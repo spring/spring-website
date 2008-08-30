@@ -1,0 +1,105 @@
+<script language="javascript">
+<!--
+  function spmenu_update(id, cname)
+  {
+    var elem = document.getElementById('spm_' + id);
+    elem.className = cname;
+  }
+
+  /* Image preloading */  
+  if (document.images)
+  {
+    var spmenupic1 = new Image(100,25); 
+    spmenupic1.src = "/images/notselected_button_left.gif"; 
+    var spmenupic2 = new Image(100,25); 
+    spmenupic2.src = "/images/selected_button_left.gif"; 
+    var spmenupic3 = new Image(100,25); 
+    spmenupic3.src = "/images/notselected_button_background.gif"; 
+    var spmenupic4 = new Image(100,25); 
+    spmenupic4.src = "/images/selected_button_background.gif"; 
+    var spmenupic5 = new Image(100,25); 
+    spmenupic5.src = "/images/notselected_button_right.gif"; 
+    var spmenupic6 = new Image(100,25); 
+    spmenupic6.src = "/images/selected_button_right.gif"; 
+  }
+// -->
+</script>
+<table width="760" border="0" cellspacing="0" cellpadding="0" align="center" style="margin-left: auto; margin-right: auto;">
+  <tr>
+    <td class="headertd">
+      <div class="banner">
+<!--[if lt IE 7]>
+        <a href="/"><img src="/images/logo.gif" height="74" border="0" style="padding-left: 10px; padding-top: 18px;"/><br /></a>
+<![endif]-->
+<![if gte IE 7]>
+<!--        <a href="/"><img src="/images/logo2.png" height="110" width="760" border="0" /><br /></a>  -->
+        <a href="/"><img src="/images/logo.png" height="74" border="0" style="padding-left: 10px; padding-top: 18px;"/><br /></a> 
+<![endif]>
+      </div>
+    
+      <table width="760" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="headertd">
+            <img src="/images/pixel.gif" width="760" height="105" border="0" /><br />
+          </td>
+        </tr>      
+        <tr>
+          <td align="right" class="headertd">
+			<table border="0" cellspacing="0" cellpadding="0" class="menubar">
+			  <tr>
+                <td class="headermenuleft" id="spm_home" onmouseover="spmenu_update('home', 'headermenuleftselected')" onmouseout="spmenu_update('home', 'headermenuleft')">
+                  <a href="/" class="menubar"><img src="/images/homie.gif" width="11" height="10" border="0" />&nbsp;Home</a>
+                </td>
+                
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+			    <td class="headermenu" id="spm_news" onmouseover="spmenu_update('news', 'headermenuselected')" onmouseout="spmenu_update('news', 'headermenu')">
+                  <a href="/phpbb/viewforum.php?f=2" class="menubar">News</a>
+                </td>
+                
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_about" onmouseover="spmenu_update('about', 'headermenuselected')" onmouseout="spmenu_update('about', 'headermenu')">
+                  <a href="/wiki/About" class="menubar">About</a>
+                </td>
+
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_games" onmouseover="spmenu_update('games', 'headermenuselected')" onmouseout="spmenu_update('games', 'headermenu')">
+                  <a href="/wiki/Games" class="menubar">Games</a>
+                </td>
+
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_dev" onmouseover="spmenu_update('dev', 'headermenuselected')" onmouseout="spmenu_update('dev', 'headermenu')">
+                  <a href="/wiki/Engine_Development" class="menubar">Development</a>
+                </td>
+
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_media" onmouseover="spmenu_update('media', 'headermenuselected')" onmouseout="spmenu_update('media', 'headermenu')">
+                  <a href="/media.php" class="menubar">Media</a>
+                </td>
+
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_help" onmouseover="spmenu_update('help', 'headermenuselected')" onmouseout="spmenu_update('help', 'headermenu')">
+                  <a href="/wiki/FAQ" class="menubar">Help</a>
+                </td>
+
+                <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                <td class="headermenu" id="spm_forums" onmouseover="spmenu_update('forums', 'headermenuselected')" onmouseout="spmenu_update('forums', 'headermenu')">
+                  <a href="/phpbb" class="menubar">Forums</a>
+                </td>
+                
+                <td class="headertd"><img src="/images/menudivider.png" height="25" width="1"/></td>                 
+			    <td class="headermenuright" id="spm_download" onmouseover="spmenu_update('download', 'headermenurightselected')" onmouseout="spmenu_update('download', 'headermenuright')">
+                  <a href="/wiki/Download" class="menubar">Download</a>
+                </td>                
+			  </tr>
+			</table>           
+          </td>
+        </tr>        
+      </table>  
+    </td>
+  </tr>
+  <tr>
+    <td class="headertd"><img src="/images/pixel.gif" height="4" width="1" /><br /></td>
+  </tr>
+  <tr>
+    <td class="locationbar" height="25">{PAGE_TITLE}</td>
+  </tr>

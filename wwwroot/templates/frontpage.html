@@ -1,0 +1,305 @@
+  <tr valign="bottom" class="welcome" height="240">
+    <td>
+     
+      <table width="760" border="0" cellpadding="0" cellspacing="0">
+<tr height="239" valign="bottom">
+          <td bgcolor="#20292E">
+            <img src="images/pixel.gif" height="4" width="1" /><br />
+          </td>
+          <td>
+          
+            <table width="758" border="0" cellpadding="0" cellspacing="0"  class="welcome" >
+              <tr height="227" valign="bottom">
+                <td>
+                  <img src="images/pixel.gif" height="4" width="12" /><br />
+                </td>
+                
+                <td width="746">
+                  <table border="0" cellpadding="6" cellspacing="0" background="/images/textbg.png">
+                    <tr>
+                      <td>
+                        Welcome to the Spring project website!
+                        <br />
+                        <font class="welcomesmall">Spring is a powerful free RTS engine developed for 
+                        <a href="/wiki/Read_Me_First">Windows</a> and 
+                        <a href="/wiki/SetupGuide">Linux</a></font>
+                      </td>
+                    </tr>
+                  </table>    
+                </td>
+
+              </tr>
+              <tr height="12">
+                <td>
+                  <img src="images/pixel.gif" height="12" width="12" /><br />
+                </td>
+              </tr>
+              
+            </table>
+          
+          </td>
+
+          <td bgcolor="#20292E">
+            <img src="images/pixel.gif" height="4" width="1" /><br />
+          </td>
+          
+        </tr>
+        <tr>
+          <td bgcolor="#20292E" colspan="4">
+            <img src="images/pixel.gif" height="1" width="10" /><br />
+          </td>
+        </tr>
+        
+      </table>    
+    
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table width="760" border="0" cellpadding="0" cellspacing="0" bgcolor="#4C626F">
+        <tr>
+          <td bgcolor="#20292E">
+            <img src="images/pixel.gif" height="4" width="1" /><br />
+          </td>
+          <td>
+            <img src="images/pixel.gif" height="1" width="7" /><br />          
+          </td>
+          <td>
+            <table width="751" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <img src="images/pixel.gif" height="15" width="1" /><br />
+                </td>
+              </tr>
+              
+              <tr>
+                <td>
+                  <table border="0" cellspacing="0" cellpadding="0" width="751">
+                    <tr>
+                      <td>
+                      
+                        <script language="javascript">
+                        <!--
+                          function mm_update(id, cname)
+                          {
+                            var elem = document.getElementById('media_' + id);
+                            elem.className = cname;
+                          }
+                          
+                          function mm_click(visible, hidden)
+                          {
+                            var ve = document.getElementById(visible);
+                            var he = document.getElementById(hidden);
+                            he.className = 'mmhide';
+                            ve.className = 'mmshow';
+                          }
+
+                          /* Image preloading */  
+                          if (document.images)
+                          {
+                            var mediamenupic1 = new Image(100,25); 
+                            mediamenupic1.src = "/images/notselected_media_left.gif"; 
+                            var mediamenupic2 = new Image(100,25); 
+                            mediamenupic2.src = "/images/selected_media_left.gif"; 
+                            var mediamenupic5 = new Image(100,25); 
+                            mediamenupic5.src = "/images/notselected_media_right.gif"; 
+                            var mediamenupic6 = new Image(100,25); 
+                            mediamenupic6.src = "/images/selected_media_right.gif"; 
+                          }
+                        // -->
+                        </script>
+                      
+                        <table border="0" cellpadding="0" cellspacing="0" width="286" height="205">
+                          <tr>
+                            <td colspan="3">
+                            
+                              <table border="0" cellspacing="0" cellpadding="0" class="menubar" width="286">
+                                <tr>
+                                  <td class="mmleft" id="media_vid" onmouseover="mm_update('vid', 'mmleftsel')" 
+                                    onmouseout="mm_update('vid', 'mmleft')"
+                                    onclick="mm_click('videos', 'screenshots'); return false">
+                                    <a href="/media.php" class="menubar">Videos</a>
+                                  </td>                            
+                                  <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                                  <td class="mmmid" id="media_pic" onmouseover="mm_update('pic', 'mmmidsel')" 
+                                    onmouseout="mm_update('pic', 'mmmid')"
+                                    onclick="mm_click('screenshots', 'videos'); return false">
+                                    <a href="/media.php" class="menubar">Screenshots</a>
+                                  </td>                            
+                                  <td><img src="/images/menudivider.png" height="25" width="1"/></td>
+                                  <td class="mmright" id="media_media" onmouseover="mm_update('media', 'mmrightsel')" onmouseout="mm_update('media', 'mmright')" width="100%">
+                                    <a href="/media.php" class="menubar">Show more!</a>
+                                  </td>                                                                
+                                </tr>
+                              </table>                            
+                     
+                            </td>
+                          </tr>
+                          <tr>  
+                            <td bgcolor="#20292E" colspan="3">
+                              <img src="images/pixel.gif" height="1" width="15" /><br />
+                            </td>                          
+                          <tr>  
+                            <td bgcolor="#20292E">
+                              <img src="images/pixel.gif" height="15" width="1" /><br />
+                            </td>
+                            <td>
+                              
+                              <div id='videos' class="mmshow">                                                          
+                                <div id='preview'><a href="/media.php" onclick="mm_click('screenshots', 'videos'); return false">
+                                  <img src="images/novideo.png" height="180" width="284" border="0" /><br />
+                                </a>
+                                </div>
+                                <script type='text/javascript' src='/external/jwplayer/swfobject.js'></script>
+                                <script type='text/javascript'>
+                                  <!--                              
+                                  var s1 = new SWFObject('/external/jwplayer/player.swf','player','284','180','9');
+                                  s1.addParam('allowfullscreen','true');
+                                  s1.addParam('allowfullscreen','true');
+                                  s1.addParam('allowscriptaccess','always');
+                                  s1.addParam('flashvars','file=#VIDEOFILE#&image=#VIDEOIMAGE#&fullscreen=true');
+                                  s1.write('preview');
+                                  // -->
+                                </script>                                                                                 
+                              </div>
+                              
+                              <div id='screenshots' class="mmhide">
+                                <table cellpadding="0" cellspacing="0" border="0" width="284" height="180">
+                                  <tr>
+                                    <td>
+                                      #SCREEN1#
+                                    </td>
+                                    <td>
+                                      #SCREEN2#
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>
+                                      #SCREEN3#
+                                    </td>
+                                    <td>
+                                      #SCREEN4#
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="2" bgcolor="#20292E" height="1">
+                                      <img src="images/pixel.gif" height="1" width="10" /><br />
+                                    </td>
+                                  </tr>                                                          
+                                  <tr height="19">
+                                    <td colspan="2" class="screendesc">
+                                      Click any image to view a larger version
+                                    </td>
+                                  </tr>    
+                                </table>
+                              </div>
+                            </td>
+                            <td bgcolor="#20292E">
+                              <img src="images/pixel.gif" height="15" width="1" /><br />
+                            </td>                            
+                          </tr>
+                          <tr>
+                            <td colspan="3" bgcolor="#20292E">
+                              <img src="images/pixel.gif" height="1" width="10" /><br />
+                            </td>
+                          </tr>                          
+                        </table>                      
+                                          
+                      </td>
+                      <td align="right" valign="top">
+                      
+                        <script language="javascript">
+                        <!--
+                          function update_bar(id, cname)
+                          {
+                            var elem = document.getElementById(id);
+                            elem.className = cname;
+                          }
+
+                          /* Image preloading */  
+                          if (document.images)
+                          {
+                            pic1 = new Image(100,25); 
+                            pic1.src = "/images/selected_download.jpg"; 
+                            pic2 = new Image(100,25); 
+                            pic2.src = "/images/selected_games.jpg"; 
+                            pic3 = new Image(100,25); 
+                            pic3.src = "/images/selected_learn.jpg";     
+
+                            pic4 = new Image(100,25); 
+                            pic4.src = "/images/notselected_download.jpg"; 
+                            pic5 = new Image(100,25); 
+                            pic5.src = "/images/notselected_games.jpg"; 
+                            pic6 = new Image(100,25); 
+                            pic6.src = "/images/notselected_learn.jpg";     
+                          }
+                        // -->
+                        </script>
+                      
+                        <table border="0" cellpadding="0" cellspacing="0" width="465" class="bigbar">
+                          <tr height="58" class="learnmorebar" id="learnmore" 
+                            onmouseover="update_bar('learnmore', 'learnmorebar_selected')"
+                            onmouseout="update_bar('learnmore', 'learnmorebar')" >
+                            <td class="bigbar" align="right">
+                              <a href="/wiki/About" class="bigbar">Learn more</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <img src="images/pixel.gif" height="16" width="1" /><br />
+                            </td>
+                          </tr>
+                          <tr height="58" class="downloadbar" id="download"
+                            onmouseover="update_bar('download', 'downloadbar_selected')"
+                            onmouseout="update_bar('download', 'downloadbar')" >
+                            <td class="bigbar" align="right">
+                              <a href="/wiki/Download" class="bigbar">Download and play</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <img src="images/pixel.gif" height="16" width="1" /><br />
+                            </td>
+                          </tr>                          
+                          <tr height="58" class="gamesbar" id="games"
+                            onmouseover="update_bar('games', 'gamesbar_selected')"
+                            onmouseout="update_bar('games', 'gamesbar')" >
+                            <td class="bigbar" align="right">
+                              <a href="/wiki/Games" class="bigbar">See the games</a>
+                            </td>
+                          </tr>                                                    
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <img src="images/pixel.gif" height="15" width="1" /><br />
+                </td>
+              </tr>
+                            
+              <tr>
+                <td height="25" class="newsbar">
+                  Latest news
+                </td>
+              </tr>              
+
+              #NEWSITEMS#
+              
+              <tr>
+                <td>
+                  <img src="images/pixel.gif" height="15" width="1" /><br />
+                </td>
+              </tr>              
+            </table>
+          </td>          
+          <td bgcolor="#20292E">
+            <img src="images/pixel.gif" height="4" width="1" /><br />
+          </td>          
+        </tr>
+      </table>
+    </td>
+  </tr>

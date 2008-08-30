@@ -1,0 +1,106 @@
+@charset "utf-8";
+body {
+	margin: 0px;
+	background-color: #38464F;
+	background-image: url(/images/background.jpg);
+	background-repeat:repeat-x;
+}
+p {
+	margin: 0px;
+}
+
+.banner {
+    width: 760px;
+    height: 110px;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-image: url(/imagerotate.php?cat=32);
+}
+
+.menubar {
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEEEEE;	
+}
+table.menubar td {
+    padding: 0px;
+}
+table.menubar td a {
+    padding-top: 3px; 
+    padding-bottom: 4px;     
+    padding-left: 8px;
+    padding-right: 8px;
+    display: block;
+}
+.headertd {
+    padding: 0px;
+}
+.headermenuleft {
+    background-image: url(/images/notselected_button_left.gif);
+}
+.headermenuleftselected {
+    background-image: url(/images/selected_button_left.gif);
+}
+.headermenu {
+    background-image: url(/images/notselected_button_background.gif);
+}
+.headermenuselected {
+    background-image: url(/images/selected_button_background.gif);
+}
+.headermenuright {
+    background-image: url(/images/notselected_button_right.gif);
+    background-position: right;
+}
+.headermenurightselected {
+    background-image: url(/images/selected_button_right.gif);
+    background-position: right;
+}
+
+a.menubar:link {
+    color: #eeeeee;
+    text-decoration: none;
+}
+a.menubar:visited {
+    color: #eeeeee;
+    text-decoration: none;
+}
+a.menubar:hover {
+    color: #eeeeee;
+    text-decoration: none;
+}
+
+.locationbar {
+	background-image: url(/images/location_bar.gif);
+	background-repeat:no-repeat;
+    padding: 0px;
+	padding-left: 12px;	
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEEEEE;	
+}
+.bottombar {
+    background-image: url(/images/bottom.gif);
+    background-repeat:no-repeat;
+    padding-left: 12px;    
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-weight:bold;
+    color: #EEEEEE;    
+}
+a.bottomlink:link {
+    color: #A3BDCF;
+    text-decoration: none;
+}
+a.bottomlink:visited {
+    color: #A3BDCF;
+    text-decoration: none;
+}
+a.bottomlink:hover {
+    color: #A3BDCF;
+    text-decoration: underline;
+}
+a {
+    outline: none;
+}

@@ -1,0 +1,138 @@
+@charset "utf-8";
+a:link {
+	color: #A3BDCF;
+	text-decoration: none;
+}
+a:visited {
+	color: #A3BDCF;
+	text-decoration: none;
+}
+a:hover {
+	color: #A3BDCF;
+	text-decoration: underline;
+}
+.welcome {
+	background-image: url(/imagerotate.php?cat=33);
+	background-repeat:no-repeat;
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 24px;
+    line-height: 18px;    
+	color: #EEEEEE;	
+}
+.welcomesmall {
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 14px;
+    font-weight:bold;
+    color: #EEEEEE;    
+}
+
+.newsbar {
+	background-image: url(/images/news_bar.gif);
+	background-repeat:no-repeat;
+	padding-left: 12px;	
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEEEEE;	
+}
+.bigbar {
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 24px;
+    /* padding-right: 8px; */
+    font-weight:bold;
+    color: #EEEEEE;    
+}
+table.bigbar td {
+    padding: 0px;
+}
+table.bigbar td a {
+    padding-top: 13px; 
+    padding-bottom: 16px;     
+    padding-left: 8px;
+    padding-right: 8px;
+    display: block;
+}
+a.bigbar:link {
+    color: #eeeeee;
+    text-decoration: none;
+}
+a.bigbar:visited {
+    color: #eeeeee;
+    text-decoration: none;
+}
+a.bigbar:hover {
+    color: #eeeeee;
+    text-decoration: none;
+}
+
+.mmleft {
+    background-image: url(/images/notselected_media_left.gif);
+}
+.mmleftsel {
+    background-image: url(/images/selected_media_left.gif);
+}
+.mmmid {
+    background-image: url(/images/notselected_button_background.gif);
+}
+.mmmidsel {
+    background-image: url(/images/selected_button_background.gif);
+}
+.mmright {
+    background-image: url(/images/notselected_media_right.gif);
+    background-position: right;
+}
+.mmrightsel {
+    background-image: url(/images/selected_media_right.gif);
+    background-position: right;
+}
+.mmhide {
+    display: none;
+}
+.mmshow {
+    display: block;
+}
+.screendesc {
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 12px;
+    font-weight:bold;
+    color: #eeeeee;
+    background-color: #29353D;
+    padding-left: 4px;
+}
+
+.learnmorebar {
+    background-image: url(/images/notselected_learn.jpg);
+}
+.learnmorebar_selected {
+    background-image: url(/images/selected_learn.jpg);
+}
+.downloadbar {
+    background-image: url(/images/notselected_download.jpg);
+}
+.downloadbar_selected {
+    background-image: url(/images/selected_download.jpg);    
+}
+.gamesbar {
+    background-image: url(/images/notselected_games.jpg);
+}
+.gamesbar_selected {
+    background-image: url(/images/selected_games.jpg);
+}
+
+.newsitem {
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 13px;
+	color: #EEEEEE;	
+    line-height: 16px;
+}
+.newsheadline {
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 18px;
+	color: #EEEEEE;	
+}
+.newsabout {
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 11px;
+    color: #EEEEEE;    
+    line-height: 16px;    
+}
