@@ -81,12 +81,8 @@
         $videoimage = '/jwimage' . $row['topic_id'] . '.jpg';
     }
     else {
-        print('ho!');
     }
-    
-    //images/video18.flv
-    //images/video18.jpg
-                
+                    
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
     $fpkeys = array('#NEWSITEMS#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');

@@ -9,8 +9,6 @@
     $sql .= 'select physical_filename, real_filename, topic_title ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where t.forum_id = $category and a.topic_id = t.topic_id ";
-    if ($category == 32)
-        $sql .= "and t.topic_id = 15499 ";
     $sql .= 'order by rand() limit 1';
 
     $res = mysql_query($sql);

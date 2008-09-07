@@ -32,6 +32,8 @@ table.menubar td a {
     padding-left: 8px;
     padding-right: 8px;
     display: block;
+    height: 18px;
+    line-height: 14pt;
 }
 .headertd {
     padding: 0px;
@@ -39,21 +41,38 @@ table.menubar td a {
 .headermenuleft {
     background-image: url(/images/notselected_button_left.gif);
 }
-.headermenuleftselected {
+.headermenuleftlink {
     background-image: url(/images/selected_button_left.gif);
+    background-position: -100px -100px;
+    background-repeat: no-repeat;
+}
+.headermenuleftlink:hover {
+    background-position: 0px 0px;
 }
 .headermenu {
     background-image: url(/images/notselected_button_background.gif);
 }
-.headermenuselected {
+.headermenulink {
     background-image: url(/images/selected_button_background.gif);
+    background-position: -100px -100px;
+    background-repeat: repeat-x;
+}
+.headermenulink:hover {
+    background-position: 0px 0px;
 }
 .headermenuright {
     background-image: url(/images/notselected_button_right.gif);
     background-position: right;
+    margin: 0px;
+    padding: 0px;
 }
-.headermenurightselected {
+.headermenurightlink {
     background-image: url(/images/selected_button_right.gif);
+    background-position: -100px -100px;
+    background-repeat: no-repeat;
+}
+.headermenurightlink:hover {
+    background-position: 0px 0px;
     background-position: right;
 }
 
@@ -85,7 +104,7 @@ a.menubar:hover {
     background-repeat:no-repeat;
     padding-left: 12px;    
     font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     font-weight:bold;
     color: #EEEEEE;    
 }

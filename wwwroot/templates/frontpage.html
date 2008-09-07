@@ -80,31 +80,12 @@
                       
                         <script language="javascript">
                         <!--
-                          function mm_update(id, cname)
-                          {
-                            var elem = document.getElementById('media_' + id);
-                            elem.className = cname;
-                          }
-                          
                           function mm_click(visible, hidden)
                           {
                             var ve = document.getElementById(visible);
                             var he = document.getElementById(hidden);
                             he.className = 'mmhide';
                             ve.className = 'mmshow';
-                          }
-
-                          /* Image preloading */  
-                          if (document.images)
-                          {
-                            var mediamenupic1 = new Image(100,25); 
-                            mediamenupic1.src = "/images/notselected_media_left.gif"; 
-                            var mediamenupic2 = new Image(100,25); 
-                            mediamenupic2.src = "/images/selected_media_left.gif"; 
-                            var mediamenupic5 = new Image(100,25); 
-                            mediamenupic5.src = "/images/notselected_media_right.gif"; 
-                            var mediamenupic6 = new Image(100,25); 
-                            mediamenupic6.src = "/images/selected_media_right.gif"; 
                           }
                         // -->
                         </script>
@@ -115,20 +96,16 @@
                             
                               <table border="0" cellspacing="0" cellpadding="0" class="menubar" width="286">
                                 <tr>
-                                  <td class="mmleft" id="media_vid" onmouseover="mm_update('vid', 'mmleftsel')" 
-                                    onmouseout="mm_update('vid', 'mmleft')"
-                                    onclick="mm_click('videos', 'screenshots'); return false">
-                                    <a href="/media.php" class="menubar">Videos</a>
+                                  <td class="mmleft" onclick="mm_click('videos', 'screenshots'); return false">
+                                    <a href="/media.php" class="menubar mmleftsel">Videos</a>
                                   </td>                            
                                   <td><img src="/images/menudivider.png" height="25" width="1"/></td>
-                                  <td class="mmmid" id="media_pic" onmouseover="mm_update('pic', 'mmmidsel')" 
-                                    onmouseout="mm_update('pic', 'mmmid')"
-                                    onclick="mm_click('screenshots', 'videos'); return false">
-                                    <a href="/media.php" class="menubar">Screenshots</a>
+                                  <td class="mmmid" onclick="mm_click('screenshots', 'videos'); return false">
+                                    <a href="/media.php" class="menubar mmmidsel">Screenshots</a>
                                   </td>                            
                                   <td><img src="/images/menudivider.png" height="25" width="1"/></td>
-                                  <td class="mmright" id="media_media" onmouseover="mm_update('media', 'mmrightsel')" onmouseout="mm_update('media', 'mmright')" width="100%">
-                                    <a href="/media.php" class="menubar">Show more!</a>
+                                  <td class="mmright" width="100%">
+                                    <a href="/media.php" class="menubar mmrightsel">Show more!</a>
                                   </td>                                                                
                                 </tr>
                               </table>                            
@@ -207,41 +184,10 @@
                                           
                       </td>
                       <td align="right" valign="top">
-                      
-                        <script language="javascript">
-                        <!--
-                          function update_bar(id, cname)
-                          {
-                            var elem = document.getElementById(id);
-                            elem.className = cname;
-                          }
-
-                          /* Image preloading */  
-                          if (document.images)
-                          {
-                            pic1 = new Image(100,25); 
-                            pic1.src = "/images/selected_download.jpg"; 
-                            pic2 = new Image(100,25); 
-                            pic2.src = "/images/selected_games.jpg"; 
-                            pic3 = new Image(100,25); 
-                            pic3.src = "/images/selected_learn.jpg";     
-
-                            pic4 = new Image(100,25); 
-                            pic4.src = "/images/notselected_download.jpg"; 
-                            pic5 = new Image(100,25); 
-                            pic5.src = "/images/notselected_games.jpg"; 
-                            pic6 = new Image(100,25); 
-                            pic6.src = "/images/notselected_learn.jpg";     
-                          }
-                        // -->
-                        </script>
-                      
                         <table border="0" cellpadding="0" cellspacing="0" width="465" class="bigbar">
-                          <tr height="58" class="learnmorebar" id="learnmore" 
-                            onmouseover="update_bar('learnmore', 'learnmorebar_selected')"
-                            onmouseout="update_bar('learnmore', 'learnmorebar')" >
+                          <tr height="58" class="learnmorebar">
                             <td class="bigbar" align="right">
-                              <a href="/wiki/About" class="bigbar">Learn more</a>
+                              <a href="/wiki/About" class="bigbar learnmorebar_selected">Learn more</a>
                             </td>
                           </tr>
                           <tr>
@@ -249,11 +195,9 @@
                               <img src="images/pixel.gif" height="16" width="1" /><br />
                             </td>
                           </tr>
-                          <tr height="58" class="downloadbar" id="download"
-                            onmouseover="update_bar('download', 'downloadbar_selected')"
-                            onmouseout="update_bar('download', 'downloadbar')" >
+                          <tr height="58" class="downloadbar">
                             <td class="bigbar" align="right">
-                              <a href="/wiki/Download" class="bigbar">Download and play</a>
+                              <a href="/wiki/Download" class="bigbar downloadbar_selected">Download and play</a>
                             </td>
                           </tr>
                           <tr>
@@ -261,11 +205,9 @@
                               <img src="images/pixel.gif" height="16" width="1" /><br />
                             </td>
                           </tr>                          
-                          <tr height="58" class="gamesbar" id="games"
-                            onmouseover="update_bar('games', 'gamesbar_selected')"
-                            onmouseout="update_bar('games', 'gamesbar')" >
+                          <tr height="58" class="gamesbar">
                             <td class="bigbar" align="right">
-                              <a href="/wiki/Games" class="bigbar">See the games</a>
+                              <a href="/wiki/Games" class="bigbar gamesbar_selected">See the games</a>
                             </td>
                           </tr>                                                    
                         </table>

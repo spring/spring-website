@@ -70,12 +70,22 @@ a.bigbar:hover {
 }
 .mmleftsel {
     background-image: url(/images/selected_media_left.gif);
+    background-position: -100px -100px;
+    background-repeat: no-repeat;   
+}
+.mmleftsel:hover {
+    background-position: 0px 0px;  
 }
 .mmmid {
     background-image: url(/images/notselected_button_background.gif);
 }
 .mmmidsel {
     background-image: url(/images/selected_button_background.gif);
+    background-position: -100px -100px;
+    background-repeat: repeat-x;      
+}
+.mmmidsel:hover {
+    background-position: 0px 0px;  
 }
 .mmright {
     background-image: url(/images/notselected_media_right.gif);
@@ -83,6 +93,11 @@ a.bigbar:hover {
 }
 .mmrightsel {
     background-image: url(/images/selected_media_right.gif);
+    background-position: -100px -100px;
+    background-repeat: repeat-x;      
+}
+.mmrightsel:hover {
+    background-position: 0px 0px;  
     background-position: right;
 }
 .mmhide {
@@ -105,18 +120,33 @@ a.bigbar:hover {
 }
 .learnmorebar_selected {
     background-image: url(/images/selected_learn.jpg);
+    background-position: -100px -100px;
+    background-repeat: no-repeat;    
+}
+.learnmorebar_selected:hover {
+    background-position: 0px 0px;  
 }
 .downloadbar {
     background-image: url(/images/notselected_download.jpg);
 }
 .downloadbar_selected {
     background-image: url(/images/selected_download.jpg);    
+    background-position: -100px -100px;
+    background-repeat: no-repeat;    
+}
+.downloadbar_selected:hover {
+    background-position: 0px 0px;  
 }
 .gamesbar {
     background-image: url(/images/notselected_games.jpg);
 }
 .gamesbar_selected {
     background-image: url(/images/selected_games.jpg);
+    background-position: -100px -100px;
+    background-repeat: no-repeat;        
+}
+.gamesbar_selected:hover {
+    background-position: 0px 0px;  
 }
 
 .newsitem {
