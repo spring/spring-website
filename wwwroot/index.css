@@ -12,7 +12,6 @@ a:hover {
 	text-decoration: underline;
 }
 .welcome {
-	background-image: url(/imagerotate.php?cat=33);
 	background-repeat:no-repeat;
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 24px;

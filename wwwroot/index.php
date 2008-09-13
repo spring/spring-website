@@ -27,6 +27,16 @@
         $news .= str_replace($newskeys, $newsdata, $newstemplate);
     }
     
+    // Get a random welcome image
+    $sql = '';
+    $sql .= 'select a.attach_id ';
+    $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
+    $sql .= "where t.forum_id = 33 and a.topic_id = t.topic_id ";
+    $sql .= 'order by rand() limit 1';    
+    $res = mysql_query($sql);
+    $row = mysql_fetch_array($res);
+    $welcome = '/screenshot.php?id=' . $row['attach_id'];
+    
     // Fetch 4 random screenshots
     $sql = '';
     $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id ';
@@ -85,8 +95,8 @@
                     
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
-    $fpkeys = array('#NEWSITEMS#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
-    $fpitems = array($news, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
+    $fpkeys = array('#NEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
+    $fpitems = array($news, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
         
     // Compose the final page
