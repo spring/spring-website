@@ -24,6 +24,11 @@ a:hover {
     font-weight:bold;
     color: #EEEEEE;    
 }
+.byline {
+    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+    font-size: 14px;
+    color: #EEEEEE;    
+}
 
 .newsbar {
 	background-image: url(/images/news_bar.gif);
