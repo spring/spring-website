@@ -3,15 +3,15 @@
     include_once('includes/db.php');
     include_once('includes/bbcode.php');
     include_once('includes/thumbs.php');
-    
+
     // Prepare newsitems
     $sql = "";
     $sql .= "SELECT t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_replies, t.topic_title ";
     $sql .= "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p ";
     $sql .= "WHERE t.forum_id = 2 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
     $sql .= "ORDER  BY t.topic_time DESC ";
-    $sql .= "LIMIT 3";    
-    
+    $sql .= "LIMIT 3";
+
     $res = mysql_query($sql);
     $newstemplate = file_get_contents('templates/newsitem.html');
     $news = "";
@@ -26,17 +26,18 @@
         $newsdata = array($row['topic_title'], $newstext, $poster, $postdate, $comments);
         $news .= str_replace($newskeys, $newsdata, $newstemplate);
     }
-    
+
     // Get a random welcome image
     $sql = '';
     $sql .= 'select a.attach_id ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where t.forum_id = 33 and a.topic_id = t.topic_id ";
-    $sql .= 'order by rand() limit 1';    
+    $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
+    $sql .= 'order by rand() limit 1';
     $res = mysql_query($sql);
     $row = mysql_fetch_array($res);
     $welcome = '/screenshot.php?id=' . $row['attach_id'];
-    
+
     // Fetch 4 random screenshots
     $sql = '';
     $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id ';
@@ -53,7 +54,7 @@
             if (!array_key_exists($proposed, $screenids))
                 $screenids[$proposed] = True;
         }
-        
+
         // Retreive details for the 4 selected ones
         $screens = array();
         for ($i = 0; count($screens) < 4; $i++) {
@@ -62,7 +63,7 @@
                 $screens[] = $row;
             }
         }
-        
+
         foreach ($screens as $screen) {            
             $thumb = get_thumbnail($screen['physical_filename'], 142, 80);
             $title = $screen['topic_title'];
@@ -75,7 +76,7 @@
     else {
         // Not enough.. Should not usually happen.
     }
-    
+
     // And a random video
     $sql = '';
     $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id, extension ';
@@ -92,22 +93,22 @@
     }
     else {
     }
-                    
+
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
     $fpkeys = array('#NEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
     $fpitems = array($news, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
-        
+
     // Compose the final page
     $headertemplate = file_get_contents('templates/header.html');
     $starttemplate = file_get_contents('templates/pagestart.html');
-    
+
     $html = $starttemplate;
     $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0"/>&nbsp;Home', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');    
     $html .= file_get_contents('templates/pageend.html');    
-    
+
     print($html);
 ?>
