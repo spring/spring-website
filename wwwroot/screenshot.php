@@ -8,7 +8,7 @@
             
     // Force the topic id to belong to the screenshots, videos or welcome image forum
     $sql = '';
-    $sql .= 'select physical_filename, real_filename, topic_title, extension ';
+    $sql .= 'select physical_filename, topic_title, extension ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where (t.forum_id = 35 or t.forum_id = 34 or t.forum_id = 33) and a.topic_id = t.topic_id ";
     if ($topic > 0)

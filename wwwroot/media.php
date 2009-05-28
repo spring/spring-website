@@ -26,7 +26,7 @@
             
     // Fetch all media of the specified type
     $sql = '';
-    $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id, p.post_text, t.forum_id ';
+    $sql .= 'select attach_id, physical_filename, topic_title, t.topic_id, p.post_text, t.forum_id ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t, phpbb3_posts as p ';
     if ($_GET['type'] == 'images')
         $sql .= "where (t.forum_id = 35) ";
@@ -73,7 +73,7 @@
         $thumb = get_thumbnail($row['physical_filename'], 174, 98);
         
         if ($row['forum_id'] == 35) {
-            $item = '<a href="screenshot.php?topic=' . $row['topic_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
+            $item = '<a href="screenshot.php?id=' . $row['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
             $item .= '<img src="' . $thumb . '" width="174" height="98" border="0"><br /></a>';
         }
         elseif ($row['forum_id'] == 34) {
