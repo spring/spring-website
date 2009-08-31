@@ -1,169 +1,176 @@
 @import url("/styles.css");
 
+
+/* HTML-BODY */
 html {
   min-height: 100%;
   margin-bottom: 0.01em;
 }
 
-#specialform { display: inline; }
-#content { top: 0; margin: 0; padding: 0; }
-#topbar { padding: 0px; }
-#powersearch {
-  background: #DDEEFF; border-style: solid; border-width: 1px; padding: 2px;
-}
-#quickbar {
- width: 140px; top: 18px; padding: 2px; visibility: visible; z-index: 99;
-}
-#article, #article td, #article th, #article p {
- font-family: Verdana, Arial, sans-serif;
- font-size: 10pt; color: #eeeeee;
- margin: 0px;
-}
-#article p {
- padding-top: 0; padding-bottom: 0;
- margin-top: 1ex; margin-bottom: 0;
-}
 
-p, pre, td, th, li, dd, dt { line-height: 12pt; }
-textarea { overflow: auto; }
+/* TABLE OF CONTENT */
+@media (min-width: 1200px) {
+  #toc[summary=Contents]  {position: absolute; right:2px; top:2px; width:240px; overflow: hidden;
+                           border: 0px; border-spacing: 0px;
+                           background-color: transparent;}
+}
+@media (max-width: 1199px) {
+  #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
+  #toc div                {line-height: 20px; padding-left: 5px; padding-right: 5px;
+                           border-bottom: 1px solid #20292E;
+                           background: transparent url("/images/news_bar.gif");}
+  #toc                    {margin-left: 5px; margin-right: 0; padding: 0;} 
+  #toc td                 {margin: 0; padding: 0;} 
+  #toc tr td > ul         {margin: 0; padding: 5px;
+                           border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
+}
+#toc                     {background-color: #38474E; border-color: #20292E;
+                          float: right;}
+#toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
+.tocnumber               {content: "•"; text-shadow: #111 2px 2px 2px;}
 
-#footer { padding: 4px; }
-#footer form { display: inline; }
-#sitetitle {
- font-family: Times, serif;
- color: white;
- font-weight: normal; font-size: 32pt;
- line-height: 32pt;
-}
-td.top {
- background-color: #6688AA; color: white;
- margin-top: 4px; margin-bottom: 4px;
- padding-top: 0; padding-bottom: 0;
- text-transform: uppercase;
- font-family: Verdana, Arial, sans-serif; font-size: 8pt;
-}
-td.top a {
- font-family: Verdana, Arial, sans-serif;
- background-color: #6688AA; color: white;
- text-decoration: none; font-size: 10pt;
-}
-td.bottom {
- font-family: Verdana, Arial, sans-serif;
- font-size: 10pt;
- padding: 0;
-}
-#pagestats {
- font-family: Verdana, Arial, sans-serif;
- color: black;
- font-size: 9pt;
-}
-#sitesub {
- font-family: Verdana, Arial, sans-serif;
- font-size: 9pt; font-weight: bold;
- color: black;
- padding-top: 0;
-}
-#quickbar {
- font-family: Verdana, Arial, sans-serif;
- font-size: 8pt; font-weight: bold; line-height: 9.5pt;
- text-decoration: none;
- color: black;
- padding: 0; margin-top: 0;
-}
-#quickbar a { color: #446688; }
 
-#quickbar h6 {
- font-family: Verdana, Arial, sans-serif;
- font-size: 10pt; font-weight: bold; line-height: 12pt;
- text-decoration: none;
- color: #666666;
- padding: 0; margin-bottom: 2px; margin-top: 6px;
-}
-#quickbar form { padding: 0; margin-top: 0; }
+/* MEDIAWIKI */
+#article                 {font-family: Verdana, Arial, sans-serif;
+                          font-size: 10pt; color: #eeeeee;}
+#specialform             {display: inline;}
+#content                 {top: 0; margin: 0; padding: 0;}
+#topbar                  {padding: 0px;}
+#powersearch             {background: #DDEEFF; padding: 2px;
+                          border-style: solid; border-width: 1px;}
+#quickbar                {position: relative; left: 4px; top: 18px; 
+                          width: 140px; padding: 0; margin-top: 0;
+                          visibility: visible; z-index: 99;
+                          font-family: Verdana, Arial, sans-serif;
+                          font-size: 8pt; font-weight: bold; line-height: 9.5pt;
+                          text-decoration: none;
+                          color: black;}
+#quickbar a              {color: #468;}
+#quickbar h6             {padding: 0; margin-bottom: 2px; margin-top: 6px;
+                          font-family: Verdana, Arial, sans-serif;
+                          font-size: 10pt; font-weight: bold; line-height: 12pt;
+                          text-decoration: none;
+                          color: #666;}
+#quickbar form           {padding: 0; margin-top: 0;}
+#sitetitle               {color: white; font-family: Times, serif;
+                          font-weight: normal; font-size: 32pt;
+                          line-height: 32pt;}
+.toolbar                 {background: url("/images/news_bar.gif") no-repeat;
+                          padding-left: 12px;    
+                          font-family: Verdana, Arial, sans-serif;
+                          font-size: 12px; font-weight:bold;
+                          color: #EEE;}
+.catlinks                {font-family: Verdana, Arial, sans-serif;
+                          font-size: 13px;}
+#footer                  {padding: 4px;}
+#footer form             {display: inline;}
+#footer td               {font-family: Verdana, Arial, sans-serif;}
+#footer td.top           {background-color: #6688AA; color: white;
+                          margin-top: 4px; margin-bottom: 4px;
+                          padding-top: 0; padding-bottom: 0;
+                          text-transform: uppercase;
+                          font-size: 8pt;}
+#footer td.top a         {background-color: #6688AA; color: white;
+                          text-decoration: none; font-size: 10pt;}
+#footer td.bottom        {font-size: 10pt; padding: 0;}
+#pagestats               {font-family: Verdana, Arial, sans-serif;
+                          font-size: 9pt; color: black;}
+#sitesub                 {font-family: Verdana, Arial, sans-serif;
+                          font-size: 9pt; font-weight: bold;
+                          color: black;
+                          padding-top: 0;}
 
-h1 {
- color: #eeeeee;
- font-family: Verdana, Arial, sans-serif;
- font-size: 14pt; font-weight: bold; line-height: 21pt;
-}
-h1.pagetitle { padding-bottom: 0; margin-bottom: 0; }
-#article p.subtitle {
- color: #666666; font-size: 11pt; font-weight: bold;
- padding-top: 0; margin-top: 0; padding-bottom: 1ex;
-}
 
-a:link {
-    color: #D8EFFF;
-    text-decoration: none;
-}
-a:visited {
-    color: #D8EFFF;
-    text-decoration: none;
-}
-a:hover {
-    color: #D8EFFF;
-    text-decoration: underline;
-}
+/* SOME STUFF */
+#article p               {padding-top: 0; padding-bottom: 0;
+                          margin-top: 1ex; margin-bottom: 0;
+                          font-family: Verdana, Arial, sans-serif;
+                          font-size: 10pt; color: #eeeeee;
+                          margin: 0px;}
+#article td,#article th  {font-family: Verdana, Arial, sans-serif;
+                          font-size: 10pt; color: #eeeeee;
+                          margin: 0px;}
+#article p.subtitle      {color: #666666; font-size: 11pt; font-weight: bold;
+                          padding-top: 0; margin-top: 0; padding-bottom: 1ex;}
+p, pre, td, 
+th, li, dd, dt           {line-height: 12pt;}
+textarea                 {overflow: auto;}
 
-a.external { color: #E9D8FF; }
-a.printable { text-decoration: underline; }
-a.stub, #quickbar a.stub { color:#772233; text-decoration:none; }
-a.new, #quickbar a.new { color: #CC2200; }
-h1, h2, h3, h4, h5, h6 { 
-  color: #eeeeee;
-  font-family: Verdana, Arial, sans-serif;
-  margin: 0px; 
-}
-small { font-size: 75%; }
 
-h1 {
- font-size: 18px;
-  margin-top: 17px;
-}
+/* ARTICLE (=WIKI CONTENT DIV) */
+#article                 {width: auto; margin-left: 10px; margin-right: 0px;}
+#article > *             {margin-right: 10px;}
+hr                       {border: 0px; border-top: 1px solid; height: 4px; background: url("/images/hr_shad.png")}
 
-h2 {
- font-size: 17px;
-  margin-top: 16px; 
-}
 
-h3 {
- font-size: 16px;
-  margin-top: 14px;  
-}
+/* LINKS */
+a:link,a:visited         {color: #D8EFFF; text-decoration: none;}
+a:hover                  {text-decoration: underline;}
+#article a.new           {color: #f55; text-decoration: none; text-shadow: #333 2px 2px 3px;}
+#article a               {color: #bbf; text-decoration: none; text-shadow: #333 2px 2px 3px;}
+#article a:visited       {color: #a0a0ff; text-decoration: none; text-shadow: #222 2px 2px 2px;}
+#article a:hover         {text-decoration: underline;}
+a.external               {color: #E9D8FF;}
+a.printable              {text-decoration: underline;}
+a.stub, #quickbar a.stub {color:#772233; text-decoration:none;}
+a.new, #quickbar a.new   {color: #CC2200;}
 
-h4 {
- font-size: 15px;
-  margin-top: 13px;  
-}
 
-h5 {
- font-size: 14px;
-  margin-top: 12px;  
- 
-}
-h6 {
- font-size: 13px; font-weight: bold;
-}
+/* HEADERS */
+h1, h2, h3, h4           {color: #eeeeee;
+                          font-family: Verdana, Arial, sans-serif;
+                          margin: 0px;}
+h1                       {font-size: 18px; margin-top: 17px;}
+h2                       {font-size: 17px; margin-top: 16px;}
+h3                       {font-size: 16px; margin-top: 14px;}
+h4                       {font-size: 15px; margin-top: 13px;}
+h1 .mw-headline:before   {content: "";}
+h2 .mw-headline:before   {content: "•";}
+h3 .mw-headline:before   {content: "••";}
+h4 .mw-headline:before   {content: "•••";}
+.mw-headline:before      {margin-right: 5px; text-shadow: #111 2px 2px 2px;} 
+.mw-headline             {text-shadow: #111 2px 2px 2px;} 
 
-#toc {
- background-color: #38474E;
- border-color: #20292E;
- float: right;
- /* display: none; */
-}
 
-.toolbar {
-    background-image: url(/images/news_bar.gif);
-    background-repeat:no-repeat;
-    padding-left: 12px;    
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 12px;
-    font-weight:bold;
-    color: #EEEEEE;    
-}
-.catlinks {
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 13px;
-}
+/* MEDIAWIKI SPECIALS */
+.TablePager th           {background-color: #444;}
+.TablePager td           {background-color: #555;}
+.gallery *               {background-color: #555;}
+.gallery                 {background-color: #555; border: 2px #222 solid;}
+.gallery td              {border: 1px #222 solid;}
+.thumb                   {border: 1px #444 solid;}
 
-.editsection { display: none; } 
+#pagehistory li          {background-color: #3A4A50;;}
+#pagehistory .autocomment,
+#pagehistory .comment    {color: #ccc;}
+li.selected              {background-color: #233; border: 1px #fff solid;}
+
+table.diff               {background-color: #3A4A50; border: 1px #aaa solid;}
+td.diff-otitle,
+td.diff-ntitle           {background-color: #41545c; border: 1px #aaa solid;}
+td.diff-context          {background-color: #41545c;}
+td.diff-marker,
+td.diff-lineno           {background-color: transparent;}
+col.diff-content         {border: 10px solid #000000;}
+td.diff-deletedline      {background-color: #a44;}
+td.diff-addedline        {background-color: #4a4;}
+ins.diffchange           {background-color: #32A032; color: #050;}
+del.diffchange           {color: #f33;}
+small                    {font-size: 75%;}
+.editsection             {display: inherit;} 
+
+
+/* CUSTOM LEGEND CLASS */
+.legend                  {border-spacing: 0px; padding: 0px;
+                          border: 0px; background: transparent;}
+.legend tr               {padding: 0px; margin: 0px;}
+.legend th               {line-height: 20px; 
+                          background: transparent url("/images/news_bar.gif");}
+.legend td               {padding: 2px; margin: 0px;
+                          border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
+
+
+.note                    {color: #55ee99;}
+.warning                 {color: red;}
+code                     {font-size: 90%; color: #9f9;}
+code *                   {margin: 2px 0px 2px 10px;}

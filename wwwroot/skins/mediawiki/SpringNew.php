@@ -115,9 +115,6 @@ class SkinSpringNew extends Skin {
 		$s = parent::doGetUserStyles();
 		$qb = $this->qbSetting();
 
-        $s .= "#quickbar { position: relative; left: 4px; }\n" .
-        "#article { margin-left: 10px; margin-right: 10px; }\n";
-
 		return $s;
 	}
 
