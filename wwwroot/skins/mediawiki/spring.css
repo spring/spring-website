@@ -31,8 +31,12 @@ html {
 
 
 /* MEDIAWIKI */
-#article                 {font-family: Verdana, Arial, sans-serif;
+#article                 {width: auto; overflow: hidden;
+                          margin-left: 10px; margin-right: 0;
+                          font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
+#article > *             {margin-right: 10px;}
+#article > td            {margin-right: 0;}
 #specialform             {display: inline;}
 #content                 {top: 0; margin: 0; padding: 0;}
 #topbar                  {padding: 0px;}
@@ -96,12 +100,6 @@ html {
 p, pre, td, 
 th, li, dd, dt           {line-height: 12pt;}
 textarea                 {overflow: auto;}
-
-
-/* ARTICLE (=WIKI CONTENT DIV) */
-#article                 {width: auto; margin-left: 10px; margin-right: 0px;}
-#article > *             {margin-right: 10px;}
-#article > td            {margin-right: 0px;}
 hr                       {border: 0px; border-top: 1px solid; height: 4px; background: url("/images/hr_shad.png")}
 
 

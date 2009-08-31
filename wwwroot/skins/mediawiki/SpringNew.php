@@ -47,7 +47,7 @@ class SkinSpringNew extends Skin {
         //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
         //$s .= '<td width="738">';
                 
-        $s .= "<div id='article' style='width:738px; overflow: hidden;'><br />";
+        $s .= "<div id='article'><br />";
 
 		$notice = wfGetSiteNotice();
 		if( $notice ) {
