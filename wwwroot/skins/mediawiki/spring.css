@@ -33,6 +33,7 @@ html {
 /* MEDIAWIKI */
 #article                 {font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
+#article *               {font-family: Verdana, Arial, sans-serif; font-size: 10pt;}
 #specialform             {display: inline;}
 #content                 {top: 0; margin: 0; padding: 0;}
 #topbar                  {padding: 0px;}
