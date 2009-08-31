@@ -101,6 +101,7 @@ textarea                 {overflow: auto;}
 /* ARTICLE (=WIKI CONTENT DIV) */
 #article                 {width: auto; margin-left: 10px; margin-right: 0px;}
 #article > *             {margin-right: 10px;}
+#article > td            {margin-right: 0px;}
 hr                       {border: 0px; border-top: 1px solid; height: 4px; background: url("/images/hr_shad.png")}
 
 
@@ -127,10 +128,10 @@ h3                       {font-size: 16px; margin-top: 14px;}
 h4                       {font-size: 15px; margin-top: 13px;}
 h5                       {font-size: 14px; margin-top: 12px;}
 h6                       {font-size: 13px; font-weight: bold;}
-h1 .mw-headline:before   {content: ''; vertical-align: 9%; font-size:115%; font-family: "Verdana";}
-h2 .mw-headline:before   {content: '\25CF'; vertical-align: 9%; font-size:115%; font-family: "Verdana";}
-h3 .mw-headline:before   {content: '\25CF\25CF'; vertical-align: 9%; font-size:115%; font-family: "Verdana";}
-h4 .mw-headline:before   {content: '\25CF\25CF\25CF' ; vertical-align: 9%; font-size:115%; font-family: "Verdana";}
+h1 .mw-headline:before   {content: ''; vertical-align: 9%; font-size:108%; font-family: "Verdana";}
+h2 .mw-headline:before   {content: '\25CF'; vertical-align: 9%; font-size:108%; font-family: "Verdana";}
+h3 .mw-headline:before   {content: '\25CF\25CF'; vertical-align: 9%; font-size:108%; font-family: "Verdana";}
+h4 .mw-headline:before   {content: '\25CF\25CF\25CF' ; vertical-align: 9%; font-size:108%; font-family: "Verdana";}
 .mw-headline:before      {margin-right: 5px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {text-shadow: #111 2px 2px 2px;} 
 
