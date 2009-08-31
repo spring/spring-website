@@ -126,10 +126,10 @@ h3                       {font-size: 16px; margin-top: 14px;}
 h4                       {font-size: 15px; margin-top: 13px;}
 h5                       {font-size: 14px; margin-top: 12px;}
 h6                       {font-size: 13px; font-weight: bold;}
-h1 .mw-headline:before   {content: '\2022';}
+h1 .mw-headline:before   {content: '';}
 h2 .mw-headline:before   {content: '\2022';}
-h3 .mw-headline:before   {content: '\2022';}
-h4 .mw-headline:before   {content: '\2022';}
+h3 .mw-headline:before   {content: '\2022\2022';}
+h4 .mw-headline:before   {content: '\2022\2022\2022';}
 .mw-headline:before      {margin-right: 5px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {text-shadow: #111 2px 2px 2px;} 
 
