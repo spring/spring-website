@@ -25,6 +25,7 @@ html {
   #toc tr td > ul         {margin: 0; padding: 5px;
                            border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
 }
+#toc tr td ul ul         {margin-right: 2.5ex;}
 #toc                     {background-color: #38474E; border-color: #20292E;
                           float: right;}
 #toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
@@ -143,10 +144,10 @@ h4 .mw-headline:before   {content: '\2022\2022\2022';}
 .gallery td              {border: 1px #222 solid;}
 .thumb                   {border: 1px #444 solid;}
 
-#pagehistory li          {background-color: #3A4A50;;}
+#pagehistory li          {background-color: #3A4A50;}
+#pagehistory li.selected {background-color: #233; border: 1px #fff solid;}
 #pagehistory .autocomment,
 #pagehistory .comment    {color: #ccc;}
-li.selected              {background-color: #233; border: 1px #fff solid;}
 
 table.diff               {background-color: #3A4A50; border: 1px #aaa solid;}
 td.diff-otitle,
@@ -160,7 +161,6 @@ td.diff-addedline        {background-color: #4a4;}
 ins.diffchange           {background-color: #32A032; color: #050;}
 del.diffchange           {color: #f33;}
 small                    {font-size: 75%;}
-.editsection             {display: inherit;} 
 
 
 /* CUSTOM LEGEND CLASS */
@@ -171,7 +171,6 @@ small                    {font-size: 75%;}
                           background: transparent url("/images/news_bar.gif");}
 .legend td               {padding: 2px; margin: 0px;
                           border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
-
 
 .note                    {color: #55ee99;}
 .warning                 {color: red;}
