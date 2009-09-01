@@ -13,7 +13,7 @@ html {
   #toc[summary=Contents]  {position: absolute; right:2px; top:5px; width:240px; overflow: hidden;
                            border: 0px; border-spacing: 0px;
                            background-color: transparent;}
-  #toc tr td > ul         {margin-top: 0.5ex !important;}
+  #toc tr td > ul         {margin-top: 0.5ex;}
 }
 @media (max-width: 1199px) {
   #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
@@ -28,7 +28,7 @@ html {
 #toc                     {background-color: #38474E; border-color: #20292E;
                           float: right;}
 #toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
-#toc h2                  {font-size: 10pt}
+#toctitle h2             {font-size: 10pt}
 .tocnumber               {content: '\2022'; text-shadow: #111 2px 2px 2px;}
 
 
@@ -123,10 +123,10 @@ h1, h2, h3, h4, h5, h6   {color: #eeeeee;
 #article h1, h2, h3, h4  {color: #eeeeee;
                           font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;
                           margin-bottom: 0.5ex; margin-top: 1ex;}
-#article h1              {font-size: 20px;}
-#article h2              {font-size: 19px;}
-#article h3              {font-size: 18px;}
-#article h4              {font-size: 16px;}
+h1 .mw-headline          {font-size: 20px;}
+h2 .mw-headline          {font-size: 19px;}
+h3 .mw-headline          {font-size: 18px;}
+h4 .mw-headline          {font-size: 16px;}
 h1 .mw-headline:before   {content: '';}
 h2 .mw-headline:before   {content: '\2022';}
 h3 .mw-headline:before   {content: '\2022\2022';}
