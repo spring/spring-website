@@ -10,9 +10,10 @@ html {
 
 /* TABLE OF CONTENT */
 @media (min-width: 1200px) {
-  #toc[summary=Contents]  {position: absolute; right:2px; top:2px; width:240px; overflow: hidden;
+  #toc[summary=Contents]  {position: absolute; right:2px; top:5px; width:240px; overflow: hidden;
                            border: 0px; border-spacing: 0px;
                            background-color: transparent;}
+  #toc tr td > ul         {margin-top: 0.5ex !important;}
 }
 @media (max-width: 1199px) {
   #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
@@ -27,6 +28,7 @@ html {
 #toc                     {background-color: #38474E; border-color: #20292E;
                           float: right;}
 #toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
+#toc h2                  {font-size: 10pt}
 .tocnumber               {content: '\2022'; text-shadow: #111 2px 2px 2px;}
 
 
@@ -116,6 +118,9 @@ a.new, #quickbar a.new   {color: #CC2200;}
 
 /* HEADERS */
 h1, h2, h3, h4, h5, h6   {color: #eeeeee;
+                          font-family: Verdana,Arial,sans-serif;
+                          margin-bottom: 0.1ex; margin-top: 0.1ex;}
+#article h1, h2, h3, h4  {color: #eeeeee;
                           font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;
                           margin-bottom: 0.5ex; margin-top: 1ex;}
 #article h1              {font-size: 20px;}
