@@ -13,7 +13,7 @@ html {
   #toc[summary=Contents]  {position: absolute; right:2px; top:5px; width:240px; overflow: hidden;
                            border: 0px; border-spacing: 0px;
                            background-color: transparent;}
-  #toc tr td > ul         {margin-top: 0.5ex;}
+  #toc tr td > ul         {margin-top: 0.5ex; margin-right: 0.5ex;}
 }
 @media (max-width: 1199px) {
   #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
@@ -25,7 +25,7 @@ html {
   #toc tr td > ul         {margin: 0; padding: 5px;
                            border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
 }
-#toc tr td ul ul         {margin-right: 2.5ex;}
+#toc tr td ul ul         {margin-left: 2.5ex;}
 #toc                     {background-color: #38474E; border-color: #20292E;
                           float: right;}
 #toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
