@@ -103,6 +103,10 @@ th, li, dd, dt           {line-height: 12pt;}
 textarea                 {overflow: auto;}
 hr                       {border-bottom: 1px #eee solid;}
 
+/* if first element is H1 undo the padding-top:10px from #article */
+#article > table:first-child + script + a + h1 {margin-top: -5px}
+
+
 /* LINKS */
 a:link,a:visited         {color: #D8EFFF; text-decoration: none;}
 a:hover                  {text-decoration: underline;}
@@ -136,7 +140,7 @@ h3 .mw-headline:before   {content: '\25b8\25b8'; }
 h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;} 
-#article > h1:first-child {margin-top: -15px}
+
 
 /* LEFT SHIFT AFTER H1 HEADERS */
 #article > * + p         {margin-left: 15px;}
