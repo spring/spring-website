@@ -35,7 +35,7 @@ html {
 
 /* MEDIAWIKI */
 #article                 {width: auto; overflow: hidden;
-                          margin-left: 10px; margin-right: 0;
+                          margin-left: 10px; margin-right: 0; paading-top: 10px;
                           font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
 #article > *             {margin-right: 10px;}
@@ -136,7 +136,7 @@ h3 .mw-headline:before   {content: '\25b8\25b8'; }
 h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;} 
-
+#article > h1:first-child {margin-top -15px}
 
 /* LEFT SHIFT AFTER H1 HEADERS */
 #article > * + p         {margin-left: 15px;}
