@@ -150,6 +150,7 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 
 #article hr              {margin-left: 0px;}
 #article ul              {margin-left: 0px;}
+#article table           {margin-left: 0px;}
 
 
 /* MEDIAWIKI SPECIALS */
