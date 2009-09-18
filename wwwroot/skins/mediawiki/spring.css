@@ -153,8 +153,9 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 #article > p:first-child + p + p + p,
 #article > p:first-child + p + p + p + p {margin-left: 0px;}
 
+#article ul,
+#article ol              {margin-left: 5px;}
 #article hr              {margin-left: 0px;}
-#article ul              {margin-left: 0px;}
 #article table           {margin-left: 0px;}
 
 
