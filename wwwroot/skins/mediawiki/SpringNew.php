@@ -47,7 +47,7 @@ class SkinSpringNew extends Skin {
         //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
         //$s .= '<td width="738">';
                 
-        $s .= "<div id='article'><br />";
+        $s .= "<div id='article'>";
 
 		$notice = wfGetSiteNotice();
 		if( $notice ) {
@@ -62,7 +62,7 @@ class SkinSpringNew extends Skin {
 	{
 		global $wgUser, $wgOut;
         
-		$s = "\n</div><br clear='all' />\n";        
+		$s = "\n</div><br clear='all' />\n";
         
         //$s .= '</td>';
         //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';        
@@ -157,7 +157,7 @@ class SkinSpringNew extends Skin {
         $s = "";
 		//$s = "\n<div id='quickbar'>";
 
-        $s .= '<br /><table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
+        $s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
         $s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
         $s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
         $s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>'; 

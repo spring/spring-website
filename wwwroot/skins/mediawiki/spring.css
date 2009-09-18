@@ -101,8 +101,7 @@ html {
 p, pre, td, 
 th, li, dd, dt           {line-height: 12pt;}
 textarea                 {overflow: auto;}
-hr                       {border: 0px; border-top: 1px solid; height: 4px; background: url("/images/hr_shad.png")}
-
+hr                       {border-bottom: 1px #eee solid;}
 
 /* LINKS */
 a:link,a:visited         {color: #D8EFFF; text-decoration: none;}
@@ -121,19 +120,36 @@ a.new, #quickbar a.new   {color: #CC2200;}
 h1, h2, h3, h4, h5, h6   {color: #eeeeee;
                           font-family: Verdana,Arial,sans-serif;
                           margin-bottom: 0.1ex; margin-top: 0.1ex;}
-#article h1, h2, h3, h4  {color: #eeeeee;
-                          font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;
-                          margin-bottom: 0.5ex; margin-top: 1ex;}
+#article h1,
+#article h2, 
+#article h3,
+#article h4              {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;
+                          font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;}
+#article h1              {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
-h2 .mw-headline          {font-size: 19px;}
-h3 .mw-headline          {font-size: 18px;}
-h4 .mw-headline          {font-size: 16px;}
+h2 .mw-headline          {font-size: 16px;}
+h3 .mw-headline          {font-size: 14.5px;}
+h4 .mw-headline          {font-size: 14.5px;}
 h1 .mw-headline:before   {content: '';}
-h2 .mw-headline:before   {content: '\2022';}
-h3 .mw-headline:before   {content: '\2022\2022';}
-h4 .mw-headline:before   {content: '\2022\2022\2022';}
-.mw-headline:before      {margin-right: 5px; text-shadow: #111 2px 2px 2px;} 
-.mw-headline             {text-shadow: #111 2px 2px 2px;} 
+h2 .mw-headline:before   {content: '\25b8';}
+h3 .mw-headline:before   {content: '\25b8\25b8'; }
+h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
+.mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
+.mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;} 
+
+
+/* LEFT SHIFT AFTER H1 HEADERS */
+#article > p,
+#article > p + p,
+#article > p + p + p,
+#article > p + p + p + p,
+#article > p + p + p + p + p {margin-left: 0px;}
+
+#article > * + p {margin-left: 15px;}
+#article > * {margin-left: 15px;}
+
+#article hr {margin-left: 0px;}
+#article ul {margin-left: 0px;}
 
 
 /* MEDIAWIKI SPECIALS */
@@ -176,3 +192,4 @@ small                    {font-size: 75%;}
 .warning                 {color: red;}
 code                     {font-size: 90%; color: #9f9;}
 code *                   {margin: 2px 0px 2px 10px;}
+code pre                 {padding-left: 5px; border-left: #333 1px solid; background: url("/images/codebg.png") repeat-y}
