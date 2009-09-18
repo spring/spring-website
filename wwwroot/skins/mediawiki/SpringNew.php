@@ -71,7 +71,7 @@ class SkinSpringNew extends Skin {
         // category fix
         $catstr = $this->getCategories();
         if (strlen($catstr) > 2) {
-            $s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>';
+            $s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories"><tr>';
             $s .= '<td width="10">&nbsp;</td><td>';
 
             $s .= '<table border="0" cellpadding="0" width="100%" id="toc"><tr><td>';

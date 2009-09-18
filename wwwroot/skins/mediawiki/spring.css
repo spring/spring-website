@@ -127,9 +127,9 @@ h1, h2, h3, h4, h5, h6   {color: #eeeeee;
                           font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;}
 #article h1              {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
-h2 .mw-headline          {font-size: 16px;}
-h3 .mw-headline          {font-size: 14.5px;}
-h4 .mw-headline          {font-size: 14.5px;}
+h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
+h3 .mw-headline          {font-size: 14.5px; margin-left: 5px}
+h4 .mw-headline          {font-size: 14.5px; margin-left: 5px}
 h1 .mw-headline:before   {content: '';}
 h2 .mw-headline:before   {content: '\25b8';}
 h3 .mw-headline:before   {content: '\25b8\25b8'; }
@@ -139,17 +139,17 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 
 
 /* LEFT SHIFT AFTER H1 HEADERS */
-#article > p,
-#article > p + p,
-#article > p + p + p,
-#article > p + p + p + p,
-#article > p + p + p + p + p {margin-left: 0px;}
+#article > * + p         {margin-left: 15px;}
+#article > *             {margin-left: 15px;}
 
-#article > * + p {margin-left: 15px;}
-#article > * {margin-left: 15px;}
+#article > p:first-child,
+#article > p:first-child + p,
+#article > p:first-child + p + p,
+#article > p:first-child + p + p + p,
+#article > p:first-child + p + p + p + p {margin-left: 0px;}
 
-#article hr {margin-left: 0px;}
-#article ul {margin-left: 0px;}
+#article hr              {margin-left: 0px;}
+#article ul              {margin-left: 0px;}
 
 
 /* MEDIAWIKI SPECIALS */
@@ -177,6 +177,7 @@ td.diff-addedline        {background-color: #4a4;}
 ins.diffchange           {background-color: #32A032; color: #050;}
 del.diffchange           {color: #f33;}
 small                    {font-size: 75%;}
+#categories              {margin-bottom: 10px}
 
 
 /* CUSTOM LEGEND CLASS */
