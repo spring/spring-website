@@ -104,6 +104,7 @@ textarea                 {overflow: auto;}
 hr                       {border-bottom: 1px #eee solid;}
 
 /* if first element is H1 undo the padding-top:10px from #article */
+#article > a:first-child + h1,
 #article > table:first-child + script + a + h1 {margin-top: -5px}
 
 
