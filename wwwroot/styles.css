@@ -2,7 +2,7 @@
 body {
 	margin: 0px;
 	background-color: #38464F;
-	background-image: url(/images/background.jpg);
+	background-image: url(/images/background.png);
 	background-repeat:repeat-x;
 }
 p {
@@ -39,10 +39,10 @@ table.menubar td a {
     padding: 0px;
 }
 .headermenuleft {
-    background-image: url(/images/notselected_button_left.gif);
+    background-image: url(/images/notselected_button_left.png);
 }
 .headermenuleftlink {
-    background-image: url(/images/selected_button_left.gif);
+    background-image: url(/images/selected_button_left.png);
     background-position: -100px -100px;
     background-repeat: no-repeat;
 }
@@ -50,10 +50,10 @@ table.menubar td a {
     background-position: 0px 0px;
 }
 .headermenu {
-    background-image: url(/images/notselected_button_background.gif);
+    background-image: url(/images/notselected_button_background.png);
 }
 .headermenulink {
-    background-image: url(/images/selected_button_background.gif);
+    background-image: url(/images/selected_button_background.png);
     background-position: -100px -100px;
     background-repeat: repeat-x;
 }
@@ -61,13 +61,13 @@ table.menubar td a {
     background-position: 0px 0px;
 }
 .headermenuright {
-    background-image: url(/images/notselected_button_right.gif);
+    background-image: url(/images/notselected_button_right.png);
     background-position: right;
     margin: 0px;
     padding: 0px;
 }
 .headermenurightlink {
-    background-image: url(/images/selected_button_right.gif);
+    background-image: url(/images/selected_button_right.png);
     background-position: -100px -100px;
     background-repeat: no-repeat;
 }
@@ -90,9 +90,9 @@ a.menubar:hover {
 }
 
 .locationbar {
-	background-image: url(/images/location_bar.gif);
+	background-image: url(/images/location_bar.png);
 	background-repeat:no-repeat;
-    padding: 0px;
+	padding: 0px;
 	padding-left: 12px;	
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 12px;
@@ -100,7 +100,7 @@ a.menubar:hover {
 	color: #EEEEEE;	
 }
 .bottombar {
-    background-image: url(/images/bottom.gif);
+    background-image: url(/images/bottom.png);
     background-repeat:no-repeat;
     padding-left: 12px;    
     font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;

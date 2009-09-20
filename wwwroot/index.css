@@ -31,7 +31,7 @@ a:hover {
 }
 
 .newsbar {
-	background-image: url(/images/news_bar.gif);
+	background-image: url(/images/news_bar.png);
 	background-repeat:no-repeat;
 	padding-left: 12px;	
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
@@ -70,10 +70,10 @@ a.bigbar:hover {
 }
 
 .mmleft {
-    background-image: url(/images/notselected_media_left.gif);
+    background-image: url(/images/notselected_media_left.png);
 }
 .mmleftsel {
-    background-image: url(/images/selected_media_left.gif);
+    background-image: url(/images/selected_media_left.png);
     background-position: -100px -100px;
     background-repeat: no-repeat;   
 }
@@ -81,10 +81,10 @@ a.bigbar:hover {
     background-position: 0px 0px;  
 }
 .mmmid {
-    background-image: url(/images/notselected_button_background.gif);
+    background-image: url(/images/notselected_button_background.png);
 }
 .mmmidsel {
-    background-image: url(/images/selected_button_background.gif);
+    background-image: url(/images/selected_button_background.png);
     background-position: -100px -100px;
     background-repeat: repeat-x;      
 }
@@ -92,11 +92,11 @@ a.bigbar:hover {
     background-position: 0px 0px;  
 }
 .mmright {
-    background-image: url(/images/notselected_media_right.gif);
+    background-image: url(/images/notselected_media_right.png);
     background-position: right;
 }
 .mmrightsel {
-    background-image: url(/images/selected_media_right.gif);
+    background-image: url(/images/selected_media_right.png);
     background-position: -100px -100px;
     background-repeat: repeat-x;      
 }

@@ -39,7 +39,7 @@ html {
                           line-height: 32pt;}
 .bottom                  {font-family: Verdana, Arial, sans-serif; font-size: 10pt;}
 .bottom h6               {font-size: 13px; font-weight: bold;}
-.toolbar                 {background: url("/images/news_bar.gif") no-repeat;
+.toolbar                 {background: url("/images/news_bar.png") no-repeat;
                           padding-left: 12px;    
                           font-family: Verdana, Arial, sans-serif;
                           font-size: 12px; font-weight:bold;
@@ -76,7 +76,7 @@ html {
   #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
   #toc div                {line-height: 20px; padding-left: 5px; padding-right: 5px;
                            border-bottom: 1px solid #20292E;
-                           background: transparent url("/images/news_bar.gif");}
+                           background: transparent url("/images/news_bar.png");}
   #toc                    {margin-left: 5px; margin-right: 0; padding: 0;} 
   #toc td                 {margin: 0; padding: 0;} 
   #toc tr td > ul         {margin: 0; padding: 5px;
@@ -141,7 +141,7 @@ h3 .mw-headline:before   {content: '\25b8\25b8'; }
 h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;} 
-.editsection             {margin-right: 10px;}
+.editsection             {margin-right: 5px;}
 
 /* LEFT SHIFT AFTER H1 HEADERS */
 #article > * + p         {margin-left: 15px;}
@@ -192,7 +192,7 @@ small                    {font-size: 75%;}
                           border: 0px; background: transparent;}
 .legend tr               {padding: 0px; margin: 0px;}
 .legend th               {line-height: 20px; 
-                          background: transparent url("/images/news_bar.gif");}
+                          background: transparent url("/images/news_bar.png");}
 .legend td               {padding: 2px; margin: 0px;
                           border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
 
