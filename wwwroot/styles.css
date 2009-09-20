@@ -50,10 +50,10 @@ table.menubar td a {
     background-position: 0px 0px;
 }
 .headermenu {
-    background-image: url(/images/notselected_button_background.png);
+    background-image: url(/images/notselected_button_background.gif);
 }
 .headermenulink {
-    background-image: url(/images/selected_button_background.png);
+    background-image: url(/images/selected_button_background.gif);
     background-position: -100px -100px;
     background-repeat: repeat-x;
 }
