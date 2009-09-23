@@ -3,3 +3,4 @@ Disallow: /dl/
 Disallow: /images/
 Disallow: /thumbs/
 Disallow: /mediawiki/
+Disallow: /websvn/
