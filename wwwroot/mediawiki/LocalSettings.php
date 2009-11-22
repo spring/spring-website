@@ -62,9 +62,11 @@ $wgEmailAuthentication = true;
 
 $wgDBtype           = "mysql";
 $wgDBserver         = "localhost";
-#$wgDBname           = "spring2";
-#$wgDBuser           = "nyspring";
-#$wgDBpassword       = "nyspring21";
+
+include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php');
+$wgDBuser           = $spring_dbuser;
+$wgDBpassword       = $spring_dbpass;
+$wgDBname           = $spring_dbname;
 
 # MySQL specific settings
 $wgDBprefix         = "wiki_";
@@ -90,7 +92,7 @@ $wgEnableUploads       = true;
 # $wgUseImageMagick = true;
 # $wgImageMagickConvertCommand = "/usr/bin/convert";
 $wgUploadDirectory = "$IP/images";
-$wgUploadPath = "images";
+$wgUploadPath = $wgScriptPath . "/images";
 
 ## If you want to use image uploads under safe mode,
 ## create the directories images/archive, images/thumb and
@@ -136,11 +138,6 @@ $wgAllowExternalImages = true;
 $wgScriptPath = '/mediawiki';         # Path to the actual files. This should already be there
 $wgArticlePath = '/wiki/$1';  # Virtual path. This directory MUST be different from the one used in $wgScriptPath
 $wgUsePathInfo = true;
-
-include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php'); 
-$wgDBuser           = $spring_dbuser;
-$wgDBpassword       = $spring_dbpass;
-$wgDBname           = $spring_dbname;
 
 // PHPBB User Database Plugin. (Requires MySQL Database)
 require_once './extensions/Auth_phpBB.php';
