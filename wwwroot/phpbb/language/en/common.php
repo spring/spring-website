@@ -513,6 +513,11 @@ $lang = array_merge($lang, array(
 	'SEARCH_NEW'				=> 'View new posts',
 	'SEARCH_POSTS_BY'			=> 'Search posts by',
 	'SEARCH_SELF'				=> 'View your posts',
+// MOD : MSSTI RSS Feeds (V1.0.9) - Start
+	'YOUR_POSTS'				=> 'Your posts',
+	'RSS_FEEDS'				=> 'RSS Feeds',
+	'RSS_NEWS'				=> 'News',
+// MOD : MSSTI RSS Feeds (V1.0.9) - End
 	'SEARCH_TOPIC'				=> 'Search this topic…',
 	'SEARCH_UNANSWERED'			=> 'View unanswered posts',
 	'SECONDS'					=> 'Seconds',
