@@ -133,7 +133,7 @@ class ucp_zebra
 
 							if (sizeof($user_id_ary))
 							{
-								// Remove users from foe list if they are admins or moderators
+/*								// Remove users from foe list if they are admins or moderators
 								if ($mode == 'foes')
 								{
 									$perms = array();
@@ -156,7 +156,7 @@ class ucp_zebra
 									$user_id_ary = array_diff($user_id_ary, $perms);
 									unset($perms);
 								}
-
+*/
 								if (sizeof($user_id_ary))
 								{
 									$sql_mode = ($mode == 'friends') ? 'friend' : 'foe';
