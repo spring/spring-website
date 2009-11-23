@@ -193,12 +193,6 @@ $lang = array_merge($lang, array(
 
 	'ACP_WORDS'					=> 'Word censoring',
 
-// MOD : MSSTI RSS Feeds (V1.0.9) - Start
-	'ACP_RSS'					=> 'RSS management',
-	'ACP_RSS_FEEDS'				=> 'RSS',
-	'LOG_CONFIG_RSS_FEEDS'		=> '<strong>Altered RSS feeds settings</strong>',
-// MOD : MSSTI RSS Feeds (V1.0.9) - End
-
 	'ACTION'				=> 'Action',
 	'ACTIONS'				=> 'Actions',
 	'ACTIVATE'				=> 'Activate',

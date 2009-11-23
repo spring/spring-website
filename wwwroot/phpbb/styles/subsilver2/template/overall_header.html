@@ -14,19 +14,6 @@
 {META}
 <title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
 
-<!-- // MOD : MSSTI RSS Feeds (V1.0.9) - Start-->
-<!-- IF S_ENABLE_FEEDS -->
-<link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {SITENAME}" href="{U_RSS}" />
-<!-- IF S_ENABLE_FEEDS_NEWS --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_RSS_NEWS}" href="{U_RSS}?mode=news" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_FORUMS --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_ALL_FORUMS}" href="{U_RSS}?mode=forums" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_THREADS --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_ALL_TOPICS}" href="{U_RSS}?mode=topics" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_POSTS --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_ALL_POSTS}" href="{U_RSS}?mode=posts" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_EGOSEARCH && S_USER_LOGGED_IN --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_YOUR_POSTS}" href="{U_RSS}?mode=egosearch" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_FORUM && S_FORUM_ID --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_FORUM} {FORUM_NAME}" href="{U_RSS}?f={S_FORUM_ID}" /><!-- ENDIF -->
-<!-- IF S_ENABLE_FEEDS_THREAD && S_TOPIC_ID --><link rel="alternate" type="application/rss+xml" title="{L_RSS_FEEDS} - {L_TOPIC} {TOPIC_TITLE}" href="{U_RSS}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
-<!-- ENDIF -->
-<!-- // MOD : MSSTI RSS Feeds (V1.0.9) - End -->
-
 <link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" />
 
 <script type="text/javascript">
