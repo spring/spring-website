@@ -21,8 +21,8 @@ chgrp www-data $files
 chmod g+rwx $files
 
 for f in $files; do
-	find $f -type f -exec chmod 660 '{}' \;
-	find $f -type f -exec chgrp www-data '{}' \;
-	find $f -type d -exec chmod 775 '{}' \;
-	find $f -type d -exec chgrp www-data '{}' \;
+	find $f -type f ! \( -name .htaccess -o -name index.\* -o -name \*.php \) -exec chmod 660 '{}' \;
+	find $f -type f ! \( -name .htaccess -o -name index.\* -o -name \*.php \) -exec chgrp www-data '{}' \;
+	find $f -type d ! \( -name .htaccess -o -name index.\* -o -name \*.php \) -exec chmod 775 '{}' \;
+	find $f -type d ! \( -name .htaccess -o -name index.\* -o -name \*.php \) -exec chgrp www-data '{}' \;
 done
