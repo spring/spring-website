@@ -1,0 +1,22 @@
+# database connection details
+springpw.php
+
+# includes/thumbs.php
+/wwwroot/thumbs
+
+# phpBB
+/wwwroot/phpbb/cache
+/wwwroot/phpbb/files
+/wwwroot/phpbb/store
+/wwwroot/phpbb/images/avatars/upload
+
+# mediawiki
+/wwwroot/mediawiki/images
+
+# downloads
+/wwwroot/dl
+
+# Misc file endings
+*~
+*.rej
+*.orig
