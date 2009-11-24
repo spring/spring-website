@@ -40,9 +40,11 @@
 
     // Fetch 4 random screenshots
     $sql = '';
-    $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id ';
+    $sql .= 'select a.attach_id, physical_filename, topic_title ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
-    $sql .= "where t.forum_id = 35 and a.topic_id = t.topic_id";
+    $sql .= "where t.forum_id = 35 and a.topic_id = t.topic_id ";
+    $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
+    $sql .= 'order by rand() limit 4';
 
     $res = mysql_query($sql);
     $rowcount = mysql_num_rows($res);
@@ -64,14 +66,14 @@
             }
         }
 
-        foreach ($screens as $screen) {            
+        foreach ($screens as $screen) {
             $thumb = get_thumbnail($screen['physical_filename'], 142, 80);
             $title = $screen['topic_title'];
             //$title .= ' - &lt;a href=&quot;screenshot.php?topic=' . $screen['topic_id'] . '&quot;&gt;Click here to see the original image&lt;/a&gt;';
-            $imgline = '<a href="screenshot.php?topic=' . $screen['topic_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
+            $imgline = '<a href="screenshot.php?id=' . $screen['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
             $imgline .= '<img src="' . $thumb . '" width="142" height="80" border="0"><br /></a>';
             $screenthumbs[] = $imgline;
-        }        
+        }
     }
     else {
         // Not enough.. Should not usually happen.
@@ -83,11 +85,11 @@
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where t.forum_id = 34 and a.topic_id = t.topic_id and extension = 'flv' ";
     $sql .= 'order by rand() limit 1';
-    
+
     $res = mysql_query($sql);
     if (mysql_num_rows($res) == 1)
     {
-        $row = mysql_fetch_array($res);        
+        $row = mysql_fetch_array($res);
         $videofile = '/jwvideo' . $row['topic_id'] . '.flv';
         $videoimage = '/jwimage' . $row['topic_id'] . '.jpg';
     }
@@ -107,8 +109,8 @@
     $html = $starttemplate;
     $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0"/>&nbsp;Home', $headertemplate);
     $html .= $fp;
-    $html .= file_get_contents('templates/footer.html');    
-    $html .= file_get_contents('templates/pageend.html');    
+    $html .= file_get_contents('templates/footer.html');
+    $html .= file_get_contents('templates/pageend.html');
 
     print($html);
 ?>
