@@ -19,8 +19,8 @@
 
     while ($row = mysql_fetch_array($res))
     {
-        $newstext = parse_bbcode($row['post_text']);        
-        $poster = '<a href="http://spring.clan-sy.com/">' . $row['username'] . '</a>';
+        $newstext = parse_bbcode($row['post_text']);
+        $poster = '<a href="/phpbb/memberlist.php?mode=viewprofile&u=' . $row['topic_poster'] . '">' . $row['username'] . '</a>';
         $postdate = date("Y-m-d H:i", $row['topic_time']);
         $comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . $row['topic_replies'] . ' comments</a>.';
         $newsdata = array($row['topic_title'], $newstext, $poster, $postdate, $comments);
