@@ -10,7 +10,7 @@ function cached_file_get_contents($url, $maxage = 300)
 		// Touch the cache to stop other scripts from refreshing the cache too.
 		touch($file);
 
-		$data = file_get_contents($url) or '';
+		$data = @file_get_contents($url) or '';
 
 		// Use temporary file and rename to make the cache refresh atomic.
 		file_put_contents($file . '.tmp', $data);

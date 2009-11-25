@@ -29,15 +29,29 @@
     }
 
     // Prepare community headlines
-    $xml = new SimpleXMLElement(cached_file_get_contents("http://springinfo.info/?feed=rss"));
+    $xml = cached_file_get_contents("http://springinfo.info/?feed=rss");
+    try {
+        $xml = new SimpleXMLElement($xml);
+    }
+    catch (Exception $ex) {
+        $xml = false;
+    }
     $cnewstemplate = file_get_contents('templates/cnewsitem.html');
     $cnews = "";
     $cnewskeys = array('#HEADLINE#', '#LINK#');
 
-    foreach ($xml->xpath('/rss/channel/item') as $item)
+    if ($xml)
     {
-        $newsdata = array((string) $item->title, (string) $item->link);
-        $cnews .= str_replace($cnewskeys, $newsdata, $cnewstemplate);
+        foreach ($xml->xpath('/rss/channel/item') as $item)
+        {
+            $newsdata = array((string) $item->title, (string) $item->link);
+            $cnews .= str_replace($cnewskeys, $newsdata, $cnewstemplate);
+        }
+    }
+    if ($cnews == '')
+    {
+        // hack to hide community news altogether if an error occurs
+        $cnews = "<style>.cnews{display:none}</style>";
     }
 
     // Get a random welcome image
