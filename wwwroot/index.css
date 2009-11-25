@@ -149,7 +149,8 @@ a.bigbar:hover {
 .newsbar {
 	background-image: url(/images/news_bar.png);
 	background-repeat:no-repeat;
-	padding: 5px 5px 5px 12px;
+	padding: 5px 0px 0px 12px;
+	height: 20px;
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
@@ -183,7 +184,7 @@ a.bigbar:hover {
 .cnews {
 	float: right;
 	border-bottom: 1px solid #20292E;
-	margin: 24px 0px 24px 24px;
+	margin: 0px 0px 24px 24px;
 	width: 40%;
 }
 .cnews .newsitem {
