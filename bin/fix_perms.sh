@@ -1,6 +1,7 @@
 #!/bin/sh
 
 files="
+ cache/
  wwwroot/thumbs/
  wwwroot/phpbb/cache/
  wwwroot/phpbb/files/

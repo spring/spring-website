@@ -2,6 +2,7 @@
 
     include_once('includes/db.php');
     include_once('includes/bbcode.php');
+    include_once('includes/cache.php');
     include_once('includes/thumbs.php');
 
     // Prepare newsitems
@@ -25,6 +26,18 @@
         $comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . $row['topic_replies'] . ' comments</a>.';
         $newsdata = array($row['topic_title'], $newstext, $poster, $postdate, $comments);
         $news .= str_replace($newskeys, $newsdata, $newstemplate);
+    }
+
+    // Prepare community headlines
+    $xml = new SimpleXMLElement(cached_file_get_contents("http://springinfo.info/?feed=rss"));
+    $cnewstemplate = file_get_contents('templates/cnewsitem.html');
+    $cnews = "";
+    $cnewskeys = array('#HEADLINE#', '#LINK#');
+
+    foreach ($xml->xpath('/rss/channel/item') as $item)
+    {
+        $newsdata = array((string) $item->title, (string) $item->link);
+        $cnews .= str_replace($cnewskeys, $newsdata, $cnewstemplate);
     }
 
     // Get a random welcome image
@@ -98,8 +111,8 @@
 
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
-    $fpkeys = array('#NEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
-    $fpitems = array($news, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
+    $fpkeys = array('#NEWSITEMS#', '#CNEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
+    $fpitems = array($news, $cnews, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
 
     // Compose the final page

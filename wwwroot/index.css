@@ -15,158 +15,184 @@ a:hover {
 	background-repeat:no-repeat;
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 24px;
-    line-height: 18px;    
-	color: #EEEEEE;	
+	line-height: 18px;
+	color: #EEEEEE;
 }
 .welcomesmall {
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 14px;
-    font-weight:bold;
-    color: #EEEEEE;    
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 14px;
+	font-weight:bold;
+	color: #EEEEEE;
 }
 .byline {
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 14px;
-    color: #EEEEEE;    
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 14px;
+	color: #EEEEEE;
 }
 
-.newsbar {
-	background-image: url(/images/news_bar.png);
-	background-repeat:no-repeat;
-	padding-left: 12px;	
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-	color: #EEEEEE;	
-}
 .bigbar {
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 24px;
-    /* padding-right: 8px; */
-    font-weight:bold;
-    color: #EEEEEE;    
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 24px;
+	/* padding-right: 8px; */
+	font-weight:bold;
+	color: #EEEEEE;
 }
 table.bigbar td {
-    padding: 0px;
+	padding: 0px;
 }
 table.bigbar td a {
-    padding-top: 13px; 
-    padding-bottom: 16px;     
-    padding-left: 8px;
-    padding-right: 8px;
-    display: block;
+	padding-top: 13px;
+	padding-bottom: 16px;
+	padding-left: 8px;
+	padding-right: 8px;
+	display: block;
 }
 a.bigbar:link {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 a.bigbar:visited {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 a.bigbar:hover {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 
 .mmleft {
-    background-image: url(/images/notselected_media_left.png);
+	background-image: url(/images/notselected_media_left.png);
 }
 .mmleftsel {
-    background-image: url(/images/selected_media_left.png);
-    background-position: -100px -100px;
-    background-repeat: no-repeat;   
+	background-image: url(/images/selected_media_left.png);
+	background-position: -100px -100px;
+	background-repeat: no-repeat;
 }
 .mmleftsel:hover {
-    background-position: 0px 0px;  
+	background-position: 0px 0px;
 }
 .mmmid {
-    background-image: url(/images/notselected_button_background.gif);
+	background-image: url(/images/notselected_button_background.gif);
 }
 .mmmidsel {
-    background-image: url(/images/selected_button_background.gif);
-    background-position: -100px -100px;
-    background-repeat: repeat-x;      
+	background-image: url(/images/selected_button_background.gif);
+	background-position: -100px -100px;
+	background-repeat: repeat-x;
 }
 .mmmidsel:hover {
-    background-position: 0px 0px;  
+	background-position: 0px 0px;
 }
 .mmright {
-    background-image: url(/images/notselected_media_right.png);
-    background-position: right;
+	background-image: url(/images/notselected_media_right.png);
+	background-position: right;
 }
 .mmrightsel {
-    background-image: url(/images/selected_media_right.png);
-    background-position: -100px -100px;
-    background-repeat: repeat-x;      
+	background-image: url(/images/selected_media_right.png);
+	background-position: -100px -100px;
+	background-repeat: repeat-x;
 }
 .mmrightsel:hover {
-    background-position: 0px 0px;  
-    background-position: right;
+	background-position: 0px 0px;
+	background-position: right;
 }
 .mmhide {
-    display: none;
+	display: none;
 }
 .mmshow {
-    display: block;
+	display: block;
 }
 .screendesc {
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 12px;
-    font-weight:bold;
-    color: #eeeeee;
-    background-color: #29353D;
-    padding-left: 4px;
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #eeeeee;
+	background-color: #29353D;
+	padding-left: 4px;
 }
 
 .learnmorebar {
-    background-image: url(/images/notselected_learn.jpg);
+	background-image: url(/images/notselected_learn.jpg);
 }
 .learnmorebar_selected {
-    background-image: url(/images/selected_learn.jpg);
-    background-position: -100px -100px;
-    background-repeat: no-repeat;    
+	background-image: url(/images/selected_learn.jpg);
+	background-position: -100px -100px;
+	background-repeat: no-repeat;
 }
 .learnmorebar_selected:hover {
-    background-position: 0px 0px;  
+	background-position: 0px 0px;
 }
 .downloadbar {
-    background-image: url(/images/notselected_download.jpg);
+	background-image: url(/images/notselected_download.jpg);
 }
 .downloadbar_selected {
-    background-image: url(/images/selected_download.jpg);    
-    background-position: -100px -100px;
-    background-repeat: no-repeat;    
+	background-image: url(/images/selected_download.jpg);
+	background-position: -100px -100px;
+	background-repeat: no-repeat;
 }
 .downloadbar_selected:hover {
-    background-position: 0px 0px;  
+	background-position: 0px 0px;
 }
 .gamesbar {
-    background-image: url(/images/notselected_games.jpg);
+	background-image: url(/images/notselected_games.jpg);
 }
 .gamesbar_selected {
-    background-image: url(/images/selected_games.jpg);
-    background-position: -100px -100px;
-    background-repeat: no-repeat;        
+	background-image: url(/images/selected_games.jpg);
+	background-position: -100px -100px;
+	background-repeat: no-repeat;
 }
 .gamesbar_selected:hover {
-    background-position: 0px 0px;  
+	background-position: 0px 0px;
 }
 
+.news {
+}
+.newsbar {
+	background-image: url(/images/news_bar.png);
+	background-repeat:no-repeat;
+	padding: 5px 5px 5px 12px;
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEEEEE;
+}
 .newsitem {
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 13px;
-	color: #EEEEEE;	
-    line-height: 16px;
+	color: #EEEEEE;
+	line-height: 16px;
+	border-left: 1px solid #20292E;
+	border-bottom: 1px solid #20292E;
+	padding: 8px;
+	background-color: #38474E;
 }
 .newsheadline {
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 18px;
-	color: #EEEEEE;	
+	color: #EEEEEE;
+	text-shadow: 2px 2px 2px #111;
 }
 .newsabout {
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 11px;
-    color: #EEEEEE;    
-    line-height: 16px;    
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 11px;
+	color: #EEEEEE;
+	line-height: 18px;
+}
+.newsbody {
+	padding: 8px;
+}
+.cnews {
+	float: right;
+	border-bottom: 1px solid #20292E;
+	margin: 24px 0px 24px 24px;
+	width: 40%;
+}
+.cnews .newsitem {
+	padding: 4px;
+	border-bottom: none;
+}
+.cnews .newsheadline {
+	font-size: 13px;
+}
+.cnews .newsheadline:before {
+	content: '▸ ';
 }
