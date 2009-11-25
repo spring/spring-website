@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: bbcode.php 8953 2008-09-28 17:08:09Z acydburn $
+* @version $Id: bbcode.php 10150 2009-09-16 08:11:52Z nickvergessen $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -128,16 +128,16 @@ class bbcode
 	*/
 	function bbcode_cache_init()
 	{
-		global $user, $phpbb_root_path;
+		global $phpbb_root_path, $template, $user;
 
 		if (empty($this->template_filename))
 		{
 			$this->template_bitfield = new bitfield($user->theme['bbcode_bitfield']);
 			$this->template_filename = $phpbb_root_path . 'styles/' . $user->theme['template_path'] . '/template/bbcode.html';
-			
+
 			if (!@file_exists($this->template_filename))
 			{
-				if (isset($user->theme['template_inherits_id']) && $user->theme['template_inherits_id'])
+				if (isset($template->orig_tpl_inherits_id) && $template->orig_tpl_inherits_id)
 				{
 					$this->template_filename = $phpbb_root_path . 'styles/' . $user->theme['template_inherit_path'] . '/template/bbcode.html';
 					if (!@file_exists($this->template_filename))
@@ -265,7 +265,7 @@ class bbcode
 				case 6:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
-							'!\[color=(#[0-9a-f]{6}|[a-z\-]+):$uid\](.*?)\[/color:$uid\]!is'	=> $this->bbcode_tpl('color', $bbcode_id),
+							'!\[color=(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z\-]+):$uid\](.*?)\[/color:$uid\]!is'	=> $this->bbcode_tpl('color', $bbcode_id),
 						)
 					);
 				break;
@@ -410,7 +410,7 @@ class bbcode
 		if (empty($bbcode_hardtpl))
 		{
 			global $user;
-			
+
 			$bbcode_hardtpl = array(
 				'b_open'	=> '<span style="font-weight: bold">',
 				'b_close'	=> '</span>',
@@ -528,12 +528,12 @@ class bbcode
 		else if (is_numeric($type))
 		{
 			$tpl = 'olist_open';
-			$type = 'arabic-numbers';
+			$type = 'decimal';
 		}
 		else
 		{
 			$tpl = 'olist_open';
-			$type = 'arabic-numbers';
+			$type = 'decimal';
 		}
 
 		return str_replace('{LIST_TYPE}', $type, $this->bbcode_tpl($tpl));

@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id: fulltext_native.php 9173 2008-12-04 17:01:39Z naderman $
+* @version $Id: fulltext_native.php 9931 2009-08-05 15:28:46Z nickvergessen $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -81,7 +81,7 @@ class fulltext_native extends search_backend
 	*/
 	function split_keywords($keywords, $terms)
 	{
-		global $db, $user;
+		global $db, $user, $config;
 
 		$keywords = trim($this->cleanup($keywords, '+-|()*'));
 
@@ -167,6 +167,13 @@ class fulltext_native extends search_backend
 		);
 
 		$keywords = preg_replace($match, $replace, $keywords);
+		$num_keywords = sizeof(explode(' ', $keywords));
+
+		// We limit the number of allowed keywords to minimize load on the database
+		if ($config['max_num_search_keywords'] && $num_keywords > $config['max_num_search_keywords'])
+		{
+			trigger_error($user->lang('MAX_NUM_SEARCH_KEYWORDS_REFINE', $config['max_num_search_keywords'], $num_keywords));
+		}
 
 		// $keywords input format: each word separated by a space, words in a bracket are not separated
 
@@ -385,16 +392,17 @@ class fulltext_native extends search_backend
 	* Performs a search on keywords depending on display specific params. You have to run split_keywords() first.
 	*
 	* @param	string		$type				contains either posts or topics depending on what should be searched for
-	* @param	string		&$fields			contains either titleonly (topic titles should be searched), msgonly (only message bodies should be searched), firstpost (only subject and body of the first post should be searched) or all (all post bodies and subjects should be searched)
-	* @param	string		&$terms				is either 'all' (use query as entered, words without prefix should default to "have to be in field") or 'any' (ignore search query parts and just return all posts that contain any of the specified words)
-	* @param	array		&$sort_by_sql		contains SQL code for the ORDER BY part of a query
-	* @param	string		&$sort_key			is the key of $sort_by_sql for the selected sorting
-	* @param	string		&$sort_dir			is either a or d representing ASC and DESC
-	* @param	string		&$sort_days			specifies the maximum amount of days a post may be old
-	* @param	array		&$ex_fid_ary		specifies an array of forum ids which should not be searched
-	* @param	array		&$m_approve_fid_ary	specifies an array of forum ids in which the searcher is allowed to view unapproved posts
-	* @param	int			&$topic_id			is set to 0 or a topic id, if it is not 0 then only posts in this topic should be searched
-	* @param	array		&$author_ary		an array of author ids if the author should be ignored during the search the array is empty
+	* @param	string		$fields				contains either titleonly (topic titles should be searched), msgonly (only message bodies should be searched), firstpost (only subject and body of the first post should be searched) or all (all post bodies and subjects should be searched)
+	* @param	string		$terms				is either 'all' (use query as entered, words without prefix should default to "have to be in field") or 'any' (ignore search query parts and just return all posts that contain any of the specified words)
+	* @param	array		$sort_by_sql		contains SQL code for the ORDER BY part of a query
+	* @param	string		$sort_key			is the key of $sort_by_sql for the selected sorting
+	* @param	string		$sort_dir			is either a or d representing ASC and DESC
+	* @param	string		$sort_days			specifies the maximum amount of days a post may be old
+	* @param	array		$ex_fid_ary			specifies an array of forum ids which should not be searched
+	* @param	array		$m_approve_fid_ary	specifies an array of forum ids in which the searcher is allowed to view unapproved posts
+	* @param	int			$topic_id			is set to 0 or a topic id, if it is not 0 then only posts in this topic should be searched
+	* @param	array		$author_ary			an array of author ids if the author should be ignored during the search the array is empty
+	* @param	string		$author_name		specifies the author match, when ANONYMOUS is also a search-match
 	* @param	array		&$id_ary			passed by reference, to be filled with ids for the page specified by $start and $per_page, should be ordered
 	* @param	int			$start				indicates the first index of the page
 	* @param	int			$per_page			number of ids each page is supposed to contain
@@ -402,7 +410,7 @@ class fulltext_native extends search_backend
 	*
 	* @access	public
 	*/
-	function keyword_search($type, &$fields, &$terms, &$sort_by_sql, &$sort_key, &$sort_dir, &$sort_days, &$ex_fid_ary, &$m_approve_fid_ary, &$topic_id, &$author_ary, &$id_ary, $start, $per_page)
+	function keyword_search($type, $fields, $terms, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_ary, $author_name, &$id_ary, $start, $per_page)
 	{
 		global $config, $db;
 
@@ -425,7 +433,8 @@ class fulltext_native extends search_backend
 			$topic_id,
 			implode(',', $ex_fid_ary),
 			implode(',', $m_approve_fid_ary),
-			implode(',', $author_ary)
+			implode(',', $author_ary),
+			$author_name,
 		)));
 
 		// try reading the results from cache
@@ -616,7 +625,16 @@ class fulltext_native extends search_backend
 
 		if (sizeof($author_ary))
 		{
-			$sql_where[] = $db->sql_in_set('p.poster_id', $author_ary);
+			if ($author_name)
+			{
+				// first one matches post of registered users, second one guests and deleted users
+				$sql_author = '(' . $db->sql_in_set('p.poster_id', array_diff($author_ary, array(ANONYMOUS)), false, true) . ' OR p.post_username ' . $author_name . ')';
+			}
+			else
+			{
+				$sql_author = $db->sql_in_set('p.poster_id', $author_ary);
+			}
+			$sql_where[] = $sql_author;
 		}
 
 		if (sizeof($ex_fid_ary))
@@ -638,13 +656,21 @@ class fulltext_native extends search_backend
 			$sql = '';
 			$sql_array_count = $sql_array;
 
+			if ($left_join_topics)
+			{
+				$sql_array_count['LEFT_JOIN'][] = array(
+					'FROM'	=> array(TOPICS_TABLE => 't'),
+					'ON'	=> 'p.topic_id = t.topic_id'
+				);
+			}
+
 			switch ($db->sql_layer)
 			{
 				case 'mysql4':
 				case 'mysqli':
 
 					// 3.x does not support SQL_CALC_FOUND_ROWS
-					$sql_array['SELECT'] = 'SQL_CALC_FOUND_ROWS ' . $sql_array['SELECT'];
+					// $sql_array['SELECT'] = 'SQL_CALC_FOUND_ROWS ' . $sql_array['SELECT'];
 					$is_mysql = true;
 
 				break;
@@ -693,10 +719,10 @@ class fulltext_native extends search_backend
 				$sql_where[] = 'f.forum_id = p.forum_id';
 			break;
 		}
-		
+
 		if ($left_join_topics)
 		{
-			$sql_array['LEFT_JOIN'][$left_join_topics] = array(
+			$sql_array['LEFT_JOIN'][] = array(
 				'FROM'	=> array(TOPICS_TABLE => 't'),
 				'ON'	=> 'p.topic_id = t.topic_id'
 			);
@@ -725,6 +751,16 @@ class fulltext_native extends search_backend
 		// if we use mysql and the total result count is not cached yet, retrieve it from the db
 		if (!$total_results && $is_mysql)
 		{
+			// Count rows for the executed queries. Replace $select within $sql with SQL_CALC_FOUND_ROWS, and run it.
+			$sql_array_copy = $sql_array;
+			$sql_array_copy['SELECT'] = 'SQL_CALC_FOUND_ROWS p.post_id ';
+
+			$sql = $db->sql_build_query('SELECT', $sql_array_copy);
+			unset($sql_array_copy);
+
+			$db->sql_query($sql);
+			$db->sql_freeresult($result);
+
 			$sql = 'SELECT FOUND_ROWS() as total_results';
 			$result = $db->sql_query($sql);
 			$total_results = (int) $db->sql_fetchfield('total_results');
@@ -748,14 +784,15 @@ class fulltext_native extends search_backend
 	*
 	* @param	string		$type				contains either posts or topics depending on what should be searched for
 	* @param	boolean		$firstpost_only		if true, only topic starting posts will be considered
-	* @param	array		&$sort_by_sql		contains SQL code for the ORDER BY part of a query
-	* @param	string		&$sort_key			is the key of $sort_by_sql for the selected sorting
-	* @param	string		&$sort_dir			is either a or d representing ASC and DESC
-	* @param	string		&$sort_days			specifies the maximum amount of days a post may be old
-	* @param	array		&$ex_fid_ary		specifies an array of forum ids which should not be searched
-	* @param	array		&$m_approve_fid_ary	specifies an array of forum ids in which the searcher is allowed to view unapproved posts
-	* @param	int			&$topic_id			is set to 0 or a topic id, if it is not 0 then only posts in this topic should be searched
-	* @param	array		&$author_ary		an array of author ids
+	* @param	array		$sort_by_sql		contains SQL code for the ORDER BY part of a query
+	* @param	string		$sort_key			is the key of $sort_by_sql for the selected sorting
+	* @param	string		$sort_dir			is either a or d representing ASC and DESC
+	* @param	string		$sort_days			specifies the maximum amount of days a post may be old
+	* @param	array		$ex_fid_ary			specifies an array of forum ids which should not be searched
+	* @param	array		$m_approve_fid_ary	specifies an array of forum ids in which the searcher is allowed to view unapproved posts
+	* @param	int			$topic_id			is set to 0 or a topic id, if it is not 0 then only posts in this topic should be searched
+	* @param	array		$author_ary			an array of author ids
+	* @param	string		$author_name		specifies the author match, when ANONYMOUS is also a search-match
 	* @param	array		&$id_ary			passed by reference, to be filled with ids for the page specified by $start and $per_page, should be ordered
 	* @param	int			$start				indicates the first index of the page
 	* @param	int			$per_page			number of ids each page is supposed to contain
@@ -763,7 +800,7 @@ class fulltext_native extends search_backend
 	*
 	* @access	public
 	*/
-	function author_search($type, $firstpost_only, &$sort_by_sql, &$sort_key, &$sort_dir, &$sort_days, &$ex_fid_ary, &$m_approve_fid_ary, &$topic_id, &$author_ary, &$id_ary, $start, $per_page)
+	function author_search($type, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_ary, $author_name, &$id_ary, $start, $per_page)
 	{
 		global $config, $db;
 
@@ -785,7 +822,8 @@ class fulltext_native extends search_backend
 			$topic_id,
 			implode(',', $ex_fid_ary),
 			implode(',', $m_approve_fid_ary),
-			implode(',', $author_ary)
+			implode(',', $author_ary),
+			$author_name,
 		)));
 
 		// try reading the results from cache
@@ -798,7 +836,15 @@ class fulltext_native extends search_backend
 		$id_ary = array();
 
 		// Create some display specific sql strings
-		$sql_author		= $db->sql_in_set('p.poster_id', $author_ary);
+		if ($author_name)
+		{
+			// first one matches post of registered users, second one guests and deleted users
+			$sql_author = '(' . $db->sql_in_set('p.poster_id', array_diff($author_ary, array(ANONYMOUS)), false, true) . ' OR p.post_username ' . $author_name . ')';
+		}
+		else
+		{
+			$sql_author = $db->sql_in_set('p.poster_id', $author_ary);
+		}
 		$sql_fora		= (sizeof($ex_fid_ary)) ? ' AND ' . $db->sql_in_set('p.forum_id', $ex_fid_ary, true) : '';
 		$sql_time		= ($sort_days) ? ' AND p.post_time >= ' . (time() - ($sort_days * 86400)) : '';
 		$sql_topic_id	= ($topic_id) ? ' AND p.topic_id = ' . (int) $topic_id : '';
@@ -848,7 +894,7 @@ class fulltext_native extends search_backend
 			{
 				case 'mysql4':
 				case 'mysqli':
-					$select = 'SQL_CALC_FOUND_ROWS ' . $select;
+//					$select = 'SQL_CALC_FOUND_ROWS ' . $select;
 					$is_mysql = true;
 				break;
 
@@ -941,6 +987,12 @@ class fulltext_native extends search_backend
 
 		if (!$total_results && $is_mysql)
 		{
+			// Count rows for the executed queries. Replace $select within $sql with SQL_CALC_FOUND_ROWS, and run it.
+			$sql = str_replace('SELECT ' . $select, 'SELECT DISTINCT SQL_CALC_FOUND_ROWS p.post_id', $sql);
+
+			$db->sql_query($sql);
+			$db->sql_freeresult($result);
+
 			$sql = 'SELECT FOUND_ROWS() as total_results';
 			$result = $db->sql_query($sql);
 			$total_results = (int) $db->sql_fetchfield('total_results');
@@ -1110,7 +1162,7 @@ class fulltext_native extends search_backend
 
 		// Get unique words from the above arrays
 		$unique_add_words = array_unique(array_merge($words['add']['post'], $words['add']['title']));
-		
+
 		// We now have unique arrays of all words to be added and removed and
 		// individual arrays of added and removed words for text and title. What
 		// we need to do now is add the new words (if they don't already exist)

@@ -44,7 +44,9 @@ ul.topiclist dd {
 
 ul.topiclist dfn {
 	/* Labels for post/view counts */
-	display: none;
+	position: absolute;
+	left: -999px;
+	width: 990px;
 }
 
 ul.topiclist li.row dt a.subforum {
@@ -128,6 +130,18 @@ dd.posts, dd.topics, dd.views {
 	text-align: center;
 	line-height: 2.2em;
 	font-size: 1.2em;
+}
+
+/* List in forum description */
+dl.icon dt ol,
+dl.icon dt ul {
+	list-style-position: inside;
+	margin-left: 1em;
+}
+
+dl.icon dt li {
+	display: list-item;
+	list-style-type: inherit;
 }
 
 dd.lastpost {
@@ -280,6 +294,10 @@ div[class].topic-actions {
 	border-bottom-width: 0;
 }
 
+.post-ignore .postbody {
+	display: none;
+}
+
 /* Content container styles
 ----------------------------------------*/
 .content {
@@ -289,6 +307,7 @@ div[class].topic-actions {
 	font-family: "Lucida Grande", "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	color: #333333;
+	padding-bottom: 1px;
 }
 
 .content h2, .panel h2 {

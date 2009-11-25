@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: style.php 8780 2008-08-22 12:52:48Z acydburn $
+* @version $Id: style.php 10056 2009-08-25 12:19:57Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -91,8 +91,9 @@ if ($id)
 	$recompile = $config['load_tplcompile'];
 	if (!$user)
 	{
-		$id			= $config['default_style'];
-		$recompile	= false;
+		$id			= ($id) ? $id : $config['default_style'];
+//		Commented out because calls do not always include the SID anymore
+//		$recompile	= false;
 		$user		= array('user_id' => ANONYMOUS);
 	}
 
@@ -118,10 +119,11 @@ if ($id)
 
 	$user_image_lang = (file_exists($phpbb_root_path . 'styles/' . $theme['imageset_path'] . '/imageset/' . $user['user_lang'])) ? $user['user_lang'] : $config['default_lang'];
 
+	// Same query in session.php
 	$sql = 'SELECT *
 		FROM ' . STYLES_IMAGESET_DATA_TABLE . '
 		WHERE imageset_id = ' . $theme['imageset_id'] . "
-		AND image_filename <> '' 
+		AND image_filename <> ''
 		AND image_lang IN ('" . $db->sql_escape($user_image_lang) . "', '')";
 	$result = $db->sql_query($sql, 3600);
 
@@ -257,11 +259,11 @@ if ($id)
 				case 'SRC':
 					$replace[] = $imgs[$img]['src'];
 				break;
-				
+
 				case 'WIDTH':
 					$replace[] = $imgs[$img]['width'];
 				break;
-	
+
 				case 'HEIGHT':
 					$replace[] = $imgs[$img]['height'];
 				break;

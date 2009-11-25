@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_pm_compose.php 9168 2008-12-03 16:48:06Z acydburn $
+* @version $Id: ucp_pm_compose.php 10251 2009-11-03 14:40:25Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -46,6 +46,9 @@ function compose_pm($id, $mode, $action)
 	$draft_id		= request_var('d', 0);
 	$lastclick		= request_var('lastclick', 0);
 
+	// Reply to all triggered (quote/reply)
+	$reply_to_all	= request_var('reply_to_all', 0);
+
 	// Do NOT use request_var or specialchars here
 	$address_list	= isset($_REQUEST['address_list']) ? $_REQUEST['address_list'] : array();
 
@@ -84,6 +87,10 @@ function compose_pm($id, $mode, $action)
 		}
 		redirect(append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm'));
 	}
+
+	// Since viewtopic.php language entries are used in several modes,
+	// we include the language file here
+	$user->add_lang('viewtopic');
 
 	// Output PM_TO box if message composing
 	if ($action != 'edit')
@@ -310,13 +317,14 @@ function compose_pm($id, $mode, $action)
 
 			if (($action == 'reply' || $action == 'quote' || $action == 'quotepost') && !sizeof($address_list) && !$refresh && !$submit && !$preview)
 			{
-				if ($action == 'quotepost')
+				// Add the original author as the recipient if quoting a post or only replying and not having checked "reply to all"
+				if ($action == 'quotepost' || !$reply_to_all)
 				{
 					$address_list = array('u' => array($post['author_id'] => 'to'));
 				}
 				else
 				{
-					// We try to include every previously listed member from the TO Header
+					// We try to include every previously listed member from the TO Header - Reply to all
 					$address_list = rebuild_header(array('to' => $post['to_address']));
 
 					// Add the author (if he is already listed then this is no shame (it will be overwritten))
@@ -439,7 +447,7 @@ function compose_pm($id, $mode, $action)
 	$max_recipients = (!$max_recipients) ? $config['pm_max_recipients'] : $max_recipients;
 
 	// If this is a quote/reply "to all"... we may increase the max_recpients to the number of original recipients
-	if (($action == 'reply' || $action == 'quote') && $max_recipients)
+	if (($action == 'reply' || $action == 'quote') && $max_recipients && $reply_to_all)
 	{
 		// We try to include every previously listed member from the TO Header
 		$list = rebuild_header(array('to' => $post['to_address']));
@@ -631,7 +639,7 @@ function compose_pm($id, $mode, $action)
 	// Load Drafts
 	if ($load && $drafts)
 	{
-		load_drafts(0, 0, $id);
+		load_drafts(0, 0, $id, $action, $msg_id);
 	}
 
 	if ($submit || $preview || $refresh)
@@ -746,7 +754,6 @@ function compose_pm($id, $mode, $action)
 	// Preview
 	if (!sizeof($error) && $preview)
 	{
-		$user->add_lang('viewtopic');
 		$preview_message = $message_parser->format_display($enable_bbcode, $enable_urls, $enable_smilies, false);
 
 		$preview_signature = $user->data['user_sig'];
@@ -804,7 +811,7 @@ function compose_pm($id, $mode, $action)
 	}
 
 	// Decode text for message display
-	$bbcode_uid = (($action == 'quote' || $action == 'forward') && !$preview && !$refresh && !sizeof($error)) ? $bbcode_uid : $message_parser->bbcode_uid;
+	$bbcode_uid = (($action == 'quote' || $action == 'forward') && !$preview && !$refresh && (!sizeof($error) || (sizeof($error) && !$submit))) ? $bbcode_uid : $message_parser->bbcode_uid;
 
 	$message_parser->decode_message($bbcode_uid);
 
@@ -850,7 +857,7 @@ function compose_pm($id, $mode, $action)
 		$forward_text = array();
 		$forward_text[] = $user->lang['FWD_ORIGINAL_MESSAGE'];
 		$forward_text[] = sprintf($user->lang['FWD_SUBJECT'], censor_text($message_subject));
-		$forward_text[] = sprintf($user->lang['FWD_DATE'], $user->format_date($message_time));
+		$forward_text[] = sprintf($user->lang['FWD_DATE'], $user->format_date($message_time, false, true));
 		$forward_text[] = sprintf($user->lang['FWD_FROM'], $quote_username_text);
 		$forward_text[] = sprintf($user->lang['FWD_TO'], implode(', ', $fwd_to_field['to']));
 
@@ -1039,6 +1046,7 @@ function compose_pm($id, $mode, $action)
 		'FLASH_STATUS'			=> ($flash_status) ? $user->lang['FLASH_IS_ON'] : $user->lang['FLASH_IS_OFF'],
 		'SMILIES_STATUS'		=> ($smilies_status) ? $user->lang['SMILIES_ARE_ON'] : $user->lang['SMILIES_ARE_OFF'],
 		'URL_STATUS'			=> ($url_status) ? $user->lang['URL_IS_ON'] : $user->lang['URL_IS_OFF'],
+		'MAX_FONT_SIZE'			=> (int) $config['max_post_font_size'],
 		'MINI_POST_IMG'			=> $user->img('icon_post_target', $user->lang['PM']),
 		'ERROR'					=> (sizeof($error)) ? implode('<br />', $error) : '',
 		'MAX_RECIPIENTS'		=> ($config['allow_mass_pm'] && ($auth->acl_get('u_masspm') || $auth->acl_get('u_masspm_group'))) ? $max_recipients : 0,
@@ -1124,7 +1132,9 @@ function handle_message_list_actions(&$address_list, &$error, $remove_u, $remove
 	$group_list = request_var('group_list', array(0));
 
 	// Build usernames to add
-	$usernames = (isset($_REQUEST['username'])) ? array(request_var('username', '', true)) : array();
+	$usernames = request_var('username', '', true);
+	$usernames = (empty($usernames)) ? array() : array($usernames);
+
 	$username_list = request_var('username_list', '', true);
 	if ($username_list)
 	{
@@ -1138,8 +1148,14 @@ function handle_message_list_actions(&$address_list, &$error, $remove_u, $remove
 
 		global $refresh, $submit, $preview;
 
-		$refresh = $preview = true;
+		$refresh = true;
 		$submit = false;
+
+		// Preview is only true if there was also a message entered
+		if (request_var('message', ''))
+		{
+			$preview = true;
+		}
 	}
 
 	// Add User/Group [TO]

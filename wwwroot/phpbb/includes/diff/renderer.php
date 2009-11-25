@@ -2,7 +2,7 @@
 /**
 *
 * @package diff
-* @version $Id: renderer.php 8766 2008-08-16 22:24:54Z aptx $
+* @version $Id: renderer.php 9861 2009-07-26 17:58:10Z toonarmy $
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
-* Code from pear.php.net, Text_Diff-1.0.0 package
+* Code from pear.php.net, Text_Diff-1.1.0 package
 * http://pear.php.net/package/Text_Diff/
 *
 * Modified by phpBB Group to meet our coding standards
@@ -536,7 +536,7 @@ class diff_renderer_raw extends diff_renderer
 	*/
 	function get_diff_content($diff)
 	{
-		return '<textarea style="height: 290px;" class="full">' . htmlspecialchars($this->render($diff)) . '</textarea>';
+		return '<textarea style="height: 290px;" rows="15" cols="76" class="full">' . htmlspecialchars($this->render($diff)) . '</textarea>';
 	}
 
 	function _block_header($xbeg, $xlen, $ybeg, $ylen)

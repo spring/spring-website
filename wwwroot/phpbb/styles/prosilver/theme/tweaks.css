@@ -67,6 +67,11 @@ dl.icon {
 	height: 35px;
 }
 
+* html li.row dl.icon dt {
+	height: 35px;
+	overflow: visible;
+}
+
 * html #search-box {
 	width: 25%;
 }
@@ -82,3 +87,6 @@ dl.icon {
 	float: none;
 }
 
+* html .forumbg table.table1 {
+	margin: 0 -2px 0px -1px;
+}

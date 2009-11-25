@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_captcha.php 8722 2008-07-29 15:13:13Z Kellanved $
+* @version $Id: acp_captcha.php 10177 2009-09-22 10:03:17Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */
@@ -29,93 +29,118 @@ class acp_captcha
 
 		$user->add_lang('acp/board');
 
+		include($phpbb_root_path . 'includes/captcha/captcha_factory.' . $phpEx);
+		$captchas = phpbb_captcha_factory::get_captcha_types();
 
-		$captcha_vars = array(
-			'captcha_gd_x_grid'				=> 'CAPTCHA_GD_X_GRID',
-			'captcha_gd_y_grid'				=> 'CAPTCHA_GD_Y_GRID',
-			'captcha_gd_foreground_noise'	=> 'CAPTCHA_GD_FOREGROUND_NOISE',
-			'captcha_gd'					=> 'CAPTCHA_GD_PREVIEWED'
-		);
+		$selected = request_var('select_captcha', $config['captcha_plugin']);
+		$selected = (isset($captchas['available'][$selected]) || isset($captchas['unavailable'][$selected])) ? $selected : $config['captcha_plugin'];
+		$configure = request_var('configure', false);
 
-		if (isset($_GET['demo']))
+
+		// Oh, they are just here for the view
+		if (isset($_GET['captcha_demo']))
 		{
-			$captcha_vars = array_keys($captcha_vars);
-			foreach ($captcha_vars as $captcha_var)
-			{
-				$config[$captcha_var] = (isset($_REQUEST[$captcha_var])) ? request_var($captcha_var, 0) : $config[$captcha_var];
-			}
-			if ($config['captcha_gd'])
-			{
-				include($phpbb_root_path . 'includes/captcha/captcha_gd.' . $phpEx);
-			}
-			else
-			{
-				include($phpbb_root_path . 'includes/captcha/captcha_non_gd.' . $phpEx);
-			}
-			$captcha = new captcha();
-			$captcha->execute(gen_rand_string(mt_rand(5, 8)), time());
-			exit;
+			$this->deliver_demo($selected);
 		}
 
-		$config_vars = array(
-			'enable_confirm'		=> 'REG_ENABLE',
-			'enable_post_confirm'	=> 'POST_ENABLE',
-			'captcha_gd'			=> 'CAPTCHA_GD',
-		);
-
-		$this->tpl_name = 'acp_captcha';
-		$this->page_title = 'ACP_VC_SETTINGS';
-		$form_key = 'acp_captcha';
-		add_form_key($form_key);
-
-		$submit = request_var('submit', '');
-
-		if ($submit && check_form_key($form_key))
+		// Delegate
+		if ($configure)
 		{
-			$config_vars = array_keys($config_vars);
-			foreach ($config_vars as $config_var)
-			{
-				set_config($config_var, request_var($config_var, ''));
-			}
-			$captcha_vars = array_keys($captcha_vars);
-			foreach ($captcha_vars as $captcha_var)
-			{
-				$value = request_var($captcha_var, 0);
-				if ($value >= 0)
-				{
-					set_config($captcha_var, $value);
-				}
-			}
-			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
-		}
-		else if ($submit)
-		{
-				trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action));
+			$config_captcha =& phpbb_captcha_factory::get_instance($selected);
+			$config_captcha->acp_page($id, $this);
 		}
 		else
 		{
+			$config_vars = array(
+				'enable_confirm'		=> array('tpl' => 'REG_ENABLE', 'default' => false),
+				'enable_post_confirm'	=> array('tpl' => 'POST_ENABLE', 'default' => false),
+				'confirm_refresh'		=> array('tpl' => 'CONFIRM_REFRESH', 'default' => false),
+				'max_reg_attempts'		=> array('tpl' => 'REG_LIMIT', 'default' => 0),
+			);
 
-			$preview_image_src = append_sid(append_sid("{$phpbb_admin_path}index.$phpEx", "i=$id&amp;demo=demo"));
-			if (@extension_loaded('gd'))
-			{
-				$template->assign_var('GD', true);
-			}
-			foreach ($config_vars as $config_var => $template_var)
-			{
-				$template->assign_var($template_var, (isset($_REQUEST[$config_var])) ? request_var($config_var, '') : $config[$config_var]) ;
-			}
-			foreach ($captcha_vars as $captcha_var => $template_var)
-			{
-				$var = (isset($_REQUEST[$captcha_var])) ? request_var($captcha_var, 0) : $config[$captcha_var];
-				$template->assign_var($template_var, $var);
-				$preview_image_src .= "&amp;$captcha_var=" . $var;
-			}
-			$template->assign_vars(array(
-				'CAPTCHA_PREVIEW'	=> $preview_image_src,
-				'PREVIEW'			=> isset($_POST['preview']),
-			));
+			$this->tpl_name = 'acp_captcha';
+			$this->page_title = 'ACP_VC_SETTINGS';
+			$form_key = 'acp_captcha';
+			add_form_key($form_key);
 
+			$submit = request_var('main_submit', false);
+
+			if ($submit && check_form_key($form_key))
+			{
+				foreach ($config_vars as $config_var => $options)
+				{
+					set_config($config_var, request_var($config_var, $options['default']));
+				}
+
+				if ($selected !== $config['captcha_plugin'])
+				{
+					// sanity check
+					if (isset($captchas['available'][$selected]))
+					{
+						$old_captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+						$old_captcha->uninstall();
+
+						set_config('captcha_plugin', $selected);
+						$new_captcha =& phpbb_captcha_factory::get_instance($config['captcha_plugin']);
+						$new_captcha->install();
+
+						add_log('admin', 'LOG_CONFIG_VISUAL');
+					}
+					else
+					{
+						trigger_error($user->lang['CAPTCHA_UNAVAILABLE'] . adm_back_link($this->u_action));
+					}
+				}
+				trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
+			}
+			else if ($submit)
+			{
+				trigger_error($user->lang['FORM_INVALID'] . adm_back_link());
+			}
+			else
+			{
+				$captcha_select = '';
+				foreach ($captchas['available'] as $value => $title)
+				{
+					$current = ($selected !== false && $value == $selected) ? ' selected="selected"' : '';
+					$captcha_select .= '<option value="' . $value . '"' . $current . '>' . $user->lang[$title] . '</option>';
+				}
+
+				foreach ($captchas['unavailable'] as $value => $title)
+				{
+					$current = ($selected !== false && $value == $selected) ? ' selected="selected"' : '';
+					$captcha_select .= '<option value="' . $value . '"' . $current . ' class="disabled-option">' . $user->lang[$title] . '</option>';
+				}
+
+				$demo_captcha =& phpbb_captcha_factory::get_instance($selected);
+
+				foreach ($config_vars as $config_var => $options)
+				{
+					$template->assign_var($options['tpl'], (isset($_POST[$config_var])) ? request_var($config_var, $options['default']) : $config[$config_var]) ;
+				}
+
+				$template->assign_vars(array(
+					'CAPTCHA_PREVIEW_TPL'	=> $demo_captcha->get_demo_template($id),
+					'S_CAPTCHA_HAS_CONFIG'	=> $demo_captcha->has_config(),
+					'CAPTCHA_SELECT'		=> $captcha_select,
+				));
+			}
 		}
+	}
+
+	/**
+	* Entry point for delivering image CAPTCHAs in the ACP.
+	*/
+	function deliver_demo($selected)
+	{
+		global $db, $user, $config;
+
+		$captcha =& phpbb_captcha_factory::get_instance($selected);
+		$captcha->init(CONFIRM_REG);
+		$captcha->execute_demo();
+
+		garbage_collection();
+		exit_handler();
 	}
 }
 

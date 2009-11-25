@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_transfer.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id: functions_transfer.php 9822 2009-07-22 03:02:45Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -206,7 +206,7 @@ class transfer
 		$directory = $this->root_path . str_replace($phpbb_root_path, '', $directory);
 
 		$this->_chdir($directory);
-		$result = $this->_ls('');
+		$result = $this->_ls();
 
 		if ($result !== false && is_array($result))
 		{
@@ -316,14 +316,14 @@ class ftp extends transfer
 			return 'ERR_CONNECTING_SERVER';
 		}
 
-		// attempt to turn pasv mode on
-		@ftp_pasv($this->connection, true);
-
 		// login to the server
 		if (!@ftp_login($this->connection, $this->username, $this->password))
 		{
 			return 'ERR_UNABLE_TO_LOGIN';
 		}
+
+		// attempt to turn pasv mode on
+		@ftp_pasv($this->connection, true);
 
 		// change to the root directory
 		if (!$this->_chdir($this->root_path))
@@ -460,7 +460,38 @@ class ftp extends transfer
 	*/
 	function _ls($dir = './')
 	{
-		return @ftp_nlist($this->connection, $dir);
+		$list = @ftp_nlist($this->connection, $dir);
+
+		// See bug #46295 - Some FTP daemons don't like './'
+		if ($dir === './')
+		{
+			// Let's try some alternatives
+			$list = (empty($list)) ? @ftp_nlist($this->connection, '.') : $list;
+			$list = (empty($list)) ? @ftp_nlist($this->connection, '') : $list;
+		}
+
+		// Return on error
+		if ($list === false)
+		{
+			return false;
+		}
+
+		// Remove path if prepended
+		foreach ($list as $key => $item)
+		{
+			// Use same separator for item and dir
+			$item = str_replace('\\', '/', $item);
+			$dir = str_replace('\\', '/', $dir);
+
+			if (!empty($dir) && strpos($item, $dir) === 0)
+			{
+				$item = substr($item, strlen($dir));
+			}
+
+			$list[$key] = $item;
+		}
+
+		return $list;
 	}
 
 	/**
@@ -706,9 +737,46 @@ class ftp_fsock extends transfer
 		$list = array();
 		while (!@feof($this->data_connection))
 		{
-			$list[] = preg_replace('#[\r\n]#', '', @fgets($this->data_connection, 512));
+			$filename = preg_replace('#[\r\n]#', '', @fgets($this->data_connection, 512));
+
+			if ($filename !== '')
+			{
+				$list[] = $filename;
+			}
 		}
 		$this->_close_data_connection();
+
+		// Clear buffer
+		$this->_check_command();
+
+		// See bug #46295 - Some FTP daemons don't like './'
+		if ($dir === './' && empty($list))
+		{
+			// Let's try some alternatives
+			$list = $this->_ls('.');
+
+			if (empty($list))
+			{
+				$list = $this->_ls('');
+			}
+
+			return $list;
+		}
+
+		// Remove path if prepended
+		foreach ($list as $key => $item)
+		{
+			// Use same separator for item and dir
+			$item = str_replace('\\', '/', $item);
+			$dir = str_replace('\\', '/', $dir);
+
+			if (!empty($dir) && strpos($item, $dir) === 0)
+			{
+				$item = substr($item, strlen($dir));
+			}
+
+			$list[$key] = $item;
+		}
 
 		return $list;
 	}
@@ -791,7 +859,7 @@ class ftp_fsock extends transfer
 			$result = @fgets($this->connection, 512);
 			$response .= $result;
 		}
-		while (substr($response, 3, 1) != ' ');
+		while (substr($result, 3, 1) !== ' ');
 
 		if (!preg_match('#^[123]#', $response))
 		{

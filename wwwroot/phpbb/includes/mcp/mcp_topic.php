@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_topic.php 9030 2008-10-19 18:32:11Z acydburn $
+* @version $Id: mcp_topic.php 10201 2009-10-03 11:35:39Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -259,7 +259,7 @@ function mcp_topic_view($id, $mode, $action)
 	// Display topic icons for split topic
 	$s_topic_icons = false;
 
-	if ($auth->acl_get('m_split', $topic_info['forum_id']))
+	if ($auth->acl_gets('m_split', 'm_merge', (int) $topic_info['forum_id']))
 	{
 		include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 		$s_topic_icons = posting_gen_topic_icons('', $icon_id);
@@ -301,8 +301,9 @@ function mcp_topic_view($id, $mode, $action)
 		'POSTS_PER_PAGE'	=> $posts_per_page,
 		'ACTION'			=> $action,
 
-		'REPORTED_IMG'		=> $user->img('icon_topic_reported', 'POST_REPORTED', false, true),
-		'UNAPPROVED_IMG'	=> $user->img('icon_topic_unapproved', 'POST_UNAPPROVED', false, true),
+		'REPORTED_IMG'		=> $user->img('icon_topic_reported', 'POST_REPORTED'),
+		'UNAPPROVED_IMG'	=> $user->img('icon_topic_unapproved', 'POST_UNAPPROVED'),
+		'INFO_IMG'			=> $user->img('icon_post_info', 'VIEW_INFO'),
 
 		'S_MCP_ACTION'		=> "$url&amp;i=$id&amp;mode=$mode&amp;action=$action&amp;start=$start",
 		'S_FORUM_SELECT'	=> ($to_forum_id) ? make_forum_select($to_forum_id, false, false, true, true, true) : make_forum_select($topic_info['forum_id'], false, false, true, true, true),
@@ -501,7 +502,7 @@ function split_topic($action, $topic_id, $to_forum_id, $subject)
 		$success_msg = 'TOPIC_SPLIT_SUCCESS';
 
 		// Update forum statistics
-		set_config('num_topics', $config['num_topics'] + 1, true);
+		set_config_count('num_topics', 1, true);
 
 		// Link back to both topics
 		$return_link = sprintf($user->lang['RETURN_TOPIC'], '<a href="' . append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $post_info['forum_id'] . '&amp;t=' . $post_info['topic_id']) . '">', '</a>') . '<br /><br />' . sprintf($user->lang['RETURN_NEW_TOPIC'], '<a href="' . append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $to_forum_id . '&amp;t=' . $to_topic_id) . '">', '</a>');

@@ -198,3 +198,16 @@ a.right:hover {
 	text-decoration: none;
 	background-position: 100% 60%;
 }
+
+/* invisible skip link, used for accessibility  */
+.skiplink {
+	position: absolute;
+	left: -999px;
+	width: 990px;
+}
+
+/* Feed icon in forumlist_body.html */
+a.feed-icon-forum {
+	float: right;
+	margin: 3px;
+}

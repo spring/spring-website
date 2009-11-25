@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_notes.php 8598 2008-06-04 15:37:06Z naderman $
+* @version $Id: mcp_notes.php 10042 2009-08-22 02:56:05Z terrafrost $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -193,9 +193,12 @@ class mcp_notes
 		$sql_where = ($st) ? (time() - ($st * 86400)) : 0;
 		$sql_sort = $sort_by_sql[$sk] . ' ' . (($sd == 'd') ? 'DESC' : 'ASC');
 
+		$keywords = utf8_normalize_nfc(request_var('keywords', '', true));
+		$keywords_param = !empty($keywords) ? '&amp;keywords=' . urlencode(htmlspecialchars_decode($keywords)) : '';
+
 		$log_data = array();
 		$log_count = 0;
-		view_log('user', $log_data, $log_count, $config['posts_per_page'], $start, 0, 0, $user_id, $sql_where, $sql_sort);
+		view_log('user', $log_data, $log_count, $config['posts_per_page'], $start, 0, 0, $user_id, $sql_where, $sql_sort, $keywords);
 
 		if ($log_count)
 		{
@@ -219,19 +222,23 @@ class mcp_notes
 			'S_SELECT_SORT_DIR'		=> $s_sort_dir,
 			'S_SELECT_SORT_KEY'		=> $s_sort_key,
 			'S_SELECT_SORT_DAYS'	=> $s_limit_days,
+			'S_KEYWORDS'			=> $keywords,
 
 			'L_TITLE'			=> $user->lang['MCP_NOTES_USER'],
 
 			'PAGE_NUMBER'		=> on_page($log_count, $config['posts_per_page'], $start),
-			'PAGINATION'		=> generate_pagination($this->u_action . "&amp;st=$st&amp;sk=$sk&amp;sd=$sd", $log_count, $config['posts_per_page'], $start),
+			'PAGINATION'	=> generate_pagination($this->u_action . "&amp;$u_sort_param$keywords_param", $log_count, $config['topics_per_page'], $start, true),
 			'TOTAL_REPORTS'		=> ($log_count == 1) ? $user->lang['LIST_REPORT'] : sprintf($user->lang['LIST_REPORTS'], $log_count),
 
-			'USERNAME'			=> $userrow['username'],
-			'USER_COLOR'		=> (!empty($userrow['user_colour'])) ? $userrow['user_colour'] : '',
 			'RANK_TITLE'		=> $rank_title,
 			'JOINED'			=> $user->format_date($userrow['user_regdate']),
 			'POSTS'				=> ($userrow['user_posts']) ? $userrow['user_posts'] : 0,
 			'WARNINGS'			=> ($userrow['user_warnings']) ? $userrow['user_warnings'] : 0,
+
+			'USERNAME_FULL'		=> get_username_string('full', $userrow['user_id'], $userrow['username'], $userrow['user_colour']),
+			'USERNAME_COLOUR'	=> get_username_string('colour', $userrow['user_id'], $userrow['username'], $userrow['user_colour']),
+			'USERNAME'			=> get_username_string('username', $userrow['user_id'], $userrow['username'], $userrow['user_colour']),
+			'U_PROFILE'			=> get_username_string('profile', $userrow['user_id'], $userrow['username'], $userrow['user_colour']),
 
 			'AVATAR_IMG'		=> $avatar_img,
 			'RANK_IMG'			=> $rank_img,

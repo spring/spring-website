@@ -4,7 +4,7 @@
 * acp_forums [English]
 *
 * @package language
-* @version $Id: forums.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id: forums.php 9896 2009-07-31 12:46:15Z Kellanved $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -44,9 +44,12 @@ $lang = array_merge($lang, array(
 	'AUTO_PRUNE_VIEWED'			=> 'Auto-prune post viewed age',
 	'AUTO_PRUNE_VIEWED_EXPLAIN'	=> 'Number of days since topic was viewed after which topic is removed.',
 
+	'CONTINUE'						=> 'Continue',
 	'COPY_PERMISSIONS'				=> 'Copy permissions from',
+	'COPY_PERMISSIONS_EXPLAIN'		=> 'To ease up the permission setup for your new forum, you can copy the permissions of an existing forum.',
 	'COPY_PERMISSIONS_ADD_EXPLAIN'	=> 'Once created, the forum will have the same permissions as the one you select here. If no forum is selected the newly created forum will not be visible until permissions had been set.',
 	'COPY_PERMISSIONS_EDIT_EXPLAIN'	=> 'If you select to copy permissions, the forum will have the same permissions as the one you select here. This will overwrite any permissions you have previously set for this forum with the permissions of the forum you select here. If no forum is selected the current permissions will be kept.',
+	'COPY_TO_ACL'					=> 'Alternatively, you are also able to %sset up new permissions%s for this forum.',
 	'CREATE_FORUM'					=> 'Create new forum',
 
 	'DECIDE_MOVE_DELETE_CONTENT'		=> 'Delete content or move to forum',
@@ -62,6 +65,8 @@ $lang = array_merge($lang, array(
 	'ENABLE_INDEXING_EXPLAIN'		=> 'If set to yes posts made to this forum will be indexed for searching.',
 	'ENABLE_POST_REVIEW'			=> 'Enable post review',
 	'ENABLE_POST_REVIEW_EXPLAIN'	=> 'If set to yes users are able to review their post if new posts were made to the topic while users wrote theirs. This should be disabled for chat forums.',
+	'ENABLE_QUICK_REPLY'			=> 'Enable quick reply',
+	'ENABLE_QUICK_REPLY_EXPLAIN'	=> 'If set to yes users get a quick reply box for this forum. If the global option for quick reply is disabled or the forum not postable to the quick reply box will not be displayed, even if set to yes here.',
 	'ENABLE_RECENT'					=> 'Display active topics',
 	'ENABLE_RECENT_EXPLAIN'			=> 'If set to yes topics made to this forum will be shown in the active topics list.',
 	'ENABLE_TOPIC_ICONS'			=> 'Enable topic icons',
@@ -81,6 +86,7 @@ $lang = array_merge($lang, array(
 	'FORUM_EDIT_EXPLAIN'				=> 'The form below will allow you to customise this forum. Please note that moderation and post count controls are set via forum permissions for each user or usergroup.',
 	'FORUM_IMAGE'						=> 'Forum image',
 	'FORUM_IMAGE_EXPLAIN'				=> 'Location, relative to the phpBB root directory, of an additional image to associate with this forum.',
+	'FORUM_IMAGE_NO_EXIST'				=> 'The specified forum image does not exist',
 	'FORUM_LINK_EXPLAIN'				=> 'Full URL (including the protocol, i.e.: <samp>http://</samp>) to the destination location that clicking this forum will take the user, e.g.: <samp>http://www.phpbb.com/</samp>.',
 	'FORUM_LINK_TRACK'					=> 'Track link redirects',
 	'FORUM_LINK_TRACK_EXPLAIN'			=> 'Records the number of times a forum link was clicked.',

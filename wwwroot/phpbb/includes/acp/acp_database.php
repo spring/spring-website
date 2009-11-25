@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_database.php 8814 2008-09-04 12:01:47Z acydburn $
+* @version $Id: acp_database.php 10174 2009-09-21 17:59:39Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -27,7 +27,7 @@ class acp_database
 	{
 		global $cache, $db, $user, $auth, $template, $table_prefix;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
-		
+
 		$user->add_lang('acp/database');
 
 		$this->tpl_name = 'acp_database';
@@ -82,6 +82,7 @@ class acp_database
 						}
 
 						@set_time_limit(1200);
+						@set_time_limit(0);
 
 						$time = time();
 
@@ -141,7 +142,7 @@ class acp_database
 									break;
 
 									case 'oracle':
-										$extractor->flush('TRUNCATE TABLE ' . $table_name . "\\\n");
+										$extractor->flush('TRUNCATE TABLE ' . $table_name . "/\n");
 									break;
 
 									default:
@@ -187,7 +188,7 @@ class acp_database
 						$template->assign_vars(array(
 							'U_ACTION'	=> $this->u_action . '&amp;action=download'
 						));
-						
+
 						$available_methods = array('gzip' => 'zlib', 'bzip2' => 'bz2');
 
 						foreach ($available_methods as $type => $module)
@@ -424,25 +425,35 @@ class acp_database
 						$dir = $phpbb_root_path . 'store/';
 						$dh = @opendir($dir);
 
+						$backup_files = array();
+
 						if ($dh)
 						{
 							while (($file = readdir($dh)) !== false)
 							{
 								if (preg_match('#^backup_(\d{10,})_[a-z\d]{16}\.(sql(?:\.(?:gz|bz2))?)$#', $file, $matches))
 								{
-									$supported = in_array($matches[2], $methods);
-
-									if ($supported == 'true')
+									if (in_array($matches[2], $methods))
 									{
-										$template->assign_block_vars('files', array(
-											'FILE'		=> $file,
-											'NAME'		=> gmdate("d-m-Y H:i:s", $matches[1]),
-											'SUPPORTED'	=> $supported
-										));
+										$backup_files[gmdate("d-m-Y H:i:s", $matches[1])] = $file;
 									}
 								}
 							}
 							closedir($dh);
+						}
+
+						if (!empty($backup_files))
+						{
+							krsort($backup_files);
+
+							foreach ($backup_files as $name => $file)
+							{
+								$template->assign_block_vars('files', array(
+									'FILE'		=> $file,
+									'NAME'		=> $name,
+									'SUPPORTED'	=> true,
+								));
+							}
 						}
 
 						$template->assign_vars(array(
@@ -508,7 +519,7 @@ class base_extractor
 			header('Pragma: no-cache');
 			header("Content-Type: $mimetype; name=\"$name\"");
 			header("Content-disposition: attachment; filename=$name");
-	
+
 			switch ($format)
 			{
 				case 'bzip2':
@@ -527,17 +538,17 @@ class base_extractor
 				break;
 			}
 		}
-		
+
 		if ($store == true)
 		{
 			global $phpbb_root_path;
 			$file = $phpbb_root_path . 'store/' . $filename . $ext;
-	
+
 			$this->fp = $open($file, 'w');
-	
+
 			if (!$this->fp)
 			{
-				trigger_error('Unable to write temporary file to storage folder', E_USER_ERROR);
+				trigger_error('FILE_WRITE_FAIL', E_USER_ERROR);
 			}
 		}
 	}
@@ -662,11 +673,11 @@ class mysql_extractor extends base_extractor
 		if ($result != false)
 		{
 			$fields_cnt = mysqli_num_fields($result);
-		
+
 			// Get field information
 			$field = mysqli_fetch_fields($result);
 			$field_set = array();
-		
+
 			for ($j = 0; $j < $fields_cnt; $j++)
 			{
 				$field_set[] = $field[$j]->name;
@@ -679,7 +690,7 @@ class mysql_extractor extends base_extractor
 			$first_set		= true;
 			$query_len		= 0;
 			$max_len		= get_usable_memory();
-		
+
 			while ($row = mysqli_fetch_row($result))
 			{
 				$values	= array();
@@ -750,7 +761,7 @@ class mysql_extractor extends base_extractor
 				$field[] = mysql_fetch_field($result, $i);
 			}
 			$field_set = array();
-			
+
 			for ($j = 0; $j < $fields_cnt; $j++)
 			{
 				$field_set[] = $field[$j]->name;
@@ -966,7 +977,7 @@ class sqlite_extractor extends base_extractor
 			$ar[] = $row;
 		}
 		$db->sql_freeresult($result);
-		
+
 		foreach ($ar as $value)
 		{
 			if (strpos($value['name'], 'autoindex') !== false)
@@ -1124,7 +1135,7 @@ class postgres_extractor extends base_extractor
 			$sql_data .= "CREATE SEQUENCE {$table_name}_seq;\n";
 		}
 		$db->sql_freeresult($result);
-	
+
 		$field_query = "SELECT a.attnum, a.attname as field, t.typname as type, a.attlen as length, a.atttypmod as lengthvar, a.attnotnull as notnull
 			FROM pg_class c, pg_attribute a, pg_type t
 			WHERE c.relname = '" . $db->sql_escape($table_name) . "'
@@ -1145,16 +1156,17 @@ class postgres_extractor extends base_extractor
 					AND (c.oid = d.adrelid)
 					AND d.adnum = " . $row['attnum'];
 			$def_res = $db->sql_query($sql_get_default);
+			$def_row = $db->sql_fetchrow($def_res);
+			$db->sql_freeresult($def_res);
 
-			if (!$def_res)
+			if (empty($def_row))
 			{
 				unset($row['rowdefault']);
 			}
 			else
 			{
-				$row['rowdefault'] = $db->sql_fetchfield('rowdefault', false, $def_res);
+				$row['rowdefault'] = $def_row['rowdefault'];
 			}
-			$db->sql_freeresult($def_res);
 
 			if ($row['type'] == 'bpchar')
 			{
@@ -1188,7 +1200,7 @@ class postgres_extractor extends base_extractor
 			{
 				$line .= ' NOT NULL';
 			}
-			
+
 			$lines[] = $line;
 		}
 		$db->sql_freeresult($result);
@@ -1388,33 +1400,33 @@ class mssql_extractor extends base_extractor
 		$sql_data .= "GO\n";
 		$sql_data .= "\nCREATE TABLE [$table_name] (\n";
 		$rows = array();
-	
+
 		$text_flag = false;
-	
+
 		$sql = "SELECT COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, COLUMNPROPERTY(object_id(TABLE_NAME), COLUMN_NAME, 'IsIdentity') as IS_IDENTITY
 			FROM INFORMATION_SCHEMA.COLUMNS
 			WHERE TABLE_NAME = '$table_name'";
 		$result = $db->sql_query($sql);
-	
+
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$line = "\t[{$row['COLUMN_NAME']}] [{$row['DATA_TYPE']}]";
-	
+
 			if ($row['DATA_TYPE'] == 'text')
 			{
 				$text_flag = true;
 			}
-	
+
 			if ($row['IS_IDENTITY'])
 			{
 				$line .= ' IDENTITY (1 , 1)';
 			}
-	
+
 			if ($row['CHARACTER_MAXIMUM_LENGTH'] && $row['DATA_TYPE'] !== 'text')
 			{
 				$line .= ' (' . $row['CHARACTER_MAXIMUM_LENGTH'] . ')';
 			}
-	
+
 			if ($row['IS_NULLABLE'] == 'YES')
 			{
 				$line .= ' NULL';
@@ -1423,27 +1435,27 @@ class mssql_extractor extends base_extractor
 			{
 				$line .= ' NOT NULL';
 			}
-	
+
 			if ($row['COLUMN_DEFAULT'])
 			{
 				$line .= ' DEFAULT ' . $row['COLUMN_DEFAULT'];
 			}
-	
+
 			$rows[] = $line;
 		}
 		$db->sql_freeresult($result);
-	
+
 		$sql_data .= implode(",\n", $rows);
 		$sql_data .= "\n) ON [PRIMARY]";
-	
+
 		if ($text_flag)
 		{
 			$sql_data .= " TEXTIMAGE_ON [PRIMARY]";
 		}
-	
+
 		$sql_data .= "\nGO\n\n";
 		$rows = array();
-	
+
 		$sql = "SELECT CONSTRAINT_NAME, COLUMN_NAME
 			FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 			WHERE TABLE_NAME = '$table_name'";
@@ -1463,7 +1475,7 @@ class mssql_extractor extends base_extractor
 			$sql_data .= "\n\t)  ON [PRIMARY] \nGO\n";
 		}
 		$db->sql_freeresult($result);
-	
+
 		$index = array();
 		$sql = "EXEC sp_statistics '$table_name'";
 		$result = $db->sql_query($sql);
@@ -1475,12 +1487,12 @@ class mssql_extractor extends base_extractor
 			}
 		}
 		$db->sql_freeresult($result);
-	
+
 		foreach ($index as $index_name => $column_name)
 		{
 			$index[$index_name] = implode(', ', $column_name);
 		}
-	
+
 		foreach ($index as $index_name => $columns)
 		{
 			$sql_data .= "\nCREATE  INDEX [$index_name] ON [$table_name]($columns) ON [PRIMARY]\nGO\n";
@@ -1508,7 +1520,7 @@ class mssql_extractor extends base_extractor
 		$ary_type = $ary_name = array();
 		$ident_set = false;
 		$sql_data = '';
-		
+
 		// Grab all of the data from current table.
 		$sql = "SELECT *
 			FROM $table_name";
@@ -1602,7 +1614,7 @@ class mssql_extractor extends base_extractor
 		$ary_type = $ary_name = array();
 		$ident_set = false;
 		$sql_data = '';
-		
+
 		// Grab all of the data from current table.
 		$sql = "SELECT *
 			FROM $table_name";
@@ -1703,8 +1715,7 @@ class oracle_extractor extends base_extractor
 	{
 		global $db;
 		$sql_data = '-- Table: ' . $table_name . "\n";
-		$sql_data .= "DROP TABLE $table_name;\n";
-		$sql_data .= '\\' . "\n";
+		$sql_data .= "DROP TABLE $table_name\n/\n";
 		$sql_data .= "\nCREATE TABLE $table_name (\n";
 
 		$sql = "SELECT COLUMN_NAME, DATA_TYPE, DATA_PRECISION, DATA_LENGTH, NULLABLE, DATA_DEFAULT
@@ -1719,7 +1730,7 @@ class oracle_extractor extends base_extractor
 
 			if ($row['data_type'] !== 'CLOB')
 			{
-				if ($row['data_type'] !== 'VARCHAR2')
+				if ($row['data_type'] !== 'VARCHAR2' && $row['data_type'] !== 'CHAR')
 				{
 					$line .= '(' . $row['data_precision'] . ')';
 				}
@@ -1749,11 +1760,19 @@ class oracle_extractor extends base_extractor
 				AND A.TABLE_NAME = '{$table_name}'";
 		$result = $db->sql_query($sql);
 
+		$primary_key = array();
+		$contraint_name = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = "  CONSTRAINT {$row['constraint_name']} PRIMARY KEY ({$row['column_name']})";
+			$constraint_name = '"' . $row['constraint_name'] . '"';
+			$primary_key[] = '"' . $row['column_name'] . '"';
 		}
 		$db->sql_freeresult($result);
+
+		if (sizeof($primary_key))
+		{
+			$rows[] = "  CONSTRAINT {$constraint_name} PRIMARY KEY (" . implode(', ', $primary_key) . ')';
+		}
 
 		$sql = "SELECT A.CONSTRAINT_NAME, A.COLUMN_NAME
 			FROM USER_CONS_COLUMNS A, USER_CONSTRAINTS B
@@ -1762,24 +1781,44 @@ class oracle_extractor extends base_extractor
 				AND A.TABLE_NAME = '{$table_name}'";
 		$result = $db->sql_query($sql);
 
+		$unique = array();
+		$contraint_name = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = "  CONSTRAINT {$row['constraint_name']} UNIQUE ({$row['column_name']})";
+			$constraint_name = '"' . $row['constraint_name'] . '"';
+			$unique[] = '"' . $row['column_name'] . '"';
 		}
 		$db->sql_freeresult($result);
 
-		$sql_data .= implode(",\n", $rows);
-		$sql_data .= "\n)\n\\";
+		if (sizeof($unique))
+		{
+			$rows[] = "  CONSTRAINT {$constraint_name} UNIQUE (" . implode(', ', $unique) . ')';
+		}
 
-		$sql = "SELECT A.REFERENCED_NAME
-			FROM USER_DEPENDENCIES A, USER_TRIGGERS B
+		$sql_data .= implode(",\n", $rows);
+		$sql_data .= "\n)\n/\n";
+
+		$sql = "SELECT A.REFERENCED_NAME, C.*
+			FROM USER_DEPENDENCIES A, USER_TRIGGERS B, USER_SEQUENCES C
 			WHERE A.REFERENCED_TYPE = 'SEQUENCE'
 				AND A.NAME = B.TRIGGER_NAME
-				AND B. TABLE_NAME = '{$table_name}'";
+				AND B.TABLE_NAME = '{$table_name}'
+				AND C.SEQUENCE_NAME = A.REFERENCED_NAME";
 		$result = $db->sql_query($sql);
+
+		$type = request_var('type', '');
+
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$sql_data .= "\nCREATE SEQUENCE {$row['referenced_name']}\\\n";
+			$sql_data .= "\nDROP SEQUENCE \"{$row['referenced_name']}\"\n/\n";
+			$sql_data .= "\nCREATE SEQUENCE \"{$row['referenced_name']}\"";
+
+			if ($type == 'full')
+			{
+				$sql_data .= ' START WITH ' . $row['last_number'];
+			}
+
+			$sql_data .= "\n/\n";
 		}
 		$db->sql_freeresult($result);
 
@@ -1789,7 +1828,7 @@ class oracle_extractor extends base_extractor
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$sql_data .= "\nCREATE OR REPLACE TRIGGER {$row['description']}WHEN ({$row['when_clause']})\n{$row['trigger_body']}\\";
+			$sql_data .= "\nCREATE OR REPLACE TRIGGER {$row['description']}WHEN ({$row['when_clause']})\n{$row['trigger_body']}\n/\n";
 		}
 		$db->sql_freeresult($result);
 
@@ -1809,7 +1848,7 @@ class oracle_extractor extends base_extractor
 
 		foreach ($index as $index_name => $column_names)
 		{
-			$sql_data .= "\nCREATE INDEX $index_name ON $table_name(" . implode(', ', $column_names) . ")\n\\";
+			$sql_data .= "\nCREATE INDEX $index_name ON $table_name(" . implode(', ', $column_names) . ")\n/\n";
 		}
 		$db->sql_freeresult($result);
 		$this->flush($sql_data);
@@ -1819,7 +1858,7 @@ class oracle_extractor extends base_extractor
 	{
 		global $db;
 		$ary_type = $ary_name = array();
-		
+
 		// Grab all of the data from current table.
 		$sql = "SELECT *
 			FROM $table_name";
@@ -1842,9 +1881,10 @@ class oracle_extractor extends base_extractor
 			// Build the SQL statement to recreate the data.
 			for ($i = 0; $i < $i_num_fields; $i++)
 			{
-				$str_val = $row[$ary_name[$i]];
+				// Oracle uses uppercase - we use lowercase
+				$str_val = $row[strtolower($ary_name[$i])];
 
-				if (preg_match('#char|text|bool|raw#i', $ary_type[$i]))
+				if (preg_match('#char|text|bool|raw|clob#i', $ary_type[$i]))
 				{
 					$str_quote = '';
 					$str_empty = "''";
@@ -1873,12 +1913,12 @@ class oracle_extractor extends base_extractor
 				}
 
 				$schema_vals[$i] = $str_quote . $str_val . $str_quote;
-				$schema_fields[$i] = '"' . $ary_name[$i] . "'";
+				$schema_fields[$i] = '"' . $ary_name[$i] . '"';
 			}
 
 			// Take the ordered fields and their associated data and build it
 			// into a valid sql statement to recreate that field in the data.
-			$sql_data = "INSERT INTO $table_name (" . implode(', ', $schema_fields) . ') VALUES (' . implode(', ', $schema_vals) . ");\n";
+			$sql_data = "INSERT INTO $table_name (" . implode(', ', $schema_fields) . ') VALUES (' . implode(', ', $schema_vals) . ")\n/\n";
 
 			$this->flush($sql_data);
 		}
@@ -1915,7 +1955,7 @@ class firebird_extractor extends base_extractor
 	{
 		global $db;
 		$ary_type = $ary_name = array();
-		
+
 		// Grab all of the data from current table.
 		$sql = "SELECT *
 			FROM $table_name";
@@ -2197,8 +2237,10 @@ function sanitize_data_mssql($text)
 
 function sanitize_data_oracle($text)
 {
-	$data = preg_split('/[\0\n\t\r\b\f\'"\\\]/', $text);
-	preg_match_all('/[\0\n\t\r\b\f\'"\\\]/', $text, $matches);
+//	$data = preg_split('/[\0\n\t\r\b\f\'"\/\\\]/', $text);
+//	preg_match_all('/[\0\n\t\r\b\f\'"\/\\\]/', $text, $matches);
+	$data = preg_split('/[\0\b\f\'\/]/', $text);
+	preg_match_all('/[\0\r\b\f\'\/]/', $text, $matches);
 
 	$val = array();
 
@@ -2244,7 +2286,7 @@ function fgetd(&$fp, $delim, $read, $seek, $eof, $buffer = 8192)
 {
 	$record = '';
 	$delim_len = strlen($delim);
-	
+
 	while (!$eof($fp))
 	{
 		$pos = strpos($record, $delim);

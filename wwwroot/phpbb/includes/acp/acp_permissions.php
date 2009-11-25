@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_permissions.php 8710 2008-07-29 13:35:49Z acydburn $
+* @version $Id: acp_permissions.php 10017 2009-08-18 14:37:49Z bantu $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -23,7 +23,7 @@ class acp_permissions
 {
 	var $u_action;
 	var $permission_dropdown;
-	
+
 	function main($id, $mode)
 	{
 		global $db, $user, $auth, $template, $cache;
@@ -54,6 +54,21 @@ class acp_permissions
 				$this->permission_trace($user_id, $forum_id, $permission);
 				return;
 			}
+			trigger_error('NO_MODE', E_USER_ERROR);
+		}
+
+		// Copy forum permissions
+		if ($mode == 'setting_forum_copy')
+		{
+			$this->tpl_name = 'permission_forum_copy';
+
+			if ($auth->acl_get('a_fauth') && $auth->acl_get('a_authusers') && $auth->acl_get('a_authgroups') && $auth->acl_get('a_mauth'))
+			{
+				$this->page_title = 'ACP_FORUM_PERMISSIONS_COPY';
+				$this->copy_forum_permissions();
+				return;
+			}
+
 			trigger_error('NO_MODE', E_USER_ERROR);
 		}
 
@@ -94,7 +109,7 @@ class acp_permissions
 			}
 			$db->sql_freeresult($result);
 		}
-		
+
 		// Map usernames to ids and vice versa
 		if ($usernames)
 		{
@@ -112,7 +127,7 @@ class acp_permissions
 			}
 		}
 		unset($username);
-		
+
 		// Build forum ids (of all forums are checked or subforum listing used)
 		if ($all_forums)
 		{
@@ -224,36 +239,65 @@ class acp_permissions
 			switch ($action)
 			{
 				case 'delete':
-
-					if (!check_form_key($form_name))
+					if (confirm_box(true))
 					{
-						trigger_error($user->lang['FORM_INVALID']. adm_back_link($this->u_action), E_USER_WARNING);
-					}
-					// All users/groups selected?
-					$all_users = (isset($_POST['all_users'])) ? true : false;
-					$all_groups = (isset($_POST['all_groups'])) ? true : false;
+						// All users/groups selected?
+						$all_users = (isset($_POST['all_users'])) ? true : false;
+						$all_groups = (isset($_POST['all_groups'])) ? true : false;
 
-					if ($all_users || $all_groups)
-					{
-						$items = $this->retrieve_defined_user_groups($permission_scope, $forum_id, $permission_type);
-
-						if ($all_users && sizeof($items['user_ids']))
+						if ($all_users || $all_groups)
 						{
-							$user_id = $items['user_ids'];
-						}
-						else if ($all_groups && sizeof($items['group_ids']))
-						{
-							$group_id = $items['group_ids'];
-						}
-					}
+							$items = $this->retrieve_defined_user_groups($permission_scope, $forum_id, $permission_type);
 
-					if (sizeof($user_id) || sizeof($group_id))
-					{
-						$this->remove_permissions($mode, $permission_type, $auth_admin, $user_id, $group_id, $forum_id);
+							if ($all_users && sizeof($items['user_ids']))
+							{
+								$user_id = $items['user_ids'];
+							}
+							else if ($all_groups && sizeof($items['group_ids']))
+							{
+								$group_id = $items['group_ids'];
+							}
+						}
+
+						if (sizeof($user_id) || sizeof($group_id))
+						{
+							$this->remove_permissions($mode, $permission_type, $auth_admin, $user_id, $group_id, $forum_id);
+						}
+						else
+						{
+							trigger_error($user->lang['NO_USER_GROUP_SELECTED'] . adm_back_link($this->u_action), E_USER_WARNING);
+						}
 					}
 					else
 					{
-						trigger_error($user->lang['NO_USER_GROUP_SELECTED'] . adm_back_link($this->u_action), E_USER_WARNING);
+						if (isset($_POST['cancel']))
+						{
+							$u_redirect = $this->u_action . '&amp;type=' . $permission_type;
+							foreach ($forum_id as $fid)
+							{
+								$u_redirect .= '&amp;forum_id[]=' . $fid;
+							}
+							redirect($u_redirect);
+						}
+
+						$s_hidden_fields = array(
+							'i'				=> $id,
+							'mode'			=> $mode,
+							'action'		=> array($action => 1),
+							'user_id'		=> $user_id,
+							'group_id'		=> $group_id,
+							'forum_id'		=> $forum_id,
+							'type'			=> $permission_type,
+						);
+						if (isset($_POST['all_users']))
+						{
+							$s_hidden_fields['all_users'] = 1;
+						}
+						if (isset($_POST['all_groups']))
+						{
+							$s_hidden_fields['all_groups'] = 1;
+						}
+						confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields($s_hidden_fields));
 					}
 				break;
 
@@ -528,7 +572,7 @@ class acp_permissions
 				}
 				continue;
 			}
-			
+
 			if ($branch_there)
 			{
 				$s_options .= ' [' . $user->lang['PLUS_SUBFORUMS'] . ']';
@@ -539,14 +583,14 @@ class acp_permissions
 
 		return $s_options;
 	}
-	
+
 	/**
 	* Build dropdown field for changing permission types
 	*/
 	function build_permission_dropdown($options, $default_option, $permission_scope)
 	{
 		global $user, $auth;
-		
+
 		$s_dropdown_options = '';
 		foreach ($options as $setting)
 		{
@@ -626,7 +670,7 @@ class acp_permissions
 		{
 			trigger_error($user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 		}
-		
+
 		$ug_id = $forum_id = 0;
 
 		// We loop through the auth settings defined in our submit
@@ -762,7 +806,14 @@ class acp_permissions
 
 		$this->log_action($mode, 'add', $permission_type, $ug_type, $ug_ids, $forum_ids);
 
-		trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action));
+		if ($mode == 'setting_forum_local' || $mode == 'setting_mod_local')
+		{
+			trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action . '&amp;forum_id[]=' . implode('&amp;forum_id[]=', $forum_ids)));
+		}
+		else
+		{
+			trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action));
+		}
 	}
 
 	/**
@@ -809,7 +860,7 @@ class acp_permissions
 	function remove_permissions($mode, $permission_type, &$auth_admin, &$user_id, &$group_id, &$forum_id)
 	{
 		global $user, $db, $auth;
-			
+
 		// User or group to be set?
 		$ug_type = (sizeof($user_id)) ? 'user' : 'group';
 
@@ -829,7 +880,14 @@ class acp_permissions
 
 		$this->log_action($mode, 'del', $permission_type, $ug_type, (($ug_type == 'user') ? $user_id : $group_id), (sizeof($forum_id) ? $forum_id : array(0 => 0)));
 
-		trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action));
+		if ($mode == 'setting_forum_local' || $mode == 'setting_mod_local')
+		{
+			trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action . '&amp;forum_id[]=' . implode('&amp;forum_id[]=', $forum_id)));
+		}
+		else
+		{
+			trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action));
+		}
 	}
 
 	/**
@@ -949,6 +1007,7 @@ class acp_permissions
 				LEFT JOIN ' . USER_GROUP_TABLE . ' ug ON (ug.group_id = g.group_id)
 			WHERE ug.user_id = ' . $user_id . '
 				AND ug.user_pending = 0
+				AND NOT (ug.group_leader = 1 AND g.group_skip_auth = 1)
 			ORDER BY g.group_type DESC, g.group_id DESC';
 		$result = $db->sql_query($sql);
 
@@ -1110,6 +1169,57 @@ class acp_permissions
 	}
 
 	/**
+	* Handles copying permissions from one forum to others
+	*/
+	function copy_forum_permissions()
+	{
+		global $auth, $cache, $template, $user;
+
+		$user->add_lang('acp/forums');
+
+		$submit = isset($_POST['submit']) ? true : false;
+
+		if ($submit)
+		{
+			$src = request_var('src_forum_id', 0);
+			$dest = request_var('dest_forum_ids', array(0));
+
+			if (confirm_box(true))
+			{
+				if (copy_forum_permissions($src, $dest))
+				{
+					cache_moderators();
+
+					$auth->acl_clear_prefetch();
+					$cache->destroy('sql', FORUMS_TABLE);
+
+					trigger_error($user->lang['AUTH_UPDATED'] . adm_back_link($this->u_action));
+				}
+				else
+				{
+					trigger_error($user->lang['SELECTED_FORUM_NOT_EXIST'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+			}
+			else
+			{
+				$s_hidden_fields = array(
+					'submit'			=> $submit,
+					'src_forum_id'		=> $src,
+					'dest_forum_ids'	=> $dest,
+				);
+
+				$s_hidden_fields = build_hidden_fields($s_hidden_fields);
+
+				confirm_box(false, $user->lang['COPY_PERMISSIONS_CONFIRM'], $s_hidden_fields);
+			}
+		}
+
+		$template->assign_vars(array(
+			'S_FORUM_OPTIONS' => make_forum_select(false, false, false, false, false),
+		));
+	}
+
+	/**
 	* Get already assigned users/groups
 	*/
 	function retrieve_defined_user_groups($permission_scope, $forum_id, $permission_type)
@@ -1150,7 +1260,11 @@ class acp_permissions
 		{
 			$sql_where = 'AND (' . $db->sql_in_set('a.auth_option_id', $option_ids) . ' OR ' . $db->sql_in_set('a.auth_role_id', $role_ids) . ')';
 		}
-		else
+		else if (sizeof($role_ids))
+		{
+			$sql_where = 'AND ' . $db->sql_in_set('a.auth_role_id', $role_ids);
+		}
+		else if (sizeof($option_ids))
 		{
 			$sql_where = 'AND ' . $db->sql_in_set('a.auth_option_id', $option_ids);
 		}

@@ -4,7 +4,7 @@
 * common [English]
 *
 * @package language
-* @version $Id: common.php 9162 2008-12-03 11:18:31Z acydburn $
+* @version $Id: common.php 9845 2009-07-24 11:13:32Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -87,7 +87,7 @@ $lang = array_merge($lang, array(
 	'AVATAR_NO_SIZE'				=> 'The width or height of the linked avatar could not be determined. Please enter them manually.',
 	'AVATAR_PARTIAL_UPLOAD'			=> 'The specified file was only partially uploaded.',
 	'AVATAR_PHP_SIZE_NA'			=> 'The avatar’s filesize is too large.<br />The maximum allowed filesize set in php.ini could not be determined.',
-	'AVATAR_PHP_SIZE_OVERRUN'		=> 'The avatar’s filesize is too large. The maximum allowed upload size is %d MB.<br />Please note this is set in php.ini and cannot be overridden.',
+	'AVATAR_PHP_SIZE_OVERRUN'		=> 'The avatar’s filesize is too large. The maximum allowed upload size is %1$d %2$s.<br />Please note this is set in php.ini and cannot be overridden.',
 	'AVATAR_URL_INVALID'			=> 'The URL you specified is invalid.',
 	'AVATAR_URL_NOT_FOUND'			=> 'The file specified could not be found.',
 	'AVATAR_WRONG_FILESIZE'			=> 'The avatar’s filesize must be between 0 and %1d %2s.',
@@ -158,7 +158,7 @@ $lang = array_merge($lang, array(
 	'VIEWED_COUNT_NONE'		=> 'Not viewed yet',
 
 	'EDIT_POST'							=> 'Edit post',
-	'EMAIL'								=> 'E-mail',
+	'EMAIL'								=> 'E-mail', // Short form for EMAIL_ADDRESS
 	'EMAIL_ADDRESS'						=> 'E-mail address',
 	'EMAIL_SMTP_ERROR_RESPONSE'			=> 'Ran into problems sending e-mail at <strong>Line %1$s</strong>. Response: %2$s.',
 	'EMPTY_SUBJECT'						=> 'You must specify a subject when posting a new topic.',
@@ -228,6 +228,8 @@ $lang = array_merge($lang, array(
 	'FTP_USERNAME_EXPLAIN'		=> 'Username used to connect to your server.',
 
 	'GENERAL_ERROR'				=> 'General Error',
+	'GB'						=> 'GB',
+	'GIB'						=> 'GiB',
 	'GO'						=> 'Go',
 	'GOTO_PAGE'					=> 'Go to page',
 	'GROUP'						=> 'Group',
@@ -248,6 +250,7 @@ $lang = array_merge($lang, array(
 	'G_REGISTERED'				=> 'Registered users',
 	'G_REGISTERED_COPPA'		=> 'Registered COPPA users',
 	'G_GLOBAL_MODERATORS'		=> 'Global moderators',
+	'G_NEWLY_REGISTERED'		=> 'Newly registered users',
 
 	'HIDDEN_USERS_ONLINE'			=> '%d hidden users online',
 	'HIDDEN_USERS_TOTAL'			=> '%d hidden',
@@ -381,6 +384,8 @@ $lang = array_merge($lang, array(
 	'NO_ONLINE_USERS'			=> 'No registered users',
 	'NO_POSTS'					=> 'No posts',
 	'NO_POSTS_TIME_FRAME'		=> 'No posts exist inside this topic for the selected time frame.',
+	'NO_FEED_ENABLED'			=> 'Feeds are not available on this board.',
+	'NO_FEED'					=> 'The requested feed is not available.',
 	'NO_SUBJECT'				=> 'No subject specified',								// Used for posts having no subject defined but displayed within management pages.
 	'NO_SUCH_SEARCH_MODULE'		=> 'The specified search backend doesn’t exist.',
 	'NO_SUPPORTED_AUTH_METHODS'	=> 'No supported authentication methods.',
@@ -484,6 +489,8 @@ $lang = array_merge($lang, array(
 	'RETURN_PAGE'				=> '%sReturn to the previous page%s',
 	'RETURN_TOPIC'				=> '%sReturn to the topic last visited%s',
 	'RETURN_TO'					=> 'Return to',
+	'FEED'						=> 'Feed',
+	'FEED_NEWS'					=> 'News',
 	'RULES_ATTACH_CAN'			=> 'You <strong>can</strong> post attachments in this forum',
 	'RULES_ATTACH_CANNOT'		=> 'You <strong>cannot</strong> post attachments in this forum',
 	'RULES_DELETE_CAN'			=> 'You <strong>can</strong> delete your posts in this forum',
@@ -515,12 +522,13 @@ $lang = array_merge($lang, array(
 	'SEARCH_SELF'				=> 'View your posts',
 	'SEARCH_TOPIC'				=> 'Search this topic…',
 	'SEARCH_UNANSWERED'			=> 'View unanswered posts',
+	'SEARCH_UNREAD'				=> 'View unread posts',
 	'SECONDS'					=> 'Seconds',
 	'SELECT'					=> 'Select',
 	'SELECT_ALL_CODE'			=> 'Select all',
 	'SELECT_DESTINATION_FORUM'	=> 'Please select a destination forum',
 	'SELECT_FORUM'				=> 'Select a forum',
-	'SEND_EMAIL'				=> 'E-mail',
+	'SEND_EMAIL'				=> 'E-mail',				// Used for submit buttons
 	'SEND_EMAIL_USER'			=> 'E-mail',				// Used as: {L_SEND_EMAIL_USER} {USERNAME} -> E-mail UserX
 	'SEND_PRIVATE_MESSAGE'		=> 'Send private message',
 	'SETTINGS'					=> 'Settings',
@@ -533,6 +541,7 @@ $lang = array_merge($lang, array(
 	'SORT_JOINED'				=> 'Joined date',
 	'SORT_LOCATION'				=> 'Location',
 	'SORT_RANK'					=> 'Rank',
+	'SORT_POSTS'				=> 'Posts',
 	'SORT_TOPIC_TITLE'			=> 'Topic title',
 	'SORT_USERNAME'				=> 'Username',
 	'SPLIT_TOPIC'				=> 'Split topic',
@@ -596,6 +605,7 @@ $lang = array_merge($lang, array(
 
 	'TOPIC'				=> 'Topic',
 	'TOPICS'			=> 'Topics',
+	'TOPICS_UNAPPROVED'	=> 'At least one topic in this forum has not been approved.',
 	'TOPIC_ICON'		=> 'Topic icon',
 	'TOPIC_LOCKED'		=> 'This topic is locked, you cannot edit posts or make further replies.',
 	'TOPIC_LOCKED_SHORT'=> 'Topic locked',
@@ -641,6 +651,8 @@ $lang = array_merge($lang, array(
 	'USER_POSTS'			=> '%d Posts',
 	'USERS'					=> 'Users',
 	'USE_PERMISSIONS'		=> 'Test out user’s permissions',
+
+	'USER_NEW_PERMISSION_DISALLOWED'	=> 'We are sorry, but you are not authorised to use this feature. You may have just registered here and may need to participate more to be able to use this feature.',
 
 	'VARIANT_DATE_SEPARATOR'	=> ' / ',	// Used in date format dropdown, eg: "Today, 13:37 / 01 Jan 2007, 13:37" ... to join a relative date with calendar date
 	'VIEWED'					=> 'Viewed',

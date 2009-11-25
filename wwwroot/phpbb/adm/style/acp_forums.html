@@ -218,6 +218,11 @@
 				<label><input type="radio" class="radio" name="enable_post_review" value="0"<!-- IF not S_ENABLE_POST_REVIEW --> id="enable_post_review" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
+			<dt><label for="enable_quick_reply">{L_ENABLE_QUICK_REPLY}:</label><br /><span>{L_ENABLE_QUICK_REPLY_EXPLAIN}</span></dt>
+			<dd><label><input type="radio" class="radio" name="enable_quick_reply" value="1"<!-- IF S_ENABLE_QUICK_REPLY --> id="enable_quick_reply" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="enable_quick_reply" value="0"<!-- IF not S_ENABLE_QUICK_REPLY --> id="enable_quick_reply" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+		</dl>
+		<dl>
 			<dt><label for="enable_indexing">{L_ENABLE_INDEXING}:</label><br /><span>{L_ENABLE_INDEXING_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="enable_indexing" value="1"<!-- IF S_ENABLE_INDEXING --> id="enable_indexing" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="enable_indexing" value="0"<!-- IF not S_ENABLE_INDEXING --> id="enable_indexing" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
@@ -444,7 +449,7 @@
 					<!-- IF forums.FORUM_IMAGE --><div style="float: {S_CONTENT_FLOW_BEGIN}; margin-right: 5px;">{forums.FORUM_IMAGE}</div><!-- ENDIF -->
 					<strong><!-- IF forums.S_FORUM_LINK -->{forums.FORUM_NAME}<!-- ELSE --><a href="{forums.U_FORUM}">{forums.FORUM_NAME}</a><!-- ENDIF --></strong>
 					<!-- IF forums.FORUM_DESCRIPTION --><br /><span>{forums.FORUM_DESCRIPTION}</span><!-- ENDIF -->
-					<!-- IF forums.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{forums.FORUM_TOPICS}</strong> / {L_POSTS}: <b>{forums.FORUM_POSTS}</b></span><!-- ENDIF -->
+					<!-- IF forums.S_FORUM_POST --><br /><br /><span>{L_TOPICS}: <strong>{forums.FORUM_TOPICS}</strong> / {L_POSTS}: <strong>{forums.FORUM_POSTS}</strong></span><!-- ENDIF -->
 				</td>
 				<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
 					<!-- IF forums.S_FIRST_ROW && not forums.S_LAST_ROW -->
