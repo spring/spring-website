@@ -1,0 +1,155 @@
+-------------------------------------------------------------------------------
+Mantis - a PHP based bugtracking system
+Copyright (C) 2000-2002  Kenzaburo Ito - kenito@300baud.org
+Copyright (C) 2002-2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
+-------------------------------------------------------------------------------
+
+*** Please contact project administrators if you should be on this list!
+
+CREDITS
+
+Administrators
+--------------
+
+Victor Boctor (vboctor)
+
+Developers
+----------
+
+Alexey Chumakov (achumakov)
+Gianluca Sforna (giallu)
+Glenn Henshaw (thraxisp)
+John Reese (jreese)
+Paul Richards (grangeway, paulr, minimoo, prichards)
+ryandesign
+siebrand
+
+Ex-Administrators
+-----------------
+
+Jeroen Latour (jlatour)
+Julian Fitzell (jfitzell)
+Kenzaburo Ito (prescience, cluebie, presbert)
+
+Contributors
+------------
+
+Adrian Spinei
+Alan Seiden (db2 support)
+Alexander Leschinsky (wanderer)
+Amandeep Jawa
+André Eisenbach (int2str)
+Andrew Gregory - xmlhttprequest.js
+Angelo Rossi
+Ariel Arjona (aarjona)
+August Zajonc
+Bastian Pfenningschmidt
+Beorn Harris
+Bernat Pegueroles
+Brett Carter
+Brett England
+Christian Mayer
+Christian Stocker - LiveSearch javascript
+Christoph Giess
+David Ethell
+David Jeske
+Don McPhee
+Dries Samyn
+Duncan Lisset
+Griff Miller
+Guy Brandt
+Hai Nguyen
+Helmut Franzke
+Ira Chandler (db2 support)
+James Beard
+Jan Derk
+Jaroslaw Lewandowski
+Jason Lunn
+Jason Stewart
+Jean-Francois Travers
+Jon Maltz
+Laurent Petit
+Lee O'Mara
+Leigh Morresi
+Lincoln Maskey (Narcissus)
+Ludwig Ruderstaller
+Marcello Scata (masc)
+Martin Wickmann
+Matt Otto
+Matthiaus Bauer
+Maxim Berlin
+Niels Andersen
+Ondrej Jombik
+Philip D. Turner
+Robert Foster
+Sean Phelan
+Sebastien Massoutier
+Scott Hanson
+Scott Roberts
+Steve Davies
+Steve Kwee
+Talal Nehme
+Tarik Sedlarevic (tazza70)
+Thaler Jörg
+Thomas Fromm
+Yves Durasnel
+Volker Wegert
+
+Translations
+------------
+
+Adam Bienias
+Adrian Spinei
+Alberto Serrano
+Alex Volkov
+Alf-Ivar Holm
+Attila Vági
+Bernardo Hernández
+BZC ToOn'S
+Daniel Coquette
+Davor Orlic
+Dragan Matic
+Eric Hartmann
+Espen Holje
+Felipe Tonioli
+Fernando Machado
+Francis Labrie
+Grétar Jón Einarsson
+Gunner Poulsen
+Hermann-Josef Beckers
+Heiko Gierer
+Hellekin O. Wolf
+Istvan Back
+Jan-Bart de Vreede
+Jan Urbancik
+Jeroen Latour
+Jonathan Tsai
+Juliano Ravasi Ferraz
+Jürgen Kehrel (Dr.)
+J.I. Kim
+Kai-Zheng Cheng
+Klaasjan Brand
+Klemens Kasemaa
+Lele Gaifax
+Luca Pescatore
+Ludvig Omholt
+Luís Martins
+Luis Miguel Cruz Miranda
+Marcin Ulanecki
+Marco Vassura
+Matej Rizman
+Oktay Altunergil
+Pablo Corral
+Pao-Hsi Huang
+Pavel Loupal
+Quentin Delance
+Roland Meyers
+Rui Alexandre Coelho
+Seiji Sogabe
+Søren Mortensen
+Takeshi Hachikawa
+Tomi Hurenius
+Vilius Ðumskas
+Volker Wegert
+Villem Vannas
+Virginija Baliukiene

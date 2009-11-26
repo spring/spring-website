@@ -1,6 +1,9 @@
 # database connection details
 springpw.php
 
+# includes/cache.php
+/cache
+
 # includes/thumbs.php
 /wwwroot/thumbs
 
