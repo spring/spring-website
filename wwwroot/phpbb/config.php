@@ -5,7 +5,7 @@ $dbms = 'mysqli';
 $dbhost = 'localhost';
 $dbport = '';
 
-include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php');
+include(dirname(__FILE__) . '/../../springpw.php');
 $dbname = $spring_dbname;
 $dbuser = $spring_dbuser;
 $dbpasswd = $spring_dbpass;
