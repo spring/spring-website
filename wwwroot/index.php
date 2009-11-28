@@ -31,6 +31,7 @@
     // Prepare community headlines
     $xml = cached_file_get_contents("http://springinfo.info/?feed=rss");
     try {
+        libxml_use_internal_errors(true);
         $xml = new SimpleXMLElement($xml);
     }
     catch (Exception $ex) {
