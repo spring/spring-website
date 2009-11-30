@@ -51,7 +51,7 @@ $wgEmergencyContact = "spring@it-l.eu";
 $wgPasswordSender = "spring@it-l.eu";
 
 ## For a detailed description of the following switches see
-## http://www.mediawiki.org/wiki/Extension:Email_notification 
+## http://www.mediawiki.org/wiki/Extension:Email_notification
 ## and http://www.mediawiki.org/wiki/Extension:Email_notification
 ## There are many more options for fine tuning available see
 ## /includes/DefaultSettings.php
@@ -108,8 +108,6 @@ $wgLocalInterwiki   = $wgSitename;
 
 $wgLanguageCode = "en";
 
-$wgProxyKey = "646c9f400fba3196b77c3822de9aa048e7891dcd216d2ff9734aab9a0b0e9365";
-
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook':
 $wgDefaultSkin = 'monobook';
@@ -144,49 +142,49 @@ require_once './extensions/Auth_phpBB.php';
 
 // BreadCrumb extension
 // require_once './extensions/BreadCrumbs/BreadCrumbs.php';
- 
+
 $wgAuth_Config = array(); // Clean.
- 
-$wgAuth_Config['WikiGroupName'][] = 'REGISTERED';       
-$wgAuth_Config['WikiGroupName'][] = 'ADMINISTRATORS';       
+
+$wgAuth_Config['WikiGroupName'][] = 'REGISTERED';
+$wgAuth_Config['WikiGroupName'][] = 'ADMINISTRATORS';
 
                                                 // Name of your PHPBB group
                                                 // users need to be a member
                                                 // of to use the wiki. (i.e. wiki)
-                                                // This can also be set to an array 
-                                                // of group names to use more then 
-                                                // one. (ie. 
+                                                // This can also be set to an array
+                                                // of group names to use more then
+                                                // one. (ie.
                                                 // $wgAuth_Config['WikiGroupName'][] = 'Wiki';
                                                 // $wgAuth_Config['WikiGroupName'][] = 'Wiki2';
                                                 // or
                                                 // $wgAuth_Config['WikiGroupName'] = array('Wiki', 'Wiki2');
                                                 // )
- 
+
 $wgAuth_Config['UseWikiGroup'] = true;          // This tells the Plugin to require
                                                 // a user to be a member of the above
                                                 // phpBB group. (ie. wiki) Setting
                                                 // this to false will let any phpBB
                                                 // user edit the wiki.
- 
+
 $wgAuth_Config['UseExtDatabase'] = false;       // This tells the plugin that the phpBB tables
                                                 // are in a different database then the wiki.
                                                 // The default settings is false.
- 
+
 //$wgAuth_Config['MySQL_Host']        = 'localhost';      // phpBB MySQL Host Name.
 //$wgAuth_Config['MySQL_Username']    = 'username';       // phpBB MySQL Username.
 //$wgAuth_Config['MySQL_Password']    = 'password';       // phpBB MySQL Password.
 //$wgAuth_Config['MySQL_Database']    = 'database';       // phpBB MySQL Database Name.
- 
+
 $wgAuth_Config['UserTB']         = 'phpbb3_users';       // Name of your PHPBB user table. (i.e. phpbb_users)
 $wgAuth_Config['GroupsTB']       = 'phpbb3_groups';      // Name of your PHPBB groups table. (i.e. phpbb_groups)
 $wgAuth_Config['User_GroupTB']   = 'phpbb3_user_group';  // Name of your PHPBB user_group table. (i.e. phpbb_user_group)
-$wgAuth_Config['PathToPHPBB']    = '../phpBB3/';         // Path from this file to your phpBB install.
- 
+$wgAuth_Config['PathToPHPBB']    = '../phpbb/';         // Path from this file to your phpBB install.
+
 // Local
 $wgAuth_Config['LoginMessage']   = '<b>You need a phpBB account to login.</b><br /><a href="' . $wgAuth_Config['PathToPHPBB'] .
                                    'ucp.php?mode=register">Click here to create an account.</a>'; // Localize this message.
 $wgAuth_Config['NoWikiError']    = 'You are not a member of the required phpBB group.'; // Localize this message.
- 
+
 $wgAuth = new Auth_phpBB($wgAuth_Config);     // Auth_phpBB Plugin.
 
 $wgDefaultSkin = 'springnew';

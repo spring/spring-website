@@ -12,4 +12,8 @@ $spring_dbname = 'springdb';
 # ATTENTION: CHANGE IT TO WHATEVER VALUE YOU PREFER
 $g_password_confirm_hash_magic_string = 'blowfish';
 
+// Mediawiki specific
+
+$wgProxyKey = "646c9f400fba3196b77c3822de9aa048e7891dcd216d2ff9734aab9a0b0e9365";
+
 ?>
