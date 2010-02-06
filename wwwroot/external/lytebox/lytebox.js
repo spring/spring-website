@@ -464,7 +464,7 @@ LyteBox.prototype.updateDetails = function() {
 	var object = this.doc.getElementById('lbCaption');
 	var sTitle = (this.isSlideshow ? this.slideArray[this.activeSlide][1] : (this.isLyteframe ? this.frameArray[this.activeFrame][1] : this.imageArray[this.activeImage][1]));
 	object.style.display = '';
-	object.innerHTML = (sTitle == null ? '' : sTitle);
+	object.innerHTML =  "<a href=\"" + (myLytebox.isSlideshow ? myLytebox.slideArray[myLytebox.activeSlide][0] : myLytebox.imageArray[myLytebox.activeImage][0]) + "\" target=\"_blank\" title=\"Open in new window\" style=\"color:blue\">" + (sTitle == null ? '' : sTitle) + "</a>";
 	this.updateNav();
 	this.doc.getElementById('lbDetailsContainer').style.display = '';
 	object = this.doc.getElementById('lbNumberDisplay');
