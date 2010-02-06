@@ -734,7 +734,7 @@ function delete_posts($where_type, $where_ids, $auto_sync = true, $posted_sync =
 {
 	// move deleted posts to the spambox 'deleted posts' thread
 	if ($where_type === 'post_id') {
-		move_posts($where_ids, '20246');
+		move_posts($where_ids, '20246', $auto_sync);
 		return 1;
 	}
 
