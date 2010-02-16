@@ -1,6 +1,7 @@
 Options +FollowSymlinks
 RewriteEngine on
-RewriteRule ^wiki/(.+)$ /mediawiki/index.php?title=$1 [L,QSA]
+RewriteRule ^wiki/(.*)$ /mediawiki/index.php?title=$1 [L,QSA]
+RewriteRule ^wiki$ /mediawiki/index.php [L,QSA]
 
 RewriteRule ^jwvideo(\d*).flv$ /screenshot.php?topic=$1&video=1 [L,QSA]
 RewriteRule ^jwimage(\d*).jpg$ /screenshot.php?topic=$1 [L,QSA]
