@@ -3,7 +3,7 @@ require_once("config.php");
 include("feedcreator.class.php");
 $db = mysql_connect($dbhost,$dbuser,$dbpasswd);
 mysql_select_db($dbname,$db);
-$query = "SELECT * FROM ".$table_prefix."posts WHERE forum_id NOT IN (3,17,18,29) ORDER BY post_id DESC LIMIT 0,10";
+$query = "SELECT * FROM ".$table_prefix."posts WHERE forum_id NOT IN (3, 4, 5, 8, 17, 18, 28, 29, 62, 24, 25, 40, 30) ORDER BY post_id DESC LIMIT 0,10";
 $res = mysql_query($query);
 
 if ($res == FALSE)
