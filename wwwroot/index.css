@@ -183,6 +183,7 @@ a.bigbar:hover {
 }
 .cnews {
 	float: right;
+	clear: right;
 	border-bottom: 1px solid #20292E;
 	margin: 0px 0px 24px 24px;
 	width: 40%;

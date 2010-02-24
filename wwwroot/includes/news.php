@@ -31,9 +31,9 @@ function get_news()
 	return $news;
 }
 
-function get_community_news()
+function get_news_from_feed($feedurl)
 {
-	$xml = cached_file_get_contents("http://springinfo.info/?feed=rss");
+	$xml = cached_file_get_contents($feedurl);
 	try {
 		libxml_use_internal_errors(true);
 		$xml = new SimpleXMLElement($xml);
@@ -60,6 +60,16 @@ function get_community_news()
 	}
 
 	return $cnews;
+}
+
+function get_community_news()
+{
+	return get_news_from_feed('http://springinfo.info/?feed=rss');
+}
+
+function get_forum_posts()
+{
+	return get_news_from_feed('http://' . $_SERVER['SERVER_NAME'] . '/phpbb/newposts.php');
 }
 
 ?>
