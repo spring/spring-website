@@ -95,7 +95,7 @@ FROM spring.phpbb3_users WHERE user_new = 0;
 
 -- username: Admin    password: admin (change this or remove it once everything is working!)
 INSERT INTO phpbb3_users (user_type, group_id, username, username_clean, user_regdate, user_password, user_email, user_lang, user_style, user_rank, user_colour, user_posts, user_permissions, user_ip, user_birthday, user_lastpage, user_last_confirm_key, user_post_sortby_type, user_post_sortby_dir, user_topic_sortby_type, user_topic_sortby_dir, user_avatar, user_sig, user_sig_bbcode_uid, user_from, user_icq, user_aim, user_yim, user_msnm, user_jabber, user_website, user_occ, user_interests, user_actkey, user_newpasswd) VALUES
-	(3, 5, 'Admin', 'admin', 0, '21232f297a57a5a743894a0e4a801fc3', 'admin@yourdomain.com', 'en', 0, 1, 'AA0000', 0, '', '', '', '', '', 't', 'a', 't', 'd', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+	(3, 5, 'Admin', 'admin', 0, '$H$9SDdY/PsGuE0g19dsIDLNipast7JL2.', 'admin@yourdomain.com', 'en', 0, 1, 'AA0000', 0, '', '', '', '', '', 't', 'a', 't', 'd', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 INSERT INTO phpbb3_user_group (group_id, user_id, user_pending, group_leader) VALUES
 	(3569, (SELECT LAST_INSERT_ID()), 0, 0),
