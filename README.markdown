@@ -2,7 +2,8 @@
 
 Quick notes on how to set up a local development copy of the site:
 
-Make sure you acquire from someone with sufficient access:
+Make sure you acquire from [here](http://springrts.com/dl/spring-website/), [here](http://www.springlobby.info/temp/spring_site/),
+or from someone with sufficient access (in case both links are down or too old):
 
 - a sample database dump (some_database_dump.sql)
 - a set of attachments belonging to this dump (attachments.tar.gz)
