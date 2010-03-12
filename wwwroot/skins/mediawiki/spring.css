@@ -69,6 +69,7 @@ html {
 @media (min-width: 1200px) {
   #toc[summary=Contents]  {position: relative; right:0px; top:5px; width:240px; overflow: hidden;
                            border: 1px solid #111; border-spacing: 0px;
+						   margin-left:20px; margin-bottom:20px;
 						   -webkit-border-radius: 10px; -moz-border-radius: 10px;border-radius: 10px;
                            background: #38464F;}
   #toc tr td > ul         {margin-top: 0.5ex; margin-right: 0.5ex;}
