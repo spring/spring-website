@@ -9,7 +9,7 @@ html {
 
 
 /* MEDIAWIKI */
-#article                 {width: auto; overflow: hidden;
+#article                 {width: 748px; overflow: hidden;
                           margin-left: 10px; margin-right: 0; padding-top: 10px;
                           font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
