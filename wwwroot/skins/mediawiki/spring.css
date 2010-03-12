@@ -164,6 +164,8 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 /* MEDIAWIKI SPECIALS */
 .TablePager th           {background-color: #444;}
 .TablePager td           {background-color: #555;}
+.imagelist th.TablePager_sort { background-color: #555 }/* defines the 'sort-by' col bg (in Filelist)*/
+.TablePager tr:hover td  {background-color: #666 }/* defines the row bg on hover(in Filelist)*/
 .gallery *               {background-color: #555;}
 .gallery                 {background-color: #555; border: 2px #222 solid;}
 .gallery td              {border: 1px #222 solid;}
