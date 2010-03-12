@@ -14,6 +14,8 @@ Then do approximately this:
     cd spring-website
     tar xf attachments.tar.gz
     bin/fix_perms.sh   # may want to review the script and/or run it as root
+    cp springpw_example.php springpw.php
+    $EDITOR springpw.php   # set mysql user/pass/database
 
     create user 'spring'@'localhost' identified by 'some_pass';
     create database spring;
