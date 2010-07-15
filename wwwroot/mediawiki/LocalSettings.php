@@ -140,6 +140,9 @@ $wgUsePathInfo = true;
 // PHPBB User Database Plugin. (Requires MySQL Database)
 require_once './extensions/Auth_phpBB.php';
 
+// CSS extension
+require_once './extensions/CSS/CSS.php';
+
 // BreadCrumb extension
 // require_once './extensions/BreadCrumbs/BreadCrumbs.php';
 
