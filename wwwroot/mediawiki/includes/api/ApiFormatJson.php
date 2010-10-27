@@ -23,24 +23,29 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiFormatBase.php');
+	require_once ( 'ApiFormatBase.php' );
 }
 
 /**
- * @addtogroup API
+ * @ingroup API
  */
 class ApiFormatJson extends ApiFormatBase {
 
 	private $mIsRaw;
 
-	public function __construct($main, $format) {
-		parent :: __construct($main, $format);
-		$this->mIsRaw = ($format === 'rawfm');
+	public function __construct( $main, $format ) {
+		parent :: __construct( $main, $format );
+		$this->mIsRaw = ( $format === 'rawfm' );
 	}
 
 	public function getMimeType() {
+		$params = $this->extractRequestParams();
+		// callback:
+		if ( $params['callback'] ) {
+			return 'text/javascript';
+		}
 		return 'application/json';
 	}
 
@@ -48,27 +53,29 @@ class ApiFormatJson extends ApiFormatBase {
 		return $this->mIsRaw;
 	}
 
+	public function getWantsHelp() {
+		// Help is always ugly in JSON
+		return false;
+	}
+
 	public function execute() {
 		$prefix = $suffix = "";
 
 		$params = $this->extractRequestParams();
 		$callback = $params['callback'];
-		if(!is_null($callback)) {
-			$prefix = ereg_replace("[^_A-Za-z0-9]", "", $callback ) . "(";
+		if ( !is_null( $callback ) ) {
+			$prefix = preg_replace( "/[^][.\\'\\\"_A-Za-z0-9]/", "", $callback ) . "(";
 			$suffix = ")";
 		}
-
-		if (!function_exists('json_encode') || $this->getIsHtml()) {
-			$json = new Services_JSON();
-			$this->printText($prefix . $json->encode($this->getResultData(), $this->getIsHtml()) . $suffix);
-		} else {
-			$this->printText($prefix . json_encode($this->getResultData()) . $suffix);
-		}
+		$this->printText(
+			$prefix .
+			FormatJson::encode( $this->getResultData(),	$this->getIsHtml() ) .
+			$suffix );
 	}
 
 	public function getAllowedParams() {
 		return array (
-			'callback' => null
+			'callback'  => null,
 		);
 	}
 
@@ -79,14 +86,13 @@ class ApiFormatJson extends ApiFormatBase {
 	}
 
 	public function getDescription() {
-		if ($this->mIsRaw)
+		if ( $this->mIsRaw )
 			return 'Output data with the debuging elements in JSON format' . parent :: getDescription();
 		else
 			return 'Output data in JSON format' . parent :: getDescription();
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiFormatJson.php 31484 2008-03-03 05:46:20Z brion $';
+		return __CLASS__ . ': $Id: ApiFormatJson.php 62354 2010-02-12 06:44:16Z mah $';
 	}
 }
-

@@ -9,8 +9,24 @@
  * the file mime.types in the includes directory.
  */
 define('MM_WELL_KNOWN_MIME_TYPES',<<<END_STRING
-application/ogg ogg ogm
+application/ogg ogg ogm ogv
 application/pdf pdf
+application/vnd.oasis.opendocument.chart odc
+application/vnd.oasis.opendocument.chart-template otc
+application/vnd.oasis.opendocument.formula odf
+application/vnd.oasis.opendocument.formula-template otf
+application/vnd.oasis.opendocument.graphics odg
+application/vnd.oasis.opendocument.graphics-template otg
+application/vnd.oasis.opendocument.image odi
+application/vnd.oasis.opendocument.image-template oti
+application/vnd.oasis.opendocument.presentation odp
+application/vnd.oasis.opendocument.presentation-template otp
+application/vnd.oasis.opendocument.spreadsheet ods
+application/vnd.oasis.opendocument.spreadsheet-template ots
+application/vnd.oasis.opendocument.text odt
+application/vnd.oasis.opendocument.text-template ott
+application/vnd.oasis.opendocument.text-master otm
+application/vnd.oasis.opendocument.text-web oth
 application/x-javascript js
 application/x-shockwave-flash swf
 audio/midi mid midi kar
@@ -29,7 +45,7 @@ image/x-portable-pixmap ppm
 image/x-xcf xcf
 text/plain txt
 text/html html htm
-video/ogg ogm ogg
+video/ogg ogm ogg ogv
 video/mpeg mpg mpeg
 END_STRING
 );
@@ -41,6 +57,22 @@ END_STRING
  */
 define('MM_WELL_KNOWN_MIME_INFO', <<<END_STRING
 application/pdf [OFFICE]
+application/vnd.oasis.opendocument.chart [OFFICE]
+application/vnd.oasis.opendocument.chart-template [OFFICE]
+application/vnd.oasis.opendocument.formula [OFFICE]
+application/vnd.oasis.opendocument.formula-template [OFFICE]
+application/vnd.oasis.opendocument.graphics [OFFICE]
+application/vnd.oasis.opendocument.graphics-template [OFFICE]
+application/vnd.oasis.opendocument.image [OFFICE]
+application/vnd.oasis.opendocument.image-template [OFFICE]
+application/vnd.oasis.opendocument.presentation [OFFICE]
+application/vnd.oasis.opendocument.presentation-template [OFFICE]
+application/vnd.oasis.opendocument.spreadsheet [OFFICE]
+application/vnd.oasis.opendocument.spreadsheet-template [OFFICE]
+application/vnd.oasis.opendocument.text [OFFICE]
+application/vnd.oasis.opendocument.text-template [OFFICE]
+application/vnd.oasis.opendocument.text-master [OFFICE]
+application/vnd.oasis.opendocument.text-web [OFFICE]
 text/javascript application/x-javascript [EXECUTABLE]
 application/x-shockwave-flash [MULTIMEDIA]
 audio/midi [AUDIO]
@@ -73,7 +105,7 @@ if ($wgLoadFileinfoExtension) {
 	if(!extension_loaded('fileinfo')) dl('fileinfo.' . PHP_SHLIB_SUFFIX);
 }
 
-/** 
+/**
  * Implements functions related to mime types such as detection and mapping to
  * file extension.
  *
@@ -86,19 +118,23 @@ class MimeMagic {
 	* Mapping of media types to arrays of mime types.
 	* This is used by findMediaType and getMediaType, respectively
 	*/
-	var $mMediaTypes= NULL;
+	var $mMediaTypes= null;
 
 	/** Map of mime type aliases
 	*/
-	var $mMimeTypeAliases= NULL;
+	var $mMimeTypeAliases= null;
 
 	/** map of mime types to file extensions (as a space seprarated list)
 	*/
-	var $mMimeToExt= NULL;
+	var $mMimeToExt= null;
 
 	/** map of file extensions types to mime types (as a space seprarated list)
 	*/
-	var $mExtToMime= NULL;
+	var $mExtToMime= null;
+
+	/** IEContentAnalyzer instance
+	 */
+	var $mIEAnalyzer;
 
 	/** The singleton instance
 	 */
@@ -120,7 +156,7 @@ class MimeMagic {
 		if ( $wgMimeTypeFile == 'includes/mime.types' ) {
 			$wgMimeTypeFile = "$IP/$wgMimeTypeFile";
 		}
-		
+
 		if ( $wgMimeTypeFile ) {
 			if ( is_file( $wgMimeTypeFile ) and is_readable( $wgMimeTypeFile ) ) {
 				wfDebug( __METHOD__.": loading mime types from $wgMimeTypeFile\n" );
@@ -292,7 +328,7 @@ class MimeMagic {
 	*/
 	function guessTypesForExtension( $ext ) {
 		$m = $this->getTypesForExtension( $ext );
-		if ( is_null( $m ) ) return NULL;
+		if ( is_null( $m ) ) return null;
 
 		$m = trim( $m );
 		$m = preg_replace( '/\s.*$/', '', $m );
@@ -309,7 +345,7 @@ class MimeMagic {
 		$ext = $this->getExtensionsForType( $mime );
 
 		if ( !$ext ) {
-			return NULL;  //unknown
+			return null;  //unknown
 		}
 
 		$ext = explode( ' ', $ext );
@@ -358,10 +394,10 @@ class MimeMagic {
 			'bmp', 'tiff', 'tif', 'jpc', 'jp2',
 			'jpx', 'jb2', 'swc', 'iff', 'wbmp',
 			'xbm',
-			
+
 			// Formats we recognize magic numbers for
-			'djvu', 'ogg', 'mid', 'pdf', 'wmf', 'xcf',
-			
+			'djvu', 'ogg', 'ogv', 'mid', 'pdf', 'wmf', 'xcf',
+
 			// XML formats we sure hope we recognize reliably
 			'svg',
 		);
@@ -374,7 +410,7 @@ class MimeMagic {
 	* or misinterpreter by the default mime detection (namely xml based formats like XHTML or SVG).
 	*
 	* @param string $file The file to check
-	* @param mixed $ext The file extension, or true to extract it from the filename. 
+	* @param mixed $ext The file extension, or true to extract it from the filename.
 	*                   Set it to false to ignore the extension.
 	*
 	* @return string the mime type of $file
@@ -394,7 +430,7 @@ class MimeMagic {
 		wfDebug(__METHOD__.": final mime type of $file: $mime\n");
 		return $mime;
 	}
-	
+
 	function doGuessMimeType( $file, $ext = true ) {
 		// Read a chunk of the file
 		wfSuppressWarnings();
@@ -402,6 +438,8 @@ class MimeMagic {
 		wfRestoreWarnings();
 		if( !$f ) return "unknown/unknown";
 		$head = fread( $f, 1024 );
+		fseek( $f, -65558, SEEK_END );
+		$tail = fread( $f, 65558 ); // 65558 = maximum size of a zip EOCDR
 		fclose( $f );
 
 		// Hardcode a few magic number checks...
@@ -409,20 +447,20 @@ class MimeMagic {
 			// Multimedia...
 			'MThd'             => 'audio/midi',
 			'OggS'             => 'application/ogg',
-			
+
 			// Image formats...
 			// Note that WMF may have a bare header, no magic number.
 			"\x01\x00\x09\x00" => 'application/x-msmetafile', // Possibly prone to false positives?
 			"\xd7\xcd\xc6\x9a" => 'application/x-msmetafile',
 			'%PDF'             => 'application/pdf',
 			'gimp xcf'         => 'image/x-xcf',
-			
+
 			// Some forbidden fruit...
 			'MZ'               => 'application/octet-stream', // DOS/Windows executable
 			"\xca\xfe\xba\xbe" => 'application/octet-stream', // Mach-O binary
 			"\x7fELF"          => 'application/octet-stream', // ELF binary
 		);
-		
+
 		foreach( $headers as $magic => $candidate ) {
 			if( strncmp( $head, $magic, strlen( $magic ) ) == 0 ) {
 				wfDebug( __METHOD__ . ": magic header in $file recognized as $candidate\n" );
@@ -431,16 +469,18 @@ class MimeMagic {
 		}
 
 		/*
-		 * look for PHP
-		 * Check for this before HTML/XML...
-		 * Warning: this is a heuristic, and won't match a file with a lot of non-PHP before.
-		 * It will also match text files which could be PHP. :)
+		 * Look for PHP.  Check for this before HTML/XML...  Warning: this is a
+		 * heuristic, and won't match a file with a lot of non-PHP before.  It
+		 * will also match text files which could be PHP. :)
+		 *
+		 * FIXME: For this reason, the check is probably useless -- an attacker
+		 * could almost certainly just pad the file with a lot of nonsense to
+		 * circumvent the check in any case where it would be a security
+		 * problem.  On the other hand, it causes harmful false positives (bug
+		 * 16583).  The heuristic has been cut down to exclude three-character
+		 * strings like "<? ", but should it be axed completely?
 		 */
 		if( ( strpos( $head, '<?php' ) !== false ) ||
-		    ( strpos( $head, '<? ' ) !== false ) ||
-		    ( strpos( $head, "<?\n" ) !== false ) ||
-		    ( strpos( $head, "<?\t" ) !== false ) ||
-		    ( strpos( $head, "<?=" ) !== false ) ||
 
 		    ( strpos( $head, "<\x00?\x00p\x00h\x00p" ) !== false ) ||
 		    ( strpos( $head, "<\x00?\x00 " ) !== false ) ||
@@ -451,23 +491,16 @@ class MimeMagic {
 			wfDebug( __METHOD__ . ": recognized $file as application/x-php\n" );
 			return "application/x-php";
 		}
-		
+
 		/*
 		 * look for XML formats (XHTML and SVG)
 		 */
 		$xml = new XmlTypeCheck( $file );
 		if( $xml->wellFormed ) {
-			$types = array(
-				'http://www.w3.org/2000/svg:svg'    => 'image/svg+xml',
-				'svg'                               => 'image/svg+xml',
-				'http://www.w3.org/1999/xhtml:html' => 'text/html', // application/xhtml+xml?
-				'html'                              => 'text/html', // application/xhtml+xml?
-			);
-			if( isset( $types[$xml->rootElement] ) ) {
-				$mime = $types[$xml->rootElement];
-				return $mime;
+			global $wgXMLMimeTypes;
+			if( isset( $wgXMLMimeTypes[$xml->getRootElement()] ) ) {
+				return $wgXMLMimeTypes[$xml->getRootElement()];
 			} else {
-				/// Fixme -- this would be the place to allow additional XML type checks
 				return 'application/xml';
 			}
 		}
@@ -475,7 +508,7 @@ class MimeMagic {
 		/*
 		 * look for shell scripts
 		 */
-		$script_type = NULL;
+		$script_type = null;
 
 		# detect by shebang
 		if ( substr( $head, 0, 2) == "#!" ) {
@@ -511,17 +544,21 @@ class MimeMagic {
 				return $mime;
 			}
 		}
-		
+
+		// Check for ZIP (before getimagesize)
+		if ( strpos( $tail, "PK\x05\x06" ) !== false ) {
+			wfDebug( __METHOD__.": ZIP header present at end of $file\n" );
+			return $this->detectZipType( $head );
+		}
+
 		wfSuppressWarnings();
 		$gis = getimagesize( $file );
 		wfRestoreWarnings();
-		
+
 		if( $gis && isset( $gis['mime'] ) ) {
 			$mime = $gis['mime'];
 			wfDebug( __METHOD__.": getimagesize detected $file as $mime\n" );
 			return $mime;
-		} else {
-			return false;
 		}
 
 		// Also test DjVu
@@ -530,18 +567,62 @@ class MimeMagic {
 			wfDebug( __METHOD__.": detected $file as image/vnd.djvu\n" );
 			return 'image/vnd.djvu';
 		}
+
+		return false;
+	}
+	
+	/**
+	 * Detect application-specific file type of a given ZIP file from its
+	 * header data.  Currently works for OpenDocument types...
+	 * If can't tell, returns 'application/zip'.
+	 *
+	 * @param string $header Some reasonably-sized chunk of file header
+	 * @return string
+	 */
+	function detectZipType( $header ) {
+		$opendocTypes = array(
+			'chart-template',
+			'chart',
+			'formula-template',
+			'formula',
+			'graphics-template',
+			'graphics',
+			'image-template',
+			'image',
+			'presentation-template',
+			'presentation',
+			'spreadsheet-template',
+			'spreadsheet',
+			'text-template',
+			'text-master',
+			'text-web',
+			'text' );
+
+		// http://lists.oasis-open.org/archives/office/200505/msg00006.html
+		$types = '(?:' . implode( '|', $opendocTypes ) . ')';
+		$opendocRegex = "/^mimetype(application\/vnd\.oasis\.opendocument\.$types)/";
+		wfDebug( __METHOD__.": $opendocRegex\n" );
+		
+		if( preg_match( $opendocRegex, substr( $header, 30 ), $matches ) ) {
+			$mime = $matches[1];
+			wfDebug( __METHOD__.": detected $mime from ZIP archive\n" );
+			return $mime;
+		} else {
+			wfDebug( __METHOD__.": unable to identify type of ZIP archive\n" );
+			return 'application/zip';
+		}
 	}
 
 	/** Internal mime type detection, please use guessMimeType() for application code instead.
 	* Detection is done using an external program, if $wgMimeDetectorCommand is set.
 	* Otherwise, the fileinfo extension and mime_content_type are tried (in this order), if they are available.
-	* If the dections fails and $ext is not false, the mime type is guessed from the file extension, using 
+	* If the dections fails and $ext is not false, the mime type is guessed from the file extension, using
 	* guessTypesForExtension.
 	* If the mime type is still unknown, getimagesize is used to detect the mime type if the file is an image.
 	* If no mime type can be determined, this function returns "unknown/unknown".
 	*
 	* @param string $file The file to check
-	* @param mixed $ext The file extension, or true to extract it from the filename. 
+	* @param mixed $ext The file extension, or true to extract it from the filename.
 	*                   Set it to false to ignore the extension.
 	*
 	* @return string the mime type of $file
@@ -550,7 +631,7 @@ class MimeMagic {
 	function detectMimeType( $file, $ext = true ) {
 		global $wgMimeDetectorCommand;
 
-		$m = NULL;
+		$m = null;
 		if ( $wgMimeDetectorCommand ) {
 			$fn = wfEscapeShellArg( $file );
 			$m = `$wgMimeDetectorCommand $fn`;
@@ -597,7 +678,7 @@ class MimeMagic {
 			$m = strtolower( $m );
 
 			if ( strpos( $m, 'unknown' ) !== false ) {
-				$m = NULL;
+				$m = null;
 			} else {
 				wfDebug( __METHOD__.": magic mime type of $file: $m\n" );
 				return $m;
@@ -642,7 +723,7 @@ class MimeMagic {
 	*
 	* @return (int?string?) a value to be used with the MEDIATYPE_xxx constants.
 	*/
-	function getMediaType( $path = NULL, $mime = NULL ) {
+	function getMediaType( $path = null, $mime = null ) {
 		if( !$mime && !$path ) return MEDIATYPE_UNKNOWN;
 
 		# If mime type is unknown, guess it
@@ -675,7 +756,7 @@ class MimeMagic {
 		}
 
 		# Check for entry for file extension
-		$e = NULL;
+		$e = null;
 		if ( $path ) {
 			$i = strrpos( $path, '.' );
 			$e = strtolower( $i ? substr( $path, $i + 1 ) : '' );
@@ -714,7 +795,7 @@ class MimeMagic {
 			if ( !$m ) return MEDIATYPE_UNKNOWN;
 
 			$m = explode( ' ', $m );
-		} else { 
+		} else {
 			# Normalize mime type
 			if ( isset( $this->mMimeTypeAliases[$extMime] ) ) {
 				$extMime = $this->mMimeTypeAliases[$extMime];
@@ -733,6 +814,27 @@ class MimeMagic {
 
 		return MEDIATYPE_UNKNOWN;
 	}
+
+	/**
+	 * Get the MIME types that various versions of Internet Explorer would 
+	 * detect from a chunk of the content.
+	 *
+	 * @param string $fileName The file name (unused at present)
+	 * @param string $chunk The first 256 bytes of the file
+	 * @param string $proposed The MIME type proposed by the server
+	 */
+	public function getIEMimeTypes( $fileName, $chunk, $proposed ) {
+		$ca = $this->getIEContentAnalyzer();
+		return $ca->getRealMimesFromData( $fileName, $chunk, $proposed );
+	}
+
+	/**
+	 * Get a cached instance of IEContentAnalyzer
+	 */
+	protected function getIEContentAnalyzer() {
+		if ( is_null( $this->mIEAnalyzer ) ) {
+			$this->mIEAnalyzer = new IEContentAnalyzer;
+		}
+		return $this->mIEAnalyzer;
+	}
 }
-
-

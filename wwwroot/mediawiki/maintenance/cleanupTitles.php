@@ -25,41 +25,54 @@
  * http://www.gnu.org/copyleft/gpl.html
  *
  * @author Brion Vibber <brion at pobox.com>
- * @addtogroup maintenance
+ * @ingroup Maintenance
  */
 
-require_once( 'commandLine.inc' );
-require_once( 'cleanupTable.inc' );
+require_once( dirname(__FILE__) . '/cleanupTable.inc' );
 
 class TitleCleanup extends TableCleanup {
-	function __construct( $dryrun = false ) {
-		parent::__construct( 'page', $dryrun );
+	public function __construct() {
+		parent::__construct();
+		$this->mDescription = "Script to clean up broken, unparseable titles";
 	}
 
-	function processPage( $row ) {
-		$current = Title::makeTitle( $row->page_namespace, $row->page_title );
-		$display = $current->getPrefixedText();
-
-		$verified = UtfNormal::cleanUp( $display );
-
+	protected function processRow( $row ) {
+		global $wgContLang;
+		$display = Title::makeName( $row->page_namespace, $row->page_title );
+		$verified = $wgContLang->normalize( $display );
 		$title = Title::newFromText( $verified );
 
-		if( is_null( $title ) ) {
-			$this->log( "page $row->page_id ($display) is illegal." );
-			$this->moveIllegalPage( $row );
-			return $this->progress( 1 );
+		if( !is_null( $title ) 
+			&& $title->canExist()
+			&& $title->getNamespace() == $row->page_namespace
+			&& $title->getDBkey() === $row->page_title )
+		{
+			return $this->progress( 0 );  // all is fine
 		}
 
-		if( !$title->equals( $current ) ) {
-			$this->log( "page $row->page_id ($display) doesn't match self." );
+		if( $row->page_namespace == NS_FILE && $this->fileExists( $row->page_title ) ) {
+			$this->output( "file $row->page_title needs cleanup, please run cleanupImages.php.\n" );
+			return $this->progress( 0 );
+		} elseif( is_null( $title ) ) {
+			$this->output( "page $row->page_id ($display) is illegal.\n" );
+			$this->moveIllegalPage( $row );
+			return $this->progress( 1 );
+		} else {
+			$this->output( "page $row->page_id ($display) doesn't match self.\n" );
 			$this->moveInconsistentPage( $row, $title );
 			return $this->progress( 1 );
 		}
-
-		$this->progress( 0 );
 	}
 
-	function moveIllegalPage( $row ) {
+	protected function fileExists( $name ) {
+		// XXX: Doesn't actually check for file existence, just presence of image record.
+		// This is reasonable, since cleanupImages.php only iterates over the image table.
+		$dbr = wfGetDB( DB_SLAVE );
+		$row = $dbr->selectRow( 'image', array( 'img_name' ), array( 'img_name' => $name ), __METHOD__ );
+		return $row !== false;
+	}
+
+	protected function moveIllegalPage( $row ) {
 		$legal = 'A-Za-z0-9_/\\\\-';
 		$legalized = preg_replace_callback( "!([^$legal])!",
 			array( &$this, 'hexChar' ),
@@ -71,28 +84,28 @@ class TitleCleanup extends TableCleanup {
 		$title = Title::newFromText( $legalized );
 		if( is_null( $title ) ) {
 			$clean = 'Broken/id:' . $row->page_id;
-			$this->log( "Couldn't legalize; form '$legalized' still invalid; using '$clean'" );
+			$this->output( "Couldn't legalize; form '$legalized' still invalid; using '$clean'\n" );
 			$title = Title::newFromText( $clean );
 		} elseif( $title->exists() ) {
 			$clean = 'Broken/id:' . $row->page_id;
-			$this->log( "Legalized for '$legalized' exists; using '$clean'" );
+			$this->output( "Legalized for '$legalized' exists; using '$clean'\n" );
 			$title = Title::newFromText( $clean );
 		}
 
 		$dest = $title->getDBkey();
 		if( $this->dryrun ) {
-			$this->log( "DRY RUN: would rename $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')" );
+			$this->output( "DRY RUN: would rename $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')\n" );
 		} else {
-			$this->log( "renaming $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')" );
+			$this->output( "renaming $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')\n" );
 			$dbw = wfGetDB( DB_MASTER );
 			$dbw->update( 'page',
 				array( 'page_title' => $dest ),
 				array( 'page_id' => $row->page_id ),
-				'cleanupTitles::moveInconsistentPage' );
+				__METHOD__ );
 		}
 	}
 
-	function moveInconsistentPage( $row, $title ) {
+	protected function moveInconsistentPage( $row, $title ) {
 		if( $title->exists() || $title->getInterwiki() ) {
 			if( $title->getInterwiki() ) {
 				$prior = $title->getPrefixedDbKey();
@@ -103,20 +116,20 @@ class TitleCleanup extends TableCleanup {
 			$verified = Title::makeTitleSafe( $row->page_namespace, $clean );
 			if( $verified->exists() ) {
 				$blah = "Broken/id:" . $row->page_id;
-				$this->log( "Couldn't legalize; form '$clean' exists; using '$blah'" );
+				$this->output( "Couldn't legalize; form '$clean' exists; using '$blah'\n" );
 				$verified = Title::makeTitleSafe( $row->page_namespace, $blah );
 			}
 			$title = $verified;
 		}
 		if( is_null( $title ) ) {
-			wfDie( "Something awry; empty title.\n" );
+			$this->error( "Something awry; empty title.", true );
 		}
 		$ns = $title->getNamespace();
 		$dest = $title->getDBkey();
 		if( $this->dryrun ) {
-			$this->log( "DRY RUN: would rename $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')" );
+			$this->output( "DRY RUN: would rename $row->page_id ($row->page_namespace,'$row->page_title') to ($row->page_namespace,'$dest')\n" );
 		} else {
-			$this->log( "renaming $row->page_id ($row->page_namespace,'$row->page_title') to ($ns,'$dest')" );
+			$this->output( "renaming $row->page_id ($row->page_namespace,'$row->page_title') to ($ns,'$dest')\n" );
 			$dbw = wfGetDB( DB_MASTER );
 			$dbw->update( 'page',
 				array(
@@ -124,15 +137,12 @@ class TitleCleanup extends TableCleanup {
 					'page_title' => $dest
 				),
 				array( 'page_id' => $row->page_id ),
-				'cleanupTitles::moveInconsistentPage' );
-			$linkCache =& LinkCache::singleton();
+				__METHOD__ );
+			$linkCache = LinkCache::singleton();
 			$linkCache->clear();
 		}
 	}
 }
 
-$wgUser->setName( 'Conversion script' );
-$caps = new TitleCleanup( !isset( $options['fix'] ) );
-$caps->cleanup();
-
-
+$maintClass = "TitleCleanup";
+require_once( DO_MAINTENANCE );

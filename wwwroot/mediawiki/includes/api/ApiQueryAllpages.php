@@ -23,144 +23,165 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiQueryBase.php');
+	require_once ( 'ApiQueryBase.php' );
 }
 
 /**
  * Query module to enumerate all available pages.
- * 
- * @addtogroup API
+ *
+ * @ingroup API
  */
 class ApiQueryAllpages extends ApiQueryGeneratorBase {
 
-	public function __construct($query, $moduleName) {
-		parent :: __construct($query, $moduleName, 'ap');
+	public function __construct( $query, $moduleName ) {
+		parent :: __construct( $query, $moduleName, 'ap' );
 	}
 
 	public function execute() {
 		$this->run();
 	}
 
-	public function executeGenerator($resultPageSet) {
-		if ($resultPageSet->isResolvingRedirects())
-			$this->dieUsage('Use "gapfilterredir=nonredirects" option instead of "redirects" when using allpages as a generator', 'params');
-
-		$this->run($resultPageSet);
+	public function getCacheMode( $params ) {
+		return 'public';
 	}
 
-	private function run($resultPageSet = null) {
+	public function executeGenerator( $resultPageSet ) {
+		if ( $resultPageSet->isResolvingRedirects() )
+			$this->dieUsage( 'Use "gapfilterredir=nonredirects" option instead of "redirects" when using allpages as a generator', 'params' );
 
+		$this->run( $resultPageSet );
+	}
+
+	private function run( $resultPageSet = null ) {
 		$db = $this->getDB();
 
 		$params = $this->extractRequestParams();
-		
+
 		// Page filters
-		if (!$this->addWhereIf('page_is_redirect = 1', $params['filterredir'] === 'redirects'))
-			$this->addWhereIf('page_is_redirect = 0', $params['filterredir'] === 'nonredirects');
-		$this->addWhereFld('page_namespace', $params['namespace']);
-		if (!is_null($params['from']))
-			$this->addWhere('page_title>=' . $db->addQuotes(ApiQueryBase :: titleToKey($params['from'])));
-		if (isset ($params['prefix']))
-			$this->addWhere("page_title LIKE '" . $db->escapeLike(ApiQueryBase :: titleToKey($params['prefix'])) . "%'");
-
-		$forceNameTitleIndex = true;
-		if (isset ($params['minsize'])) {
-			$this->addWhere('page_len>=' . intval($params['minsize']));
-			$forceNameTitleIndex = false;
-		}
+		$this->addTables( 'page' );
 		
-		if (isset ($params['maxsize'])) {
-			$this->addWhere('page_len<=' . intval($params['maxsize']));
-			$forceNameTitleIndex = false;
-		}
-	
-		// Page protection filtering
-		if (isset ($params['prtype'])) {
-			$this->addTables('page_restrictions');
-			$this->addWhere('page_id=pr_page');
-			$this->addWhere('pr_expiry>' . $db->addQuotes($db->timestamp()));
-			$this->addWhereFld('pr_type', $params['prtype']);
+		if ( $params['filterredir'] == 'redirects' )
+			$this->addWhereFld( 'page_is_redirect', 1 );
+		else if ( $params['filterredir'] == 'nonredirects' )
+			$this->addWhereFld( 'page_is_redirect', 0 );
 
-			$prlevel = $params['prlevel'];
-			if (!is_null($prlevel) && $prlevel != '' && $prlevel != '*')
-				$this->addWhereFld('pr_level', $prlevel);
-				
-			$this->addOption('DISTINCT');
-
-			$forceNameTitleIndex = false;
-
-		} else if (isset ($params['prlevel'])) {
-			$this->dieUsage('prlevel may not be used without prtype', 'params');
-		}
+		$this->addWhereFld( 'page_namespace', $params['namespace'] );
+		$dir = ( $params['dir'] == 'descending' ? 'older' : 'newer' );
+		$from = ( is_null( $params['from'] ) ? null : $this->titlePartToKey( $params['from'] ) );
+		$this->addWhereRange( 'page_title', $dir, $from, null );
 		
-		if($params['filterlanglinks'] == 'withoutlanglinks') {
-			$pageName = $this->getDB()->tableName('page');
-			$llName = $this->getDB()->tableName('langlinks');
-			$tables = "$pageName LEFT JOIN $llName ON page_id=ll_from";
-			$this->addWhere('ll_from IS NULL');
-			$this->addTables($tables);
-			$forceNameTitleIndex = false;
-		} else if($params['filterlanglinks'] == 'withlanglinks') {
-			$this->addTables(array('page', 'langlinks'));
-			$this->addWhere('page_id=ll_from');
-			$forceNameTitleIndex = false;		
-		} else {
-			$this->addTables('page');
-		}
-		if ($forceNameTitleIndex)
-			$this->addOption('USE INDEX', 'name_title');
+		if ( isset ( $params['prefix'] ) )
+			$this->addWhere( 'page_title' . $db->buildLike( $this->titlePartToKey( $params['prefix'] ), $db->anyString() ) );
 
-		if (is_null($resultPageSet)) {
-			$this->addFields(array (
-				'page_id',
+		if ( is_null( $resultPageSet ) ) {
+			$selectFields = array (
 				'page_namespace',
-				'page_title'
-			));
+				'page_title',
+				'page_id'
+			);
 		} else {
-			$this->addFields($resultPageSet->getPageTableFields());
+			$selectFields = $resultPageSet->getPageTableFields();
 		}
+
+		$this->addFields( $selectFields );
+		$forceNameTitleIndex = true;
+		if ( isset ( $params['minsize'] ) ) {
+			$this->addWhere( 'page_len>=' . intval( $params['minsize'] ) );
+			$forceNameTitleIndex = false;
+		}
+
+		if ( isset ( $params['maxsize'] ) ) {
+			$this->addWhere( 'page_len<=' . intval( $params['maxsize'] ) );
+			$forceNameTitleIndex = false;
+		}
+
+		// Page protection filtering
+		if ( !empty ( $params['prtype'] ) ) {
+			$this->addTables( 'page_restrictions' );
+			$this->addWhere( 'page_id=pr_page' );
+			$this->addWhere( 'pr_expiry>' . $db->addQuotes( $db->timestamp() ) );
+			$this->addWhereFld( 'pr_type', $params['prtype'] );
+
+			if ( isset ( $params['prlevel'] ) ) {
+				// Remove the empty string and '*' from the prlevel array
+				$prlevel = array_diff( $params['prlevel'], array( '', '*' ) );
+				
+				if ( !empty( $prlevel ) )
+					$this->addWhereFld( 'pr_level', $prlevel );
+			}
+			if ( $params['prfiltercascade'] == 'cascading' )
+				$this->addWhereFld( 'pr_cascade', 1 );
+			else if ( $params['prfiltercascade'] == 'noncascading' )
+				$this->addWhereFld( 'pr_cascade', 0 );
+
+			$this->addOption( 'DISTINCT' );
+
+			$forceNameTitleIndex = false;
+
+		} else if ( isset ( $params['prlevel'] ) ) {
+			$this->dieUsage( 'prlevel may not be used without prtype', 'params' );
+		}
+
+		if ( $params['filterlanglinks'] == 'withoutlanglinks' ) {
+			$this->addTables( 'langlinks' );
+			$this->addJoinConds( array( 'langlinks' => array( 'LEFT JOIN', 'page_id=ll_from' ) ) );
+			$this->addWhere( 'll_from IS NULL' );
+			$forceNameTitleIndex = false;
+		} else if ( $params['filterlanglinks'] == 'withlanglinks' ) {
+			$this->addTables( 'langlinks' );
+			$this->addWhere( 'page_id=ll_from' );
+			$this->addOption( 'STRAIGHT_JOIN' );
+			// We have to GROUP BY all selected fields to stop
+			// PostgreSQL from whining
+			$this->addOption( 'GROUP BY', implode( ', ', $selectFields ) );
+			$forceNameTitleIndex = false;
+		}
+
+		if ( $forceNameTitleIndex )
+			$this->addOption( 'USE INDEX', 'name_title' );
 
 		$limit = $params['limit'];
-		$this->addOption('LIMIT', $limit+1);
-		$this->addOption('ORDER BY', 'page_namespace, page_title' .
-						($params['dir'] == 'descending' ? ' DESC' : ''));
+		$this->addOption( 'LIMIT', $limit + 1 );
+		$res = $this->select( __METHOD__ );
 
-		$res = $this->select(__METHOD__);
-
-		$data = array ();
 		$count = 0;
-		while ($row = $db->fetchObject($res)) {
-			if (++ $count > $limit) {
+		$result = $this->getResult();
+		while ( $row = $db->fetchObject( $res ) ) {
+			if ( ++ $count > $limit ) {
 				// We've reached the one extra which shows that there are additional pages to be had. Stop here...
 				// TODO: Security issue - if the user has no right to view next title, it will still be shown
-				$this->setContinueEnumParameter('from', ApiQueryBase :: keyToTitle($row->page_title));
+				$this->setContinueEnumParameter( 'from', $this->keyToTitle( $row->page_title ) );
 				break;
 			}
 
-			if (is_null($resultPageSet)) {
-				$title = Title :: makeTitle($row->page_namespace, $row->page_title);
-				$data[] = array(
-					'pageid' => intval($row->page_id),
-					'ns' => intval($title->getNamespace()),
-					'title' => $title->getPrefixedText());
+			if ( is_null( $resultPageSet ) ) {
+				$title = Title :: makeTitle( $row->page_namespace, $row->page_title );
+				$vals = array(
+					'pageid' => intval( $row->page_id ),
+					'ns' => intval( $title->getNamespace() ),
+					'title' => $title->getPrefixedText() );
+				$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $vals );
+				if ( !$fit )
+				{
+					$this->setContinueEnumParameter( 'from', $this->keyToTitle( $row->page_title ) );
+					break;
+				}
 			} else {
-				$resultPageSet->processDbRow($row);
+				$resultPageSet->processDbRow( $row );
 			}
 		}
-		$db->freeResult($res);
+		$db->freeResult( $res );
 
-		if (is_null($resultPageSet)) {
-			$result = $this->getResult();
-			$result->setIndexedTagName($data, 'p');
-			$result->addValue('query', $this->getModuleName(), $data);
+		if ( is_null( $resultPageSet ) ) {
+			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ), 'p' );
 		}
 	}
 
 	public function getAllowedParams() {
 		global $wgRestrictionTypes, $wgRestrictionLevels;
-		
+
 		return array (
 			'from' => null,
 			'prefix' => null,
@@ -178,10 +199,10 @@ class ApiQueryAllpages extends ApiQueryGeneratorBase {
 			),
 			'minsize' => array (
 				ApiBase :: PARAM_TYPE => 'integer',
-			), 
+			),
 			'maxsize' => array (
 				ApiBase :: PARAM_TYPE => 'integer',
-			), 
+			),
 			'prtype' => array (
 				ApiBase :: PARAM_TYPE => $wgRestrictionTypes,
 				ApiBase :: PARAM_ISMULTI => true
@@ -189,6 +210,14 @@ class ApiQueryAllpages extends ApiQueryGeneratorBase {
 			'prlevel' => array (
 				ApiBase :: PARAM_TYPE => $wgRestrictionLevels,
 				ApiBase :: PARAM_ISMULTI => true
+			),
+			'prfiltercascade' => array (
+				ApiBase :: PARAM_DFLT => 'all',
+				ApiBase :: PARAM_TYPE => array (
+					'cascading',
+					'noncascading',
+					'all'
+				),
 			),
 			'limit' => array (
 				ApiBase :: PARAM_DFLT => 10,
@@ -226,6 +255,7 @@ class ApiQueryAllpages extends ApiQueryGeneratorBase {
 			'maxsize' => 'Limit to pages with at most this many bytes',
 			'prtype' => 'Limit to protected pages only',
 			'prlevel' => 'The protection level (must be used with apprtype= parameter)',
+			'prfiltercascade' => 'Filter protections based on cascadingness (ignored when apprtype isn\'t set)',
 			'filterlanglinks' => 'Filter based on whether a page has langlinks',
 			'limit' => 'How many total pages to return.'
 		);
@@ -233,6 +263,13 @@ class ApiQueryAllpages extends ApiQueryGeneratorBase {
 
 	public function getDescription() {
 		return 'Enumerate all pages sequentially in a given namespace';
+	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'params', 'info' => 'Use "gapfilterredir=nonredirects" option instead of "redirects" when using allpages as a generator' ),
+			array( 'code' => 'params', 'info' => 'prlevel may not be used without prtype' ),
+		) );
 	}
 
 	protected function getExamples() {
@@ -249,7 +286,6 @@ class ApiQueryAllpages extends ApiQueryGeneratorBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryAllpages.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiQueryAllpages.php 69932 2010-07-26 08:03:21Z tstarling $';
 	}
 }
-

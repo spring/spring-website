@@ -1,11 +1,15 @@
 <?php
 /** Kashmiri (कश्मीरी - (كشميري))
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  */
 
+#FIXME: inherit almost everything for now
 $rtl = true;
 
 $digitTransformTable = array(
@@ -20,4 +24,3 @@ $digitTransformTable = array(
 	'8' => '८', # &#x096e;
 	'9' => '९', # &#x096f;
 );
-

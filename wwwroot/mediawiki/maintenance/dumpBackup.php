@@ -18,14 +18,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * @addtogroup SpecialPage
+ * @file
+ * @ingroup Dump Maintenance
  */
 
 $originalDir = getcwd();
 
 $optionsWithArgs = array( 'pagelist', 'start', 'end' );
 
-require_once( 'commandLine.inc' );
+require_once( dirname(__FILE__) . '/commandLine.inc' );
 require_once( 'backup.inc' );
 
 $dumper = new BackupDumper( $argv );
@@ -54,6 +55,7 @@ if( isset( $options['end'] ) ) {
 }
 $dumper->skipHeader = isset( $options['skip-header'] );
 $dumper->skipFooter = isset( $options['skip-footer'] );
+$dumper->dumpUploads = isset( $options['uploads'] );
 
 $textMode = isset( $options['stub'] ) ? WikiExporter::STUB : WikiExporter::TEXT;
 
@@ -61,37 +63,41 @@ if( isset( $options['full'] ) ) {
 	$dumper->dump( WikiExporter::FULL, $textMode );
 } elseif( isset( $options['current'] ) ) {
 	$dumper->dump( WikiExporter::CURRENT, $textMode );
+} elseif( isset( $options['stable'] ) ) {
+	$dumper->dump( WikiExporter::STABLE, $textMode );
+} elseif( isset( $options['logs'] ) ) {
+	$dumper->dump( WikiExporter::LOGS );
 } else {
-	$dumper->progress( <<<END
-This script dumps the wiki page database into an XML interchange wrapper
-format for export or backup.
+	$dumper->progress( <<<ENDS
+This script dumps the wiki page or logging database into an
+XML interchange wrapper format for export or backup.
 
 XML output is sent to stdout; progress reports are sent to stderr.
 
 Usage: php dumpBackup.php <action> [<options>]
 Actions:
-  --full      Dump complete history of every page.
-  --current   Includes only the latest revision of each page.
+  --full      Dump all revisions of every page.
+  --current   Dump only the latest revision of every page.
+  --logs      Dump all log events.
 
 Options:
   --quiet     Don't dump status reports to stderr.
   --report=n  Report position and speed after every n pages processed.
               (Default: 100)
   --server=h  Force reading from MySQL server h
-  --start=n   Start from page_id n
-  --end=n     Stop before page_id n (exclusive)
+  --start=n   Start from page_id or log_id n
+  --end=n     Stop before page_id or log_id n (exclusive)
   --skip-header Don't output the <mediawiki> header
   --skip-footer Don't output the </mediawiki> footer
   --stub      Don't perform old_text lookups; for 2-pass dump
+  --uploads   Include upload records (experimental)
 
-Fancy stuff:
+Fancy stuff: (Works? Add examples please.)
   --plugin=<class>[:<file>]   Load a dump plugin class
   --output=<type>:<file>      Begin a filtered output stream;
                               <type>s: file, gzip, bzip2, 7zip
   --filter=<type>[:<options>] Add a filter on an output branch
 
-END
+ENDS
 );
 }
-
-

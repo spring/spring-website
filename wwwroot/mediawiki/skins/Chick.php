@@ -1,9 +1,10 @@
 <?php
 /**
- * See skin.txt
+ * Chick: A lightweight Monobook skin with no sidebar, the sidebar links are
+ * given at the bottom of the page instead, as in the unstyled MySkin.
  *
- * @todo document
- * @addtogroup Skins
+ * @file
+ * @ingroup Skins
  */
 
 if( !defined( 'MEDIAWIKI' ) )
@@ -13,16 +14,19 @@ if( !defined( 'MEDIAWIKI' ) )
 require_once( dirname(__FILE__) . '/MonoBook.php' );
 
 /**
- * @todo document
- * @addtogroup Skins
+ * Inherit main code from SkinTemplate, set the CSS and template filter.
+ * @ingroup Skins
  */
 class SkinChick extends SkinTemplate {
-	function initPage( &$out ) {
-		SkinTemplate::initPage( $out );
-		$this->skinname  = 'chick';
-		$this->stylename = 'chick';
-		$this->template  = 'MonoBookTemplate';
+	var $skinname = 'chick', $stylename = 'chick',
+	$template = 'MonoBookTemplate', $useHeadElement = true;
+
+	function setupSkinUserCss( OutputPage $out ){
+		parent::setupSkinUserCss( $out );
+		// Append to the default screen common & print styles...
+		$out->addStyle( 'chick/main.css', 'screen,handheld' );
+		$out->addStyle( 'chick/IE50Fixes.css', 'screen,handheld', 'lt IE 5.5000' );
+		$out->addStyle( 'chick/IE55Fixes.css', 'screen,handheld', 'IE 5.5000' );
+		$out->addStyle( 'chick/IE60Fixes.css', 'screen,handheld', 'IE 6' );
 	}
 }
-
-

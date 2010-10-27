@@ -23,18 +23,18 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiFormatBase.php');
+	require_once ( 'ApiFormatBase.php' );
 }
 
 /**
- * @addtogroup API
+ * @ingroup API
  */
 class ApiFormatPhp extends ApiFormatBase {
 
-	public function __construct($main, $format) {
-		parent :: __construct($main, $format);
+	public function __construct( $main, $format ) {
+		parent :: __construct( $main, $format );
 	}
 
 	public function getMimeType() {
@@ -42,7 +42,7 @@ class ApiFormatPhp extends ApiFormatBase {
 	}
 
 	public function execute() {
-		$this->printText(serialize($this->getResultData()));
+		$this->printText( serialize( $this->getResultData() ) );
 	}
 
 	public function getDescription() {
@@ -50,7 +50,6 @@ class ApiFormatPhp extends ApiFormatBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiFormatPhp.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiFormatPhp.php 60930 2010-01-11 15:55:52Z simetrical $';
 	}
 }
-

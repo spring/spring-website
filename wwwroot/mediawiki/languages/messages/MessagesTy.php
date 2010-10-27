@@ -1,10 +1,12 @@
 <?php
 /** Tahitian (Reo Mā`ohi)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
- * @author SPQRobin
  * @author Sab
  */
 
@@ -63,15 +65,14 @@ $messages = array(
 'nov'           => 'nō novema',
 'dec'           => 'nō tītema',
 
-# Bits of text used by many pages
-'categories' => 'Te mau huru o te ’api',
+'about'      => 'Nō',
+'article'    => 'Parau pāpa’i',
+'navigation' => 'Arata’i',
 
-'about'          => 'Nō',
-'article'        => 'Parau pāpa’i',
+# Cologne Blue skin
 'qbedit'         => 'Fa’ahuru ’ē',
 'qbmyoptions'    => 'ta’u ’api',
 'qbspecialpages' => 'Te mau ’api ta’a ’ē',
-'navigation'     => 'Arata’i',
 
 'help'             => 'Tauturu',
 'search'           => 'Roromā’imi',
@@ -87,12 +88,12 @@ $messages = array(
 'jumptosearch'     => 'haere',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'   => 'Nō {{SITENAME}}',
-'aboutpage'   => 'Project:Nō',
-'edithelp'    => 'Tauturu',
-'mainpage'    => 'Fa’ari’ira’a',
-'portal'      => 'Fare auhoa',
-'sitesupport' => 'Pūpū i te ō',
+'aboutsite'            => 'Nō {{SITENAME}}',
+'aboutpage'            => 'Project:Nō',
+'edithelp'             => 'Tauturu',
+'mainpage'             => 'Fa’ari’ira’a',
+'mainpage-description' => 'Fa’ari’ira’a',
+'portal'               => 'Fare auhoa',
 
 'newmessageslink'     => 'Te mau poro’i ’āpī',
 'newmessagesdifflink' => 'fa’ahuru-’ē-ra’a hope’a',
@@ -109,11 +110,6 @@ $messages = array(
 'nstab-help'      => 'Tauturu',
 'nstab-category'  => 'Huru',
 
-# Login and logout pages
-'youremail'    => 'Tā’u ’āfata rata uira',
-'yourlanguage' => 'Te reo:',
-'email'        => '’Imere',
-
 # Revision feed
 'history-feed-title' => 'Parau tuatāpapa',
 
@@ -121,31 +117,42 @@ $messages = array(
 'powersearch' => 'Roromā’imi',
 
 # Preferences page
-'prefs-rc' => 'Te mau fa’ahuru-’ē-ra’a ’āpī',
-'files'    => 'Te mau putu’ite',
+'prefs-rc'     => 'Te mau fa’ahuru-’ē-ra’a ’āpī',
+'prefs-files'  => 'Te mau putu’ite',
+'youremail'    => 'Tā’u ’āfata rata uira',
+'yourlanguage' => 'Te reo:',
+'email'        => '’Imere',
 
 # Recent changes
 'recentchanges' => 'Te mau fa’ahuru-’ē-ra’a ’āpī',
 
-# Image list
-'filehist-user'  => 'Ta’ata',
-'imagelist_user' => 'Ta’ata fa’a’ohipa',
+# Special:ListFiles
+'listfiles_user' => 'Ta’ata fa’a’ohipa',
+
+# File description page
+'file-anchor-link' => 'Hōho’a',
+'filehist-user'    => 'Ta’ata',
 
 # Random page
 'randompage' => '’Api mā’iti-haere-noa',
 
-# Miscellaneous special pages
-'specialpages' => 'Te mau ’api ta’a ’ē',
-'spheading'    => 'Te mau ’api ta’a ’ē',
-
 # Special:Log
 'specialloguserlabel' => 'Ta’ata fa’a’ohipa :',
 
-# Special:Allpages
+# Special:AllPages
 'allpagessubmit' => 'Haere',
+
+# Special:Categories
+'categories' => 'Te mau huru o te ’api',
+
+# Special:Log/newusers
+'newuserlog-create-entry' => 'Ta’ata fa’a’ohipa ’āpī',
 
 # Watchlist
 'watch' => 'Ha’apa’o',
+
+# Protect
+'prot_1movedto2' => '’Ua tāhitihia te ’api [[$1]] e ana i te ’api ’āpī [[$2]]',
 
 # Restrictions (nouns)
 'restriction-edit' => 'Fa’ahuru ’ē',
@@ -160,7 +167,10 @@ $messages = array(
 # Tooltip help for the actions
 'tooltip-search' => 'Roromā’imi {{SITENAME}}',
 
-# Special:Filepath
+# Special:FilePath
 'filepath-page' => 'Putu’ite:',
+
+# Special:SpecialPages
+'specialpages' => 'Te mau ’api ta’a ’ē',
 
 );

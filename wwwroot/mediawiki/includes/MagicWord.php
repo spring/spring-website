@@ -1,7 +1,10 @@
 <?php
 /**
  * File for magic words
- * @addtogroup Parser
+ * See docs/magicword.txt
+ *
+ * @file
+ * @ingroup Parser
  */
 
 /**
@@ -16,10 +19,11 @@
  * Please avoid reading the data out of one of these objects and then writing
  * special case code. If possible, add another match()-like function here.
  *
- * To add magic words in an extension, use the LanguageGetMagic hook. For 
+ * To add magic words in an extension, use the LanguageGetMagic hook. For
  * magic words which are also Parser variables, add a MagicWordwgVariableIDs
  * hook. Use string keys.
  *
+ * @ingroup Parser
  */
 class MagicWord {
 	/**#@+
@@ -32,6 +36,7 @@ class MagicWord {
 	static public $mVariableIDsInitialised = false;
 	static public $mVariableIDs = array(
 		'currentmonth',
+		'currentmonth1',
 		'currentmonthname',
 		'currentmonthnamegen',
 		'currentmonthabbrev',
@@ -42,6 +47,7 @@ class MagicWord {
 		'currenttime',
 		'currenthour',
 		'localmonth',
+		'localmonth1',
 		'localmonthname',
 		'localmonthnamegen',
 		'localmonthabbrev',
@@ -58,6 +64,7 @@ class MagicWord {
 		'server',
 		'servername',
 		'scriptpath',
+		'stylepath',
 		'pagename',
 		'pagenamee',
 		'fullpagename',
@@ -74,9 +81,9 @@ class MagicWord {
 		'revisionmonth',
 		'revisionyear',
 		'revisiontimestamp',
+		'revisionuser',
 		'subpagename',
 		'subpagenamee',
-		'displaytitle',
 		'talkspace',
 		'talkspacee',
 		'subjectspace',
@@ -86,25 +93,23 @@ class MagicWord {
 		'subjectpagename',
 		'subjectpagenamee',
 		'numberofusers',
-		'newsectionlink',
+		'numberofactiveusers',
 		'numberofpages',
 		'currentversion',
 		'basepagename',
 		'basepagenamee',
-		'urlencode',
 		'currenttimestamp',
 		'localtimestamp',
 		'directionmark',
-		'language',
 		'contentlanguage',
-		'pagesinnamespace',
 		'numberofadmins',
-		'defaultsort',
+		'numberofviews',
 	);
-	
+
 	/* Array of caching hints for ParserCache */
 	static public $mCacheTTLs = array (
 		'currentmonth' => 86400,
+		'currentmonth1' => 86400,
 		'currentmonthname' => 86400,
 		'currentmonthnamegen' => 86400,
 		'currentmonthabbrev' => 86400,
@@ -115,6 +120,7 @@ class MagicWord {
 		'currenttime' => 3600,
 		'currenthour' => 3600,
 		'localmonth' => 86400,
+		'localmonth1' => 86400,
 		'localmonthname' => 86400,
 		'localmonthnamegen' => 86400,
 		'localmonthabbrev' => 86400,
@@ -132,15 +138,40 @@ class MagicWord {
 		'localweek' => 3600,
 		'localdow' => 3600,
 		'numberofusers' => 3600,
+		'numberofactiveusers' => 3600,
 		'numberofpages' => 3600,
 		'currentversion' => 86400,
 		'currenttimestamp' => 3600,
 		'localtimestamp' => 3600,
 		'pagesinnamespace' => 3600,
 		'numberofadmins' => 3600,
+		'numberofviews' => 3600,
+		'numberingroup' => 3600,
 		);
 
+	static public $mDoubleUnderscoreIDs = array(
+		'notoc',
+		'nogallery',
+		'forcetoc',
+		'toc',
+		'noeditsection',
+		'newsectionlink',
+		'nonewsectionlink',
+		'hiddencat',
+		'index',
+		'noindex',
+		'staticredirect',
+		'notitleconvert',
+		'nocontentconvert',
+	);
+
+	static public $mSubstIDs = array(
+		'subst',
+		'safesubst',
+	);
+
 	static public $mObjects = array();
+	static public $mDoubleUnderscoreArray = null;
 
 	/**#@-*/
 
@@ -161,7 +192,7 @@ class MagicWord {
 	 */
 	static function &get( $id ) {
 		wfProfileIn( __METHOD__ );
-		if (!array_key_exists( $id, self::$mObjects ) ) {
+		if ( !isset( self::$mObjects[$id] ) ) {
 			$mw = new MagicWord();
 			$mw->load( $id );
 			self::$mObjects[$id] = $mw;
@@ -188,7 +219,14 @@ class MagicWord {
 		}
 		return self::$mVariableIDs;
 	}
-	
+
+	/**
+	 * Get an array of parser substitution modifier IDs
+	 */
+	static function getSubstIDs() {
+		return self::$mSubstIDs; 
+	}
+
 	/* Allow external reads of TTL array */
 	static function getCacheTTL($id) {
 		if (array_key_exists($id,self::$mCacheTTLs)) {
@@ -197,8 +235,23 @@ class MagicWord {
 			return -1;
 		}
 	}
-	
-	
+
+	/** Get a MagicWordArray of double-underscore entities */
+	static function getDoubleUnderscoreArray() {
+		if ( is_null( self::$mDoubleUnderscoreArray ) ) {
+			self::$mDoubleUnderscoreArray = new MagicWordArray( self::$mDoubleUnderscoreIDs );
+		}
+		return self::$mDoubleUnderscoreArray;
+	}
+
+	/**
+	 * Clear the self::$mObjects variable
+	 * For use in parser tests
+	 */
+	public static function clearCache() {
+		self::$mObjects = array();
+	}
+
 	# Initialises this object with an ID
 	function load( $id ) {
 		global $wgContLang;
@@ -220,13 +273,13 @@ class MagicWord {
 		# This was used for matching "$1" variables, but different uses of the feature will have
 		# different restrictions, which should be checked *after* the MagicWord has been matched,
 		# not here. - IMSoP
-		
+
 		$escSyn = array();
 		foreach ( $this->mSynonyms as $synonym )
 			// In case a magic word contains /, like that's going to happen;)
 			$escSyn[] = preg_quote( $synonym, '/' );
 		$this->mBaseRegex = implode( '|', $escSyn );
-		
+
 		$case = $this->mCaseSensitive ? '' : 'iu';
 		$this->mRegex = "/{$this->mBaseRegex}/{$case}";
 		$this->mRegexStart = "/^(?:{$this->mBaseRegex})/{$case}";
@@ -282,7 +335,7 @@ class MagicWord {
 	 * @return bool
 	 */
 	function match( $text ) {
-		return preg_match( $this->getRegex(), $text );
+		return (bool)preg_match( $this->getRegex(), $text );
 	}
 
 	/**
@@ -290,7 +343,7 @@ class MagicWord {
 	 * @return bool
 	 */
 	function matchStart( $text ) {
-		return preg_match( $this->getRegexStart(), $text );
+		return (bool)preg_match( $this->getRegexStart(), $text );
 	}
 
 	/**
@@ -303,7 +356,7 @@ class MagicWord {
 		$matches = array();
 		$matchcount = preg_match( $this->getVariableStartToEndRegex(), $text, $matches );
 		if ( $matchcount == 0 ) {
-			return NULL;
+			return null;
 		} else {
 			# multiple matched parts (variable match); some will be empty because of
 			# synonyms. The variable will be the second non-empty one so remove any
@@ -444,11 +497,13 @@ class MagicWord {
 
 /**
  * Class for handling an array of magic words
+ * @ingroup Parser
  */
 class MagicWordArray {
 	var $names = array();
 	var $hash;
 	var $baseRegex, $regex;
+	var $matches;
 
 	function __construct( $names = array() ) {
 		$this->names = $names;
@@ -515,7 +570,7 @@ class MagicWordArray {
 	}
 
 	/**
-	 * Get an unanchored regex
+	 * Get an unanchored regex that does not match parameters
 	 */
 	function getRegex() {
 		if ( is_null( $this->regex ) ) {
@@ -532,14 +587,29 @@ class MagicWordArray {
 	}
 
 	/**
-	 * Get a regex for matching variables
+	 * Get a regex for matching variables with parameters
 	 */
 	function getVariableRegex() {
 		return str_replace( "\\$1", "(.*?)", $this->getRegex() );
 	}
 
 	/**
-	 * Get an anchored regex for matching variables
+	 * Get a regex anchored to the start of the string that does not match parameters
+	 */
+	function getRegexStart() {
+		$base = $this->getBaseRegex();
+		$newRegex = array( '', '' );
+		if ( $base[0] !== '' ) {
+			$newRegex[0] = "/^(?:{$base[0]})/iuS";
+		}
+		if ( $base[1] !== '' ) {
+			$newRegex[1] = "/^(?:{$base[1]})/S"; 
+		}
+		return $newRegex;
+	}
+
+	/**
+	 * Get an anchored regex for matching variables with parameters
 	 */
 	function getVariableStartToEndRegex() {
 		$base = $this->getBaseRegex();
@@ -555,6 +625,8 @@ class MagicWordArray {
 
 	/**
 	 * Parse a match array from preg_match
+	 * Returns array(magic word ID, parameter value)
+	 * If there is no parameter value, that element will be false.
 	 */
 	function parseMatch( $m ) {
 		reset( $m );
@@ -579,7 +651,7 @@ class MagicWordArray {
 
 	/**
 	 * Match some text, with parameter capture
-	 * Returns an array with the magic word name in the first element and the 
+	 * Returns an array with the magic word name in the first element and the
 	 * parameter in the second element.
 	 * Both elements are false if there was no match.
 	 */
@@ -610,6 +682,52 @@ class MagicWordArray {
 		$lc = $wgContLang->lc( $text );
 		if ( isset( $hash[0][$lc] ) ) {
 			return $hash[0][$lc];
+		}
+		return false;
+	}
+
+	/**
+	 * Returns an associative array, ID => param value, for all items that match
+	 * Removes the matched items from the input string (passed by reference)
+	 */
+	public function matchAndRemove( &$text ) {
+		$found = array();
+		$regexes = $this->getRegex();
+		foreach ( $regexes as $regex ) {
+			if ( $regex === '' ) {
+				continue;
+			}
+			preg_match_all( $regex, $text, $matches, PREG_SET_ORDER );
+			foreach ( $matches as $m ) {
+				list( $name, $param ) = $this->parseMatch( $m );
+				$found[$name] = $param;
+			}
+			$text = preg_replace( $regex, '', $text );
+		}
+		return $found;
+	}
+
+	/**
+	 * Return the ID of the magic word at the start of $text, and remove
+	 * the prefix from $text.
+	 * Return false if no match found and $text is not modified.
+	 * Does not match parameters.
+	 */
+	public function matchStartAndRemove( &$text ) {
+		$regexes = $this->getRegexStart();
+		foreach ( $regexes as $regex ) {
+			if ( $regex === '' ) {
+				continue;
+			}
+			if ( preg_match( $regex, $text, $m ) ) {
+				list( $id, $param ) = $this->parseMatch( $m );
+				if ( strlen( $m[0] ) >= strlen( $text ) ) {
+					$text = '';
+				} else {
+					$text = substr( $text, strlen( $m[0] ) );
+				}
+				return $id;
+			}
 		}
 		return false;
 	}

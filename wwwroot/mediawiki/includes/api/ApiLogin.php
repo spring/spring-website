@@ -1,11 +1,11 @@
 <?php
 
-/*
+/**
  * Created on Sep 19, 2006
  *
  * API for MediaWiki 1.8+
  *
- * Copyright (C) 2006-2007 Yuri Astrakhan <Firstname><Lastname>@gmail.com,
+ * Copyright © 2006-2007 Yuri Astrakhan <Firstname><Lastname>@gmail.com,
  * Daniel Cannon (cannon dot danielc at gmail dot com)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,228 +24,181 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiBase.php');
+	require_once( 'ApiBase.php' );
 }
 
 /**
  * Unit to authenticate log-in attempts to the current wiki.
  *
- * @addtogroup API
+ * @ingroup API
  */
 class ApiLogin extends ApiBase {
-	
-	/**
-	 * Time (in seconds) a user must wait after submitting
-	 * a bad login (will be multiplied by the THROTTLE_FACTOR for each bad attempt)
-	 */
-	const THROTTLE_TIME = 5;
 
-	/**
-	 * The factor by which the wait-time in between authentication
-	 * attempts is increased every failed attempt.
-	 */
-	const THROTTLE_FACTOR = 2;
-	
-	/**
-	 * The maximum number of failed logins after which the wait increase stops. 
-	 */
-	const THOTTLE_MAX_COUNT = 10;
-	
-	public function __construct($main, $action) {
-		parent :: __construct($main, $action, 'lg');
+	public function __construct( $main, $action ) {
+		parent::__construct( $main, $action, 'lg' );
 	}
 
 	/**
 	 * Executes the log-in attempt using the parameters passed. If
 	 * the log-in succeeeds, it attaches a cookie to the session
 	 * and outputs the user id, username, and session token. If a
-	 * log-in fails, as the result of a bad password, a nonexistant
+	 * log-in fails, as the result of a bad password, a nonexistent
 	 * user, or any other reason, the host is cached with an expiry
 	 * and no log-in attempts will be accepted until that expiry
 	 * is reached. The expiry is $this->mLoginThrottle.
-	 *
-	 * @access public
 	 */
 	public function execute() {
-		$name = $password = $domain = null;
-		extract($this->extractRequestParams());
+		$params = $this->extractRequestParams();
 
-		$result = array ();
+		$result = array();
 
-		// Make sure noone is trying to guess the password brut-force
-		$nextLoginIn = $this->getNextLoginTimeout();
-		if ($nextLoginIn > 0) {
-			$result['result']  = 'NeedToWait';
-			$result['details'] = "Please wait $nextLoginIn seconds before next log-in attempt";
-			$result['wait'] = $nextLoginIn;
-			$this->getResult()->addValue(null, 'login', $result);
-			return;
-		}
-
-		$params = new FauxRequest(array (
-			'wpName' => $name,
-			'wpPassword' => $password,
-			'wpDomain' => $domain,
+		$req = new FauxRequest( array(
+			'wpName' => $params['name'],
+			'wpPassword' => $params['password'],
+			'wpDomain' => $params['domain'],
+			'wpLoginToken' => $params['token'],
 			'wpRemember' => ''
-		));
+		) );
 
 		// Init session if necessary
-		if( session_id() == '' ) {
+		if ( session_id() == '' ) {
 			wfSetupSession();
 		}
 
-		$loginForm = new LoginForm($params);
-		switch ($loginForm->authenticateUserData()) {
-			case LoginForm :: SUCCESS :
+		$loginForm = new LoginForm( $req );
+		switch ( $authRes = $loginForm->authenticateUserData() ) {
+			case LoginForm::SUCCESS:
 				global $wgUser, $wgCookiePrefix;
 
-				$wgUser->setOption('rememberpassword', 1);
+				$wgUser->setOption( 'rememberpassword', 1 );
 				$wgUser->setCookies();
 
+				// Run hooks. FIXME: split back and frontend from this hook.
+				// FIXME: This hook should be placed in the backend
+				$injected_html = '';
+				wfRunHooks( 'UserLoginComplete', array( &$wgUser, &$injected_html ) );
+
 				$result['result'] = 'Success';
-				$result['lguserid'] = $_SESSION['wsUserID'];
-				$result['lgusername'] = $_SESSION['wsUserName'];
-				$result['lgtoken'] = $_SESSION['wsToken'];
+				$result['lguserid'] = intval( $wgUser->getId() );
+				$result['lgusername'] = $wgUser->getName();
+				$result['lgtoken'] = $wgUser->getToken();
 				$result['cookieprefix'] = $wgCookiePrefix;
 				$result['sessionid'] = session_id();
 				break;
+			
+			case LoginForm::NEED_TOKEN:
+				global $wgCookiePrefix;
+				$result['result'] = 'NeedToken';
+				$result['token'] = $loginForm->getLoginToken();
+				$result['cookieprefix'] = $wgCookiePrefix;
+				$result['sessionid'] = session_id();
+				break;
+			
+			case LoginForm::WRONG_TOKEN:
+				$result['result'] = 'WrongToken';
+				break;
 
-			case LoginForm :: NO_NAME :
+			case LoginForm::NO_NAME:
 				$result['result'] = 'NoName';
 				break;
-			case LoginForm :: ILLEGAL :
+
+			case LoginForm::ILLEGAL:
 				$result['result'] = 'Illegal';
 				break;
-			case LoginForm :: WRONG_PLUGIN_PASS :
+
+			case LoginForm::WRONG_PLUGIN_PASS:
 				$result['result'] = 'WrongPluginPass';
 				break;
-			case LoginForm :: NOT_EXISTS :
+
+			case LoginForm::NOT_EXISTS:
 				$result['result'] = 'NotExists';
 				break;
-			case LoginForm :: WRONG_PASS :
+
+			case LoginForm::RESET_PASS: // bug 20223 - Treat a temporary password as wrong. Per SpecialUserLogin - "The e-mailed temporary password should not be used for actual logins;"
+			case LoginForm::WRONG_PASS:
 				$result['result'] = 'WrongPass';
 				break;
-			case LoginForm :: EMPTY_PASS :
+
+			case LoginForm::EMPTY_PASS:
 				$result['result'] = 'EmptyPass';
 				break;
-			default :
-				ApiBase :: dieDebug(__METHOD__, 'Unhandled case value');
+
+			case LoginForm::CREATE_BLOCKED:
+				$result['result'] = 'CreateBlocked';
+				$result['details'] = 'Your IP address is blocked from account creation';
+				break;
+
+			case LoginForm::THROTTLED:
+				global $wgPasswordAttemptThrottle;
+				$result['result'] = 'Throttled';
+				$result['wait'] = intval( $wgPasswordAttemptThrottle['seconds'] );
+				break;
+
+			case LoginForm::USER_BLOCKED:
+				$result['result'] = 'Blocked';
+				break;
+
+			default:
+				ApiBase::dieDebug( __METHOD__, "Unhandled case value: {$authRes}" );
 		}
 
-		if ($result['result'] != 'Success') {
-			$result['wait'] = $this->cacheBadLogin();
-			$result['details'] = "Please wait " . self::THROTTLE_TIME . " seconds before next log-in attempt";
-		}
-		// if we were allowed to try to login, memcache is fine
-		
-		$this->getResult()->addValue(null, 'login', $result);
+		$this->getResult()->addValue( null, 'login', $result );
 	}
 
-	
-	/**
-	 * Caches a bad-login attempt associated with the host and with an 
-	 * expiry of $this->mLoginThrottle. These are cached by a key 
-	 * separate from that used by the captcha system--as such, logging
-	 * in through the standard interface will get you a legal session
-	 * and cookies to prove it, but will not remove this entry.
-	 *
-	 * Returns the number of seconds until next login attempt will be allowed. 
-	 *
-	 * @access private
-	 */
-	private function cacheBadLogin() {
-		global $wgMemc;
-		
-		$key = $this->getMemCacheKey();
-		$val = $wgMemc->get( $key );
-
-		$val['lastReqTime'] = time();
-		if (!isset($val['count'])) {
-			$val['count'] = 1;
-		} else {
-			$val['count'] = 1 + $val['count'];
-		}
-		
-		$delay = ApiLogin::calculateDelay($val['count']);
-		
-		$wgMemc->delete($key);
-		// Cache expiration should be the maximum timeout - to prevent a "try and wait" attack
-		$wgMemc->add( $key, $val, ApiLogin::calculateDelay(ApiLogin::THOTTLE_MAX_COUNT) );	
-		
-		return $delay;
+	public function mustBePosted() {
+		return true;
 	}
-	
-	/**
-	 * How much time the client must wait before it will be 
-	 * allowed to try to log-in next.
-	 * The return value is 0 if no wait is required.
-	 */
-	private function getNextLoginTimeout() {
-		global $wgMemc;
-		
-		$val = $wgMemc->get($this->getMemCacheKey());
 
-		$elapse = (time() - $val['lastReqTime']);  // in seconds
-		$canRetryIn = ApiLogin::calculateDelay($val['count']) - $elapse;
-
-		return $canRetryIn < 0 ? 0 : $canRetryIn;
+	public function isReadMode() {
+		return false;
 	}
-	
-	/**
-	 * Based on the number of previously attempted logins, returns
-	 * the delay (in seconds) when the next login attempt will be allowed.
-	 */
-	private static function calculateDelay($count) {
-		// Defensive programming
-		$count = intval($count);
-		$count = $count < 1 ? 1 : $count;
-		$count = $count > self::THOTTLE_MAX_COUNT ? self::THOTTLE_MAX_COUNT : $count;
-
-		return self::THROTTLE_TIME + self::THROTTLE_TIME * ($count - 1) * self::THROTTLE_FACTOR;
-	} 
-
-	/**
-	* Internal cache key for badlogin checks. Robbed from the 
-	* ConfirmEdit extension and modified to use a key unique to the
-	* API login.3
-	*
-	* @return string
-	* @access private
-	*/
-	private function getMemCacheKey() {
-		return wfMemcKey( 'apilogin', 'badlogin', 'ip', wfGetIP() );
-	}
-	
-	public function mustBePosted() { return true; }
 
 	public function getAllowedParams() {
-		return array (
+		return array(
 			'name' => null,
 			'password' => null,
-			'domain' => null
+			'domain' => null,
+			'token' => null,
 		);
 	}
 
 	public function getParamDescription() {
-		return array (
+		return array(
 			'name' => 'User Name',
 			'password' => 'Password',
-			'domain' => 'Domain (optional)'
+			'domain' => 'Domain (optional)',
+			'token' => 'Login token obtained in first request',
 		);
 	}
 
 	public function getDescription() {
-		return array (
+		return array(
 			'This module is used to login and get the authentication tokens. ',
 			'In the event of a successful log-in, a cookie will be attached',
 			'to your session. In the event of a failed log-in, you will not ',
-			'be able to attempt another log-in through this method for 60 seconds.',
+			'be able to attempt another log-in through this method for 5 seconds.',
 			'This is to prevent password guessing by automated password crackers.'
 		);
 	}
-	
+
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'NeedToken', 'info' => 'You need to resubmit your login with the specified token. See https://bugzilla.wikimedia.org/show_bug.cgi?id=23076' ),
+			array( 'code' => 'WrongToken', 'info' => 'You specified an invalid token' ),
+			array( 'code' => 'NoName', 'info' => 'You didn\'t set the lgname parameter' ),
+			array( 'code' => 'Illegal', 'info' => ' You provided an illegal username' ),
+			array( 'code' => 'NotExists', 'info' => ' The username you provided doesn\'t exist' ),
+			array( 'code' => 'EmptyPass', 'info' => ' You didn\'t set the lgpassword parameter or you left it empty' ),
+			array( 'code' => 'WrongPass', 'info' => ' The password you provided is incorrect' ),
+			array( 'code' => 'WrongPluginPass', 'info' => 'Same as `WrongPass", returned when an authentication plugin rather than MediaWiki itself rejected the password' ),
+			array( 'code' => 'CreateBlocked', 'info' => 'The wiki tried to automatically create a new account for you, but your IP address has been blocked from account creation' ),
+			array( 'code' => 'Throttled', 'info' => 'You\'ve logged in too many times in a short time' ),
+			array( 'code' => 'Blocked', 'info' => 'User is blocked' ),
+		) );
+	}
+
 	protected function getExamples() {
 		return array(
 			'api.php?action=login&lgname=user&lgpassword=password'
@@ -253,7 +206,6 @@ class ApiLogin extends ApiBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiLogin.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiLogin.php 64697 2010-04-07 09:05:05Z catrope $';
 	}
 }
-

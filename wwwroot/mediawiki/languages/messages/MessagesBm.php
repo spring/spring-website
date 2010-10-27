@@ -1,11 +1,13 @@
 <?php
 /** Bambara (Bamanankan)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author Guaka
- * @author Siebrand
  * @author לערי ריינהארט
  */
 
@@ -26,17 +28,18 @@ $messages = array(
 'august'    => 'uti',
 'aug'       => 'uti',
 
-# Bits of text used by many pages
-'categories'      => 'Nyɛ ka cogoyaw',
+# Categories related messages
 'category_header' => 'Nyɛw cogoya kɔnɔ: "$1"',
 
-'article'        => 'Nyɛ',
+'article' => 'Nyɛ',
+'mypage'  => "N'ka nyɛ",
+'mytalk'  => "N'ka baronyɛ",
+'and'     => '&#32;ani',
+
+# Cologne Blue skin
 'qbfind'         => 'Nyini',
 'qbedit'         => 'Yɛlɛma',
 'qbspecialpages' => 'Nyɛw kɛrɛnkɛrɛnnen',
-'mypage'         => "N'ka nyɛ",
-'mytalk'         => "N'ka baronyɛ",
-'and'            => 'ani',
 
 'help'           => 'Dɛmɛ',
 'search'         => 'Nyini',
@@ -54,13 +57,13 @@ $messages = array(
 'otherlanguages' => 'Kanw wɛrɛ',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'currentevents'     => 'Kunnafoni',
-'currentevents-url' => 'Project:Kunnafoni',
-'disclaimers'       => 'Kangari',
-'edithelp'          => 'Dɛmɛ',
-'mainpage'          => 'Nyɛ fɔlɔ',
-'portal'            => 'Jamaje',
-'sitesupport'       => 'Banumanke',
+'currentevents'        => 'Kunnafoni',
+'currentevents-url'    => 'Project:Kunnafoni',
+'disclaimers'          => 'Kangari',
+'edithelp'             => 'Dɛmɛ',
+'mainpage'             => 'Nyɛ fɔlɔ',
+'mainpage-description' => 'Nyɛ fɔlɔ',
+'portal'               => 'Jamaje',
 
 'editsection' => 'yɛlɛma',
 'hidetoc'     => 'dogo',
@@ -84,26 +87,29 @@ $messages = array(
 
 # Preferences page
 'preferences' => 'Fisayali',
-'skin'        => 'Apparence',
+'prefs-skin'  => 'Apparence',
 
 # Recent changes
 'hide' => 'dogo',
 
-# Image list
-'ilsubmit' => 'Nyini',
+# File description page
+'file-anchor-link' => 'Janin',
 
 # Random page
 'randompage' => 'Nyɛ min man ni ja',
 
 # Miscellaneous special pages
 'popularpages' => 'Nyɛw les plus consultées',
-'allpages'     => 'Nyɛw bɛɛ',
-'specialpages' => 'Nyɛw kɛrɛnkɛrɛnnen',
-'spheading'    => 'Nyɛw kɛrɛnkɛrɛnnen',
 'newpages'     => 'Nyɛw kura',
 'ancientpages' => 'Nyɛw les plus anciens',
 'move'         => 'telun',
 'movethispage' => 'Nyɛ telun',
+
+# Special:AllPages
+'allpages' => 'Nyɛw bɛɛ',
+
+# Special:Categories
+'categories' => 'Nyɛ ka cogoyaw',
 
 # Watchlist
 'watch'         => 'Tulomajɔ',
@@ -116,11 +122,17 @@ $messages = array(
 'lockconfirm' => 'Awɔ, je confirme que je souhaite verrouiller la base de données.',
 
 # Move page
-'movepage'    => 'Nyɛ telun',
-'movearticle' => 'Nyɛ telun',
-'movepagebtn' => 'Nyɛ telun',
+'move-page-legend' => 'Nyɛ telun',
+'movearticle'      => 'Nyɛ telun',
+'movepagebtn'      => 'Nyɛ telun',
 
 # Attribution
 'others' => 'wɛrɛ',
+
+# Special:NewFiles
+'ilsubmit' => 'Nyini',
+
+# Special:SpecialPages
+'specialpages' => 'Nyɛw kɛrɛnkɛrɛnnen',
 
 );

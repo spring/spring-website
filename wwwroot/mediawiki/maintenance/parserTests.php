@@ -18,7 +18,8 @@
 # http://www.gnu.org/copyleft/gpl.html
 
 /**
- * @addtogroup Maintenance
+ * @file
+ * @ingroup Maintenance
  */
 
 /** */
@@ -27,27 +28,39 @@ require('parserTests.inc');
 if( isset( $options['help'] ) ) {
     echo <<<ENDS
 MediaWiki $wgVersion parser test suite
-Usage: php parserTests.php [--quick] [--quiet] [--show-output]
-                           [--color[=(yes|no)]]
-                           [--regex=<expression>] [--file=<testfile>]
-                           [--record] [--compare]
-                           [--help]
+Usage: php parserTests.php [options...]
+
 Options:
   --quick          Suppress diff output of failed tests
   --quiet          Suppress notification of passed tests (shows only failed tests)
   --show-output    Show expected and actual output
-  --color          Override terminal detection and force color output on or off
+  --color[=yes|no] Override terminal detection and force color output on or off
                    use wgCommandLineDarkBg = true; if your term is dark 
   --regex          Only run tests whose descriptions which match given regex
-  --file           Run test cases from a custom file instead of parserTests.txt
+  --file=<testfile> Run test cases from a custom file instead of parserTests.txt
   --record         Record tests in database
   --compare        Compare with recorded results, without updating the database.
+  --setversion     When using --record, set the version string to use (useful
+                   with git-svn so that you can get the exact revision)
   --keep-uploads   Re-use the same upload directory for each test, don't delete it
+  --fuzz           Do a fuzz test instead of a normal test
+  --seed <n>       Start the fuzz test from the specified seed
   --help           Show this help message
-
+  --run-disabled   run disabled tests
+  --upload         Upload test results to remote wiki (per \$wgParserTestRemote)
 
 ENDS;
     exit( 0 );
+}
+
+# Cases of weird db corruption were encountered when running tests on earlyish
+# versions of SQLite
+if ( $wgDBtype == 'sqlite' ) {
+	$db = wfGetDB( DB_MASTER );
+	$version = $db->getServerVersion();
+	if ( version_compare( $version, '3.6' ) < 0 ) {
+		die( "Parser tests require SQLite version 3.6 or later, you have $version\n" );
+	}
 }
 
 # There is a convention that the parser should never
@@ -66,7 +79,10 @@ if( isset( $options['file'] ) ) {
 # Print out software version to assist with locating regressions
 $version = SpecialVersion::getVersion();
 echo( "This is MediaWiki version {$version}.\n\n" );
-$ok = $tester->runTestsFromFiles( $files );
 
-exit ($ok ? 0 : -1);
-
+if ( isset( $options['fuzz'] ) ) {
+	$tester->fuzzTest( $files );
+} else {
+	$ok = $tester->runTestsFromFiles( $files );
+	exit ($ok ? 0 : 1);
+}

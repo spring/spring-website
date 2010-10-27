@@ -23,124 +23,142 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiQueryBase.php');
+	require_once ( 'ApiQueryBase.php' );
 }
 
 /**
- * @addtogroup API
+ * @ingroup API
  */
 class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 
-	public function __construct($query, $moduleName) {
-		parent :: __construct($query, $moduleName, 'eu');
+	public function __construct( $query, $moduleName ) {
+		parent :: __construct( $query, $moduleName, 'eu' );
 	}
 
 	public function execute() {
 		$this->run();
 	}
 
-	public function executeGenerator($resultPageSet) {
-		$this->run($resultPageSet);
+	public function getCacheMode( $params ) {
+		return 'public';
 	}
 
-	private function run($resultPageSet = null) {
+	public function executeGenerator( $resultPageSet ) {
+		$this->run( $resultPageSet );
+	}
+
+	private function run( $resultPageSet = null ) {
 
 		$params = $this->extractRequestParams();
 
 		$protocol = $params['protocol'];
 		$query = $params['query'];
-		if (is_null($query))
-			$this->dieUsage('Missing required query parameter', 'params');
-		
+
 		// Find the right prefix
 		global $wgUrlProtocols;
-		foreach ($wgUrlProtocols as $p) {
-			if( substr( $p, 0, strlen( $protocol ) ) === $protocol ) {
-				$protocol = $p;
-				break;
+		if ( $protocol && !in_array( $protocol, $wgUrlProtocols ) )
+		{
+			foreach ( $wgUrlProtocols as $p ) {
+				if ( substr( $p, 0, strlen( $protocol ) ) === $protocol ) {
+					$protocol = $p;
+					break;
+				}
 			}
 		}
-		
-		$likeQuery = LinkFilter::makeLike($query , $protocol);
-		if (!$likeQuery)
-			$this->dieUsage('Invalid query', 'bad_query');
-		$likeQuery = substr($likeQuery, 0, strpos($likeQuery,'%')+1);
-
-		$this->addTables(array('page','externallinks'));	// must be in this order for 'USE INDEX' 
-		$this->addOption('USE INDEX', 'el_index');
+		else
+			$protocol = null;
 
 		$db = $this->getDB();
-		$this->addWhere('page_id=el_from');
-		$this->addWhere('el_index LIKE ' . $db->addQuotes( $likeQuery ));
-		$this->addWhereFld('page_namespace', $params['namespace']);
+		$this->addTables( array( 'page', 'externallinks' ) );	// must be in this order for 'USE INDEX'
+		$this->addOption( 'USE INDEX', 'el_index' );
+		$this->addWhere( 'page_id=el_from' );
+		$this->addWhereFld( 'page_namespace', $params['namespace'] );
 
-		$prop = array_flip($params['prop']);
-		$fld_ids = isset($prop['ids']);
-		$fld_title = isset($prop['title']);
-		$fld_url = isset($prop['url']);
-		
-		if (is_null($resultPageSet)) {
-			$this->addFields(array (
+		if ( !is_null( $query ) || $query != '' )
+		{
+			if ( is_null( $protocol ) )
+				$protocol = 'http://';
+
+			$likeQuery = LinkFilter::makeLikeArray( $query, $protocol );
+			if ( !$likeQuery )
+				$this->dieUsage( 'Invalid query', 'bad_query' );
+
+			$likeQuery = LinkFilter::keepOneWildcard( $likeQuery );
+			$this->addWhere( 'el_index ' . $db->buildLike( $likeQuery ) );
+		}
+		else if ( !is_null( $protocol ) )
+			$this->addWhere( 'el_index ' . $db->buildLike( "$protocol", $db->anyString() ) );
+
+		$prop = array_flip( $params['prop'] );
+		$fld_ids = isset( $prop['ids'] );
+		$fld_title = isset( $prop['title'] );
+		$fld_url = isset( $prop['url'] );
+
+		if ( is_null( $resultPageSet ) ) {
+			$this->addFields( array (
 				'page_id',
 				'page_namespace',
 				'page_title'
-			));
-			$this->addFieldsIf('el_to', $fld_url);			
+			) );
+			$this->addFieldsIf( 'el_to', $fld_url );
 		} else {
-			$this->addFields($resultPageSet->getPageTableFields());
+			$this->addFields( $resultPageSet->getPageTableFields() );
 		}
 
 		$limit = $params['limit'];
 		$offset = $params['offset'];
-		$this->addOption('LIMIT', $limit +1);
-		if (isset ($offset))
-			$this->addOption('OFFSET', $offset);
+		$this->addOption( 'LIMIT', $limit + 1 );
+		if ( isset ( $offset ) )
+			$this->addOption( 'OFFSET', $offset );
 
-		$res = $this->select(__METHOD__);
+		$res = $this->select( __METHOD__ );
 
-		$data = array ();
+		$result = $this->getResult();
 		$count = 0;
-		while ($row = $db->fetchObject($res)) {
-			if (++ $count > $limit) {
+		while ( $row = $db->fetchObject( $res ) ) {
+			if ( ++ $count > $limit ) {
 				// We've reached the one extra which shows that there are additional pages to be had. Stop here...
-				$this->setContinueEnumParameter('offset', $offset+$limit+1);
+				$this->setContinueEnumParameter( 'offset', $offset + $limit );
 				break;
 			}
 
-			if (is_null($resultPageSet)) {
+			if ( is_null( $resultPageSet ) ) {
 				$vals = array();
-				if ($fld_ids)
-					$vals['pageid'] = intval($row->page_id);
-				if ($fld_title) {
-					$title = Title :: makeTitle($row->page_namespace, $row->page_title);
-					$vals['ns'] = intval($title->getNamespace());
-					$vals['title'] = $title->getPrefixedText();
+				if ( $fld_ids )
+					$vals['pageid'] = intval( $row->page_id );
+				if ( $fld_title ) {
+					$title = Title :: makeTitle( $row->page_namespace, $row->page_title );
+					ApiQueryBase::addTitleInfo( $vals, $title );
 				}
-				if ($fld_url)
+				if ( $fld_url )
 					$vals['url'] = $row->el_to;
-				$data[] = $vals;
+				$fit = $result->addValue( array( 'query', $this->getModuleName() ), null, $vals );
+				if ( !$fit )
+				{
+					$this->setContinueEnumParameter( 'offset', $offset + $count - 1 );
+					break;
+				}
 			} else {
-				$resultPageSet->processDbRow($row);
+				$resultPageSet->processDbRow( $row );
 			}
 		}
-		$db->freeResult($res);
+		$db->freeResult( $res );
 
-		if (is_null($resultPageSet)) {
-			$result = $this->getResult();
-			$result->setIndexedTagName($data, $this->getModulePrefix());
-			$result->addValue('query', $this->getModuleName(), $data);
+		if ( is_null( $resultPageSet ) ) {
+			$result->setIndexedTagName_internal( array( 'query', $this->getModuleName() ),
+					$this->getModulePrefix() );
 		}
 	}
 
 	public function getAllowedParams() {
 		global $wgUrlProtocols;
-		$protocols = array();
-		foreach ($wgUrlProtocols as $p) {
-			$protocols[] = substr($p, 0, strpos($p,':'));
+		$protocols = array( '' );
+		foreach ( $wgUrlProtocols as $p ) {
+			$protocols[] = substr( $p, 0, strpos( $p, ':' ) );
 		}
-		
+
 		return array (
 			'prop' => array (
 				ApiBase :: PARAM_ISMULTI => true,
@@ -156,7 +174,7 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 			),
 			'protocol' => array (
 				ApiBase :: PARAM_TYPE => $protocols,
-				ApiBase :: PARAM_DFLT => 'http',
+				ApiBase :: PARAM_DFLT => '',
 			),
 			'query' => null,
 			'namespace' => array (
@@ -177,15 +195,22 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 		return array (
 			'prop' => 'What pieces of information to include',
 			'offset' => 'Used for paging. Use the value returned for "continue"',
-			'protocol' => 'Protocol of the url',
-			'query' => 'Search string without protocol. See [[Special:LinkSearch]]',
+			'protocol' => array(	'Protocol of the url. If empty and euquery set, the protocol is http.',
+						'Leave both this and euquery empty to list all external links' ),
+			'query' => 'Search string without protocol. See [[Special:LinkSearch]]. Leave empty to list all external links',
 			'namespace' => 'The page namespace(s) to enumerate.',
-			'limit' => 'How many entries to return.'
+			'limit' => 'How many pages to return.'
 		);
 	}
 
 	public function getDescription() {
 		return 'Enumerate pages that contain a given URL';
+	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'bad_query', 'info' => 'Invalid query' ),
+		) );
 	}
 
 	protected function getExamples() {
@@ -195,6 +220,6 @@ class ApiQueryExtLinksUsage extends ApiQueryGeneratorBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryExtLinksUsage.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiQueryExtLinksUsage.php 69932 2010-07-26 08:03:21Z tstarling $';
 	}
 }

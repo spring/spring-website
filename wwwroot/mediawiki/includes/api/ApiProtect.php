@@ -22,94 +22,114 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ("ApiBase.php");
+	require_once ( "ApiBase.php" );
 }
 
 /**
- * @addtogroup API
+ * @ingroup API
  */
 class ApiProtect extends ApiBase {
 
-	public function __construct($main, $action) {
-		parent :: __construct($main, $action);
+	public function __construct( $main, $action ) {
+		parent :: __construct( $main, $action );
 	}
 
 	public function execute() {
-		global $wgUser;
-		$this->getMain()->requestWriteMode();
+		global $wgUser, $wgRestrictionTypes, $wgRestrictionLevels;
 		$params = $this->extractRequestParams();
-		
-		$titleObj = NULL;
-		if(!isset($params['title']))
-			$this->dieUsageMsg(array('missingparam', 'title'));
-		if(!isset($params['token']))
-			$this->dieUsageMsg(array('missingparam', 'token'));
-		if(!isset($params['protections']) || empty($params['protections']))
-			$this->dieUsageMsg(array('missingparam', 'protections'));
 
-		if(!$wgUser->matchEditToken($params['token']))
-			$this->dieUsageMsg(array('sessionfailure'));
+		$titleObj = null;
+		if ( !isset( $params['title'] ) )
+			$this->dieUsageMsg( array( 'missingparam', 'title' ) );
+		if ( empty( $params['protections'] ) )
+			$this->dieUsageMsg( array( 'missingparam', 'protections' ) );
 
-		$titleObj = Title::newFromText($params['title']);
-		if(!$titleObj)
-			$this->dieUsageMsg(array('invalidtitle', $params['title']));
-			
-		$errors = $titleObj->getUserPermissionsErrors('protect', $wgUser);
-		if(!empty($errors))
+		$titleObj = Title::newFromText( $params['title'] );
+		if ( !$titleObj )
+			$this->dieUsageMsg( array( 'invalidtitle', $params['title'] ) );
+
+		$errors = $titleObj->getUserPermissionsErrors( 'protect', $wgUser );
+		if ( $errors )
 			// We don't care about multiple errors, just report one of them
-			$this->dieUsageMsg(current($errors));
+			$this->dieUsageMsg( reset( $errors ) );
+
+		$expiry = (array)$params['expiry'];
+		if ( count( $expiry ) != count( $params['protections'] ) )
+		{
+			if ( count( $expiry ) == 1 )
+				$expiry = array_fill( 0, count( $params['protections'] ), $expiry[0] );
+			else
+				$this->dieUsageMsg( array( 'toofewexpiries', count( $expiry ), count( $params['protections'] ) ) );
+		}
 		
-		if(in_array($params['expiry'], array('infinite', 'indefinite', 'never')))
-			$expiry = Block::infinity();
-		else
-		{
-			$expiry = strtotime($params['expiry']);
-			if($expiry < 0 || $expiry == false)
-				$this->dieUsageMsg(array('invalidexpiry'));
+		$restrictionTypes = $titleObj->getRestrictionTypes();
 			
-			$expiry = wfTimestamp(TS_MW, $expiry);
-			if($expiry < wfTimestampNow())
-				$this->dieUsageMsg(array('pastexpiry'));
-		}
-
 		$protections = array();
-		foreach($params['protections'] as $prot)
+		$expiryarray = array();
+		$resultProtections = array();
+		foreach ( $params['protections'] as $i => $prot )
 		{
-			$p = explode('=', $prot);
-			$protections[$p[0]] = ($p[1] == 'all' ? '' : $p[1]);
-			if($titleObj->exists() && $p[0] == 'create')
-				$this->dieUsageMsg(array('create-titleexists'));
-			if(!$titleObj->exists() && $p[0] != 'create')
-				$this->dieUsageMsg(array('missingtitles-createonly'));
+			$p = explode( '=', $prot );
+			$protections[$p[0]] = ( $p[1] == 'all' ? '' : $p[1] );
+
+			if ( $titleObj->exists() && $p[0] == 'create' )
+				$this->dieUsageMsg( array( 'create-titleexists' ) );
+			if ( !$titleObj->exists() && $p[0] != 'create' )
+				$this->dieUsageMsg( array( 'missingtitle-createonly' ) );
+
+			if ( !in_array( $p[0], $restrictionTypes ) && $p[0] != 'create' )
+				$this->dieUsageMsg( array( 'protect-invalidaction', $p[0] ) );
+			if ( !in_array( $p[1], $wgRestrictionLevels ) && $p[1] != 'all' )
+				$this->dieUsageMsg( array( 'protect-invalidlevel', $p[1] ) );
+
+			if ( in_array( $expiry[$i], array( 'infinite', 'indefinite', 'never' ) ) )
+				$expiryarray[$p[0]] = Block::infinity();
+			else
+			{
+				$exp = strtotime( $expiry[$i] );
+				if ( $exp < 0 || $exp == false )
+					$this->dieUsageMsg( array( 'invalidexpiry', $expiry[$i] ) );
+
+				$exp = wfTimestamp( TS_MW, $exp );
+				if ( $exp < wfTimestampNow() )
+					$this->dieUsageMsg( array( 'pastexpiry', $expiry[$i] ) );
+				$expiryarray[$p[0]] = $exp;
+			}
+			$resultProtections[] = array( $p[0] => $protections[$p[0]],
+					'expiry' => ( $expiryarray[$p[0]] == Block::infinity() ?
+								'infinite' :
+								wfTimestamp( TS_ISO_8601, $expiryarray[$p[0]] ) ) );
 		}
 
-		$dbw = wfGetDb(DB_MASTER);
-		$dbw->begin();
-		if($titleObj->exists()) {
-			$articleObj = new Article($titleObj);
-			$ok = $articleObj->updateRestrictions($protections, $params['reason'], $params['cascade'], $expiry);
-		} else
-			$ok = $titleObj->updateTitleProtection($protections['create'], $params['reason'], $expiry);
-		if(!$ok)
+		$cascade = $params['cascade'];
+		$articleObj = new Article( $titleObj );
+		if ( $params['watch'] )
+			$articleObj->doWatch();
+		if ( $titleObj->exists() )
+			$ok = $articleObj->updateRestrictions( $protections, $params['reason'], $cascade, $expiryarray );
+		else
+			$ok = $titleObj->updateTitleProtection( $protections['create'], $params['reason'], $expiryarray['create'] );
+		if ( !$ok )
 			// This is very weird. Maybe the article was deleted or the user was blocked/desysopped in the meantime?
 			// Just throw an unknown error in this case, as it's very likely to be a race condition
-			$this->dieUsageMsg(array());
-		$dbw->commit();
-		$res = array('title' => $titleObj->getPrefixedText(), 'reason' => $params['reason']);
-		if($expiry == Block::infinity())
-			$res['expiry'] = 'infinity';
-		else
-			$res['expiry'] = wfTimestamp(TS_ISO_8601, $expiry);
-
-		if($params['cascade'])
+			$this->dieUsageMsg( array() );
+		$res = array( 'title' => $titleObj->getPrefixedText(), 'reason' => $params['reason'] );
+		if ( $cascade )
 			$res['cascade'] = '';
-		$res['protections'] = $protections;
-		$this->getResult()->addValue(null, $this->getModuleName(), $res);
+		$res['protections'] = $resultProtections;
+		$this->getResult()->setIndexedTagName( $res['protections'], 'protection' );
+		$this->getResult()->addValue( null, $this->getModuleName(), $res );
 	}
 
-	public function mustBePosted() { return true; }
+	public function mustBePosted() {
+		return true;
+	}
+
+	public function isWriteMode() {
+		return true;
+	}
 
 	public function getAllowedParams() {
 		return array (
@@ -118,20 +138,28 @@ class ApiProtect extends ApiBase {
 			'protections' => array(
 				ApiBase :: PARAM_ISMULTI => true
 			),
-			'expiry' => 'infinite',
+			'expiry' => array(
+				ApiBase :: PARAM_ISMULTI => true,
+				ApiBase :: PARAM_ALLOW_DUPLICATES => true,
+				ApiBase :: PARAM_DFLT => 'infinite',
+			),
 			'reason' => '',
-			'cascade' => false
+			'cascade' => false,
+			'watch' => false,
 		);
 	}
 
 	public function getParamDescription() {
 		return array (
-			'title' => 'Title of the page you want to restore.',
+			'title' => 'Title of the page you want to (un)protect.',
 			'token' => 'A protect token previously retrieved through prop=info',
 			'protections' => 'Pipe-separated list of protection levels, formatted action=group (e.g. edit=sysop)',
-			'expiry' => 'Expiry timestamp. If set to \'infinite\', \'indefinite\' or \'never\', the protection will never expire.',
+			'expiry' => array( 'Expiry timestamps. If only one timestamp is set, it\'ll be used for all protections.',
+					'Use \'infinite\', \'indefinite\' or \'never\', for a neverexpiring protection.' ),
 			'reason' => 'Reason for (un)protecting (optional)',
-			'cascade' => 'Enable cascading protection (i.e. protect pages included in this page)'
+			'cascade' => array( 'Enable cascading protection (i.e. protect pages included in this page)',
+					'Ignored if not all protection levels are \'sysop\' or \'protect\'' ),
+			'watch' => 'If set, add the page being (un)protected to your watchlist',
 		);
 	}
 
@@ -140,15 +168,34 @@ class ApiProtect extends ApiBase {
 			'Change the protection level of a page.'
 		);
 	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'missingparam', 'title' ),
+			array( 'missingparam', 'protections' ),
+			array( 'invalidtitle', 'title' ),
+			array( 'toofewexpiries', 'noofexpiries', 'noofprotections' ),
+			array( 'create-titleexists' ),
+			array( 'missingtitle-createonly' ),
+			array( 'protect-invalidaction', 'action' ),
+			array( 'protect-invalidlevel', 'level' ),
+			array( 'invalidexpiry', 'expiry' ),
+			array( 'pastexpiry', 'expiry' ),
+		) );
+	}
+	
+	public function getTokenSalt() {
+		return null;
+	}
 
 	protected function getExamples() {
 		return array (
-			'api.php?action=protect&title=Main%20Page&token=123ABC&protections=edit=sysop|move=sysop&cascade&expiry=20070901163000',
+			'api.php?action=protect&title=Main%20Page&token=123ABC&protections=edit=sysop|move=sysop&cascade&expiry=20070901163000|never',
 			'api.php?action=protect&title=Main%20Page&token=123ABC&protections=edit=all|move=all&reason=Lifting%20restrictions'
 		);
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiProtect.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiProtect.php 62557 2010-02-15 23:53:43Z reedy $';
 	}
 }

@@ -1,11 +1,13 @@
 <?php
 /** Kirghiz (Кыргызча)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author Aidabishkek
- * @author SPQRobin
  */
 
 $messages = array(
@@ -47,16 +49,18 @@ $messages = array(
 'nov'       => 'Ноя',
 'dec'       => 'Дек',
 
-'about'         => 'Тууралуу',
-'cancel'        => 'Жокко чыгаруу',
+'about'      => 'Тууралуу',
+'cancel'     => 'Жокко чыгаруу',
+'mypage'     => 'Барагым',
+'mytalk'     => 'Маегим',
+'navigation' => 'Багыттоо',
+'and'        => '&#32;жана',
+
+# Cologne Blue skin
 'qbedit'        => 'Оңдоо',
 'qbpageoptions' => 'Бул барак',
 'qbpageinfo'    => 'Контекст',
 'qbmyoptions'   => 'Барактарым',
-'mypage'        => 'Барагым',
-'mytalk'        => 'Маегим',
-'navigation'    => 'Багыттоо',
-'and'           => 'жана',
 
 'errorpagetitle'   => 'Жаңылыш',
 'tagline'          => '{{SITENAME}} дан',
@@ -81,17 +85,16 @@ $messages = array(
 'jumptosearch'     => 'издөө',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'         => '{{SITENAME}} тууралуу',
-'aboutpage'         => 'Project:тууралуу',
-'copyrightpagename' => '{{SITENAME}} автордук укугу',
-'copyrightpage'     => '{{ns:project}}:Автордук укуктар',
-'currentevents'     => 'Учурдагы окуялар',
-'currentevents-url' => 'Project:Учурдагы окуялар',
-'edithelppage'      => 'Help:Оңдоо',
-'mainpage'          => 'Башбарак',
-'portal'            => 'Жамаат порталы',
-'portal-url'        => 'Project:Жамаат порталы',
-'sitesupport'       => 'Демөөр',
+'aboutsite'            => '{{SITENAME}} тууралуу',
+'aboutpage'            => 'Project:тууралуу',
+'copyrightpage'        => '{{ns:project}}:Автордук укуктар',
+'currentevents'        => 'Учурдагы окуялар',
+'currentevents-url'    => 'Project:Учурдагы окуялар',
+'edithelppage'         => 'Help:Оңдоо',
+'mainpage'             => 'Башбарак',
+'mainpage-description' => 'Башбарак',
+'portal'               => 'Жамаат порталы',
+'portal-url'           => 'Project:Жамаат порталы',
 
 'youhavenewmessages'      => 'Сизге $1 ($2) бар.',
 'newmessageslink'         => 'жаңы билдирүүлөр',
@@ -127,13 +130,6 @@ $messages = array(
 'logout'             => 'Чыгуу',
 'userlogout'         => 'Чыгуу',
 'createaccountmail'  => 'Электрондук дарек боюнча',
-'youremail'          => 'Электрондук почта:',
-'username'           => 'Колдонуучунун аты:',
-'uid'                => 'Колдонуучунун ID си:',
-'yourrealname'       => 'Анык атыңыз:',
-'yourlanguage'       => 'Тил:',
-'yourvariant'        => 'Вариант:',
-'yournick'           => 'Такма атыңыз:',
 'wrongpassword'      => 'Ката сырсөз киргизилди. Кайтадан аракет кылып көрүңүз.',
 'wrongpasswordempty' => 'Сырсөз киргизилген жок. Кайтадан аракет кылып көрүңүз.',
 'mailmypassword'     => 'Сырсөздү электрондук дарегиме жибер',
@@ -141,8 +137,12 @@ $messages = array(
 'accountcreated'     => 'Катталды',
 'loginlanguagelabel' => 'Тил: $1',
 
+# Password reset dialog
+'oldpassword' => 'Эски сырсөз:',
+'newpassword' => 'Жаңы сырсөз:',
+
 # Edit pages
-'summary'            => 'Кыска түшүндүрүү',
+'summary'            => 'Кыска түшүндүрүү:',
 'savearticle'        => 'Баракты сактап кой',
 'whitelistedittitle' => 'Оңдоо үчүн катоодон өтүү зарыл',
 'accmailtitle'       => 'Сырсөз жөнөтүлдү.',
@@ -153,9 +153,8 @@ $messages = array(
 'yourdiff'           => 'Айырмалар',
 
 # History pages
-'next'       => 'кийинки',
-'last'       => 'соңку',
-'deletedrev' => '[өчүрүлдү]',
+'next' => 'кийинки',
+'last' => 'соңку',
 
 # Diffs
 'difference' => '(Оңдоолордун айырмасы)',
@@ -164,20 +163,23 @@ $messages = array(
 'powersearch' => 'Издөө',
 
 # Preferences page
-'preferences'        => 'Түзөө',
-'changepassword'     => 'Сырсөздү өзгөртүү',
-'dateformat'         => 'Датанын форматы',
-'datetime'           => 'Дата жана убакыт',
-'math_unknown_error' => 'белгисиз ката',
-'prefs-rc'           => 'Соңку өзгөрүүлөр',
-'prefs-watchlist'    => 'Байкоо тизме',
-'saveprefs'          => 'Сактап кой',
-'oldpassword'        => 'Эски сырсөз:',
-'newpassword'        => 'Жаңы сырсөз:',
-'textboxsize'        => 'Оңдоо',
-'searchresultshead'  => 'Издөө',
-'localtime'          => 'Жергиликтүү убакыт',
-'files'              => 'Файлдар',
+'preferences'       => 'Түзөө',
+'changepassword'    => 'Сырсөздү өзгөртүү',
+'prefs-datetime'    => 'Дата жана убакыт',
+'prefs-rc'          => 'Соңку өзгөрүүлөр',
+'prefs-watchlist'   => 'Байкоо тизме',
+'saveprefs'         => 'Сактап кой',
+'prefs-editing'     => 'Оңдоо',
+'searchresultshead' => 'Издөө',
+'localtime'         => 'Жергиликтүү убакыт',
+'prefs-files'       => 'Файлдар',
+'youremail'         => 'Электрондук почта:',
+'username'          => 'Колдонуучунун аты:',
+'uid'               => 'Колдонуучунун ID си:',
+'yourrealname'      => 'Анык атыңыз:',
+'yourlanguage'      => 'Тил:',
+'yourvariant'       => 'Вариант:',
+'yournick'          => 'Такма атыңыз:',
 
 # Groups
 'group'            => 'Топ:',
@@ -192,7 +194,9 @@ $messages = array(
 'newpageletter' => 'Ж',
 
 # Recent changes linked
-'recentchangeslinked' => 'Тиешелүү өзгөрүүлөр',
+'recentchangeslinked'         => 'Тиешелүү өзгөрүүлөр',
+'recentchangeslinked-feed'    => 'Тиешелүү өзгөрүүлөр',
+'recentchangeslinked-toolbox' => 'Тиешелүү өзгөрүүлөр',
 
 # Upload
 'upload'            => 'Файл жүктөө',
@@ -202,15 +206,15 @@ $messages = array(
 'uploadedfiles'     => 'Жүктөлгөн файлдар',
 'savefile'          => 'Файлды сактап кой',
 
-'license' => 'Лицензиялоо',
+'license'        => 'Лицензиялоо:',
+'license-header' => 'Лицензиялоо:',
 
-# Image list
-'imagelist'  => 'Файлдар тизмеси',
-'ilsubmit'   => 'Издөө',
-'byname'     => 'Аталышы боюнча',
-'bydate'     => 'Күнү боюнча',
-'bysize'     => 'Көлөмү боюнча',
-'imagelinks' => 'Шилтемелер',
+# Special:ListFiles
+'listfiles' => 'Файлдар тизмеси',
+
+# File description page
+'file-anchor-link' => 'Файл',
+'imagelinks'       => 'Шилтемелер',
 
 # Unused templates
 'unusedtemplates'    => 'Колдонулбаган нускалар',
@@ -220,28 +224,24 @@ $messages = array(
 'randompage' => 'Тушкелди макала',
 
 # Statistics
-'statistics' => 'Статистика',
-'userstats'  => 'Колдонуучулардын статистикасы',
+'statistics'              => 'Статистика',
+'statistics-header-users' => 'Колдонуучулардын статистикасы',
 
 # Miscellaneous special pages
 'unusedcategories' => 'Колдонулбаган категориялар',
 'unusedimages'     => 'Колдонулбаган файлдар',
-'allpages'         => 'Бардык барактар',
 'shortpages'       => 'Кыска макалалар',
 'listusers'        => 'Колдонуучулар тизмеси',
-'specialpages'     => 'Атайын барактар',
 'newpages'         => 'Жаңы барактар',
 'ancientpages'     => 'Эң эски барактар',
 'move'             => 'Аталышын өзгөртүү',
-
-'groups'  => 'Колдонуучу топтор',
-'version' => 'Версия',
 
 # Special:Log
 'specialloguserlabel'  => 'Колдонуучу:',
 'speciallogtitlelabel' => 'Аталышы:',
 
-# Special:Allpages
+# Special:AllPages
+'allpages'       => 'Бардык барактар',
 'nextpage'       => 'Кийинки барак ($1)',
 'allpagesfrom'   => '-дан башталган барактарды көрсөт:',
 'allarticles'    => 'Бардык макалалар',
@@ -266,12 +266,12 @@ $messages = array(
 'changed' => 'өзгөртүлдү',
 'created' => 'түзүлдү',
 
-# Delete/protect/revert
+# Delete
 'deletepage'     => 'Баракты өчүрүп кой',
 'confirm'        => 'Ырастоо',
 'actioncomplete' => 'Иш-аракет жыйынтыкталды',
 'deletedarticle' => 'өчүрүлдү "[[$1]]"',
-'deletecomment'  => 'Өчүрүү үчүн себептер',
+'deletecomment'  => 'Себеп',
 
 # Restrictions (nouns)
 'restriction-edit' => 'Оңдоо',
@@ -298,19 +298,23 @@ $messages = array(
 'delete_and_move_confirm' => 'Ооба, бул баракты өчүр',
 
 # Namespace 8 related
-'allmessages'         => 'Система билдирүүлөрү',
-'allmessagesname'     => 'Аталышы',
-'allmessagescurrent'  => 'Учурдагы текст',
-'allmessagesmodified' => 'Өзгөрүүгө учурагандарды гана көрсөт',
+'allmessages'        => 'Система билдирүүлөрү',
+'allmessagesname'    => 'Аталышы',
+'allmessagescurrent' => 'Учурдагы текст',
 
 # Attribution
 'others' => 'башкалар',
 
+# Math errors
+'math_unknown_error' => 'белгисиз ката',
+
 # Browsing diffs
 'nextdiff' => 'Кийинки айырма →',
 
-# Special:Newimages
+# Special:NewFiles
 'newimages' => 'Жаңы файлдардын галлереясы',
+'ilsubmit'  => 'Издөө',
+'bydate'    => 'Күнү боюнча',
 
 # EXIF tags
 'exif-artist'   => 'Автор',
@@ -328,5 +332,11 @@ $messages = array(
 # E-mail address confirmation
 'confirmemail'          => 'Электрондук даректи ырастоо',
 'confirmemail_loggedin' => 'Электрондук дарегиңиз ырасталды.',
+
+# Special:Version
+'version' => 'Версия',
+
+# Special:SpecialPages
+'specialpages' => 'Атайын барактар',
 
 );

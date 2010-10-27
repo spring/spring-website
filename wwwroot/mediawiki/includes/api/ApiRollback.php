@@ -22,72 +22,69 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ("ApiBase.php");
+	require_once ( "ApiBase.php" );
 }
 
 /**
- * @addtogroup API
+ * @ingroup API
  */
 class ApiRollback extends ApiBase {
 
-	public function __construct($main, $action) {
-		parent :: __construct($main, $action);
+	public function __construct( $main, $action ) {
+		parent :: __construct( $main, $action );
 	}
 
 	public function execute() {
-		global $wgUser;
-		$this->getMain()->requestWriteMode();
 		$params = $this->extractRequestParams();
-		
-		$titleObj = NULL;
-		if(!isset($params['title']))
-			$this->dieUsageMsg(array('missingparam', 'title'));
-		if(!isset($params['user']))
-			$this->dieUsageMsg(array('missingparam', 'user'));
-		if(!isset($params['token']))
-			$this->dieUsageMsg(array('missingparam', 'token'));
 
-		$titleObj = Title::newFromText($params['title']);
-		if(!$titleObj)
-			$this->dieUsageMsg(array('invalidtitle', $params['title']));
-		if(!$titleObj->exists())
-			$this->dieUsageMsg(array('notanarticle'));
+		$titleObj = null;
+		if ( !isset( $params['title'] ) )
+			$this->dieUsageMsg( array( 'missingparam', 'title' ) );
+		if ( !isset( $params['user'] ) )
+			$this->dieUsageMsg( array( 'missingparam', 'user' ) );
 
-		$username = User::getCanonicalName($params['user']);
-		if(!$username)
-			$this->dieUsageMsg(array('invaliduser', $params['user']));
+		$titleObj = Title::newFromText( $params['title'] );
+		if ( !$titleObj )
+			$this->dieUsageMsg( array( 'invalidtitle', $params['title'] ) );
+		if ( !$titleObj->exists() )
+			$this->dieUsageMsg( array( 'notanarticle' ) );
 
-		$articleObj = new Article($titleObj);
-		$summary = (isset($params['summary']) ? $params['summary'] : "");
+		// We need to be able to revert IPs, but getCanonicalName rejects them
+		$username = User::isIP( $params['user'] )
+			? $params['user']
+			: User::getCanonicalName( $params['user'] );
+		if ( !$username )
+			$this->dieUsageMsg( array( 'invaliduser', $params['user'] ) );
+
+		$articleObj = new Article( $titleObj );
+		$summary = ( isset( $params['summary'] ) ? $params['summary'] : "" );
 		$details = null;
-		$dbw = wfGetDb(DB_MASTER);
-		$dbw->begin();
-		$retval = $articleObj->doRollback($username, $summary, $params['token'], $params['markbot'], $details);
+		$retval = $articleObj->doRollback( $username, $summary, $params['token'], $params['markbot'], $details );
 
-		if(!empty($retval))
+		if ( $retval )
 			// We don't care about multiple errors, just report one of them
-			$this->dieUsageMsg(current($retval));
-
-		$dbw->commit();
-		$current = $target = $summary = NULL;
-		extract($details);
+			$this->dieUsageMsg( reset( $retval ) );
 
 		$info = array(
 			'title' => $titleObj->getPrefixedText(),
-			'pageid' => $current->getPage(),
-			'summary' => $summary,
-			'revid' => $titleObj->getLatestRevID(),
-			'old_revid' => $current->getID(),
-			'last_revid' => $target->getID()
+			'pageid' => intval( $details['current']->getPage() ),
+			'summary' => $details['summary'],
+			'revid' => intval( $details['newid'] ),
+			'old_revid' => intval( $details['current']->getID() ),
+			'last_revid' => intval( $details['target']->getID() )
 		);
 
-		$this->getResult()->addValue(null, $this->getModuleName(), $info);
+		$this->getResult()->addValue( null, $this->getModuleName(), $info );
 	}
-	
+
 	public function mustBePosted() { return true; }
-	
+
+	public function isWriteMode() {
+		return true;
+	}
+
 	public function getAllowedParams() {
 		return array (
 			'title' => null,
@@ -102,7 +99,7 @@ class ApiRollback extends ApiBase {
 		return array (
 			'title' => 'Title of the page you want to rollback.',
 			'user' => 'Name of the user whose edits are to be rolled back. If set incorrectly, you\'ll get a badtoken error.',
-			'token' => 'A rollback token previously retrieved through prop=info',
+			'token' => 'A rollback token previously retrieved through prop=revisions',
 			'summary' => 'Custom edit summary. If not set, default summary will be used.',
 			'markbot' => 'Mark the reverted edits and the revert as bot edits'
 		);
@@ -110,9 +107,19 @@ class ApiRollback extends ApiBase {
 
 	public function getDescription() {
 		return array(
-				'Undoes the last edit to the page. If the last user who edited the page made multiple edits in a row,',
-				'they will all be rolled back. You need to be logged in as a sysop to use this function, see also action=login.'
+				'Undo the last edit to the page. If the last user who edited the page made multiple edits in a row,',
+				'they will all be rolled back.'
 			);
+	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'missingparam', 'title' ),
+			array( 'missingparam', 'user' ),
+			array( 'invalidtitle', 'title' ),
+			array( 'notanarticle' ),
+			array( 'invaliduser', 'user' ),
+		) );
 	}
 
 	protected function getExamples() {
@@ -123,6 +130,6 @@ class ApiRollback extends ApiBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiRollback.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiRollback.php 65371 2010-04-21 10:41:25Z tstarling $';
 	}
 }

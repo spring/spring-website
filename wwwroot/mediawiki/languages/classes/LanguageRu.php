@@ -1,12 +1,11 @@
 <?php
+
 /** Russian (русский язык)
   *
   * You can contact Alexander Sigachov (alexander.sigachov at Googgle Mail)
   *
-  * @addtogroup Language
+  * @ingroup Language
   */
-
-/* Please, see Language.php for general function comments */
 class LanguageRu extends Language {
 	# Convert from the nominative form of a noun to some other case
 	# Invoked with {{grammar:case|word}}
@@ -77,6 +76,8 @@ class LanguageRu extends Language {
 		//if no number with word, then use $form[0] for singular and $form[1] for plural or zero
 		if( count($forms) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
 
+		// FIXME: CLDR defines 4 plural forms. Form with decimals missing.
+		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#ru
 		$forms = $this->preConvertPlural( $forms, 3 );
 
 		if ($count > 10 && floor(($count % 100) / 10) == 1) {
@@ -93,16 +94,15 @@ class LanguageRu extends Language {
 	}
 
 	/*
-	 * Russian numeric format is "12 345,67" but "1234,56"
+	 * Four-digit number should be without group commas (spaces)
+	 * See manual of style at http://ru.wikipedia.org/wiki/Википедия:Оформление_статей
+	 * So "1 234 567", "12 345" but "1234"
 	 */
-
 	function commafy($_) {
-		if (!preg_match('/^\d{1,4}$/',$_)) {
-			return strrev((string)preg_replace('/(\d{3})(?=\d)(?!\d*\.)/','$1,',strrev($_)));
-		} else {
+		if (preg_match('/^-?\d{1,4}(\.\d*)?$/',$_)) {
 			return $_;
+		} else {
+			return strrev((string)preg_replace('/(\d{3})(?=\d)(?!\d*\.)/','$1,',strrev($_)));
 		}
 	}
 }
-
-

@@ -1,13 +1,7 @@
 <?php
 /**
- * Compress the text of a wiki
+ * Compress the text of a wiki.
  *
- * @addtogroup Maintenance
- */
-
-/** */
-
-/**
  * Usage:
  *
  * Non-wikimedia
@@ -24,10 +18,10 @@
  *  -b <begin-date>     earliest date to check for uncompressed revisions
  *  -e <end-date>       latest revision date to compress
  *  -s <start-id>       the old_id to start from
- *  -f <max-factor>     the maximum ratio of compressed chunk bytes to uncompressed avg. revision bytes
- *  -h <threshold>      is a minimum number of KB, where <max-factor> cuts in
  *  --extdb <cluster>   store specified revisions in an external cluster (untested)
  *
+ * @file
+ * @ingroup Maintenance ExternalStorage
  */
 
 $optionsWithArgs = array( 't', 'c', 's', 'f', 'h', 'extdb', 'endid', 'e' );
@@ -44,8 +38,6 @@ $defaults = array(
 	't' => 'concat',
 	'c' => 20,
 	's' => 0,
-	'f' => 5,
-	'h' => 100,
 	'b' => '',
     'e' => '',
     'extdb' => '',
@@ -66,7 +58,7 @@ if ( $options['extdb'] != '' ) {
 
 $success = true;
 if ( $options['t'] == 'concat' ) {
-    $success = compressWithConcat( $options['s'], $options['c'], $options['f'], $options['h'], $options['b'],
+    $success = compressWithConcat( $options['s'], $options['c'], $options['b'],
         $options['e'], $options['extdb'], $options['endid'] );
 } else {
 	compressOldPages( $options['s'], $options['extdb'] );
@@ -76,6 +68,6 @@ if ( $success ) {
 	print "Done.\n";
 }
 
-exit();
+exit(0);
 
 

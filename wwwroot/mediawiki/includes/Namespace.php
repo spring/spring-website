@@ -1,6 +1,7 @@
 <?php
 /**
  * Provide things related to namespaces
+ * @file
  */
 
 /**
@@ -15,8 +16,8 @@ $wgCanonicalNamespaceNames = array(
 	NS_USER_TALK        => 'User_talk',
 	NS_PROJECT          => 'Project',
 	NS_PROJECT_TALK     => 'Project_talk',
-	NS_IMAGE            => 'Image',
-	NS_IMAGE_TALK       => 'Image_talk',
+	NS_FILE             => 'File',
+	NS_FILE_TALK        => 'File_talk',
 	NS_MEDIAWIKI        => 'MediaWiki',
 	NS_MEDIAWIKI_TALK   => 'MediaWiki_talk',
 	NS_TEMPLATE         => 'Template',
@@ -27,7 +28,7 @@ $wgCanonicalNamespaceNames = array(
 	NS_CATEGORY_TALK    => 'Category_talk',
 );
 
-if( is_array( $wgExtraNamespaces ) ) {
+if( isset( $wgExtraNamespaces ) && is_array( $wgExtraNamespaces ) ) {
 	$wgCanonicalNamespaceNames = $wgCanonicalNamespaceNames + $wgExtraNamespaces;
 }
 
@@ -42,26 +43,30 @@ if( is_array( $wgExtraNamespaces ) ) {
  *
  */
 
-/*
-WARNING: The statement below may fail on some versions of PHP: see bug 12294
-*/
+class MWNamespace {
 
-class Namespace {
+	/**
+	 * These namespaces should always be first-letter capitalized, now and
+	 * forevermore. Historically, they could've probably been lowercased too,
+	 * but some things are just too ingrained now. :)
+	 */
+	private static $alwaysCapitalizedNamespaces = array( NS_SPECIAL, NS_USER, NS_MEDIAWIKI );
 
 	/**
 	 * Can pages in the given namespace be moved?
 	 *
-	 * @param int $index Namespace index
+	 * @param $index Int: namespace index
 	 * @return bool
 	 */
 	public static function isMovable( $index ) {
-		return !( $index < NS_MAIN || $index == NS_IMAGE  || $index == NS_CATEGORY );
+		global $wgAllowImageMoving;
+		return !( $index < NS_MAIN || ($index == NS_FILE && !$wgAllowImageMoving)  || $index == NS_CATEGORY );
 	}
 
 	/**
 	 * Is the given namespace is a subject (non-talk) namespace?
 	 *
-	 * @param int $index Namespace index
+	 * @param $index Int: namespace index
 	 * @return bool
 	 */
 	public static function isMain( $index ) {
@@ -71,7 +76,7 @@ class Namespace {
 	/**
 	 * Is the given namespace a talk namespace?
 	 *
-	 * @param int $index Namespace index
+	 * @param $index Int: namespace index
 	 * @return bool
 	 */
 	public static function isTalk( $index ) {
@@ -82,7 +87,7 @@ class Namespace {
 	/**
 	 * Get the talk namespace index for a given namespace
 	 *
-	 * @param int $index Namespace index
+	 * @param $index Int: namespace index
 	 * @return int
 	 */
 	public static function getTalk( $index ) {
@@ -94,7 +99,7 @@ class Namespace {
 	/**
 	 * Get the subject namespace index for a given namespace
 	 *
-	 * @param int $index Namespace index
+	 * @param $index Int: Namespace index
 	 * @return int
 	 */
 	public static function getSubject( $index ) {
@@ -104,21 +109,34 @@ class Namespace {
 	}
 
 	/**
+	 * Returns whether the specified namespace exists
+	 */
+	public static function exists( $index ) {
+		global $wgCanonicalNamespaceNames;
+		return isset( $wgCanonicalNamespaceNames[$index] );
+	}
+
+
+	/**
 	 * Returns the canonical (English Wikipedia) name for a given index
 	 *
-	 * @param int $index Namespace index
-	 * @return string
+	 * @param $index Int: namespace index
+	 * @return string or false if no canonical definition.
 	 */
 	public static function getCanonicalName( $index ) {
 		global $wgCanonicalNamespaceNames;
-		return $wgCanonicalNamespaceNames[$index];
+		if( isset( $wgCanonicalNamespaceNames[$index] ) ) {
+			return $wgCanonicalNamespaceNames[$index];
+		} else {
+			return false;
+		}
 	}
 
 	/**
 	 * Returns the index for a given canonical name, or NULL
 	 * The input *must* be converted to lower case first
 	 *
-	 * @param string $name Namespace name
+	 * @param $name String: namespace name
 	 * @return int
 	 */
 	public static function getCanonicalIndex( $name ) {
@@ -133,40 +151,76 @@ class Namespace {
 		if ( array_key_exists( $name, $xNamespaces ) ) {
 			return $xNamespaces[$name];
 		} else {
-			return NULL;
+			return null;
 		}
 	}
-	
+
 	/**
 	 * Can this namespace ever have a talk namespace?
 	 *
-	 * @param $index Namespace index
+	 * @param $index Int: namespace index
 	 * @return bool
 	 */
 	 public static function canTalk( $index ) {
-	 	return $index >= NS_MAIN;
+		return $index >= NS_MAIN;
 	 }
-	 
+
 	/**
-	 * Does this namespace contain content, for the purposes
-	 * of calculating statistics, etc?
+	 * Does this namespace contain content, for the purposes of calculating
+	 * statistics, etc?
 	 *
-	 * @param $index Index to check
+	 * @param $index Int: index to check
 	 * @return bool
 	 */
 	public static function isContent( $index ) {
 		global $wgContentNamespaces;
 		return $index == NS_MAIN || in_array( $index, $wgContentNamespaces );
 	}
-	
+
 	/**
 	 * Can pages in a namespace be watched?
 	 *
-	 * @param int $index
+	 * @param $index Int
 	 * @return bool
 	 */
 	public static function isWatchable( $index ) {
 		return $index >= NS_MAIN;
 	}
-	 
+
+	/**
+	 * Does the namespace allow subpages?
+	 *
+	 * @param $index int Index to check
+	 * @return bool
+	 */
+	public static function hasSubpages( $index ) {
+		global $wgNamespacesWithSubpages;
+		return !empty( $wgNamespacesWithSubpages[$index] );
+	}
+
+	/**
+	 * Is the namespace first-letter capitalized?
+	 *
+	 * @param $index int Index to check
+	 * @return bool
+	 */
+	public static function isCapitalized( $index ) {
+		global $wgCapitalLinks, $wgCapitalLinkOverrides;
+		// Turn NS_MEDIA into NS_FILE
+		$index = $index === NS_MEDIA ? NS_FILE : $index;
+
+		// Make sure to get the subject of our namespace
+		$index = self::getSubject( $index );
+
+		// Some namespaces are special and should always be upper case
+		if ( in_array( $index, self::$alwaysCapitalizedNamespaces ) ) {
+			return true;
+		}
+		if ( isset( $wgCapitalLinkOverrides[ $index ] ) ) {
+			// $wgCapitalLinkOverrides is explicitly set
+			return $wgCapitalLinkOverrides[ $index ];
+		}
+		// Default to the global setting
+		return $wgCapitalLinks;
+	}
 }

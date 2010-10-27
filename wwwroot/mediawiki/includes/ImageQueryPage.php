@@ -4,8 +4,7 @@
  * Variant of QueryPage which uses a gallery to output results, thus
  * suited for reports generating images
  *
- * @package MediaWiki
- * @addtogroup SpecialPage
+ * @ingroup SpecialPage
  * @author Rob Church <robchur@gmail.com>
  */
 class ImageQueryPage extends QueryPage {
@@ -14,12 +13,12 @@ class ImageQueryPage extends QueryPage {
 	 * Format and output report results using the given information plus
 	 * OutputPage
 	 *
-	 * @param OutputPage $out OutputPage to print to
-	 * @param Skin $skin User skin to use
-	 * @param Database $dbr Database (read) connection to use
-	 * @param int $res Result pointer
-	 * @param int $num Number of available result rows
-	 * @param int $offset Paging offset
+	 * @param $out OutputPage to print to
+	 * @param $skin Skin: user skin to use
+	 * @param $dbr Database (read) connection to use
+	 * @param $res Integer: result pointer
+	 * @param $num Integer: number of available result rows
+	 * @param $offset Integer: paging offset
 	 */
 	protected function outputResults( $out, $skin, $dbr, $res, $num, $offset ) {
 		if( $num > 0 ) {
@@ -35,20 +34,20 @@ class ImageQueryPage extends QueryPage {
 				}
 			}
 
-			$out->addHtml( $gallery->toHtml() );
+			$out->addHTML( $gallery->toHtml() );
 		}
 	}
 
 	/**
 	 * Prepare an image object given a result row
 	 *
-	 * @param object $row Result row
+	 * @param $row Object: result row
 	 * @return Image
 	 */
 	private function prepareImage( $row ) {
-		$namespace = isset( $row->namespace ) ? $row->namespace : NS_IMAGE;
+		$namespace = isset( $row->namespace ) ? $row->namespace : NS_FILE;
 		$title = Title::makeTitleSafe( $namespace, $row->title );
-		return ( $title instanceof Title && $title->getNamespace() == NS_IMAGE )
+		return ( $title instanceof Title && $title->getNamespace() == NS_FILE )
 			? wfFindFile( $title )
 			: null;
 	}
@@ -56,13 +55,11 @@ class ImageQueryPage extends QueryPage {
 	/**
 	 * Get additional HTML to be shown in a results' cell
 	 *
-	 * @param object $row Result row
-	 * @return string
+	 * @param $row Object: result row
+	 * @return String
 	 */
 	protected function getCellHtml( $row ) {
 		return '';
 	}
 
 }
-
-

@@ -1,11 +1,18 @@
 <?php
-if( !defined( 'MEDIAWIKI' ) ) {
+/**
+ * @file
+ * @ingroup Ajax
+ */
+
+if ( !defined( 'MEDIAWIKI' ) ) {
 	die( 1 );
 }
 
 /**
- * @todo document
- * @addtogroup Ajax
+ * Handle responses for Ajax requests (send headers, print
+ * content, that sort of thing)
+ *
+ * @ingroup Ajax
  */
 class AjaxResponse {
 
@@ -15,7 +22,7 @@ class AjaxResponse {
 	/** HTTP header Content-Type */
 	private $mContentType;
 
-	/** @todo document */
+	/** Disables output. Can be set by calling $AjaxResponse->disable() */
 	private $mDisabled;
 
 	/** Date for the HTTP header Last-modified */
@@ -30,15 +37,15 @@ class AjaxResponse {
 	/** Content of our HTTP response */
 	private $mText;
 
-	function __construct( $text = NULL ) {
-		$this->mCacheDuration = NULL;
-		$this->mVary = NULL;
+	function __construct( $text = null ) {
+		$this->mCacheDuration = null;
+		$this->mVary = null;
 
 		$this->mDisabled = false;
 		$this->mText = '';
 		$this->mResponseCode = '200 OK';
 		$this->mLastModified = false;
-		$this->mContentType= 'text/html; charset=utf-8';
+		$this->mContentType = 'application/x-wiki';
 
 		if ( $text ) {
 			$this->addText( $text );
@@ -88,46 +95,46 @@ class AjaxResponse {
 			header( "Status: " . $this->mResponseCode, true, (int)$n );
 		}
 
-		header ("Content-Type: " . $this->mContentType );
+		header ( "Content-Type: " . $this->mContentType );
 
 		if ( $this->mLastModified ) {
-			header ("Last-Modified: " . $this->mLastModified );
+			header ( "Last-Modified: " . $this->mLastModified );
 		}
 		else {
-			header ("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+			header ( "Last-Modified: " . gmdate( "D, d M Y H:i:s" ) . " GMT" );
 		}
 
 		if ( $this->mCacheDuration ) {
 
-			# If squid caches are configured, tell them to cache the response, 
+			# If squid caches are configured, tell them to cache the response,
 			# and tell the client to always check with the squid. Otherwise,
 			# tell the client to use a cached copy, without a way to purge it.
 
-			if( $wgUseSquid ) {
+			if ( $wgUseSquid ) {
 
 				# Expect explicite purge of the proxy cache, but require end user agents
 				# to revalidate against the proxy on each visit.
 				# Surrogate-Control controls our Squid, Cache-Control downstream caches
 
 				if ( $wgUseESI ) {
-					header( 'Surrogate-Control: max-age='.$this->mCacheDuration.', content="ESI/1.0"');
+					header( 'Surrogate-Control: max-age=' . $this->mCacheDuration . ', content="ESI/1.0"' );
 					header( 'Cache-Control: s-maxage=0, must-revalidate, max-age=0' );
 				} else {
-					header( 'Cache-Control: s-maxage='.$this->mCacheDuration.', must-revalidate, max-age=0' );
+					header( 'Cache-Control: s-maxage=' . $this->mCacheDuration . ', must-revalidate, max-age=0' );
 				}
 
 			} else {
 
 				# Let the client do the caching. Cache is not purged.
-				header ("Expires: " . gmdate( "D, d M Y H:i:s", time() + $this->mCacheDuration ) . " GMT");
-				header ("Cache-Control: s-max-age={$this->mCacheDuration},public,max-age={$this->mCacheDuration}");
+				header ( "Expires: " . gmdate( "D, d M Y H:i:s", time() + $this->mCacheDuration ) . " GMT" );
+				header ( "Cache-Control: s-max-age={$this->mCacheDuration},public,max-age={$this->mCacheDuration}" );
 			}
 
 		} else {
 			# always expired, always modified
-			header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");    // Date in the past
-			header ("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
-			header ("Pragma: no-cache");                          // HTTP/1.0
+			header ( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );    // Date in the past
+			header ( "Cache-Control: no-cache, must-revalidate" );  // HTTP/1.1
+			header ( "Pragma: no-cache" );                          // HTTP/1.0
 		}
 
 		if ( $this->mVary ) {
@@ -149,11 +156,11 @@ class AjaxResponse {
 			wfDebug( "$fname: CACHE DISABLED, NO TIMESTAMP\n" );
 			return;
 		}
-		if( !$wgCachePages ) {
+		if ( !$wgCachePages ) {
 			wfDebug( "$fname: CACHE DISABLED\n", false );
 			return;
 		}
-		if( $wgUser->getOption( 'nocache' ) ) {
+		if ( $wgUser->getOption( 'nocache' ) ) {
 			wfDebug( "$fname: USER DISABLED CACHE\n", false );
 			return;
 		}
@@ -161,7 +168,7 @@ class AjaxResponse {
 		$timestamp = wfTimestamp( TS_MW, $timestamp );
 		$lastmod = wfTimestamp( TS_RFC2822, max( $timestamp, $wgUser->mTouched, $wgCacheEpoch ) );
 
-		if( !empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
+		if ( !empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) ) {
 			# IE sends sizes after the date like this:
 			# Wed, 20 Aug 2003 06:51:19 GMT; length=5202
 			# this breaks strtotime().
@@ -170,7 +177,8 @@ class AjaxResponse {
 			$ismodsince = wfTimestamp( TS_MW, $modsinceTime ? $modsinceTime : 1 );
 			wfDebug( "$fname: -- client send If-Modified-Since: " . $modsince . "\n", false );
 			wfDebug( "$fname: --  we might send Last-Modified : $lastmod\n", false );
-			if( ($ismodsince >= $timestamp ) && $wgUser->validateCache( $ismodsince ) && $ismodsince >= $wgCacheEpoch ) {
+			if ( ( $ismodsince >= $timestamp ) && $wgUser->validateCache( $ismodsince ) && $ismodsince >= $wgCacheEpoch ) {
+				ini_set( 'zlib.output_compression', 0 );
 				$this->setResponseCode( "304 Not Modified" );
 				$this->disable();
 				$this->mLastModified = $lastmod;
@@ -220,4 +228,3 @@ class AjaxResponse {
 		return true;
 	}
 }
-

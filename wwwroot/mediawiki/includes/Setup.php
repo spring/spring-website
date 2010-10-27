@@ -8,9 +8,8 @@
  * MEDIAWIKI is defined
  */
 if( !defined( 'MEDIAWIKI' ) ) {
-	echo "This file is part of MediaWiki, it is not a valid entry point.\n";
 	exit( 1 );
-}	
+}
 
 # The main wiki script and things like database
 # conversion and maintenance scripts all share a
@@ -41,6 +40,7 @@ if( $wgArticlePath === false ) {
 
 if( $wgStylePath === false ) $wgStylePath = "$wgScriptPath/skins";
 if( $wgStyleDirectory === false) $wgStyleDirectory   = "$IP/skins";
+if( $wgExtensionAssetsPath === false ) $wgExtensionAssetsPath = "$wgScriptPath/extensions";
 
 if( $wgLogo === false ) $wgLogo = "$wgStylePath/common/images/wiki.png";
 
@@ -58,12 +58,28 @@ if ( empty( $wgFileStore['deleted']['directory'] ) ) {
 	$wgFileStore['deleted']['directory'] = "{$wgUploadDirectory}/deleted";
 }
 
+/**
+ * Unconditional protection for NS_MEDIAWIKI since otherwise it's too easy for a
+ * sysadmin to set $wgNamespaceProtection incorrectly and leave the wiki insecure.
+ *
+ * Note that this is the definition of editinterface and it can be granted to
+ * all users if desired.
+ */
+$wgNamespaceProtection[NS_MEDIAWIKI] = 'editinterface';
+
+/**
+ * The canonical names of namespaces 6 and 7 are, as of v1.14, "File"
+ * and "File_talk".  The old names "Image" and "Image_talk" are
+ * retained as aliases for backwards compatibility.
+ */
+$wgNamespaceAliases['Image'] = NS_FILE;
+$wgNamespaceAliases['Image_talk'] = NS_FILE_TALK;
 
 /**
  * Initialise $wgLocalFileRepo from backwards-compatible settings
  */
 if ( !$wgLocalFileRepo ) {
-	$wgLocalFileRepo = array( 
+	$wgLocalFileRepo = array(
 		'class' => 'LocalRepo',
 		'name' => 'local',
 		'directory' => $wgUploadDirectory,
@@ -71,7 +87,6 @@ if ( !$wgLocalFileRepo ) {
 		'hashLevels' => $wgHashedUploadDirectory ? 2 : 0,
 		'thumbScriptUrl' => $wgThumbnailScriptPath,
 		'transformVia404' => !$wgGenerateThumbnailOnParse,
-		'initialCapital' => $wgCapitalLinks,
 		'deletedDir' => $wgFileStore['deleted']['directory'],
 		'deletedHashLevels' => $wgFileStore['deleted']['hash']
 	);
@@ -101,7 +116,7 @@ if ( $wgUseSharedUploads ) {
 			'fetchDescription' => $wgFetchCommonsDescriptions,
 		);
 	} else {
-		$wgForeignFileRepos[] = array( 
+		$wgForeignFileRepos[] = array(
 			'class' => 'FSRepo',
 			'name' => 'shared',
 			'directory' => $wgSharedUploadDirectory,
@@ -114,8 +129,21 @@ if ( $wgUseSharedUploads ) {
 		);
 	}
 }
+if( $wgUseInstantCommons ) {
+	$wgForeignFileRepos[] = array(
+		'class'                   => 'ForeignAPIRepo',
+		'name'                    => 'wikimediacommons',
+		'apibase'                 => 'http://commons.wikimedia.org/w/api.php',
+		'hashLevels'              => 2,
+		'fetchDescription'        => true,
+		'descriptionCacheExpiry'  => 43200,
+		'apiThumbCacheExpiry'     => 86400,
+	);
+}
 
-require_once( "$IP/includes/AutoLoader.php" );
+if ( !class_exists( 'AutoLoader' ) ) {
+	require_once( "$IP/includes/AutoLoader.php" );
+}
 
 wfProfileIn( $fname.'-exception' );
 require_once( "$IP/includes/Exception.php" );
@@ -133,30 +161,60 @@ require_once( "$IP/includes/StubObject.php" );
 wfProfileOut( $fname.'-includes' );
 wfProfileIn( $fname.'-misc1' );
 
+# Raise the memory limit if it's too low
+wfMemoryLimit();
+
+/**
+ * Set up the timezone, suppressing the pseudo-security warning in PHP 5.1+ 
+ * that happens whenever you use a date function without the timezone being
+ * explicitly set. Inspired by phpMyAdmin's treatment of the problem.
+ */
+wfSuppressWarnings();
+date_default_timezone_set( date_default_timezone_get() );
+wfRestoreWarnings();
 
 $wgIP = false; # Load on demand
 # Can't stub this one, it sets up $_GET and $_REQUEST in its constructor
 $wgRequest = new WebRequest;
-if ( function_exists( 'posix_uname' ) ) {
-	$wguname = posix_uname();
-	$wgNodeName = $wguname['nodename'];
-} else {
-	$wgNodeName = '';
-}
 
 # Useful debug output
 if ( $wgCommandLineMode ) {
 	wfDebug( "\n\nStart command line script $self\n" );
-} elseif ( function_exists( 'getallheaders' ) ) {
-	wfDebug( "\n\nStart request\n" );
+} else {
+	wfDebug( "Start request\n\n" );
 	wfDebug( $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . "\n" );
-	$headers = getallheaders();
-	foreach ($headers as $name => $value) {
-		wfDebug( "$name: $value\n" );
+
+	if ( $wgDebugPrintHttpHeaders ) {
+		$headerOut = "HTTP HEADERS:\n";
+
+		if ( function_exists( 'getallheaders' ) ) {
+			$headers = getallheaders();
+			foreach ( $headers as $name => $value ) {
+				$headerOut .= "$name: $value\n";
+			}
+		} else {
+			$headers = $_SERVER;
+			foreach ( $headers as $name => $value ) {
+				if ( substr( $name, 0, 5 ) !== 'HTTP_' ) continue;
+				$name = substr( $name, 5 );
+				$headerOut .= "$name: $value\n";
+			}
+		}
+		wfDebug( "$headerOut\n" );
 	}
-	wfDebug( "\n" );
-} elseif( isset( $_SERVER['REQUEST_URI'] ) ) {
-	wfDebug( $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'] . "\n" );
+}
+
+if( $wgRCFilterByAge ) {
+	## Trim down $wgRCLinkDays so that it only lists links which are valid
+	## as determined by $wgRCMaxAge.
+	## Note that we allow 1 link higher than the max for things like 56 days but a 60 day link.
+	sort($wgRCLinkDays);
+	for( $i = 0; $i < count($wgRCLinkDays); $i++ ) {
+		if( $wgRCLinkDays[$i] >= $wgRCMaxAge / ( 3600 * 24 ) ) {
+			$wgRCLinkDays = array_slice( $wgRCLinkDays, 0, $i+1, false );
+			break;
+		}
+	}
 }
 
 if ( $wgSkipSkin ) {
@@ -173,6 +231,27 @@ if($wgMetaNamespace === FALSE) {
 # To determine the user language, use $wgLang->getCode()
 $wgContLanguageCode = $wgLanguageCode;
 
+# Easy to forget to falsify $wgShowIPinHeader for static caches.
+# If file cache or squid cache is on, just disable this (DWIMD).
+if( $wgUseFileCache || $wgUseSquid ) $wgShowIPinHeader = false;
+
+# $wgAllowRealName and $wgAllowUserSkin were removed in 1.16
+# in favor of $wgHiddenPrefs, handle b/c here
+if( !$wgAllowRealName ) {
+	$wgHiddenPrefs[] = 'realname';
+}
+
+if( !$wgAllowUserSkin ) {
+	$wgHiddenPrefs[] = 'skin';
+}
+
+if ( !$wgHtml5Version && $wgHtml5 && $wgAllowRdfaAttributes ) {
+	# see http://www.w3.org/TR/rdfa-in-html/#document-conformance
+	if ( $wgMimeType == 'application/xhtml+xml' ) $wgHtml5Version = 'XHTML+RDFa 1.0';
+	else $wgHtml5Version = 'HTML+RDFa 1.0';
+}
+
+
 wfProfileOut( $fname.'-misc1' );
 wfProfileIn( $fname.'-memcached' );
 
@@ -180,19 +259,30 @@ $wgMemc =& wfGetMainCache();
 $messageMemc =& wfGetMessageCacheStorage();
 $parserMemc =& wfGetParserCacheStorage();
 
-wfDebug( 'Main cache: ' . get_class( $wgMemc ) .
-       "\nMessage cache: " . get_class( $messageMemc ) .
-	   "\nParser cache: " . get_class( $parserMemc ) . "\n" );
+wfDebug( 'CACHES: ' . get_class( $wgMemc ) . '[main] ' .
+	get_class( $messageMemc ) . '[message] ' .
+	get_class( $parserMemc ) . "[parser]\n" );
 
 wfProfileOut( $fname.'-memcached' );
+
+## Most of the config is out, some might want to run hooks here.
+wfRunHooks( 'SetupAfterCache' );
+
 wfProfileIn( $fname.'-SetupSession' );
 
-if ( $wgDBprefix ) {
-	$wgCookiePrefix = $wgDBname . '_' . $wgDBprefix;
-} elseif ( $wgSharedDB ) {
-	$wgCookiePrefix = $wgSharedDB;
-} else {
-	$wgCookiePrefix = $wgDBname;
+# Set default shared prefix
+if( $wgSharedPrefix === false ) $wgSharedPrefix = $wgDBprefix;
+
+if( !$wgCookiePrefix ) {
+	if ( $wgSharedDB && $wgSharedPrefix && in_array('user',$wgSharedTables) ) {
+		$wgCookiePrefix = $wgSharedDB . '_' . $wgSharedPrefix;
+	} elseif ( $wgSharedDB && in_array('user',$wgSharedTables) ) {
+		$wgCookiePrefix = $wgSharedDB;
+	} elseif ( $wgDBprefix ) {
+		$wgCookiePrefix = $wgDBname . '_' . $wgDBprefix;
+	} else {
+		$wgCookiePrefix = $wgDBname;
+	}
 }
 $wgCookiePrefix = strtr($wgCookiePrefix, "=,; +.\"'\\[", "__________");
 
@@ -213,20 +303,6 @@ if( !$wgCommandLineMode && ( $wgRequest->checkSessionCookie() || isset( $_COOKIE
 wfProfileOut( $fname.'-SetupSession' );
 wfProfileIn( $fname.'-globals' );
 
-if ( !$wgDBservers ) {
-	$wgDBservers = array(array(
-		'host' => $wgDBserver,
-		'user' => $wgDBuser,
-		'password' => $wgDBpassword,
-		'dbname' => $wgDBname,
-		'type' => $wgDBtype,
-		'load' => 1,
-		'flags' => ($wgDebugDumpSql ? DBO_DEBUG : 0) | DBO_DEFAULT
-	));
-}
-
-$wgLoadBalancer = new StubObject( 'wgLoadBalancer', 'LoadBalancer', 
-	array( $wgDBservers, false, $wgMasterWaitTimeout, true ) );
 $wgContLang = new StubContLang;
 
 // Now that variant lists may be available...
@@ -237,8 +313,8 @@ $wgLang = new StubUserLang;
 $wgOut = new StubObject( 'wgOut', 'OutputPage' );
 $wgParser = new StubObject( 'wgParser', $wgParserConf['class'], array( $wgParserConf ) );
 
-$wgMessageCache = new StubObject( 'wgMessageCache', 'MessageCache', 
-	array( $parserMemc, $wgUseDatabaseMessages, $wgMsgCacheExpiry, wfWikiID() ) );
+$wgMessageCache = new StubObject( 'wgMessageCache', 'MessageCache',
+	array( $messageMemc, $wgUseDatabaseMessages, $wgMsgCacheExpiry, wfWikiID() ) );
 
 wfProfileOut( $fname.'-globals' );
 wfProfileIn( $fname.'-User' );
@@ -246,7 +322,7 @@ wfProfileIn( $fname.'-User' );
 # Skin setup functions
 # Entries can be added to this variable during the inclusion
 # of the extension file. Skins can then perform any necessary initialisation.
-# 
+#
 foreach ( $wgSkinExtensionFunctions as $func ) {
 	call_user_func( $func );
 }
@@ -263,13 +339,8 @@ wfProfileIn( $fname.'-misc2' );
 $wgDeferredUpdateList = array();
 $wgPostCommitUpdateList = array();
 
-if ( $wgAjaxSearch ) $wgAjaxExportList[] = 'wfSajaxSearch';
 if ( $wgAjaxWatch ) $wgAjaxExportList[] = 'wfAjaxWatch';
-if ( $wgAjaxUploadDestCheck ) $wgAjaxExportList[] = 'UploadForm::ajaxGetExistsWarning';
-if( $wgAjaxLicensePreview )
-	$wgAjaxExportList[] = 'UploadForm::ajaxGetLicensePreview';
-
-wfSeedRandom();
+if ( $wgAjaxUploadDestCheck ) $wgAjaxExportList[] = 'SpecialUpload::ajaxGetExistsWarning';
 
 # Placeholders in case of DB error
 $wgTitle = null;
@@ -283,7 +354,18 @@ wfProfileIn( $fname.'-extensions' );
 # of the extension file. This allows the extension to perform
 # any necessary initialisation in the fully initialised environment
 foreach ( $wgExtensionFunctions as $func ) {
-	$profName = $fname.'-extensions-'.strval( $func );
+	# Allow closures in PHP 5.3+
+	if ( is_object( $func ) && $func instanceof Closure ) {
+		$profName = $fname.'-extensions-closure';
+	} elseif( is_array( $func ) ) {
+		if ( is_object( $func[0] ) )
+			$profName = $fname.'-extensions-'.get_class( $func[0] ).'::'.$func[1];
+		else
+			$profName = $fname.'-extensions-'.implode( '::', $func );
+	} else {
+		$profName = $fname.'-extensions-'.strval( $func );
+	}
+
 	wfProfileIn( $profName );
 	call_user_func( $func );
 	wfProfileOut( $profName );
@@ -295,10 +377,18 @@ wfRunHooks( 'LogPageLogName', array( &$wgLogNames ) );
 wfRunHooks( 'LogPageLogHeader', array( &$wgLogHeaders ) );
 wfRunHooks( 'LogPageActionText', array( &$wgLogActions ) );
 
+if( !empty($wgNewUserLog) ) {
+	# Add a new log type
+	$wgLogTypes[]                        = 'newusers';
+	$wgLogNames['newusers']              = 'newuserlogpage';
+	$wgLogHeaders['newusers']            = 'newuserlogpagetext';
+	$wgLogActions['newusers/newusers']   = 'newuserlogentry'; // For compatibility with older log entries
+	$wgLogActions['newusers/create']     = 'newuserlog-create-entry';
+	$wgLogActions['newusers/create2']    = 'newuserlog-create2-entry';
+	$wgLogActions['newusers/autocreate'] = 'newuserlog-autocreate-entry';
+}
 
 wfDebug( "Fully initialised\n" );
 $wgFullyInitialised = true;
 wfProfileOut( $fname.'-extensions' );
 wfProfileOut( $fname );
-
-

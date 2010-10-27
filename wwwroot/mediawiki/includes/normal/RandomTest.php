@@ -22,7 +22,7 @@
  * UtfNormal::cleanUp() code paths, and checks to see if there's a
  * difference. Will run forever until it finds one or you kill it.
  *
- * @addtogroup UtfNormal
+ * @ingroup UtfNormal
  * @access private
  */
 
@@ -32,7 +32,7 @@ if( php_sapi_name() != 'cli' ) {
 
 /** */
 require_once( 'UtfNormal.php' );
-require_once( '../DifferenceEngine.php' );
+require_once( '../diff/DifferenceEngine.php' );
 
 dl('php_utfnormal.so' );
 
@@ -104,5 +104,3 @@ while( true ) {
 	$clean = '';
 	$norm = '';
 }
-
-

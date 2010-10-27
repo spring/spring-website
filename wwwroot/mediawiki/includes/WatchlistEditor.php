@@ -4,7 +4,7 @@
  * Provides the UI through which users can perform editing
  * operations on their watchlist
  *
- * @addtogroup Watchlist
+ * @ingroup Watchlist
  * @author Rob Church <robchur@gmail.com>
  */
 class WatchlistEditor {
@@ -19,10 +19,10 @@ class WatchlistEditor {
 	/**
 	 * Main execution point
 	 *
-	 * @param User $user
-	 * @param OutputPage $output
-	 * @param WebRequest $request
-	 * @param int $mode
+	 * @param $user User
+	 * @param $output OutputPage
+	 * @param $request WebRequest
+	 * @param $mode int
 	 */
 	public function execute( $user, $output, $request, $mode ) {
 		global $wgUser;
@@ -46,19 +46,19 @@ class WatchlistEditor {
 						$this->unwatchTitles( $toUnwatch, $user );
 						$user->invalidateCache();
 						if( count( $toWatch ) > 0 || count( $toUnwatch ) > 0 )
-							$output->addHtml( wfMsgExt( 'watchlistedit-raw-done', 'parse' ) );
+							$output->addHTML( wfMsgExt( 'watchlistedit-raw-done', 'parse' ) );
 						if( ( $count = count( $toWatch ) ) > 0 ) {
-							$output->addHtml( wfMsgExt( 'watchlistedit-raw-added', 'parse', $count ) );
+							$output->addHTML( wfMsgExt( 'watchlistedit-raw-added', 'parse', $count ) );
 							$this->showTitles( $toWatch, $output, $wgUser->getSkin() );
 						}
 						if( ( $count = count( $toUnwatch ) ) > 0 ) {
-							$output->addHtml( wfMsgExt( 'watchlistedit-raw-removed', 'parse', $count ) );
+							$output->addHTML( wfMsgExt( 'watchlistedit-raw-removed', 'parse', $count ) );
 							$this->showTitles( $toUnwatch, $output, $wgUser->getSkin() );
 						}
 					} else {
 						$this->clearWatchlist( $user );
 						$user->invalidateCache();
-						$output->addHtml( wfMsgExt( 'watchlistedit-raw-removed', 'parse', count( $current ) ) );
+						$output->addHTML( wfMsgExt( 'watchlistedit-raw-removed', 'parse', count( $current ) ) );
 						$this->showTitles( $current, $output, $wgUser->getSkin() );
 					}
 				}
@@ -70,30 +70,30 @@ class WatchlistEditor {
 					$titles = $this->extractTitles( $request->getArray( 'titles' ) );
 					$this->unwatchTitles( $titles, $user );
 					$user->invalidateCache();
-					$output->addHtml( wfMsgExt( 'watchlistedit-normal-done', 'parse',
+					$output->addHTML( wfMsgExt( 'watchlistedit-normal-done', 'parse',
 						$GLOBALS['wgLang']->formatNum( count( $titles ) ) ) );
 					$this->showTitles( $titles, $output, $wgUser->getSkin() );
 				}
 				$this->showNormalForm( $output, $user );
 		}
 	}
-	
+
 	/**
 	 * Check the edit token from a form submission
 	 *
-	 * @param WebRequest $request
-	 * @param User $user
+	 * @param $request WebRequest
+	 * @param $user User
 	 * @return bool
 	 */
 	private function checkToken( $request, $user ) {
-		return $user->matchEditToken( $request->getVal( 'token' ), 'watchlistedit' );	
+		return $user->matchEditToken( $request->getVal( 'token' ), 'watchlistedit' );
 	}
-	
+
 	/**
 	 * Extract a list of titles from a blob of text, returning
 	 * (prefixed) strings; unwatchable titles are ignored
 	 *
-	 * @param mixed $list
+	 * @param $list mixed
 	 * @return array
 	 */
 	private function extractTitles( $list ) {
@@ -113,20 +113,20 @@ class WatchlistEditor {
 		}
 		return array_unique( $titles );
 	}
-	
+
 	/**
 	 * Print out a list of linked titles
 	 *
 	 * $titles can be an array of strings or Title objects; the former
 	 * is preferred, since Titles are very memory-heavy
 	 *
-	 * @param array $titles An array of strings, or Title objects
-	 * @param OutputPage $output
-	 * @param Skin $skin
+	 * @param $titles An array of strings, or Title objects
+	 * @param $output OutputPage
+	 * @param $skin Skin
 	 */
 	private function showTitles( $titles, $output, $skin ) {
 		$talk = wfMsgHtml( 'talkpagelinktext' );
-		// Do a batch existence check		
+		// Do a batch existence check
 		$batch = new LinkBatch();
 		foreach( $titles as $title ) {
 			if( !$title instanceof Title )
@@ -138,22 +138,22 @@ class WatchlistEditor {
 		}
 		$batch->execute();
 		// Print out the list
-		$output->addHtml( "<ul>\n" );
+		$output->addHTML( "<ul>\n" );
 		foreach( $titles as $title ) {
 			if( !$title instanceof Title )
 				$title = Title::newFromText( $title );
 			if( $title instanceof Title ) {
-				$output->addHtml( "<li>" . $skin->makeLinkObj( $title )
-				. ' (' . $skin->makeLinkObj( $title->getTalkPage(), $talk ) . ")</li>\n" );
+				$output->addHTML( "<li>" . $skin->link( $title )
+				. ' (' . $skin->link( $title->getTalkPage(), $talk ) . ")</li>\n" );
 			}
 		}
-		$output->addHtml( "</ul>\n" );
+		$output->addHTML( "</ul>\n" );
 	}
-	
+
 	/**
 	 * Count the number of titles on a user's watchlist, excluding talk pages
 	 *
-	 * @param User $user
+	 * @param $user User
 	 * @return int
 	 */
 	private function countWatchlist( $user ) {
@@ -162,16 +162,16 @@ class WatchlistEditor {
 		$row = $dbr->fetchObject( $res );
 		return ceil( $row->count / 2 ); // Paranoia
 	}
-	
+
 	/**
 	 * Prepare a list of titles on a user's watchlist (excluding talk pages)
 	 * and return an array of (prefixed) strings
 	 *
-	 * @param User $user
+	 * @param $user User
 	 * @return array
 	 */
 	private function getWatchlist( $user ) {
-		$list = array();	
+		$list = array();
 		$dbr = wfGetDB( DB_MASTER );
 		$res = $dbr->select(
 			'watchlist',
@@ -187,17 +187,17 @@ class WatchlistEditor {
 				if( $title instanceof Title && !$title->isTalkPage() )
 					$list[] = $title->getPrefixedText();
 			}
-			$res->free();		
+			$res->free();
 		}
 		return $list;
 	}
-	
+
 	/**
 	 * Get a list of titles on a user's watchlist, excluding talk pages,
 	 * and return as a two-dimensional array with namespace, title and
 	 * redirect status
 	 *
-	 * @param User $user
+	 * @param $user User
 	 * @return array
 	 */
 	private function getWatchlistInfo( $user ) {
@@ -205,7 +205,7 @@ class WatchlistEditor {
 		$dbr = wfGetDB( DB_MASTER );
 		$uid = intval( $user->getId() );
 		list( $watchlist, $page ) = $dbr->tableNamesN( 'watchlist', 'page' );
-		$sql = "SELECT wl_namespace, wl_title, page_id, page_is_redirect
+		$sql = "SELECT wl_namespace, wl_title, page_id, page_len, page_is_redirect
 			FROM {$watchlist} LEFT JOIN {$page} ON ( wl_namespace = page_namespace
 			AND wl_title = page_title ) WHERE wl_user = {$uid}";
 		$res = $dbr->query( $sql, __METHOD__ );
@@ -216,7 +216,7 @@ class WatchlistEditor {
 				if( $title instanceof Title ) {
 					// Update the link cache while we're at it
 					if( $row->page_id ) {
-						$cache->addGoodLinkObj( $row->page_id, $title );
+						$cache->addGoodLinkObj( $row->page_id, $title, $row->page_len, $row->page_is_redirect );
 					} else {
 						$cache->addBadLinkObj( $title );
 					}
@@ -228,29 +228,29 @@ class WatchlistEditor {
 		}
 		return $titles;
 	}
-	
+
 	/**
 	 * Show a message indicating the number of items on the user's watchlist,
 	 * and return this count for additional checking
 	 *
-	 * @param OutputPage $output
-	 * @param User $user
+	 * @param $output OutputPage
+	 * @param $user User
 	 * @return int
 	 */
 	private function showItemCount( $output, $user ) {
 		if( ( $count = $this->countWatchlist( $user ) ) > 0 ) {
-			$output->addHtml( wfMsgExt( 'watchlistedit-numitems', 'parse',
+			$output->addHTML( wfMsgExt( 'watchlistedit-numitems', 'parse',
 				$GLOBALS['wgLang']->formatNum( $count ) ) );
 		} else {
-			$output->addHtml( wfMsgExt( 'watchlistedit-noitems', 'parse' ) );
+			$output->addHTML( wfMsgExt( 'watchlistedit-noitems', 'parse' ) );
 		}
 		return $count;
 	}
-	
+
 	/**
 	 * Remove all titles from a user's watchlist
 	 *
-	 * @param User $user
+	 * @param $user User
 	 */
 	private function clearWatchlist( $user ) {
 		$dbw = wfGetDB( DB_MASTER );
@@ -263,8 +263,8 @@ class WatchlistEditor {
 	 * $titles can be an array of strings or Title objects; the former
 	 * is preferred, since Titles are very memory-heavy
 	 *
-	 * @param array $titles An array of strings, or Title objects
-	 * @param User $user
+	 * @param $titles An array of strings, or Title objects
+	 * @param $user User
 	 */
 	private function watchTitles( $titles, $user ) {
 		$dbw = wfGetDB( DB_MASTER );
@@ -296,8 +296,8 @@ class WatchlistEditor {
 	 * $titles can be an array of strings or Title objects; the former
 	 * is preferred, since Titles are very memory-heavy
 	 *
-	 * @param array $titles An array of strings, or Title objects
-	 * @param User $user
+	 * @param $titles An array of strings, or Title objects
+	 * @param $user User
 	 */
 	private function unwatchTitles( $titles, $user ) {
 		$dbw = wfGetDB( DB_MASTER );
@@ -323,44 +323,72 @@ class WatchlistEditor {
 					),
 					__METHOD__
 				);
+				$article = new Article($title);
+				wfRunHooks('UnwatchArticleComplete',array(&$user,&$article));
 			}
 		}
 	}
-	
+
 	/**
 	 * Show the standard watchlist editing form
 	 *
-	 * @param OutputPage $output
-	 * @param User $user
+	 * @param $output OutputPage
+	 * @param $user User
 	 */
 	private function showNormalForm( $output, $user ) {
 		global $wgUser;
 		if( ( $count = $this->showItemCount( $output, $user ) ) > 0 ) {
 			$self = SpecialPage::getTitleFor( 'Watchlist' );
 			$form  = Xml::openElement( 'form', array( 'method' => 'post',
-				'action' => $self->getLocalUrl( 'action=edit' ) ) );
+				'action' => $self->getLocalUrl( array( 'action' => 'edit' ) ) ) );
 			$form .= Xml::hidden( 'token', $wgUser->editToken( 'watchlistedit' ) );
-			$form .= '<fieldset><legend>' . wfMsgHtml( 'watchlistedit-normal-legend' ) . '</legend>';
+			$form .= "<fieldset>\n<legend>" . wfMsgHtml( 'watchlistedit-normal-legend' ) . "</legend>";
 			$form .= wfMsgExt( 'watchlistedit-normal-explain', 'parse' );
-			foreach( $this->getWatchlistInfo( $user ) as $namespace => $pages ) {
-				$form .= '<h2>' . $this->getNamespaceHeading( $namespace ) . '</h2>';
-				$form .= '<ul>';
-				foreach( $pages as $dbkey => $redirect ) {
-					$title = Title::makeTitleSafe( $namespace, $dbkey );
-					$form .= $this->buildRemoveLine( $title, $redirect, $wgUser->getSkin() );
-				}
-				$form .= '</ul>';
-			}
+			$form .= $this->buildRemoveList( $user, $wgUser->getSkin() );
 			$form .= '<p>' . Xml::submitButton( wfMsg( 'watchlistedit-normal-submit' ) ) . '</p>';
 			$form .= '</fieldset></form>';
-			$output->addHtml( $form );
+			$output->addHTML( $form );
 		}
 	}
-	
+
+	/**
+	 * Build the part of the standard watchlist editing form with the actual
+	 * title selection checkboxes and stuff.  Also generates a table of
+	 * contents if there's more than one heading.
+	 *
+	 * @param $user User
+	 * @param $skin Skin (really, Linker)
+	 */
+	private function buildRemoveList( $user, $skin ) {
+		$list = "";
+		$toc = $skin->tocIndent();
+		$tocLength = 0;
+		foreach( $this->getWatchlistInfo( $user ) as $namespace => $pages ) {
+			$tocLength++;
+			$heading = htmlspecialchars( $this->getNamespaceHeading( $namespace ) );
+			$anchor = "editwatchlist-ns" . $namespace;
+
+			$list .= $skin->makeHeadLine( 2, ">", $anchor, $heading, "" );
+			$toc .= $skin->tocLine( $anchor, $heading, $tocLength, 1 ) . $skin->tocLineEnd();
+
+			$list .= "<ul>\n";
+			foreach( $pages as $dbkey => $redirect ) {
+				$title = Title::makeTitleSafe( $namespace, $dbkey );
+				$list .= $this->buildRemoveLine( $title, $redirect, $skin );
+			}
+			$list .= "</ul>\n";
+		}
+		// ISSUE: omit the TOC if the total number of titles is low?
+		if( $tocLength > 1 ) {
+			$list = $skin->tocList( $toc ) . $list;
+		}
+		return $list;
+	}
+
 	/**
 	 * Get the correct "heading" for a namespace
 	 *
-	 * @param int $namespace
+	 * @param $namespace int
 	 * @return string
 	 */
 	private function getNamespaceHeading( $namespace ) {
@@ -368,44 +396,58 @@ class WatchlistEditor {
 			? wfMsgHtml( 'blanknamespace' )
 			: htmlspecialchars( $GLOBALS['wgContLang']->getFormattedNsText( $namespace ) );
 	}
-	
+
 	/**
 	 * Build a single list item containing a check box selecting a title
 	 * and a link to that title, with various additional bits
 	 *
-	 * @param Title $title
-	 * @param bool $redirect
-	 * @param Skin $skin
+	 * @param $title Title
+	 * @param $redirect bool
+	 * @param $skin Skin
 	 * @return string
 	 */
 	private function buildRemoveLine( $title, $redirect, $skin ) {
-		$link = $skin->makeLinkObj( $title );
+		global $wgLang;
+
+		$link = $skin->link( $title );
 		if( $redirect )
 			$link = '<span class="watchlistredir">' . $link . '</span>';
-		$tools[] = $skin->makeLinkObj( $title->getTalkPage(), wfMsgHtml( 'talkpagelinktext' ) );
+		$tools[] = $skin->link( $title->getTalkPage(), wfMsgHtml( 'talkpagelinktext' ) );
 		if( $title->exists() ) {
-			$tools[] = $skin->makeKnownLinkObj( $title, wfMsgHtml( 'history_short' ), 'action=history' );
+			$tools[] = $skin->link(
+				$title,
+				wfMsgHtml( 'history_short' ),
+				array(),
+				array( 'action' => 'history' ),
+				array( 'known', 'noclasses' )
+			);
 		}
 		if( $title->getNamespace() == NS_USER && !$title->isSubpage() ) {
-			$tools[] = $skin->makeKnownLinkObj( SpecialPage::getTitleFor( 'Contributions', $title->getText() ), wfMsgHtml( 'contributions' ) );
+			$tools[] = $skin->link(
+				SpecialPage::getTitleFor( 'Contributions', $title->getText() ),
+				wfMsgHtml( 'contributions' ),
+				array(),
+				array(),
+				array( 'known', 'noclasses' )
+			);
 		}
-		return '<li>'
+		return "<li>"
 			. Xml::check( 'titles[]', false, array( 'value' => $title->getPrefixedText() ) )
-			. $link . ' (' . implode( ' | ', $tools ) . ')' . '</li>';
+			. $link . " (" . $wgLang->pipeList( $tools ) . ")" . "</li>\n";
 		}
-	
+
 	/**
 	 * Show a form for editing the watchlist in "raw" mode
 	 *
-	 * @param OutputPage $output
-	 * @param User $user
+	 * @param $output OutputPage
+	 * @param $user User
 	 */
 	public function showRawForm( $output, $user ) {
 		global $wgUser;
 		$this->showItemCount( $output, $user );
 		$self = SpecialPage::getTitleFor( 'Watchlist' );
 		$form  = Xml::openElement( 'form', array( 'method' => 'post',
-			'action' => $self->getLocalUrl( 'action=raw' ) ) );
+			'action' => $self->getLocalUrl( array( 'action' => 'raw' ) ) ) );
 		$form .= Xml::hidden( 'token', $wgUser->editToken( 'watchlistedit' ) );
 		$form .= '<fieldset><legend>' . wfMsgHtml( 'watchlistedit-raw-legend' ) . '</legend>';
 		$form .= wfMsgExt( 'watchlistedit-raw-explain', 'parse' );
@@ -419,15 +461,15 @@ class WatchlistEditor {
 		$form .= '</textarea>';
 		$form .= '<p>' . Xml::submitButton( wfMsg( 'watchlistedit-raw-submit' ) ) . '</p>';
 		$form .= '</fieldset></form>';
-		$output->addHtml( $form );
+		$output->addHTML( $form );
 	}
-	
+
 	/**
 	 * Determine whether we are editing the watchlist, and if so, what
 	 * kind of editing operation
 	 *
-	 * @param WebRequest $request
-	 * @param mixed $par
+	 * @param $request WebRequest
+	 * @param $par mixed
 	 * @return int
 	 */
 	public static function getMode( $request, $par ) {
@@ -443,21 +485,29 @@ class WatchlistEditor {
 				return false;
 		}
 	}
-	
+
 	/**
 	 * Build a set of links for convenient navigation
 	 * between watchlist viewing and editing modes
 	 *
-	 * @param Skin $skin Skin to use
+	 * @param $skin Skin to use
 	 * @return string
 	 */
 	public static function buildTools( $skin ) {
+		global $wgLang;
+
 		$tools = array();
 		$modes = array( 'view' => false, 'edit' => 'edit', 'raw' => 'raw' );
 		foreach( $modes as $mode => $subpage ) {
-			$tools[] = $skin->makeKnownLinkObj( SpecialPage::getTitleFor( 'Watchlist', $subpage ), wfMsgHtml( "watchlisttools-{$mode}" ) );
+			// can use messages 'watchlisttools-view', 'watchlisttools-edit', 'watchlisttools-raw'
+			$tools[] = $skin->link(
+				SpecialPage::getTitleFor( 'Watchlist', $subpage ),
+				wfMsgHtml( "watchlisttools-{$mode}" ),
+				array(),
+				array(),
+				array( 'known', 'noclasses' )
+			);
 		}
-		return implode( ' | ', $tools );
+		return $wgLang->pipeList( $tools );
 	}
-
 }

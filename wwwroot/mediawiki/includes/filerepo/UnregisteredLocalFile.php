@@ -1,14 +1,16 @@
 <?php
 
 /**
- * A file object referring to either a standalone local file, or a file in a 
+ * A file object referring to either a standalone local file, or a file in a
  * local repository with no database, for example an FSRepo repository.
  *
  * Read-only.
  *
- * TODO: Currently it doesn't really work in the repository role, there are 
- * lots of functions missing. It is used by the WebStore extension in the 
+ * TODO: Currently it doesn't really work in the repository role, there are
+ * lots of functions missing. It is used by the WebStore extension in the
  * standalone role.
+ *
+ * @ingroup FileRepo
  */
 class UnregisteredLocalFile extends File {
 	var $title, $path, $mime, $handler, $dims;
@@ -30,7 +32,7 @@ class UnregisteredLocalFile extends File {
 			$this->name = $repo->getNameFromTitle( $title );
 		} else {
 			$this->name = basename( $path );
-			$this->title = Title::makeTitleSafe( NS_IMAGE, $this->name );
+			$this->title = Title::makeTitleSafe( NS_FILE, $this->name );
 		}
 		$this->repo = $repo;
 		if ( $path ) {
@@ -106,4 +108,3 @@ class UnregisteredLocalFile extends File {
 		}
 	}
 }
-

@@ -1,6 +1,9 @@
 <?php
 /** Kazakh (Қазақша)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
@@ -8,23 +11,11 @@
 
 # Stub message file for converter code "kk"
 
-$fallback = 'kk-kz';
-
-$linkTrail = '/^([a-zäçéğıïñöşüýʺʹа-яёәғіқңөұүһٴابپتجحدرزسشعفقكلمنڭەوۇۋۆىيچھ“»]+)(.*)$/sDu';
+$fallback = 'kk-cyrl';
 
 $messages = array(
-'linkprefix' => '/^(.*?)([a-zäçéğıïñöşüýA-ZÄÇÉĞİÏÑÖŞÜÝʺʹа-яёәіңғүұқөһА-ЯЁӘІҢҒҮҰҚӨҺٴابپتجحدرزسشعفقكلمنڭەوۇۋۆىيچھ«„]+)$/sDu',
-
 # Edit pages
 'edittools' => '<!-- Мындағы мәтін өңдеу және қотару пішіндердің астында көрсетіледі. -->',
-
-# Stylesheets
-'common.css'   => '/* Мындағы CSS барлық безендіру мәнеріндерде қолданылады */',
-'monobook.css' => '/* Мындағы CSS «Дара кітап» (monobook) безендіру мәнерін пайдаланушыларға ықпал етеді */',
-
-# Scripts
-'common.js'   => '/* Мындағы JavaScript әрқайсы бет қаралғанда барлық пайдаланушыларға жүктеледі. */',
-'monobook.js' => ' /* Тыйылған; орнына [[{{ns:mediawiki}}:common.js]] қолданыңыз */',
 
 # Variants for Kazakh language
 'variantname-kk-kz'   => 'disable',

@@ -18,19 +18,25 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * @addtogroup Maintenance
+ * @file
+ * @ingroup Maintenance
  */
 
 $optionsWithArgs = array( 'report' );
 
-require_once( 'commandLine.inc' );
+require_once( dirname(__FILE__) . '/commandLine.inc' );
 
+/**
+ * @ingroup Maintenance
+ */
 class BackupReader {
 	var $reportingInterval = 100;
 	var $reporting = true;
 	var $pageCount = 0;
 	var $revCount  = 0;
 	var $dryRun    = false;
+	var $debug     = false;
+	var $uploads   = false;
 
 	function BackupReader() {
 		$this->stderr = fopen( "php://stderr", "wt" );
@@ -42,19 +48,40 @@ class BackupReader {
 
 	function handleRevision( $rev ) {
 		$title = $rev->getTitle();
-		if (!$title) {
+		if( !$title ) {
 			$this->progress( "Got bogus revision with null title!" );
 			return;
 		}
-		#$timestamp = $rev->getTimestamp();
-		#$display = $title->getPrefixedText();
-		#echo "$display $timestamp\n";
 
 		$this->revCount++;
 		$this->report();
 
 		if( !$this->dryRun ) {
 			call_user_func( $this->importCallback, $rev );
+		}
+	}
+	
+	function handleUpload( $revision ) {
+		if( $this->uploads ) {
+			$this->uploadCount++;
+			//$this->report();
+			$this->progress( "upload: " . $revision->getFilename() );
+			
+			if( !$this->dryRun ) {
+				// bluuuh hack
+				//call_user_func( $this->uploadCallback, $revision );
+				$dbw = wfGetDB( DB_MASTER );
+				return $dbw->deadlockLoop( array( $revision, 'importUpload' ) );
+			}
+		}
+	}
+
+	function handleLogItem( $rev ) {
+		$this->revCount++;
+		$this->report();
+
+		if( !$this->dryRun ) {
+			call_user_func( $this->logItemCallback, $rev );
 		}
 	}
 
@@ -74,8 +101,13 @@ class BackupReader {
 				$rate = '-';
 				$revrate = '-';
 			}
-			$this->progress( "$this->pageCount ($rate pages/sec $revrate revs/sec)" );
+			# Logs dumps don't have page tallies
+			if( $this->pageCount )
+				$this->progress( "$this->pageCount ($rate pages/sec $revrate revs/sec)" );
+			else
+				$this->progress( "$this->revCount ($revrate revs/sec)" );
 		}
+		wfWaitForSlaves(5);
 	}
 
 	function progress( $string ) {
@@ -83,10 +115,19 @@ class BackupReader {
 	}
 
 	function importFromFile( $filename ) {
+		$t = true;
 		if( preg_match( '/\.gz$/', $filename ) ) {
 			$filename = 'compress.zlib://' . $filename;
 		}
-		$file = fopen( $filename, 'rt' );
+		elseif( preg_match( '/\.bz2$/', $filename ) ) {
+			$filename = 'compress.bzip2://' . $filename;
+		}
+		elseif( preg_match( '/\.7z$/', $filename ) ) {
+			$filename = 'mediawiki.compress.7z://' . $filename;
+			$t = false;
+		}
+
+		$file = fopen( $filename, $t ? 'rt' : 't' ); //our 7zip wrapper uses popen, which seems not to like two-letter modes
 		return $this->importFromHandle( $file );
 	}
 
@@ -101,9 +142,14 @@ class BackupReader {
 		$source = new ImportStreamSource( $handle );
 		$importer = new WikiImporter( $source );
 
+		$importer->setDebug( $this->debug );
 		$importer->setPageCallback( array( &$this, 'reportPage' ) );
 		$this->importCallback =  $importer->setRevisionCallback(
 			array( &$this, 'handleRevision' ) );
+		$this->uploadCallback = $importer->setUploadCallback(
+			array( &$this, 'handleUpload' ) );
+		$this->logItemCallback = $importer->setLogItemCallback(
+			array( &$this, 'handleLogItem' ) );
 
 		return $importer->doImport();
 	}
@@ -122,6 +168,12 @@ if( isset( $options['report'] ) ) {
 }
 if( isset( $options['dry-run'] ) ) {
 	$reader->dryRun = true;
+}
+if( isset( $options['debug'] ) ) {
+	$reader->debug = true;
+}
+if( isset( $options['uploads'] ) ) {
+	$reader->uploads = true; // experimental!
 }
 
 if( isset( $args[0] ) ) {

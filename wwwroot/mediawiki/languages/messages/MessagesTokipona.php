@@ -1,11 +1,13 @@
 <?php
 /** Toki Pona (Toki Pona)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author http://tokipona.wikia.com sysops
- * @author Siebrand
  */
 
 $messages = array(
@@ -23,10 +25,10 @@ $messages = array(
 'november'  => 'tenpo mun pi nanpa luka luka wan',
 'december'  => 'tenpo mun pi nanpa luka luka tu',
 
-# Bits of text used by many pages
-'categories'      => 'kulupu lipu',
-'category_header' => 'lipu lon kulupu lipu "$1"',
-'subcategories'   => 'kulupu lipu lili',
+# Categories related messages
+'category_header'        => 'lipu lon kulupu lipu "$1"',
+'subcategories'          => 'kulupu lipu lili',
+'listingcontinuesabbrev' => ' li awen',
 
 'article'    => 'lipu sona',
 'newwindow'  => '(ona li open e lupa sin)',
@@ -57,16 +59,16 @@ $messages = array(
 'redirectedfrom'    => '(tan $1)',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'     => 'lipu sona pi toki pona li seme?',
-'aboutpage'     => 'Project:lipu sona pi toki pona li seme?',
-'copyright'     => 'lipu ken $1 li lawa e lipu ni.',
-'currentevents' => 'seme li sin lon ma?',
-'disclaimers'   => 'wile ala',
-'edithelp'      => 'mi sona ala e ante',
-'mainpage'      => 'lipu lawa',
-'portal'        => 'lipu pi kulupu ni',
-'privacy'       => 'ken pi awen weka',
-'sitesupport'   => 'o pana e mani',
+'aboutsite'            => 'lipu sona pi toki pona li seme?',
+'aboutpage'            => 'Project:lipu sona pi toki pona li seme?',
+'copyright'            => 'lipu ken $1 li lawa e lipu ni.',
+'currentevents'        => 'seme li sin lon ma?',
+'disclaimers'          => 'wile ala',
+'edithelp'             => 'mi sona ala e ante',
+'mainpage'             => 'lipu lawa',
+'mainpage-description' => 'lipu lawa',
+'portal'               => 'lipu pi kulupu ni',
+'privacy'              => 'ken pi awen weka',
 
 'ok'            => 'pona',
 'retrievedfrom' => 'tan $1',
@@ -90,7 +92,7 @@ $messages = array(
 'userlogout' => 'mi o tawa',
 
 # Edit pages
-'summary'          => 'ante li seme',
+'summary'          => 'ante li seme:',
 'minoredit'        => 'ante ni li lili taso',
 'watchthis'        => 'mi wile sona e ante ale pi lipu ni lon tenpo kama',
 'savearticle'      => 'o awen',
@@ -98,9 +100,9 @@ $messages = array(
 'showpreview'      => 'mi wile lukin taso e ante',
 'editing'          => 'mi ante e: $1',
 'editingcomment'   => 'mi ante e lipu $1 (wan sin)',
-'copyrightwarning' => 'o sona e ni: ken $2 (o lukin e $1) li lawa tawa ante ali lon {{SITENAME}} li. jan li ken ante e toki sina li ken pana e ona tawa jan ante. sina wile ala e ni la, o sitelen ala lon lipu ni.<br />
+'copyrightwarning' => "o sona e ni: ken $2 (o lukin e $1) li lawa tawa ante ali lon {{SITENAME}} li. jan li ken ante e toki sina li ken pana e ona tawa jan ante. sina wile ala e ni la, o sitelen ala lon lipu ni.<br />
 kin la sina toki e ni: toki sina ni li tan sina taso anu lipu pi ken ali.
-<strong>SINA KEN ALA LA, O PANA ALA E TOKI PI KEN LILI TAWA LIPU NI!</strong>',
+'''SINA KEN ALA LA, O PANA ALA E TOKI PI KEN LILI TAWA LIPU NI!'''",
 'templatesused'    => 'lipu ni li kepeken e lipu mama ni:',
 
 # History pages
@@ -108,9 +110,9 @@ kin la sina toki e ni: toki sina ni li tan sina taso anu lipu pi ken ali.
 'histlast'  => 'sin taso',
 
 # Search results
-'prevn'        => 'nanpa $1 pini',
-'nextn'        => 'nanpa $1 kama',
-'viewprevnext' => 'o lukin e ($1) ($2) ($3).',
+'prevn'        => 'nanpa {{PLURAL:$1|$1}} pini',
+'nextn'        => 'nanpa {{PLURAL:$1|$1}} kama',
+'viewprevnext' => 'o lukin e ($1 {{int:pipe-separator}} $2) ($3).',
 
 # Preferences page
 'preferences' => 'seme li pona tawa mi',
@@ -121,22 +123,31 @@ kin la sina toki e ni: toki sina ni li tan sina taso anu lipu pi ken ali.
 'newpageletter'   => 'lipu sin',
 
 # Recent changes linked
-'recentchangeslinked' => 'ante sama',
+'recentchangeslinked'         => 'ante sama',
+'recentchangeslinked-feed'    => 'ante sama',
+'recentchangeslinked-toolbox' => 'ante sama',
 
 # Upload
 'upload'            => 'o pana e lipu nanpa',
 'filedesc'          => 'ante li seme',
 'fileuploadsummary' => 'ante li seme:',
 
+# File description page
+'file-anchor-link' => 'Lipu nanpa',
+
 # Random page
 'randompage' => 'mi wile lukin e lipu ante',
 
 # Miscellaneous special pages
 'lonelypages'  => 'lipu ni li jo ala e lipu sama',
-'allpages'     => 'lipu ale',
-'specialpages' => 'lipu suli',
 'move'         => 'o tawa',
 'movethispage' => 'o pana e nimi sin',
+
+# Special:AllPages
+'allpages' => 'lipu ale',
+
+# Special:Categories
+'categories' => 'kulupu lipu',
 
 # Watchlist
 'watchlist'       => 'mi sona e ante pi lipu seme',
@@ -151,7 +162,7 @@ kin la sina toki e ni: toki sina ni li tan sina taso anu lipu pi ken ali.
 # What links here
 'whatlinkshere' => 'lipu seme li tawa ni?',
 
-# Spam protection
-'listingcontinuesabbrev' => ' li awen',
+# Special:SpecialPages
+'specialpages' => 'lipu suli',
 
 );

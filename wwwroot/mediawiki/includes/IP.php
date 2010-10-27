@@ -18,16 +18,24 @@ define( 'RE_IPV6_GAP', ':(?:0+:)*(?::(?:0+:)*)?' );
 define( 'RE_IPV6_V4_PREFIX', '0*' . RE_IPV6_GAP . '(?:ffff:)?' );
 // An IPv6 block is an IP address and a prefix (d1 to d128)
 define( 'RE_IPV6_PREFIX', '(12[0-8]|1[01][0-9]|[1-9]?\d)');
-// An IPv6 IP is made up of 8 octets. However abbreviations like "::" can be used. This is lax!
-define( 'RE_IPV6_ADD', '(:(:' . RE_IPV6_WORD . '){1,7}|' . RE_IPV6_WORD . '(:{1,2}' . RE_IPV6_WORD . '|::$){1,7})' );
+// An IPv6 IP is made up of 8 octets. However abbreviations like "::" can be used.
+// This is lax! Number of octets/double colons validation not done.
+define( 'RE_IPV6_ADD',
+	'(' .
+		':(:' . RE_IPV6_WORD . '){1,7}' . // IPs that start with ":"
+	'|' .
+		RE_IPV6_WORD . '(:{1,2}' . RE_IPV6_WORD . '|::$){1,7}' . // IPs that don't start with ":"
+	')'
+);
 define( 'RE_IPV6_BLOCK', RE_IPV6_ADD . '\/' . RE_IPV6_PREFIX );
 // This might be useful for regexps used elsewhere, matches any IPv6 or IPv6 address or network
 define( 'IP_ADDRESS_STRING',
 	'(?:' .
-		RE_IP_ADD . '(\/' . RE_IP_PREFIX . '|)' .
+		RE_IP_ADD . '(\/' . RE_IP_PREFIX . '|)' . // IPv4
 	'|' .
-		RE_IPV6_ADD . '(\/' . RE_IPV6_PREFIX . '|)' .
-	')' );
+		RE_IPV6_ADD . '(\/' . RE_IPV6_PREFIX . '|)' . // IPv6
+	')'
+);
 
 /**
  * A collection of public static functions to play with IP address
@@ -48,27 +56,29 @@ class IP {
 		// IPv6 IPs with two "::" strings are ambiguous and thus invalid
 		return preg_match( '/^' . IP_ADDRESS_STRING . '$/', $ip) && ( substr_count($ip, '::') < 2 );
 	}
-	
+
 	public static function isIPv6( $ip ) {
 		if ( !$ip ) return false;
 		if( is_array( $ip ) ) {
-		  throw new MWException( "invalid value passed to " . __METHOD__ );
+			throw new MWException( "invalid value passed to " . __METHOD__ );
 		}
+		$doubleColons = substr_count($ip, '::');
 		// IPv6 IPs with two "::" strings are ambiguous and thus invalid
-		return preg_match( '/^' . RE_IPV6_ADD . '(\/' . RE_IPV6_PREFIX . '|)$/', $ip) && ( substr_count($ip, '::') < 2);
+		return preg_match( '/^' . RE_IPV6_ADD . '(\/' . RE_IPV6_PREFIX . '|)$/', $ip)
+			&& ( $doubleColons == 1 || substr_count($ip,':') == 7 );
 	}
-	
+
 	public static function isIPv4( $ip ) {
 		if ( !$ip ) return false;
 		return preg_match( '/^' . RE_IP_ADD . '(\/' . RE_IP_PREFIX . '|)$/', $ip);
 	}
-	
+
 	/**
 	 * Given an IP address in dotted-quad notation, returns an IPv6 octet.
 	 * See http://www.answers.com/topic/ipv4-compatible-address
 	 * IPs with the first 92 bits as zeros are reserved from IPv6
 	 * @param $ip quad-dotted IP address.
-	 * @return string 
+	 * @return string
 	 */
 	public static function IPv4toIPv6( $ip ) {
 		if ( !$ip ) return null;
@@ -98,21 +108,21 @@ class IP {
 	 */
 	public static function toUnsigned6( $ip ) {
 		if ( !$ip ) return null;
-       	$ip = explode(':', self::sanitizeIP( $ip ) );
-       	$r_ip = '';
-       	foreach ($ip as $v) {
-       		$r_ip .= str_pad( $v, 4, 0, STR_PAD_LEFT );
-        }
-        $r_ip = wfBaseConvert( $r_ip, 16, 10 );
-       	return $r_ip;
+		$ip = explode(':', self::sanitizeIP( $ip ) );
+		$r_ip = '';
+		foreach ($ip as $v) {
+			$r_ip .= str_pad( $v, 4, 0, STR_PAD_LEFT );
+		}
+		$r_ip = wfBaseConvert( $r_ip, 16, 10 );
+		return $r_ip;
 	}
-	
+
 	/**
 	 * Given an IPv6 address in octet notation, returns the expanded octet.
 	 * IPv4 IPs will be trimmed, thats it...
 	 * @param $ip octet ipv6 IP address.
-	 * @return string 
-	 */	
+	 * @return string
+	 */
 	public static function sanitizeIP( $ip ) {
 		$ip = trim( $ip );
 		if ( $ip === '' ) return null;
@@ -123,32 +133,87 @@ class IP {
 		// Remove any whitespaces, convert to upper case
 		$ip = strtoupper( $ip );
 		// Expand zero abbreviations
-		if ( strpos( $ip, '::' ) !== false ) {
-    		$ip = str_replace('::', str_repeat(':0', 8 - substr_count($ip, ':')) . ':', $ip);
-    	}
-    	// For IPs that start with "::", correct the final IP so that it starts with '0' and not ':'
-    	if ( $ip[0] == ':' ) $ip = "0$ip";
-    	// Remove leading zereos from each bloc as needed
-    	$ip = preg_replace( '/(^|:)0+' . RE_IPV6_WORD . '/', '$1$2', $ip );
-    	return $ip;
+		$abbrevPos = strpos( $ip, '::' );
+		if ( $abbrevPos !== false ) {
+			// If the '::' is at the beginning...
+			if( $abbrevPos == 0 ) {
+				$repeat = '0:'; $extra = ''; $pad = 9; // 7+2 (due to '::')
+			// If the '::' is at the end...
+			} else if( $abbrevPos == (strlen($ip)-2) ) {
+				$repeat = ':0'; $extra = ''; $pad = 9; // 7+2 (due to '::')
+			// If the '::' is at the end...
+			} else {
+				$repeat = ':0'; $extra = ':'; $pad = 8; // 6+2 (due to '::')
+			}
+			$ip = str_replace('::', str_repeat($repeat, $pad-substr_count($ip,':')).$extra, $ip);
+		}
+		// Remove leading zereos from each bloc as needed
+		$ip = preg_replace( '/(^|:)0+' . RE_IPV6_WORD . '/', '$1$2', $ip );
+		return $ip;
 	}
-	
+
 	/**
 	 * Given an unsigned integer, returns an IPv6 address in octet notation
 	 * @param $ip integer IP address.
-	 * @return string 
+	 * @return string
 	 */
 	public static function toOctet( $ip_int ) {
    		// Convert to padded uppercase hex
    		$ip_hex = wfBaseConvert($ip_int, 10, 16, 32, false);
-   		// Seperate into 8 octets
+   		// Separate into 8 octets
    		$ip_oct = substr( $ip_hex, 0, 4 );
    		for ($n=1; $n < 8; $n++) {
    			$ip_oct .= ':' . substr($ip_hex, 4*$n, 4);
    		}
    		// NO leading zeroes
    		$ip_oct = preg_replace( '/(^|:)0+' . RE_IPV6_WORD . '/', '$1$2', $ip_oct );
-       	return $ip_oct;
+		return $ip_oct;
+	}
+
+	/**
+	 * Convert an IPv4 or IPv6 hexadecimal representation back to readable format
+	 */
+	public static function formatHex( $hex ) {
+		if ( substr( $hex, 0, 3 ) == 'v6-' ) {
+			return self::hexToOctet( $hex );
+		} else {
+			return self::hexToQuad( $hex );
+		}
+	}
+	
+	/**
+	 * Given a hexadecimal number, returns to an IPv6 address in octet notation
+	 * @param $ip string hex IP
+	 * @return string
+	 */
+	public static function hextoOctet( $ip_hex ) {
+   		// Convert to padded uppercase hex
+   		$ip_hex = str_pad( strtoupper($ip_hex), 32, '0');
+   		// Separate into 8 octets
+   		$ip_oct = substr( $ip_hex, 0, 4 );
+   		for ($n=1; $n < 8; $n++) {
+   			$ip_oct .= ':' . substr($ip_hex, 4*$n, 4);
+   		}
+   		// NO leading zeroes
+   		$ip_oct = preg_replace( '/(^|:)0+' . RE_IPV6_WORD . '/', '$1$2', $ip_oct );
+		return $ip_oct;
+	}
+	
+	/**
+	 * Converts a hexadecimal number to an IPv4 address in octet notation
+	 * @param $ip string Hex IP
+	 * @return string
+	 */ 
+	public static function hexToQuad( $ip ) {
+		// Converts a hexadecimal IP to nnn.nnn.nnn.nnn format
+		$s = '';
+		for ( $i = 0; $i < 4; $i++ ) {
+			if ( $s !== '' ) {
+				$s .= '.';
+			}
+			$s .= base_convert( substr( $ip, $i * 2, 2 ), 16, 10 );
+		}
+		return $s;
 	}
 
 	/**
@@ -181,9 +246,9 @@ class IP {
 		}
 		return array( $network, $bits );
 	}
-	
+
 	/**
-	 * Given a string range in a number of formats, return the start and end of 
+	 * Given a string range in a number of formats, return the start and end of
 	 * the range in hexadecimal. For IPv6.
 	 *
 	 * Formats are:
@@ -232,8 +297,8 @@ class IP {
 		} else {
 			return array( $start, $end );
 		}
-    }
-	
+	}
+
 	/**
 	 * Validate an IP address.
 	 * @return boolean True if it is valid.
@@ -310,7 +375,7 @@ class IP {
 	 * Return a zero-padded hexadecimal representation of an IP address.
 	 *
 	 * Hexadecimal addresses are used because they can easily be extended to
-	 * IPv6 support. To separate the ranges, the return value from this 
+	 * IPv6 support. To separate the ranges, the return value from this
 	 * function for an IPv6 address will be prefixed with "v6-", a non-
 	 * hexadecimal string which sorts after the IPv4 addresses.
 	 *
@@ -320,7 +385,7 @@ class IP {
 	public static function toHex( $ip ) {
 		$n = self::toUnsigned( $ip );
 		if ( $n !== false ) {
-			$n = ( self::isIPv6($ip) ) ? "v6-" . wfBaseConvert( $n, 10, 16, 32, false ) : wfBaseConvert( $n, 10, 16, 8, false );
+			$n = self::isIPv6($ip) ? "v6-" . wfBaseConvert( $n, 10, 16, 32, false ) : wfBaseConvert( $n, 10, 16, 8, false );
 		}
 		return $n;
 	}
@@ -396,14 +461,14 @@ class IP {
 	}
 
 	/**
-	 * Given a string range in a number of formats, return the start and end of 
+	 * Given a string range in a number of formats, return the start and end of
 	 * the range in hexadecimal.
 	 *
 	 * Formats are:
 	 *     1.2.3.4/24          CIDR
 	 *     1.2.3.4 - 1.2.3.5   Explicit range
 	 *     1.2.3.4             Single IP
-	 * 
+	 *
 	 *     2001:0db8:85a3::7344/96          			 CIDR
 	 *     2001:0db8:85a3::7344 - 2001:0db8:85a3::7344   Explicit range
 	 *     2001:0db8:85a3::7344             			 Single IP
@@ -426,12 +491,16 @@ class IP {
 		} elseif ( strpos( $range, '-' ) !== false ) {
 			# Explicit range
 			list( $start, $end ) = array_map( 'trim', explode( '-', $range, 2 ) );
-			$start = self::toUnsigned( $start ); $end = self::toUnsigned( $end );
-			if ( $start > $end ) {
-				$start = $end = false;
+			if( self::isIPAddress( $start ) && self::isIPAddress( $end ) ) {
+				$start = self::toUnsigned( $start ); $end = self::toUnsigned( $end );
+				if ( $start > $end ) {
+					$start = $end = false;
+				} else {
+					$start = sprintf( '%08X', $start );
+					$end = sprintf( '%08X', $end );
+				}
 			} else {
-				$start = sprintf( '%08X', $start );
-				$end = sprintf( '%08X', $end );
+				$start = $end = false;
 			}
 		} else {
 			# Single IP
@@ -439,43 +508,43 @@ class IP {
 		}
 		if ( $start === false || $end === false ) {
 			return array( false, false );
-		} else {				
+		} else {
 			return array( $start, $end );
 		}
-    }
+	}
 
-    /**
-     * Determine if a given IPv4/IPv6 address is in a given CIDR network
-     * @param $addr The address to check against the given range.
-     * @param $range The range to check the given address against.
-     * @return bool Whether or not the given address is in the given range.
-     */
-    public static function isInRange( $addr, $range ) {
-    // Convert to IPv6 if needed
-        $unsignedIP = self::toHex( $addr );
-        list( $start, $end ) = self::parseRange( $range );
-        return (($unsignedIP >= $start) && ($unsignedIP <= $end));
-    }
+	/**
+	 * Determine if a given IPv4/IPv6 address is in a given CIDR network
+	 * @param $addr The address to check against the given range.
+	 * @param $range The range to check the given address against.
+	 * @return bool Whether or not the given address is in the given range.
+	 */
+	public static function isInRange( $addr, $range ) {
+		// Convert to IPv6 if needed
+		$hexIP = self::toHex( $addr );
+		list( $start, $end ) = self::parseRange( $range );
+		return (strcmp($hexIP, $start) >= 0 &&
+		strcmp($hexIP, $end) <= 0);
+	}
 
-    /**
-     * Convert some unusual representations of IPv4 addresses to their
-     * canonical dotted quad representation.
-     *
-     * This currently only checks a few IPV4-to-IPv6 related cases.  More
-     * unusual representations may be added later.
-     *
-     * @param $addr something that might be an IP address
-     * @return valid dotted quad IPv4 address or null
-     */
-    public static function canonicalize( $addr ) {
+	/**
+	 * Convert some unusual representations of IPv4 addresses to their
+	 * canonical dotted quad representation.
+	 *
+	 * This currently only checks a few IPV4-to-IPv6 related cases.  More
+	 * unusual representations may be added later.
+	 *
+	 * @param $addr something that might be an IP address
+	 * @return valid dotted quad IPv4 address or null
+	 */
+	public static function canonicalize( $addr ) {
 		if ( self::isValid( $addr ) )
 			return $addr;
 
-		// Annoying IPv6 representations like ::ffff:1.2.3.4
+		// Turn mapped addresses from ::ce:ffff:1.2.3.4 to 1.2.3.4
 		if ( strpos($addr,':') !==false && strpos($addr,'.') !==false ) {
-			$addr = str_replace( '.', ':', $addr );
-			if( IP::isIPv6( $addr ) )
-				return $addr;
+			$addr = substr( $addr, strrpos($addr,':')+1 );
+			if( self::isIPv4($addr) ) return $addr;
 		}
 
 		// IPv6 loopback address
@@ -485,12 +554,10 @@ class IP {
 
 		// IPv4-mapped and IPv4-compatible IPv6 addresses
 		if ( preg_match( '/^' . RE_IPV6_V4_PREFIX . '(' . RE_IP_ADD . ')$/i', $addr, $m ) )
-		    return $m[1];
+			return $m[1];
 		if ( preg_match( '/^' . RE_IPV6_V4_PREFIX . RE_IPV6_WORD . ':' . RE_IPV6_WORD . '$/i', $addr, $m ) )
-		    return long2ip( ( hexdec( $m[1] ) << 16 ) + hexdec( $m[2] ) );
+			return long2ip( ( hexdec( $m[1] ) << 16 ) + hexdec( $m[2] ) );
 
 		return null;  // give up
-    }
+	}
 }
-
-

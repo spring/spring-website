@@ -1,14 +1,13 @@
 #!/usr/bin/perl
 
 ## Convert data from a MySQL mediawiki database into a Postgres mediawiki database
-## svn: $Id: mediawiki_mysql2postgres.pl 26564 2007-10-10 01:24:18Z greg $
+## svn: $Id: mediawiki_mysql2postgres.pl 59489 2009-11-27 15:34:54Z greg $
 
 ## NOTE: It is probably easier to dump your wiki using maintenance/dumpBackup.php
 ## and then import it with maintenance/importDump.php
 
 ## If having UTF-8 problems, there are reports that adding --compatible=postgresql
 ## may help.
-
 
 use strict;
 use warnings;
@@ -182,7 +181,7 @@ $MYSQLSOCKET and $conninfo .= "\n--   socket    $MYSQLSOCKET";
 print qq{
 -- Dump of MySQL Mediawiki tables for import into a Postgres Mediawiki schema
 -- Performed by the program: $0
--- Version: $VERSION (subversion }.q{$LastChangedRevision: 26564 $}.qq{)
+-- Version: $VERSION (subversion }.q{$LastChangedRevision: 59489 $}.qq{)
 -- Author: Greg Sabino Mullane <greg\@turnstep.com> Comments welcome
 --
 -- This file was created: $now
@@ -203,6 +202,7 @@ print q{
 BEGIN;
 SET client_min_messages = 'WARNING';
 SET timezone = 'GMT';
+SET DateStyle = 'ISO, YMD';
 };
 
 warn qq{Reading in the Postgres schema information\n} if $verbose;
@@ -416,7 +416,7 @@ SELECT setval('page_page_id_seq',      1+coalesce(max(page_id),0),false) FROM pa
 SELECT setval('pr_id_val',             1+coalesce(max(pr_id)  ,0),false) FROM page_restrictions;
 SELECT setval('rc_rc_id_seq',          1+coalesce(max(rc_id)  ,0),false) FROM recentchanges;
 SELECT setval('rev_rev_id_val',        1+coalesce(max(rev_id) ,0),false) FROM revision;
-SELECT setval('text_old_id_val',       1+coalesce(max(old_id) ,0),false) FROM pagecontent;
+SELECT setval('text_old_id_seq',       1+coalesce(max(old_id) ,0),false) FROM pagecontent;
 SELECT setval('trackbacks_tb_id_seq',  1+coalesce(max(tb_id)  ,0),false) FROM trackbacks;
 SELECT setval('user_user_id_seq',      1+coalesce(max(user_id),0),false) FROM mwuser;
 };

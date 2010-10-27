@@ -1,11 +1,13 @@
 <?php
 /** Southern Sotho (Sesotho)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author Cbrown1023
- * @author SPQRobin
  */
 
 $messages = array(
@@ -43,13 +45,15 @@ $messages = array(
 'nov'       => 'Pudu',
 'dec'       => 'Tshitwe',
 
-# Bits of text used by many pages
-'categories'      => 'Mekga',
+# Categories related messages
 'category_header' => 'Dingolwa tse mokgeng wa "$1"',
 
 'mypage'     => 'Leqephe la ka',
 'mytalk'     => 'Leqephe la ka la moqoqo',
 'navigation' => 'Eya ho',
+
+# Cologne Blue skin
+'faq' => 'Dipotso-mehla',
 
 'returnto'       => 'Kgutlela ho $1.',
 'tagline'        => 'E tswa ho {{SITENAME}}',
@@ -65,11 +69,10 @@ $messages = array(
 'jumptosearch'   => 'phuputso',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'faq'         => 'Dipotso-mehla',
-'mainpage'    => 'Leqephe la pele',
-'portal'      => 'Potjho e kopano',
-'portal-url'  => 'Project:Potjho e kopano',
-'sitesupport' => 'Dimpho',
+'mainpage'             => 'Leqephe la pele',
+'mainpage-description' => 'Leqephe la pele',
+'portal'               => 'Potjho e kopano',
+'portal-url'           => 'Project:Potjho e kopano',
 
 'retrievedfrom'   => 'E tswa ho "$1"',
 'newmessageslink' => 'melaetsa e metjha',
@@ -85,10 +88,15 @@ $messages = array(
 'remembermypassword' => 'O nkgopole',
 'nologinlink'        => 'Ingodisetse',
 'createaccount'      => 'Ingodisetse',
-'gotaccount'         => 'O se o ingodisitse? $1.',
+'gotaccount'         => "O se o ingodisitse? '''$1'''.",
 'createaccountmail'  => 'ka e-mail',
 'badretype'          => 'Mapetjo a mabedi o a ngotseng ha a tshwane.',
 'mailmypassword'     => 'Nthomele password ya ka ka email',
+
+# Password reset dialog
+'oldpassword' => 'Lepetjo la kgale:',
+'newpassword' => 'Lepetjo le letjha:',
+'retypenew'   => 'Ngola lepetjo le letjha hape:',
 
 # Edit pages
 'savearticle'  => 'Le boloke',
@@ -96,16 +104,13 @@ $messages = array(
 'showdiff'     => 'Mpontshe hore ho tlo fetoha eng',
 'accmailtitle' => 'Lepetjo le rometswe.',
 'accmailtext'  => 'Lepetjo la "$1" le se le rometswe ho $2.',
-'note'         => '<strong>Ela hloko:</strong>',
+'note'         => "'''Ela hloko:'''",
 
 # Search results
 'powersearch' => 'Fuputsa',
 
 # Preferences page
 'changepassword'    => 'Fetola lepetjo',
-'oldpassword'       => 'Lepetjo la kgale:',
-'newpassword'       => 'Lepetjo le letjha:',
-'retypenew'         => 'Ngola lepetjo le letjha hape:',
 'searchresultshead' => 'Phuputso',
 'allowemail'        => 'Dumella batho ba bang hore ba nthomelle di-email',
 
@@ -120,11 +125,15 @@ $messages = array(
 
 # Miscellaneous special pages
 'mostcategories' => 'Dingolwa tse mekga e mengata',
-'allpages'       => 'Maqephe ohle',
 'shortpages'     => 'Maqephe a makgutshwane',
 'longpages'      => 'Maqephe a matelele',
 'newpages'       => 'Maqephe a matjha',
 
+# Special:AllPages
+'allpages' => 'Maqephe ohle',
+
+# Special:Categories
+'categories'         => 'Mekga',
 'categoriespagetext' => 'Wiki e na le mekga ena',
 
 # E-mail user

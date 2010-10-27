@@ -3,14 +3,11 @@ if ( ! defined( 'MEDIAWIKI' ) )
 	die( 1 );
 
 /**
- */
-
-/**
  * Image gallery
  *
  * Add images to the gallery using add(), then render that list to HTML using toHTML().
  *
- * @addtogroup Media
+ * @ingroup Media
  */
 class ImageGallery
 {
@@ -37,7 +34,7 @@ class ImageGallery
 
 	private $mPerRow = 4; // How many images wide should the gallery be?
 	private $mWidths = 120, $mHeights = 120; // How wide/tall each thumbnail should be
-	
+
 	private $mAttribs = array();
 
 	/**
@@ -196,11 +193,11 @@ class ImageGallery
 	function setShowFilename( $f ) {
 		$this->mShowFilename = ( $f == true);
 	}
-	
+
 	/**
 	 * Set arbitrary attributes to go on the HTML gallery output element.
 	 * Should be suitable for a &lt;table&gt; element.
-	 * 
+	 *
 	 * Note -- if taking from user input, you should probably run through
 	 * Sanitizer::validateAttributes() first.
 	 *
@@ -239,36 +236,52 @@ class ImageGallery
 		$i = 0;
 		foreach ( $this->mImages as $pair ) {
 			$nt = $pair[0];
-			$text = $pair[1];
-			
+			$text = $pair[1]; # "text" means "caption" here
+
 			# Give extensions a chance to select the file revision for us
-			$time = false;
-			wfRunHooks( 'BeforeGalleryFindFile', array( &$this, &$nt, &$time ) );
+			$time = $descQuery = false;
+			wfRunHooks( 'BeforeGalleryFindFile', array( &$this, &$nt, &$time, &$descQuery ) );
 
-			$img = wfFindFile( $nt, $time );
+			$img = wfFindFile( $nt, array( 'time' => $time ) );
 
-			if( $nt->getNamespace() != NS_IMAGE || !$img ) {
+			if( $nt->getNamespace() != NS_FILE || !$img ) {
 				# We're dealing with a non-image, spit out the name and be done with it.
 				$thumbhtml = "\n\t\t\t".'<div style="height: '.($this->mHeights*1.25+2).'px;">'
 					. htmlspecialchars( $nt->getText() ) . '</div>';
 			} elseif( $this->mHideBadImages && wfIsBadImage( $nt->getDBkey(), $this->getContextTitle() ) ) {
 				# The image is blacklisted, just show it as a text link.
-				$thumbhtml = "\n\t\t\t".'<div style="height: '.($this->mHeights*1.25+2).'px;">'
-					. $sk->makeKnownLinkObj( $nt, htmlspecialchars( $nt->getText() ) ) . '</div>';
+				$thumbhtml = "\n\t\t\t".'<div style="height: '.($this->mHeights*1.25+2).'px;">' .
+					$sk->link(
+						$nt,
+						htmlspecialchars( $nt->getText() ),
+						array(),
+						array(),
+						array( 'known', 'noclasses' )
+					) .
+					'</div>';
 			} elseif( !( $thumb = $img->transform( $params ) ) ) {
 				# Error generating thumbnail.
 				$thumbhtml = "\n\t\t\t".'<div style="height: '.($this->mHeights*1.25+2).'px;">'
 					. htmlspecialchars( $img->getLastError() ) . '</div>';
 			} else {
 				$vpad = floor( ( 1.25*$this->mHeights - $thumb->height ) /2 ) - 2;
-					
+				
+				$imageParameters = array(
+					'desc-link' => true,
+					'desc-query' => $descQuery
+				);
+				# In the absence of a caption, fall back on providing screen readers with the filename as alt text
+				if ( $text == '' ) {
+					$imageParameters['alt'] = $nt->getText();
+				}
+
 				$thumbhtml = "\n\t\t\t".
 					'<div class="thumb" style="padding: ' . $vpad . 'px 0; width: ' .($this->mWidths+30).'px;">'
 					# Auto-margin centering for block-level elements. Needed now that we have video
 					# handlers since they may emit block-level elements as opposed to simple <img> tags.
 					# ref http://css-discuss.incutio.com/?page=CenteringBlockElement
 					. '<div style="margin-left: auto; margin-right: auto; width: ' .$this->mWidths.'px;">'
-					. $thumb->toHtml( array( 'desc-link' => true ) ) . '</div></div>';
+					. $thumb->toHtml( $imageParameters ) . '</div></div>';
 
 				// Call parser transform hook
 				if ( $this->mParser && $img->getHandler() ) {
@@ -277,7 +290,8 @@ class ImageGallery
 			}
 
 			//TODO
-			//$ul = $sk->makeLink( $wgContLang->getNsText( Namespace::getUser() ) . ":{$ut}", $ut );
+			// $linkTarget = Title::newFromText( $wgContLang->getNsText( MWNamespace::getUser() ) . ":{$ut}" );
+			// $ul = $sk->link( $linkTarget, $ut );
 
 			if( $this->mShowBytes ) {
 				if( $img ) {
@@ -292,7 +306,13 @@ class ImageGallery
 			}
 
 			$textlink = $this->mShowFilename ?
-				$sk->makeKnownLinkObj( $nt, htmlspecialchars( $wgLang->truncate( $nt->getText(), 20, '...' ) ) ) . "<br />\n" :
+				$sk->link(
+					$nt,
+					htmlspecialchars( $wgLang->truncate( $nt->getText(), 20 ) ),
+					array(),
+					array(),
+					array( 'known', 'noclasses' )
+				) . "<br />\n" :
 				'' ;
 
 			# ATTENTION: The newline after <div class="gallerytext"> is needed to accommodate htmltidy which
@@ -328,7 +348,7 @@ class ImageGallery
 	public function count() {
 		return count( $this->mImages );
 	}
-	
+
 	/**
 	 * Set the contextual title
 	 *
@@ -337,7 +357,7 @@ class ImageGallery
 	public function setContextTitle( $title ) {
 		$this->contextTitle = $title;
 	}
-	
+
 	/**
 	 * Get the contextual title, if applicable
 	 *
@@ -350,5 +370,3 @@ class ImageGallery
 	}
 
 } //class
-
-
