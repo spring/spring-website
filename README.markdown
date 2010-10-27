@@ -32,3 +32,21 @@ Quick notes on how to create a new clean database (user/database: spring_clean):
     use spring_clean;
     source mysql/schema.sql;
     source mysql/anonimized-copy.sql;   # this wants to select from database 'spring'
+
+# FAQ
+
+## mysql: packet bigger than 'max_allowed_packet' bytes
+
+I get an error about a packet bigger than 'max_allowed_packet' bytes when importing a mysql database dump. What should I do?
+
+If you get the error:
+
+    ERROR 1153 (08S01) at line 62: Got a packet bigger than 'max_allowed_packet' bytes
+
+You should configure mysqld to allow bigger packets by putting the following in `/etc/my.cnf`:
+
+    [mysqld]
+    max_allowed_packet=16M
+
+Then restart mysqld and try again. Also add the option --max_allowed_packet=16M to the mysql client.
+(Increase size if necessary.)
