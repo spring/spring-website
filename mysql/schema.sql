@@ -37,7 +37,7 @@ CREATE TABLE `mantis_bug_file_table` (
   PRIMARY KEY (`id`),
   KEY `idx_bug_file_bug_id` (`bug_id`),
   KEY `idx_diskfile` (`diskfile`)
-) ENGINE=MyISAM AUTO_INCREMENT=1018 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,7 +59,7 @@ CREATE TABLE `mantis_bug_history_table` (
   PRIMARY KEY (`id`),
   KEY `idx_bug_history_bug_id` (`bug_id`),
   KEY `idx_history_user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13789 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `mantis_bug_relationship_table` (
   PRIMARY KEY (`id`),
   KEY `idx_relationship_source` (`source_bug_id`),
   KEY `idx_relationship_destination` (`destination_bug_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=144 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -135,7 +135,7 @@ CREATE TABLE `mantis_bug_table` (
   KEY `idx_bug_fixed_in_version` (`fixed_in_version`),
   KEY `idx_bug_status` (`status`),
   KEY `idx_project` (`project_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1742 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +167,7 @@ CREATE TABLE `mantis_bug_text_table` (
   `steps_to_reproduce` text NOT NULL,
   `additional_information` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1742 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -191,7 +191,7 @@ CREATE TABLE `mantis_bugnote_table` (
   PRIMARY KEY (`id`),
   KEY `idx_bug` (`bug_id`),
   KEY `idx_last_mod` (`last_modified`)
-) ENGINE=MyISAM AUTO_INCREMENT=4371 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,7 +205,7 @@ CREATE TABLE `mantis_bugnote_text_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `note` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4371 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -306,7 +306,7 @@ CREATE TABLE `mantis_email_table` (
   `body` longtext NOT NULL,
   PRIMARY KEY (`email_id`),
   KEY `idx_email_id` (`email_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2778 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -324,7 +324,7 @@ CREATE TABLE `mantis_filters_table` (
   `name` varchar(64) NOT NULL DEFAULT '',
   `filter_string` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=360 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,7 +419,7 @@ CREATE TABLE `mantis_project_table` (
   UNIQUE KEY `idx_project_name` (`name`),
   KEY `idx_project_id` (`id`),
   KEY `idx_project_view` (`view_state`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -454,7 +454,7 @@ CREATE TABLE `mantis_project_version_table` (
   `released` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_project_version` (`project_id`,`version`)
-) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -495,7 +495,7 @@ CREATE TABLE `mantis_tag_table` (
   `date_created` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   `date_updated` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   PRIMARY KEY (`id`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -514,7 +514,7 @@ CREATE TABLE `mantis_tokens_table` (
   `value` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_typeowner` (`type`,`owner`)
-) ENGINE=MyISAM AUTO_INCREMENT=6751 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -557,7 +557,7 @@ CREATE TABLE `mantis_user_pref_table` (
   `email_bugnote_limit` smallint(6) NOT NULL DEFAULT '0',
   `language` varchar(32) NOT NULL DEFAULT 'english',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=744 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -589,7 +589,7 @@ CREATE TABLE `mantis_user_profile_table` (
   `os_build` varchar(32) NOT NULL DEFAULT '',
   `description` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -619,7 +619,7 @@ CREATE TABLE `mantis_user_table` (
   UNIQUE KEY `idx_user_username` (`username`),
   KEY `idx_enable` (`enabled`),
   KEY `idx_access` (`access_level`)
-) ENGINE=MyISAM AUTO_INCREMENT=744 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -656,7 +656,7 @@ CREATE TABLE `phpbb3_acl_options` (
   `founder_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`auth_option_id`),
   UNIQUE KEY `auth_option` (`auth_option`)
-) ENGINE=MyISAM AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,7 +675,7 @@ CREATE TABLE `phpbb3_acl_roles` (
   PRIMARY KEY (`role_id`),
   KEY `role_type` (`role_type`),
   KEY `role_order` (`role_order`)
-) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -742,7 +742,7 @@ CREATE TABLE `phpbb3_attachments` (
   KEY `topic_id` (`topic_id`),
   KEY `poster_id` (`poster_id`),
   KEY `is_orphan` (`is_orphan`)
-) ENGINE=MyISAM AUTO_INCREMENT=3105 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -767,7 +767,7 @@ CREATE TABLE `phpbb3_banlist` (
   KEY `ban_user` (`ban_userid`,`ban_exclude`),
   KEY `ban_email` (`ban_email`,`ban_exclude`),
   KEY `ban_ip` (`ban_ip`,`ban_exclude`)
-) ENGINE=MyISAM AUTO_INCREMENT=628 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -823,7 +823,7 @@ CREATE TABLE `phpbb3_bots` (
   `bot_ip` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`bot_id`),
   KEY `bot_active` (`bot_active`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -872,7 +872,7 @@ CREATE TABLE `phpbb3_disallow` (
   `disallow_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `disallow_username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`disallow_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -892,7 +892,7 @@ CREATE TABLE `phpbb3_drafts` (
   `draft_message` mediumtext COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`draft_id`),
   KEY `save_time` (`save_time`)
-) ENGINE=MyISAM AUTO_INCREMENT=178 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -913,7 +913,7 @@ CREATE TABLE `phpbb3_extension_groups` (
   `allowed_forums` text COLLATE utf8_bin NOT NULL,
   `allow_in_pm` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -928,7 +928,7 @@ CREATE TABLE `phpbb3_extensions` (
   `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `extension` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`extension_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=75 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -984,7 +984,7 @@ CREATE TABLE `phpbb3_forums` (
   PRIMARY KEY (`forum_id`),
   KEY `left_right_id` (`left_id`,`right_id`),
   KEY `forum_lastpost_id` (`forum_last_post_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1065,7 +1065,7 @@ CREATE TABLE `phpbb3_groups` (
   `group_skip_auth` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`),
   KEY `group_legend_name` (`group_legend`,`group_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=3591 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1084,7 +1084,7 @@ CREATE TABLE `phpbb3_icons` (
   `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`icons_id`),
   KEY `display_on_posting` (`display_on_posting`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1103,7 +1103,7 @@ CREATE TABLE `phpbb3_lang` (
   `lang_author` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`lang_id`),
   KEY `lang_iso` (`lang_iso`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1130,7 +1130,7 @@ CREATE TABLE `phpbb3_log` (
   KEY `topic_id` (`topic_id`),
   KEY `reportee_id` (`reportee_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6740 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1175,7 +1175,7 @@ CREATE TABLE `phpbb3_modules` (
   KEY `left_right_id` (`left_id`,`right_id`),
   KEY `module_enabled` (`module_enabled`),
   KEY `class_left_id` (`module_class`,`left_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=218 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1258,7 +1258,7 @@ CREATE TABLE `phpbb3_posts` (
   FULLTEXT KEY `post_subject` (`post_subject`),
   FULLTEXT KEY `post_text` (`post_text`),
   FULLTEXT KEY `post_content` (`post_subject`,`post_text`)
-) ENGINE=MyISAM AUTO_INCREMENT=393681 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1296,7 +1296,7 @@ CREATE TABLE `phpbb3_privmsgs` (
   KEY `message_time` (`message_time`),
   KEY `author_id` (`author_id`),
   KEY `root_level` (`root_level`)
-) ENGINE=MyISAM AUTO_INCREMENT=36798 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1313,7 +1313,7 @@ CREATE TABLE `phpbb3_privmsgs_folder` (
   `pm_count` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`folder_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6051 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1335,7 +1335,7 @@ CREATE TABLE `phpbb3_privmsgs_rules` (
   `rule_folder_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`rule_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1392,7 +1392,7 @@ CREATE TABLE `phpbb3_profile_fields` (
   PRIMARY KEY (`field_id`),
   KEY `fld_type` (`field_type`),
   KEY `fld_ordr` (`field_order`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1457,7 +1457,7 @@ CREATE TABLE `phpbb3_ranks` (
   `rank_special` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `rank_image` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`rank_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1480,7 +1480,7 @@ CREATE TABLE `phpbb3_reports` (
   PRIMARY KEY (`report_id`),
   KEY `post_id` (`post_id`),
   KEY `pm_id` (`pm_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=418 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1496,7 +1496,7 @@ CREATE TABLE `phpbb3_reports_reasons` (
   `reason_description` mediumtext COLLATE utf8_bin NOT NULL,
   `reason_order` smallint(4) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`reason_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1630,7 +1630,7 @@ CREATE TABLE `phpbb3_smilies` (
   `number_on_posting` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`smiley_id`),
   KEY `display_on_post` (`display_on_posting`)
-) ENGINE=MyISAM AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1653,7 +1653,7 @@ CREATE TABLE `phpbb3_styles` (
   KEY `template_id` (`template_id`),
   KEY `theme_id` (`theme_id`),
   KEY `imageset_id` (`imageset_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1670,7 +1670,7 @@ CREATE TABLE `phpbb3_styles_imageset` (
   `imageset_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`imageset_id`),
   UNIQUE KEY `imgset_nm` (`imageset_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1690,7 +1690,7 @@ CREATE TABLE `phpbb3_styles_imageset_data` (
   `imageset_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`image_id`),
   KEY `i_d` (`imageset_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=241 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1711,7 +1711,7 @@ CREATE TABLE `phpbb3_styles_template` (
   `template_inherit_path` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`template_id`),
   UNIQUE KEY `tmplte_nm` (`template_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1749,7 +1749,7 @@ CREATE TABLE `phpbb3_styles_theme` (
   `theme_data` mediumtext COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`theme_id`),
   UNIQUE KEY `theme_name` (`theme_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1801,7 +1801,7 @@ CREATE TABLE `phpbb3_topics` (
   KEY `topic_approved` (`topic_approved`),
   KEY `forum_appr_last` (`forum_id`,`topic_approved`,`topic_last_post_id`),
   KEY `fid_time_moved` (`forum_id`,`topic_last_post_time`,`topic_moved_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21166 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1960,7 +1960,7 @@ CREATE TABLE `phpbb3_users` (
   KEY `user_birthday` (`user_birthday`),
   KEY `user_email_hash` (`user_email_hash`),
   KEY `user_type` (`user_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=9169 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1977,7 +1977,7 @@ CREATE TABLE `phpbb3_warnings` (
   `log_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `warning_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`warning_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2118,7 +2118,7 @@ CREATE TABLE `wiki_cur` (
   KEY `user_timestamp` (`cur_user`,`inverse_timestamp`),
   KEY `usertext_timestamp` (`cur_user_text`,`inverse_timestamp`),
   KEY `namespace_redirect_timestamp` (`cur_namespace`,`cur_is_redirect`,`cur_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=2386 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2277,7 +2277,7 @@ CREATE TABLE `wiki_ipblocks` (
   KEY `ipb_range` (`ipb_range_start`(8),`ipb_range_end`(8)),
   KEY `ipb_timestamp` (`ipb_timestamp`),
   KEY `ipb_expiry` (`ipb_expiry`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2302,7 +2302,7 @@ CREATE TABLE `wiki_ipblocks_old` (
   KEY `ipb_address` (`ipb_address`),
   KEY `ipb_user` (`ipb_user`),
   KEY `ipb_range` (`ipb_range_start`(8),`ipb_range_end`(8))
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2391,7 +2391,7 @@ CREATE TABLE `wiki_logging` (
   KEY `user_time` (`log_user`,`log_timestamp`),
   KEY `page_time` (`log_namespace`,`log_title`,`log_timestamp`),
   KEY `times` (`log_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=1977 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2481,7 +2481,7 @@ CREATE TABLE `wiki_page` (
   UNIQUE KEY `name_title` (`page_namespace`,`page_title`),
   KEY `page_random` (`page_random`),
   KEY `page_len` (`page_len`)
-) ENGINE=InnoDB AUTO_INCREMENT=2788 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2505,7 +2505,7 @@ CREATE TABLE `wiki_page_restrictions` (
   KEY `pr_typelevel` (`pr_type`,`pr_level`),
   KEY `pr_level` (`pr_level`),
   KEY `pr_cascade` (`pr_cascade`)
-) ENGINE=InnoDB AUTO_INCREMENT=1873 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2636,7 +2636,7 @@ CREATE TABLE `wiki_recentchanges` (
   KEY `rc_ip` (`rc_ip`),
   KEY `rc_ns_usertext` (`rc_namespace`,`rc_user_text`),
   KEY `rc_user_text` (`rc_user_text`,`rc_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=18586 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2680,7 +2680,7 @@ CREATE TABLE `wiki_revision` (
   KEY `page_timestamp` (`rev_page`,`rev_timestamp`),
   KEY `user_timestamp` (`rev_user`,`rev_timestamp`),
   KEY `usertext_timestamp` (`rev_user_text`,`rev_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=17901 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2760,7 +2760,7 @@ CREATE TABLE `wiki_text` (
   KEY `name_title_timestamp` (`old_namespace`,`old_title`,`inverse_timestamp`),
   KEY `user_timestamp` (`old_user`,`inverse_timestamp`),
   KEY `usertext_timestamp` (`old_user_text`,`inverse_timestamp`)
-) ENGINE=InnoDB AUTO_INCREMENT=17828 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2823,7 +2823,7 @@ CREATE TABLE `wiki_user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   KEY `user_email_token` (`user_email_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=2718 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
