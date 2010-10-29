@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.37, for debian-linux-gnu (i486)
+-- MySQL dump 10.13  Distrib 5.1.51, for redhat-linux-gnu (i386)
 --
 -- Host: localhost    Database: spring
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5
+-- Server version	5.1.51
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2033,6 +2033,7 @@ CREATE TABLE `wiki_archive` (
   `ar_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ar_len` int(8) unsigned DEFAULT NULL,
   `ar_page_id` int(10) unsigned DEFAULT NULL,
+  `ar_parent_id` int(10) unsigned DEFAULT NULL,
   KEY `name_title_timestamp` (`ar_namespace`,`ar_title`,`ar_timestamp`),
   KEY `usertext_timestamp` (`ar_user_text`,`ar_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -2068,6 +2069,26 @@ CREATE TABLE `wiki_brokenlinks` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `wiki_category`
+--
+
+DROP TABLE IF EXISTS `wiki_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_category` (
+  `cat_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `cat_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  `cat_pages` int(11) NOT NULL DEFAULT '0',
+  `cat_subcats` int(11) NOT NULL DEFAULT '0',
+  `cat_files` int(11) NOT NULL DEFAULT '0',
+  `cat_hidden` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cat_id`),
+  UNIQUE KEY `cat_title` (`cat_title`),
+  KEY `cat_pages` (`cat_pages`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `wiki_categorylinks`
 --
 
@@ -2082,6 +2103,26 @@ CREATE TABLE `wiki_categorylinks` (
   UNIQUE KEY `cl_from` (`cl_from`,`cl_to`),
   KEY `cl_timestamp` (`cl_to`,`cl_timestamp`),
   KEY `cl_sortkey` (`cl_to`,`cl_sortkey`,`cl_from`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_change_tag`
+--
+
+DROP TABLE IF EXISTS `wiki_change_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_change_tag` (
+  `ct_rc_id` int(11) DEFAULT NULL,
+  `ct_log_id` int(11) DEFAULT NULL,
+  `ct_rev_id` int(11) DEFAULT NULL,
+  `ct_tag` varchar(255) NOT NULL,
+  `ct_params` blob,
+  UNIQUE KEY `change_tag_rc_tag` (`ct_rc_id`,`ct_tag`),
+  UNIQUE KEY `change_tag_log_tag` (`ct_log_id`,`ct_tag`),
+  UNIQUE KEY `change_tag_rev_tag` (`ct_rev_id`,`ct_tag`),
+  KEY `change_tag_tag_id` (`ct_tag`,`ct_rc_id`,`ct_rev_id`,`ct_log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2118,6 +2159,21 @@ CREATE TABLE `wiki_cur` (
   KEY `user_timestamp` (`cur_user`,`inverse_timestamp`),
   KEY `usertext_timestamp` (`cur_user_text`,`inverse_timestamp`),
   KEY `namespace_redirect_timestamp` (`cur_namespace`,`cur_is_redirect`,`cur_timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_external_user`
+--
+
+DROP TABLE IF EXISTS `wiki_external_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_external_user` (
+  `eu_local_id` int(10) unsigned NOT NULL,
+  `eu_external_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  PRIMARY KEY (`eu_local_id`),
+  UNIQUE KEY `eu_external_id` (`eu_external_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2161,7 +2217,7 @@ CREATE TABLE `wiki_filearchive` (
   `fa_bits` int(3) DEFAULT '0',
   `fa_media_type` enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE') DEFAULT NULL,
   `fa_major_mime` enum('unknown','application','audio','image','text','video','message','model','multipart') DEFAULT 'unknown',
-  `fa_minor_mime` varchar(32) DEFAULT 'unknown',
+  `fa_minor_mime` varbinary(100) DEFAULT 'unknown',
   `fa_description` tinyblob,
   `fa_user` int(5) unsigned DEFAULT '0',
   `fa_user_text` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT '',
@@ -2171,7 +2227,7 @@ CREATE TABLE `wiki_filearchive` (
   KEY `fa_name` (`fa_name`,`fa_timestamp`),
   KEY `fa_storage_group` (`fa_storage_group`,`fa_storage_key`),
   KEY `fa_deleted_timestamp` (`fa_deleted_timestamp`),
-  KEY `fa_deleted_user` (`fa_deleted_user`)
+  KEY `fa_user_timestamp` (`fa_user_text`,`fa_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2207,7 +2263,7 @@ CREATE TABLE `wiki_image` (
   `img_metadata` mediumblob NOT NULL,
   `img_media_type` enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE') DEFAULT NULL,
   `img_major_mime` enum('unknown','application','audio','image','text','video','message','model','multipart') NOT NULL DEFAULT 'unknown',
-  `img_minor_mime` varchar(32) NOT NULL DEFAULT 'unknown',
+  `img_minor_mime` varbinary(100) NOT NULL DEFAULT 'unknown',
   `img_sha1` varbinary(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`img_name`),
   KEY `img_size` (`img_size`),
@@ -2228,7 +2284,7 @@ CREATE TABLE `wiki_imagelinks` (
   `il_from` int(8) unsigned NOT NULL DEFAULT '0',
   `il_to` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   UNIQUE KEY `il_from` (`il_from`,`il_to`),
-  KEY `il_to` (`il_to`,`il_from`)
+  UNIQUE KEY `il_to` (`il_to`,`il_from`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2271,6 +2327,8 @@ CREATE TABLE `wiki_ipblocks` (
   `ipb_enable_autoblock` tinyint(1) NOT NULL DEFAULT '1',
   `ipb_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `ipb_block_email` tinyint(4) NOT NULL DEFAULT '0',
+  `ipb_by_text` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `ipb_allow_usertalk` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ipb_id`),
   UNIQUE KEY `ipb_address_unique` (`ipb_address`(255),`ipb_user`,`ipb_auto`),
   KEY `ipb_user` (`ipb_user`),
@@ -2324,6 +2382,21 @@ CREATE TABLE `wiki_job` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `wiki_l10n_cache`
+--
+
+DROP TABLE IF EXISTS `wiki_l10n_cache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_l10n_cache` (
+  `lc_lang` varbinary(32) NOT NULL,
+  `lc_key` varchar(255) NOT NULL,
+  `lc_value` mediumblob NOT NULL,
+  KEY `lc_lang_key` (`lc_lang`,`lc_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `wiki_langlinks`
 --
 
@@ -2369,6 +2442,22 @@ CREATE TABLE `wiki_linkscc` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `wiki_log_search`
+--
+
+DROP TABLE IF EXISTS `wiki_log_search`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_log_search` (
+  `ls_field` varbinary(32) NOT NULL,
+  `ls_value` varchar(255) NOT NULL,
+  `ls_log_id` int(10) unsigned NOT NULL DEFAULT '0',
+  UNIQUE KEY `ls_field_val` (`ls_field`,`ls_value`,`ls_log_id`),
+  KEY `ls_log_id` (`ls_log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `wiki_logging`
 --
 
@@ -2376,8 +2465,8 @@ DROP TABLE IF EXISTS `wiki_logging`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_logging` (
-  `log_type` varchar(10) NOT NULL DEFAULT '',
-  `log_action` varchar(10) NOT NULL DEFAULT '',
+  `log_type` varbinary(32) NOT NULL,
+  `log_action` varbinary(32) NOT NULL,
   `log_timestamp` varchar(14) NOT NULL DEFAULT '19700101000000',
   `log_user` int(10) unsigned NOT NULL DEFAULT '0',
   `log_namespace` int(11) NOT NULL,
@@ -2386,11 +2475,15 @@ CREATE TABLE `wiki_logging` (
   `log_params` blob NOT NULL,
   `log_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `log_deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `log_user_text` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `log_page` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`log_id`),
   KEY `type_time` (`log_type`,`log_timestamp`),
   KEY `user_time` (`log_user`,`log_timestamp`),
   KEY `page_time` (`log_namespace`,`log_title`,`log_timestamp`),
-  KEY `times` (`log_timestamp`)
+  KEY `times` (`log_timestamp`),
+  KEY `log_user_type_time` (`log_user`,`log_type`,`log_timestamp`),
+  KEY `log_page_id_time` (`log_page`,`log_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2448,7 +2541,7 @@ CREATE TABLE `wiki_oldimage` (
   `oi_metadata` mediumblob NOT NULL,
   `oi_media_type` enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE') DEFAULT NULL,
   `oi_major_mime` enum('unknown','application','audio','image','text','video','message','model','multipart') NOT NULL DEFAULT 'unknown',
-  `oi_minor_mime` varbinary(32) NOT NULL DEFAULT 'unknown',
+  `oi_minor_mime` varbinary(100) NOT NULL DEFAULT 'unknown',
   `oi_deleted` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `oi_sha1` varbinary(32) NOT NULL DEFAULT '',
   KEY `oi_name_timestamp` (`oi_name`,`oi_timestamp`),
@@ -2481,6 +2574,21 @@ CREATE TABLE `wiki_page` (
   UNIQUE KEY `name_title` (`page_namespace`,`page_title`),
   KEY `page_random` (`page_random`),
   KEY `page_len` (`page_len`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_page_props`
+--
+
+DROP TABLE IF EXISTS `wiki_page_props`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_page_props` (
+  `pp_page` int(11) NOT NULL,
+  `pp_propname` varbinary(60) NOT NULL,
+  `pp_value` blob NOT NULL,
+  PRIMARY KEY (`pp_page`,`pp_propname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2520,7 +2628,7 @@ CREATE TABLE `wiki_pagelinks` (
   `pl_namespace` int(11) NOT NULL DEFAULT '0',
   `pl_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   UNIQUE KEY `pl_from` (`pl_from`,`pl_namespace`,`pl_title`),
-  KEY `pl_namespace` (`pl_namespace`,`pl_title`,`pl_from`)
+  UNIQUE KEY `pl_namespace` (`pl_namespace`,`pl_title`,`pl_from`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2533,7 +2641,7 @@ DROP TABLE IF EXISTS `wiki_protected_titles`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_protected_titles` (
   `pt_namespace` int(11) NOT NULL,
-  `pt_title` varchar(255) NOT NULL,
+  `pt_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `pt_user` int(10) unsigned NOT NULL,
   `pt_reason` tinyblob,
   `pt_timestamp` binary(14) NOT NULL,
@@ -2650,6 +2758,8 @@ CREATE TABLE `wiki_redirect` (
   `rd_from` int(8) unsigned NOT NULL DEFAULT '0',
   `rd_namespace` int(11) NOT NULL DEFAULT '0',
   `rd_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `rd_interwiki` varchar(32) DEFAULT NULL,
+  `rd_fragment` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
   PRIMARY KEY (`rd_from`),
   KEY `rd_ns_title` (`rd_namespace`,`rd_title`,`rd_from`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -2716,7 +2826,26 @@ CREATE TABLE `wiki_site_stats` (
   `ss_users` bigint(20) DEFAULT '-1',
   `ss_admins` int(10) DEFAULT '-1',
   `ss_images` int(10) DEFAULT '0',
+  `ss_active_users` bigint(20) DEFAULT '-1',
   UNIQUE KEY `ss_row_id` (`ss_row_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_tag_summary`
+--
+
+DROP TABLE IF EXISTS `wiki_tag_summary`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_tag_summary` (
+  `ts_rc_id` int(11) DEFAULT NULL,
+  `ts_log_id` int(11) DEFAULT NULL,
+  `ts_rev_id` int(11) DEFAULT NULL,
+  `ts_tags` blob NOT NULL,
+  UNIQUE KEY `tag_summary_rc_id` (`ts_rc_id`),
+  UNIQUE KEY `tag_summary_log_id` (`ts_log_id`),
+  UNIQUE KEY `tag_summary_rev_id` (`ts_rev_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2732,7 +2861,7 @@ CREATE TABLE `wiki_templatelinks` (
   `tl_namespace` int(11) NOT NULL DEFAULT '0',
   `tl_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   UNIQUE KEY `tl_from` (`tl_from`,`tl_namespace`,`tl_title`),
-  KEY `tl_namespace` (`tl_namespace`,`tl_title`,`tl_from`)
+  UNIQUE KEY `tl_namespace` (`tl_namespace`,`tl_title`,`tl_from`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2792,8 +2921,21 @@ DROP TABLE IF EXISTS `wiki_transcache`;
 CREATE TABLE `wiki_transcache` (
   `tc_url` varchar(255) NOT NULL,
   `tc_contents` text,
-  `tc_time` int(11) NOT NULL,
+  `tc_time` binary(14) DEFAULT NULL,
   UNIQUE KEY `tc_url_idx` (`tc_url`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_updatelog`
+--
+
+DROP TABLE IF EXISTS `wiki_updatelog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_updatelog` (
+  `ul_key` varchar(255) NOT NULL,
+  PRIMARY KEY (`ul_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2851,8 +2993,25 @@ DROP TABLE IF EXISTS `wiki_user_newtalk`;
 CREATE TABLE `wiki_user_newtalk` (
   `user_id` int(5) NOT NULL DEFAULT '0',
   `user_ip` varchar(40) NOT NULL DEFAULT '',
+  `user_last_timestamp` binary(14) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
   KEY `user_id` (`user_id`),
   KEY `user_ip` (`user_ip`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_user_properties`
+--
+
+DROP TABLE IF EXISTS `wiki_user_properties`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_user_properties` (
+  `up_user` int(11) NOT NULL,
+  `up_property` varbinary(32) NOT NULL,
+  `up_value` blob,
+  UNIQUE KEY `user_properties_user_property` (`up_user`,`up_property`),
+  KEY `user_properties_property` (`up_property`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2867,6 +3026,19 @@ CREATE TABLE `wiki_user_rights` (
   `ur_user` int(5) unsigned NOT NULL DEFAULT '0',
   `ur_rights` tinyblob NOT NULL,
   UNIQUE KEY `ur_user` (`ur_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_valid_tag`
+--
+
+DROP TABLE IF EXISTS `wiki_valid_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_valid_tag` (
+  `vt_tag` varchar(255) NOT NULL,
+  PRIMARY KEY (`vt_tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2914,4 +3086,4 @@ CREATE TABLE `wiki_watchlist` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2009-11-30 23:05:35
+-- Dump completed on 2010-10-29 22:42:12
