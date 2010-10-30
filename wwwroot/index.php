@@ -55,8 +55,8 @@
             $thumb = get_thumbnail($screen['physical_filename'], 142, 80);
             $title = $screen['topic_title'];
             //$title .= ' - &lt;a href=&quot;screenshot.php?topic=' . $screen['topic_id'] . '&quot;&gt;Click here to see the original image&lt;/a&gt;';
-            $imgline = '<a href="screenshot.php?id=' . $screen['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
-            $imgline .= '<img src="' . $thumb . '" width="142" height="80" border="0"><br /></a>';
+            $imgline = '<a href="screenshot.php?id=' . $screen['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '" alt="'.$title.'">';
+            $imgline .= '<img src="' . $thumb . '" width="142" height="80" border="0" alt=""><br /></a>';
             $screenthumbs[] = $imgline;
         }
     }
@@ -92,7 +92,7 @@
     $starttemplate = file_get_contents('templates/pagestart.html');
 
     $html = $starttemplate;
-    $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0"/>&nbsp;Home', $headertemplate);
+    $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0" alt=""/>&nbsp;Home', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');
     $html .= file_get_contents('templates/pageend.html');
