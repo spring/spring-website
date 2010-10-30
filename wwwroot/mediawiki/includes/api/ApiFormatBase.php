@@ -23,33 +23,37 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiBase.php');
+	require_once ( 'ApiBase.php' );
 }
 
 /**
  * This is the abstract base class for API formatters.
- * 
- * @addtogroup API
+ *
+ * @ingroup API
  */
 abstract class ApiFormatBase extends ApiBase {
 
-	private $mIsHtml, $mFormat, $mUnescapeAmps, $mHelp;
+	private $mIsHtml, $mFormat, $mUnescapeAmps, $mHelp, $mCleared;
+	private $mBufferResult = false, $mBuffer;
 
 	/**
-	* Create a new instance of the formatter.
-	* If the format name ends with 'fm', wrap its output in the proper HTML.
-	*/
-	public function __construct($main, $format) {
-		parent :: __construct($main, $format);
+	 * Constructor
+	 * If $format ends with 'fm', pretty-print the output in HTML.
+	 * @param $main ApiMain
+	 * @param $format string Format name
+	 */
+	public function __construct( $main, $format ) {
+		parent :: __construct( $main, $format );
 
-		$this->mIsHtml = (substr($format, -2, 2) === 'fm'); // ends with 'fm'
-		if ($this->mIsHtml)
-			$this->mFormat = substr($format, 0, -2); // remove ending 'fm'
+		$this->mIsHtml = ( substr( $format, - 2, 2 ) === 'fm' ); // ends with 'fm'
+		if ( $this->mIsHtml )
+			$this->mFormat = substr( $format, 0, - 2 ); // remove ending 'fm'
 		else
 			$this->mFormat = $format;
-		$this->mFormat = strtoupper($this->mFormat);
+		$this->mFormat = strtoupper( $this->mFormat );
+		$this->mCleared = false;
 	}
 
 	/**
@@ -60,58 +64,78 @@ abstract class ApiFormatBase extends ApiBase {
 	public abstract function getMimeType();
 
 	/**
-	 * If formatter outputs data results as is, the results must first be sanitized.
-	 * An XML formatter on the other hand uses special tags, such as "_element" for special handling,
-	 * and thus needs to override this function to return true.  
+	 * Whether this formatter needs raw data such as _element tags
+	 * @return bool
 	 */
 	public function getNeedsRawData() {
 		return false;
 	}
 
 	/**
-	 * Specify whether or not ampersands should be escaped to '&amp;' when rendering. This
-	 * should only be set to true for the help message when rendered in the default (xmlfm)
-	 * format. This is a temporary special-case fix that should be removed once the help
-	 * has been reworked to use a fully html interface.
+	 * Get the internal format name
+	 * @return string
+	 */
+	public function getFormat() {
+		return $this->mFormat;
+	}
+
+	/**
+	 * Specify whether or not sequences like &amp;quot; should be unescaped
+	 * to &quot; . This should only be set to true for the help message
+	 * when rendered in the default (xmlfm) format. This is a temporary
+	 * special-case fix that should be removed once the help has been
+	 * reworked to use a fully HTML interface.
 	 *
-	 * @param boolean Whether or not ampersands should be escaped.
+	 * @param $b bool Whether or not ampersands should be escaped.
 	 */
 	public function setUnescapeAmps ( $b ) {
 		$this->mUnescapeAmps = $b;
 	}
 
 	/**
-	 * Returns true when an HTML filtering printer should be used.
-	 * The default implementation assumes that formats ending with 'fm' 
-	 * should be formatted in HTML. 
+	 * Returns true when the HTML pretty-printer should be used.
+	 * The default implementation assumes that formats ending with 'fm'
+	 * should be formatted in HTML.
+	 * @return bool
 	 */
 	public function getIsHtml() {
 		return $this->mIsHtml;
 	}
 
 	/**
-	 * Initialize the printer function and prepares the output headers, etc.
+	 * Whether this formatter can format the help message in a nice way.
+	 * By default, this returns the same as getIsHtml().
+	 * When action=help is set explicitly, the help will always be shown
+	 * @return bool
+	 */
+	public function getWantsHelp() {
+		return $this->getIsHtml();
+	}
+
+	/**
+	 * Initialize the printer function and prepare the output headers, etc.
 	 * This method must be the first outputing method during execution.
 	 * A help screen's header is printed for the HTML-based output
+	 * @param $isError bool Whether an error message is printed
 	 */
-	function initPrinter($isError) {
+	function initPrinter( $isError ) {
 		$isHtml = $this->getIsHtml();
 		$mime = $isHtml ? 'text/html' : $this->getMimeType();
 		$script = wfScript( 'api' );
 
 		// Some printers (ex. Feed) do their own header settings,
 		// in which case $mime will be set to null
-		if (is_null($mime))
+		if ( is_null( $mime ) )
 			return; // skip any initialization
 
-		header("Content-Type: $mime; charset=utf-8");
+		header( "Content-Type: $mime; charset=utf-8" );
 
-		if ($isHtml) {
+		if ( $isHtml ) {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<?php if ($this->mUnescapeAmps) { 
+<?php if ( $this->mUnescapeAmps ) {
 ?>	<title>MediaWiki API</title>
 <?php } else {
 ?>	<title>MediaWiki API Result</title>
@@ -121,13 +145,13 @@ abstract class ApiFormatBase extends ApiBase {
 <?php
 
 
-			if( !$isError ) {
+			if ( !$isError ) {
 ?>
-<br/>
+<br />
 <small>
-You are looking at the HTML representation of the <?php echo( $this->mFormat ); ?> format.<br/>
-HTML is good for debugging, but probably is not suitable for your application.<br/>
-See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or 
+You are looking at the HTML representation of the <?php echo( $this->mFormat ); ?> format.<br />
+HTML is good for debugging, but probably is not suitable for your application.<br />
+See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or
 <a href='<?php echo( $script ); ?>'>API help</a> for more information.
 </small>
 <?php
@@ -146,7 +170,7 @@ See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or
 	 * Finish printing. Closes HTML tags.
 	 */
 	public function closePrinter() {
-		if ($this->getIsHtml()) {
+		if ( $this->getIsHtml() ) {
 ?>
 
 </pre>
@@ -159,45 +183,77 @@ See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or
 	}
 
 	/**
-	 * The main format printing function. Call it to output the result string to the user.
-	 * This function will automatically output HTML when format name ends in 'fm'.
+	 * The main format printing function. Call it to output the result
+	 * string to the user. This function will automatically output HTML
+	 * when format name ends in 'fm'.
+	 * @param $text string
 	 */
-	public function printText($text) {
-		if ($this->getIsHtml())
-			echo $this->formatHTML($text);
-		else
+	public function printText( $text ) {
+		if ( $this->mBufferResult ) {
+			$this->mBuffer = $text;
+		} elseif ( $this->getIsHtml() ) {
+			echo $this->formatHTML( $text );
+		} else {
+			// For non-HTML output, clear all errors that might have been
+			// displayed if display_errors=On
+			// Do this only once, of course
+			if ( !$this->mCleared )
+			{
+				ob_clean();
+				$this->mCleared = true;
+			}
 			echo $text;
+		}
 	}
 
 	/**
-	* Says pretty-printer that it should use *bold* and $italics$ formatting
-	*/
+	 * Get the contents of the buffer.
+	 */
+	public function getBuffer() {
+		return $this->mBuffer;
+	}
+	/**
+	 * Set the flag to buffer the result instead of printing it.
+	 */
+	public function setBufferResult( $value ) {
+		$this->mBufferResult = $value;
+	}
+
+	/**
+	 * Sets whether the pretty-printer should format *bold* and $italics$
+	 * @param $help bool
+	 */
 	public function setHelp( $help = true ) {
 		$this->mHelp = true;
 	}
-	
+
 	/**
-	* Prety-print various elements in HTML format, such as xml tags and URLs.
-	* This method also replaces any '<' with &lt;
+	* Prety-print various elements in HTML format, such as xml tags and
+	* URLs. This method also escapes characters like <
+	* @param $text string
+	* @return string
 	*/
-	protected function formatHTML($text) {
+	protected function formatHTML( $text ) {
+		global $wgUrlProtocols;
+
 		// Escape everything first for full coverage
-		$text = htmlspecialchars($text);
+		$text = htmlspecialchars( $text );
 
 		// encode all comments or tags as safe blue strings
-		$text = preg_replace('/\&lt;(!--.*?--|.*?)\&gt;/', '<span style="color:blue;">&lt;\1&gt;</span>', $text);
+		$text = preg_replace( '/\&lt;(!--.*?--|.*?)\&gt;/', '<span style="color:blue;">&lt;\1&gt;</span>', $text );
 		// identify URLs
-		$protos = "http|https|ftp|gopher";
-		$text = ereg_replace("($protos)://[^ \\'\"()<\n]+", '<a href="\\0">\\0</a>', $text);
+		$protos = implode( "|", $wgUrlProtocols );
+		// This regex hacks around bug 13218 (&quot; included in the URL)
+		$text = preg_replace( "#(($protos).*?)(&quot;)?([ \\'\"<>\n]|&lt;|&gt;|&quot;)#", '<a href="\\1">\\1</a>\\3\\4', $text );
 		// identify requests to api.php
-		$text = ereg_replace("api\\.php\\?[^ \\()<\n\t]+", '<a href="\\0">\\0</a>', $text);
-		if( $this->mHelp ) {
+		$text = preg_replace( "#api\\.php\\?[^ \\()<\n\t]+#", '<a href="\\0">\\0</a>', $text );
+		if ( $this->mHelp ) {
 			// make strings inside * bold
-			$text = ereg_replace("\\*[^<>\n]+\\*", '<b>\\0</b>', $text);
+			$text = preg_replace( "#\\*[^<>\n]+\\*#", '<b>\\0</b>', $text );
 			// make strings inside $ italic
-			$text = ereg_replace("\\$[^<>\n]+\\$", '<b><i>\\0</i></b>', $text);
+			$text = preg_replace( "#\\$[^<>\n]+\\$#", '<b><i>\\0</i></b>', $text );
 		}
-		
+
 		/* Temporary fix for bad links in help messages. As a special case,
 		 * XML-escaped metachars are de-escaped one level in the help message
 		 * for legibility. Should be removed once we have completed a fully-html
@@ -208,9 +264,6 @@ See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or
 		return $text;
 	}
 
-	/**
-	 * Returns usage examples for this format.
-	 */
 	protected function getExamples() {
 		return 'api.php?action=query&meta=siteinfo&siprop=namespaces&format=' . $this->getModuleName();
 	}
@@ -220,29 +273,36 @@ See <a href='http://www.mediawiki.org/wiki/API'>complete documentation</a>, or
 	}
 
 	public static function getBaseVersion() {
-		return __CLASS__ . ': $Id: ApiFormatBase.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiFormatBase.php 62367 2010-02-12 14:09:42Z siebrand $';
 	}
 }
 
 /**
- * This printer is used to wrap an instance of the Feed class 
- * @addtogroup API
+ * This printer is used to wrap an instance of the Feed class
+ * @ingroup API
  */
 class ApiFormatFeedWrapper extends ApiFormatBase {
 
-	public function __construct($main) {
-		parent :: __construct($main, 'feed');
+	public function __construct( $main ) {
+		parent :: __construct( $main, 'feed' );
 	}
 
 	/**
-	 * Call this method to initialize output data. See self::execute()
+	 * Call this method to initialize output data. See execute()
+	 * @param $result ApiResult
+	 * @param $feed object an instance of one of the $wgFeedClasses classes
+	 * @param $feedItems array of FeedItem objects
 	 */
-	public static function setResult($result, $feed, $feedItems) {
+	public static function setResult( $result, $feed, $feedItems ) {
 		// Store output in the Result data.
 		// This way we can check during execution if any error has occured
-		$data = & $result->getData();
-		$data['_feed'] = $feed;
-		$data['_feeditems'] = $feedItems;
+		// Disable size checking for this because we can't continue
+		// cleanly; size checking would cause more problems than it'd
+		// solve
+		$result->disableSizeCheck();
+		$result->addValue( null, '_feed', $feed );
+		$result->addValue( null, '_feeditems', $feedItems );
+		$result->enableSizeCheck();
 	}
 
 	/**
@@ -261,27 +321,26 @@ class ApiFormatFeedWrapper extends ApiFormatBase {
 
 	/**
 	 * This class expects the result data to be in a custom format set by self::setResult()
-	 * $result['_feed']		 - an instance of one of the $wgFeedClasses classes
-	 * $result['_feeditems'] - an array of FeedItem instances
+	 * $result['_feed']		- an instance of one of the $wgFeedClasses classes
+	 * $result['_feeditems']	- an array of FeedItem instances
 	 */
 	public function execute() {
 		$data = $this->getResultData();
-		if (isset ($data['_feed']) && isset ($data['_feeditems'])) {
+		if ( isset ( $data['_feed'] ) && isset ( $data['_feeditems'] ) ) {
 			$feed = $data['_feed'];
 			$items = $data['_feeditems'];
 
 			$feed->outHeader();
-			foreach ($items as & $item)
-				$feed->outItem($item);
+			foreach ( $items as & $item )
+				$feed->outItem( $item );
 			$feed->outFooter();
 		} else {
-			// Error has occured, print something usefull
-			// TODO: make this error more informative using ApiBase :: dieDebug() or similar
-			wfHttpError(500, 'Internal Server Error', '');
+			// Error has occured, print something useful
+			ApiBase::dieDebug( __METHOD__, 'Invalid feed class/item' );
 		}
 	}
-	
+
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiFormatBase.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiFormatBase.php 62367 2010-02-12 14:09:42Z siebrand $';
 	}
 }

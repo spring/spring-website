@@ -1,12 +1,13 @@
 <?php
 /** Gagauz (Gagauz)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author Cuman
- * @author Nike
- * @author Siebrand
  */
 
 $fallback = 'tr';
@@ -55,8 +56,6 @@ $messages = array(
 'underline-always'  => 'Dayma',
 'underline-never'   => 'Hiç bir zaman',
 'underline-default' => 'Brauzer karar kabletsin',
-
-'skinpreview' => '(Ön siir)',
 
 # Dates
 'sunday'        => 'Pazar',
@@ -110,27 +109,35 @@ $messages = array(
 'nov'           => 'Noy',
 'dec'           => 'Dek',
 
-# Bits of text used by many pages
-'categories'            => '{{PLURAL:$1|Kategoriya|Kategoriyalar}}',
-'pagecategories'        => 'Sayfa {{PLURAL:$1|kategoriyası|kategoriyaları}}',
-'category_header'       => '"$1" kategoriyasındaki sayfalar',
-'subcategories'         => 'Alt kategoriyalar',
-'category-media-header' => '"$1" kategoriyasındaki media',
-'category-empty'        => "''Bu kategoriyada henez bulunmêêr bir yazı yaki media.''",
+# Categories related messages
+'pagecategories'         => 'Sayfa {{PLURAL:$1|kategoriyası|kategoriyaları}}',
+'category_header'        => '"$1" kategoriyasındaki sayfalar',
+'subcategories'          => 'Alt kategoriyalar',
+'category-media-header'  => '"$1" kategoriyasındaki media',
+'category-empty'         => "''Bu kategoriyada henez bulunmêêr bir yazı yaki media.''",
+'listingcontinuesabbrev' => '(devam)',
 
-'mainpagetext'      => "<big>'''MediaWiki başarılan kuruldu.'''</big>",
+'mainpagetext'      => "'''MediaWiki başarılan kuruldu.'''",
 'mainpagedocfooter' => "Vikilän iş uurunda bilgi almaa için [http://meta.wikimedia.org/wiki/Help:Contents User's Guide] sayfasına bakınız
 
 == Eni başlayanlar için ==
 
 * [http://www.mediawiki.org/wiki/Manual:Configuration_settings Configuration settings list]
 * [http://www.mediawiki.org/wiki/Manual:FAQ MediaWiki FAQ]
-* [http://lists.wikimedia.org/mailman/listinfo/mediawiki-announce MediaWiki release mailing list]",
+* [https://lists.wikimedia.org/mailman/listinfo/mediawiki-announce MediaWiki release mailing list]",
 
-'about'          => 'Uurunda',
-'article'        => 'Yazı',
-'newwindow'      => '(eni bir pencerädä açılêr)',
-'cancel'         => 'Ret',
+'about'         => 'Uurunda',
+'article'       => 'Yazı',
+'newwindow'     => '(eni bir pencerädä açılêr)',
+'cancel'        => 'Ret',
+'moredotdotdot' => 'Taa...',
+'mypage'        => 'Benim sayfam',
+'mytalk'        => 'Sözleşmäk sayfam',
+'anontalk'      => 'Bu IP-nin konuşmaları',
+'navigation'    => 'Saytda yol bulmaa',
+'and'           => '&#32;hem',
+
+# Cologne Blue skin
 'qbfind'         => 'Bul',
 'qbbrowse'       => 'Taramaa',
 'qbedit'         => 'Diiştir',
@@ -138,15 +145,8 @@ $messages = array(
 'qbpageinfo'     => 'Kontekst',
 'qbmyoptions'    => 'Sayfalarım',
 'qbspecialpages' => 'Maasus sayfalar',
-'moredotdotdot'  => 'Taa...',
-'mypage'         => 'Benim sayfam',
-'mytalk'         => 'Sözleşmäk sayfam',
-'anontalk'       => 'Bu IP-nin konuşmaları',
-'navigation'     => 'Saytda yol bulmaa',
-'and'            => 'hem',
-
-# Metadata in edit box
-'metadata_help' => 'Metadata:',
+'faq'            => 'SSS',
+'faqpage'        => 'Project:SSS',
 
 'errorpagetitle'    => 'Yannış',
 'returnto'          => '$1 dön.',
@@ -194,7 +194,7 @@ $messages = array(
 'otherlanguages'    => 'Übür diller',
 'redirectedfrom'    => '($1 sayfasınnan yönnendirildi)',
 'redirectpagesub'   => 'Yönnendirme sayfası',
-'lastmodifiedat'    => 'Bu sayfa bitki kerä $2, $1 datasında enilendi.', # $1 date, $2 time
+'lastmodifiedat'    => 'Bu sayfa bitki kerä $2, $1 datasında enilendi.',
 'viewcount'         => 'Bu sayfaya $1 kerä girildi.',
 'protectedpage'     => 'Korunmaklı sayfa',
 'jumpto'            => 'Git hem:',
@@ -202,35 +202,27 @@ $messages = array(
 'jumptosearch'      => 'ara',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'         => '{{SITENAME}} için',
-'aboutpage'         => 'Project:Uurunda',
-'bugreports'        => 'Yannışnık raportları',
-'bugreportspage'    => 'Project:Yannışnık raportları',
-'copyright'         => 'İçersindeki $1 altında.',
-'copyrightpagename' => '{{SITENAME}} korunmak hakları',
-'copyrightpage'     => '{{ns:project}}:Avtorluk hakları',
-'currentevents'     => 'Hergünkü sluçaylar',
-'currentevents-url' => 'Project:Hergünkü sluçaylar',
-'disclaimers'       => 'Cuvapçılık reti',
-'disclaimerpage'    => 'Project:Genel cuvapçılık reti',
-'edithelp'          => 'Nesoy var nicä diiştirmää?',
-'edithelppage'      => 'Help:Nesoy var nicä sayfa diiştirmää',
-'faq'               => 'SSS',
-'faqpage'           => 'Project:SSS',
-'helppage'          => 'Help:İçindekilär',
-'mainpage'          => 'Baş yaprak',
-'policy-url'        => 'Project:Politika',
-'portal'            => 'Topluluk portalı',
-'portal-url'        => 'Project:Topluluk portalı',
-'privacy'           => 'Saklamaa politikası',
-'privacypage'       => 'Project:Saklamaa politikası',
-'sitesupport'       => 'Baaşişlär',
-'sitesupport-url'   => 'Project:Baaşiş',
+'aboutsite'            => '{{SITENAME}} için',
+'aboutpage'            => 'Project:Uurunda',
+'copyright'            => 'İçersindeki $1 altında.',
+'copyrightpage'        => '{{ns:project}}:Avtorluk hakları',
+'currentevents'        => 'Hergünkü sluçaylar',
+'currentevents-url'    => 'Project:Hergünkü sluçaylar',
+'disclaimers'          => 'Cuvapçılık reti',
+'disclaimerpage'       => 'Project:Genel cuvapçılık reti',
+'edithelp'             => 'Nesoy var nicä diiştirmää?',
+'edithelppage'         => 'Help:Nesoy var nicä sayfa diiştirmää',
+'helppage'             => 'Help:İçindekilär',
+'mainpage'             => 'Baş yaprak',
+'mainpage-description' => 'Baş yaprak',
+'policy-url'           => 'Project:Politika',
+'portal'               => 'Topluluk portalı',
+'portal-url'           => 'Project:Topluluk portalı',
+'privacy'              => 'Saklamaa politikası',
+'privacypage'          => 'Project:Saklamaa politikası',
 
 'badaccess'        => 'İzin kusurluu',
 'badaccess-group0' => 'Bu işlemi yapmaa kuvediniz yok.',
-'badaccess-group1' => 'O işlem ani yapmaa neetlendiniz sadä var nicä yapılsın $1 gruppasındaki kullanıcılar tarafınnan.',
-'badaccess-group2' => 'O işlem ani yapmaa neetlendiniz, var nicä yapılsın sadä $1 gruppasındaki kullanıcılardan biri tarafınnan.',
 'badaccess-groups' => 'O işlem ani yapmaa neetlendiniz var nicä yapılsın sadä $1 gruppalarınnan birinin kullanıcıları tarafınnan.',
 
 'versionrequired'     => 'MediaWiki-nin $1 versiyası läazım',
@@ -273,12 +265,11 @@ $messages = array(
 'nosuchaction'      => 'Bölä bir işlem yok',
 'nosuchactiontext'  => 'URL tarafınnan tanınan işlem Viki tarafınnan kabledilmedi.',
 'nosuchspecialpage' => 'Bu adda bir maasus sayfa yok',
-'nospecialpagetext' => 'Bir maasus sayfaya girdiniz angısı bulunmêêr. Var olan hepsi maasus sayfaları yakışêr sizä görmää [[Special:Specialpages|{{int:specialpages}}]] sayfasında.',
+'nospecialpagetext' => 'Bir maasus sayfaya girdiniz angısı bulunmêêr. Var olan hepsi maasus sayfaları yakışêr sizä görmää [[Special:SpecialPages|{{int:specialpages}}]] sayfasında.',
 
 # General errors
 'error'              => 'Kusurluk',
 'databaseerror'      => 'Data bazası kusurluu',
-'nodb'               => '$1 data bazasını yok nicä seçsin',
 'readonly'           => 'Data bazası kilitlendi',
 'internalerror'      => 'İç yannış',
 'internalerror_info' => 'İç yannış: $1',
@@ -294,46 +285,33 @@ $messages = array(
 'viewsourcetext'     => 'Var nicä görmää hem kopiya etmää bu yapraa gelinirini:',
 
 # Login and logout pages
-'logouttitle'                => 'Sessiyanı kapat',
 'logouttext'                 => 'Sessiyayı kapattınız.
 Şindi var nicä devam etmää kullanmaa {{SITENAME}} saytını kimlik göstermedän yaki enidän sessiya açmaa (ister hep o kullanıcı adıylan, ister başka bir kullanıcı adıylan). O zamana kadar ani web brauzerinizin keşi temizlenecek bir takım sayfalar var nicä görünsün sansın sessiya hep açık.',
 'welcomecreation'            => '== Hoş geldiniz $1! ==
 
 Esapınız açıldı. Unutmayın {{SITENAME}} seçimnerin diiştirmää.',
-'loginpagetitle'             => 'Sessiya aç',
 'yourname'                   => 'Kullanıcı adınız',
 'yourpassword'               => 'Parol',
 'yourpasswordagain'          => 'Parolu enidän yaz',
 'remembermypassword'         => 'Parolu hatırla.',
 'yourdomainname'             => 'Domen adınız',
-'loginproblem'               => '<b>Registrat olur känä bir problema oldu.</b><br />Bir taa deneyin!',
 'login'                      => 'Gir',
+'nav-login-createaccount'    => 'Gir / esap yarat',
 'loginprompt'                => "Bak: {{SITENAME}} saytında sessiya açmaa için tarayıcınızda läazım cookies aktivat olsun. <br />
 Kullanıcı adınız '''var nicä içersin'''gagauzça nışan, boşluk . Savaşın kullanıcı adınıza e-mail adresi '''girmemää'''.",
 'userlogin'                  => 'Gir / esap yarat',
 'logout'                     => 'Sessiyanı kapat',
 'userlogout'                 => 'Oturmaa kapat',
 'notloggedin'                => 'Sessiya diil açık',
-'nologin'                    => 'Henez aza olmadınız? $1.',
+'nologin'                    => "Henez aza olmadınız? '''$1'''.",
 'nologinlink'                => 'Esap yarat',
 'createaccount'              => 'Eni esap aç',
-'gotaccount'                 => 'Taa ilerdä esap açtınızmı? $1.',
+'gotaccount'                 => "Taa ilerdä esap açtınızmı? '''$1'''.",
 'gotaccountlink'             => 'Herliim ilerdän esap açtıysanız girin bu baalantıdan.',
 'createaccountmail'          => 'e-maillan',
 'badretype'                  => 'Parollar angılarını girdiniz uymêêr.',
 'userexists'                 => 'Kullanıcı adı ani girdiniz kullanılêr. Yalvarêrız farklı bir kullanıcı adı seçin.',
-'youremail'                  => 'E-mail adresiniz*',
-'username'                   => 'Kullanıcı adı:',
-'uid'                        => 'Registrațiya nomeri:',
-'yourrealname'               => 'Haliz adınız:',
-'yourlanguage'               => 'Dil:',
-'yournick'                   => 'Nik',
-'badsig'                     => 'Geçersiz çii imza; HTML etiketlerini yoklayın.',
-'badsiglength'               => 'Kullanıcı adı çok uzun; lääzım olsun $1 simvol altında.',
-'email'                      => 'E-mail',
-'prefs-help-realname'        => '* Aslı ad (istemää baalı): herliim seçersäniz aslı adı vermää, işinize görä sizin için kullanılacêk.',
 'loginerror'                 => 'Sessiya açmaa yannışı.',
-'prefs-help-email-required'  => 'E-mail adres istenildi.',
 'noname'                     => 'Geçerli bir kullanıcı adı girmediniz.',
 'loginsuccesstitle'          => 'Sessiya başarılan açıldı',
 'loginsuccess'               => '{{SITENAME}} saytında "$1" kullanıcı adılan sessiya açtınız.',
@@ -365,6 +343,7 @@ O zamana kadar ani e-maildaki instrukțiyalar yapılmaycêk hem doorulanmaycêk 
 'loginlanguagelabel'         => 'Dil: $1',
 
 # Password reset dialog
+'retypenew'           => 'Eni parolu tekrar girin',
 'resetpass_forbidden' => '{{SITENAME}} saytında parol yok nicä diiştirilsin',
 
 # Edit page toolbar
@@ -374,7 +353,7 @@ O zamana kadar ani e-maildaki instrukțiyalar yapılmaycêk hem doorulanmaycêk 
 'italic_tip'      => 'İtalik tekst',
 'link_sample'     => 'Sayfanın adı',
 'link_tip'        => 'İç baalantı',
-'extlink_sample'  => '{{SERVER}} adres adı',
+'extlink_sample'  => 'http://www.example.com adres adı',
 'extlink_tip'     => 'Dış baalantı (Unutmayın adresin önüne http:// koymaa)',
 'headline_sample' => 'Başlık teksti',
 'headline_tip'    => '2. düzey başlık',
@@ -388,20 +367,20 @@ O zamana kadar ani e-maildaki instrukțiyalar yapılmaycêk hem doorulanmaycêk 
 'hr_tip'          => 'Gorizontal liniya (çok sık kullanmayın)',
 
 # Edit pages
-'summary'                => 'Kısaca',
-'subject'                => 'Konu/başlık',
-'minoredit'              => 'Küçük diişilmäkler',
-'watchthis'              => 'Bak bu sayfaa',
-'savearticle'            => 'Sayfayı registrat et',
-'preview'                => 'Ön siir',
-'showpreview'            => 'Ön siiri göster',
-'showlivepreview'        => 'Cannı ön siir',
-'showdiff'               => 'Diişilmäkleri göster',
-'anoneditwarning'        => 'Sessiya açmadınız deyni yazının diişmäk istoriyasına diil nik, IP adresiniz registrat olunacêk.',
-'summary-preview'        => 'Ön siir özeti',
-'subject-preview'        => 'Konu/başlık ön siiri',
-'blockedtitle'           => 'Kullanıcı kösteklendi.',
-'blockedtext'            => '<big>Kullanıcı adınız yaki parolunuz $1 tarafından kösteklendi.</big>
+'summary'                    => 'Kısaca:',
+'subject'                    => 'Konu/başlık:',
+'minoredit'                  => 'Küçük diişilmäkler',
+'watchthis'                  => 'Bak bu sayfaa',
+'savearticle'                => 'Sayfayı registrat et',
+'preview'                    => 'Ön siir',
+'showpreview'                => 'Ön siiri göster',
+'showlivepreview'            => 'Cannı ön siir',
+'showdiff'                   => 'Diişilmäkleri göster',
+'anoneditwarning'            => 'Sessiya açmadınız deyni yazının diişmäk istoriyasına diil nik, IP adresiniz registrat olunacêk.',
+'summary-preview'            => 'Ön siir özeti:',
+'subject-preview'            => 'Konu/başlık ön siiri:',
+'blockedtitle'               => 'Kullanıcı kösteklendi.',
+'blockedtext'                => 'Kullanıcı adınız yaki parolunuz $1 tarafından kösteklendi.
 
 Sizi köstek edän önderci: $1. Köstek sebebi: \'\'$2\'\'.
 
@@ -410,44 +389,43 @@ Eer düşünürsünüz ani köstek diil dooru o sebeptän angısı belirtildi, v
 Herliim girmediniz [[Special:Preferences|seçimner]] bölümünde geçerli bir e-mail adresi, yok nicä kullanmaa "Kullanıcıya e-mail gönder" seçimini.
 
 Şindi IP adresiniz $3. Yalvarêrêz bu adresi belirtmää her angı bir sorgu yapar kana.',
-'blockednoreason'        => 'hiç bir sebep belirtilmedi',
-'blockedoriginalsource'  => "'''$1''' sayfasın kaynak teksti aşaada:",
-'whitelistedittitle'     => 'Lääzım açmaa sessiya diişmäk yapmaa deyni',
-'whitelistedittext'      => 'Diişmäk yapmaa için $1.',
-'nosuchsectiontitle'     => 'Bölä bölüm yok',
-'loginreqtitle'          => 'Lääazım sessiya açmaa',
-'loginreqlink'           => 'sessiya aç',
-'loginreqpagetext'       => 'Lääzım $1 görmää übür sayfaları.',
-'accmailtitle'           => 'Parol gönderildi.',
-'accmailtext'            => "'$1' kullanıcısın parolu $2 adresine gönderildi.",
-'newarticle'             => '(Eni)',
-'newarticletext'         => "Henez var olmayan bir sayfaya konulmuş baalantıya tuşladınız. Bu sayfayı yaratmaa deyni aşaadaki tekst kutusunu kullanınız. Bilgi için [[{{MediaWiki:Helppage}}|yardım sayfasına]] bakınız. Herliim buraya yannış geldiniz, läazım tuşlamaa programınızın '''Geeri''' tuşuna.",
-'noarticletext'          => 'Bu sayfa boş. Bu başlıı [[Special:Search/{{PAGENAME}}|var nicä aramaa]] übür sayfalarda yaki bu sayfayı siz  [{{fullurl:{{FULLPAGENAME}}|action=edit}} var nicä yazmaa].',
-'updated'                => '(Enilendi)',
-'previewnote'            => '<strong>Bu saadä bir ön siir, hem diişmäkler henez korunmadı!</strong>',
-'editing'                => '"$1" sayfasın diiştirersiniz',
-'editinguser'            => '"$1" sayfasını diiştirersiniz ([[User talk:$1|{{int:talkpagelinktext}}]] | [[Special:Contributions/$1|{{int:contribslink}}]])',
-'editingsection'         => '"$1" sayfasında bölüm diiştirersiniz',
-'editingcomment'         => '$1 sayfasına yorum ekleersiniz.',
-'editconflict'           => 'Diişmäk konflikti: $1',
-'yourtext'               => 'Sizin tekstiniz',
-'storedversion'          => 'Saklanmış tekst',
-'yourdiff'               => 'Farklar',
-'copyrightwarning'       => "<strong>Bakınız:</strong> {{SITENAME}} saytına yapılan hepsi eklemäkler hem diişmäkler läazım olsun  <i>$2</i>
+'blockednoreason'            => 'hiç bir sebep belirtilmedi',
+'blockedoriginalsource'      => "'''$1''' sayfasın kaynak teksti aşaada:",
+'whitelistedittitle'         => 'Lääzım açmaa sessiya diişmäk yapmaa deyni',
+'whitelistedittext'          => 'Diişmäk yapmaa için $1.',
+'nosuchsectiontitle'         => 'Bölä bölüm yok',
+'loginreqtitle'              => 'Lääazım sessiya açmaa',
+'loginreqlink'               => 'sessiya aç',
+'loginreqpagetext'           => 'Lääzım $1 görmää übür sayfaları.',
+'accmailtitle'               => 'Parol gönderildi.',
+'accmailtext'                => "'$1' kullanıcısın parolu $2 adresine gönderildi.",
+'newarticle'                 => '(Eni)',
+'newarticletext'             => "Henez var olmayan bir sayfaya konulmuş baalantıya tuşladınız. Bu sayfayı yaratmaa deyni aşaadaki tekst kutusunu kullanınız. Bilgi için [[{{MediaWiki:Helppage}}|yardım sayfasına]] bakınız. Herliim buraya yannış geldiniz, läazım tuşlamaa programınızın '''Geeri''' tuşuna.",
+'noarticletext'              => 'Bu sayfa boş. Bu başlıı [[Special:Search/{{PAGENAME}}|var nicä aramaa]] übür sayfalarda yaki bu sayfayı siz  [{{fullurl:{{FULLPAGENAME}}|action=edit}} var nicä yazmaa].',
+'updated'                    => '(Enilendi)',
+'previewnote'                => "'''Bu saadä bir ön siir, hem diişmäkler henez korunmadı!'''",
+'editing'                    => '"$1" sayfasın diiştirersiniz',
+'editingsection'             => '"$1" sayfasında bölüm diiştirersiniz',
+'editingcomment'             => '$1 sayfasına yorum ekleersiniz.',
+'editconflict'               => 'Diişmäk konflikti: $1',
+'yourtext'                   => 'Sizin tekstiniz',
+'storedversion'              => 'Saklanmış tekst',
+'yourdiff'                   => 'Farklar',
+'copyrightwarning'           => "'''Bakınız:''' {{SITENAME}} saytına yapılan hepsi eklemäkler hem diişmäkler läazım olsun  <i>$2</i>
 lițenziyası şartları içindä (detallar için $1'a bakınız).
 Herliim istemeersiniz ani sizin tekstlär serbest yayılsın hem diiştirilsin übür kullanıcılar tarafınnan, onnarı erleştirmeyniz buraya.<br />
 Hem siz garantiyada bulunêrsiniz ani eklemäklerin avtorusunuz, yaki onnarı kopiya ettiniz kaynaktan angısı izin verer teksti serbest yaymaa hem diiştirmää.<br />
-<strong><center>AVTORLUK KORUNMAK HAKKILAN KORUNMAYAN MATERİALLAR EKLEMEYNİZ!</center></strong>",
-'longpagewarning'        => '<strong>BAK: Bu sayfanın ölçüsü $1 kilobayt; ölçüsü 32 kb-a yakın yaki onnan çok sayfalar bir takım brauzerlärdä var nicä yannış görünsün. Savaşênız onu bölümnerä ayırmaa.</strong>',
-'templatesused'          => 'Bu sayfada kullanılan şablonlar:',
-'templatesusedpreview'   => 'Şablonnar ani bu ön siirdä kullanıldı:',
-'templatesusedsection'   => 'Bu bölümde kullanılan şablonlar:',
-'template-protected'     => '(korumaa)',
-'template-semiprotected' => '(yarı-korunmaa)',
-'nocreatetext'           => '{{SITENAME}} eni yazılar yaratmaa yasaklandı.
-Sizä yakışêr geeri dönmää hem düzmää var olan yapraa, yaki [[Special:Userlogin|sessiya açmaa yaki esap yaratmaa]].',
-'permissionserrors'      => 'İzin yannışları',
-'recreate-deleted-warn'  => "'''Bak: Siz yarattınız o sayfayı angısı ilerdän silindi.'''
+'''<center>AVTORLUK KORUNMAK HAKKILAN KORUNMAYAN MATERİALLAR EKLEMEYNİZ!</center>'''",
+'longpagewarning'            => "'''BAK: Bu sayfanın ölçüsü $1 kilobayt; ölçüsü 32 kb-a yakın yaki onnan çok sayfalar bir takım brauzerlärdä var nicä yannış görünsün. Savaşênız onu bölümnerä ayırmaa.'''",
+'templatesused'              => 'Bu sayfada kullanılan şablonlar:',
+'templatesusedpreview'       => 'Şablonnar ani bu ön siirdä kullanıldı:',
+'templatesusedsection'       => 'Bu bölümde kullanılan şablonlar:',
+'template-protected'         => '(korumaa)',
+'template-semiprotected'     => '(yarı-korunmaa)',
+'nocreatetext'               => '{{SITENAME}} eni yazılar yaratmaa yasaklandı.
+Sizä yakışêr geeri dönmää hem düzmää var olan yapraa, yaki [[Special:UserLogin|sessiya açmaa yaki esap yaratmaa]].',
+'permissionserrors'          => 'İzin yannışları',
+'recreate-moveddeleted-warn' => "'''Bak: Siz yarattınız o sayfayı angısı ilerdän silindi.'''
 
 Läazım düşünmää bu sayfayı redaktat etmää devam etmää deyni.
 Sayfanın silmää jurnalı raatlık için yazılêr burada:",
@@ -457,7 +435,6 @@ Sayfanın silmää jurnalı raatlık için yazılêr burada:",
 
 # History pages
 'viewpagelogs'        => 'Bu yaprak için jurnalları göster',
-'loadhist'            => 'Sayfa istoriyası üklener',
 'currentrev'          => 'Şindiki versiya',
 'revisionasof'        => 'Sayfanın $1 datasındaki hali',
 'revision-info'       => '$1; $2 datalı versiya',
@@ -467,13 +444,11 @@ Sayfanın silmää jurnalı raatlık için yazılêr burada:",
 'cur'                 => 'fark',
 'next'                => 'geeriki',
 'last'                => 'bitki',
-'orig'                => 'aslı',
 'page_first'          => 'ilk',
 'page_last'           => 'bitki',
 'histlegend'          => "Fark seçimi: 2 versiyanın angısını isteersiniz karşılaştırmaa, önündeki kutucaa tuşlayıp, enter'a basın yaki tuşlayın butona angısı sayfanın en altında bulunêr.<br />
 Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 (ilerki) = bir ilerki versiyalan aradaki fark, K = küçük diişmäk",
-'deletedrev'          => '[silindi]',
 'histfirst'           => 'En eski',
 'histlast'            => 'En eni',
 'historysize'         => '({{PLURAL:$1|1 bayt|$1 bayt}})',
@@ -481,7 +456,7 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 
 # Revision feed
 'history-feed-title'          => 'Diişmäk istoriyası',
-'history-feed-item-nocomment' => ' $2de $1', # user at time
+'history-feed-item-nocomment' => ' $2de $1',
 
 # Revision deletion
 'rev-deleted-comment' => '(yorum silindi)',
@@ -502,16 +477,30 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'diff-multi'              => '({{PLURAL:$1|Ara versiya|$1 ara versiyalar}} gösterilmedi.)',
 
 # Search results
-'noexactmatch' => " Başlaa bu olan bir yazı bulunamadı. Bu yazını var nicä [[:$1|'''siz çeketmää''']].",
-'prevn'        => 'ilerki $1',
-'nextn'        => 'geeriki $1',
-'viewprevnext' => '($1) ($2) ($3).',
-'powersearch'  => 'Ara',
+'prevn'          => 'ilerki {{PLURAL:$1|$1}}',
+'nextn'          => 'geeriki {{PLURAL:$1|$1}}',
+'viewprevnext'   => '($1 {{int:pipe-separator}} $2) ($3).',
+'searchhelp-url' => 'Help:İçindekilär',
+'powersearch'    => 'Ara',
 
 # Preferences page
-'preferences'   => 'Seçimner',
-'mypreferences' => 'Seçimnerim',
-'retypenew'     => 'Eni parolu tekrar girin',
+'preferences'               => 'Seçimner',
+'mypreferences'             => 'Seçimnerim',
+'skin-preview'              => 'Ön siir',
+'youremail'                 => 'E-mail adresiniz*',
+'username'                  => 'Kullanıcı adı:',
+'uid'                       => 'Registrațiya nomeri:',
+'yourrealname'              => 'Haliz adınız:',
+'yourlanguage'              => 'Dil:',
+'yournick'                  => 'Nik',
+'badsig'                    => 'Geçersiz çii imza; HTML etiketlerini yoklayın.',
+'badsiglength'              => 'Kullanıcı adı çok uzun; lääzım olsun $1 simvol altında.',
+'email'                     => 'E-mail',
+'prefs-help-realname'       => '* Aslı ad (istemää baalı): herliim seçersäniz aslı adı vermää, işinize görä sizin için kullanılacêk.',
+'prefs-help-email-required' => 'E-mail adres istenildi.',
+
+# User rights
+'editinguser' => '"$1" sayfasını diiştirersiniz ([[User talk:$1|{{int:talkpagelinktext}}]] | [[Special:Contributions/$1|{{int:contribslink}}]])',
 
 'grouppage-sysop' => '{{ns:project}}:Önderciler',
 
@@ -522,7 +511,7 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'nchanges'                       => '$1 {{PLURAL:$1|diiştir|diiştir}}',
 'recentchanges'                  => 'Bitki diişikmäklär',
 'recentchanges-feed-description' => 'Bu lentalan en bitki diişmäkleri vikiyä yaz.',
-'rcnote'                         => '$3 (UTC) datasında bitki <strong>$2</strong> gündä yapılan <strong>$1</strong> diişmäk:',
+'rcnote'                         => '$3 datasında bitki <strong>$2</strong> gündä yapılan <strong>$1</strong> diişmäk:',
 'rcnotefrom'                     => "'''$2''' datasınnan büüne kadar yapılan diişmäkler aşaada (en çok '''$1''' yazı gösteriler).",
 'rclistfrom'                     => 'Göster diişmäkleri ani $1 datasından beeri yapıldı',
 'rcshowhideminor'                => 'küçük diişilmäkläri $1',
@@ -542,6 +531,8 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 
 # Recent changes linked
 'recentchangeslinked'          => 'İlgili diişilmäklär',
+'recentchangeslinked-feed'     => 'İlgili diişilmäklär',
+'recentchangeslinked-toolbox'  => 'İlgili diişilmäklär',
 'recentchangeslinked-title'    => '"$1" ilgili diişmäklär',
 'recentchangeslinked-noresult' => 'Baalantılı sayfalarda verilmiş devirde diişmäk olmadı.',
 'recentchangeslinked-summary'  => "Bu maasus sayfa baalantılı sayfalardaki diişmäkleri sayêr. Sizin bakmaa listasındaki sayfalar verildi '''kalın''' bukvalarnan.",
@@ -552,8 +543,11 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'uploadlogpage' => 'Fayl üklemäk jurnalları',
 'uploadedimage' => 'Üklenen: "[[$1]]"',
 
-# Image list
-'imagelist'                 => 'Pätret listası',
+# Special:ListFiles
+'listfiles' => 'Pätret listası',
+
+# File description page
+'file-anchor-link'          => 'Fayl',
 'filehist'                  => 'Fayl istoriyası',
 'filehist-help'             => 'Fayl istoriyasın görmää deyni Gün/Zaman bölümündeki dataları tıklayınız.',
 'filehist-current'          => 'Şindiki',
@@ -566,8 +560,6 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'linkstoimage'              => 'Bu fayla baalantısı olan sayfalar:',
 'nolinkstoimage'            => 'Yok sayfalar ani bu fayla baalı.',
 'sharedupload'              => 'Bu fayl üklendi ortak kullanmak erinä hem var nicä kullanılsın übür proektlärdä.',
-'noimage'                   => 'Bu adda fayl yok. Siz $1.',
-'noimage-linktext'          => 'var nicä üklemää',
 'uploadnewversion-linktext' => 'Eni fayl ükle',
 
 # MIME search
@@ -617,14 +609,12 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'mostcategories'          => 'En çok kategoriyalı sayfalar',
 'mostimages'              => 'En çok kullanılan pätretler',
 'mostrevisions'           => 'Yapraklar ani en çok diiştirildi',
-'allpages'                => 'Hepsi sayfalar',
 'prefixindex'             => 'Prefiks indeks',
 'shortpages'              => 'Kısa sayfalar',
 'longpages'               => 'Uzun sayfalar',
 'deadendpages'            => 'Başka sayfalara baalantısız sayfalar',
 'protectedpages'          => 'Korunma altındaki sayfalar',
 'listusers'               => 'Kullanıcı listası',
-'specialpages'            => 'Maasus sayfalar',
 'newpages'                => 'Eni sayfalar',
 'ancientpages'            => 'En bitki diişmäk datası en eski olan yazılar',
 'move'                    => 'Aadını diiştir',
@@ -633,16 +623,15 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 # Book sources
 'booksources' => 'Kaynak kiyatlar',
 
-'alphaindexline' => '$1den $2e',
-'version'        => 'Versiya',
-
 # Special:Log
 'specialloguserlabel'  => 'Kullanıcı:',
 'speciallogtitlelabel' => 'Yazı adı:',
 'log'                  => 'Jurnallar',
 'all-logs-page'        => 'Hepsi jurnallar',
 
-# Special:Allpages
+# Special:AllPages
+'allpages'       => 'Hepsi sayfalar',
+'alphaindexline' => '$1den $2e',
 'nextpage'       => 'Geeriki sayfa ($1)',
 'prevpage'       => 'İlerki sayfa ($1)',
 'allpagesfrom'   => 'Listaya düzmää başlanılacêk bukvalar:',
@@ -650,60 +639,64 @@ Nışannar: (bitki) = şindiki versiyalan aradaki fark,
 'allpagessubmit' => 'Git',
 'allpagesprefix' => 'Gösterin sayfaları angıları çekeder bukvalarlan ani buraya yazdınız:',
 
+# Special:Categories
+'categories' => 'Kategoriyalar',
+
 # E-mail user
 'emailuser' => 'Gönder bu kullanıcıya bir e-mail',
 
 # Watchlist
-'watchlist'            => 'Bakmaa listam',
-'mywatchlist'          => 'Bakmaa listam',
-'watchlistfor'         => "('''$1''' için)",
-'addedwatch'           => 'Bakmaa listasına registrat edildi.',
-'addedwatchtext'       => '"<nowiki>$1</nowiki>" adlı sayfa [[Special:Watchlist|bakmaa listanıza]] registrat olundu.
+'watchlist'         => 'Bakmaa listam',
+'mywatchlist'       => 'Bakmaa listam',
+'watchlistfor'      => "('''$1''' için)",
+'addedwatch'        => 'Bakmaa listasına registrat edildi.',
+'addedwatchtext'    => '"<nowiki>$1</nowiki>" adlı sayfa [[Special:Watchlist|bakmaa listanıza]] registrat olundu.
 
 Gelecektä, bu sayfaya hem ilgili konuşmaa sayfasına yapılacêk diişmäkler burada yazılacêk.
 
-[[Special:Recentchanges|Bitki diişmäkler listası]] başlıı altında yazılacêk kalın bukvalarnan neçin ki kolayca seçilsin.
+[[Special:RecentChanges|Bitki diişmäkler listası]] başlıı altında yazılacêk kalın bukvalarnan neçin ki kolayca seçilsin.
 
 Ne zaman neetlendiniz sayfayı bakmaa listasınnan çıkarmaa tuşlayın "sayfaya bakmaa durgun" baalantısına.',
-'removedwatch'         => 'Bakmaa listanızdan silindi',
-'removedwatchtext'     => '"<nowiki>$1</nowiki>" yapraı siir listanızdan silindi.',
-'watch'                => 'Bak',
-'watchthispage'        => 'Bak bu sayfaya',
-'unwatch'              => 'Durgun sayfa izlemää',
-'watchlist-details'    => 'Diil konuşmaa sayfaları $1 sayfa bakmaa listanızda.',
-'wlshowlast'           => 'Bitki $1 saati $2 günü göster $3',
-'watchlist-hide-bots'  => 'Bot diişmäklerini sakla',
-'watchlist-hide-own'   => 'Benim diişmäklerimi sakla',
-'watchlist-hide-minor' => 'Küçük diişmäkleri sakla',
+'removedwatch'      => 'Bakmaa listanızdan silindi',
+'removedwatchtext'  => '"[[:$1]]" yapraı siir listanızdan silindi.',
+'watch'             => 'Bak',
+'watchthispage'     => 'Bak bu sayfaya',
+'unwatch'           => 'Durgun sayfa izlemää',
+'watchlist-details' => 'Diil konuşmaa sayfaları $1 sayfa bakmaa listanızda.',
+'wlshowlast'        => 'Bitki $1 saati $2 günü göster $3',
 
-# Displayed when you click the "watch" button and it's in the process of watching
+# Displayed when you click the "watch" button and it is in the process of watching
 'watching'   => 'Bakılêr...',
 'unwatching' => 'Durgundurulêr...',
 
-# Delete/protect/revert
-'deletepage'                  => 'Sayfayı sil',
-'historywarning'              => 'Bak: O sayfa angısını isteersiniz silmää istoriyası var:',
-'confirmdeletetext'           => 'Bu sayfayı yaki faylı silersiniz hepsi istoriyasılan bilä.
+# Delete
+'deletepage'            => 'Sayfayı sil',
+'historywarning'        => 'Bak: O sayfa angısını isteersiniz silmää istoriyası var:',
+'confirmdeletetext'     => 'Bu sayfayı yaki faylı silersiniz hepsi istoriyasılan bilä.
 Lütfen doorulayın ani siz neetlenersiniz bunu yapmaa, annêêrsiniz onun rezultatlarını hem inanêrsiniz ani bu [[{{MediaWiki:Policy-url}}|Silmää kanonnarına]] uyêr.',
-'actioncomplete'              => 'İşlik tamannandı.',
-'deletedtext'                 => '"<nowiki>$1</nowiki>" silindi.
+'actioncomplete'        => 'İşlik tamannandı.',
+'deletedtext'           => '"<nowiki>$1</nowiki>" silindi.
 Yakın zamanda silinenleri görmää deyni: $2.',
-'deletedarticle'              => '"$1" silindi',
-'dellogpage'                  => 'Silmää jurnalı',
-'deletecomment'               => 'Silmää sebep',
-'deleteotherreason'           => 'Başka/ek sebep:',
-'deletereasonotherlist'       => 'Başka sebep',
-'rollbacklink'                => 'eski halinä dön',
+'deletedarticle'        => '"$1" silindi',
+'dellogpage'            => 'Silmää jurnalı',
+'deletecomment'         => 'Sebep',
+'deleteotherreason'     => 'Başka/ek sebep:',
+'deletereasonotherlist' => 'Başka sebep',
+
+# Rollback
+'rollbacklink' => 'eski halinä dön',
+
+# Protect
 'protectlogpage'              => 'Korunmak jurnalı',
-'confirmprotect'              => 'Korunmaa doorula',
-'protectcomment'              => 'Korunma altına almaa sebep:',
+'prot_1movedto2'              => '[[$1]] sayfasın eni adı: [[$2]]',
+'protect-legend'              => 'Korunmaa doorula',
+'protectcomment'              => 'Sebep',
 'protectexpiry'               => 'Bitmää datası:',
 'protect_expiry_invalid'      => 'Yannış bitmää datası.',
 'protect_expiry_old'          => 'Bitmää datası geçti.',
-'protect-unchain'             => 'Taşıma kilidini kaldır',
 'protect-text'                => 'Var nicä görmää hem diiştirmää buradan [[$1]] sayfasın korunmaa düzeyini.',
-'protect-locked-access'       => 'Sizin esapın yok izni yazının korunmak düzeyini diiştirmää.
-Burada bitki seçimner <strong>$1</strong> yazı diiştirmää deyni:',
+'protect-locked-access'       => "Sizin esapın yok izni yazının korunmak düzeyini diiştirmää.
+Burada bitki seçimner '''$1''' yazı diiştirmää deyni:",
 'protect-cascadeon'           => 'Bu sayfa şindi korunêr onuştan ani girer {{PLURAL:$1|aşaadaki sayfaa, angısına|||aşaadaki sayfalara, angılarına}} konuldu kaskad korunmak. Sizä yakışêr diiştirin bu sayfanın korunmak düzeyin, ama bu etkilemez kaskad korunmaa.',
 'protect-default'             => '(standart)',
 'protect-fallback'            => ' "$1" izin iste',
@@ -713,6 +706,7 @@ Burada bitki seçimner <strong>$1</strong> yazı diiştirmää deyni:',
 'protect-expiring'            => 'bitmää datası $1 (UTC)',
 'protect-cascade'             => 'Bu sayfaya girän sayfaları koru (kaskad korunmaa)',
 'protect-cantedit'            => 'Siz bu yazının korunmak düzeyin bilmärsiniz diiştirmää, neçin ki sizin onu düzmää izniniz yok.',
+'protect-expiry-options'      => '1 saat:1 hour,1 day:1 day,1 afta:1 week,1 ay:1 month,3 months:3 months,6 months,6 months,zamansız:infinite',
 'restriction-type'            => 'İzin:',
 'restriction-level'           => 'Yasaklama düzeyi:',
 
@@ -734,11 +728,11 @@ Burada bitki seçimner <strong>$1</strong> yazı diiştirmää deyni:',
 
 'sp-contributions-newbies-sub' => 'Eni kullanıcılara deyni',
 'sp-contributions-blocklog'    => 'Köstek jurnalı',
+'sp-contributions-talk'        => 'Konuşmaa',
 
 # What links here
 'whatlinkshere'       => 'Baalantılar sayfaa',
 'whatlinkshere-title' => '$1 baalantısı olan sayfalar',
-'linklistsub'         => '(Baalantı listası)',
 'linkshere'           => 'Buraya baalantısı var olan sayfalar:',
 'nolinkshere'         => 'Yok buraya baalanan sayfa.',
 'isredirect'          => 'yönnendirmäk sayfası',
@@ -749,7 +743,7 @@ Burada bitki seçimner <strong>$1</strong> yazı diiştirmää deyni:',
 
 # Block/unblock
 'blockip'       => 'Bu kullanıcıya köstek ol',
-'ipboptions'    => '15 minut:15 minutes,1 saat:1 hour,3 saat:3 hours,24 saat:24 hours,48 saat:48 hours,1 afta:1 week,1 ay:1 month,zamansız:infinite', # display1:time1,display2:time2,...
+'ipboptions'    => '15 minut:15 minutes,1 saat:1 hour,3 saat:3 hours,24 saat:24 hours,48 saat:48 hours,1 afta:1 week,1 ay:1 month,zamansız:infinite',
 'ipblocklist'   => 'Köstekli kullanıcılar hem IP adresleri listası',
 'blocklink'     => 'köstek ol',
 'unblocklink'   => 'köstek kaldır',
@@ -758,11 +752,11 @@ Burada bitki seçimner <strong>$1</strong> yazı diiştirmää deyni:',
 'blocklogentry' => '"[[$1]]" $2 durduruldu. Sebep',
 
 # Move page
-'movepage'         => 'Ad diişmäklii',
+'move-page-legend' => 'Ad diişmäklii',
 'movepagetext'     => "Aşaadaki formayı kullanılarak var nicä sayfanın adın diiştirin, onnan bilä hepsi diiştirmää jurnalı eni ada aktarılacêk.
 Eski ad eni ada yönnendirmäk olacêk.
 Eski başlaa baalantılar diişmeycek;
-[[Special:DoubleRedirects|çift]] yaki [[Special:BrokenRedirects|yannış]] yönnendirmäkleri.
+çift yaki yannış yönnendirmäkleri.
 Läazım inanmaa ani baalantılar genä dä gösterer orayı nerä läazım göstersin.
 
 Herliim ilerdän eni adda sayfa vardı, ad diişmää '''yapılmaycêk'''.
@@ -783,14 +777,11 @@ Bu hallerdä läazım kendiniz ellän sayfaları aktarmaa yaki birleştirmää."
 'move-watch'       => 'Bak bu sayfaya',
 'movepagebtn'      => 'Adı diiştir',
 'pagemovedsub'     => 'Ad diişmäk tamannandı.',
-'movepage-moved'   => '<big>"$1" sayfasın eni adı: "$2"</big>', # The two titles are passed in plain text as $3 and $4 to allow additional goodies in the message.
 'articleexists'    => 'Bu adda bir sayfa bulunêr yaki o ad geçersiz angısını seçtiniz.
 Yalvarêrêz başka bir ad seçmää.',
 'talkexists'       => "'''Bu sayfa kendisi başarılan aktarıldı, ama konuşmaa sayfası aktarılamadı neçin ki eni ad altında bulunêr taa birisi. Yalvarêrêz onnarı ellän birleştirmää.'''",
 'movedto'          => 'taşındı:',
 'movetalk'         => 'Varsa hem aktar "konuşmaa" sayfasını.',
-'talkpagemoved'    => 'İlgili konuşmaa sayfası da aktarıldı.',
-'talkpagenotmoved' => 'İlgili konuşmaa sayfası <strong>aktarılmadı</strong>.',
 '1movedto2'        => '[[$1]] sayfasın eni adı: [[$2]]',
 'movelogpage'      => 'Ad diişmäk jurnalı',
 'movereason'       => 'Sebep',
@@ -833,7 +824,6 @@ Yalvarêrêz başka bir ad seçmää.',
 'tooltip-n-recentchanges'         => 'Bitki diişmäklär listası angıları Vikidä yapıldı.',
 'tooltip-n-randompage'            => 'Razgele bir yazıya gidin',
 'tooltip-n-help'                  => 'Yardım almaa deyni',
-'tooltip-n-sitesupport'           => 'Material destek',
 'tooltip-t-whatlinkshere'         => 'Başka viki sayfaların listası angıları bu sayfaa baalantı verdi',
 'tooltip-t-contributions'         => 'Kullanıcının katılmak listasını gör',
 'tooltip-t-emailuser'             => 'Bu kullanıcı için e-mail gönder',
@@ -852,12 +842,6 @@ Yalvarêrêz başka bir ad seçmää.',
 'tooltip-compareselectedversions' => 'Seçilmiş iki versiya arasındaki farkları göster.',
 'tooltip-watch'                   => 'Sayfayı bakmaa listana ekle',
 
-# Spam protection
-'subcategorycount'       => 'Bu kategoriyada var $1 alt kategoriya.',
-'categoryarticlecount'   => 'Bu kategoriyada $1 yazı var.',
-'category-media-count'   => 'Bu kategoriyada {{PLURAL:$1|bir|$1 fayl}} var.',
-'listingcontinuesabbrev' => '(devam)',
-
 # Browsing diffs
 'previousdiff' => '← İlerki versiyalan aradaki fark',
 'nextdiff'     => 'Geerki versiyalan aradaki fark →',
@@ -869,7 +853,7 @@ Yalvarêrêz başka bir ad seçmää.',
 'show-big-image'       => 'Taman aydınnık',
 'show-big-image-thumb' => '<small>Ön siir ölçüsü: $1 × $2 piksel</small>',
 
-# Special:Newimages
+# Special:NewFiles
 'newimages' => 'Eni pätretler',
 
 # Bad image list
@@ -889,11 +873,12 @@ Sadä listadaki êlementlarä (* nışannan çekedän liniyalar) bakılacêk. Li
 * datetimeoriginal
 * exposuretime
 * fnumber
-* focallength', # Do not translate list items
+* isospeedratings
+* focallength',
 
 # External editor support
 'edit-externally'      => 'Kompyuterinizdäki uygulamaklarlan faylı düz',
-'edit-externally-help' => 'Taa çok bilgi için var nicä bakmaa metadaki [http://meta.wikimedia.org/wiki/Help:External_editors dış uygulama instrumentläri] (angliyça) sayfasına.',
+'edit-externally-help' => 'Taa çok bilgi için var nicä bakmaa metadaki [http://www.mediawiki.org/wiki/Manual:External_editors dış uygulama instrumentläri] (angliyça) sayfasına.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'Hepsini göster',
@@ -904,5 +889,11 @@ Sadä listadaki êlementlarä (* nışannan çekedän liniyalar) bakılacêk. Li
 'watchlisttools-view' => 'İlgili diişmäkleri göster',
 'watchlisttools-edit' => 'Siir listasını gör hem düzelt',
 'watchlisttools-raw'  => 'Ham siir listasını düz',
+
+# Special:Version
+'version' => 'Versiya',
+
+# Special:SpecialPages
+'specialpages' => 'Maasus sayfalar',
 
 );

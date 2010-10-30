@@ -22,68 +22,65 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ("ApiBase.php");
+	require_once ( "ApiBase.php" );
 }
 
 /**
  * API module that facilitates the unblocking of users. Requires API write mode
  * to be enabled.
  *
- * @addtogroup API
+ * @ingroup API
  */
 class ApiUnblock extends ApiBase {
 
-	public function __construct($main, $action) {
-		parent :: __construct($main, $action);
+	public function __construct( $main, $action ) {
+		parent :: __construct( $main, $action );
 	}
 
 	/**
 	 * Unblocks the specified user or provides the reason the unblock failed.
-	 */	
+	 */
 	public function execute() {
 		global $wgUser;
-		$this->getMain()->requestWriteMode();
 		$params = $this->extractRequestParams();
 
-		if($params['gettoken'])
+		if ( $params['gettoken'] )
 		{
 			$res['unblocktoken'] = $wgUser->editToken();
-			$this->getResult()->addValue(null, $this->getModuleName(), $res);
+			$this->getResult()->addValue( null, $this->getModuleName(), $res );
 			return;
 		}
 
-		if(is_null($params['id']) && is_null($params['user']))
-			$this->dieUsageMsg(array('unblock-notarget'));
-		if(!is_null($params['id']) && !is_null($params['user']))
-			$this->dieUsageMsg(array('unblock-idanduser'));
-		if(is_null($params['token']))
-			$this->dieUsageMsg(array('missingparam', 'token'));
-		if(!$wgUser->matchEditToken($params['token']))
-			$this->dieUsageMsg(array('sessionfailure'));
-		if(!$wgUser->isAllowed('block'))
-			$this->dieUsageMsg(array('cantunblock'));
-		if(wfReadOnly())
-			$this->dieUsageMsg(array('readonlytext'));
+		if ( is_null( $params['id'] ) && is_null( $params['user'] ) )
+			$this->dieUsageMsg( array( 'unblock-notarget' ) );
+		if ( !is_null( $params['id'] ) && !is_null( $params['user'] ) )
+			$this->dieUsageMsg( array( 'unblock-idanduser' ) );
+
+		if ( !$wgUser->isAllowed( 'block' ) )
+			$this->dieUsageMsg( array( 'cantunblock' ) );
 
 		$id = $params['id'];
 		$user = $params['user'];
-		$reason = (is_null($params['reason']) ? '' : $params['reason']);
-		$dbw = wfGetDb(DB_MASTER);
-		$dbw->begin();
-		$retval = IPUnblockForm::doUnblock($id, $user, $reason, $range);
-		if(!empty($retval))
-			$this->dieUsageMsg($retval);
+		$reason = ( is_null( $params['reason'] ) ? '' : $params['reason'] );
+		$retval = IPUnblockForm::doUnblock( $id, $user, $reason, $range );
+		if ( $retval )
+			$this->dieUsageMsg( $retval );
 
-		$dbw->commit();
-		$res['id'] = $id;
+		$res['id'] = intval( $id );
 		$res['user'] = $user;
 		$res['reason'] = $reason;
-		$this->getResult()->addValue(null, $this->getModuleName(), $res);
+		$this->getResult()->addValue( null, $this->getModuleName(), $res );
 	}
-	
-	public function mustBePosted() { return true; }
+
+	public function mustBePosted() {
+		return true;
+	}
+
+	public function isWriteMode() {
+		return true;
+	}
 
 	public function getAllowedParams() {
 		return array (
@@ -99,7 +96,7 @@ class ApiUnblock extends ApiBase {
 		return array (
 			'id' => 'ID of the block you want to unblock (obtained through list=blocks). Cannot be used together with user',
 			'user' => 'Username, IP address or IP range you want to unblock. Cannot be used together with id',
-			'token' => 'An unblock token previously obtained through the gettoken parameter',
+			'token' => 'An unblock token previously obtained through the gettoken parameter or prop=info',
 			'gettoken' => 'If set, an unblock token will be returned, and no other action will be taken',
 			'reason' => 'Reason for unblock (optional)',
 		);
@@ -110,6 +107,18 @@ class ApiUnblock extends ApiBase {
 			'Unblock a user.'
 		);
 	}
+	
+    public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'unblock-notarget' ),
+			array( 'unblock-idanduser' ),
+			array( 'cantunblock' ),
+        ) );
+	}
+	
+	public function getTokenSalt() {
+		return '';
+	}
 
 	protected function getExamples() {
 		return array (
@@ -119,6 +128,6 @@ class ApiUnblock extends ApiBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiUnblock.php 30222 2008-01-28 19:05:26Z catrope $';
+		return __CLASS__ . ': $Id: ApiUnblock.php 62599 2010-02-16 21:59:16Z reedy $';
 	}
 }

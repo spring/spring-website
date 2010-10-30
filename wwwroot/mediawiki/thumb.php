@@ -3,7 +3,8 @@
 /**
  * PHP script to stream out an image thumbnail.
  *
- * @addtogroup Media
+ * @file
+ * @ingroup Media
  */
 define( 'MW_NO_OUTPUT_COMPRESSION', 1 );
 require_once( './includes/WebStart.php' );
@@ -19,6 +20,9 @@ wfLogProfilingData();
 
 function wfThumbMain() {
 	wfProfileIn( __METHOD__ );
+
+	$headers = array();
+
 	// Get input parameters
 	if ( get_magic_quotes_gpc() ) {
 		$params = array_map( 'stripslashes', $_REQUEST );
@@ -39,10 +43,42 @@ function wfThumbMain() {
 	}
 	unset( $params['r'] );
 
+	// Is this a thumb of an archived file?
+	$isOld = (isset( $params['archived'] ) && $params['archived']);
+	unset( $params['archived'] );
+
 	// Some basic input validation
 	$fileName = strtr( $fileName, '\\/', '__' );
 
-	$img = wfLocalFile( $fileName );
+	// Actually fetch the image. Method depends on whether it is archived or not.
+	if( $isOld ) {
+		// Format is <timestamp>!<name>
+		$bits = explode( '!', $fileName, 2 );
+		if( !isset($bits[1]) ) {
+			wfThumbError( 404, wfMsg( 'badtitletext' ) );
+			return;
+		}
+		$title = Title::makeTitleSafe( NS_FILE, $bits[1] );
+		if( is_null($title) ) {
+			wfThumbError( 404, wfMsg( 'badtitletext' ) );
+			return;
+		}
+		$img = RepoGroup::singleton()->getLocalRepo()->newFromArchiveName( $title, $fileName );
+	} else {
+		$img = wfLocalFile( $fileName );
+	}
+
+	// Check permissions if there are read restrictions
+	if ( !in_array( 'read', User::getGroupPermissions( array( '*' ) ), true ) ) {
+		if ( !$img->getTitle()->userCanRead() ) {
+			wfThumbError( 403, 'Access denied. You do not have permission to access ' . 
+				'the source file.' );
+			return;
+		}
+		$headers[] = 'Cache-Control: private';
+		$headers[] = 'Vary: Cookie';
+	}
+
 	if ( !$img ) {
 		wfThumbError( 404, wfMsg( 'badtitletext' ) );
 		return;
@@ -79,7 +115,7 @@ function wfThumbMain() {
 			$thumbPath = $img->getThumbPath( $thumbName );
 
 			if ( is_file( $thumbPath ) ) {
-				wfStreamFile( $thumbPath );
+				wfStreamFile( $thumbPath, $headers );
 				return;
 			}
 		}
@@ -106,7 +142,7 @@ function wfThumbMain() {
 		$errorMsg = wfMsgHtml( 'thumbnail_error', 'Image was not scaled, ' .
 			'is the requested width bigger than the source?' );
 	} else {
-		wfStreamFile( $thumb->getPath() );
+		wfStreamFile( $thumb->getPath(), $headers );
 	}
 	if ( $errorMsg !== false ) {
 		wfThumbError( 500, $errorMsg );
@@ -116,12 +152,23 @@ function wfThumbMain() {
 }
 
 function wfThumbError( $status, $msg ) {
+	global $wgShowHostnames;
 	header( 'Cache-Control: no-cache' );
 	header( 'Content-Type: text/html; charset=utf-8' );
 	if ( $status == 404 ) {
 		header( 'HTTP/1.1 404 Not found' );
+	} elseif ( $status == 403 ) {
+		header( 'HTTP/1.1 403 Forbidden' );
+		header( 'Vary: Cookie' );
 	} else {
 		header( 'HTTP/1.1 500 Internal server error' );
+	}
+	if( $wgShowHostnames ) {
+		$url = htmlspecialchars( @$_SERVER['REQUEST_URI'] );
+		$hostname = htmlspecialchars( wfHostname() );
+		$debug = "<!-- $url -->\n<!-- $hostname -->\n";
+	} else {
+		$debug = "";
 	}
 	echo <<<EOT
 <html><head><title>Error generating thumbnail</title></head>
@@ -130,6 +177,7 @@ function wfThumbError( $status, $msg ) {
 <p>
 $msg
 </p>
+$debug
 </body>
 </html>
 

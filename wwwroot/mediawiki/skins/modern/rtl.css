@@ -20,8 +20,7 @@ div div.thumbcaption {
 	text-align: right;
 }
 
-div.magnify,
-#div.townBox {
+div.magnify {
 	left: auto;
 	right: 0;
 }
@@ -43,17 +42,9 @@ div.tright, div.floatright, table.floatright {
 div.tleft, div.floatleft, table.floatleft {
 	clear: left;
 }
-div.townBox {
-	margin-left: 0;
-	margin-right: 1em;
-}
-div.townBox dl dd {
-	margin-left: 0;
-	margin-right: 1.1em;
-}
 
 /* Fix link icons */
-.external {
+.external, a.feedlink {
 	padding: 0 !important;
 	background: none !important;
 }
@@ -88,11 +79,11 @@ input#wpSave, input#wpDiff {
 }
 
 #userlogin {
-	float: right;
 	margin: 0 0 1em 3em;
 }
-/* Unblock and Ipblocklist links of Special:Blockip */
-p.mw-ipb-conveniencelinks {
+/* Convenience links to edit block, delete and protect reasons */
+p.mw-ipb-conveniencelinks, p.mw-protect-editreasons,
+p.mw-filedelete-editreasons, p.mw-delete-editreasons {
 	float: left;
 }
 
@@ -108,7 +99,7 @@ table.filehistory th {
 	margin: 0 -15em 0 0;
 	float: left;
 }
-	
+
 #mw_content {
 	margin: 0 14em 0 0;
 	border-left: none;
@@ -140,3 +131,33 @@ table.filehistory th {
 	border-right: none;
 	border-left: solid 1px #bbbbbb;
 }
+
+/**
+ * Lists:
+ * The following lines don't have a visible effect on non-Gecko browsers
+ * They fix a problem ith Gecko browsers rendering lists to the right of
+ * left-floated objects in an RTL layout.
+ */
+html > body div#mw_contentholder ul {
+	display: table;
+}
+html > body div#mw_contentholder ul li {
+	margin-right:10px;
+}
+html > body div.pBody ul li {
+	margin-right:4px;
+}
+html > body div#mw_contentholder ul#filetoc {
+	display: block;
+}
+
+/* Special:Allpages styling */
+td.mw-allpages-nav, p.mw-allpages-nav, td.mw-allpages-alphaindexline {
+	text-align: left;
+}
+
+/* Special:Prefixindex styling */
+td#mw-prefixindex-nav-form  {
+	text-align: left;
+}
+

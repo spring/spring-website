@@ -1,4 +1,7 @@
 <?php
+/**
+ * @defgroup JobQueue JobQueue
+ */
 
 if ( !defined( 'MEDIAWIKI' ) ) {
 	die( "This file is part of MediaWiki, it is not a valid entry point\n" );
@@ -6,6 +9,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 /**
  * Class to both describe a background job and handle jobs.
+ *
+ * @ingroup JobQueue
  */
 abstract class Job {
 	var $command,
@@ -37,20 +42,24 @@ abstract class Job {
 	 */
 
 	/**
-	 * Pop a job of a certain type.  This tries less hard than pop() to 
-	 * actually find a job; it may be adversely affected by concurrent job 
+	 * Pop a job of a certain type.  This tries less hard than pop() to
+	 * actually find a job; it may be adversely affected by concurrent job
 	 * runners.
 	 */
-	static function pop_type($type) {
+	static function pop_type( $type ) {
 		wfProfilein( __METHOD__ );
 
 		$dbw = wfGetDB( DB_MASTER );
 
+		$row = $dbw->selectRow(
+			'job',
+			'*',
+			array( 'job_cmd' => $type ),
+			__METHOD__,
+			array( 'LIMIT' => 1 )
+		);
 
-		$row = $dbw->selectRow( 'job', '*', array( 'job_cmd' => $type ), __METHOD__,
-				array( 'LIMIT' => 1 ));
-
-		if ($row === false) {
+		if ( $row === false ) {
 			wfProfileOut( __METHOD__ );
 			return false;
 		}
@@ -59,7 +68,7 @@ abstract class Job {
 		$dbw->delete( 'job', array( 'job_id' => $row->job_id ), __METHOD__ );
 		$affected = $dbw->affectedRows();
 
-		if ($affected == 0) {
+		if ( $affected == 0 ) {
 			wfProfileOut( __METHOD__ );
 			return false;
 		}
@@ -70,7 +79,7 @@ abstract class Job {
 		$job = Job::factory( $row->job_cmd, $title, Job::extractBlob( $row->job_params ), $row->job_id );
 
 		$dbw->delete( 'job', $job->insertFields(), __METHOD__ );
-		$dbw->immediateCommit();
+		$dbw->commit();
 
 		wfProfileOut( __METHOD__ );
 		return $job;
@@ -78,34 +87,35 @@ abstract class Job {
 
 	/**
 	 * Pop a job off the front of the queue
-	 * @static
-	 * @param $offset Number of jobs to skip
+	 *
+	 * @param $offset Integer: Number of jobs to skip
 	 * @return Job or false if there's no jobs
 	 */
-	static function pop($offset=0) {
+	static function pop( $offset = 0 ) {
 		wfProfileIn( __METHOD__ );
 
 		$dbr = wfGetDB( DB_SLAVE );
 
-		/* Get a job from the slave, start with an offset, 
+		/* Get a job from the slave, start with an offset,
 			scan full set afterwards, avoid hitting purged rows
 
-			NB: If random fetch previously was used, offset 
-				will always be ahead of few entries 
+			NB: If random fetch previously was used, offset
+				will always be ahead of few entries
 		*/
 
 		$row = $dbr->selectRow( 'job', '*', "job_id >= ${offset}", __METHOD__,
-			array( 'ORDER BY' => 'job_id', 'LIMIT' => 1 ));
+			array( 'ORDER BY' => 'job_id', 'LIMIT' => 1 ) );
 
 		// Refetching without offset is needed as some of job IDs could have had delayed commits
 		// and have lower IDs than jobs already executed, blame concurrency :)
 		//
-		if ( $row === false) {
-			if ($offset!=0)
+		if ( $row === false ) {
+			if ( $offset != 0 ) {
 				$row = $dbr->selectRow( 'job', '*', '', __METHOD__,
-					array( 'ORDER BY' => 'job_id', 'LIMIT' => 1 ));
+					array( 'ORDER BY' => 'job_id', 'LIMIT' => 1 ) );
+			}
 
-			if ($row === false ) {
+			if ( $row === false ) {
 				wfProfileOut( __METHOD__ );
 				return false;
 			}
@@ -116,13 +126,13 @@ abstract class Job {
 		$dbw = wfGetDB( DB_MASTER );
 		$dbw->delete( 'job', array( 'job_id' => $row->job_id ), __METHOD__ );
 		$affected = $dbw->affectedRows();
-		$dbw->immediateCommit();
+		$dbw->commit();
 
 		if ( !$affected ) {
 			// Failed, someone else beat us to it
 			// Try getting a random row
 			$row = $dbw->selectRow( 'job', array( 'MIN(job_id) as minjob',
-				'MAX(job_id) as maxjob' ), "job_id >= $offset", __METHOD__ );
+				'MAX(job_id) as maxjob' ), '1=1', __METHOD__ );
 			if ( $row === false || is_null( $row->minjob ) || is_null( $row->maxjob ) ) {
 				// No jobs to get
 				wfProfileOut( __METHOD__ );
@@ -130,7 +140,7 @@ abstract class Job {
 			}
 			// Get the random row
 			$row = $dbw->selectRow( 'job', '*',
-				'job_id >= ' . mt_rand( $row->minjob, $row->maxjob ),	__METHOD__ );
+				'job_id >= ' . mt_rand( $row->minjob, $row->maxjob ), __METHOD__ );
 			if ( $row === false ) {
 				// Random job gone before we got the chance to select it
 				// Give up
@@ -140,7 +150,7 @@ abstract class Job {
 			// Delete the random row
 			$dbw->delete( 'job', array( 'job_id' => $row->job_id ), __METHOD__ );
 			$affected = $dbw->affectedRows();
-			$dbw->immediateCommit();
+			$dbw->commit();
 
 			if ( !$affected ) {
 				// Random job gone before we exclusively deleted it
@@ -158,7 +168,10 @@ abstract class Job {
 		$job = Job::factory( $row->job_cmd, $title, Job::extractBlob( $row->job_params ), $row->job_id );
 
 		// Remove any duplicates it may have later in the queue
+		// Deadlock prone section
+		$dbw->begin();
 		$dbw->delete( 'job', $job->insertFields(), __METHOD__ );
+		$dbw->commit();
 
 		wfProfileOut( __METHOD__ );
 		return $job;
@@ -167,10 +180,10 @@ abstract class Job {
 	/**
 	 * Create the appropriate object to handle a specific job
 	 *
-	 * @param string $command Job command
-	 * @param Title $title Associated title
-	 * @param array $params Job parameters
-	 * @param int $id Job identifier
+	 * @param $command String: Job command
+	 * @param $title Title: Associated title
+	 * @param $params Array: Job parameters
+	 * @param $id Int: Job identifier
 	 * @return Job
 	 */
 	static function factory( $command, $title, $params = false, $id = 0 ) {
@@ -181,7 +194,7 @@ abstract class Job {
 		}
 		throw new MWException( "Invalid job command `{$command}`" );
 	}
-		
+
 	static function makeBlob( $params ) {
 		if ( $params !== false ) {
 			return serialize( $params );
@@ -208,12 +221,23 @@ abstract class Job {
 	 * @param $jobs array of Job objects
 	 */
 	static function batchInsert( $jobs ) {
-		if( count( $jobs ) ) {
-			$dbw = wfGetDB( DB_MASTER );
-			$dbw->begin();
-			foreach( $jobs as $job ) {
-				$rows[] = $job->insertFields();
+		if( !count( $jobs ) ) {
+			return;
+		}
+		$dbw = wfGetDB( DB_MASTER );
+		$rows = array();
+		foreach( $jobs as $job ) {
+			$rows[] = $job->insertFields();
+			if ( count( $rows ) >= 50 ) {
+				# Do a small transaction to avoid slave lag
+				$dbw->begin();
+				$dbw->insert( 'job', $rows, __METHOD__, 'IGNORE' );
+				$dbw->commit();
+				$rows = array();
 			}
+		}
+		if ( $rows ) {
+			$dbw->begin();
 			$dbw->insert( 'job', $rows, __METHOD__, 'IGNORE' );
 			$dbw->commit();
 		}
@@ -248,12 +272,13 @@ abstract class Job {
 				return;
 			}
 		}
-		$fields['job_id'] = $dbw->nextSequenceValue( 'job_job_id_seq' );
 		$dbw->insert( 'job', $fields, __METHOD__ );
 	}
 
 	protected function insertFields() {
+		$dbw = wfGetDB( DB_MASTER );
 		return array(
+			'job_id' => $dbw->nextSequenceValue( 'job_job_id_seq' ),
 			'job_cmd' => $this->command,
 			'job_namespace' => $this->title->getNamespace(),
 			'job_title' => $this->title->getDBkey(),
@@ -283,9 +308,11 @@ abstract class Job {
 		}
 	}
 
+	protected function setLastError( $error ) {
+		$this->error = $error;
+	}
+
 	function getLastError() {
 		return $this->error;
 	}
 }
-
-

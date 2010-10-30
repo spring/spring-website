@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This class checks if user can get extra rights
  * because of conditions specified in $wgAutopromote
@@ -8,7 +7,7 @@ class Autopromote {
 	/**
 	 * Get the groups for the given user based on $wgAutopromote.
 	 *
-	 * @param User $user The user to get the groups for
+	 * @param $user The user to get the groups for
 	 * @return array Array of groups to promote to.
 	 */
 	public static function getAutopromoteGroups( User $user ) {
@@ -18,6 +17,9 @@ class Autopromote {
 			if( self::recCheckCondition( $cond, $user ) )
 				$promote[] = $group;
 		}
+
+		wfRunHooks( 'GetAutoPromoteGroups', array( $user, &$promote ) );
+
 		return $promote;
 	}
 
@@ -33,12 +35,12 @@ class Autopromote {
 	 * This function evaluates the former type recursively, and passes off to
 	 * self::checkCondition for evaluation of the latter type.
 	 *
-	 * @param mixed $cond A condition, possibly containing other conditions
-	 * @param User  $user The user to check the conditions against
+	 * @param $cond Mixed: a condition, possibly containing other conditions
+	 * @param $user The user to check the conditions against
 	 * @return bool Whether the condition is true
 	 */
 	private static function recCheckCondition( $cond, User $user ) {
-		$validOps = array( '&', '|', '^' );
+		$validOps = array( '&', '|', '^', '!' );
 		if( is_array( $cond ) && count( $cond ) >= 2 && in_array( $cond[0], $validOps ) ) {
 			# Recursive condition
 			if( $cond[0] == '&' ) {
@@ -47,7 +49,7 @@ class Autopromote {
 						return false;
 				return true;
 			} elseif( $cond[0] == '|' ) {
-				foreach( array_slice( $cond, 1 ) as $subcond ) 
+				foreach( array_slice( $cond, 1 ) as $subcond )
 					if( self::recCheckCondition( $subcond, $user ) )
 						return true;
 				return false;
@@ -60,6 +62,11 @@ class Autopromote {
 						$res = ($res xor self::recCheckCondition( $subcond, $user ));
 				}
 				return $res;
+			} elseif ( $cond[0] = '!' ) {
+				foreach( array_slice( $cond, 1 ) as $subcond )
+					if( self::recCheckCondition( $subcond, $user ) )
+						return false;
+				return true;
 			}
 		}
 		# If we got here, the array presumably does not contain other condi-
@@ -75,8 +82,8 @@ class Autopromote {
 	 * APCOND_AGE.  Other types will throw an exception if no extension evalu-
 	 * ates them.
 	 *
-	 * @param array $cond A condition, which must not contain other conditions
-	 * @param User  $user The user to check the condition against
+	 * @param $cond Array: A condition, which must not contain other conditions
+	 * @param $user The user to check the condition against
 	 * @return bool Whether the condition is true for the user
 	 */
 	private static function checkCondition( $cond, User $user ) {
@@ -87,7 +94,7 @@ class Autopromote {
 				if( User::isValidEmailAddr( $user->getEmail() ) ) {
 					global $wgEmailAuthentication;
 					if( $wgEmailAuthentication ) {
-						return $user->getEmailAuthenticationTimestamp() ? true : false;
+						return (bool)$user->getEmailAuthenticationTimestamp();
 					} else {
 						return true;
 					}
@@ -98,9 +105,18 @@ class Autopromote {
 			case APCOND_AGE:
 				$age = time() - wfTimestampOrNull( TS_UNIX, $user->getRegistration() );
 				return $age >= $cond[1];
+			case APCOND_AGE_FROM_EDIT:
+				$age = time() - wfTimestampOrNull( TS_UNIX, $user->getFirstEditTimestamp() );
+				return $age >= $cond[1];
 			case APCOND_INGROUPS:
 				$groups = array_slice( $cond, 1 );
 				return count( array_intersect( $groups, $user->getGroups() ) ) == count( $groups );
+			case APCOND_ISIP:
+				return $cond[1] == wfGetIP();
+			case APCOND_IPINRANGE:
+				return IP::isInRange( wfGetIP(), $cond[1] );
+			case APCOND_BLOCKED:
+				return $user->isBlocked();
 			default:
 				$result = null;
 				wfRunHooks( 'AutopromoteCondition', array( $cond[0], array_slice( $cond, 1 ), $user, &$result ) );

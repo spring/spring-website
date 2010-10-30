@@ -1,36 +1,35 @@
 <?php
 /** West-Vlams (West-Vlams)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
- * @author SPQRobin
- * @author Siebrand
- * @author לערי ריינהארט
  * @author Tbc
+ * @author לערי ריינהארט
  */
 
 $fallback = 'nl';
 
 $namespaceNames = array(
-	NS_MEDIA          => 'Media',
-	NS_SPECIAL        => 'Specioal',
-	NS_MAIN           => '',
-	NS_TALK           => 'Discuusje',
-	NS_USER           => 'Gebruker',
-	NS_USER_TALK      => 'Discuusje_gebruker',
-	# NS_PROJECT set by $wgMetaNamespace
-	NS_PROJECT_TALK   => 'Discuusje_$1',
-	NS_IMAGE          => 'Ofbeeldienge',
-	NS_IMAGE_TALK     => 'Discuusje_ofbeeldienge',
-	NS_MEDIAWIKI      => 'MediaWiki',
-	NS_MEDIAWIKI_TALK => 'Discuusje_MediaWiki',
-	NS_TEMPLATE       => 'Patrôon',
-	NS_TEMPLATE_TALK  => 'Discuusje_patrôon',
-	NS_HELP           => 'Ulpe',
-	NS_HELP_TALK      => 'Discuusje_ulpe',
-	NS_CATEGORY       => 'Categorie',
-	NS_CATEGORY_TALK  => 'Discuusje_categorie',
+	NS_MEDIA            => 'Media',
+	NS_SPECIAL          => 'Specioal',
+	NS_TALK             => 'Discuusje',
+	NS_USER             => 'Gebruker',
+	NS_USER_TALK        => 'Discuusje_gebruker',
+	NS_PROJECT_TALK     => 'Discuusje_$1',
+	NS_FILE             => 'Ofbeeldienge',
+	NS_FILE_TALK        => 'Discuusje_ofbeeldienge',
+	NS_MEDIAWIKI        => 'MediaWiki',
+	NS_MEDIAWIKI_TALK   => 'Discuusje_MediaWiki',
+	NS_TEMPLATE         => 'Patrôon',
+	NS_TEMPLATE_TALK    => 'Discuusje_patrôon',
+	NS_HELP             => 'Ulpe',
+	NS_HELP_TALK        => 'Discuusje_ulpe',
+	NS_CATEGORY         => 'Categorie',
+	NS_CATEGORY_TALK    => 'Discuusje_categorie',
 );
 
 $messages = array(
@@ -71,12 +70,16 @@ $messages = array(
 'newpages'          => 'Nieuwe bloadn',
 'newpages-username' => 'Gebrukersnoame:',
 
+# Special:Log/newusers
+'newuserlogpage'          => 'Logboek nieuwe gebrukers',
+'newuserlog-create-entry' => 'Nieuwe gebruker',
+
 # Watchlist
 'mywatchlist' => 'Myn volglyste',
 'watch'       => 'Volgn',
 'unwatch'     => 'Nie volgn',
 
-# Displayed when you click the "watch" button and it's in the process of watching
+# Displayed when you click the "watch" button and it is in the process of watching
 'unwatching' => 'Stoppn me volgn...',
 
 # Undelete
@@ -97,7 +100,7 @@ $messages = array(
 # Tooltip help for the actions
 'tooltip-n-mainpage' => "Noar 't voorblad goane",
 
-# Special:Newimages
+# Special:NewFiles
 'newimages' => 'Nieuwe ofbeeldiengn',
 
 );

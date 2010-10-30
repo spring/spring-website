@@ -117,26 +117,6 @@ table.rimage {
     text-align:center;
 }
 
-div.townBox {
-    position:relative;
-    float:right;
-    margin-left:1em;
-    padding:0.3em;
-    width: 200px;
-    overflow: hidden;
-    clear: right;
-}
-div.townBox dl {
-    padding: 0;
-    margin: 0 0 0.3em 0;
-}
-div.townBox dl dt {
-    background: none;
-    margin: 0.4em 0 0 0;
-}
-div.townBox dl dd {
-    margin: 0.1em 0 0 1.1em;
-}
 .portlet {
     border: none;
     float: none;
@@ -195,6 +175,12 @@ input.searchButton {
     padding: 0.5em 0.4em 0.4em 0.4em;
 }
 
+/* feed links */
+a.feedlink {
+	background: url("../common/images/feed-icon.png") center left no-repeat;
+	padding-left: 16px;
+}
+
 textarea {
   width: 100%;
 }
@@ -237,6 +223,7 @@ h1.firstHeading, h2 {
     padding-right: 18px;
 }
 #bodyContent a[href ^="irc://"],
+#bodyContent a.extiw[href ^="irc://"],
 .link-irc {
     background: url("discussionitem_icon.gif")  center right no-repeat;
     padding-right: 18px;
@@ -258,16 +245,8 @@ td.diff-deletedline {
 }
 
 .diffchange { background-color: #FFCDF3; text-decoration: none; }
-.autocomment { color:  grey; }
-#pagehistory span.user {
-    margin-left: 1.4em;
-    margin-right: 0.4em;
-}
-#pagehistory span.minor { font-weight: bold; }
-#pagehistory li.selected {
-    background-color:#f9f9f9;
-    border:1px dashed #aaaaaa;
-}
+#pagehistory li { border: none; }
+
 span.urlexpansion {
   display: none;
 }
@@ -302,13 +281,13 @@ div.thumb {
     margin-bottom: 0.5em;
     width: auto;
 }
-div.thumb div {
+div.thumbinner {
     padding: 3px !important;
     text-align: center;
     overflow: hidden;
 }
 
-div.thumb div div.thumbcaption {
+html .thumbcaption {
     border: none;
     text-align: left;
     line-height: 1.4;
@@ -347,7 +326,7 @@ a.new,
 li.new {
 	text-decoration: line-through;
 }
-p.catlinks {
+.catlinks {
   text-align: center;
   width: 80%;
   margin-left: auto;
@@ -365,25 +344,11 @@ div.printfooter {
   display: none;
 }
 
-
-#ca-addsection a:before {
-  content: "Add section";
-  font-size: 10pt;
-}
-
-#ca-addsection a {
-  font-size: 0px;
-}
-
 #n-portal,
 #n-currentevents,
 #n-help,
 #n-sitesupport {
   display: none;
-}
-
-span.searchmatch {
-  font-weight: bold;
 }
 
 #preftoc {
@@ -400,12 +365,7 @@ span.searchmatch {
 #preftoc a:active {
     display: block;
 }
-#prefcontrol {
-    clear: both;
-    float: left;
-    margin-top: 1em;
-}
-div.prefsectiontip {
+div.htmlform-tip {
     font-size: 95%;
     margin-top: 1em;
 }
@@ -430,12 +390,3 @@ table.collapsed tr.collapsable {
 
 .templatesUsed { margin-top: 1.5em; }
 
-/* Recreating-deleted-page/reupload file warning and log entries */
-div#mw-upload-deleted-warn ul li,
-div#mw-recreate-deleted-warn ul li {
-	font-size: 95%;
-}
-div.mw-recreate-deleted-control {
-	float: right;
-	font-size: 90%;
-}

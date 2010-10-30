@@ -1,14 +1,15 @@
 <?php
 /** Tswana (Setswana)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
- * @author Hakka
  * @author Cbrown1023
+ * @author Hakka
  */
-
-
 
 $messages = array(
 # Dates
@@ -64,14 +65,14 @@ $messages = array(
 'otherlanguages'   => 'Ka dipuo di sele',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'currentevents' => 'Ditiragalo tsa sešeng',
-'disclaimers'   => 'Tlhapa diatla',
-'edithelp'      => 'Thuso ya go fetola',
-'mainpage'      => 'Tsebe ya konokono',
-'portal'        => 'Patlelo ya setšhaba',
-'portal-url'    => 'Project:Patlelo ya setšhaba',
-'privacy'       => 'Melawana ya sephiri',
-'sitesupport'   => 'Dimpho',
+'currentevents'        => 'Ditiragalo tsa sešeng',
+'disclaimers'          => 'Tlhapa diatla',
+'edithelp'             => 'Thuso ya go fetola',
+'mainpage'             => 'Tsebe ya konokono',
+'mainpage-description' => 'Tsebe ya konokono',
+'portal'               => 'Patlelo ya setšhaba',
+'portal-url'           => 'Project:Patlelo ya setšhaba',
+'privacy'              => 'Melawana ya sephiri',
 
 'youhavenewmessages'      => 'O na le $1 ($2).',
 'newmessageslink'         => 'molaetsa o moša',
@@ -100,11 +101,9 @@ O ipuletse akhaonte. O seka wa lebala go fetola tse o di dikgatlhegelo tsa gago 
 'userlogout'         => 'Tswala',
 'notloggedin'        => 'Ga o a ikwadisa',
 'createaccount'      => 'Ipulela tsebe',
-'youremail'          => 'E-mail:',
-'username'           => 'Leina la modirisi:',
 
 # Edit pages
-'summary'            => 'Tshoboko',
+'summary'            => 'Tshoboko:',
 'minoredit'          => 'Se ke paakanyo e potlana',
 'watchthis'          => 'Lebelela tsebe e',
 'savearticle'        => 'Boloka tsebe',
@@ -118,12 +117,16 @@ O ipuletse akhaonte. O seka wa lebala go fetola tse o di dikgatlhegelo tsa gago 
 
 # Preferences page
 'mypreferences' => 'Dikgatlhegelo tsa me',
+'youremail'     => 'E-mail:',
+'username'      => 'Leina la modirisi:',
 
 # Recent changes
 'recentchanges' => 'Diphetogo tsa sešeng',
 
 # Recent changes linked
-'recentchangeslinked' => 'Diphetogo tse di tsamaelanang',
+'recentchangeslinked'         => 'Diphetogo tse di tsamaelanang',
+'recentchangeslinked-feed'    => 'Diphetogo tse di tsamaelanang',
+'recentchangeslinked-toolbox' => 'Diphetogo tse di tsamaelanang',
 
 # Upload
 'upload'          => 'Tsenya mokwalo o o tswang kwantle',
@@ -134,7 +137,6 @@ O ipuletse akhaonte. O seka wa lebala go fetola tse o di dikgatlhegelo tsa gago 
 'randompage' => 'Tsebe e e sa tlhomamang',
 
 # Miscellaneous special pages
-'specialpages' => 'Diphetogo tse di faphegileng',
 'move'         => 'Suta',
 'movethispage' => 'Sutisa tsebe e',
 
@@ -143,6 +145,9 @@ O ipuletse akhaonte. O seka wa lebala go fetola tse o di dikgatlhegelo tsa gago 
 'watchnologin'  => 'Ga o a ikwadisa',
 'watch'         => 'Lebelela',
 'watchthispage' => 'Lebelela tsebe e',
+
+# Protect
+'prot_1movedto2' => '[[$1]] o sutisediwa kwa go [[$2]]',
 
 # Undelete
 'undelete-search-submit' => 'Senka',
@@ -154,15 +159,18 @@ O ipuletse akhaonte. O seka wa lebala go fetola tse o di dikgatlhegelo tsa gago 
 'whatlinkshere' => 'Ke eng se se gokaganang fa',
 
 # Move page
-'movepage'    => 'Sutisa tsebe',
-'movearticle' => 'Sutisa tsebe:',
-'movenologin' => 'Ga o a ikwadisa',
-'movepagebtn' => 'Sutisa tsebe',
-'movedto'     => 'sutela kwa',
-'1movedto2'   => '[[$1]] o sutisediwa kwa go [[$2]]',
-'movereason'  => 'Lebaka:',
+'move-page-legend' => 'Sutisa tsebe',
+'movearticle'      => 'Sutisa tsebe:',
+'movenologin'      => 'Ga o a ikwadisa',
+'movepagebtn'      => 'Sutisa tsebe',
+'movedto'          => 'sutela kwa',
+'1movedto2'        => '[[$1]] o sutisediwa kwa go [[$2]]',
+'movereason'       => 'Lebaka:',
 
 # Namespace 8 related
 'allmessages' => 'Melaetsa ya maranyane',
+
+# Special:SpecialPages
+'specialpages' => 'Diphetogo tse di faphegileng',
 
 );

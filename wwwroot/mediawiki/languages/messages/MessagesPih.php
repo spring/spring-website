@@ -1,6 +1,9 @@
 <?php
 /** Norfuk / Pitkern (Norfuk / Pitkern)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
@@ -31,18 +34,21 @@ $messages = array(
 'talk'          => 'diskushun',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'currentevents'     => 'Dem Kurent Iwent',
-'currentevents-url' => 'Project:Dem Kurent Iwent',
-'helppage'          => 'Help:Dem Kontent',
-'mainpage'          => 'Mien Paij',
-'portal'            => "Trii'nohlij",
-'sitesupport'       => 'Doenaiishun',
+'currentevents'        => 'Dem Kurent Iwent',
+'currentevents-url'    => 'Project:Dem Kurent Iwent',
+'helppage'             => 'Help:Dem Kontent',
+'mainpage'             => 'Mien Paij',
+'mainpage-description' => 'Mien Paij',
+'portal'               => "Trii'nohlij",
 
 'editold' => 'edet',
 
 # Short words for each namespace, by default used in the namespace tab in monobook
 'nstab-main' => 'Artikal',
 'nstab-help' => 'Hiiwp Paij',
+
+# Search results
+'searchhelp-url' => 'Help:Dem Kontent',
 
 # Preferences page
 'prefs-rc' => 'Dem Riisent Chayng',
@@ -51,7 +57,9 @@ $messages = array(
 'recentchanges' => 'Dem Riisent Chayng',
 
 # Recent changes linked
-'recentchangeslinked' => 'Dem Riilated Chayng',
+'recentchangeslinked'         => 'Dem Riilated Chayng',
+'recentchangeslinked-feed'    => 'Dem Riilated Chayng',
+'recentchangeslinked-toolbox' => 'Dem Riilated Chayng',
 
 # Upload
 'upload' => 'Upload Faail',

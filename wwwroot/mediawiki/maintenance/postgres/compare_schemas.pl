@@ -2,10 +2,14 @@
 
 ## Rough check that the base and postgres "tables.sql" are in sync
 ## Should be run from maintenance/postgres
+## Checks a few other things as well...
 
 use strict;
 use warnings;
 use Data::Dumper;
+use Cwd;
+
+#check_valid_sql();
 
 my @old = ('../tables.sql');
 my $new = 'tables.sql';
@@ -44,7 +48,7 @@ $datatype = qr{($datatype)};
 
 my $typeval = qr{(\(\d+\))?};
 
-my $typeval2 = qr{ unsigned| binary| NOT NULL| NULL| auto_increment| default ['\-\d\w"]+| REFERENCES .+CASCADE};
+my $typeval2 = qr{ signed| unsigned| binary| NOT NULL| NULL| PRIMARY KEY| AUTO_INCREMENT| default ['\-\d\w"]+| REFERENCES .+CASCADE};
 
 my $indextype = join '|' => qw(INDEX KEY FULLTEXT), 'PRIMARY KEY', 'UNIQUE INDEX', 'UNIQUE KEY';
 $indextype = qr{$indextype};
@@ -64,7 +68,7 @@ my ($table,%old);
 my %xinfo;
 for my $xfile (@xfile) {
 	print "Loading $xfile\n";
-	my $info = &parse_sql($xfile);
+	my $info = parse_sql($xfile);
 	for (keys %$info) {
 		$xinfo{$_} = $info->{$_};
 	}
@@ -72,7 +76,7 @@ for my $xfile (@xfile) {
 
 for my $oldfile (@old) {
 	print "Loading $oldfile\n";
-	my $info = &parse_sql($oldfile);
+	my $info = parse_sql($oldfile);
 	for (keys %xinfo) {
 		$info->{$_} = $xinfo{$_};
 	}
@@ -92,13 +96,19 @@ sub parse_sql {
 		chomp;
 
 		if (/CREATE\s*TABLE/i) {
-			m{^CREATE TABLE /\*\$wgDBprefix\*/(\w+) \($}
-				or die qq{Invalid CREATE TABLE at line $. of $oldfile\n};
-			$table = $1;
+			if (m{^CREATE TABLE /\*_\*/(\w+) \($}) {
+				$table = $1;
+			}
+			elsif (m{^CREATE TABLE /\*\$wgDBprefix\*/(\w+) \($}) {
+				$table = $1;
+			}
+			else {
+				die qq{Invalid CREATE TABLE at line $. of $oldfile\n};
+			}
 			$info{$table}{name}=$table;
 		}
-		elsif (m#^\) /\*\$wgDBTableOptions\*/#) {
-			$info{$table}{engine} = 'TYPE';
+		elsif (m{^\) /\*\$wgDBTableOptions\*/}) {
+			$info{$table}{engine} = 'ENGINE';
 			$info{$table}{type} = 'variable';
 		}
 		elsif (/^\) ($engine)=($tabletype);$/) {
@@ -110,21 +120,23 @@ sub parse_sql {
 			$info{$table}{type}=$2;
 			$info{$table}{charset}=$3;
 		}
-		elsif (/^  (\w+) $datatype$typeval$typeval2{0,3},?$/) {
+		elsif (/^  (\w+) $datatype$typeval$typeval2{0,4},?$/) {
 			$info{$table}{column}{$1} = $2;
 			my $extra = $3 || '';
 			$info{$table}{columnfull}{$1} = "$2$extra";
 		}
-		elsif (/^  ($indextype)(?: (\w+))? \(([\w, \(\)]+)\),?$/) {
-			$info{$table}{lc $1.'_name'} = $2 ? $2 : '';
-			$info{$table}{lc $1.'pk_target'} = $3;
+		elsif (m{^  UNIQUE KEY (\w+) \((.+?)\)}) {
+		}
+		elsif (m{^CREATE (?:UNIQUE )?(?:FULLTEXT )?INDEX /\*i\*/(\w+) ON /\*_\*/(\w+) \((.+?)\);}) {
+		}
+		elsif (m{^\s*PRIMARY KEY \([\w,]+\)}) {
 		}
 		else {
 			die "Cannot parse line $. of $oldfile:\n$_\n";
 		}
 
 	}
-	close $oldfh;
+	close $oldfh or die qq{Could not close "$oldfile": $!\n};
 
 	return \%info;
 
@@ -142,23 +154,27 @@ while (<$pfh>) {
 		}
 		next;
 	}
-	$ptable{$1}=2 while /'(\w+)'/g;
+	$ptable{$1}=2 while m{'(\w+)'}g;
 	last if /\);/;
 }
-close $pfh;
+close $pfh or die qq{Could not close "$parsefile": $!\n};
 
 my $OK_NOT_IN_PTABLE = '
+change_tag
 filearchive
 logging
 profiling
 querycache_info
 searchindex
+tag_summary
 trackbacks
 transcache
 user_newtalk
+updatelog
+valid_tag
 ';
 
-## Make sure all tables in main tables.sql are accounted for int the parsertest.
+## Make sure all tables in main tables.sql are accounted for in the parsertest.
 for my $table (sort keys %{$old{'../tables.sql'}}) {
 	$ptable{$table}++;
 	next if $ptable{$table} > 2;
@@ -177,9 +193,7 @@ for my $oldfile (@old) {
 ## MySQL sanity checks
 for my $table (sort keys %{$old{$oldfile}}) {
 	my $t = $old{$oldfile}{$table};
-	if (($oldfile =~ /5/ and $t->{engine} ne 'ENGINE')
-		or
-		($oldfile !~ /5/ and $t->{engine} ne 'TYPE')) {
+	if ($t->{engine} eq 'TYPE') {
 		die "Invalid engine for $oldfile: $t->{engine}\n" unless $t->{name} eq 'profiling';
 	}
 	my $charset = $t->{charset} || '';
@@ -246,6 +260,9 @@ while (<$newfh>) {
 		}
 		$lastcomma = $3 ? 1 : 0;
 	}
+	elsif (m{^\s*PRIMARY KEY \([\w,]+\)}) {
+		$lastcomma = 0;
+	}
 	else {
 		die "Cannot parse line $. of $new:\n$_\n";
 	}
@@ -261,6 +278,7 @@ real NUMERIC
 float NUMERIC
 
 ## TEXT:
+varchar(15) TEXT
 varchar(32) TEXT
 varchar(70) TEXT
 varchar(255) TEXT
@@ -279,7 +297,7 @@ timestamp TIMESTAMPTZ
 mediumblob BYTEA
 
 ## OTHER:
-bool CHAR # Sigh
+bool SMALLINT # Sigh
 
 };
 ## Allow specific exceptions to the above
@@ -289,7 +307,8 @@ ar_comment      tinyblob       TEXT
 fa_description  tinyblob       TEXT
 img_description tinyblob       TEXT
 ipb_reason      tinyblob       TEXT
-log_action      varbinary(10)  TEXT
+log_action      varbinary(32)  TEXT
+log_type        varbinary(32)  TEXT
 oi_description  tinyblob       TEXT
 rev_comment     tinyblob       TEXT
 rc_log_action   varbinary(255) TEXT
@@ -297,6 +316,7 @@ rc_log_type     varbinary(255) TEXT
 
 ## Simple text-only strings:
 ar_flags          tinyblob       TEXT
+ct_params         blob           TEXT
 fa_minor_mime     varbinary(32)  TEXT
 fa_storage_group  varbinary(16)  TEXT # Just 'deleted' for now, should stay plain text
 fa_storage_key    varbinary(64)  TEXT # sha1 plus text extension
@@ -304,16 +324,23 @@ ipb_address       tinyblob       TEXT # IP address or username
 ipb_range_end     tinyblob       TEXT # hexadecimal
 ipb_range_start   tinyblob       TEXT # hexadecimal
 img_minor_mime    varbinary(32)  TEXT
+lc_lang           varbinary(32)  TEXT
+lc_value          varbinary(32)  TEXT
+
 img_sha1          varbinary(32)  TEXT
 job_cmd           varbinary(60)  TEXT # Should we limit to 60 as well?
 keyname           varbinary(255) TEXT # No tablename prefix (objectcache)
 ll_lang           varbinary(20)  TEXT # Language code
+lc_value          mediumblob     TEXT
 log_params        blob           TEXT # LF separated list of args
 log_type          varbinary(10)  TEXT
+ls_field          varbinary(32)  TEXT
 oi_minor_mime     varbinary(32)  TEXT
 oi_sha1           varbinary(32)  TEXT
 old_flags         tinyblob       TEXT
 old_text          mediumblob     TEXT
+pp_propname       varbinary(60)  TEXT
+pp_value          blob           TEXT
 page_restrictions tinyblob       TEXT # CSV string
 pf_server         varchar(30)    TEXT
 pr_level          varbinary(60)  TEXT
@@ -324,7 +351,11 @@ qc_type           varbinary(32)  TEXT
 qcc_type          varbinary(32)  TEXT
 qci_type          varbinary(32)  TEXT
 rc_params         blob           TEXT
+rlc_to_blob       blob           TEXT
+ts_tags           blob           TEXT
 ug_group          varbinary(16)  TEXT
+up_property       varbinary(32)  TEXT
+up_value          blob           TEXT
 user_email_token  binary(32)     TEXT
 user_ip           varbinary(40)  TEXT
 user_newpassword  tinyblob       TEXT
@@ -358,32 +389,21 @@ math_inputhash  varbinary(16) BYTEA
 math_outputhash varbinary(16) BYTEA
 
 ## Namespaces: not need for such a high range
-ar_namespace   int SMALLINT
-job_namespace  int SMALLINT
-log_namespace  int SMALLINT
-page_namespace int SMALLINT
-pl_namespace   int SMALLINT
-pt_namespace   int SMALLINT
-qc_namespace   int SMALLINT
-rc_namespace   int SMALLINT
-rd_namespace   int SMALLINT
-tl_namespace   int SMALLINT
-wl_namespace   int SMALLINT
-
-## "Bools"
-ar_minor_edit    tinyint CHAR
-iw_trans         tinyint CHAR
-page_is_new      tinyint CHAR
-page_is_redirect tinyint CHAR
-rc_bot           tinyint CHAR
-rc_deleted       tinyint CHAR
-rc_minor         tinyint CHAR
-rc_new           tinyint CHAR
-rc_patrolled     tinyint CHAR
-rev_deleted      tinyint CHAR
-rev_minor_edit   tinyint CHAR
+ar_namespace     int SMALLINT
+job_namespace    int SMALLINT
+log_namespace    int SMALLINT
+page_namespace   int SMALLINT
+pl_namespace     int SMALLINT
+pt_namespace     int SMALLINT
+qc_namespace     int SMALLINT
+rc_namespace     int SMALLINT
+rd_namespace     int SMALLINT
+rlc_to_namespace int SMALLINT
+tl_namespace     int SMALLINT
+wl_namespace     int SMALLINT
 
 ## Easy enough to change if a wiki ever does grow this big:
+ss_active_users  bigint INTEGER
 ss_good_articles bigint INTEGER
 ss_total_edits   bigint INTEGER
 ss_total_pages   bigint INTEGER
@@ -461,6 +481,92 @@ for (sort keys %new) {
 
 
 } ## end each file to be parsed
+
+
+sub check_valid_sql {
+
+	## Check for a few common problems in most php files
+
+	my $olddir = getcwd();
+	chdir("../..");
+	for my $basedir (qw/includes extensions/) {
+		scan_dir($basedir);
+	}
+	chdir $olddir;
+
+	return;
+
+} ## end of check_valid_sql
+
+
+sub scan_dir {
+
+	my $dir = shift;
+
+	opendir my $dh, $dir or die qq{Could not opendir $dir: $!\n};
+	#print "Scanning $dir...\n";
+	for my $file (grep { -f "$dir/$_" and /\.php$/ } readdir $dh) {
+		find_problems("$dir/$file");
+	}
+	rewinddir $dh;
+	for my $subdir (grep { -d "$dir/$_" and ! /\./ } readdir $dh) {
+		scan_dir("$dir/$subdir");
+	}
+	closedir $dh or die qq{Closedir failed: $!\n};
+	return;
+
+} ## end of scan_dir
+
+sub find_problems {
+
+	my $file = shift;
+	open my $fh, '<', $file or die qq{Could not open "$file": $!\n};
+	my $lastline = '';
+	my $inarray = 0;
+	while (<$fh>) {
+		if (/FORCE INDEX/ and $file !~ /Database\w*\.php/) {
+			warn "Found FORCE INDEX string at line $. of $file\n";
+		}
+		if (/REPLACE INTO/ and $file !~ /Database\w*\.php/) {
+			warn "Found REPLACE INTO string at line $. of $file\n";
+		}
+		if (/\bIF\s*\(/ and $file !~ /DatabaseMySQL\.php/) {
+			warn "Found IF string at line $. of $file\n";
+		}
+		if (/\bCONCAT\b/ and $file !~ /Database\w*\.php/) {
+			warn "Found CONCAT string at line $. of $file\n";
+		}
+		if (/\bGROUP\s+BY\s*\d\b/i and $file !~ /Database\w*\.php/) {
+			warn "Found GROUP BY # at line $. of $file\n";
+		}
+		if (/wfGetDB\s*\(\s+\)/io) {
+			warn "wfGETDB is missing parameters at line $. of $file\n";
+		}
+		if (/=\s*array\s*\(\s*$/) {
+			$inarray = 1;
+			next;
+		}
+		if ($inarray) {
+			if (/\s*\);\s*$/) {
+				$inarray = 0;
+				next;
+			}
+			next if ! /\w/ or /array\(\s*$/ or /^\s*#/ or m{^\s*//};
+			if (! /,/) {
+				my $nextline = <$fh>;
+				last if ! defined $nextline;
+				if ($nextline =~ /^\s*\)[;,]/) {
+					$inarray = 0;
+					next;
+				}
+				#warn "Array is missing a comma? Line $. of $file\n";
+			}
+		}
+	}
+	close $fh or die qq{Could not close "$file": $!\n};
+	return;
+
+} ## end of find_problems
 
 
 __DATA__

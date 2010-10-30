@@ -2,21 +2,29 @@
 /**
  * Walloon (Walon)
  *
- * @addtogroup Language
+ * @ingroup Language
  */
 
 # NOTE: cweri après "NOTE:" po des racsegnes so des ratournaedjes
 # k' i gn a.
 
 class LanguageWa extends Language {
+	/**
+	 * Use singular form for zero
+	 */
+	function convertPlural( $count, $forms ) {
+		if ( !count($forms) ) { return ''; }
+		$forms = $this->preConvertPlural( $forms, 2 );
+
+		return ($count <= 1) ? $forms[0] : $forms[1];
+	}
+
 	###
 	### Dates in Walloon are "1î d' <monthname>" for 1st of the month,
 	### "<day> di <monthname>" for months starting by a consoun, and
 	### "<day> d' <monthname>" for months starting with a vowel
 	###
 	function date( $ts, $adj = false, $format = true, $tc = false ) {
-		global $wgUser;
-
 		if ( $adj ) { $ts = $this->userAdjust( $ts, $tc ); }
 		$datePreference = $this->dateFormat( $format );
 
@@ -27,13 +35,13 @@ class LanguageWa extends Language {
 		       $d = substr($ts, 0, 4). '-' . substr($ts, 4, 2). '-' .substr($ts, 6, 2);
 		       return $d;
 		}
-		
+
 		# dd/mm/YYYY format
 		if ( $datePreference == 'walloon short' ) {
 		       $d = substr($ts, 6, 2). '/' . substr($ts, 4, 2). '/' .substr($ts, 0, 4);
 		       return $d;
 		}
-		
+
 		# Walloon format
 		#
 		# we output this in all other cases
@@ -61,10 +69,8 @@ class LanguageWa extends Language {
 		if ( $datePreference == 'ISO 8601' ) {
 			return parent::timeanddate( $ts, $adj, $format, $tc );
 		} else {
-			return $this->date( $ts, $adj, $format, $tc ) . ' a ' . 
+			return $this->date( $ts, $adj, $format, $tc ) . ' a ' .
 				$this->time( $ts, $adj, $format, $tc );
 		}
 	}
 }
-
-

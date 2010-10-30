@@ -2,16 +2,19 @@
 /**
  * Rebuild interwiki table using the file on meta and the language list
  * Wikimedia specific!
+ *
+ * @file
  * @todo document
- * @addtogroup Maintenance
+ * @ingroup Maintenance
+ * @ingroup Wikimedia
  */
 
 /** */
 $oldCwd = getcwd();
 
 $optionsWithArgs = array( "d" );
-include_once( "commandLine.inc" );
-include_once( "rebuildInterwiki.inc" );
+require_once( dirname(__FILE__) . '/commandLine.inc' );
+require( "rebuildInterwiki.inc" );
 chdir( $oldCwd );
 
 # Output

@@ -57,7 +57,7 @@ let get_preface ()  = "\\nonstopmode\n\\documentclass[12pt]{article}\n" ^
               (if !modules_nonascii then get_encoding !modules_encoding else "") ^
               (if !modules_ams then "\\usepackage{amsmath}\n\\usepackage{amsfonts}\n\\usepackage{amssymb}\n" else "") ^
               (if !modules_color then "\\usepackage[dvips,usenames]{color}\n" else "") ^
-              "\\pagestyle{empty}\n\\begin{document}\n$$\n"
+              "\\usepackage{cancel}\n\\pagestyle{empty}\n\\begin{document}\n$$\n"
 let get_footer  ()  = "\n$$\n\\end{document}\n"
 
 let set_encoding = function
@@ -108,6 +108,10 @@ let find = function
     | "\\nu"               -> LITERAL (HTMLABLEC (FONT_UF,  "\\nu ", "&nu;"))
     | "\\Nu"               -> (tex_use_ams (); LITERAL (HTMLABLEC (FONT_UF,
     "\\mathrm{N}", "&Nu;")))
+    | "\\omicron"          -> (tex_use_ams (); LITERAL (HTMLABLEC (FONT_UF,
+    "\\mathrm{o}", "&omicron;")))
+    | "\\Omicron"          -> (tex_use_ams (); LITERAL (HTMLABLEC (FONT_UF,
+    "\\mathrm{O}", "&Omicron;")))
     | "\\pi"               -> LITERAL (HTMLABLEC (FONT_UF,  "\\pi ", "&pi;"))
     | "\\Pi"               -> LITERAL (HTMLABLEC (FONT_UF, "\\Pi ", "&Pi;"))
     | "\\varpi"            -> LITERAL (TEX_ONLY "\\varpi ")
@@ -408,11 +412,13 @@ let find = function
     | "\\reals"            -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{R}", "<b>R</b>")))
     | "\\Reals"            -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{R}", "<b>R</b>")))
     | "\\R"                -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{R}", "<b>R</b>")))
+    | "\\C"                -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{C}", "<b>C</b>")))
     | "\\cnums"            -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{C}", "<b>C</b>")))
     | "\\Complex"          -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{C}", "<b>C</b>")))
     | "\\Z"                -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{Z}", "<b>Z</b>")))
     | "\\natnums"          -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{N}", "<b>N</b>")))
     | "\\N"                -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{N}", "<b>N</b>")))
+    | "\\Q"                -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\mathbb{Q}", "<b>Q</b>")))
     | "\\lVert"            -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\lVert ", "||")))
     | "\\rVert"            -> (tex_use_ams (); LITERAL (HTMLABLE (FONT_UFH,"\\rVert ", "||")))
     | "\\nmid"             -> (tex_use_ams (); LITERAL (TEX_ONLY "\\nmid "))
@@ -475,7 +481,7 @@ let find = function
     | "\\underbrace"       -> LITERAL (TEX_ONLY "\\underbrace ")
     | "\\overleftarrow"    -> LITERAL (TEX_ONLY "\\overleftarrow ")
     | "\\overrightarrow"   -> LITERAL (TEX_ONLY "\\overrightarrow ")
-    | "\\overleftrightarrow"->LITERAL (TEX_ONLY "\\overleftrightarrow ")
+    | "\\overleftrightarrow"-> (tex_use_ams(); LITERAL (TEX_ONLY "\\overleftrightarrow "))
     | "\\check"            -> FUN_AR1 "\\check "
     | "\\acute"            -> FUN_AR1 "\\acute "
     | "\\grave"            -> FUN_AR1 "\\grave "
@@ -501,6 +507,8 @@ let find = function
     | "\\cfrac"            -> (tex_use_ams (); FUN_AR2h ("\\cfrac ", fun num den -> Html.html_render [num], "<hr style=\"{background: black}\">", Html.html_render [den]))
     | "\\over"             -> FUN_INFIXh ("\\over ", fun num den -> Html.html_render num, "<hr style=\"{background: black}\"/>", Html.html_render den)
     | "\\sqrt"             -> FUN_AR1 "\\sqrt "
+    | "\\cancel"           -> FUN_AR1 "\\cancel "
+    | "\\cancelto"         -> FUN_AR2 "\\cancelto "
     | "\\pmod"             -> FUN_AR1hl ("\\pmod ", ("(mod ", ")"))
     | "\\bmod"             -> FUN_AR1hl ("\\bmod ", ("mod ", ""))
     | "\\emph"             -> FUN_AR1 "\\emph "
@@ -725,4 +733,6 @@ let find = function
     | "\\vbox"             -> raise (Failure "malformatted \\vbox")
     | "\\hbox"             -> raise (Failure "malformatted \\hbox")
     | "\\color"            -> (tex_use_color (); LITERAL (TEX_ONLY "\\color"))
+    | "\\pagecolor"        -> (tex_use_color (); LITERAL (TEX_ONLY "\\pagecolor"))
+    | "\\definecolor"      -> (tex_use_color (); LITERAL (TEX_ONLY "\\definecolor"))
     | s                    -> raise (Illegal_tex_function s)

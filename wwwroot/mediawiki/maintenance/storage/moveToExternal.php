@@ -1,9 +1,15 @@
 <?php
+/**
+ * Move revision's text to external storage
+ *
+ * @file
+ * @ingroup Maintenance ExternalStorage
+ */
 
 define( 'REPORTING_INTERVAL', 1 );
 
 if ( !defined( 'MEDIAWIKI' ) ) {
-	$optionsWithArgs = array( 'm', 's' );
+	$optionsWithArgs = array( 'e', 's' );
 
 	require_once( dirname(__FILE__) . '/../commandLine.inc' );
 	require_once( 'ExternalStoreDB.php' );
@@ -56,7 +62,7 @@ function moveToExternal( $cluster, $maxID, $minID = 1 ) {
 		$res = $dbr->select( 'text', array( 'old_id', 'old_flags', 'old_text' ),
 			array(
 				"old_id BETWEEN $blockStart AND $blockEnd",
-				"old_flags NOT LIKE '%external%'",
+				'old_flags NOT ' . $dbr->buildLike( $dbr->anyString(), 'external', $dbr->anyString() ),
 			), $fname );
 		while ( $row = $dbr->fetchObject( $res ) ) {
 			# Resolve stubs

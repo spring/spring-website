@@ -10,8 +10,8 @@ proper installation.
 
 Certain scripts will require elevated access to the database. In order to
 provide this, first create a MySQL user with "all" permissions on the wiki
-database, and then place their username and password in an AdminSettings.php
-file in the directory above. See AdminSettings.sample for specifics on this.
+database, and then set $wgDBadminuser and $wgDBadminpassword in your
+LocalSettings.php
 
 === Brief explanation of files ===
 
@@ -48,8 +48,11 @@ installations.
 	dumpBackup.php
 	Backup dump script
 
-	dumpHTML.php
-	Produce an HTML dump of a wiki
+	edit.php
+	Edit a page to change its content
+
+	findhooks.php
+	Find hooks that aren't documented in docs/hooks.txt
 
 	importDump.php
 	XML dump importer
@@ -60,6 +63,12 @@ installations.
 	importTextFile.php
 	Import the contents of a text file into a wiki page
 
+	moveBatch.php
+	Move a batch of pages 
+
+	namespaceDupes.php
+	Check articles name to see if they conflict with new/existing namespaces
+
 	nukePage.php
 	Wipe a page and all revisions from the database
 
@@ -69,7 +78,7 @@ installations.
 	rebuildImages.php
 	Update image metadata records
 
-	rebuildMessages.php
+	rebuildmessages.php
 	Update the MediaWiki namespace after changing site language
 
 	rebuildtextindex.php
@@ -84,5 +93,17 @@ installations.
 	runJobs.php
 	Immediately complete all jobs in the job queue
 
+	stats.php
+	Show all statistics stored in the cache
+
+	undelete.php
+	Undelete all revisions of a page
+
 	update.php
 	Check and upgrade the database schema to the current version
+
+	updateRestrictions.php
+	Update pages restriction to the new schema
+
+	userOptions.php
+	Change user options

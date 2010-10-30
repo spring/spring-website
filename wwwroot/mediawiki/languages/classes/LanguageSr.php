@@ -1,19 +1,18 @@
 <?php
-/**
-  * @addtogroup Language
-  */
 
-/*
-	There are two levels of conversion for Serbian: the script level
-	(Cyrillics <-> Latin), and the variant level (ekavian
-	<->iyekavian). The two are orthogonal. So we really only need two
-	dictionaries: one for Cyrillics and Latin, and one for ekavian and
-	iyekavian.
-*/
 require_once( dirname(__FILE__).'/../LanguageConverter.php' );
 require_once( dirname(__FILE__).'/LanguageSr_ec.php' );
 require_once( dirname(__FILE__).'/LanguageSr_el.php' );
 
+/**
+ * There are two levels of conversion for Serbian: the script level
+ * (Cyrillics <-> Latin), and the variant level (ekavian
+ * <->iyekavian). The two are orthogonal. So we really only need two
+ * dictionaries: one for Cyrillics and Latin, and one for ekavian and
+ * iyekavian.
+ *
+ * @ingroup Language
+ */
 class SrConverter extends LanguageConverter {
 	var $mToLatin = array(
 		'а' => 'a', 'б' => 'b',  'в' => 'v', 'г' => 'g',  'д' => 'd',
@@ -54,9 +53,7 @@ class SrConverter extends LanguageConverter {
 	function loadDefaultTables() {
 		$this->mTables = array(
 			'sr-ec' => new ReplacementArray( $this->mToCyrillics ),
-			'sr-jc' => new ReplacementArray( $this->mToCyrillics),
 			'sr-el' => new ReplacementArray( $this->mToLatin),
-			'sr-jl' => new ReplacementArray( $this->mToLatin),
 			'sr'    => new ReplacementArray()
 		);
 	}
@@ -75,27 +72,17 @@ class SrConverter extends LanguageConverter {
 		foreach($this->mVariants as $v) {
 			$carray[$v] = $rule;
 		}
-		
+
 		return $carray;
-	}
-
-	// Do not convert content on talk pages
-	function parserConvert( $text, &$parser ){
-		if(is_object($parser->getTitle() ) && $parser->getTitle()->isTalkPage())
-			$this->mDoContentConvert=false;
-		else 
-			$this->mDoContentConvert=true;
-
-		return parent::parserConvert($text, $parser );
 	}
 
 	/*
 	 * A function wrapper:
-	 *   - if there is no selected variant, leave the link 
+	 *   - if there is no selected variant, leave the link
 	 *     names as they were
 	 *   - do not try to find variants for usernames
 	 */
-	function findVariantLink( &$link, &$nt ) {
+	function findVariantLink( &$link, &$nt, $ignoreOtherCond = false ) {
 		// check for user namespace
 		if(is_object($nt)){
 			$ns = $nt->getNamespace();
@@ -104,7 +91,7 @@ class SrConverter extends LanguageConverter {
 		}
 
 		$oldlink=$link;
-		parent::findVariantLink($link,$nt);
+		parent::findVariantLink( $link, $nt, $ignoreOtherCond );
 		if($this->getPreferredVariant()==$this->mMainLanguageCode)
 			$link=$oldlink;
 	}
@@ -125,12 +112,12 @@ class SrConverter extends LanguageConverter {
 	 */
 	function autoConvert($text, $toVariant=false) {
 		global $wgTitle;
-		if(is_object($wgTitle) && $wgTitle->getNameSpace()==NS_IMAGE){ 
+		if(is_object($wgTitle) && $wgTitle->getNameSpace()==NS_FILE){
 			$imagename = $wgTitle->getNsText();
 			if(preg_match("/^$imagename:/",$text)) return $text;
 		}
 		return parent::autoConvert($text,$toVariant);
-	} 
+	}
 
 	/**
 	 *  It translates text into variant, specials:
@@ -145,7 +132,7 @@ class SrConverter extends LanguageConverter {
 		$reg = '/^'.$roman.'$|^'.$roman.$breaks.'|'.$breaks.$roman.'$|'.$breaks.$roman.$breaks.'/';
 
 		$matches = preg_split($reg, $text, -1, PREG_SPLIT_OFFSET_CAPTURE);
-		
+
 		$m = array_shift($matches);
 		if( !isset( $this->mTables[$toVariant] ) ) {
 			throw new MWException( "Broken variant table: " . implode( ',', array_keys( $this->mTables ) ) );
@@ -160,32 +147,52 @@ class SrConverter extends LanguageConverter {
 
 		return $ret;
 	}
-
 }
 
+/**
+ * @ingroup Language
+ */
 class LanguageSr extends LanguageSr_ec {
 	function __construct() {
 		global $wgHooks;
 
 		parent::__construct();
 
-		// these variants are currently UNUSED:
-		// 'sr-jc', 'sr-jl' 
 		$variants = array('sr', 'sr-ec', 'sr-el');
 		$variantfallbacks = array(
 			'sr'    => 'sr-ec',
 			'sr-ec' => 'sr',
 			'sr-el' => 'sr',
-			); 
+		);
 
-
-		$marker = array();//don't mess with these, leave them as they are
 		$flags = array(
 			'S' => 'S', 'писмо' => 'S', 'pismo' => 'S',
 			'W' => 'W', 'реч'   => 'W', 'reč'   => 'W', 'ријеч' => 'W', 'riječ' => 'W'
 		);
-		$this->mConverter = new SrConverter($this, 'sr', $variants, $variantfallbacks, $marker, $flags);
+		$this->mConverter = new SrConverter($this, 'sr', $variants, $variantfallbacks, $flags);
 		$wgHooks['ArticleSaveComplete'][] = $this->mConverter;
 	}
-}
 
+	function convertPlural( $count, $forms ) {
+		if ( !count($forms) ) { return ''; }
+
+		//if no number with word, then use $form[0] for singular and $form[1] for plural or zero
+		if( count($forms) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
+
+		// FIXME: CLDR defines 4 plural forms. Form with decimals missing.
+		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#ru
+		$forms = $this->preConvertPlural( $forms, 3 );
+
+		if ($count > 10 && floor(($count % 100) / 10) == 1) {
+			return $forms[2];
+		} else {
+			switch ($count % 10) {
+				case 1:  return $forms[0];
+				case 2:
+				case 3:
+				case 4:  return $forms[1];
+				default: return $forms[2];
+			}
+		}
+	}
+}

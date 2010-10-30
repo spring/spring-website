@@ -23,64 +23,108 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ("ApiQueryBase.php");
+	require_once ( "ApiQueryBase.php" );
 }
 
 /**
  * A query module to list all langlinks (links to correspanding foreign language pages).
- * 
- * @addtogroup API
+ *
+ * @ingroup API
  */
 class ApiQueryLangLinks extends ApiQueryBase {
 
-	public function __construct($query, $moduleName) {
-		parent :: __construct($query, $moduleName, 'll');
+	public function __construct( $query, $moduleName ) {
+		parent :: __construct( $query, $moduleName, 'll' );
 	}
 
 	public function execute() {
 		if ( $this->getPageSet()->getGoodTitleCount() == 0 )
 			return;
-	
-		$this->addFields(array (
+
+		$params = $this->extractRequestParams();
+		$this->addFields( array (
 			'll_from',
 			'll_lang',
 			'll_title'
-		));
+		) );
 
-		$this->addTables('langlinks');
-		$this->addWhereFld('ll_from', array_keys($this->getPageSet()->getGoodTitles()));
-		$this->addOption('ORDER BY', "ll_from, ll_lang");
-		$res = $this->select(__METHOD__);
+		$this->addTables( 'langlinks' );
+		$this->addWhereFld( 'll_from', array_keys( $this->getPageSet()->getGoodTitles() ) );
+		if ( !is_null( $params['continue'] ) ) {
+			$cont = explode( '|', $params['continue'] );
+			if ( count( $cont ) != 2 )
+				$this->dieUsage( "Invalid continue param. You should pass the " .
+					"original value returned by the previous query", "_badcontinue" );
+			$llfrom = intval( $cont[0] );
+			$lllang = $this->getDB()->strencode( $cont[1] );
+			$this->addWhere( "ll_from > $llfrom OR " .
+					"(ll_from = $llfrom AND " .
+					"ll_lang >= '$lllang')" );
+		}
 
-		$data = array();
-		$lastId = 0;	// database has no ID 0	
+		// Don't order by ll_from if it's constant in the WHERE clause
+		if ( count( $this->getPageSet()->getGoodTitles() ) == 1 )
+			$this->addOption( 'ORDER BY', 'll_lang' );
+		else
+			$this->addOption( 'ORDER BY', 'll_from, ll_lang' );
+		$this->addOption( 'LIMIT', $params['limit'] + 1 );
+		$res = $this->select( __METHOD__ );
+
+		$count = 0;
 		$db = $this->getDB();
-		while ($row = $db->fetchObject($res)) {
-
-			if ($lastId != $row->ll_from) {
-				if($lastId != 0) {
-					$this->addPageSubItems($lastId, $data);
-					$data = array();
-				}
-				$lastId = $row->ll_from;
+		while ( $row = $db->fetchObject( $res ) ) {
+			if ( ++$count > $params['limit'] ) {
+				// We've reached the one extra which shows that
+				// there are additional pages to be had. Stop here...
+				$this->setContinueEnumParameter( 'continue', "{$row->ll_from}|{$row->ll_lang}" );
+				break;
 			}
-
-			$entry = array('lang'=>$row->ll_lang);
-			ApiResult :: setContent($entry, $row->ll_title);
-			$data[] = $entry;
+			$entry = array( 'lang' => $row->ll_lang );
+			ApiResult :: setContent( $entry, $row->ll_title );
+			$fit = $this->addPageSubItem( $row->ll_from, $entry );
+			if ( !$fit )
+			{
+				$this->setContinueEnumParameter( 'continue', "{$row->ll_from}|{$row->ll_lang}" );
+				break;
+			}
 		}
+		$db->freeResult( $res );
+	}
 
-		if($lastId != 0) {
-			$this->addPageSubItems($lastId, $data);
-		}
+	public function getCacheMode( $params ) {
+		return 'public';
+	}
 
-		$db->freeResult($res);
+	public function getAllowedParams() {
+		return array(
+				'limit' => array(
+					ApiBase :: PARAM_DFLT => 10,
+					ApiBase :: PARAM_TYPE => 'limit',
+					ApiBase :: PARAM_MIN => 1,
+					ApiBase :: PARAM_MAX => ApiBase :: LIMIT_BIG1,
+					ApiBase :: PARAM_MAX2 => ApiBase :: LIMIT_BIG2
+				),
+				'continue' => null,
+		);
+	}
+
+	public function getParamDescription () {
+		return array(
+			'limit' => 'How many langlinks to return',
+			'continue' => 'When more results are available, use this to continue',
+		);
 	}
 
 	public function getDescription() {
 		return 'Returns all interlanguage links from the given page(s)';
+	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => '_badcontinue', 'info' => 'Invalid continue param. You should pass the original value returned by the previous query' ),
+		) );
 	}
 
 	protected function getExamples() {
@@ -91,7 +135,6 @@ class ApiQueryLangLinks extends ApiQueryBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryLangLinks.php 34658 2008-05-12 13:33:18Z btongminh $';
+		return __CLASS__ . ': $Id: ApiQueryLangLinks.php 69932 2010-07-26 08:03:21Z tstarling $';
 	}
 }
-

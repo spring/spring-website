@@ -1,10 +1,12 @@
 <?php
 /** Fijian (Na Vosa Vakaviti)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
- * @author SPQRobin
  */
 
 $messages = array(
@@ -58,9 +60,11 @@ $messages = array(
 'dec'           => 'Tiseba',
 
 'cancel'     => 'Sasamaki',
-'qbedit'     => 'Veisautaki',
 'mytalk'     => 'Noqu vosa',
 'navigation' => 'Vakatasosoko',
+
+# Cologne Blue skin
+'qbedit' => 'Veisautaki',
 
 'help'             => 'Veivuke',
 'search'           => 'Vaqaqara',
@@ -81,12 +85,12 @@ $messages = array(
 'jumptosearch'     => 'Vaqaqara',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'currentevents'     => 'Tukutuku kuruvaki',
-'currentevents-url' => 'Project:Tukutuku kuruvaki',
-'edithelp'          => 'Veivukei',
-'mainpage'          => 'Tabana levu',
-'portal'            => 'Soqosoqo toso',
-'sitesupport'       => 'Soli',
+'currentevents'        => 'Tukutuku kuruvaki',
+'currentevents-url'    => 'Project:Tukutuku kuruvaki',
+'edithelp'             => 'Veivukei',
+'mainpage'             => 'Tabana levu',
+'mainpage-description' => 'Tabana levu',
+'portal'               => 'Soqosoqo toso',
 
 'editsection' => 'Veisautaki',
 'editold'     => 'Veisautaki',
@@ -106,12 +110,9 @@ $messages = array(
 'nologinlink'        => 'Dolava nomu Akaude',
 'createaccount'      => 'Dolava nomu Akaude',
 'gotaccountlink'     => 'Curu mai',
-'youremail'          => 'I vola livaliva *:',
-'username'           => 'Yaca vakayagataki:',
-'email'              => 'I vola livaliva',
 
 # Edit pages
-'summary'      => 'Kena i Soqoni',
+'summary'      => 'Kena i Soqoni:',
 'watchthis'    => 'Vakaraica toka na tabana oqo',
 'savearticle'  => 'Vakabula na tabana oqo',
 'showpreview'  => 'Vakaraitaka na kenai yaloyalo',
@@ -124,12 +125,17 @@ $messages = array(
 # Preferences page
 'mypreferences'     => 'Ulutaga taleitaki',
 'searchresultshead' => 'Vaqaqara',
+'youremail'         => 'I vola livaliva *:',
+'username'          => 'Yaca vakayagataki:',
+'email'             => 'I vola livaliva',
 
 # Recent changes
 'recentchanges' => 'Veisau vovou',
 
 # Recent changes linked
-'recentchangeslinked' => 'Veisau e veiwekani',
+'recentchangeslinked'         => 'Veisau e veiwekani',
+'recentchangeslinked-feed'    => 'Veisau e veiwekani',
+'recentchangeslinked-toolbox' => 'Veisau e veiwekani',
 
 # Upload
 'upload'            => 'Vakasinaita',
@@ -138,22 +144,18 @@ $messages = array(
 'fileuploadsummary' => 'Kena i Soqoni:',
 'watchthisupload'   => 'Vakaraica toka na tabana oqo',
 
-# Image list
-'ilsubmit' => 'Vaqaqara',
-
 # Random page
 'randompage' => 'Vakawasoma',
 
-'brokenredirects-edit'   => '(Veisautaki)',
-'brokenredirects-delete' => '(Vakarusa)',
+'brokenredirects-edit'   => 'Veisautaki',
+'brokenredirects-delete' => 'Vakarusa',
 
 # Miscellaneous special pages
-'specialpages'      => 'Tabana vakamareqeti',
 'newpages-username' => 'Yaca vakayagataki:',
 'move'              => 'Toso',
 'movethispage'      => 'Toso na tabana oqo',
 
-# Special:Allpages
+# Special:AllPages
 'allpagessubmit' => 'Lako',
 
 # E-mail user
@@ -181,11 +183,11 @@ $messages = array(
 'ipbreason' => 'Vuna',
 
 # Move page
-'movepage'    => 'Toso kina yasana kadua',
-'movearticle' => 'Toso kina yasana kadua',
-'move-watch'  => 'Vakaraica toka na tabana oqo',
-'movepagebtn' => 'Toso kina yasana kadua',
-'movereason'  => 'Vuna',
+'move-page-legend' => 'Toso kina yasana kadua',
+'movearticle'      => 'Toso kina yasana kadua',
+'move-watch'       => 'Vakaraica toka na tabana oqo',
+'movepagebtn'      => 'Toso kina yasana kadua',
+'movereason'       => 'Vuna',
 
 # Tooltip help for the actions
 'tooltip-pt-preferences' => 'Ulutaga taleitaki',
@@ -194,10 +196,16 @@ $messages = array(
 'tooltip-search'         => 'Vaqaqara {{SITENAME}}',
 'tooltip-p-logo'         => 'Tabana levu',
 
+# Special:NewFiles
+'ilsubmit' => 'Vaqaqara',
+
 # Multipage image navigation
 'imgmultigo' => 'Lako!',
 
 # Table pager
 'table_pager_limit_submit' => 'Lako',
+
+# Special:SpecialPages
+'specialpages' => 'Tabana vakamareqeti',
 
 );

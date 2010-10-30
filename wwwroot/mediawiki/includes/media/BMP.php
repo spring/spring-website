@@ -1,12 +1,25 @@
 <?php
+/**
+ * @file
+ * @ingroup Media
+ */
 
 /**
  * Handler for Microsoft's bitmap format; getimagesize() doesn't
  * support these files
  *
- * @addtogroup Media
+ * @ingroup Media
  */
 class BmpHandler extends BitmapHandler {
+	// We never want to use .bmp in an <img/> tag
+	function mustRender( $file ) {
+		return true;
+	}
+
+	// Render files as PNG
+	function getThumbType( $text, $mime ) {
+		return array( 'png', 'image/png' );
+	}
 
 	/*
 	 * Get width and height from the bmp header.

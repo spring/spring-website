@@ -23,26 +23,35 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiBase.php');
+	require_once ( 'ApiBase.php' );
 }
 
 /**
- * API module to allow users to log out of the wiki. API equivalent of 
+ * API module to allow users to log out of the wiki. API equivalent of
  * Special:Userlogout.
  *
- * @addtogroup API
+ * @ingroup API
  */
 class ApiLogout extends ApiBase {
 
-	public function __construct($main, $action) {
-		parent :: __construct($main, $action);
+	public function __construct( $main, $action ) {
+		parent :: __construct( $main, $action );
 	}
 
 	public function execute() {
 		global $wgUser;
+		$oldName = $wgUser->getName();
 		$wgUser->logout();
+		
+		// Give extensions to do something after user logout
+		$injected_html = '';
+		wfRunHooks( 'UserLogoutComplete', array( &$wgUser, &$injected_html, $oldName ) );
+	}
+
+	public function isReadMode() {
+		return false;
 	}
 
 	public function getAllowedParams() {
@@ -66,6 +75,6 @@ class ApiLogout extends ApiBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id$';
+		return __CLASS__ . ': $Id: ApiLogout.php 69578 2010-07-20 02:46:20Z tstarling $';
 	}
 }

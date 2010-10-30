@@ -1,6 +1,9 @@
 <?php
 /** Bislama (Bislama)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
@@ -57,13 +60,15 @@ $messages = array(
 'oct'           => 'Okt',
 'dec'           => 'Des',
 
+'mypage' => 'Pej blong mi',
+'mytalk' => 'Tingting blong mi',
+'and'    => '&#32;mo',
+
+# Cologne Blue skin
 'qbedit'         => 'Jenisim hem',
 'qbpageoptions'  => 'Pej ia',
 'qbmyoptions'    => 'Ol pej blong mi',
 'qbspecialpages' => 'Ol spesel pej',
-'mypage'         => 'Pej blong mi',
-'mytalk'         => 'Tingting blong mi',
-'and'            => 'mo',
 
 'edit'             => 'Jenisim hem',
 'newpage'          => 'Mekem niu pej',
@@ -72,7 +77,8 @@ $messages = array(
 'talk'             => 'Tingting',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'mainpage' => 'Nambawan Pej',
+'mainpage'             => 'Nambawan Pej',
+'mainpage-description' => 'Nambawan Pej',
 
 'retrievedfrom' => 'Kam long "$1"',
 'editsection'   => 'jenisim hem',
@@ -88,30 +94,32 @@ $messages = array(
 # Preferences page
 'servertime' => 'Taem blong server',
 
-# Image list
-'imagelist_name' => 'Nem',
+# Special:ListFiles
+'listfiles_name' => 'Nem',
 
 # Miscellaneous special pages
 'shortpages' => 'Ol smol pej',
 'longpages'  => 'Ol big pej',
 'newpages'   => 'Ol niu pej',
 
-# Special:Allpages
+# Special:AllPages
 'allarticles' => 'Olgeta atikel',
 
 # E-mail user
 'emailfrom' => 'Kam long',
-'emailto'   => 'Go long',
+'emailto'   => 'Go long:',
 
 # Contributions
 'year' => 'Yia:',
+
+'sp-contributions-talk' => 'Toktok',
 
 # Block/unblock
 'proxyblocksuccess' => 'Finis.',
 
 # Move page
-'movepage'    => 'Muvum pej',
-'movearticle' => 'Muvum pej:',
+'move-page-legend' => 'Muvum pej',
+'movearticle'      => 'Muvum pej:',
 
 # Namespace 8 related
 'allmessagesname' => 'Nem',
@@ -122,7 +130,7 @@ $messages = array(
 'tooltip-n-mainpage' => 'Go long Nambawan Pej',
 'tooltip-minoredit'  => 'Em i stap wan smol jenis',
 
-# Special:Newimages
+# Special:NewFiles
 'showhidebots' => '($1 bot)',
 
 # EXIF tags
@@ -135,9 +143,6 @@ $messages = array(
 'watchlistall2'    => 'olgeta',
 'namespacesall'    => 'olgeta',
 'monthsall'        => 'olgeta',
-
-# Multipage image navigation
-'imgmultigotopre' => 'Go long pej',
 
 # Table pager
 'table_pager_first' => 'Nambawan pej',

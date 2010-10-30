@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * @ingroup Maintenance
+ */
 
 require_once( 'cleanupDupes.inc' );
 require_once( 'userDupes.inc' );
@@ -9,12 +13,16 @@ define( 'MW_UPGRADE_ENCODE',   true  );
 define( 'MW_UPGRADE_NULL',     null  );
 define( 'MW_UPGRADE_CALLBACK', null  ); // for self-documentation only
 
+/**
+ * @ingroup Maintenance
+ */
 class FiveUpgrade {
 	function FiveUpgrade() {
 		$this->conversionTables = $this->prepareWindows1252();
 
-		$this->dbw =& $this->newConnection();
-		$this->dbr =& $this->streamConnection();
+		$this->loadBalancers = array();
+		$this->dbw = wfGetDB( DB_MASTER );
+		$this->dbr = $this->streamConnection();
 
 		$this->cleanupSwaps = array();
 		$this->emailAuth = false; # don't preauthenticate emails
@@ -60,11 +68,22 @@ class FiveUpgrade {
 	 * @return Database
 	 * @access private
 	 */
-	function &newConnection() {
-		global $wgDBadminuser, $wgDBadminpassword;
-		global $wgDBserver, $wgDBname;
-		$db = new Database( $wgDBserver, $wgDBadminuser, $wgDBadminpassword, $wgDBname );
+	function newConnection() {
+		$lb = wfGetLBFactory()->newMainLB();
+		$db = $lb->getConnection( DB_MASTER );
+		
+		$this->loadBalancers[] = $lb;
 		return $db;
+	}
+	
+	/**
+	 * Commit transactions and close the connections when we're done...
+	 */
+	function close() {
+		foreach( $this->loadBalancers as $lb ) {
+			$lb->commitMasterChanges();
+			$lb->closeAll();
+		}
 	}
 
 	/**
@@ -74,12 +93,16 @@ class FiveUpgrade {
 	 * @return Database
 	 * @access private
 	 */
-	function &streamConnection() {
+	function streamConnection() {
+		global $wgDBtype;
+
 		$timeout = 3600 * 24;
-		$db =& $this->newConnection();
+		$db = $this->newConnection();
 		$db->bufferResults( false );
-		$db->query( "SET net_read_timeout=$timeout" );
-		$db->query( "SET net_write_timeout=$timeout" );
+		if ($wgDBtype == 'mysql') {
+			$db->query( "SET net_read_timeout=$timeout" );
+			$db->query( "SET net_write_timeout=$timeout" );
+		}
 		return $db;
 	}
 
@@ -503,7 +526,7 @@ class FiveUpgrade {
 		} else {
 			global $IP;
 			$this->log( 'adding iw_trans...' );
-			dbsource( $IP . '/maintenance/archives/patch-interwiki-trans.sql', $this->dbw );
+			$this->dbw->sourceFile( $IP . '/maintenance/archives/patch-interwiki-trans.sql' );
 			$this->log( 'added iw_trans.' );
 		}
 
@@ -702,7 +725,7 @@ END;
 			'major'  => '',
 			'minor'  => '' );
 
-		$magic =& wfGetMimeMagic();
+		$magic = MimeMagic::singleton();
 		$mime = $magic->guessMimeType( $filename, true );
 		list( $info['major'], $info['minor'] ) = explode( '/', $mime );
 
@@ -865,17 +888,17 @@ END;
 		$add = array();
 		while( $row = $this->dbr->fetchObject( $result ) ) {
 			$add[] = array(
-				'wl_user'      =>                        $row->wl_user,
-				'wl_namespace' => Namespace::getSubject( $row->wl_namespace ),
-				'wl_title'     =>           $this->conv( $row->wl_title ),
-				'wl_notificationtimestamp' =>            '0' );
+				'wl_user'      =>                          $row->wl_user,
+				'wl_namespace' => MWNamespace::getSubject( $row->wl_namespace ),
+				'wl_title'     =>             $this->conv( $row->wl_title ),
+				'wl_notificationtimestamp' =>              '0' );
 			$this->addChunk( $add );
 
 			$add[] = array(
-				'wl_user'      =>                        $row->wl_user,
-				'wl_namespace' =>    Namespace::getTalk( $row->wl_namespace ),
-				'wl_title'     =>           $this->conv( $row->wl_title ),
-				'wl_notificationtimestamp' =>            '0' );
+				'wl_user'      =>                          $row->wl_user,
+				'wl_namespace' =>    MWNamespace::getTalk( $row->wl_namespace ),
+				'wl_title'     =>             $this->conv( $row->wl_title ),
+				'wl_notificationtimestamp' =>              '0' );
 			$this->addChunk( $add );
 		}
 		$this->lastChunk( $add );
@@ -976,7 +999,7 @@ CREATE TABLE $1 (
 
   -- Filename of target image.
   -- This is also the page_title of the file's description page;
-  -- all such pages are in namespace 6 (NS_IMAGE).
+  -- all such pages are in namespace 6 (NS_FILE).
   il_to varchar(255) binary NOT NULL default '',
 
   UNIQUE KEY il_from(il_from,il_to),
@@ -1165,5 +1188,3 @@ ENDS;
 	}
 
 }
-
-?>

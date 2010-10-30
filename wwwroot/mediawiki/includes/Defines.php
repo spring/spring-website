@@ -1,6 +1,7 @@
 <?php
 /**
  * A few constants that might be needed during LocalSettings.php
+ * @file
  */
 
 /**
@@ -17,6 +18,7 @@ define( 'DBO_IGNORE', 4 );
 define( 'DBO_TRX', 8 );
 define( 'DBO_DEFAULT', 16 );
 define( 'DBO_PERSISTENT', 32 );
+define( 'DBO_SYSDBA', 64 ); //for oracle maintenance
 /**#@-*/
 
 # Valid database indexes
@@ -51,8 +53,8 @@ define('NS_USER', 2);
 define('NS_USER_TALK', 3);
 define('NS_PROJECT', 4);
 define('NS_PROJECT_TALK', 5);
-define('NS_IMAGE', 6);
-define('NS_IMAGE_TALK', 7);
+define('NS_FILE', 6);
+define('NS_FILE_TALK', 7);
 define('NS_MEDIAWIKI', 8);
 define('NS_MEDIAWIKI_TALK', 9);
 define('NS_TEMPLATE', 10);
@@ -61,6 +63,16 @@ define('NS_HELP', 12);
 define('NS_HELP_TALK', 13);
 define('NS_CATEGORY', 14);
 define('NS_CATEGORY_TALK', 15);
+/**
+ * NS_IMAGE and NS_IMAGE_TALK are the pre-v1.14 names for NS_FILE and
+ * NS_FILE_TALK respectively, and are kept for compatibility.
+ *
+ * When writing code that should be compatible with older MediaWiki
+ * versions, either stick to the old names or define the new constants
+ * yourself, if they're not defined already.
+ */
+define('NS_IMAGE', NS_FILE);
+define('NS_IMAGE_TALK', NS_FILE_TALK);
 /**#@-*/
 
 /**
@@ -84,30 +96,6 @@ define( 'MW_MATH_MODERN', 4 );
 define( 'MW_MATH_MATHML', 5 );
 /**#@-*/
 
-/**
- * User rights list
- * @deprecated
- */
-$wgAvailableRights = array(
-	'block',
-	'bot',
-	'createaccount',
-	'delete',
-	'edit',
-	'editinterface',
-	'import',
-	'importupload',
-	'move',
-	'patrol',
-	'protect',
-	'read',
-	'rollback',
-	'siteadmin',
-	'unwatchedpages',
-	'upload',
-	'userrights',
-);
-
 /**#@+
  * Cache type
  */
@@ -115,7 +103,7 @@ define( 'CACHE_ANYTHING', -1 );  // Use anything, as long as it works
 define( 'CACHE_NONE', 0 );       // Do not cache
 define( 'CACHE_DB', 1 );         // Store cache objects in the DB
 define( 'CACHE_MEMCACHED', 2 );  // MemCached, must specify servers in $wgMemCacheServers
-define( 'CACHE_ACCEL', 3 );      // eAccelerator or Turck, whichever is available
+define( 'CACHE_ACCEL', 3 );      // eAccelerator
 define( 'CACHE_DBA', 4 );        // Use PHP's DBA extension to store in a DBM-style database
 /**#@-*/
 
@@ -188,15 +176,15 @@ define( 'RC_MOVE_OVER_REDIRECT', 4);
  */
 define( 'EDIT_NEW', 1 );
 define( 'EDIT_UPDATE', 2 );
-define( 'EDIT_MINOR', 4 ); 
+define( 'EDIT_MINOR', 4 );
 define( 'EDIT_SUPPRESS_RC', 8 );
 define( 'EDIT_FORCE_BOT', 16 );
 define( 'EDIT_DEFER_UPDATES', 32 );
 define( 'EDIT_AUTOSUMMARY', 64 );
 /**#@-*/
 
-/** 
- * Flags for Database::makeList() 
+/**
+ * Flags for Database::makeList()
  * These are also available as Database class constants
  */
 define( 'LIST_COMMA', 0 );
@@ -208,61 +196,12 @@ define( 'LIST_OR', 4);
 /**
  * Unicode and normalisation related
  */
-define( 'UNICODE_HANGUL_FIRST', 0xac00 );
-define( 'UNICODE_HANGUL_LAST',  0xd7a3 );
-
-define( 'UNICODE_HANGUL_LBASE', 0x1100 );
-define( 'UNICODE_HANGUL_VBASE', 0x1161 );
-define( 'UNICODE_HANGUL_TBASE', 0x11a7 );
-
-define( 'UNICODE_HANGUL_LCOUNT', 19 );
-define( 'UNICODE_HANGUL_VCOUNT', 21 );
-define( 'UNICODE_HANGUL_TCOUNT', 28 );
-define( 'UNICODE_HANGUL_NCOUNT', UNICODE_HANGUL_VCOUNT * UNICODE_HANGUL_TCOUNT );
-
-define( 'UNICODE_HANGUL_LEND', UNICODE_HANGUL_LBASE + UNICODE_HANGUL_LCOUNT - 1 );
-define( 'UNICODE_HANGUL_VEND', UNICODE_HANGUL_VBASE + UNICODE_HANGUL_VCOUNT - 1 );
-define( 'UNICODE_HANGUL_TEND', UNICODE_HANGUL_TBASE + UNICODE_HANGUL_TCOUNT - 1 );
-
-define( 'UNICODE_SURROGATE_FIRST', 0xd800 );
-define( 'UNICODE_SURROGATE_LAST', 0xdfff );
-define( 'UNICODE_MAX', 0x10ffff );
-define( 'UNICODE_REPLACEMENT', 0xfffd );
-
-
-define( 'UTF8_HANGUL_FIRST', "\xea\xb0\x80" /*codepointToUtf8( UNICODE_HANGUL_FIRST )*/ );
-define( 'UTF8_HANGUL_LAST', "\xed\x9e\xa3" /*codepointToUtf8( UNICODE_HANGUL_LAST )*/ );
-
-define( 'UTF8_HANGUL_LBASE', "\xe1\x84\x80" /*codepointToUtf8( UNICODE_HANGUL_LBASE )*/ );
-define( 'UTF8_HANGUL_VBASE', "\xe1\x85\xa1" /*codepointToUtf8( UNICODE_HANGUL_VBASE )*/ );
-define( 'UTF8_HANGUL_TBASE', "\xe1\x86\xa7" /*codepointToUtf8( UNICODE_HANGUL_TBASE )*/ );
-
-define( 'UTF8_HANGUL_LEND', "\xe1\x84\x92" /*codepointToUtf8( UNICODE_HANGUL_LEND )*/ );
-define( 'UTF8_HANGUL_VEND', "\xe1\x85\xb5" /*codepointToUtf8( UNICODE_HANGUL_VEND )*/ );
-define( 'UTF8_HANGUL_TEND', "\xe1\x87\x82" /*codepointToUtf8( UNICODE_HANGUL_TEND )*/ );
-
-define( 'UTF8_SURROGATE_FIRST', "\xed\xa0\x80" /*codepointToUtf8( UNICODE_SURROGATE_FIRST )*/ );
-define( 'UTF8_SURROGATE_LAST', "\xed\xbf\xbf" /*codepointToUtf8( UNICODE_SURROGATE_LAST )*/ );
-define( 'UTF8_MAX', "\xf4\x8f\xbf\xbf" /*codepointToUtf8( UNICODE_MAX )*/ );
-define( 'UTF8_REPLACEMENT', "\xef\xbf\xbd" /*codepointToUtf8( UNICODE_REPLACEMENT )*/ );
-#define( 'UTF8_REPLACEMENT', '!' );
-
-define( 'UTF8_OVERLONG_A', "\xc1\xbf" );
-define( 'UTF8_OVERLONG_B', "\xe0\x9f\xbf" );
-define( 'UTF8_OVERLONG_C', "\xf0\x8f\xbf\xbf" );
-
-# These two ranges are illegal
-define( 'UTF8_FDD0', "\xef\xb7\x90" /*codepointToUtf8( 0xfdd0 )*/ );
-define( 'UTF8_FDEF', "\xef\xb7\xaf" /*codepointToUtf8( 0xfdef )*/ );
-define( 'UTF8_FFFE', "\xef\xbf\xbe" /*codepointToUtf8( 0xfffe )*/ );
-define( 'UTF8_FFFF', "\xef\xbf\xbf" /*codepointToUtf8( 0xffff )*/ );
-
-define( 'UTF8_HEAD', false );
-define( 'UTF8_TAIL', true );
+require_once dirname(__FILE__).'/normal/UtfNormalDefines.php';
 
 # Hook support constants
 define( 'MW_SUPPORTS_EDITFILTERMERGED', 1 );
 define( 'MW_SUPPORTS_PARSERFIRSTCALLINIT', 1 );
+define( 'MW_SUPPORTS_LOCALISATIONCACHE', 1 );
 
 # Allowed values for Parser::$mOutputType
 # Parameter to Parser::startExternalParse().
@@ -275,6 +214,9 @@ define( 'OT_MSG' , 3 );  // b/c alias for OT_PREPROCESS
 define( 'SFH_NO_HASH', 1 );
 define( 'SFH_OBJECT_ARGS', 2 );
 
+# Flags for Parser::setLinkHook
+define( 'SLH_PATTERN', 1 );
+
 # Flags for Parser::replaceLinkHolders
 define( 'RLH_FOR_UPDATE', 1 );
 
@@ -284,3 +226,7 @@ define( 'APCOND_EDITCOUNT', 1 );
 define( 'APCOND_AGE', 2 );
 define( 'APCOND_EMAILCONFIRMED', 3 );
 define( 'APCOND_INGROUPS', 4 );
+define( 'APCOND_ISIP', 5 );
+define( 'APCOND_IPINRANGE', 6 );
+define( 'APCOND_AGE_FROM_EDIT', 7 );
+define( 'APCOND_BLOCKED', 8 );

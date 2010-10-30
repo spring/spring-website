@@ -1,13 +1,15 @@
 <?php
-/** Nauru (Ekakairũ Naoero)
+/** Nauru (Dorerin Naoero)
+ *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
  *
  * @ingroup Language
  * @file
  *
- * @author CdaMVvWgS
  * @author Belgian man
+ * @author CdaMVvWgS
  * @author Node ue
- * @author SPQRobin
  */
 
 $messages = array(
@@ -20,9 +22,11 @@ $messages = array(
 'friday'    => 'Preidak',
 'saturday'  => 'Tadurdei',
 
-'qbedit'        => 'Kiwiwid',
 'moredotdotdot' => 'Iyuw...',
-'and'           => 'me',
+'and'           => '&#32;me',
+
+# Cologne Blue skin
+'qbedit' => 'Kiwiwid',
 
 'errorpagetitle' => 'Dairinaiya',
 'help'           => 'Ipuok',
@@ -35,13 +39,13 @@ $messages = array(
 'toolbox'        => 'Dabadi n bwait makur',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'currentevents'     => 'Imwin',
-'currentevents-url' => 'Project:Imwin',
-'edithelp'          => 'Oomo/edar Ipuok',
-'edithelppage'      => 'Help:Oomo/edar',
-'helppage'          => 'Help:Oangan',
-'mainpage'          => 'Bwiema peij',
-'sitesupport'       => 'Eadu a me',
+'currentevents'        => 'Imwin',
+'currentevents-url'    => 'Project:Imwin',
+'edithelp'             => 'Oomo/edar Ipuok',
+'edithelppage'         => 'Help:Oomo/edar',
+'helppage'             => 'Help:Oangan',
+'mainpage'             => 'Bwiema peij',
+'mainpage-description' => 'Bwiema peij',
 
 'editsection' => 'Kiwiwid',
 'showtoc'     => 'oduwen',
@@ -54,10 +58,9 @@ $messages = array(
 'error' => 'Dairinaiya',
 
 # Login and logout pages
-'login'        => 'Metu',
-'logout'       => 'Meta',
-'userlogout'   => 'Meta',
-'yourlanguage' => 'Edorer',
+'login'      => 'Metu',
+'logout'     => 'Meta',
+'userlogout' => 'Meta',
 
 # Edit page toolbar
 'bold_sample'  => 'Eõ mangiyungiy',
@@ -71,11 +74,13 @@ $messages = array(
 'editingsection' => 'Oomo/edar $1 (itubwang)',
 
 # Search results
-'powersearch' => 'Anani ko',
+'searchhelp-url' => 'Help:Oangan',
+'powersearch'    => 'Anani ko',
 
 # Preferences page
-'skin'              => 'Witsin',
+'prefs-skin'        => 'Witsin',
 'searchresultshead' => 'Anani ko',
+'yourlanguage'      => 'Edorer',
 
 # Recent changes
 'recentchanges' => 'Iwiwidit tsimeduw',
@@ -83,18 +88,13 @@ $messages = array(
 'hide'          => 'witsit imin gogoro',
 'show'          => 'oduwen',
 
-# Image list
-'ilsubmit'  => 'Anani ko',
-'byname'    => 'ean eg',
-'imgdelete' => 'iya',
-
 # Random page
 'randompage' => 'Tamo peij',
 
 # Miscellaneous special pages
 'move' => 'Memori',
 
-# Special:Allpages
+# Special:AllPages
 'allpagessubmit' => 'nuwa ko',
 
 # E-mail user
@@ -107,11 +107,14 @@ $messages = array(
 'watch'   => 'Aea',
 'unwatch' => 'Eab krak',
 
-# Delete/protect/revert
+# Delete
 'confirm'        => 'Oebwigaga',
 'deletedarticle' => 'iyababa "[[$1]]"',
 
 # Contributions
 'contributions' => 'Mana engame totow inne',
+
+# Special:NewFiles
+'ilsubmit' => 'Anani ko',
 
 );

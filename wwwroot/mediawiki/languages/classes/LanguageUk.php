@@ -1,11 +1,9 @@
 <?php
-/** Ukrainian (українська мова)
-  *
-  * @package MediaWiki
-  * @subpackage Language
-  */
 
-/* Please, see Language.php for general function comments */
+/** Ukrainian (українська мова)
+ *
+ * @ingroup Language
+ */
 class LanguageUk extends Language {
 	# Convert from the nominative form of a noun to some other case
 	# Invoked with {{grammar:case|word}}
@@ -60,6 +58,12 @@ class LanguageUk extends Language {
 
 	function convertPlural( $count, $forms ) {
 		if ( !count($forms) ) { return ''; }
+
+		//if no number with word, then use $form[0] for singular and $form[1] for plural or zero
+		if( count($forms) === 2 ) return $count == 1 ? $forms[0] : $forms[1];
+
+		// FIXME: CLDR defines 4 plural forms. Form for decimals is missing/
+		// See http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html#uk
 		$forms = $this->preConvertPlural( $forms, 3 );
 
 		if ($count > 10 && floor(($count % 100) / 10) == 1) {
@@ -87,4 +91,3 @@ class LanguageUk extends Language {
 		}
 	}
 }
-

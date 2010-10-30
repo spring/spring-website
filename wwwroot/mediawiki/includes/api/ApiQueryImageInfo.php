@@ -23,83 +23,153 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ('ApiQueryBase.php');
+	require_once ( 'ApiQueryBase.php' );
 }
 
 /**
  * A query action to get image information and upload history.
- * 
- * @addtogroup API
+ *
+ * @ingroup API
  */
 class ApiQueryImageInfo extends ApiQueryBase {
 
-	public function __construct($query, $moduleName) {
-		parent :: __construct($query, $moduleName, 'ii');
+	public function __construct( $query, $moduleName ) {
+		parent :: __construct( $query, $moduleName, 'ii' );
 	}
 
 	public function execute() {
 		$params = $this->extractRequestParams();
 
-		$prop = array_flip($params['prop']);		
-		$this->fld_timestamp = isset($prop['timestamp']);
-		$this->fld_user = isset($prop['user']);
-		$this->fld_comment = isset($prop['comment']);
-		$this->fld_url = isset($prop['url']);
-		$this->fld_size = isset($prop['size']);
-		$this->fld_sha1 = isset($prop['sha1']);
-		$this->fld_metadata = isset($prop['metadata']);
+		$prop = array_flip( $params['prop'] );
+
+		if ( $params['urlheight'] != - 1 && $params['urlwidth'] == - 1 )
+			$this->dieUsage( "iiurlheight cannot be used without iiurlwidth", 'iiurlwidth' );
 		
-		if($params['urlheight'] != -1 && $params['urlwidth'] == -1)
-			$this->dieUsage("iiurlheight cannot be used without iiurlwidth", 'iiurlwidth');
-		$this->scale = ($params['urlwidth'] != -1);
-		$this->urlwidth = $params['urlwidth'];
-		$this->urlheight = $params['urlheight'];
+		if ( $params['urlwidth'] != - 1 ) {
+			$scale = array();
+			$scale['width'] = $params['urlwidth'];
+			$scale['height'] = $params['urlheight'];
+		} else {
+			$scale = null;
+		}
 
 		$pageIds = $this->getPageSet()->getAllTitlesByNamespace();
-		if (!empty($pageIds[NS_IMAGE])) {
-			foreach ($pageIds[NS_IMAGE] as $dbKey => $pageId) {
-								
-				$title = Title :: makeTitle(NS_IMAGE, $dbKey);
-				$img = wfFindFile($title);
+		if ( !empty( $pageIds[NS_FILE] ) ) {
+			$titles = array_keys( $pageIds[NS_FILE] );
+			asort( $titles ); // Ensure the order is always the same
 
-				$data = array();
-				if ( !$img ) {
-					$repository = '';
-				} else {
+			$skip = false;
+			if ( !is_null( $params['continue'] ) )
+			{
+				$skip = true;
+				$cont = explode( '|', $params['continue'] );
+				if ( count( $cont ) != 2 )
+					$this->dieUsage( "Invalid continue param. You should pass the original " .
+							"value returned by the previous query", "_badcontinue" );
+				$fromTitle = strval( $cont[0] );
+				$fromTimestamp = $cont[1];
+				// Filter out any titles before $fromTitle
+				foreach ( $titles as $key => $title )
+					if ( $title < $fromTitle )
+						unset( $titles[$key] );
+					else
+						break;
+			}
 
-					$repository = $img->getRepoName();
-					
-					// Get information about the current version first
-					// Check that the current version is within the start-end boundaries
-					if((is_null($params['start']) || $img->getTimestamp() <= $params['start']) &&
-							(is_null($params['end']) || $img->getTimestamp() >= $params['end'])) {
-						$data[] = $this->getInfo($img);
-					}
-					
-					// Now get the old revisions
-					// Get one more to facilitate query-continue functionality
-					$count = count($data);
-					$oldies = $img->getHistory($params['limit'] - $count + 1, $params['start'], $params['end']);
-					foreach($oldies as $oldie) {
-						if(++$count > $params['limit']) {
-							// We've reached the extra one which shows that there are additional pages to be had. Stop here...
-							// Only set a query-continue if there was only one title
-							if(count($pageIds[NS_IMAGE]) == 1)
-								$this->setContinueEnumParameter('start', $oldie->getTimestamp());
-							break;
-						}
-						$data[] = $this->getInfo($oldie);	
+			$result = $this->getResult();
+			$images = RepoGroup::singleton()->findFiles( $titles );
+			foreach ( $images as $img ) {
+				// Skip redirects
+				if ( $img->getOriginalTitle()->isRedirect() )
+					continue;
+				
+				$start = $skip ? $fromTimestamp : $params['start'];
+				$pageId = $pageIds[NS_IMAGE][ $img->getOriginalTitle()->getDBkey() ];
+
+				$fit = $result->addValue(
+					array( 'query', 'pages', intval( $pageId ) ),
+					'imagerepository', $img->getRepoName()
+				);
+				if ( !$fit )
+				{
+					if ( count( $pageIds[NS_IMAGE] ) == 1 )
+						// The user is screwed. imageinfo can't be solely
+						// responsible for exceeding the limit in this case,
+						// so set a query-continue that just returns the same
+						// thing again. When the violating queries have been
+						// out-continued, the result will get through
+						$this->setContinueEnumParameter( 'start',
+							wfTimestamp( TS_ISO_8601, $img->getTimestamp() ) );
+					else
+						$this->setContinueEnumParameter( 'continue',
+							$this->getContinueStr( $img ) );
+					break;
+				}
+
+				// Get information about the current version first
+				// Check that the current version is within the start-end boundaries
+				$gotOne = false;
+				if ( ( is_null( $start ) || $img->getTimestamp() <= $start ) &&
+						( is_null( $params['end'] ) || $img->getTimestamp() >= $params['end'] ) ) {
+					$gotOne = true;
+					$fit = $this->addPageSubItem( $pageId,
+						self::getInfo( $img, $prop, $result, $scale ) );
+					if ( !$fit )
+					{
+						if ( count( $pageIds[NS_IMAGE] ) == 1 )
+							// See the 'the user is screwed' comment above
+							$this->setContinueEnumParameter( 'start',
+								wfTimestamp( TS_ISO_8601, $img->getTimestamp() ) );
+						else
+							$this->setContinueEnumParameter( 'continue',
+								$this->getContinueStr( $img ) );
+						break;
 					}
 				}
 
-				$this->getResult()->addValue(array(
-						'query', 'pages', intval($pageId)),
-						'imagerepository', $repository
-				);
-				if (!empty($data))
-					$this->addPageSubItems($pageId, $data);
+				// Now get the old revisions
+				// Get one more to facilitate query-continue functionality
+				$count = ( $gotOne ? 1 : 0 );
+				$oldies = $img->getHistory( $params['limit'] - $count + 1, $start, $params['end'] );
+				foreach ( $oldies as $oldie ) {
+					if ( ++$count > $params['limit'] ) {
+						// We've reached the extra one which shows that there are additional pages to be had. Stop here...
+						// Only set a query-continue if there was only one title
+						if ( count( $pageIds[NS_FILE] ) == 1 )
+						{
+							$this->setContinueEnumParameter( 'start',
+								wfTimestamp( TS_ISO_8601, $oldie->getTimestamp() ) );
+						}
+						break;
+					}
+					$fit = $this->addPageSubItem( $pageId,
+						self::getInfo( $oldie, $prop, $result ) );
+					if ( !$fit )
+					{
+						if ( count( $pageIds[NS_IMAGE] ) == 1 )
+							$this->setContinueEnumParameter( 'start',
+								wfTimestamp( TS_ISO_8601, $oldie->getTimestamp() ) );
+						else
+							$this->setContinueEnumParameter( 'continue',
+								$this->getContinueStr( $oldie ) );
+						break;
+					}
+				}
+				if ( !$fit )
+					break;
+				$skip = false;
+			}
+			
+			$data = $this->getResultData();
+			foreach ( $data['query']['pages'] as $pageid => $arr ) {
+				if ( !isset( $arr['imagerepository'] ) )
+					$result->addValue(
+						array( 'query', 'pages', $pageid ),
+						'imagerepository', ''
+					);
+					// The above can't fail because it doesn't increase the result size
 			}
 		}
 	}
@@ -109,42 +179,79 @@ class ApiQueryImageInfo extends ApiQueryBase {
 	 * @param File f The image
 	 * @return array Result array
 	 */
-	protected function getInfo($f) {
+	static function getInfo( $file, $prop, $result, $scale = null ) {
 		$vals = array();
-		if($this->fld_timestamp)
-			$vals['timestamp'] = wfTimestamp(TS_ISO_8601, $f->getTimestamp());
-		if($this->fld_user) {
-			$vals['user'] = $f->getUser();
-			if(!$f->getUser('id'))
+		if ( isset( $prop['timestamp'] ) )
+			$vals['timestamp'] = wfTimestamp( TS_ISO_8601, $file->getTimestamp() );
+		if ( isset( $prop['user'] ) ) {
+			$vals['user'] = $file->getUser();
+			if ( !$file->getUser( 'id' ) )
 				$vals['anon'] = '';
 		}
-		if($this->fld_size) {
-			$vals['size'] = intval($f->getSize());
-			$vals['width'] = intval($f->getWidth());
-			$vals['height'] = intval($f->getHeight());
+		if ( isset( $prop['size'] ) || isset( $prop['dimensions'] ) ) {
+			$vals['size'] = intval( $file->getSize() );
+			$vals['width'] = intval( $file->getWidth() );
+			$vals['height'] = intval( $file->getHeight() );
 		}
-		if($this->fld_url) {
-			if($this->scale && !$f->isOld()) {
-				$thumb = $f->getThumbnail($this->urlwidth, $this->urlheight);
-				if($thumb)
+		if ( isset( $prop['url'] ) ) {
+			if ( !is_null( $scale ) && !$file->isOld() ) {
+				$mto = $file->transform( array( 'width' => $scale['width'], 'height' => $scale['height'] ) );
+				if ( $mto && !$mto->isError() )
 				{
-					$vals['thumburl'] = $thumb->getURL();
-					$vals['thumbwidth'] = $thumb->getWidth();
-					$vals['thumbheight'] = $thumb->getHeight();
+					$vals['thumburl'] = wfExpandUrl( $mto->getUrl() );
+					$vals['thumbwidth'] = intval( $mto->getWidth() );
+					$vals['thumbheight'] = intval( $mto->getHeight() );
 				}
 			}
-			$vals['url'] = $f->getURL();
+			$vals['url'] = $file->getFullURL();
+			$vals['descriptionurl'] = wfExpandUrl( $file->getDescriptionUrl() );
 		}
-		if($this->fld_comment) 
-			$vals['comment'] = $f->getDescription();
-		if($this->fld_sha1) 
-			$vals['sha1'] = wfBaseConvert($f->getSha1(), 36, 16, 40);
-		if($this->fld_metadata) {
-			$metadata = unserialize($f->getMetadata());
-			$vals['metadata'] = $metadata ? $metadata : null;
-			$this->getResult()->setIndexedTagName_recursive($vals['metadata'], 'meta');
+		if ( isset( $prop['comment'] ) )
+			$vals['comment'] = $file->getDescription();
+		if ( isset( $prop['sha1'] ) )
+			$vals['sha1'] = wfBaseConvert( $file->getSha1(), 36, 16, 40 );
+		if ( isset( $prop['metadata'] ) ) {
+			$metadata = $file->getMetadata();
+			$vals['metadata'] = $metadata ? self::processMetaData( unserialize( $metadata ), $result ) : null;
 		}
+		if ( isset( $prop['mime'] ) )
+			$vals['mime'] = $file->getMimeType();
+		
+		if ( isset( $prop['archivename'] ) && $file->isOld() )
+			$vals['archivename'] = $file->getArchiveName();
+			
+		if ( isset( $prop['bitdepth'] ) )
+			$vals['bitdepth'] = $file->getBitDepth();
+
 		return $vals;
+	}
+	
+	public static function processMetaData( $metadata, $result )
+	{
+		$retval = array();
+		if ( is_array( $metadata ) ) {
+			foreach ( $metadata as $key => $value )
+			{
+				$r = array( 'name' => $key );
+				if ( is_array( $value ) )
+					$r['value'] = self::processMetaData( $value, $result );
+				else
+					$r['value'] = $value;
+				$retval[] = $r;
+			}
+		}
+		$result->setIndexedTagName( $retval, 'metadata' );
+		return $retval;
+	}
+
+	public function getCacheMode( $params ) {
+		return 'public';
+	}
+
+	private function getContinueStr( $img )
+	{
+		return $img->getOriginalTitle()->getText() .
+			'|' .  $img->getTimestamp();
 	}
 
 	public function getAllowedParams() {
@@ -152,15 +259,7 @@ class ApiQueryImageInfo extends ApiQueryBase {
 			'prop' => array (
 				ApiBase :: PARAM_ISMULTI => true,
 				ApiBase :: PARAM_DFLT => 'timestamp|user',
-				ApiBase :: PARAM_TYPE => array (
-					'timestamp',
-					'user',
-					'comment',
-					'url',
-					'size',
-					'sha1',
-					'metadata'
-				)
+				ApiBase :: PARAM_TYPE => self::getPropertyNames()
 			),
 			'limit' => array(
 				ApiBase :: PARAM_TYPE => 'limit',
@@ -177,13 +276,33 @@ class ApiQueryImageInfo extends ApiQueryBase {
 			),
 			'urlwidth' => array(
 				ApiBase :: PARAM_TYPE => 'integer',
-				ApiBase :: PARAM_DFLT => -1
+				ApiBase :: PARAM_DFLT => - 1
 			),
 			'urlheight' => array(
 				ApiBase :: PARAM_TYPE => 'integer',
-				ApiBase :: PARAM_DFLT => -1
-			)
+				ApiBase :: PARAM_DFLT => - 1
+			),
+			'continue' => null,
 		);
+	}
+	
+	/**
+	 * Returns all possible parameters to iiprop
+	 */
+	public static function getPropertyNames() {
+		return array (
+					'timestamp',
+					'user',
+					'comment',
+					'url',
+					'size',
+					'dimensions', // For backwards compatibility with Allimages
+					'sha1',
+					'mime',
+					'metadata',
+					'archivename',
+					'bitdepth',
+				);
 	}
 
 	public function getParamDescription() {
@@ -192,8 +311,10 @@ class ApiQueryImageInfo extends ApiQueryBase {
 			'limit' => 'How many image revisions to return',
 			'start' => 'Timestamp to start listing from',
 			'end' => 'Timestamp to stop listing at',
-			'urlwidth' => 'If iiprop=url is set, a URL to an image scaled to this width will be returned. Only the current version of the image can be scaled.',
+			'urlwidth' => array( 'If iiprop=url is set, a URL to an image scaled to this width will be returned.',
+					    'Only the current version of the image can be scaled.' ),
 			'urlheight' => 'Similar to iiurlwidth. Cannot be used without iiurlwidth',
+			'continue' => 'When more results are available, use this to continue',
 		);
 	}
 
@@ -202,15 +323,21 @@ class ApiQueryImageInfo extends ApiQueryBase {
 			'Returns image information and upload history'
 		);
 	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'iiurlwidth', 'info' => 'iiurlheight cannot be used without iiurlwidth' ),
+		) );
+	}
 
 	protected function getExamples() {
 		return array (
-			'api.php?action=query&titles=Image:Albert%20Einstein%20Head.jpg&prop=imageinfo',
-			'api.php?action=query&titles=Image:Test.jpg&prop=imageinfo&iilimit=50&iiend=20071231235959&iiprop=timestamp|user|url',
+			'api.php?action=query&titles=File:Albert%20Einstein%20Head.jpg&prop=imageinfo',
+			'api.php?action=query&titles=File:Test.jpg&prop=imageinfo&iilimit=50&iiend=20071231235959&iiprop=timestamp|user|url',
 		);
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryImageInfo.php 30665 2008-02-07 12:21:48Z catrope $';
+		return __CLASS__ . ': $Id: ApiQueryImageInfo.php 69932 2010-07-26 08:03:21Z tstarling $';
 	}
 }

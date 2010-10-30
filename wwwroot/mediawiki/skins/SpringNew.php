@@ -15,7 +15,7 @@ if( !defined( 'MEDIAWIKI' ) )
  */
 class SkinSpringNew extends Skin {
 
-	private $searchboxes = '';
+	protected $searchboxes = '';
 	// How many search boxes have we made?  Avoid duplicate id's.
 
 	function getStylesheet() {
@@ -33,20 +33,20 @@ class SkinSpringNew extends Skin {
 
         $s .= file_get_contents('../templates/header.html');
         $title = htmlspecialchars($wgOut->getPageTitle());
-        
-        $s = str_replace('{PAGE_TITLE}', $title, $s);        
+
+        $s = str_replace('{PAGE_TITLE}', $title, $s);
         $s .= '<tr><td>';
         $s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
         $s .= '<tr>';
         $s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
         $s .= '<td bgcolor="#4C626F" width="758">';
-        
+
         $s .= "\n<div id='content'>\n";
 
         //$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
         //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
         //$s .= '<td width="738">';
-                
+
         $s .= "<div id='article'>";
 
 		$notice = wfGetSiteNotice();
@@ -55,19 +55,20 @@ class SkinSpringNew extends Skin {
 		}
 		//$s .= $this->pageTitle();
 //		$s .= $this->pageSubtitle() . "\n";
+
 		return $s;
 	}
 
 	function doAfterContent()
 	{
 		global $wgUser, $wgOut;
-        
+
 		$s = "\n</div><br clear='all' />\n";
-        
+
         //$s .= '</td>';
-        //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';        
+        //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
         //$s .= '</tr></table>';
-        
+
         // category fix
         $catstr = $this->getCategories();
         if (strlen($catstr) > 2) {
@@ -80,8 +81,8 @@ class SkinSpringNew extends Skin {
 
             $s .= '</td><td width="10">&nbsp;</td></tr></table>';
         }
-        
-        
+
+
         $qb = $this->qbSetting();
         if ( 0 != $qb ) { $s .= $this->quickBar(); }
 
@@ -102,18 +103,10 @@ class SkinSpringNew extends Skin {
         $s .= '</td>';
         $s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
         $s .= '</tr></table>';
-        
-        
+
+
         $s .= '</tr></td>';
         $s .= file_get_contents('../templates/footer.html');
-
-		return $s;
-	}
-
-	function doGetUserStyles() {
-		global $wgOut;
-		$s = parent::doGetUserStyles();
-		$qb = $this->qbSetting();
 
 		return $s;
 	}
@@ -160,9 +153,9 @@ class SkinSpringNew extends Skin {
         $s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
         $s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
         $s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
-        $s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>'; 
+        $s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>';
         $s .= '<td bgcolor="#38474E" class="bottom">';
-        
+
                 $s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
 
 		$sep = "<br />";
@@ -263,8 +256,8 @@ class SkinSpringNew extends Skin {
 		$s .= $this->menuHead( "qbspecialpages" )
 		  . $this->specialLink( "newpages" )
 		  . $sep . $this->specialLink( "imagelist" )
-		  . $sep . $this->specialLink( "statistics" )
-		  . $sep . $this->bugReportsLink();
+		  . $sep . $this->specialLink( "statistics" );
+//		  . $sep . $this->bugReportsLink();
 		if ( $wgUser->isLoggedIn() && $wgEnableUploads ) {
 			$s .= $sep . $this->specialLink( "upload" );
 		}
@@ -279,11 +272,11 @@ class SkinSpringNew extends Skin {
 			wfMsg( 'moredotdotdot' ) );
 
         $s .= '</td></tr></table>';
-            
+
         $s .= '</td></tr>';
         $s .= '<tr height="1"><td bgcolor="#20292E" colspan="2"><img src="/images/pixel.gif" height="1" width="10" /></td>';
         $s .= '</tr></table>';
-                
+
 		//$s .= $sep . "\n</div>\n";
 		return $s;
 	}

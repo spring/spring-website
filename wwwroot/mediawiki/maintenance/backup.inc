@@ -18,15 +18,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * @addtogroup SpecialPage
+ * @file
+ * @ingroup Dump Maintenance
  */
 
+/**
+ * @ingroup Dump Maintenance
+ */
 class DumpDBZip2Output extends DumpPipeOutput {
 	function DumpDBZip2Output( $file ) {
 		parent::DumpPipeOutput( "dbzip2", $file );
 	}
 }
 
+/**
+ * @ingroup Dump Maintenance
+ */
 class BackupDumper {
 	var $reportingInterval = 100;
 	var $reporting = true;
@@ -40,6 +47,7 @@ class BackupDumper {
 	var $endId      = 0;
 	var $sink       = null; // Output filters
 	var $stubText   = false; // include rev_text_id instead of text; for 2-pass dump
+	var $dumpUploads = false;
 
 	function BackupDumper( $args ) {
 		$this->stderr = fopen( "php://stderr", "wt" );
@@ -167,7 +175,7 @@ class BackupDumper {
 		// extension point for subclasses to add options
 	}
 
-	function dump( $history, $text = MW_EXPORT_TEXT ) {
+	function dump( $history, $text = WikiExporter::TEXT ) {
 		# Notice messages will foul up your XML output even if they're
 		# relatively harmless.
 		if( ini_get( 'display_errors' ) )
@@ -177,19 +185,28 @@ class BackupDumper {
 
 		$db = $this->backupDb();
 		$exporter = new WikiExporter( $db, $history, WikiExporter::STREAM, $text );
+		$exporter->dumpUploads = $this->dumpUploads;
 
 		$wrapper = new ExportProgressFilter( $this->sink, $this );
 		$exporter->setOutputSink( $wrapper );
 
 		if( !$this->skipHeader )
 			$exporter->openStream();
-
-		if( is_null( $this->pages ) ) {
+		# Log item dumps: all or by range
+		if( $history & WikiExporter::LOGS ) {
+			if( $this->startId || $this->endId ) {
+				$exporter->logsByRange( $this->startId, $this->endId );
+			} else {
+				$exporter->allLogs();
+			}
+		# Page dumps: all or by page ID range
+		} else if( is_null( $this->pages ) ) {
 			if( $this->startId || $this->endId ) {
 				$exporter->pagesByRange( $this->startId, $this->endId );
 			} else {
 				$exporter->allPages();
 			}
+		# Dump of specific pages
 		} else {
 			$exporter->pagesByName( $this->pages );
 		}
@@ -215,19 +232,25 @@ class BackupDumper {
 		$this->startTime = wfTime();
 	}
 
+	/**
+	 * @fixme the --server parameter is currently not respected, as it doesn't seem
+	 * terribly easy to ask the load balancer for a particular connection by name.
+	 */
 	function backupDb() {
-		global $wgDBadminuser, $wgDBadminpassword;
-		global $wgDBname, $wgDebugDumpSql, $wgDBtype;
-		$flags = ($wgDebugDumpSql ? DBO_DEBUG : 0) | DBO_DEFAULT; // god-damn hack
-
-		$class = 'Database' . ucfirst($wgDBtype);
-		$db = new $class( $this->backupServer(), $wgDBadminuser, $wgDBadminpassword, $wgDBname, false, $flags );
+		$this->lb = wfGetLBFactory()->newMainLB();
+		$db = $this->lb->getConnection( DB_SLAVE, 'backup' );
 		
 		// Discourage the server from disconnecting us if it takes a long time
 		// to read out the big ol' batch query.
 		$db->setTimeout( 3600 * 24 );
 		
 		return $db;
+	}
+	
+	function __destruct() {
+		if( isset( $this->lb ) ) {
+			$this->lb->closeAll();
+		}
 	}
 
 	function backupServer() {
@@ -293,5 +316,3 @@ class ExportProgressFilter extends DumpFilter {
 		$this->progress->revCount();
 	}
 }
-
-?>

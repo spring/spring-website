@@ -1,9 +1,9 @@
 <?php
+
 /** Polish (polski)
  *
- * @addtogroup Language
+ * @ingroup Language
  */
-
 class LanguagePl extends Language {
 	function convertPlural( $count, $forms ) {
 		if ( !count($forms) ) { return ''; }
@@ -19,6 +19,14 @@ class LanguagePl extends Language {
 					return $forms[1]; // plural
 			default:
 				return $forms[2];   // plural genitive
+		}
+	}
+
+	function commafy($_) {
+		if (!preg_match('/^\d{1,4}(.\d+)?$/',$_)) {
+			return strrev((string)preg_replace('/(\d{3})(?=\d)(?!\d*\.)/','$1,',strrev($_)));
+		} else {
+			return $_;
 		}
 	}
 }

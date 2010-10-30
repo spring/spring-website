@@ -21,7 +21,7 @@
  * Runs the UTF-8 decoder test at:
  * http://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-test.txt
  *
- * @addtogroup UtfNormal
+ * @ingroup UtfNormal
  * @access private
  */
 
@@ -81,7 +81,7 @@ $longTests = array(
 # These tests are not in proper subsections
 $sectionTests = array( '3.4' );
 
-$section = NULL;
+$section = null;
 $test = '';
 $failed = 0;
 $success = 0;
@@ -149,5 +149,3 @@ function testLine( $test, $line, &$total, &$success, &$failed ) {
 		print str_replace( "\n", "$len\n", $stripped );
 	}
 }
-
-

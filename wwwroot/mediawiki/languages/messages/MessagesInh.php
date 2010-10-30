@@ -1,11 +1,13 @@
 <?php
 /** Ingush (ГІалгІай Ğalğaj)
  *
+ * See MessagesQqq.php for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
+ *
  * @ingroup Language
  * @file
  *
  * @author Tagir
- * @author Siebrand
  */
 
 $fallback = 'ru';
@@ -54,8 +56,6 @@ $messages = array(
 'underline-always'  => 'Массаза',
 'underline-never'   => 'ЦIаккха',
 'underline-default' => 'Браузер настройкаш хьаэца',
-
-'skinpreview' => '(Хьажа)',
 
 # Dates
 'sunday'        => 'КIиранди',
@@ -109,18 +109,24 @@ $messages = array(
 'nov'           => 'Ноя',
 'dec'           => 'Дек',
 
-# Bits of text used by many pages
-'categories'            => 'Категореш',
+# Categories related messages
 'pagecategories'        => '{{PLURAL:$1|Категори|Категореш}}',
 'category_header'       => '"$1" категори оагIонаш',
 'subcategories'         => 'Чура-категореш',
 'category-media-header' => '"$1" категори медиа',
 'category-empty'        => "''Укх категори хьанзарчоа цхьаккха е оагIонаш, е медиа яц.''",
 
-'about'          => 'Описани',
-'article'        => 'ОагIув',
-'newwindow'      => '(кердача курогIa хьаделла)',
-'cancel'         => 'Юхавал',
+'about'         => 'Описани',
+'article'       => 'ОагIув',
+'newwindow'     => '(кердача курогIa хьаделла)',
+'cancel'        => 'Юхавал',
+'moredotdotdot' => 'ДукхагIа ха...',
+'mypage'        => 'Са оагIув',
+'mytalk'        => 'Са къамаьл',
+'anontalk'      => 'Цу IP ца къамаьл де',
+'navigation'    => 'Навигаци',
+
+# Cologne Blue skin
 'qbfind'         => 'Хьакораде',
 'qbbrowse'       => 'Хьокха',
 'qbedit'         => 'Хувца',
@@ -128,11 +134,8 @@ $messages = array(
 'qbpageinfo'     => 'Укхо чу фу да',
 'qbmyoptions'    => 'Са оагIонаш',
 'qbspecialpages' => 'ЛаьрххIа оагIувнаш',
-'moredotdotdot'  => 'ДукхагIа ха...',
-'mypage'         => 'Са оагIув',
-'mytalk'         => 'Са къамаьл',
-'anontalk'       => 'Цу IP ца къамаьл де',
-'navigation'     => 'Навигаци',
+'faq'            => 'КХХ (Каста Хоатташ доа Хамаж)',
+'faqpage'        => 'Project:КХХ (Каста Хоатташ доа Хамаж)',
 
 'errorpagetitle'    => 'ГIалат',
 'returnto'          => '$1 оагIувте юхавал',
@@ -180,7 +183,7 @@ $messages = array(
 'otherlanguages'    => 'Вокхо меттала',
 'redirectedfrom'    => '($1 тIера хьайахьийта)',
 'redirectpagesub'   => 'Йука меттиге йахьийта оагIув',
-'lastmodifiedat'    => 'Тiехьара хувцам у оагIувна: $2, $1.', # $1 date, $2 time
+'lastmodifiedat'    => 'Тiехьара хувцам у оагIувна: $2, $1.',
 'viewcount'         => 'Ер оагIув $1 хьо йай.',
 'protectedpage'     => 'Лораеж йоа оагIув',
 'jumpto'            => 'Уккуз дехьадала:',
@@ -188,35 +191,39 @@ $messages = array(
 'jumptosearch'      => 'леха',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'         => 'Описани {{SITENAME}}',
-'aboutpage'         => 'Project:Описани',
-'bugreports'        => 'Гiалата хоам',
-'bugreportspage'    => 'Project:Гiалата хоам',
-'currentevents'     => 'Хьанзар доалара хамаж',
-'currentevents-url' => 'Project:Хьанзар доалара хама',
-'edithelp'          => 'Хувцамаш йие гIо',
-'edithelppage'      => 'Help:Хувцамаш йие гIо',
-'faq'               => 'КХХ (Каста Хоатташ доа Хамаж)',
-'faqpage'           => 'Project:КХХ (Каста Хоатташ доа Хамаж)',
-'helppage'          => 'Help:Хьехар',
-'mainpage'          => 'Кертера оагIув',
-'policy-url'        => 'Project:Бокъонаш',
-'portal'            => 'Гiоз',
-'portal-url'        => 'Project:ГIоз',
-'privacy'           => 'Конфиденциальности бокъонаш',
-'privacypage'       => 'Project:Конфиденциальности бокъона',
-'sitesupport'       => 'СагIа',
-'sitesupport-url'   => 'Project:СагIа',
+'aboutsite'            => 'Описани {{SITENAME}}',
+'aboutpage'            => 'Project:Описани',
+'currentevents'        => 'Хьанзар доалара хамаж',
+'currentevents-url'    => 'Project:Хьанзар доалара хама',
+'edithelp'             => 'Хувцамаш йие гIо',
+'edithelppage'         => 'Help:Хувцамаш йие гIо',
+'helppage'             => 'Help:Хьехар',
+'mainpage'             => 'Кертера оагIув',
+'mainpage-description' => 'Кертера оагIув',
+'policy-url'           => 'Project:Бокъонаш',
+'portal'               => 'Гiоз',
+'portal-url'           => 'Project:ГIоз',
+'privacy'              => 'Конфиденциальности бокъонаш',
+'privacypage'          => 'Project:Конфиденциальности бокъона',
 
 'badaccess'        => 'Чу валар гIалата',
 'badaccess-group0' => 'Хьо де воалара хьюна де пурам дац',
-'badaccess-group1' => 'Хьо де воалара $1 группе бол чар ма де йиша яц',
-'badaccess-group2' => 'Хьо де воалара $1 группаш юкъе бол чар ма де йиша яц',
 'badaccess-groups' => 'Хьо де воалара $1 группаш юкъе бол чар ма де йиша яц',
 
 'versionrequired'     => '$1 MediaWiki верси йиза',
 'versionrequiredtext' => '$1 MediaWiki верси йиза ер оагIув хьажа. [[Special:Version|version page]] хьажа.',
 
 'ok' => 'ОК',
+
+# Search results
+'searchhelp-url' => 'Help:Хьехар',
+
+# Preferences page
+'skin-preview' => 'Хьажа',
+
+# Special:Categories
+'categories' => 'Категореш',
+
+'sp-contributions-talk' => 'Къамьал',
 
 );

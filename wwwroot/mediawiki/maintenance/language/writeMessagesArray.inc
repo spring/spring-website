@@ -2,17 +2,19 @@
 /**
  * Write a messages array as a PHP text.
  *
- * @addtogroup Maintenance
+ * @file
+ * @ingroup MaintenanceLanguage
  */
 
+/**
+ * @ingroup MaintenanceLanguage
+ */
 class MessageWriter {
 	static $optionalComment = 'only translate this message to other languages if you have to change it';
-	static $ignoredComment = "don't translate or duplicate this message to other languages";
+	static $ignoredComment = "do not translate or duplicate this message to other languages";
 
-	static $loaded = false;
 	static $messageStructure;
 	static $blockComments;
-	static $messageComments;
 	static $ignoredMessages;
 	static $optionalMessages;
 
@@ -24,9 +26,9 @@ class MessageWriter {
 	 * @param $write Write to the messages file?
 	 * @param $listUnknown List the unknown messages?
 	 */
-	public static function writeMessagesToFile( $messages, $code, $write, $listUnknown ) {
+	public static function writeMessagesToFile( $messages, $code, $write, $listUnknown, $removeUnknown ) {
 		# Rewrite the messages array
-		$messages = self::writeMessagesArray( $messages, $code == 'en' );
+		$messages = self::writeMessagesArray( $messages, $code == 'en', false, $removeUnknown );
 		$messagesText = $messages[0];
 		$sortedMessages = $messages[1];
 
@@ -48,13 +50,16 @@ class MessageWriter {
 				}
 			}
 			if( $listUnknown && isset( $sortedMessages['unknown'] ) && !empty( $sortedMessages['unknown'] ) ) {
-				echo "\nThere are " . count( $sortedMessages['unknown'] ) . " unknown messages, please check them:\n";
+				if ( $removeUnknown )
+					echo "\nThe following " . count( $sortedMessages['unknown'] ) . " unknown messages have been removed:\n";
+				else
+					echo "\nThere are " . count( $sortedMessages['unknown'] ) . " unknown messages, please check them:\n";
 				foreach( $sortedMessages['unknown'] as $key => $value ) {
 					echo "* " . $key . "\n";
 				}
 			}
 		} else {
-			echo "Generated messages for language $code. There seems to be no messages array in the file.\n";
+			echo "Generated messages for language $code. There seem to be no messages array in the file.\n";
 		}
 	}
 
@@ -66,20 +71,17 @@ class MessageWriter {
 	 *
 	 * @return Array of the PHP text and the sorted messages array.
 	 */
-	public static function writeMessagesArray( $messages, $ignoredComments = false ) {
+	public static function writeMessagesArray( $messages, $ignoredComments = false, $prefix = false, $removeUnknown = false ) {
 		# Load messages
-		if( !self::$loaded ) {
-			require( dirname( __FILE__ ) . '/messages.inc' );
-			self::$messageStructure = $wgMessageStructure;
-			self::$blockComments = $wgBlockComments;
-			self::$messageComments = $wgMessageComments;
+		$dir = $prefix ? $prefix : dirname( __FILE__ );
 
-			require( dirname( __FILE__ ) . '/messageTypes.inc' );
-			self::$ignoredMessages = $wgIgnoredMessages;
-			self::$optionalMessages = $wgOptionalMessages;
+		require( $dir . '/messages.inc' );
+		self::$messageStructure = $wgMessageStructure;
+		self::$blockComments = $wgBlockComments;
 
-			self::$loaded = true;
-		}
+		require( $dir . '/messageTypes.inc' );
+		self::$ignoredMessages = $wgIgnoredMessages;
+		self::$optionalMessages = $wgOptionalMessages;
 
 		# Sort messages to blocks
 		$sortedMessages['unknown'] = $messages;
@@ -108,19 +110,20 @@ class MessageWriter {
 				$ignored = array();
 				$optional = array();
 			}
-			$comments = self::makeComments( array_keys($messages), self::$messageComments, $ignored, $optional );
+			$comments = self::makeComments( array_keys( $messages ), $ignored, $optional );
 
 			# Write the block
 			$messagesText .= self::writeMessagesBlock( self::$blockComments[$block], $messages, $comments );
 		}
 
 		# Write the unknown messages, alphabetically sorted.
-		# Of course, we don't have any comments for them, because the are unknown.
-		ksort( $sortedMessages['unknown'] );
-		$messagesText .= self::writeMessagesBlock( 'Unknown messages', $sortedMessages['unknown'] );
+		# Of course, we don't have any comments for them, because they are unknown.
+		if ( !$removeUnknown ) {
+			ksort( $sortedMessages['unknown'] );
+			$messagesText .= self::writeMessagesBlock( 'Unknown messages', $sortedMessages['unknown'] );
+		}
 		$messagesText .= ");
 ";
-
 		return array( $messagesText, $sortedMessages );
 	}
 
@@ -128,33 +131,19 @@ class MessageWriter {
 	 * Generates an array of comments for messages.
 	 *
 	 * @param $messages Key of messages.
-	 * @param $comments Comments for messages, indexed by key.
 	 * @param $ignored List of ingored message keys.
 	 * @param $optional List of optional message keys.
 	 */
-	public static function makeComments( $messages, $comments, $ignored, $optional ) {
+	public static function makeComments( $messages, $ignored, $optional ) {
 		# Comment collector
 		$commentArray = array();
 
 		# List of keys only
 		foreach( $messages as $key ) {
-			$commentsForKey = array();
-
-			# Add descriptive comment for this message if there is one
-			if( array_key_exists( $key, $comments ) ) {
-				$commentsForKey[] = $comments[$key];
-			}
-
-			# For translator information only
 			if( in_array( $key, $ignored ) ) {
-				$commentsForKey[] = self::$ignoredComment;
+				$commentArray[$key] = ' # ' . self::$ignoredComment;
 			} elseif( in_array( $key, $optional ) ) {
-				$commentsForKey[] = self::$optionalComment;
-			}
-
-			# Format one or more comments nicely and store in array
-			if( count( $commentsForKey ) ) {
-				$commentArray[$key] = ' # ' . implode( '; ', $commentsForKey );
+				$commentArray[$key] = ' # ' . self::$optionalComment;
 			}
 		}
 

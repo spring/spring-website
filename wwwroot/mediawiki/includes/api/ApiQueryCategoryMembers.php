@@ -23,169 +23,187 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-if (!defined('MEDIAWIKI')) {
+if ( !defined( 'MEDIAWIKI' ) ) {
 	// Eclipse helper - will be ignored in production
-	require_once ("ApiQueryBase.php");
+	require_once ( "ApiQueryBase.php" );
 }
 
 /**
  * A query module to enumerate pages that belong to a category.
- * 
- * @addtogroup API
+ *
+ * @ingroup API
  */
 class ApiQueryCategoryMembers extends ApiQueryGeneratorBase {
 
-	public function __construct($query, $moduleName) {
-		parent :: __construct($query, $moduleName, 'cm');
+	public function __construct( $query, $moduleName ) {
+		parent :: __construct( $query, $moduleName, 'cm' );
 	}
 
 	public function execute() {
 		$this->run();
 	}
 
-	public function executeGenerator($resultPageSet) {
-		$this->run($resultPageSet);
+	public function getCacheMode( $params ) {
+		return 'public';
 	}
 
-	private function run($resultPageSet = null) {
+	public function executeGenerator( $resultPageSet ) {
+		$this->run( $resultPageSet );
+	}
+
+	private function run( $resultPageSet = null ) {
 
 		$params = $this->extractRequestParams();
 
-		if (is_null($params['category'])) {
-			if (is_null($params['title']))
-				$this->dieUsage("Either the cmcategory or the cmtitle parameter is required", 'notitle');
-			else
-				$categoryTitle = Title::newFromText($params['title']);
-		} else if(is_null($params['title']))
-			$categoryTitle = Title::makeTitleSafe(NS_CATEGORY, $params['category']);
-		else
-			$this->dieUsage("The cmcategory and cmtitle parameters can't be used together", 'titleandcategory');
+		if ( !isset( $params['title'] ) || is_null( $params['title'] ) )
+			$this->dieUsage( "The cmtitle parameter is required", 'notitle' );
+		$categoryTitle = Title::newFromText( $params['title'] );
 
 		if ( is_null( $categoryTitle ) || $categoryTitle->getNamespace() != NS_CATEGORY )
-			$this->dieUsage("The category name you entered is not valid", 'invalidcategory');
-		
-		$prop = array_flip($params['prop']);
-		$fld_ids = isset($prop['ids']);
-		$fld_title = isset($prop['title']);
-		$fld_sortkey = isset($prop['sortkey']);
-		$fld_timestamp = isset($prop['timestamp']);
+			$this->dieUsage( "The category name you entered is not valid", 'invalidcategory' );
 
-		if (is_null($resultPageSet)) {
-			$this->addFields(array('cl_from', 'cl_sortkey', 'page_namespace', 'page_title'));
-			$this->addFieldsIf('page_id', $fld_ids);
+		$prop = array_flip( $params['prop'] );
+		$fld_ids = isset( $prop['ids'] );
+		$fld_title = isset( $prop['title'] );
+		$fld_sortkey = isset( $prop['sortkey'] );
+		$fld_timestamp = isset( $prop['timestamp'] );
+
+		if ( is_null( $resultPageSet ) ) {
+			$this->addFields( array( 'cl_from', 'cl_sortkey', 'page_namespace', 'page_title' ) );
+			$this->addFieldsIf( 'page_id', $fld_ids );
 		} else {
-			$this->addFields($resultPageSet->getPageTableFields()); // will include page_ id, ns, title
-			$this->addFields(array('cl_from', 'cl_sortkey'));
+			$this->addFields( $resultPageSet->getPageTableFields() ); // will include page_ id, ns, title
+			$this->addFields( array( 'cl_from', 'cl_sortkey' ) );
 		}
 
-		$this->addFieldsIf('cl_timestamp', $fld_timestamp || $params['sort'] == 'timestamp');
-		$this->addTables(array('page','categorylinks'));	// must be in this order for 'USE INDEX' 
+		$this->addFieldsIf( 'cl_timestamp', $fld_timestamp || $params['sort'] == 'timestamp' );
+		$this->addTables( array( 'page', 'categorylinks' ) );	// must be in this order for 'USE INDEX'
 									// Not needed after bug 10280 is applied to servers
-		if($params['sort'] == 'timestamp')
-		{
-			$this->addOption('USE INDEX', 'cl_timestamp');
-			$this->addOption('ORDER BY', 'cl_to, cl_timestamp' . ($params['dir'] == 'desc' ? ' DESC' : ''));
+		if ( $params['sort'] == 'timestamp' )
+			$this->addOption( 'USE INDEX', 'cl_timestamp' );
+		else
+			$this->addOption( 'USE INDEX', 'cl_sortkey' );
+
+		$this->addWhere( 'cl_from=page_id' );
+		$this->setContinuation( $params['continue'], $params['dir'] );
+		$this->addWhereFld( 'cl_to', $categoryTitle->getDBkey() );
+		// Scanning large datasets for rare categories sucks, and I already told 
+		// how to have efficient subcategory access :-) ~~~~ (oh well, domas)
+		global $wgMiserMode;
+		$miser_ns = array();
+		if ( $wgMiserMode ) {
+			$miser_ns = $params['namespace'];
+		} else {
+			$this->addWhereFld( 'page_namespace', $params['namespace'] );
 		}
+		if ( $params['sort'] == 'timestamp' )
+			$this->addWhereRange( 'cl_timestamp', ( $params['dir'] == 'asc' ? 'newer' : 'older' ), $params['start'], $params['end'] );
 		else
 		{
-			$this->addOption('USE INDEX', 'cl_sortkey');
-			$this->addOption('ORDER BY', 'cl_to, cl_sortkey' . ($params['dir'] == 'desc' ? ' DESC' : '') . ', cl_from');
+			$this->addWhereRange( 'cl_sortkey', ( $params['dir'] == 'asc' ? 'newer' : 'older' ), $params['startsortkey'], $params['endsortkey'] );
+			$this->addWhereRange( 'cl_from', ( $params['dir'] == 'asc' ? 'newer' : 'older' ), null, null );
 		}
 
-		$this->addWhere('cl_from=page_id');
-		$this->setContinuation($params['continue']);		
-		$this->addWhereFld('cl_to', $categoryTitle->getDBkey());
-		$this->addWhereFld('page_namespace', $params['namespace']);
-		$this->addWhereRange('cl_timestamp', ($params['dir'] == 'asc' ? 'newer' : 'older'), $params['start'], $params['end']);
-		
 		$limit = $params['limit'];
-		$this->addOption('LIMIT', $limit +1);
+		$this->addOption( 'LIMIT', $limit + 1 );
 
 		$db = $this->getDB();
 
 		$data = array ();
 		$count = 0;
 		$lastSortKey = null;
-		$res = $this->select(__METHOD__);
-		while ($row = $db->fetchObject($res)) {
-			if (++ $count > $limit) {
+		$res = $this->select( __METHOD__ );
+		while ( $row = $db->fetchObject( $res ) ) {
+			if ( ++ $count > $limit ) {
 				// We've reached the one extra which shows that there are additional pages to be had. Stop here...
 				// TODO: Security issue - if the user has no right to view next title, it will still be shown
-				if ($params['sort'] == 'timestamp')
-					$this->setContinueEnumParameter('start', $row->cl_timestamp);
+				if ( $params['sort'] == 'timestamp' )
+					$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->cl_timestamp ) );
 				else
-					$this->setContinueEnumParameter('continue', $this->getContinueStr($row, $lastSortKey));
+					$this->setContinueEnumParameter( 'continue', $this->getContinueStr( $row, $lastSortKey ) );
 				break;
 			}
 
-			$lastSortKey = $row->cl_sortkey;	// detect duplicate sortkeys 
-			
-			if (is_null($resultPageSet)) {
-				$vals = array();
-				if ($fld_ids)
-					$vals['pageid'] = intval($row->page_id); 
-				if ($fld_title) {
-					$title = Title :: makeTitle($row->page_namespace, $row->page_title);
-					$vals['ns'] = intval($title->getNamespace());
-					$vals['title'] = $title->getPrefixedText();
-				}
-				if ($fld_sortkey)
-					$vals['sortkey'] = $row->cl_sortkey;
-				if ($fld_timestamp)
-					$vals['timestamp'] = wfTimestamp(TS_ISO_8601, $row->cl_timestamp);
-				$data[] = $vals;
-			} else {
-				$resultPageSet->processDbRow($row);
-			}
-		}
-		$db->freeResult($res);
+			// Since domas won't tell anyone what he told long ago, apply 
+			// cmnamespace here. This means the query may return 0 actual 
+			// results, but on the other hand it could save returning 5000 
+			// useless results to the client. ~~~~
+			if ( count( $miser_ns ) && !in_array( $row->page_namespace, $miser_ns ) )
+				continue;
 
-		if (is_null($resultPageSet)) {
-			$this->getResult()->setIndexedTagName($data, 'cm');
-			$this->getResult()->addValue('query', $this->getModuleName(), $data);
+			if ( is_null( $resultPageSet ) ) {
+				$vals = array();
+				if ( $fld_ids )
+					$vals['pageid'] = intval( $row->page_id );
+				if ( $fld_title ) {
+					$title = Title :: makeTitle( $row->page_namespace, $row->page_title );
+					ApiQueryBase::addTitleInfo( $vals, $title );
+				}
+				if ( $fld_sortkey )
+					$vals['sortkey'] = $row->cl_sortkey;
+				if ( $fld_timestamp )
+					$vals['timestamp'] = wfTimestamp( TS_ISO_8601, $row->cl_timestamp );
+				$fit = $this->getResult()->addValue( array( 'query', $this->getModuleName() ),
+						null, $vals );
+				if ( !$fit )
+				{
+					if ( $params['sort'] == 'timestamp' )
+						$this->setContinueEnumParameter( 'start', wfTimestamp( TS_ISO_8601, $row->cl_timestamp ) );
+					else
+						$this->setContinueEnumParameter( 'continue', $this->getContinueStr( $row, $lastSortKey ) );
+					break;
+				}
+			} else {
+				$resultPageSet->processDbRow( $row );
+			}
+			$lastSortKey = $row->cl_sortkey;	// detect duplicate sortkeys
+		}
+		$db->freeResult( $res );
+
+		if ( is_null( $resultPageSet ) ) {
+			$this->getResult()->setIndexedTagName_internal(
+					 array( 'query', $this->getModuleName() ), 'cm' );
 		}
 	}
-	
-	private function getContinueStr($row, $lastSortKey) {
+
+	private function getContinueStr( $row, $lastSortKey ) {
 		$ret = $row->cl_sortkey . '|';
-		if ($row->cl_sortkey == $lastSortKey)	// duplicate sort key, add cl_from
+		if ( $row->cl_sortkey == $lastSortKey )	// duplicate sort key, add cl_from
 			$ret .= $row->cl_from;
 		return $ret;
 	}
-	
+
 	/**
-	 * Add DB WHERE clause to continue previous query based on 'continue' parameter 
+	 * Add DB WHERE clause to continue previous query based on 'continue' parameter
 	 */
-	private function setContinuation($continue) {
-		if (is_null($continue))
+	private function setContinuation( $continue, $dir ) {
+		if ( is_null( $continue ) )
 			return;	// This is not a continuation request
-			
-		$continueList = explode('|', $continue);
-		$hasError = count($continueList) != 2;
-		$from = 0;
-		if (!$hasError && strlen($continueList[1]) > 0) {
-			$from = intval($continueList[1]);
-			$hasError = ($from == 0); 
-		}
+
+		$pos = strrpos( $continue, '|' );
+		$sortkey = substr( $continue, 0, $pos );
+		$fromstr = substr( $continue, $pos + 1 );
+		$from = intval( $fromstr );
+
+		if ( $from == 0 && strlen( $fromstr ) > 0 )
+			$this->dieUsage( "Invalid continue param. You should pass the original value returned by the previous query", "badcontinue" );
+
+		$encSortKey = $this->getDB()->addQuotes( $sortkey );
+		$encFrom = $this->getDB()->addQuotes( $from );
 		
-		if ($hasError)
-			$this->dieUsage("Invalid continue param. You should pass the original value returned by the previous query", "badcontinue");
+		$op = ( $dir == 'desc' ? '<' : '>' );
 
-		$encSortKey = $this->getDB()->addQuotes($continueList[0]);
-		$encFrom = $this->getDB()->addQuotes($from);
-
-		if ($from != 0) {
+		if ( $from != 0 ) {
 			// Duplicate sort key continue
-			$this->addWhere( "cl_sortkey>$encSortKey OR (cl_sortkey=$encSortKey AND cl_from>=$encFrom)" );
+			$this->addWhere( "cl_sortkey$op$encSortKey OR (cl_sortkey=$encSortKey AND cl_from$op=$encFrom)" );
 		} else {
-			$this->addWhere( "cl_sortkey>=$encSortKey" );
+			$this->addWhere( "cl_sortkey$op=$encSortKey" );
 		}
 	}
 
 	public function getAllowedParams() {
 		return array (
 			'title' => null,
-			'category' => null, // DEPRECATED, will be removed in early March
 			'prop' => array (
 				ApiBase :: PARAM_DFLT => 'ids|title',
 				ApiBase :: PARAM_ISMULTI => true,
@@ -227,27 +245,47 @@ class ApiQueryCategoryMembers extends ApiQueryGeneratorBase {
 			),
 			'end' => array(
 				ApiBase :: PARAM_TYPE => 'timestamp'
-			)
+			),
+			'startsortkey' => null,
+			'endsortkey' => null,
 		);
 	}
 
 	public function getParamDescription() {
-		return array (
+		global $wgMiserMode;
+		$desc = array (
 			'title' => 'Which category to enumerate (required). Must include Category: prefix',
 			'prop' => 'What pieces of information to include',
 			'namespace' => 'Only include pages in these namespaces',
 			'sort' => 'Property to sort by',
 			'dir' => 'In which direction to sort',
-			'start' => 'Timestamp to start listing from',
-			'end' => 'Timestamp to end listing at',
+			'start' => 'Timestamp to start listing from. Can only be used with cmsort=timestamp',
+			'end' => 'Timestamp to end listing at. Can only be used with cmsort=timestamp',
+			'startsortkey' => 'Sortkey to start listing from. Can only be used with cmsort=sortkey',
+			'endsortkey' => 'Sortkey to end listing at. Can only be used with cmsort=sortkey',
 			'continue' => 'For large categories, give the value retured from previous query',
 			'limit' => 'The maximum number of pages to return.',
-			'category' => 'DEPRECATED. Like title, but without the Category: prefix.',
 		);
+		if ( $wgMiserMode ) {
+			$desc['namespace'] = array(
+				$desc['namespace'],
+				'NOTE: Due to $wgMiserMode, using this may result in fewer than "limit" results',
+				'returned before continuing; in extreme cases, zero results may be returned.',
+			);
+		}
+		return $desc;
 	}
 
 	public function getDescription() {
 		return 'List all pages in a given category';
+	}
+	
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'notitle', 'info' => 'The cmtitle parameter is required' ),
+			array( 'code' => 'invalidcategory', 'info' => 'The category name you entered is not valid' ),
+			array( 'code' => 'badcontinue', 'info' => 'Invalid continue param. You should pass the original value returned by the previous query' ),
+		) );
 	}
 
 	protected function getExamples() {
@@ -260,7 +298,6 @@ class ApiQueryCategoryMembers extends ApiQueryGeneratorBase {
 	}
 
 	public function getVersion() {
-		return __CLASS__ . ': $Id: ApiQueryCategoryMembers.php 37506 2008-07-10 14:37:27Z btongminh $';
+		return __CLASS__ . ': $Id: ApiQueryCategoryMembers.php 69932 2010-07-26 08:03:21Z tstarling $';
 	}
 }
-

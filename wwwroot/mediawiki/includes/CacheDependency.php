@@ -1,10 +1,9 @@
 <?php
-
 /**
- * This class stores an arbitrary value along with its dependencies. 
+ * This class stores an arbitrary value along with its dependencies.
  * Users should typically only use DependencyWrapper::getFromCache(), rather
  * than instantiating one of these objects directly.
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class DependencyWrapper {
 	var $value;
@@ -12,8 +11,8 @@ class DependencyWrapper {
 
 	/**
 	 * Create an instance.
-	 * @param mixed $value The user-supplied value
-	 * @param mixed $deps A dependency or dependency array. All dependencies
+	 * @param $value Mixed: the user-supplied value
+	 * @param $deps Mixed: a dependency or dependency array. All dependencies
 	 *        must be objects implementing CacheDependency.
 	 */
 	function __construct( $value = false, $deps = array() ) {
@@ -24,7 +23,7 @@ class DependencyWrapper {
 		$this->deps = $deps;
 	}
 
-	/** 
+	/**
 	 * Returns true if any of the dependencies have expired
 	 */
 	function isExpired() {
@@ -62,24 +61,24 @@ class DependencyWrapper {
 	}
 
 	/**
-	 * Attempt to get a value from the cache. If the value is expired or missing, 
+	 * Attempt to get a value from the cache. If the value is expired or missing,
 	 * it will be generated with the callback function (if present), and the newly
-	 * calculated value will be stored to the cache in a wrapper. 
+	 * calculated value will be stored to the cache in a wrapper.
 	 *
-	 * @param object $cache A cache object such as $wgMemc
-	 * @param string $key The cache key
-	 * @param integer $expiry The expiry timestamp or interval in seconds
-	 * @param mixed $callback The callback for generating the value, or false
-	 * @param array $callbackParams The function parameters for the callback
-	 * @param array $deps The dependencies to store on a cache miss. Note: these 
+	 * @param $cache Object: a cache object such as $wgMemc
+	 * @param $key String: the cache key
+	 * @param $expiry Integer: the expiry timestamp or interval in seconds
+	 * @param $callback Mixed: the callback for generating the value, or false
+	 * @param $callbackParams Array: the function parameters for the callback
+	 * @param $deps Array: the dependencies to store on a cache miss. Note: these
 	 *    are not the dependencies used on a cache hit! Cache hits use the stored
 	 *    dependency array.
 	 *
 	 * @return mixed The value, or null if it was not present in the cache and no
 	 *    callback was defined.
 	 */
-	static function getValueFromCache( $cache, $key, $expiry = 0, $callback = false, 
-		$callbackParams = array(), $deps = array() ) 
+	static function getValueFromCache( $cache, $key, $expiry = 0, $callback = false,
+		$callbackParams = array(), $deps = array() )
 	{
 		$obj = $cache->get( $key );
 		if ( is_object( $obj ) && $obj instanceof DependencyWrapper && !$obj->isExpired() ) {
@@ -97,7 +96,7 @@ class DependencyWrapper {
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 abstract class CacheDependency {
 	/**
@@ -108,11 +107,11 @@ abstract class CacheDependency {
 	/**
 	 * Hook to perform any expensive pre-serialize loading of dependency values.
 	 */
-	function loadDependencyValues() {}
+	function loadDependencyValues() { }
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class FileDependency extends CacheDependency {
 	var $filename, $timestamp;
@@ -120,18 +119,23 @@ class FileDependency extends CacheDependency {
 	/**
 	 * Create a file dependency
 	 *
-	 * @param string $filename The name of the file, preferably fully qualified
-	 * @param mixed $timestamp The unix last modified timestamp, or false if the
-	 *        file does not exist. If omitted, the timestamp will be loaded from 
+	 * @param $filename String: the name of the file, preferably fully qualified
+	 * @param $timestamp Mixed: the unix last modified timestamp, or false if the
+	 *        file does not exist. If omitted, the timestamp will be loaded from
 	 *        the file.
 	 *
-	 * A dependency on a nonexistent file will be triggered when the file is 
-	 * created. A dependency on an existing file will be triggered when the 
+	 * A dependency on a nonexistent file will be triggered when the file is
+	 * created. A dependency on an existing file will be triggered when the
 	 * file is changed.
 	 */
 	function __construct( $filename, $timestamp = null ) {
 		$this->filename = $filename;
 		$this->timestamp = $timestamp;
+	}
+
+	function __sleep() {
+		$this->loadDependencyValues();
+		return array( 'filename', 'timestamp' );
 	}
 
 	function loadDependencyValues() {
@@ -171,7 +175,7 @@ class FileDependency extends CacheDependency {
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class TitleDependency extends CacheDependency {
 	var $titleObj;
@@ -180,7 +184,7 @@ class TitleDependency extends CacheDependency {
 
 	/**
 	 * Construct a title dependency
-	 * @param Title $title
+	 * @param $title Title
 	 */
 	function __construct( Title $title ) {
 		$this->titleObj = $title;
@@ -191,7 +195,7 @@ class TitleDependency extends CacheDependency {
 	function loadDependencyValues() {
 		$this->touched = $this->getTitle()->getTouched();
 	}
-	
+
 	/**
 	 * Get rid of bulky Title object for sleep
 	 */
@@ -202,12 +206,13 @@ class TitleDependency extends CacheDependency {
 	function getTitle() {
 		if ( !isset( $this->titleObj ) ) {
 			$this->titleObj = Title::makeTitle( $this->ns, $this->dbk );
-		} 
+		}
 		return $this->titleObj;
 	}
 
 	function isExpired() {
 		$touched = $this->getTitle()->getTouched();
+
 		if ( $this->touched === false ) {
 			if ( $touched === false ) {
 				# Still missing
@@ -230,12 +235,12 @@ class TitleDependency extends CacheDependency {
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class TitleListDependency extends CacheDependency {
 	var $linkBatch;
 	var $timestamps;
-	
+
 	/**
 	 * Construct a dependency on a list of titles
 	 */
@@ -246,6 +251,7 @@ class TitleListDependency extends CacheDependency {
 	function calculateTimestamps() {
 		# Initialise values to false
 		$timestamps = array();
+
 		foreach ( $this->getLinkBatch()->data as $ns => $dbks ) {
 			if ( count( $dbks ) > 0 ) {
 				$timestamps[$ns] = array();
@@ -259,9 +265,13 @@ class TitleListDependency extends CacheDependency {
 		if ( count( $timestamps ) ) {
 			$dbr = wfGetDB( DB_SLAVE );
 			$where = $this->getLinkBatch()->constructSet( 'page', $dbr );
-			$res = $dbr->select( 'page', 
+			$res = $dbr->select(
+				'page',
 				array( 'page_namespace', 'page_title', 'page_touched' ),
-				$where, __METHOD__ );
+				$where,
+				__METHOD__
+			);
+
 			while ( $row = $dbr->fetchObject( $res ) ) {
 				$timestamps[$row->page_namespace][$row->page_title] = $row->page_touched;
 			}
@@ -278,7 +288,7 @@ class TitleListDependency extends CacheDependency {
 	}
 
 	function getLinkBatch() {
-		if ( !isset( $this->linkBatch ) ){
+		if ( !isset( $this->linkBatch ) ) {
 			$this->linkBatch = new LinkBatch;
 			$this->linkBatch->setArray( $this->timestamps );
 		}
@@ -290,6 +300,7 @@ class TitleListDependency extends CacheDependency {
 		foreach ( $this->timestamps as $ns => $dbks ) {
 			foreach ( $dbks as $dbk => $oldTimestamp ) {
 				$newTimestamp = $newTimestamps[$ns][$dbk];
+
 				if ( $oldTimestamp === false ) {
 					if ( $newTimestamp === false ) {
 						# Still missing
@@ -313,11 +324,11 @@ class TitleListDependency extends CacheDependency {
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class GlobalDependency extends CacheDependency {
 	var $name, $value;
-	
+
 	function __construct( $name ) {
 		$this->name = $name;
 		$this->value = $GLOBALS[$name];
@@ -329,7 +340,7 @@ class GlobalDependency extends CacheDependency {
 }
 
 /**
- * @addtogroup Cache
+ * @ingroup Cache
  */
 class ConstantDependency extends CacheDependency {
 	var $name, $value;
@@ -343,5 +354,3 @@ class ConstantDependency extends CacheDependency {
 		return constant( $this->name ) != $this->value;
 	}
 }
-
-

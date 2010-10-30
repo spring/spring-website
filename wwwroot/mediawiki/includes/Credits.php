@@ -20,169 +20,199 @@
  * @author <evan@wikitravel.org>
  */
 
-/**
- * This is largely cadged from PageHistory::history
- */
-function showCreditsPage($article) {
-	global $wgOut;
+class Credits {
 
-	$fname = 'showCreditsPage';
-
-	wfProfileIn( $fname );
+	/**
+	 * This is largely cadged from PageHistory::history
+	 * @param $article Article object
+	 */
+	public static function showPage( Article $article ) {
+		global $wgOut;
 	
-	$wgOut->setPageTitle( $article->mTitle->getPrefixedText() );
-	$wgOut->setSubtitle( wfMsg( 'creditspage' ) );
-	$wgOut->setArticleFlag( false );
-	$wgOut->setArticleRelated( true );
-	$wgOut->setRobotpolicy( 'noindex,nofollow' );
-
-	if( $article->mTitle->getArticleID() == 0 ) {
-		$s = wfMsg( 'nocredits' );
-	} else {
-		$s = getCredits($article, -1);
-	}
-
-	$wgOut->addHTML( $s );
-
-	wfProfileOut( $fname );
-}
-
-function getCredits($article, $cnt, $showIfMax=true) {
-	$fname = 'getCredits';
-	wfProfileIn( $fname );
-	$s = '';
-
-	if (isset($cnt) && $cnt != 0) {
-		$s = getAuthorCredits($article);
-		if ($cnt > 1 || $cnt < 0) {
-			$s .= ' ' . getContributorCredits($article, $cnt - 1, $showIfMax);
-		}
-	}
-
-	wfProfileOut( $fname );
-	return $s;
-}
-
-/**
- *
- */
-function getAuthorCredits($article) {
-	global $wgLang, $wgAllowRealName;
-
-	$last_author = $article->getUser();
-
-	if ($last_author == 0) {
-		$author_credit = wfMsg('anonymous');
-	} else {
-		if($wgAllowRealName) { $real_name = User::whoIsReal($last_author); }
-		$user_name = User::whoIs($last_author);
-
-		if (!empty($real_name)) {
-			$author_credit = creditLink($user_name, $real_name);
+		wfProfileIn( __METHOD__ );
+	
+		$wgOut->setPageTitle( $article->mTitle->getPrefixedText() );
+		$wgOut->setSubtitle( wfMsg( 'creditspage' ) );
+		$wgOut->setArticleFlag( false );
+		$wgOut->setArticleRelated( true );
+		$wgOut->setRobotPolicy( 'noindex,nofollow' );
+	
+		if( $article->mTitle->getArticleID() == 0 ) {
+			$s = wfMsg( 'nocredits' );
 		} else {
-			$author_credit = wfMsg('siteuser', creditLink($user_name));
+			$s = self::getCredits($article, -1 );
 		}
+	
+		$wgOut->addHTML( $s );
+	
+		wfProfileOut( __METHOD__ );
 	}
 
-	$timestamp = $article->getTimestamp();
-	if ($timestamp) {
-		$d = $wgLang->date($article->getTimestamp(), true);
-		$t = $wgLang->time($article->getTimestamp(), true);
-	} else {
-		$d = '';
-		$t = '';
-	}
-	return wfMsg('lastmodifiedatby', $d, $t, $author_credit);
-}
+	/**
+	 * Get a list of contributors of $article
+	 * @param $article Article object
+	 * @param $cnt Int: maximum list of contributors to show
+	 * @param $showIfMax Bool: whether to contributors if there more than $cnt
+	 * @return String: html
+	 */
+	public static function getCredits( Article $article, $cnt, $showIfMax = true ) {
+		wfProfileIn( __METHOD__ );
+		$s = '';
 
-/**
- *
- */
-function getContributorCredits($article, $cnt, $showIfMax) {
-
-	global $wgLang, $wgAllowRealName;
-
-	$contributors = $article->getContributors();
-
-	$others_link = '';
-
-	# Hmm... too many to fit!
-
-	if ($cnt > 0 && count($contributors) > $cnt) {
-		$others_link = creditOthersLink($article);
-		if (!$showIfMax) {
-			return wfMsg('othercontribs', $others_link);
-		} else {
-			$contributors = array_slice($contributors, 0, $cnt);
-		}
-	}
-
-	$real_names = array();
-	$user_names = array();
-
-	$anon = '';
-
-	# Sift for real versus user names
-
-	foreach ($contributors as $user_parts) {
-		if ($user_parts[0] != 0) {
-			if ($wgAllowRealName && !empty($user_parts[2])) {
-				$real_names[] = creditLink($user_parts[1], $user_parts[2]);
-			} else {
-				$user_names[] = creditLink($user_parts[1]);
+		if( isset( $cnt ) && $cnt != 0 ){
+			$s = self::getAuthor( $article );
+			if ( $cnt > 1 || $cnt < 0 ) {
+				$s .= ' ' . self::getContributors( $article, $cnt - 1, $showIfMax );
 			}
+		}
+
+		wfProfileOut( __METHOD__ );
+		return $s;
+	}
+
+	/**
+	 * Get the last author with the last modification time
+	 * @param $article Article object
+	 */
+	protected static function getAuthor( Article $article ){
+		global $wgLang;
+
+		$user = User::newFromId( $article->getUser() );
+
+		$timestamp = $article->getTimestamp();
+		if( $timestamp ){
+			$d = $wgLang->date( $article->getTimestamp(), true );
+			$t = $wgLang->time( $article->getTimestamp(), true );
 		} else {
-			$anon = wfMsg('anonymous');
+			$d = '';
+			$t = '';
+		}
+		return wfMsgExt( 'lastmodifiedatby', 'parsemag', $d, $t, self::userLink( $user ), $user->getName() );
+	}
+
+	/**
+	 * Get a list of contributors of $article
+	 * @param $article Article object
+	 * @param $cnt Int: maximum list of contributors to show
+	 * @param $showIfMax Bool: whether to contributors if there more than $cnt
+	 * @return String: html
+	 */
+	protected static function getContributors( Article $article, $cnt, $showIfMax ) {
+		global $wgLang, $wgHiddenPrefs;
+	
+		$contributors = $article->getContributors();
+	
+		$others_link = false;
+	
+		# Hmm... too many to fit!
+		if( $cnt > 0 && $contributors->count() > $cnt ){
+			$others_link = self::othersLink( $article );
+			if( !$showIfMax )
+				return wfMsg( 'othercontribs', $others_link );
+		}
+	
+		$real_names = array();
+		$user_names = array();
+		$anon_ips = array();
+	
+		# Sift for real versus user names
+		foreach( $contributors as $user ) {
+			$cnt--;
+			if( $user->isLoggedIn() ){
+				$link = self::link( $user );
+				if( !in_array( 'realname', $wgHiddenPrefs ) && $user->getRealName() )
+					$real_names[] = $link;
+				else
+					$user_names[] = $link;
+			} else {
+				$anon_ips[] = self::link( $user );
+			}
+			if( $cnt == 0 ) break;
+		}
+	
+		if ( count( $real_names ) ) {
+			$real = $wgLang->listToText( $real_names );
+		} else {
+			$real = false;
+		}
+	
+		# "ThisSite user(s) A, B and C"
+		if( count( $user_names ) ){
+			$user = wfMsgExt( 'siteusers', array( 'parsemag' ),
+				$wgLang->listToText( $user_names ), count( $user_names ) );
+		} else {
+			$user = false;
+		}
+
+		if( count( $anon_ips ) ){
+			$anon = wfMsgExt( 'anonusers', array( 'parsemag' ),
+				$wgLang->listToText( $anon_ips ), count( $anon_ips ) );
+		} else {
+			$anon = false;
+		}
+	
+		# This is the big list, all mooshed together. We sift for blank strings
+		$fulllist = array();
+		foreach( array( $real, $user, $anon, $others_link ) as $s ){
+			if( $s ){
+				array_push( $fulllist, $s );
+			}
+		}
+
+		# Make the list into text...
+		$creds = $wgLang->listToText( $fulllist );
+
+		# "Based on work by ..."
+		return strlen( $creds ) ? wfMsg( 'othercontribs', $creds ) : '';
+	}
+
+	/**
+	 * Get a link to $user's user page
+	 * @param $user User object
+	 * @return String: html
+	 */
+	protected static function link( User $user ) {
+		global $wgUser, $wgHiddenPrefs;
+		if( !in_array( 'realname', $wgHiddenPrefs ) && !$user->isAnon() )
+			$real = $user->getRealName();
+		else
+			$real = false;
+
+		$skin = $wgUser->getSkin();
+		$page = $user->isAnon() ?
+			SpecialPage::getTitleFor( 'Contributions', $user->getName() ) :
+			$user->getUserPage();
+
+		return $skin->link( $page, htmlspecialchars( $real ? $real : $user->getName() ) );
+	}
+
+	/**
+	 * Get a link to $user's user page
+	 * @param $user_name String: user name
+	 * @param $linkText String: optional display
+	 * @return String: html
+	 */
+	protected static function userLink( User $user ) {
+		$link = self::link( $user );
+		if( $user->isAnon() ){
+			return wfMsgExt( 'anonuser', array( 'parseinline', 'replaceafter' ), $link );
+		} else {
+			global $wgHiddenPrefs;
+			if( !in_array( 'realname', $wgHiddenPrefs ) && $user->getRealName() )
+				return $link;
+			else 
+				return wfMsgExt( 'siteuser', array( 'parseinline', 'replaceafter' ), $link );
 		}
 	}
 
-	# Two strings: real names, and user names
-
-	$real = $wgLang->listToText($real_names);
-	$user = $wgLang->listToText($user_names);
-
-	# "ThisSite user(s) A, B and C"
-
-	if (!empty($user)) {
-		$user = wfMsg('siteusers', $user);
+	/**
+	 * Get a link to action=credits of $article page
+	 * @param $article Article object
+	 * @return String: html
+	 */
+	protected static function othersLink( Article $article ) {
+		global $wgUser;
+		$skin = $wgUser->getSkin();
+		return $skin->link( $article->getTitle(), wfMsgHtml( 'others' ), array(), array( 'action' => 'credits' ), array( 'known' ) );
 	}
-
-	# This is the big list, all mooshed together. We sift for blank strings
-
-	$fulllist = array();
-
-	foreach (array($real, $user, $anon, $others_link) as $s) {
-		if (!empty($s)) {
-			array_push($fulllist, $s);
-		}
-	}
-
-	# Make the list into text...
-
-	$creds = $wgLang->listToText($fulllist);
-
-	# "Based on work by ..."
-
-	return (empty($creds)) ? '' : wfMsg('othercontribs', $creds);
 }
-
-/**
- *
- */
-function creditLink($user_name, $link_text = '') {
-	global $wgUser, $wgContLang;
-	$skin = $wgUser->getSkin();
-	return $skin->makeLink($wgContLang->getNsText(NS_USER) . ':' . $user_name,
-			       htmlspecialchars( (empty($link_text)) ? $user_name : $link_text ));
-}
-
-/**
- *
- */
-function creditOthersLink($article) {
-	global $wgUser;
-	$skin = $wgUser->getSkin();
-	return $skin->makeKnownLink($article->mTitle->getPrefixedText(), wfMsg('others'), 'action=credits');
-}
-
-

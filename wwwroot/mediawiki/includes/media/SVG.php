@@ -1,7 +1,11 @@
 <?php
+/**
+ * @file
+ * @ingroup Media
+ */
 
 /**
- * @addtogroup Media
+ * @ingroup Media
  */
 class SvgHandler extends ImageHandler {
 	function isEnabled() {
@@ -23,7 +27,6 @@ class SvgHandler extends ImageHandler {
 		if ( !parent::normaliseParams( $image, $params ) ) {
 			return false;
 		}
-
 		# Don't make an image bigger than wgMaxSVGSize
 		$params['physicalWidth'] = $params['width'];
 		$params['physicalHeight'] = $params['height'];
@@ -35,10 +38,8 @@ class SvgHandler extends ImageHandler {
 		}
 		return true;
 	}
-	
+
 	function doTransform( $image, $dstPath, $dstUrl, $params, $flags = 0 ) {
-		global $wgSVGConverters, $wgSVGConverter, $wgSVGConverterPath;
-		
 		if ( !$this->normaliseParams( $image, $params ) ) {
 			return new TransformParameterError( $params );
 		}
@@ -53,35 +54,52 @@ class SvgHandler extends ImageHandler {
 		}
 
 		if ( !wfMkdirParents( dirname( $dstPath ) ) ) {
-			return new MediaTransformError( 'thumbnail_error', $clientWidth, $clientHeight, 
+			return new MediaTransformError( 'thumbnail_error', $clientWidth, $clientHeight,
 				wfMsg( 'thumbnail_dest_directory' ) );
 		}
-
+		
+		$status = $this->rasterize( $srcPath, $dstPath, $physicalWidth, $physicalHeight );
+		if( $status === true ) {
+			return new ThumbnailImage( $image, $dstUrl, $clientWidth, $clientHeight, $dstPath );
+		} else {
+			return $status; // MediaTransformError
+		}
+	}
+	
+	/*
+	* Transform an SVG file to PNG
+	* This function can be called outside of thumbnail contexts
+	* @param string $srcPath
+	* @param string $dstPath
+	* @param string $width
+	* @param string $height
+	* @returns TRUE/MediaTransformError
+	*/
+	public function rasterize( $srcPath, $dstPath, $width, $height ) {
+		global $wgSVGConverters, $wgSVGConverter, $wgSVGConverterPath;
 		$err = false;
-		if( isset( $wgSVGConverters[$wgSVGConverter] ) ) {
+		if ( isset( $wgSVGConverters[$wgSVGConverter] ) ) {
 			$cmd = str_replace(
 				array( '$path/', '$width', '$height', '$input', '$output' ),
 				array( $wgSVGConverterPath ? wfEscapeShellArg( "$wgSVGConverterPath/" ) : "",
-					   intval( $physicalWidth ),
-					   intval( $physicalHeight ),
+					   intval( $width ),
+					   intval( $height ),
 					   wfEscapeShellArg( $srcPath ),
 					   wfEscapeShellArg( $dstPath ) ),
-				$wgSVGConverters[$wgSVGConverter] ) . " 2>&1";
+				$wgSVGConverters[$wgSVGConverter]
+			) . " 2>&1";
 			wfProfileIn( 'rsvg' );
 			wfDebug( __METHOD__.": $cmd\n" );
 			$err = wfShellExec( $cmd, $retval );
 			wfProfileOut( 'rsvg' );
 		}
-
 		$removed = $this->removeBadFile( $dstPath, $retval );
 		if ( $retval != 0 || $removed ) {
-			wfDebugLog( 'thumbnail',
-				sprintf( 'thumbnail failed on %s: error %d "%s" from "%s"',
+			wfDebugLog( 'thumbnail', sprintf( 'thumbnail failed on %s: error %d "%s" from "%s"',
 					wfHostname(), $retval, trim($err), $cmd ) );
-			return new MediaTransformError( 'thumbnail_error', $clientWidth, $clientHeight, $err );
-		} else {
-			return new ThumbnailImage( $image, $dstUrl, $clientWidth, $clientHeight, $dstPath );
+			return new MediaTransformError( 'thumbnail_error', $width, $height, $err );
 		}
+		return true;
 	}
 
 	function getImageSize( $image, $path ) {
@@ -94,9 +112,9 @@ class SvgHandler extends ImageHandler {
 
 	function getLongDesc( $file ) {
 		global $wgLang;
-		return wfMsg( 'svg-long-desc', $file->getWidth(), $file->getHeight(), 
+		return wfMsgExt( 'svg-long-desc', 'parseinline',
+			$wgLang->formatNum( $file->getWidth() ),
+			$wgLang->formatNum( $file->getHeight() ),
 			$wgLang->formatSize( $file->getSize() ) );
 	}
 }
-
-
