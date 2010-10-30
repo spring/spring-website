@@ -205,3 +205,7 @@ small                    {font-size: 75%;}
 code                     {font-size: 90%; color: #9f9;}
 code *                   {margin: 2px 0px 2px 10px;}
 code pre                 {padding-left: 5px; border-left: #333 1px solid; background: url("/images/codebg.png") repeat-y}
+
+
+/* FIXES FOR MEDIAWIKI 1.16.0 */
+.headertd                {line-height: 0;}
