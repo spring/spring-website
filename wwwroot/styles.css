@@ -24,7 +24,8 @@ p {
 	color: #EEEEEE;	
 }
 table.menubar td {
-    padding: 0px;
+    line-height: 0;
+    padding: 0;
 }
 table.menubar td a {
     padding-top: 3px; 
@@ -36,7 +37,8 @@ table.menubar td a {
     line-height: 14pt;
 }
 .headertd {
-    padding: 0px;
+    line-height: 0;
+    padding: 0;
 }
 .headermenuleft {
     background-image: url(/images/notselected_button_left.png);
