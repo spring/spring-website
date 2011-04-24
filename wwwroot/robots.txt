@@ -4,3 +4,5 @@ Disallow: /images/
 Disallow: /thumbs/
 Disallow: /mediawiki/
 Disallow: /websvn/
+Disallow: /mantis/print_all_bug_page_word.php
+Disallow: /mantis/print_bug_page.php
