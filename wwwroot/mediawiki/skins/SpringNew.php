@@ -43,6 +43,7 @@ class SkinSpringNew extends Skin {
 
         $s .= "\n<div id='content'>\n";
 
+
         //$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
         //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
         //$s .= '<td width="738">';
@@ -93,10 +94,9 @@ class SkinSpringNew extends Skin {
 
         $s .= $this->searchForm(wfMsg("qbfind"));
 
-        $s .= "</td><td class='bottom' align='right'>";
-        $s .= '<a href="http://www.mediawiki.org">MediaWiki</a>&nbsp;&nbsp;';
-
-		$s .= "</td>";
+	$s .= "</td>";
+        //$s .= '<td class="bottom" align="right"><a href="http://www.mediawiki.org">MediaWiki</a>&nbsp;&nbsp;';
+	//$s .= "</td>";
 		$s .= "</tr></table>\n</div>\n";
 
 
@@ -293,16 +293,22 @@ class SkinSpringNew extends Skin {
 
 		$search = $wgRequest->getText( 'search' );
 		$action = $this->escapeSearchLink();
-		$s = "<form id=\"searchform{$this->searchboxes}\" method=\"get\" class=\"inline\" action=\"$action\">";
+		$s = "<div id=\"cse\" style=\"width: 100%;\"><form id=\"searchform{$this->searchboxes}\" method=\"get\" class=\"inline\" action=\"$action\">";
 		if ( "" != $label ) { $s .= "{$label}: "; }
 
 		$s .= "<input type='text' id=\"searchInput{$this->searchboxes}\" class=\"mw-searchInput\" name=\"search\" size=\"14\" value=\""
 		  . htmlspecialchars(substr($search,0,256)) . "\" /> "
 		  . "<input type='submit' id=\"searchGoButton{$this->searchboxes}\" class=\"searchButton\" name=\"go\" value=\"" . htmlspecialchars( wfMsg( "searcharticle" ) ) . "\" />"
-		  . "<input type='submit' id=\"mw-searchButton{$this->searchboxes}\" class=\"searchButton\" name=\"fulltext\" value=\"" . htmlspecialchars( wfMsg( "search" ) ) . "\" /></form>";
+		  . "<input type='submit' id=\"mw-searchButton{$this->searchboxes}\" class=\"searchButton\" name=\"fulltext\" value=\"" . htmlspecialchars( wfMsg( "search" ) ) . "\" /></form></div>";
 
 		// Ensure unique id's for search boxes made after the first
 		$this->searchboxes = $this->searchboxes == '' ? 2 : $this->searchboxes + 1;
+
+	$s .= <<<GOOGLESTRING
+		<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+		<script type="text/javascript">  google.load('search', '1', {language : 'en'});  google.setOnLoadCallback(function() {    var customSearchControl = new google.search.CustomSearchControl('009330874965769538744:qyumpuo2xti');    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);    customSearchControl.draw('cse');  }, true);</script>
+		<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
+GOOGLESTRING;
 
 		return $s;
 	}
