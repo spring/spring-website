@@ -4,32 +4,62 @@ body {
 	background-color: #38464F;
 	background-image: url(/images/background.png);
 	background-repeat:repeat-x;
+	text-align:center;
 }
+
+#wrapper {
+	text-align:left;
+	margin:0 auto;
+	width:760px;
+}
+
 p {
 	margin: 0px;
 }
 
 .banner {
-    width: 760px;
-    height: 110px;
-    position: absolute;
+    height: 105px;
+	position: relative;
     background-repeat: no-repeat;
-    background-image: url(/imagerotate.php?cat=32);
 }
 
-.menubar {
+.topbannerbg {
+	position:absolute;
+	width:100%;
+	height:110px;
+	background-image: url(/imagerotate.php?cat=32);
+}
+
+#menu {
+
+}
+#menu ul {
+	float:right;
+	list-style:none;
+	margin:0;
+	padding:0;
+}
+#menu li {
+	float:left;
+	margin:0;
+	padding:0;
+}
+#menu a {
+	display:block;
+}
+#menu, .menubar {
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
-	color: #EEEEEE;	
+	color: #EEEEEE;
 }
 table.menubar td {
     line-height: 0;
     padding: 0;
 }
-table.menubar td a {
-    padding-top: 3px; 
-    padding-bottom: 4px;     
+#menu  a {
+    padding-top: 3px;
+    padding-bottom: 4px;
     padding-left: 8px;
     padding-right: 8px;
     display: block;
@@ -39,35 +69,35 @@ table.menubar td a {
 .headertd {
     padding: 0;
 }
-.headermenuleft {
+#menu .headermenuleft {
     background-image: url(/images/notselected_button_left.png);
 }
-.headermenuleftlink {
+#menu .headermenuleftlink {
     background-image: url(/images/selected_button_left.png);
     background-position: -100px -100px;
     background-repeat: no-repeat;
 }
-.headermenuleftlink:hover {
+#menu .headermenuleftlink:hover {
     background-position: 0px 0px;
 }
-.headermenu {
+#menu .headermenu {
     background-image: url(/images/notselected_button_background.gif);
 }
-.headermenulink {
+#menu .headermenulink {
     background-image: url(/images/selected_button_background.gif);
     background-position: -100px -100px;
     background-repeat: repeat-x;
 }
-.headermenulink:hover {
+#menu .headermenulink:hover {
     background-position: 0px 0px;
 }
-.headermenuright {
+#menu .headermenuright {
     background-image: url(/images/notselected_button_right.png);
     background-position: right;
     margin: 0px;
     padding: 0px;
 }
-.headermenurightlink {
+#menu .headermenurightlink {
     background-image: url(/images/selected_button_right.png);
     background-position: -100px -100px;
     background-repeat: no-repeat;
@@ -94,20 +124,20 @@ a.menubar:hover {
 	background-image: url(/images/location_bar.png);
 	background-repeat:no-repeat;
 	padding: 0px;
-	padding-left: 12px;	
+	padding-left: 12px;
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
-	color: #EEEEEE;	
+	color: #EEEEEE;
 }
 .bottombar {
     background-image: url(/images/bottom.png);
     background-repeat:no-repeat;
-    padding-left: 12px;    
+    padding-left: 12px;
     font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
     font-size: 10px;
     font-weight:bold;
-    color: #EEEEEE;    
+    color: #EEEEEE;
 }
 a.bottomlink:link {
     color: #A3BDCF;
