@@ -29,6 +29,16 @@ p {
 	height:110px;
 	background: transparent url(/imagerotate.php?cat=32) top right no-repeat;
 }
+#topbannerfade {
+	float:right;
+	height:110px;
+	width:760px;
+	background: transparent url(/images/bannerfade.png) top left no-repeat;
+}
+.banner a {
+	position: absolute;
+	z-index: 1001;
+}
 
 #menu {
 
