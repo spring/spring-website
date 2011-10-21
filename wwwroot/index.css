@@ -112,6 +112,8 @@ a.bigbar:hover {
 
 .learnmorebar {
 	background-image: url(/images/notselected_learn.jpg);
+	background-position: top right;
+	background-repeat: no-repeat;
 }
 .learnmorebar_selected {
 	background-image: url(/images/selected_learn.jpg);
@@ -119,10 +121,13 @@ a.bigbar:hover {
 	background-repeat: no-repeat;
 }
 .learnmorebar_selected:hover {
-	background-position: 0px 0px;
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }
 .downloadbar {
 	background-image: url(/images/notselected_download.jpg);
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }
 .downloadbar_selected {
 	background-image: url(/images/selected_download.jpg);
@@ -130,10 +135,13 @@ a.bigbar:hover {
 	background-repeat: no-repeat;
 }
 .downloadbar_selected:hover {
-	background-position: 0px 0px;
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }
 .gamesbar {
 	background-image: url(/images/notselected_games.jpg);
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }
 .gamesbar_selected {
 	background-image: url(/images/selected_games.jpg);
@@ -141,7 +149,8 @@ a.bigbar:hover {
 	background-repeat: no-repeat;
 }
 .gamesbar_selected:hover {
-	background-position: 0px 0px;
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }
 
 .news {
