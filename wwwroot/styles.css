@@ -62,6 +62,8 @@ p {
 	font-size: 12px;
 	font-weight:bold;
 	color: #EEEEEE;
+}
+#menu {
 	height: 29px;
 }
 table.menubar td {
