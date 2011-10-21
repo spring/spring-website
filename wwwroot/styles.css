@@ -168,7 +168,8 @@ a {
     outline: none;
 }
 #frontrightbuttons {
-	width:465px;
+	width:100%;
+	max-width:465px;
 }
 
 #welcometext {
