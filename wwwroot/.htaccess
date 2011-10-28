@@ -11,3 +11,5 @@ RewriteRule ^screenshots /media.php [L,R=301]
 RewriteRule ^doxygen http://spring.osocial.se/ [L,R=301]
 
 RewriteRule ^git/$ /cgi-bin/gitweb.cgi [L,QSA]
+RewriteRule ^stylesv([0-9]+).css /styles.css [NC]
+RewriteRule ^indexv([0-9]+).css /index.css [NC]
