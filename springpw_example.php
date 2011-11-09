@@ -2,6 +2,7 @@
 
 // Copy this file to springpw.php and update these variables
 
+$spring_dbhost = 'localhost';
 $spring_dbuser = 'spring';
 $spring_dbpass = 'some_pass';
 $spring_dbname = 'spring';
