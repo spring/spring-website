@@ -61,9 +61,9 @@ $wgEnotifWatchlist = false; # UPO
 $wgEmailAuthentication = true;
 
 $wgDBtype           = "mysql";
-$wgDBserver         = "localhost";
 
 include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php');
+$wgDBserver         = $spring_dbhost;
 $wgDBuser           = $spring_dbuser;
 $wgDBpassword       = $spring_dbpass;
 $wgDBname           = $spring_dbname;

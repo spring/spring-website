@@ -2,10 +2,10 @@
 // phpBB 3.0.x auto-generated configuration file
 // Do not change anything in this file!
 $dbms = 'mysqli';
-$dbhost = 'localhost';
 $dbport = '';
 
 include(dirname(__FILE__) . '/../../springpw.php');
+$dbhost = $spring_dbhost;
 $dbname = $spring_dbname;
 $dbuser = $spring_dbuser;
 $dbpasswd = $spring_dbpass;

@@ -42,7 +42,7 @@
 	include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php'); 
 
 	# set these values to match your setup
-	$g_hostname      = "localhost";
+	$g_hostname      = $spring_dbhost;
 	$g_db_username   = $spring_dbuser;
 	$g_db_password   = $spring_dbpass;
 	$g_database_name = $spring_dbname;
