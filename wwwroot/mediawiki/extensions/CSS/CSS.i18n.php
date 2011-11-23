@@ -49,7 +49,14 @@ $messages['arz'] = array(
 	'css-desc' => 'دالة محلل تسمح بأنماط CSS أن تضمن فى صفحات معينة',
 );
 
-/** Belarusian (Taraškievica orthography) (Беларуская (тарашкевіца))
+/** Asturian (Asturianu)
+ * @author Xuacu
+ */
+$messages['ast'] = array(
+	'css-desc' => "Una función d'analís que permite incluir fueyes d'estilu CSS en páxines específiques",
+);
+
+/** Belarusian (Taraškievica orthography) (‪Беларуская (тарашкевіца)‬)
  * @author Jim-by
  */
 $messages['be-tarask'] = array(
@@ -134,6 +141,13 @@ $messages['eu'] = array(
 	'css-desc' => 'CSS stilo orrialdeak biamentzen dituen parser funtzio bat sartzen du orrialde berezietan',
 );
 
+/** Persian (فارسی)
+ * @author Ebraminio
+ */
+$messages['fa'] = array(
+	'css-desc' => 'یک تابع تجزیه کننده که اجازه می‌دهد CSSها در صفحه‌های خاص اضافه شوند.',
+);
+
 /** Finnish (Suomi)
  * @author Vililikku
  */
@@ -146,7 +160,7 @@ $messages['fi'] = array(
  * @author Verdy p
  */
 $messages['fr'] = array(
-	'css-desc' => 'Une fonction du parseur qui permet d’inclure des feuilles de style dans certaines pages',
+	'css-desc' => 'Une fonction du parseur qui permet d’inclure des feuilles de style dans des pages spécifiques',
 );
 
 /** Galician (Galego)
@@ -281,7 +295,7 @@ $messages['mg'] = array(
  * @author Bjankuloski06
  */
 $messages['mk'] = array(
-	'css-desc' => 'Парсер функција која дозволува прикажување на CSS стилски табли на одбрани страници',
+	'css-desc' => 'Парсерска функција која дозволува прикажување на CSS-стилски табели на одбрани страници',
 );
 
 /** Malay (Bahasa Melayu)
@@ -397,14 +411,14 @@ $messages['sl'] = array(
 	'css-desc' => 'Funkcija razčlenjevalnika, ki omogoča vključitev slogovne predloge CSS v določene strani',
 );
 
-/** Serbian Cyrillic ekavian (Српски (ћирилица))
+/** Serbian Cyrillic ekavian (‪Српски (ћирилица)‬)
  * @author Михајло Анђелковић
  */
 $messages['sr-ec'] = array(
 	'css-desc' => 'Функција парсера која омогућује да се CSS стилови укључе у одређене стране',
 );
 
-/** Serbian Latin ekavian (Srpski (latinica))
+/** Serbian Latin ekavian (‪Srpski (latinica)‬)
  * @author Michaello
  */
 $messages['sr-el'] = array(
@@ -430,6 +444,13 @@ $messages['sv'] = array(
  */
 $messages['te'] = array(
 	'css-desc' => 'కొన్ని ప్రత్యేకమైన పేజీలలో CSS శైలులని చేర్చడానికి అనుమతించే పార్సర్ సౌలభ్యం',
+);
+
+/** Thai (ไทย)
+ * @author Octahedron80
+ */
+$messages['th'] = array(
+	'css-desc' => 'ฟังก์ชันแจงส่วนที่อนุญาตให้สไตล์ชีต CSS รวมอยู่ในหน้าที่เฉพาะเจาะจง',
 );
 
 /** Tagalog (Tagalog)
@@ -485,6 +506,13 @@ $messages['zh-hans'] = array(
  * @author Liangent
  */
 $messages['zh-hant'] = array(
+	'css-desc' => '可讓CSS樣式表包含在特定頁面的語法解析功能',
+);
+
+/** Chinese (Taiwan) (‪中文(台灣)‬)
+ * @author Pbdragonwang
+ */
+$messages['zh-tw'] = array(
 	'css-desc' => '可讓CSS樣式表包含在特定頁面的語法解析功能',
 );
 
