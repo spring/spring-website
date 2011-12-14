@@ -1,4 +1,5 @@
 @charset "utf-8";
+
 body {
 	margin: 0px;
 	background-color: #38464F;
@@ -183,6 +184,7 @@ a {
 	margin-bottom:3px;
 }
 
+
 #toplogo {
 	display:block;
 	padding-left: 10px;
@@ -191,6 +193,7 @@ a {
 	height:74px;
 	background: transparent url(/images/logo.png) 10px 18px no-repeat;
 }
+
 #frontmediavideotd {
 	width:200px;
 }
@@ -238,3 +241,6 @@ a {
 		background: transparent url(/images/logosmall.png) 10px 25px no-repeat;
 	}
 }
+
+/* Christmas */
+@import url("style_xmas.css");
