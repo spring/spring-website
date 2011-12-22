@@ -26,29 +26,29 @@ class SkinSpringNew extends Skin {
 	}
 
 	function doBeforeContent() {
-        global $wgOut;
+		global $wgOut;
 		$s = "";
 		$qb = $this->qbSetting();
 		$mainPageObj = Title::newMainPage();
 
-        $s .= file_get_contents('../templates/header.html');
-        $title = htmlspecialchars($wgOut->getPageTitle());
+		$s .= file_get_contents('../templates/header.html');
+		$title = htmlspecialchars($wgOut->getPageTitle());
 
-        $s = str_replace('{PAGE_TITLE}', $title, $s);
-        $s .= '<tr><td>';
-        $s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
-        $s .= '<tr>';
-        $s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-        $s .= '<td bgcolor="#4C626F" width="758">';
+		$s = str_replace('{PAGE_TITLE}', $title, $s);
+		$s .= '<tr><td>';
+		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
+		$s .= '<tr>';
+		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
+		$s .= '<td bgcolor="#4C626F" width="758">';
 
-        $s .= "\n<div id='content'>\n";
+		$s .= "\n<div id='content'>\n";
 
 
-        //$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
-        //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
-        //$s .= '<td width="738">';
+		//$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
+		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
+		//$s .= '<td width="738">';
 
-        $s .= "<div id='article'>";
+		$s .= "<div id='article'>";
 
 		$notice = wfGetSiteNotice();
 		if( $notice ) {
@@ -66,47 +66,47 @@ class SkinSpringNew extends Skin {
 
 		$s = "\n</div><br clear='all' />\n";
 
-        //$s .= '</td>';
-        //$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
-        //$s .= '</tr></table>';
+		//$s .= '</td>';
+		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
+		//$s .= '</tr></table>';
 
-        // category fix
-        $catstr = $this->getCategories();
-        if (strlen($catstr) > 2) {
-            $s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories"><tr>';
-            $s .= '<td width="10">&nbsp;</td><td>';
+		// category fix
+		$catstr = $this->getCategories();
+		if (strlen($catstr) > 2) {
+			$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories"><tr>';
+			$s .= '<td width="10">&nbsp;</td><td>';
 
-            $s .= '<table border="0" cellpadding="0" width="100%" id="toc"><tr><td>';
-            $s .= $catstr;
-            $s .= '</td></tr></table>';
+			$s .= '<table border="0" cellpadding="0" width="100%" id="toc"><tr><td>';
+			$s .= $catstr;
+			$s .= '</td></tr></table>';
 
-            $s .= '</td><td width="10">&nbsp;</td></tr></table>';
-        }
+			$s .= '</td><td width="10">&nbsp;</td></tr></table>';
+		}
 
 
-        $qb = $this->qbSetting();
-        if ( 0 != $qb ) { $s .= $this->quickBar(); }
+		$qb = $this->qbSetting();
+		if ( 0 != $qb ) { $s .= $this->quickBar(); }
 
 		$s .= "\n<div id='footer'>";
 		$s .= "<table width='98%' border='0' cellspacing='0'><tr>";
 
 		$s .= "<td class='bottom' align='left' valign='top'>&nbsp;&nbsp;";
 
-        $s .= $this->searchForm(wfMsg("qbfind"));
+		$s .= $this->searchForm(wfMsg("qbfind"));
 
-	$s .= "</td>";
-        //$s .= '<td class="bottom" align="right"><a href="http://www.mediawiki.org">MediaWiki</a>&nbsp;&nbsp;';
-	//$s .= "</td>";
+		$s .= "</td>";
+		//$s .= '<td class="bottom" align="right"><a href="http://www.mediawiki.org">MediaWiki</a>&nbsp;&nbsp;';
+		//$s .= "</td>";
 		$s .= "</tr></table>\n</div>\n";
 
 
-        $s .= '</td>';
-        $s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-        $s .= '</tr></table>';
+		$s .= '</td>';
+		$s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
+		$s .= '</tr></table>';
 
 
-        $s .= '</tr></td>';
-        $s .= file_get_contents('../templates/footer.html');
+		$s .= '</tr></td>';
+		$s .= file_get_contents('../templates/footer.html');
 
 		return $s;
 	}
@@ -147,16 +147,16 @@ class SkinSpringNew extends Skin {
 
 		$tns=$wgTitle->getNamespace();
 
-        $s = "";
+		$s = "";
 		//$s = "\n<div id='quickbar'>";
 
-        $s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
-        $s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
-        $s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
-        $s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>';
-        $s .= '<td bgcolor="#38474E" class="bottom">';
+		$s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
+		$s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
+		$s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
+		$s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>';
+		$s .= '<td bgcolor="#38474E" class="bottom">';
 
-                $s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
+		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
 
 		$sep = "<br />";
 		//$s .= $this->menuHead( "qbfind" );
@@ -176,7 +176,7 @@ class SkinSpringNew extends Skin {
 		}
 
 		if ( $wgOut->isArticle() ) {
-            $s .= '</td><td>';
+			$s .= '</td><td>';
 
 			$s .= $this->menuHead( "qbedit" );
 			$s .= "<strong>" . $this->editThisPage() . "</strong>";
@@ -199,7 +199,7 @@ class SkinSpringNew extends Skin {
 				}
 			}
 			$s .= $sep;
-            $s .= '</td><td>';
+			$s .= '</td><td>';
 
 			$s .= $this->menuHead( "qbpageoptions" );
 			$s .= $this->talkLink()
@@ -210,7 +210,7 @@ class SkinSpringNew extends Skin {
 			}
 
 			$s .= $sep;
-            $s .= '</td><td>';
+			$s .= '</td><td>';
 
 			$s .= $this->menuHead("qbpageinfo")
 			  . $this->historyLink()
@@ -228,7 +228,7 @@ class SkinSpringNew extends Skin {
 			}
 			$s .= $sep;
 		}
-        $s .= '</td><td>';
+		$s .= '</td><td>';
 
 		$s .= $this->menuHead( "qbmyoptions" );
 		if ( $wgUser->isLoggedIn() ) {
@@ -251,7 +251,7 @@ class SkinSpringNew extends Skin {
 			$s .= $this->specialLink( "userlogin" );
 		}
 
-        $s .= '</td><td>';
+		$s .= '</td><td>';
 
 		$s .= $this->menuHead( "qbspecialpages" )
 		  . $this->specialLink( "newpages" )
@@ -271,11 +271,11 @@ class SkinSpringNew extends Skin {
 			SpecialPage::getTitleFor( 'Specialpages' ),
 			wfMsg( 'moredotdotdot' ) );
 
-        $s .= '</td></tr></table>';
+		$s .= '</td></tr></table>';
 
-        $s .= '</td></tr>';
-        $s .= '<tr height="1"><td bgcolor="#20292E" colspan="2"><img src="/images/pixel.gif" height="1" width="10" /></td>';
-        $s .= '</tr></table>';
+		$s .= '</td></tr>';
+		$s .= '<tr height="1"><td bgcolor="#20292E" colspan="2"><img src="/images/pixel.gif" height="1" width="10" /></td>';
+		$s .= '</tr></table>';
 
 		//$s .= $sep . "\n</div>\n";
 		return $s;
@@ -304,7 +304,7 @@ class SkinSpringNew extends Skin {
 		// Ensure unique id's for search boxes made after the first
 		$this->searchboxes = $this->searchboxes == '' ? 2 : $this->searchboxes + 1;
 
-	$s .= <<<GOOGLESTRING
+		$s .= <<<GOOGLESTRING
 		<script src="http://www.google.com/jsapi" type="text/javascript"></script>
 		<script type="text/javascript">  google.load('search', '1', {language : 'en'});  google.setOnLoadCallback(function() {    var customSearchControl = new google.search.CustomSearchControl('009330874965769538744:qyumpuo2xti');    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);    customSearchControl.draw('cse');  }, true);</script>
 		<link rel="stylesheet" href="http://www.google.com/cse/style/look/default.css" type="text/css" />
