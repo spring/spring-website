@@ -46,7 +46,7 @@ html {
                           color: #EEE;}
 .catlinks                {font-family: Verdana, Arial, sans-serif;
                           font-size: 13px;}
-#footer                  {padding: 4px;}
+#footer                  {padding: 16px;}
 #footer *                {font-family: Verdana, Arial, sans-serif; font-size: 10pt;}
 #footer form             {display: inline;}
 #footer td.top           {background-color: #6688AA; color: white;
@@ -57,6 +57,7 @@ html {
 #footer td.top a         {background-color: #6688AA; color: white;
                           text-decoration: none; font-size: 10pt;}
 #footer td.bottom        {font-size: 10pt; padding: 0;}
+#footer table.gsc-branding { display: none; } /* Google Custom Search */
 #pagestats               {font-family: Verdana, Arial, sans-serif;
                           font-size: 9pt; color: black;}
 #sitesub                 {font-family: Verdana, Arial, sans-serif;

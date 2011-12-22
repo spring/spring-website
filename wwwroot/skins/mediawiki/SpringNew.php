@@ -85,7 +85,7 @@ class SkinSpringNew extends Skin {
 		if ( 0 != $qb ) { $s .= $this->quickBar(); }
 
 		$s .= "\n<div id='footer'>";
-		$s .= "<table width='98%' border='0' cellspacing='0'><tr>";
+		$s .= "<table width='100%' border='0' cellspacing='0'><tr>";
 
 		$s .= "<td class='bottom' align='left' valign='top'>&nbsp;&nbsp;";
 
