@@ -30,8 +30,6 @@ p {
 	height: 105px;
 	position: relative;
 	background: transparent url(/images/banner.png) top left no-repeat;
-	border-radius: 4px 0px 0px 0px;
-	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
 }
 
 .topbannershadow {
@@ -57,9 +55,6 @@ p {
 	position: absolute;
 	z-index: 1001;
 }
-#menu {
-
-}
 #menu ul {
 	float:right;
 	list-style:none;
@@ -75,6 +70,13 @@ p {
 }
 #menu a {
 	display:block;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	display: block;
+	height: 18px;
+	line-height: 14pt;
 }
 #menu, .menubar {
 	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
@@ -83,23 +85,15 @@ p {
 	color: #EEEEEE;
 }
 #menu {
-	height: 29px;
+	height: 25px;
+	margin-bottom: 4px;
 }
 table.menubar td {
-    line-height: 0;
-    padding: 0;
-}
-#menu  a {
-    padding-top: 3px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
-    display: block;
-    height: 18px;
-    line-height: 14pt;
+	line-height: 0;
+	padding: 0;
 }
 .headertd {
-    padding: 0;
+	padding: 0;
 }
 #menu .headermenuleft {
     background-image: url(/images/notselected_button_left.png);
@@ -164,14 +158,14 @@ a.menubar:hover {
 }
 .bottombar {
     background-image: url(/images/bottom.png);
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     padding-left: 12px;
     font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
     font-size: 10px;
-    font-weight:bold;
+    font-weight: bold;
     color: #EEEEEE;
-    padding: 3px;
     padding-right: 6px;
+    vertical-align: center;
     overflow: hidden;
 }
 a.bottomlink:link {
