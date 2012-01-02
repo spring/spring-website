@@ -1,6 +1,7 @@
 <?php
 
 // Copy this file to springpw.php and update these variables
+// If db information changes, remember to change /wwwroot/piwik/config/config.ini.php as well
 
 $spring_dbhost = 'localhost';
 $spring_dbuser = 'spring';
