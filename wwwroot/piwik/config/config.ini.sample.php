@@ -1,56 +1,20 @@
 ; <?php exit; ?> DO NOT REMOVE THIS LINE
-; file automatically generated or modified by Piwik; you can manually override the default values in global.ini.php by redefining them in this file.
+; this file for documentation purposes; DO NOT COPY this file to config.ini.php;
+; the config.ini.php is normally created during the installation process
+; (see http://piwik.org/docs/installation)
+; when this file is absent it triggers the Installation process to create
+; config.ini.php; that file will contain the superuser and database access info
+
 [superuser]
-login = "admin"
-password = "some_password"
-email = "some_email@spring.com"
-salt = "automatically_generated"
+login			= yourSuperUserLogin
+password		= yourSuperUserPassword
+email			= hello@example.org
 
 [database]
-host = "localhost"
-username = "spring"
-password = "some_password"
-dbname = "spring"
-tables_prefix = "piwik_"
-adapter = "PDO_MYSQL"
-port = 3306
-charset = "utf8"
-
-[PluginsInstalled]
-PluginsInstalled[] = "Login"
-PluginsInstalled[] = "CoreAdminHome"
-PluginsInstalled[] = "UsersManager"
-PluginsInstalled[] = "SitesManager"
-PluginsInstalled[] = "Installation"
-PluginsInstalled[] = "CorePluginsAdmin"
-PluginsInstalled[] = "CoreHome"
-PluginsInstalled[] = "Proxy"
-PluginsInstalled[] = "API"
-PluginsInstalled[] = "Widgetize"
-PluginsInstalled[] = "LanguagesManager"
-PluginsInstalled[] = "Actions"
-PluginsInstalled[] = "Dashboard"
-PluginsInstalled[] = "MultiSites"
-PluginsInstalled[] = "Referers"
-PluginsInstalled[] = "UserSettings"
-PluginsInstalled[] = "Goals"
-PluginsInstalled[] = "SEO"
-PluginsInstalled[] = "UserCountry"
-PluginsInstalled[] = "VisitsSummary"
-PluginsInstalled[] = "VisitFrequency"
-PluginsInstalled[] = "VisitTime"
-PluginsInstalled[] = "VisitorInterest"
-PluginsInstalled[] = "ExampleAPI"
-PluginsInstalled[] = "ExamplePlugin"
-PluginsInstalled[] = "ExampleRssWidget"
-PluginsInstalled[] = "ExampleFeedburner"
-PluginsInstalled[] = "Provider"
-PluginsInstalled[] = "Feedback"
-PluginsInstalled[] = "CoreUpdater"
-PluginsInstalled[] = "PDFReports"
-PluginsInstalled[] = "UserCountryMap"
-PluginsInstalled[] = "Live"
-PluginsInstalled[] = "CustomVariables"
-PluginsInstalled[] = "PrivacyManager"
-PluginsInstalled[] = "ImageGraph"
-
+host			= localhost
+username		= databaseLogin
+password		= datatabasePassword
+dbname			= databaseName
+adapter			= PDO_MYSQL ; PDO_MYSQL, MYSQLI, or PDO_PGSQL
+tables_prefix	= piwik_
+;charset		= utf8
