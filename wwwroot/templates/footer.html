@@ -7,17 +7,13 @@
 </div>
 </div>
 <!-- Piwik --> 
-<!--{$PIWIK_URL} would be replaced by your Piwik URL and {$IDSITE} would be replaced by the idsite of the website you are tracking in Piwik-->
-<!--http://piwik.org/docs/javascript-tracking/-->
 <script type="text/javascript">
-var pkBaseURL = (("http:" == document.location.protocol) ? "http://springrts.com/piwik/" : "http://springrts.com/piwik/");
-document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+document.write(unescape("%3Cscript src='/piwik/piwik.js' type='text/javascript'%3E%3C/script%3E"));
 </script><script type="text/javascript">
 try {
-var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+var piwikTracker = Piwik.getTracker("/piwik/piwik.php", 1);
 piwikTracker.trackPageView();
 piwikTracker.enableLinkTracking();
 } catch( err ) {}
-</script><noscript><p><img src="http://localhost/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+</script><noscript><p><img src="/piwik/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
 <!-- End Piwik Tracking Code -->
-<!-- head1? -->
