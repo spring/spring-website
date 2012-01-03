@@ -86,7 +86,8 @@ p {
 }
 #menu {
 	height: 25px;
-	margin-bottom: 4px;
+	padding: 0;
+	margin: 0 0 4px 0;
 }
 table.menubar td {
 	line-height: 0;
