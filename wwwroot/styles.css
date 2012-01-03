@@ -129,7 +129,7 @@ table.menubar td {
     background-position: -100px -100px;
     background-repeat: no-repeat;
 }
-.headermenurightlink:hover {
+#menu .headermenurightlink:hover {
     background-position: 0px 0px;
     background-position: right;
 }
