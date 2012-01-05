@@ -167,7 +167,7 @@ a.menubar:hover {
     font-weight: bold;
     color: #EEEEEE;
     padding-right: 6px;
-    vertical-align: center;
+    vertical-align: middle;
     overflow: hidden;
 }
 a.bottomlink:link {
