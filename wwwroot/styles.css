@@ -240,7 +240,12 @@ a {
 		padding-right:7px;
 	}
 	#menu {
-	    background-image: url(/images/notselected_button_background.gif);
+		height: auto;
+		background-image: url(/images/notselected_button_background.gif);
+	}
+	#menu ul {
+		border-radius: 0;
+		box-shadow: none;
 	}
 	.separator {
 		display:none;
@@ -248,7 +253,11 @@ a {
 }
 @media screen and (max-width: 633px) {
 	#menu {
-		height:58px;
+		height: auto;
+	}
+	#menu ul {
+		border-radius: 0;
+		box-shadow: none;
 	}
 	#toplogo {
 		display:block;
