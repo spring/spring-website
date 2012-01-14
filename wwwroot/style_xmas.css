@@ -1,6 +1,6 @@
 
 /* XMAS */
-body {
+html {
 	background-image: -ms-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
 	background-image: -moz-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
 	background-image: -o-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);

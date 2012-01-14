@@ -1,10 +1,23 @@
 @charset "utf-8";
 
-body {
-	margin: 0px;
+html {
 	background-color: #38464F;
 	background-image: url(/images/background.png);
 	background-repeat:repeat-x;
+
+	/* replicates the image based background */
+	background-image: -o-linear-gradient(top, #8498a3, #38464F 765px);
+
+	/* a nice ellipse gradient */
+	/*background-image: -ms-radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);
+	background-image: -moz-radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);
+	background-image: -o-radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);
+	background-image: -webkit-radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);
+	background-image: radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);*/
+}
+
+body {
+	margin: 0px;
 	text-align:center;
 }
 
