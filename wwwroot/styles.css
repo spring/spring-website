@@ -43,14 +43,32 @@ p {
 	height: 105px;
 	position: relative;
 	background: transparent url(/images/banner.png) top left no-repeat;
+
+	/* disable banner.png and replicate it in css3 (in .topbannershadow) if supported */
+	background-image: linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0));
+	background-image: -o-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0));
+	background-image: -moz-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0));
+	background-image: -webkit-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0));
+	background-image: -ms-linear-gradient(top, rgba(0,0,0,0), rgba(0,0,0,0));
 }
 
 .topbannershadow {
-	width:100%;
-	height: 98px;
+	width:  100%;
+	height: 94px;
 	margin-top: 7px;
 	border-radius: 6px 0px 0px 0px;
-	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
+
+	/* replicate banner.png */
+	background-image: linear-gradient(right top, #4F4F5F, #323f47 45%);
+	background-image: -o-linear-gradient(right top, #4F4F5F, #323f47 45%);
+	background-image: -moz-linear-gradient(right top, #4F4F5F, #323f47 45%);
+	background-image: -webkit-linear-gradient(right top, #4F4F5F, #323f47 45%);
+	background-image: -ms-linear-gradient(right top, #4F4F5F, #323f47 45%);
+	border-bottom: 3px solid #4a7791; /* bright bottom line */
+	box-shadow:
+		0px 0px 10px 1px rgba(0,0,0,0.7), /* shadow (not part of banner.png) */
+		inset 0px -1px 0px #30404a,       /* bottom line top gradient */
+		0px 1px 0px #5386a3;              /* bottom line bottom gradient */
 }
 .topbannerbg {
 	position:absolute;
@@ -245,6 +263,9 @@ a {
 
 
 @media screen and (max-width: 760px) {
+	.topbannershadow {
+		border-radius: 0;
+	}
 	#wrapper {
 		width:100%;
 	}
@@ -275,6 +296,9 @@ a {
 	}
 }
 @media screen and (max-width: 633px) {
+	.topbannershadow {
+		border-radius: 0;
+	}
 	#topbannerfade {
 		border-radius: 0;
 	}
