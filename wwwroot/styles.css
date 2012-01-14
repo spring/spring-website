@@ -46,10 +46,17 @@ p {
 	background: transparent url(/imagerotate.php?cat=32) top right no-repeat;
 }
 #topbannerfade {
-	float:right;
-	height:110px;
-	width:760px;
-	background: transparent url(/images/bannerfade.png) top left no-repeat;
+	float: left;
+	margin-top: 7px;
+	border-radius: 10px 0px 0px 0px;
+	background-image: linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
+	background-image: -o-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
+	background-image: -moz-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
+	background-image: -webkit-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
+	background-image: -ms-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
+	height: 94px;
+	width:  40%;
+	min-width: 200px;
 }
 .banner a {
 	position: absolute;
@@ -235,6 +242,9 @@ a {
 		width:100%;
 		max-width:100%;
 	}
+	#topbannerfade {
+		border-radius: 0;
+	}
 	#menu a {
 		padding-left:7px;
 		padding-right:7px;
@@ -252,6 +262,9 @@ a {
 	}
 }
 @media screen and (max-width: 633px) {
+	#topbannerfade {
+		border-radius: 0;
+	}
 	#menu {
 		height: auto;
 	}
