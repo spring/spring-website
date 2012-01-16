@@ -113,12 +113,11 @@ p {
 	padding:0;
 }
 #menu a {
-	display:block;
+	display: block;
 	padding-top: 3px;
 	padding-bottom: 4px;
 	padding-left: 8px;
 	padding-right: 8px;
-	display: block;
 	height: 18px;
 	line-height: 14pt;
 }
@@ -291,10 +290,26 @@ a {
 	#menu {
 		height: auto;
 		background-image: url(/images/notselected_button_background.gif);
+		margin-bottom: 4px;
 	}
 	#menu ul {
 		border-radius: 0;
 		box-shadow: none;
+		float: none;
+		height: auto;
+	}
+	#menu a {
+		display: inherit;
+		height: auto;
+		line-height: auto;
+	}
+	#menu li {
+		display: inline-block;
+		height: auto;
+	}
+	#menu .headermenuleftlink,
+	#menu .headermenurightlink {
+		background-image: url(/images/selected_button_background.gif);
 	}
 	.separator {
 		display:none;
@@ -309,10 +324,27 @@ a {
 	}
 	#menu {
 		height: auto;
+		background-image: url(/images/notselected_button_background.gif);
+		margin-bottom: 4px;
 	}
 	#menu ul {
 		border-radius: 0;
 		box-shadow: none;
+		float: none;
+		height: auto;
+	}
+	#menu li {
+		display: inline-block;
+		height: auto;
+	}
+	#menu a {
+		display: inherit;
+		height: auto;
+		line-height: auto;
+	}
+	#menu .headermenuleftlink,
+	#menu .headermenurightlink {
+		background-image: url(/images/selected_button_background.gif);
 	}
 	#toplogo {
 		display:block;
