@@ -6,7 +6,11 @@ html {
 	background-repeat:repeat-x;
 
 	/* replicates the image based background */
+	background-image: linear-gradient(top, #8498a3, #38464F 765px);
 	background-image: -o-linear-gradient(top, #8498a3, #38464F 765px);
+	background-image: -moz-linear-gradient(top, #8498a3, #38464F 765px);
+	background-image: -webkit-linear-gradient(top, #8498a3, #38464F 765px);
+	background-image: -ms-linear-gradient(top, #8498a3, #38464F 765px);
 
 	/* a nice ellipse gradient */
 	/*background-image: -ms-radial-gradient(center bottom, ellipse farthest-corner, #65747d 0%, #38464F 100%);
@@ -19,6 +23,7 @@ html {
 body {
 	margin: 0px;
 	text-align:center;
+	background-color: transparent; /* override one of oldshared.css */
 }
 
 #wrapper {
