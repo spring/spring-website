@@ -43,7 +43,7 @@
     $sql .= 'order by topic_time desc';
 
     $res = mysql_query($sql);
-    $media = '';
+    $media = '<tr>';
     $count = 0;
 
     $tags = array();
@@ -78,11 +78,11 @@
 
         if ($row['forum_id'] == 35) {
             $item = '<a href="screenshot.php?id=' . $row['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
-            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0"><br /></a>';
+            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /><br /></a>';
         }
         elseif ($row['forum_id'] == 34) {
             $item = '<a href="' . get_link(array('play' => $row['topic_id'])) . '">';
-            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0"><br /></a>';
+            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /><br /></a>';
         }
 
         $media .= str_replace('#ITEM#', $item, $itemtemplate);
