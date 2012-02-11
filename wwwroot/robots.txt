@@ -1,8 +1,27 @@
 User-agent: *
+
+# large files
 Disallow: /dl/
 Disallow: /images/
 Disallow: /thumbs/
+
+# wiki
 Disallow: /mediawiki/
+
+# repositories
+Disallow: /svn/
 Disallow: /websvn/
-Disallow: /mantis/print_all_bug_page_word.php
+
+# mantis
+Disallow: /manits/print_all_bug_page_word.php
 Disallow: /mantis/print_bug_page.php
+
+# phpbb
+Disallow: /phpbb/admin/ 
+Disallow: /phpbb/includes/ 
+Disallow: /phpbb/common.php 
+Disallow: /phpbb/config.php 
+Disallow: /phpbb/groupcp.php 
+Disallow: /phpbb/memberlist.php 
+Disallow: /phpbb/modcp.php 
+Disallow: /phpbb/profile.php
