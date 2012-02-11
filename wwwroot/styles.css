@@ -1,6 +1,7 @@
 @charset "utf-8";
 
 html {
+	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
 	background-image: url(/images/background.png);
 	background-repeat:repeat-x;
