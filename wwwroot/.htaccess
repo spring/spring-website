@@ -8,7 +8,7 @@ RewriteRule ^jwimage(\d*).jpg$ /screenshot.php?topic=$1 [L,QSA]
 
 RewriteRule ^download /wiki/Download [L,R=301]
 RewriteRule ^screenshots /media.php [L,R=301]
-RewriteRule ^doxygen http://spring.osocial.se/ [L,R=301]
+RewriteRule ^doxygen http://spring.osocial.se/ [L,R=302]
 
 RewriteRule ^git/$ /cgi-bin/gitweb.cgi [L,QSA]
 RewriteRule ^stylesv([0-9]+).css /styles.css [NC]
