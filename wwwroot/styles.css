@@ -101,83 +101,13 @@ p {
 	position: absolute;
 	z-index: 1001;
 }
-#menu ul {
-	float:right;
-	list-style:none;
-	margin:0;
-	padding:0;
-	height: 25px;
-	border-radius: 0px 0px 7px 7px;
-	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
-}
-#menu li {
-	float:left;
-	margin:0;
-	padding:0;
-}
-#menu a {
-	display: block;
-	padding-top: 3px;
-	padding-bottom: 4px;
-	padding-left: 8px;
-	padding-right: 8px;
-	height: 18px;
-	line-height: 14pt;
-}
-#menu, .menubar {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-	color: #EEEEEE;
-}
-#menu {
-	height: 25px;
-	padding: 0;
-	margin: 0 0 4px 0;
-}
+
 table.menubar td {
 	line-height: 0;
 	padding: 0;
 }
 .headertd {
 	padding: 0;
-}
-#menu .headermenuleft {
-    background-image: url(/images/notselected_button_left.png);
-}
-#menu .headermenuleftlink {
-    background-image: url(/images/selected_button_left.png);
-    background-position: -100px -100px;
-    background-repeat: no-repeat;
-}
-#menu .headermenuleftlink:hover {
-    background-position: 0px 0px;
-}
-#menu .headermenu {
-    background-image: url(/images/notselected_button_background.gif);
-}
-#menu .headermenulink {
-    background-image: url(/images/selected_button_background.gif);
-    background-position: -100px -100px;
-    background-repeat: repeat-x;
-}
-#menu .headermenulink:hover {
-    background-position: 0px 0px;
-}
-#menu .headermenuright {
-    background-image: url(/images/notselected_button_right.png);
-    background-position: right;
-    margin: 0px;
-    padding: 0px;
-}
-#menu .headermenurightlink {
-    background-image: url(/images/selected_button_right.png);
-    background-position: -100px -100px;
-    background-repeat: no-repeat;
-}
-#menu .headermenurightlink:hover {
-    background-position: 0px 0px;
-    background-position: right;
 }
 
 a.menubar:link {
@@ -192,6 +122,135 @@ a.menubar:hover {
     color: #eeeeee;
     text-decoration: none;
 }
+
+.menubar {
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEE;
+}
+
+
+
+/* MAIN MENUBAR */
+#menu {
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	color: #EEE;
+	height: 25px;
+	padding: 0;
+	margin: 0 0 4px 0;
+}
+
+#menu ul {
+	float:right;
+	list-style:none;
+	margin:0;
+	padding:0;
+	height: 25px;
+	border-radius: 0px 0px 7px 7px;
+	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
+}
+
+#menu li {
+	float:left;
+	margin:0;
+	padding:0;
+}
+
+/* Background & Round Corners */
+#menu .headermenuleft,
+#menu .headermenu,
+#menu .headermenuright {
+	background: #323f47;
+}
+#menu .headermenuleft  { border-radius: 0px 0px 0px 7px; }
+#menu .headermenu      { border-radius: 0px 0px 0px 0px; }
+#menu .headermenuright { border-radius: 0px 0px 7px 0px; }
+
+/* Hover Highlight */
+#menu .headermenuleft:hover,
+#menu .headermenu:hover,
+#menu .headermenuright:hover {
+	background: #778;
+	background-image: linear-gradient(top, #323f47 20%, #778 100%);
+	background-image: -o-linear-gradient(top, #323f47 20%, #778 100%);
+	background-image: -moz-linear-gradient(top, #323f47 20%, #778 100%);
+	background-image: -webkit-linear-gradient(top, #323f47 20%, #778 100%);
+	background-image: -ms-linear-gradient(top, #323f47 20%, #778 100%);
+}
+
+/* Separator between header menu items */
+#menu .headermenuleft,
+#menu .headermenu {
+	border-right: 1px solid #556269;
+}
+
+#menu a {
+	display: block;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	height: 18px;
+	line-height: 14pt;
+}
+
+@media screen and (max-width: 760px) {
+	html {
+		background: #272E33;
+		background-image: linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -o-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -moz-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -webkit-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -ms-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+	}
+
+	#menu {
+		background: #272E33;
+		height: auto;
+		margin-bottom: 0px;
+	}
+
+	#menu ul {
+		border-radius: 0;
+		box-shadow: none;
+		float: none;
+		height: auto;
+	}
+
+	#menu li {
+		float: none;
+		display: inline-block;
+		height: auto;
+	}
+	#menu li a {
+		display: inherit;
+		height: auto;
+		line-height: auto;
+		padding-left:7px;
+		padding-right:7px;
+		text-shadow: 0px 0px 4px rgba(255,255,255,0.5);
+	}
+	#menu li:hover a {
+		text-shadow: 0px 0px 10px rgba(255,255,255,1);
+	}
+
+	#menu .headermenuleft,
+	#menu .headermenu,
+	#menu .headermenuright {
+		border: none;
+		background: transparent;
+		border-radius: 0px 0px 0px 0px;
+	}
+}
+
+
+
+
+
+
 
 .locationbar {
 	background-image: url(/images/location_bar.png);
@@ -286,37 +345,6 @@ a {
 	#topbannerfade {
 		border-radius: 0;
 	}
-	#menu a {
-		padding-left:7px;
-		padding-right:7px;
-	}
-	#menu {
-		height: auto;
-		background-image: url(/images/notselected_button_background.gif);
-		margin-bottom: 4px;
-	}
-	#menu ul {
-		border-radius: 0;
-		box-shadow: none;
-		float: none;
-		height: auto;
-	}
-	#menu a {
-		display: inherit;
-		height: auto;
-		line-height: auto;
-	}
-	#menu li {
-		display: inline-block;
-		height: auto;
-	}
-	#menu .headermenuleftlink,
-	#menu .headermenurightlink {
-		background-image: url(/images/selected_button_background.gif);
-	}
-	.separator {
-		display:none;
-	}
 }
 @media screen and (max-width: 633px) {
 	.topbannershadow {
@@ -324,30 +352,6 @@ a {
 	}
 	#topbannerfade {
 		border-radius: 0;
-	}
-	#menu {
-		height: auto;
-		background-image: url(/images/notselected_button_background.gif);
-		margin-bottom: 4px;
-	}
-	#menu ul {
-		border-radius: 0;
-		box-shadow: none;
-		float: none;
-		height: auto;
-	}
-	#menu li {
-		display: inline-block;
-		height: auto;
-	}
-	#menu a {
-		display: inherit;
-		height: auto;
-		line-height: auto;
-	}
-	#menu .headermenuleftlink,
-	#menu .headermenurightlink {
-		background-image: url(/images/selected_button_background.gif);
 	}
 	#toplogo {
 		display:block;
