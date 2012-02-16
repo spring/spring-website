@@ -111,16 +111,16 @@ table.menubar td {
 }
 
 a.menubar:link {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 a.menubar:visited {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 a.menubar:hover {
-    color: #eeeeee;
-    text-decoration: none;
+	color: #eeeeee;
+	text-decoration: none;
 }
 
 .menubar {
@@ -263,31 +263,31 @@ a.menubar:hover {
 	color: #EEEEEE;
 }
 .bottombar {
-    background-image: url(/images/bottom.png);
-    background-repeat: no-repeat;
-    padding-left: 12px;
-    font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-    font-size: 10px;
-    font-weight: bold;
-    color: #EEEEEE;
-    padding-right: 6px;
-    vertical-align: middle;
-    overflow: hidden;
+	background-image: url(/images/bottom.png);
+	background-repeat: no-repeat;
+	padding-left: 12px;
+	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #EEEEEE;
+	padding-right: 6px;
+	vertical-align: middle;
+	overflow: hidden;
 }
 a.bottomlink:link {
-    color: #A3BDCF;
-    text-decoration: none;
+	color: #A3BDCF;
+	text-decoration: none;
 }
 a.bottomlink:visited {
-    color: #A3BDCF;
-    text-decoration: none;
+	color: #A3BDCF;
+	text-decoration: none;
 }
 a.bottomlink:hover {
-    color: #A3BDCF;
-    text-decoration: underline;
+	color: #A3BDCF;
+	text-decoration: underline;
 }
 a {
-    outline: none;
+	outline: none;
 }
 #frontrightbuttons {
 	width:100%;
