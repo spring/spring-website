@@ -22,7 +22,7 @@ html {
 }
 
 body {
-	margin: 0px;
+	margin: 0;
 	text-align:center;
 	background-color: transparent; /* override one of oldshared.css */
 }
@@ -38,13 +38,13 @@ body {
 #maincontentwrapper {
 	page-break-before: always;
 	margin-top: 4px;
-	border-radius: 10px 10px 0px 7px;
-	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
+	border-radius: 10px 10px 0 7px;
+	box-shadow: 0 0 10px 1px rgba(0,0,0,0.7);
 	width: 100%;
 }
 
 p {
-	margin: 0px;
+	margin: 0;
 }
 
 .banner {
@@ -64,7 +64,7 @@ p {
 	width:  100%;
 	height: 94px;
 	margin-top: 7px;
-	border-radius: 6px 0px 0px 0px;
+	border-radius: 6px 0 0 0;
 
 	/* replicate banner.png */
 	background-image: linear-gradient(right top, #4F4F5F, #323f47 45%);
@@ -74,9 +74,9 @@ p {
 	background-image: -ms-linear-gradient(right top, #4F4F5F, #323f47 45%);
 	border-bottom: 3px solid #4a7791; /* bright bottom line */
 	box-shadow:
-		0px 0px 10px 1px rgba(0,0,0,0.7), /* shadow (not part of banner.png) */
-		inset 0px -1px 0px #30404a,       /* bottom line top gradient */
-		0px 1px 0px #5386a3;              /* bottom line bottom gradient */
+		0 0 10px 1px rgba(0,0,0,0.7), /* shadow (not part of banner.png) */
+		inset 0 -1px 0 #30404a,       /* bottom line top gradient */
+		0 1px 0 #5386a3;              /* bottom line bottom gradient */
 }
 .topbannerbg {
 	position:absolute;
@@ -87,7 +87,7 @@ p {
 #topbannerfade {
 	float: left;
 	margin-top: 7px;
-	border-radius: 10px 0px 0px 0px;
+	border-radius: 10px 0 0 0;
 	background-image: linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
 	background-image: -o-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
 	background-image: -moz-linear-gradient(left, rgba(46,58,66,1) 30%, rgba(46,58,66,0));
@@ -110,16 +110,10 @@ table.menubar td {
 	padding: 0;
 }
 
-a.menubar:link {
-	color: #eeeeee;
-	text-decoration: none;
-}
-a.menubar:visited {
-	color: #eeeeee;
-	text-decoration: none;
-}
+a.menubar:link,
+a.menubar:visited,
 a.menubar:hover {
-	color: #eeeeee;
+	color: #EEE;
 	text-decoration: none;
 }
 
@@ -149,8 +143,8 @@ a.menubar:hover {
 	margin:0;
 	padding:0;
 	height: 25px;
-	border-radius: 0px 0px 7px 7px;
-	box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.7);
+	border-radius: 0 0 7px 7px;
+	box-shadow: 0 0 10px 1px rgba(0,0,0,0.7);
 }
 
 #menu li {
@@ -210,7 +204,7 @@ a.menubar:hover {
 	#menu {
 		background: #272E33;
 		height: auto;
-		margin-bottom: 0px;
+		margin-bottom: 0;
 	}
 
 	#menu ul {
@@ -231,10 +225,10 @@ a.menubar:hover {
 		line-height: auto;
 		padding-left:7px;
 		padding-right:7px;
-		text-shadow: 0px 0px 4px rgba(255,255,255,0.5);
+		text-shadow: 0 0 4px rgba(255,255,255,0.5);
 	}
 	#menu li:hover a {
-		text-shadow: 0px 0px 10px rgba(255,255,255,1);
+		text-shadow: 0 0 10px rgba(255,255,255,1);
 	}
 
 	#menu .headermenuleft,
@@ -242,7 +236,7 @@ a.menubar:hover {
 	#menu .headermenuright {
 		border: none;
 		background: transparent;
-		border-radius: 0px 0px 0px 0px;
+		border-radius: 0;
 	}
 }
 
@@ -255,7 +249,7 @@ a.menubar:hover {
 .locationbar {
 	background-image: url(/images/location_bar.png);
 	background-repeat:no-repeat;
-	padding: 0px;
+	padding: 0;
 	padding-left: 12px;
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
@@ -274,10 +268,7 @@ a.menubar:hover {
 	vertical-align: middle;
 	overflow: hidden;
 }
-a.bottomlink:link {
-	color: #A3BDCF;
-	text-decoration: none;
-}
+a.bottomlink:link,
 a.bottomlink:visited {
 	color: #A3BDCF;
 	text-decoration: none;

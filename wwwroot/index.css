@@ -1,8 +1,6 @@
 @charset "utf-8";
-a:link {
-	color: #A3BDCF;
-	text-decoration: none;
-}
+
+a:link,
 a:visited {
 	color: #A3BDCF;
 	text-decoration: none;
@@ -16,18 +14,18 @@ a:hover {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 24px;
 	line-height: 18px;
-	color: #EEEEEE;
+	color: #EEE;
 }
 .welcomesmall {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 14px;
 	font-weight:bold;
-	color: #EEEEEE;
+	color: #EEE;
 }
 .byline {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 14px;
-	color: #EEEEEE;
+	color: #EEE;
 }
 
 .bigbar {
@@ -35,10 +33,10 @@ a:hover {
 	font-size: 24px;
 	/* padding-right: 8px; */
 	font-weight:bold;
-	color: #EEEEEE;
+	color: #EEE;
 }
 table.bigbar td {
-	padding: 0px;
+	padding: 0;
 }
 table.bigbar td a {
 	padding-top: 13px;
@@ -47,14 +45,8 @@ table.bigbar td a {
 	padding-right: 8px;
 	display: block;
 }
-a.bigbar:link {
-	color: #eeeeee;
-	text-decoration: none;
-}
-a.bigbar:visited {
-	color: #eeeeee;
-	text-decoration: none;
-}
+a.bigbar:link,
+a.bigbar:visited,
 a.bigbar:hover {
 	color: #eeeeee;
 	text-decoration: none;
@@ -69,7 +61,7 @@ a.bigbar:hover {
 	background-repeat: no-repeat;
 }
 .mmleftsel:hover {
-	background-position: 0px 0px;
+	background-position: 0 0;
 }
 .mmmid {
 	background-image: url(/images/notselected_button_background.gif);
@@ -80,7 +72,7 @@ a.bigbar:hover {
 	background-repeat: repeat-x;
 }
 .mmmidsel:hover {
-	background-position: 0px 0px;
+	background-position: 0 0;
 }
 .mmright {
 	background-image: url(/images/notselected_media_right.png);
@@ -105,53 +97,41 @@ a.bigbar:hover {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
-	color: #eeeeee;
+	color: #EEE;
 	background-color: #29353D;
 	padding-left: 4px;
 }
 
-.learnmorebar {
-	background-image: url(/images/notselected_learn.jpg);
-	background-position: top right;
-	background-repeat: no-repeat;
-}
-.learnmorebar_selected {
-	background-image: url(/images/selected_learn.jpg);
-	background-position: -100px -100px;
-	background-repeat: no-repeat;
-}
-.learnmorebar_selected:hover {
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
-.downloadbar {
-	background-image: url(/images/notselected_download.jpg);
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
-.downloadbar_selected {
-	background-image: url(/images/selected_download.jpg);
-	background-position: -100px -100px;
-	background-repeat: no-repeat;
-}
-.downloadbar_selected:hover {
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
+
+.learnmorebar,
+.downloadbar,
 .gamesbar {
-	background-image: url(/images/notselected_games.jpg);
 	background-position: bottom right;
 	background-repeat: no-repeat;
 }
+
+.learnmorebar { background-image: url(/images/notselected_learn.jpg); }
+.downloadbar  { background-image: url(/images/notselected_download.jpg); }
+.gamesbar     { background-image: url(/images/notselected_games.jpg); }
+
+.learnmorebar_selected,
+.downloadbar_selected,
 .gamesbar_selected {
-	background-image: url(/images/selected_games.jpg);
 	background-position: -100px -100px;
 	background-repeat: no-repeat;
 }
+
+.learnmorebar_selected:hover,
+.downloadbar_selected:hover,
 .gamesbar_selected:hover {
 	background-position: bottom right;
-	background-repeat: no-repeat;
 }
+
+.learnmorebar_selected { background-image: url(/images/selected_learn.jpg); }
+.downloadbar_selected  { background-image: url(/images/selected_download.jpg); }
+.gamesbar_selected     { background-image: url(/images/selected_games.jpg); }
+
+
 
 .news {
 }
@@ -163,12 +143,12 @@ a.bigbar:hover {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
-	color: #EEEEEE;
+	color: #EEE;
 }
 .newsitem {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 13px;
-	color: #EEEEEE;
+	color: #EEE;
 	line-height: 16px;
 	border-left: 1px solid #20292E;
 	border-bottom: 1px solid #20292E;
@@ -178,13 +158,13 @@ a.bigbar:hover {
 .newsheadline {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 18px;
-	color: #EEEEEE;
+	color: #EEE;
 	text-shadow: 2px 2px 2px #111;
 }
 .newsabout {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 11px;
-	color: #EEEEEE;
+	color: #EEE;
 	line-height: 18px;
 }
 .newsbody {
@@ -194,7 +174,7 @@ a.bigbar:hover {
 	float: right;
 	clear: right;
 	border-bottom: 1px solid #20292E;
-	margin: 0px 0px 24px 24px;
+	margin: 0 0 24px 24px;
 	width: 40%;
 }
 .cnews .newsitem {
