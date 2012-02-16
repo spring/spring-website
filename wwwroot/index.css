@@ -13,25 +13,25 @@ a:hover {
 }
 .welcome {
 	background-repeat:no-repeat;
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 24px;
 	line-height: 18px;
 	color: #EEEEEE;
 }
 .welcomesmall {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 14px;
 	font-weight:bold;
 	color: #EEEEEE;
 }
 .byline {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 14px;
 	color: #EEEEEE;
 }
 
 .bigbar {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 24px;
 	/* padding-right: 8px; */
 	font-weight:bold;
@@ -102,7 +102,7 @@ a.bigbar:hover {
 	display: block;
 }
 .screendesc {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
 	color: #eeeeee;
@@ -160,13 +160,13 @@ a.bigbar:hover {
 	background-repeat:no-repeat;
 	padding: 5px 0px 0px 12px;
 	height: 20px;
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
 	color: #EEEEEE;
 }
 .newsitem {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 13px;
 	color: #EEEEEE;
 	line-height: 16px;
@@ -176,13 +176,13 @@ a.bigbar:hover {
 	background-color: #38474E;
 }
 .newsheadline {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 18px;
 	color: #EEEEEE;
 	text-shadow: 2px 2px 2px #111;
 }
 .newsabout {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 11px;
 	color: #EEEEEE;
 	line-height: 18px;

@@ -124,8 +124,8 @@ a.menubar:hover {
 }
 
 .menubar {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
-	font-size: 12px;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
+	font-size: 11px;
 	font-weight:bold;
 	color: #EEE;
 }
@@ -134,7 +134,7 @@ a.menubar:hover {
 
 /* MAIN MENUBAR */
 #menu {
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
 	color: #EEE;
@@ -257,7 +257,7 @@ a.menubar:hover {
 	background-repeat:no-repeat;
 	padding: 0px;
 	padding-left: 12px;
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
 	color: #EEEEEE;
@@ -266,7 +266,7 @@ a.menubar:hover {
 	background-image: url(/images/bottom.png);
 	background-repeat: no-repeat;
 	padding-left: 12px;
-	font-family: "Trebuchet MS", Tahoma, Geneva, Verdana, Arial, sans-serif;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 10px;
 	font-weight: bold;
 	color: #EEEEEE;
