@@ -15,12 +15,6 @@ a:hover {
 	background-repeat: no-repeat;
 	border-bottom: 1px solid #20292E;
 }
-.welcomesmall {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 14px;
-	font-weight:bold;
-	color: #EEE;
-}
 #welcometext {
 	float: left;
 	padding: 10px;
@@ -30,7 +24,13 @@ a:hover {
 #welcometext p {
 	line-height: 21px;
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 24px;
+	font-size: 19px;
+	color: #EEE;
+}
+.welcomesmall {
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
 	color: #EEE;
 }
 .byline {
