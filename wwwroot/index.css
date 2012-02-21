@@ -31,26 +31,46 @@ a:hover {
 .bigbar {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 24px;
-	/* padding-right: 8px; */
 	font-weight:bold;
 	color: #EEE;
 }
-table.bigbar td {
-	padding: 0;
-}
-table.bigbar td a {
-	padding-top: 13px;
+
+.bigbar td {
+	text-align: right;
+	vertical-align: middle;
 	padding-bottom: 16px;
-	padding-left: 8px;
-	padding-right: 8px;
-	display: block;
 }
-a.bigbar:link,
-a.bigbar:visited,
-a.bigbar:hover {
-	color: #eeeeee;
+
+.bigbar a {
+	display: block;
+	height: 58px;
+	padding-right: 8px;
+}
+
+.bigbar a:link,
+.bigbar a:visited,
+.bigbar a:hover {
+	color: #EEE;
 	text-decoration: none;
 }
+
+.learnmorebar,
+.downloadbar,
+.gamesbar {
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+.learnmorebar { background-image: url(/images/notselected_learn.jpg); }
+.downloadbar  { background-image: url(/images/notselected_download.jpg); }
+.gamesbar     { background-image: url(/images/notselected_games.jpg); }
+
+.learnmorebar:hover { background-image: url(/images/selected_learn.jpg); }
+.downloadbar:hover  { background-image: url(/images/selected_download.jpg); }
+.gamesbar:hover     { background-image: url(/images/selected_games.jpg); }
+
+
+
 
 .mmleft {
 	background-image: url(/images/notselected_media_left.png);
@@ -101,37 +121,6 @@ a.bigbar:hover {
 	background-color: #29353D;
 	padding-left: 4px;
 }
-
-
-.learnmorebar,
-.downloadbar,
-.gamesbar {
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
-
-.learnmorebar { background-image: url(/images/notselected_learn.jpg); }
-.downloadbar  { background-image: url(/images/notselected_download.jpg); }
-.gamesbar     { background-image: url(/images/notselected_games.jpg); }
-
-.learnmorebar_selected,
-.downloadbar_selected,
-.gamesbar_selected {
-	background-position: -100px -100px;
-	background-repeat: no-repeat;
-}
-
-.learnmorebar_selected:hover,
-.downloadbar_selected:hover,
-.gamesbar_selected:hover {
-	background-position: bottom right;
-}
-
-.learnmorebar_selected { background-image: url(/images/selected_learn.jpg); }
-.downloadbar_selected  { background-image: url(/images/selected_download.jpg); }
-.gamesbar_selected     { background-image: url(/images/selected_games.jpg); }
-
-
 
 .news {
 }
