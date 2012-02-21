@@ -92,9 +92,17 @@ a:hover {
 
 
 
-.mmleft  { background-image: url(/images/notselected_media_left.png); }
-.mmmid   { background-image: url(/images/notselected_button_background.gif); }
-.mmright { background-image: url(/images/notselected_media_right.png); }
+.mmleft {
+	background-image: url(/images/notselected_media_left.png);
+	background-position: top left;
+}
+.mmmid {
+	background-image: url(/images/notselected_button_background.gif);
+}
+.mmright {
+	background-image: url(/images/notselected_media_right.png);
+	background-position: top right;
+}
 
 .mmleftsel {
 	background-image: url(/images/selected_media_left.png);
@@ -113,12 +121,9 @@ a:hover {
 	background-repeat: repeat-x;
 }
 
-.mmleftsel:hover,
-.mmmidsel:hover,
-.mmrightsel:hover {
-	background-position: 0 0;
-
-}
+.mmleftsel:hover  { background-position: top left; }
+.mmmidsel:hover   { background-position: 0 0; }
+.mmrightsel:hover { background-position: top right; }
 
 .mmhide {
 	display: none;
