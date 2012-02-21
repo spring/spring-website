@@ -92,41 +92,34 @@ a:hover {
 
 
 
-.mmleft {
-	background-image: url(/images/notselected_media_left.png);
-}
+.mmleft  { background-image: url(/images/notselected_media_left.png); }
+.mmmid   { background-image: url(/images/notselected_button_background.gif); }
+.mmright { background-image: url(/images/notselected_media_right.png); }
+
 .mmleftsel {
 	background-image: url(/images/selected_media_left.png);
 	background-position: -100px -100px;
 	background-repeat: no-repeat;
-}
-.mmleftsel:hover {
-	background-position: 0 0;
-}
-.mmmid {
-	background-image: url(/images/notselected_button_background.gif);
+
 }
 .mmmidsel {
 	background-image: url(/images/selected_button_background.gif);
 	background-position: -100px -100px;
 	background-repeat: repeat-x;
 }
-.mmmidsel:hover {
-	background-position: 0 0;
-}
-.mmright {
-	background-image: url(/images/notselected_media_right.png);
-	background-position: right;
-}
 .mmrightsel {
 	background-image: url(/images/selected_media_right.png);
 	background-position: -100px -100px;
 	background-repeat: repeat-x;
 }
+
+.mmleftsel:hover,
+.mmmidsel:hover,
 .mmrightsel:hover {
-	background-position: 0px 0px;
-	background-position: right;
+	background-position: 0 0;
+
 }
+
 .mmhide {
 	display: none;
 }
