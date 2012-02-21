@@ -11,6 +11,7 @@ a:hover {
 }
 .welcome {
 	height: 239px;
+	background-color: #38474E;
 	background-position: top right;
 	background-repeat: no-repeat;
 	border-bottom: 1px solid #20292E;
