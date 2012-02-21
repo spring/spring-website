@@ -20,6 +20,7 @@ f = open(LOG_FILE, 'a')
 
 def log(msg, s = {}):
 	f.write("%s %s\n" % (time.asctime(), str(msg)))
+	f.flush()
 
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def log_message(self, format,*args):
