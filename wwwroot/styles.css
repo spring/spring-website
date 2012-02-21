@@ -281,17 +281,6 @@ a {
 	max-width:465px;
 }
 
-#welcometext {
-	float: left;
-	padding: 10px;
-}
-.welcome {
-	background-position: top right;
-}
-#welcometext p{
-	margin-bottom:3px;
-}
-
 
 #toplogo {
 	display:block;
