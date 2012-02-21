@@ -20,18 +20,15 @@ a:hover {
 	padding: 10px;
 	margin-left: 10px;
 	margin-bottom: 10px;
-}
-#welcometext p {
-	line-height: 21px;
+
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
+	line-height: 21px;
 	font-size: 19px;
 	color: #EEE;
 }
 .welcomesmall {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
-	color: #EEE;
 }
 .byline {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
