@@ -12,7 +12,7 @@ import subprocess
 import os
 
 HOST_NAME = '0.0.0.0'
-ALLOWED_IPS = { '207.97.227.239' }
+ALLOWED_IPS = { '207.97.227.253' }
 PORT_NUMBER = 9999
 GIT_REPO = os.path.expanduser('~/www')
 LOG_FILE = os.path.expanduser('~/webhook.log')
