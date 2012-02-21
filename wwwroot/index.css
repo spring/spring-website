@@ -22,13 +22,15 @@ a:hover {
 	margin-bottom: 10px;
 
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	line-height: 21px;
+	line-height: 24px;
 	font-size: 19px;
 	color: #EEE;
 }
 .welcomesmall {
 	font-size: 12px;
 	font-weight: bold;
+	margin-left: 2px;
+	margin-bottom: -3px;
 }
 .byline {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
