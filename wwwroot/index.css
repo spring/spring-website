@@ -43,8 +43,8 @@ a:hover {
 
 .bigbar a {
 	display: block;
-	height: 48px;
-	padding-top: 10px;
+	height: 45px;
+	padding-top: 13px;
 	padding-right: 8px;
 }
 
@@ -163,7 +163,7 @@ a:hover {
 	float: right;
 	clear: right;
 	border-bottom: 1px solid #20292E;
-	margin: 0 0 24px 24px;
+	margin: 5px 0 24px 24px;
 	width: 40%;
 }
 .cnews .newsitem {
