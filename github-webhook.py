@@ -12,9 +12,11 @@ import subprocess
 import os
 
 HOST_NAME = '0.0.0.0'
+ALLOWED_IPS = { '207.97.227.239' }
 PORT_NUMBER = 9999
-GIT_REPO = '/home/springtest/www'
-LOG_FILE = '/home/springtest/webhook.log'
+GIT_REPO = os.path.expanduser('~/www')
+LOG_FILE = os.path.expanduser('~/webhook.log')
+ALLOWED_IPS = { '207.97.227.239' }
 
 f = open(LOG_FILE, 'a')
 
@@ -25,11 +27,25 @@ def log(msg, s = {}):
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	def log_message(self, format,*args):
 		log(self.client_address[0] +" "+format %( args))
+	def is_allowed(self):
+		if not self.client_address[0] in ALLOWED_IPS:
+			self.send_response(403)
+			self.send_header("Content-type", "text/html")
+			self.end_headers()
+			self.wfile.write("Access denied\n")
+			self.log_message("Access denied from %s", (self.client_address[0]))
+			return False
+		return True
+
 	def do_HEAD(s):
+		if not s.is_allowed():
+			return
 		s.send_response(200)
 		s.send_header("Content-type", "text/html")
 		s.end_headers()
 	def do_GET(s):
+		if not s.is_allowed():
+			return
 		"""Respond to a GET request."""
 		s.send_response(200)
 		s.send_header("Content-type", "text/html")
@@ -41,6 +57,9 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		s.wfile.write("<p>You accessed path: %s</p>" % s.path)
 		s.wfile.write("</body></html>")
 	def do_POST(self):
+		if not self.is_allowed():
+			return
+
 		if self.path != "/github-webhook":
 			self.log_message("Invalid path")
 			return
