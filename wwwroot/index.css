@@ -78,6 +78,7 @@ a:hover {
 .downloadbar,
 .gamesbar {
 	background-repeat: no-repeat;
+	background-position: top right;
 }
 
 .learnmorebar { background-image: url(/images/notselected_learn.jpg); }

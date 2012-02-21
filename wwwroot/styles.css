@@ -229,7 +229,10 @@ a.menubar:hover {
 
 	#menu .headermenuleft,
 	#menu .headermenu,
-	#menu .headermenuright {
+	#menu .headermenuright,
+	#menu .headermenuleft:hover,
+	#menu .headermenu:hover,
+	#menu .headermenuright:hover {
 		border: none;
 		background: transparent;
 		border-radius: 0;
