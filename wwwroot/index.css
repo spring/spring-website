@@ -39,13 +39,11 @@ a:hover {
 	text-align: right;
 	vertical-align: middle;
 	padding-bottom: 16px;
-	width: 100%;
 }
 
 .bigbar a {
 	display: block;
-	width: 100%;
-	height: 58px;
+	height: 48px;
 	padding-top: 10px;
 	padding-right: 8px;
 }
