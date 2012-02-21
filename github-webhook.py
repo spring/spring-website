@@ -104,12 +104,16 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 		""" update the git repository """
 		origWD = os.getcwd()
 		os.chdir(GIT_REPO)
+		output = ""
 		try:
 			output = subprocess.check_output(["git", "pull"])
+		except CalledProcessError as e:
+			output = "process failed: " + str(e.output)
 		except Exception as e:
-			self.log_message("Exception: %s", str(e))
+			output = "Exception: %s", str(e)
 		os.chdir(origWD)
-		self.log_message("git pull: " + output.replace("\n", ""))
+		output = output.replace("\n", "")
+		self.log_message("git pull: " + output)
 
 if __name__ == '__main__':
 	server_class = BaseHTTPServer.HTTPServer
