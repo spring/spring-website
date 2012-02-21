@@ -10,12 +10,9 @@ a:hover {
 	text-decoration: underline;
 }
 .welcome {
+	height: 239px;
 	background-position: top right;
-	background-repeat:no-repeat;
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 24px;
-	line-height: 18px;
-	color: #EEE;
+	background-repeat: no-repeat;
 	border-bottom: 1px solid #20292E;
 }
 .welcomesmall {
@@ -31,7 +28,10 @@ a:hover {
 	margin-bottom: 10px;
 }
 #welcometext p {
-	margin-bottom: 3px;
+	line-height: 21px;
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
+	font-size: 24px;
+	color: #EEE;
 }
 .byline {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
@@ -51,8 +51,9 @@ a:hover {
 	vertical-align: middle;
 }
 
-.bigbar td + td {
-	padding-top: 16px;
+.learnmorebar,
+.downloadbar {
+	padding-bottom: 16px;
 }
 
 .bigbar a {
