@@ -106,7 +106,7 @@
         $tagstr .= '</ul><ul>';
     }
     foreach ($tags as $tag => $count) {
-        $tagstr .= '<li><td>&nbsp;&nbsp;<a href="' . get_link(array('tag' => $tag, 'play' => false)) . '">' . $tag . ' (' . $count . ')</a></li>\n';
+        $tagstr .= '<li><a href="' . get_link(array('tag' => $tag, 'play' => false)) . '">' . $tag . ' (' . $count . ')</a></li>\n';
     }
 
     // Check if the video player has been invoked
