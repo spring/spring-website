@@ -103,7 +103,7 @@
     $tagstr = '';
     if (array_key_exists('tag', $_GET)) {
         $tagstr .= '<li><a href="' . get_link(array('tag' => false, 'play' => false)) . '">Show all content (' . mysql_num_rows($res) . ")</a></li>\n";
-        $tagstr .= "</ul><ul>\n";
+        $tagstr .= "</ul><ul style=\"padding: 0; margin: 0\">\n";
     }
     foreach ($tags as $tag => $count) {
         $tagstr .= '<li><a href="' . get_link(array('tag' => $tag, 'play' => false)) . '">' . $tag . ' (' . $count . ")</a></li>\n";
