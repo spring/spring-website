@@ -102,11 +102,11 @@
     arsort($tags);
     $tagstr = '';
     if (array_key_exists('tag', $_GET)) {
-        $tagstr .= '<tr><td>&nbsp;&nbsp;<a href="' . get_link(array('tag' => false, 'play' => false)) . '">Show all content (' . mysql_num_rows($res) . ')</a></td></tr>';
-        $tagstr .= '<tr><td>&nbsp;</td></tr>';
+        $tagstr .= '<li><a href="' . get_link(array('tag' => false, 'play' => false)) . '">Show all content (' . mysql_num_rows($res) . ')</a></li>\n';
+        $tagstr .= '</ul><ul>';
     }
     foreach ($tags as $tag => $count) {
-        $tagstr .= '<tr><td>&nbsp;&nbsp;<a href="' . get_link(array('tag' => $tag, 'play' => false)) . '">' . $tag . ' (' . $count . ')</a></td></tr>';
+        $tagstr .= '<li><td>&nbsp;&nbsp;<a href="' . get_link(array('tag' => $tag, 'play' => false)) . '">' . $tag . ' (' . $count . ')</a></li>\n';
     }
 
     // Check if the video player has been invoked
