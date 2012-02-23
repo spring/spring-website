@@ -10,18 +10,23 @@ a:hover {
 	text-decoration: underline;
 }
 
-.mediatitle {
-	background: url("images/contentheader.png");
-
+.title {
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	line-height: 24px;
-	font-size: 19px;
 	color: #EEE;
+}
 
+.mediabanner {
+	background: url("images/contentheader.png");
 	border-right: 1px solid #20292E;
 	border-left:  1px solid #20292E;
+
+	width: 760px;
+	height: 93px;
+
 	vertical-align: middle;
 	padding-left: 25px;
+
+	font-size: 25px;
 }
 
 .welcome {
