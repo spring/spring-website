@@ -15,19 +15,7 @@ a:hover {
 	color: #EEE;
 }
 
-.mediabanner {
-	background: url("images/contentheader.png");
-	border-right: 1px solid #20292E;
-	border-left:  1px solid #20292E;
 
-	width: 760px;
-	height: 93px;
-
-	vertical-align: middle;
-	padding-left: 25px;
-
-	font-size: 25px;
-}
 
 .welcome {
 	height: 239px;
@@ -197,3 +185,25 @@ a:hover {
 .cnews .newsheadline:before {
 	content: '▸ ';
 }
+
+
+/* media page */
+.mediabanner {
+	background: url("images/contentheader.png");
+	border-right: 1px solid #20292E;
+	border-left:  1px solid #20292E;
+
+	width: 760px;
+	height: 93px;
+
+	vertical-align: middle;
+	padding-left: 25px;
+
+	font-size: 25px;
+}
+
+.taglist {
+	padding-left: 8px;
+	margin: 0;
+}
+
