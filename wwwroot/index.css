@@ -9,6 +9,21 @@ a:hover {
 	color: #A3BDCF;
 	text-decoration: underline;
 }
+
+.mediatitle {
+	background: url("images/contentheader.png");
+
+	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
+	line-height: 24px;
+	font-size: 19px;
+	color: #EEE;
+
+	border-right: 1px solid #20292E;
+	border-left:  1px solid #20292E;
+	vertical-align: middle;
+	padding-left: 25px;
+}
+
 .welcome {
 	height: 239px;
 	background-color: #38474E;
