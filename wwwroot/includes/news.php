@@ -33,6 +33,7 @@ function get_news()
 
 function get_news_from_feed($feedurl)
 {
+	//downloads + parses a rss 2.0 feed
 	$xml = cached_file_get_contents($feedurl);
 	try {
 		libxml_use_internal_errors(true);
