@@ -64,7 +64,7 @@ function get_news_from_feed($feedurl)
 
 function get_community_news()
 {
-	return get_news_from_feed('http://springinfo.info/?feed=rss');
+	return get_news_from_feed('http://feeds.feedburner.com/SpringCommunityHeadlines');
 }
 
 function get_forum_posts()
