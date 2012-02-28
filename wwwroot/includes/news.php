@@ -47,10 +47,13 @@ function get_news_from_feed($feedurl)
 
 	if ($xml)
 	{
+		$count = 1;
 		foreach ($xml->xpath('/rss/channel/item') as $item)
 		{
 			$newsdata = array((string) $item->title, (string) $item->link);
 			$cnews .= str_replace($cnewskeys, $newsdata, $cnewstemplate);
+			if($count>=20) break; //limit to 20 news items
+			$count++;
 		}
 	}
 	if ($cnews == '')
