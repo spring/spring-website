@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -10,111 +10,93 @@ defined('IN_MOBIQUO') or exit;
 
 function reply_post_func($xmlrpc_params)
 {
-    global $db, $auth, $user, $config, $phpbb_root_path, $phpEx, $mobiquo_config;
-
+    global $db, $auth, $user, $config, $phpbb_root_path, $phpEx, $mobiquo_config, $phpbb_home;
+    
+    $user->setup('posting');
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_POST');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     // get parameters
-    $forum_id   = isset($params[0]) ? $params[0] : '';
-    $topic_id   = isset($params[1]) ? $params[1] : '';
+    $forum_id   = isset($params[0]) ? intval($params[0]) : '';
+    $topic_id   = isset($params[1]) ? intval($params[1]) : '';
     $subject    = isset($params[2]) ? $params[2] : '';
     $text_body  = isset($params[3]) ? $params[3] : '';
-    $attach_id  = isset($params[4]) ? $params[4] : array();
     
-    if (!$topic_id || !$text_body)
-    {
-        return get_error(1);
-    }
+    $attach_list = isset($params[4]) ? $params[4] : array();
+    $_POST['attachment_data'] = (isset($params[5]) && $params[5]) ? unserialize(base64_decode($params[5])) : array();
+    $GLOBALS['return_html'] = isset($params[6]) ? $params[6] : false;
+    
+    if (!$topic_id) trigger_error('NO_TOPIC');
+    if (utf8_clean_string($text_body) === '') trigger_error('TOO_FEW_CHARS');
 
     $post_data = array();
     $current_time = time();
     
-    $sql = 'SELECT f.*, t.*
-            FROM ' . TOPICS_TABLE . ' t, ' . FORUMS_TABLE . " f
-            WHERE t.topic_id = $topic_id
-            AND t.forum_id = f.forum_id
-            AND t.forum_id = $forum_id";
+    // get topic data
+    $sql = 'SELECT *
+            FROM ' . TOPICS_TABLE . '
+            WHERE topic_id = ' . $topic_id;
     $result = $db->sql_query($sql);
     $post_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     
-    if (!$post_data)
-    {
-        return get_error(7);
-    }
-
+    // get forum data
+    $sql = 'SELECT *
+            FROM ' . FORUMS_TABLE . "
+            WHERE forum_type = " . FORUM_POST . ($post_data['forum_id'] ? "
+            AND forum_id = '$post_data[forum_id]' " : '');
+    $result = $db->sql_query_limit($sql, 1);
+    $forum_data = $db->sql_fetchrow($result);
+    $db->sql_freeresult($result);
+    
+    $post_data = array_merge($post_data, $forum_data);
+    
+    if (!$post_data) trigger_error('NO_TOPIC');
+    
     // Use post_row values in favor of submitted ones...
     $forum_id    = (!empty($post_data['forum_id'])) ? (int) $post_data['forum_id'] : (int) $forum_id;
     $topic_id    = (!empty($post_data['topic_id'])) ? (int) $post_data['topic_id'] : (int) $topic_id;
 
     // Need to login to passworded forum first?
     if ($post_data['forum_password'] && !check_forum_password($forum_id))
-    {
-        return get_error(6);
-    }
+        trigger_error('LOGIN_FORUM');
 
     // Check permissions
-    if ($user->data['is_bot'])
-    {
-        return get_error(2);
-    }
-
+    if ($user->data['is_bot']) trigger_error('NOT_AUTHORISED');
+    
     // Is the user able to read within this forum?
     if (!$auth->acl_get('f_read', $forum_id))
     {
         if ($user->data['user_id'] != ANONYMOUS)
         {
-            return get_error(17);
+            trigger_error('USER_CANNOT_READ');
         }
-    
-        return get_error(18);
+        
+        trigger_error('LOGIN_EXPLAIN_POST');
     }
 
     // Permission to do the reply
     if (!$auth->acl_get('f_reply', $forum_id))
     {    
-        if ($user->data['is_registered'])
+        if ($user->data['user_id'] != ANONYMOUS)
         {
-            return get_error(19);
+            trigger_error('USER_CANNOT_REPLY');
         }
-    
-        return get_error(18);
+        
+        trigger_error('LOGIN_EXPLAIN_POST');
     }
 
     // Is the user able to post within this forum?
     if ($post_data['forum_type'] != FORUM_POST)
     {
-        return get_error(11);
+        trigger_error('USER_CANNOT_FORUM_POST');
     }
 
     // Forum/Topic locked?
     if (($post_data['forum_status'] == ITEM_LOCKED || (isset($post_data['topic_status']) && $post_data['topic_status'] == ITEM_LOCKED)) && !$auth->acl_get('m_edit', $forum_id))
     {
-        return get_error(12);
-    }
-
-    if($attach_id)
-    {
-        $attach_id_str = implode(',', $attach_id);
-        // Get the attachment data, based on the attach id...
-        $sql = 'SELECT attach_id, is_orphan, real_filename, attach_comment
-                FROM ' . ATTACHMENTS_TABLE . "
-                WHERE attach_id IN ($attach_id_str)
-                AND is_orphan = 1
-                AND poster_id = " . $user->data['user_id'];
-        $result = $db->sql_query($sql);
-        
-        $attach_data = array();
-        while ($row = $db->sql_fetchrow($result))
-        {
-            $attach_data['attach_id'] = $row['attach_id'];
-            $attach_data['is_orphan'] = $row['is_orphan'];
-            $attach_data['real_filename'] = $row['real_filename'];
-            $attach_data['attach_comment'] = $row['attach_comment'];
-            
-            $_POST['attachment_data'][] = $attach_data;
-        }
-        $db->sql_freeresult($result);
+        trigger_error(($post_data['forum_status'] == ITEM_LOCKED) ? 'FORUM_LOCKED' : 'TOPIC_LOCKED');
     }
     
     $post_data['post_edit_locked']  = (isset($post_data['post_edit_locked'])) ? (int) $post_data['post_edit_locked'] : 0;
@@ -226,14 +208,14 @@ function reply_post_func($xmlrpc_params)
 
     // Parse Attachments - before checksum is calculated
     $message_parser->parse_attachments('fileupload', 'reply', $forum_id, true, false, false);
-
+    
     // Grab md5 'checksum' of new message
     $message_md5 = md5($message_parser->message);
 
     // Check checksum ... don't re-parse message if the same
     if (sizeof($message_parser->warn_msg))
     {
-        return get_error();
+        trigger_error(join("\n", $message_parser->warn_msg));
     }
 
     $message_parser->parse($post_data['enable_bbcode'], ($config['allow_post_links']) ? $post_data['enable_urls'] : false, $post_data['enable_smilies'], $img_status, $flash_status, $quote_status, $config['allow_post_links']);
@@ -263,7 +245,7 @@ function reply_post_func($xmlrpc_params)
 
         if ($last_post_time && ($current_time - $last_post_time) < intval($config['flood_interval']))
         {
-            return get_error(13);
+            trigger_error('FLOOD_ERROR');
         }
     }
 
@@ -274,27 +256,8 @@ function reply_post_func($xmlrpc_params)
 
         if (($result = validate_username($post_data['username'], (!empty($post_data['post_username'])) ? $post_data['post_username'] : '')) !== false)
         {
-            return get_error(14);
-        }
-    }
-
-    if ($config['enable_post_confirm'] && !$user->data['is_registered'])
-    {
-        $confirm_id = request_var('confirm_id', '');
-        $confirm_code = request_var('confirm_code', '');
-
-        $sql = 'SELECT code
-            FROM ' . CONFIRM_TABLE . "
-            WHERE confirm_id = '" . $db->sql_escape($confirm_id) . "'
-                AND session_id = '" . $db->sql_escape($user->session_id) . "'
-                AND confirm_type = " . CONFIRM_POST;
-        $result = $db->sql_query($sql);
-        $confirm_row = $db->sql_fetchrow($result);
-        $db->sql_freeresult($result);
-
-        if (empty($confirm_row['code']) || strcasecmp($confirm_row['code'], $confirm_code) !== 0)
-        {
-            return get_error(4);
+            $user->add_lang('ucp');
+            trigger_error($result . '_USERNAME');
         }
     }
 
@@ -312,7 +275,7 @@ function reply_post_func($xmlrpc_params)
     {
         if (($dnsbl = $user->check_dnsbl('post')) !== false)
         {
-            return get_error(16);
+            trigger_error(sprintf($user->lang['IP_BLACKLISTED'], $user->ip, $dnsbl[1]));
         }
     }
 
@@ -352,14 +315,20 @@ function reply_post_func($xmlrpc_params)
 
         'topic_approved'      => (isset($post_data['topic_approved'])) ? $post_data['topic_approved'] : false,
         'post_approved'       => (isset($post_data['post_approved'])) ? $post_data['post_approved'] : false,
+        
+        // for mod post expire compatibility
+        'post_expire_time'      => -1,
     );
     
-    //include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-    include('include/functions_posting.' . $phpEx);
+    include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 
     $update_message = true;
+    
+    $cwd = getcwd();
+    chdir('../');
     $redirect_url = submit_post('reply', $post_data['post_subject'], $post_data['username'], $post_data['topic_type'], $poll, $data, $update_message);
-
+    chdir($cwd);
+    
     // Check the permissions for post approval, as well as the queue trigger where users are put on approval with a post count lower than specified. Moderators are not affected.
     $approved = true;
     if ((($config['enable_queue_trigger'] && $user->data['user_posts'] < $config['queue_trigger_posts']) || !$auth->acl_get('f_noapprove', $data['forum_id'])) && !$auth->acl_get('m_approve', $data['forum_id']))
@@ -374,12 +343,118 @@ function reply_post_func($xmlrpc_params)
         preg_match('/&amp;p=(\d+)/', $redirect_url, $matches);
         $post_id = $matches[1];
         $reply_success = true;
+        
+        // get new post_content
+        $message = censor_text($data['message']);
+        $quote_wrote_string = $user->lang['WROTE'];
+        $message = str_replace('[/quote:'.$data['bbcode_uid'].']', '[/quote]', $message);
+        $message = preg_replace('/\[quote(?:=&quot;(.*?)&quot;)?:'.$data['bbcode_uid'].'\]/ise', "'[quote]' . ('$1' ? '$1' . ' $quote_wrote_string:\n' : '\n')", $message);
+        $blocks = preg_split('/(\[\/?quote\])/i', $message, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $quote_level = 0;
+        $message = '';
+            
+        foreach($blocks as $block)
+        {
+            if ($block == '[quote]') {
+                if ($quote_level == 0) $message .= $block;
+                $quote_level++;
+            } else if ($block == '[/quote]') {
+                if ($quote_level <= 1) $message .= $block;
+                if ($quote_level >= 1) $quote_level--;            
+            } else {
+                if ($quote_level <= 1) $message .= $block;
+            }
+        }
+        
+        $message = preg_replace('/\[(youtube|video|googlevideo|gvideo):'.$data['bbcode_uid'].'\](.*?)\[\/\1:'.$data['bbcode_uid'].'\]/sie', "video_bbcode_format('$1', '$2')", $message);
+        $message = preg_replace('/\[(BBvideo)[\d, ]+:'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[url=$2]YouTube Video[/url]", $message);
+        $message = preg_replace('/\[(spoil|spoiler):'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[spoiler]$2[/spoiler]", $message);
+        $message = preg_replace('/\[b:'.$data['bbcode_uid'].'\](.*?)\[\/b:'.$data['bbcode_uid'].'\]/si', '[b]$1[/b]', $message);
+        $message = preg_replace('/\[i:'.$data['bbcode_uid'].'\](.*?)\[\/i:'.$data['bbcode_uid'].'\]/si', '[i]$1[/i]', $message);
+        $message = preg_replace('/\[u:'.$data['bbcode_uid'].'\](.*?)\[\/u:'.$data['bbcode_uid'].'\]/si', '[u]$1[/u]', $message);
+        $message = preg_replace('/\[color=#(\w{6}):'.$data['bbcode_uid'].'\](.*?)\[\/color:'.$data['bbcode_uid'].'\]/si', '[color=#$1]$2[/color]', $message);
+        
+        // Second parse bbcode here
+        if ($data['bbcode_bitfield'])
+        {
+            $bbcode = new bbcode(base64_encode($data['bbcode_bitfield']));
+            $bbcode->bbcode_second_pass($message, $data['bbcode_uid'], $data['bbcode_bitfield']);
+        }
+        
+        $message = bbcode_nl2br($message);
+        $message = smiley_text($message);
+        
+        if (!empty($data['attachment_data']))
+        {
+            parse_attachments($forum_id, $message, $data['attachment_data'], $update_count);
+        }
+        
+        $updated_post_title = html_entity_decode(strip_tags(censor_text($data['topic_title'])), ENT_QUOTES, 'UTF-8');
+        
+        $edit_allowed = ($auth->acl_get('m_edit', $forum_id) || (
+            $auth->acl_get('f_edit', $forum_id) &&
+            !$data['post_edit_locked'] &&
+            ($data['post_time'] > time() - ($config['edit_time'] * 60) || !$config['edit_time'])
+        ));
+        
+        $delete_allowed = ($auth->acl_get('m_delete', $forum_id) || (
+            $auth->acl_get('f_delete', $forum_id) &&
+            ($data['post_time'] > time() - ($config['delete_time'] * 60) || !$config['delete_time']) &&
+            // we do not want to allow removal of the last post if a moderator locked it!
+            !$data['post_edit_locked']
+        ));
+        
+        $attachments = array();  
+        if (sizeof($attach_list) && sizeof($data['attachment_data']))
+        {
+            $sql = 'SELECT *
+                FROM ' . ATTACHMENTS_TABLE . '
+                WHERE ' . $db->sql_in_set('attach_id', $attach_list) . '
+                    AND in_message = 0
+                ORDER BY filetime DESC';
+            $result = $db->sql_query($sql);
+            
+            while ($row = $db->sql_fetchrow($result))
+            {
+                $attachment_by_id[$row['attach_id']] = $row;
+            }
+            $db->sql_freeresult($result);
+            
+            foreach($data['attachment_data'] as $attachment)
+            {               
+                if(preg_match('/<img src=\".*?(\/download\/file.php\?id=(\d+).*?)\"/is', $attachment, $matches))
+                {
+                    $file_url = html_entity_decode($phpbb_home.$matches[1]);
+                    $attach_id = $matches[2];
+                    unset($matches);
+                
+                    $xmlrpc_attachment = new xmlrpcval(array(
+                        'filename'      => new xmlrpcval($attachment_by_id[$attach_id]['real_filename'], 'base64'),
+                        'filesize'      => new xmlrpcval($attachment_by_id[$attach_id]['filesize'], 'int'),
+                        'content_type'  => new xmlrpcval('image'),
+                        'thumbnail_url' => new xmlrpcval(''),
+                        'url'           => new xmlrpcval($file_url)
+                    ), 'struct');
+                    $attachments[] = $xmlrpc_attachment;
+                }
+            }
+        }
     }
     
     $xmlrpc_reply_topic = new xmlrpcval(array(
         'result'    => new xmlrpcval($reply_success, 'boolean'),
         'post_id'   => new xmlrpcval($post_id, 'string'),
         'state'     => new xmlrpcval($approved ? 0 : 1, 'int'),
+        'post_title'        => new xmlrpcval($updated_post_title, 'base64'),
+        'post_content'      => new xmlrpcval(post_html_clean($message), 'base64'),
+        'post_author_name'  => new xmlrpcval(html_entity_decode($user->data['username']), 'base64'),
+        'is_online'         => new xmlrpcval(true, 'boolean'),
+        'can_edit'          => new xmlrpcval($edit_allowed, 'boolean'),
+        'icon_url'          => new xmlrpcval(($user->optionget('viewavatars')) ? get_user_avatar_url($user->data['user_avatar'], $user->data['user_avatar_type']) : ''),
+        'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($current_time), 'dateTime.iso8601'),
+        'can_delete'        => new xmlrpcval($delete_allowed, 'boolean'),
+        'allow_smilies'     => new xmlrpcval($data['enable_smilies'] ? true : false, 'boolean'),
+        'attachments'       => new xmlrpcval($attachments, 'array'),
     ), 'struct');
 
     return new xmlrpcresp($xmlrpc_reply_topic);

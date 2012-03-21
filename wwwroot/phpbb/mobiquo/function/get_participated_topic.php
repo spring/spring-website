@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,34 +12,12 @@ function get_participated_topic_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $mobiquo_config;
     
+    $user->setup('search');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     $author = $params[0];
     
-    $start_num  = 0;
-    $end_num    = 19;
-    if (isset($params[1]) && is_int($params[1]))
-    {
-        $start_num = $params[1];
-    }
-
-    // get end index of topic from parameters
-    if (isset($params[2]) && is_int($params[2]))
-    {
-        $end_num = $params[2];
-    }
-
-    // check if topic index is out of range
-    if ($start_num > $end_num)
-    {
-        return get_error(5);
-    }
-
-    // return at most 50 topics
-    if ($end_num - $start_num >= 50)
-    {
-        $end_num = $start_num + 49;
-    }
-    $sql_limit = $end_num - $start_num + 1;
+    list($start, $per_page) = process_page($params[1], $params[2]);
     
     $show_results = 'topics';       // need topics
     $search_fields = 'all';   // only search for topics
@@ -48,7 +26,6 @@ function get_participated_topic_func($xmlrpc_params)
     // Define initial vars
     $mode            = request_var('mode', '');
     $search_id        = request_var('search_id', '');
-    $start            = $start_num;
     $post_id        = request_var('p', 0);
     $topic_id        = request_var('t', 0);
     $view            = request_var('view', '');
@@ -70,29 +47,13 @@ function get_participated_topic_func($xmlrpc_params)
     // Is user able to search? Has search been disabled?
     if (!$auth->acl_get('u_search') || !$auth->acl_getf_global('f_search') || !$config['load_search'])
     {
-        $template->assign_var('S_NO_SEARCH', true);
-    //    trigger_error('NO_SEARCH');
-        return get_error(1);
+        trigger_error('NO_SEARCH');
     }
     
     // Check search load limit
     if ($user->load && $config['limit_search_load'] && ($user->load > doubleval($config['limit_search_load'])))
     {
-        $template->assign_var('S_NO_SEARCH', true);
-    //    trigger_error('NO_SEARCH_TIME');
-            return get_error(2);
-    }
-    
-    // Check flood limit ... if applicable
-    $interval = ($user->data['user_id'] == ANONYMOUS) ? $config['search_anonymous_interval'] : $config['search_interval'];
-    if ($interval && !$auth->acl_get('u_ignoreflood'))
-    {
-        if ($user->data['user_last_search'] > time() - $interval)
-        {
-            $template->assign_var('S_NO_SEARCH', true);
-    //        trigger_error('NO_SEARCH_TIME');
-                return get_error(3);
-        }
+        trigger_error('NO_SEARCH_TIME');
     }
     
     // Define some vars
@@ -101,6 +62,7 @@ function get_participated_topic_func($xmlrpc_params)
     
     $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
     gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
+    $sort_key = 't';
     
     if ($keywords || $author || $author_id || $search_id || $submit)
     {
@@ -117,8 +79,7 @@ function get_participated_topic_func($xmlrpc_params)
         {
             if ((strpos($author, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $author)) < $config['min_search_author_chars']))
             {
-    //          trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
-                return get_error(5);
+                trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
             }
     
             $sql_where = (strpos($author, '*') !== false) ? ' username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($author))) : " username_clean = '" . $db->sql_escape(utf8_clean_string($author)) . "'";
@@ -137,8 +98,7 @@ function get_participated_topic_func($xmlrpc_params)
     
             if (!sizeof($author_id_ary))
             {
-    //          trigger_error('NO_SEARCH_RESULTS');
-                return get_error(18, 'No suitable matches were found.');
+                trigger_error('NO_SEARCH_RESULTS');
             }
         }
         
@@ -227,8 +187,7 @@ function get_participated_topic_func($xmlrpc_params)
     
         if (!file_exists($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx))
         {
-    //      trigger_error('NO_SUCH_SEARCH_MODULE');
-            return get_error(7);
+            trigger_error('NO_SUCH_SEARCH_MODULE');
         }
     
         require("{$phpbb_root_path}includes/search/$search_type.$phpEx");
@@ -239,8 +198,7 @@ function get_participated_topic_func($xmlrpc_params)
     
         if ($error)
         {
-    //      trigger_error($error);
-            return get_error(8);
+            trigger_error($error);
         }
     
         // define some variables needed for retrieving post_id/topic_id information
@@ -250,7 +208,6 @@ function get_participated_topic_func($xmlrpc_params)
         $sql = $field = $l_search_title = '';
     
         // $per_page = $config['topics_per_page'];
-        $per_page = $sql_limit;
         $total_match_count = 0;
     
         // make sure that some arrays are always in the same order
@@ -265,8 +222,8 @@ function get_participated_topic_func($xmlrpc_params)
         else if (sizeof($author_id_ary))
         {
             $firstpost_only = ($search_fields === 'firstpost' || $search_fields == 'titleonly') ? true : false;
-            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1'){
-                $total_match_count = $search->author_search($show_results, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary,$aaa, $id_ary, $start, $per_page);
+            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1' || $config['version'] == '3.0.9' || $config['version'] == '3.0.10'){
+                $total_match_count = $search->author_search($show_results, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary, $aaa, $id_ary, $start, $per_page);
             } else {
                 $total_match_count = $search->author_search($show_results, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary, $id_ary, $start, $per_page);
             }
@@ -338,9 +295,8 @@ function get_participated_topic_func($xmlrpc_params)
             $sql_from = TOPICS_TABLE . ' t
                 LEFT JOIN ' . FORUMS_TABLE . ' f ON (f.forum_id = t.forum_id)
                 LEFT JOIN ' . USERS_TABLE . ' u ON (u.user_id = t.topic_last_poster_id) 
-                LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id) 
-                LEFT JOIN ' . BOOKMARKS_TABLE . ' bm ON (bm.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = bm.topic_id) ';
-            $sql_select = 't.*, f.forum_name, u.user_avatar, u.user_avatar_type, tw.notify_status, bm.topic_id as bookmarked';
+                LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id)';
+            $sql_select = 't.*, f.forum_name, u.user_avatar, u.user_avatar_type, tw.notify_status';
 
             if ($user->data['is_registered'])
             {
@@ -369,8 +325,8 @@ function get_participated_topic_func($xmlrpc_params)
 
             $sql = "SELECT $sql_select
                 FROM $sql_from
-                WHERE $sql_where";
-            $sql .= ' ORDER BY ' . $sort_by_sql['t'] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
+                WHERE $sql_where 
+                ORDER BY $sort_by_sql[t] DESC";
             $result = $db->sql_query($sql);
             $result_topic_id = 0;
             
@@ -511,10 +467,10 @@ function get_participated_topic_func($xmlrpc_params)
                     'user_avatar'       => $row['user_avatar'],
                     'user_avatar_type'  => $row['user_avatar_type'],
                     'notify_status'     => $row['notify_status'],
-                    'bookmarked'        => $row['bookmarked'],
                     'topic_poster'      => $row['topic_poster'],
                     'topic_status'      => $row['topic_status'],
                     'topic_type'        => $row['topic_type'],
+                    'topic_approved'    => $row['topic_approved'],
 
                     'TOPIC_FOLDER_IMG'        => $user->img($folder_img, $folder_alt),
                     'TOPIC_FOLDER_IMG_SRC'    => $user->img($folder_img, $folder_alt, false, '', 'src'),
@@ -575,23 +531,49 @@ function get_participated_topic_func($xmlrpc_params)
     
     // Mobiquo start here
     $topic_list = array();
+    $total_unread_num = 0;
     if(isset($template->_tpldata['searchresults']))
     {
+        $tids = array();
+        foreach ($template->_tpldata['searchresults'] as $row)
+            $tids[] = $row['TOPIC_ID'];
+        
+        // get participated users of each topic
+//        get_participated_user_avatars($tids);
+//        global $topic_users, $user_avatar;
+        
         foreach($template->_tpldata['searchresults'] as $row)
         {
+            $forum_id = $row['FORUM_ID'];
             $short_content = get_short_content($row['POST_ID']);
             $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
-            $topic_tracking = get_complete_topic_tracking($row['FORUM_ID'], $row['TOPIC_ID']);
+            $topic_tracking = get_complete_topic_tracking($forum_id, $row['TOPIC_ID']);
             $new_post = $topic_tracking[$row['TOPIC_ID']] < $row['LAST_POST_TIME'] ? true : false;
+            $new_post && $total_unread_num++;
             
             $allow_change_type = ($auth->acl_get('m_', $forum_id) || ($user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster'])) ? true : false;
             
+//            $icon_urls = array();
+//            foreach($topic_users[$row['TOPIC_ID']] as $posterid){
+//                $icon_urls[] = new xmlrpcval($user_avatar[$posterid], 'string');
+//            }
+            
+            if (empty($forum_id))
+            {
+                $user->setup('viewforum');
+                $forum_id = 0;
+                $row['FORUM_TITLE'] = $user->lang['ANNOUNCEMENTS'];
+            }
+            
+            if (empty($row['FORUM_TITLE'])) $row['FORUM_TITLE'] = 'Forum';
+            
             $xmlrpc_topic = new xmlrpcval(array(
-                'forum_id'          => new xmlrpcval($row['FORUM_ID']),
+                'forum_id'          => new xmlrpcval($forum_id),
                 'forum_name'        => new xmlrpcval(html_entity_decode($row['FORUM_TITLE']), 'base64'),
                 'topic_id'          => new xmlrpcval($row['TOPIC_ID']),
                 'topic_title'       => new xmlrpcval(html_entity_decode(strip_tags(censor_text($row['TOPIC_TITLE']))), 'base64'),
                 'icon_url'          => new xmlrpcval($user_avatar_url),
+//                'icon_urls'         => new xmlrpcval($icon_urls, 'array'),
                 'topic_author_name' => new xmlrpcval(html_entity_decode($row['TOPIC_AUTHOR']), 'base64'),
                 'post_author_name'  => new xmlrpcval(html_entity_decode($row['LAST_POST_AUTHOR']), 'base64'),
                 'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($row['LAST_POST_TIME']), 'dateTime.iso8601'),
@@ -599,15 +581,17 @@ function get_participated_topic_func($xmlrpc_params)
                 'view_number'       => new xmlrpcval($row['TOPIC_VIEWS'], 'int'),
                 'new_post'          => new xmlrpcval($new_post, 'boolean'),
                 'short_content'     => new xmlrpcval($short_content, 'base64'),
+                
                 'can_delete'        => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
+                'can_move'          => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
                 'can_subscribe'     => new xmlrpcval(($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'], 'boolean'), 
-                'can_bookmark'      => new xmlrpcval($user->data['is_registered'] && $config['allow_bookmarks'], 'boolean'),
-                'issubscribed'      => new xmlrpcval(!is_null($row['notify_status']) && $row['notify_status'] !== '' ? true : false, 'boolean'),
                 'is_subscribed'     => new xmlrpcval(!is_null($row['notify_status']) && $row['notify_status'] !== '' ? true : false, 'boolean'),
-                'isbookmarked'      => new xmlrpcval($row['bookmarked'] ? true : false, 'boolean'),
                 'can_close'         => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster']), 'boolean'),
                 'is_closed'         => new xmlrpcval($row['topic_status'] == ITEM_LOCKED, 'boolean'),
-                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id) && $row['topic_type'] != POST_STICKY, 'boolean'),
+                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id), 'boolean'),
+                'is_sticky'         => new xmlrpcval($row['topic_type'] == POST_STICKY, 'boolean'),
+                'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['topic_approved'], 'boolean'),
+                'is_approved'       => new xmlrpcval($row['topic_approved'] ? true : false, 'boolean'),
             ), 'struct');
     
             $topic_list[] = $xmlrpc_topic;
@@ -616,8 +600,9 @@ function get_participated_topic_func($xmlrpc_params)
     
     $response = new xmlrpcval(
         array(
-            'total_topic_num' => new xmlrpcval($total_match_count, 'int'),
-            'topics'           => new xmlrpcval($topic_list, 'array'),
+            'total_topic_num'   => new xmlrpcval($total_match_count, 'int'),
+            'total_unread_num'  => new xmlrpcval($total_unread_num, 'int'),
+            'topics'            => new xmlrpcval($topic_list, 'array'),
         ),
         'struct'
     );

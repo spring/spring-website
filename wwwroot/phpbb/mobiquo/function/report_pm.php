@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,7 +11,9 @@ defined('IN_MOBIQUO') or exit;
 function report_pm_func($xmlrpc_params)
 {
     global $db, $user, $config;
-
+    
+    $user->setup('mcp');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     $post_id = 0;
@@ -23,7 +25,7 @@ function report_pm_func($xmlrpc_params)
     
     if (!$pm_id || !$config['allow_pm_report'])
     {
-        get_error(1);
+        trigger_error('NO_POST_SELECTED');
     }
     
     // Grab all relevant data
@@ -38,13 +40,13 @@ function report_pm_func($xmlrpc_params)
 
     if (!$report_data)
     {
-        get_error(20);
+        $user->add_lang('ucp');
+        trigger_error('NO_MESSAGE');
     }
 
     if ($report_data['message_reported'])
     {
-        $result = new xmlrpcval(array('result' => new xmlrpcval(true, 'boolean')), 'struct');
-        return new xmlrpcresp($result);
+        trigger_error('ALREADY_REPORTED_PM');
     }
     
     $sql = 'SELECT *
@@ -56,7 +58,7 @@ function report_pm_func($xmlrpc_params)
 
     if (!$row || (!$report_text && strtolower($row['reason_title']) == 'other'))
     {
-        get_error(1);
+        trigger_error('EMPTY_REPORT');
     }
 
     $sql_ary = array(

@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,7 +11,9 @@ defined('IN_MOBIQUO') or exit;
 function report_post_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config;
-
+    
+    $user->setup('mcp');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     $pm_id = 0;
@@ -23,7 +25,7 @@ function report_post_func($xmlrpc_params)
     
     if (!$post_id)
     {
-        get_error(1);
+        trigger_error('NO_POST_SELECTED');
     }
     
     // Grab all relevant data
@@ -37,7 +39,7 @@ function report_post_func($xmlrpc_params)
 
     if (!$report_data)
     {
-        get_error(26);
+        trigger_error('POST_NOT_EXIST');
     }
 
     $forum_id = (int) ($report_data['forum_id']) ? $report_data['forum_id'] : $forum_id;
@@ -52,7 +54,7 @@ function report_post_func($xmlrpc_params)
 
     if (!$forum_data)
     {
-        get_error(3);
+        trigger_error('FORUM_NOT_EXIST');
     }
 
     // Check required permissions
@@ -62,15 +64,14 @@ function report_post_func($xmlrpc_params)
     {
         if (!$auth->acl_get($acl, $forum_id))
         {
-            get_error(2);
+            trigger_error($error);
         }
     }
     unset($acl_check_ary);
 
     if ($report_data['post_reported'])
     {
-        $result = new xmlrpcval(array('result' => new xmlrpcval(true, 'boolean')), 'struct');
-        return new xmlrpcresp($result);
+        trigger_error('ALREADY_REPORTED');
     }
     
     $sql = 'SELECT *
@@ -82,7 +83,7 @@ function report_post_func($xmlrpc_params)
 
     if (!$row || (!$report_text && strtolower($row['reason_title']) == 'other'))
     {
-        get_error(1);
+        trigger_error('EMPTY_REPORT');
     }
 
     $sql_ary = array(

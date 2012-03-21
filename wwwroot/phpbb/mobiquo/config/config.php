@@ -8,6 +8,12 @@
 
 defined('IN_MOBIQUO') or exit;
 
+foreach($_COOKIE as $key => $value) $_REQUEST[$key] = $value;
+
+$mobiquo_config = get_mobiquo_config();
+$phpEx = $mobiquo_config['php_extension'];
+$phpbb_root_path = dirname(dirname(dirname(__FILE__))).'/';
+
 function get_mobiquo_config() 
 {
     $config_file = './config/config.txt';
@@ -43,5 +49,3 @@ function get_mobiquo_config()
     
     return $mobiquo_config;
 }
-
-?>

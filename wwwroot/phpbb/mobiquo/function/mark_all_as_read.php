@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -18,7 +18,7 @@ function mark_all_as_read_func($xmlrpc_params)
     }
     else
     {
-        $forum_id = $params[0];
+        $forum_id = intval($params[0]);
         markread('topics', $forum_id);
     }
     

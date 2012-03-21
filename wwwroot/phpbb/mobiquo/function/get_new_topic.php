@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -13,31 +13,8 @@ function get_new_topic_func($xmlrpc_params)
     global $db, $auth, $user, $mobiquo_config;
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    $start_num  = 0;          
-    $end_num    = 19;
-    if (isset($params[0]) && is_int($params[0]))
-    {
-        $start_num = $params[0];
-    }
+    list($start, $sql_limit) = process_page($params[0], $params[1]);
     
-    // get end index of topic from parameters
-    if (isset($params[1]) && is_int($params[1]))
-    {
-        $end_num = $params[1];
-    }
-    
-    // check if topic index is out of range
-    if ($start_num > $end_num)
-    {
-        return get_error(5);
-    }
-    
-    // return at most 50 topics
-    if ($end_num - $start_num >= 50)
-    {
-        $end_num = $start_num + 49;
-    }
-    $sql_limit = $end_num - $start_num + 1;
     $ex_fid_ary = array_unique(array_merge(array_keys($auth->acl_getf('!f_read', true)), array_keys($auth->acl_getf('!f_search', true))));
     
     if (isset($mobiquo_config['hide_forum_id']))
@@ -92,21 +69,20 @@ function get_new_topic_func($xmlrpc_params)
                    t.topic_last_poster_id,
                    t.topic_last_poster_name,
                    t.topic_last_post_time,
+                   t.topic_approved,
                    u.user_avatar,
                    u.user_avatar_type,
-                   tw.notify_status,
-                   bm.topic_id as bookmarked
-            FROM ('. TOPICS_TABLE .' t, '. FORUMS_TABLE .' f, '.USERS_TABLE . ' u) 
-                LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id) 
-                LEFT JOIN ' . BOOKMARKS_TABLE . ' bm ON (bm.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = bm.topic_id) 
-            WHERE f.forum_id = t.forum_id
-            AND t.topic_moved_id = 0 '.' 
-            AND u.user_id = t.topic_last_poster_id'. "
+                   tw.notify_status
+            FROM '. TOPICS_TABLE .' t
+                LEFT JOIN ' . FORUMS_TABLE .' f ON (t.forum_id = f.forum_id)
+                LEFT JOIN ' . USERS_TABLE . ' u ON (t.topic_last_poster_id = u.user_id)
+                LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id)
+            WHERE t.topic_moved_id = 0 ' . "
             $m_approve_fid_sql
             " . ((sizeof($ex_fid_ary)) ? 'AND ' . $db->sql_in_set('t.forum_id', $ex_fid_ary, true) : '') . '
             ORDER BY t.topic_last_post_time DESC';
 
-    $result = $db->sql_query_limit($sql, $sql_limit, $start_num);
+    $result = $db->sql_query_limit($sql, $sql_limit, $start);
 
     $topic_list = array();
     while ($row = $db->sql_fetchrow($result))
@@ -114,8 +90,12 @@ function get_new_topic_func($xmlrpc_params)
         $topic_id = $row['topic_id'];
         $forum_id = $row['forum_id'];
         $short_content = get_short_content($row['topic_last_post_id']);
-        $topic_tracking = get_complete_topic_tracking($forum_id, $topic_id);
-        $new_post = $topic_tracking[$topic_id] < $row['topic_last_post_time'] ? true : false;
+        if ($forum_id) {
+            $topic_tracking = get_complete_topic_tracking($forum_id, $topic_id);
+            $new_post = $topic_tracking[$topic_id] < $row['topic_last_post_time'] ? true : false;
+        } else {
+            $new_post = false;
+        }
 
         $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
         $allow_change_type = ($auth->acl_get('m_', $forum_id) || ($user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster'])) ? true : false;
@@ -133,15 +113,17 @@ function get_new_topic_func($xmlrpc_params)
             'new_post'          => new xmlrpcval($new_post, 'boolean'),
             'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($row['topic_last_post_time']), 'dateTime.iso8601'),
             'icon_url'          => new xmlrpcval($user_avatar_url),
+            
             'can_delete'        => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
+            'can_move'          => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
             'can_subscribe'     => new xmlrpcval(($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'], 'boolean'), 
-            'can_bookmark'      => new xmlrpcval($user->data['is_registered'] && $config['allow_bookmarks'], 'boolean'),
-            'issubscribed'      => new xmlrpcval(!is_null($row['notify_status']) && $row['notify_status'] !== '' ? true : false, 'boolean'),
             'is_subscribed'     => new xmlrpcval(!is_null($row['notify_status']) && $row['notify_status'] !== '' ? true : false, 'boolean'),
-            'isbookmarked'      => new xmlrpcval($row['bookmarked'] ? true : false, 'boolean'),
             'can_close'         => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster']), 'boolean'),
             'is_closed'         => new xmlrpcval($row['topic_status'] == ITEM_LOCKED, 'boolean'),
-            'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id) && $row['topic_type'] != POST_STICKY, 'boolean'),
+            'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id), 'boolean'),
+            'is_sticky'         => new xmlrpcval($row['topic_type'] == POST_STICKY, 'boolean'),
+            'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['topic_approved'], 'boolean'),
+            'is_approved'       => new xmlrpcval($row['topic_approved'] ? true : false, 'boolean'),
         ), 'struct');
 
         $topic_list[] = $xmlrpc_topic;
@@ -149,6 +131,4 @@ function get_new_topic_func($xmlrpc_params)
       $db->sql_freeresult($result);
 
     return new xmlrpcresp(new xmlrpcval($topic_list, 'array'));
-} // End of get_new_topic
-    
-?>
+}

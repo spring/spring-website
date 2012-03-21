@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,17 +11,16 @@ defined('IN_MOBIQUO') or exit;
 function login_forum_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config;
-
+    
+    $user->setup('viewforum');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    $forum_id = $params[0];
+    $forum_id = intval($params[0]);
     $password = $params[1];
     
-    if (!$forum_id)
-    {
-        return get_error(1);
-    }
-
+    if (!$forum_id) trigger_error('NO_FORUM');
+    
     $sql_from = FORUMS_TABLE . ' f';
     $lastread_select = '';
     
@@ -46,23 +45,17 @@ function login_forum_func($xmlrpc_params)
     $forum_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     
-    if (!$forum_data)
-    {
-        return get_error(3);
-    }
-
-    // Configure style, language, etc.
-    //$user->setup('viewforum', $forum_data['forum_style']);
+    if (!$forum_data) trigger_error('NO_FORUM');
     
     // Permissions check
     if (!$auth->acl_gets('f_list', 'f_read', $forum_id) || ($forum_data['forum_type'] == FORUM_LINK && $forum_data['forum_link'] && !$auth->acl_get('f_read', $forum_id)))
     {
         if ($user->data['user_id'] != ANONYMOUS)
         {
-            return get_error(2);
+            trigger_error('SORRY_AUTH_READ');
         }
     
-        return get_error(9);
+        trigger_error('LOGIN_VIEWFORUM');
     }
     
     $login_status = false;

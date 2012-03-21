@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,20 +12,13 @@ function create_message_func($xmlrpc_params)
 {
     global $db, $user, $auth, $config, $phpbb_root_path, $phpEx;
     
+    $user->setup('ucp');
+    
     include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
     include_once($phpbb_root_path . 'includes/ucp/ucp_pm_compose.' . $phpEx);
     
-    // Only registered users can go beyond this point
-    if (!$user->data['is_registered'])
-    {
-        return get_error(9);
-    }
-    
-    // Is PM disabled?
-    if (!$config['allow_privmsg'])
-    {
-        return get_error(21);
-    }
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
+    if (!$config['allow_privmsg']) trigger_error('Module not accessible');
     
     // Flood check
     $current_time = time();
@@ -33,14 +26,14 @@ function create_message_func($xmlrpc_params)
 
     if ($last_post_time && ($current_time - $last_post_time) < intval($config['flood_interval']))
     {
-        return get_error(23);
+        trigger_error('FLOOD_ERROR');
     }
     
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     if (!is_array($params[0]) || empty($params[0]) || !isset($params[1]) || utf8_clean_string($params[1]) === '' || !isset($params[2]))
     {
-        return get_error(1);
+        trigger_error('Required paramerter missing');
     }
     else
     {
@@ -57,28 +50,25 @@ function create_message_func($xmlrpc_params)
         if ($params[3] == 1)
         {
             $action = 'reply';
-            $msg_id = $params[4];
+            $msg_id = intval($params[4]);
         }
         else if ($params[3] == 2)
         {
             $action = 'forword';
-            $msg_id = $params[4];
+            $msg_id = intval($params[4]);
         }
         
-        if (!$msg_id)   // when reply or forward, message id is required
-        {
-            return get_error(1);
-        }
+        if (!$msg_id) trigger_error('NO_MESSAGE');
     }
     
     if (($action == 'post' || $action == 'reply')  && (!$auth->acl_get('u_sendpm')))
     {
-        return get_error(22);
+        trigger_error('NO_AUTH_SEND_MESSAGE');
     }
     
     if ($action == 'forward' && (!$config['forward_pm'] || !$auth->acl_get('u_pm_forward')))
     {
-        return get_error(22);
+        trigger_error('NO_AUTH_FORWARD_MESSAGE');
     }    
     
     // Do NOT use request_var or specialchars here
@@ -94,7 +84,7 @@ function create_message_func($xmlrpc_params)
         }
         else
         {
-            return get_error(25);
+            trigger_error('PM_NO_USERS');
         }
     }
     
@@ -120,12 +110,12 @@ function create_message_func($xmlrpc_params)
 
         if (!$post)
         {
-            return get_error(20);
+            trigger_error('NO_MESSAGE');
         }
 
         if (!$post['author_id'] || $post['author_id'] == ANONYMOUS)
         {
-            return get_error(2);
+            trigger_error('NO_AUTHOR');
         }
     }
     
@@ -168,28 +158,23 @@ function create_message_func($xmlrpc_params)
     if ((!$config['allow_mass_pm'] || !$auth->acl_get('u_masspm_group')) && !empty($address_list['g']))
     {
         $address_list = array();
-        $error = 'NO_AUTH_GROUP_MESSAGE';
+        trigger_error('NO_AUTH_GROUP_MESSAGE');
     }
 
     // Check mass pm to users permission
     if ((!$config['allow_mass_pm'] || !$auth->acl_get('u_masspm')) && num_recipients($address_list) > 1)
     {
         $address_list = get_recipients($address_list, 1);
-        $error = 'TOO_MANY_RECIPIENTS';
+        trigger_error('TOO_MANY_RECIPIENTS');
     }
 
     // Check for too many recipients
     if (!empty($address_list['u']) && $max_recipients && sizeof($address_list['u']) > $max_recipients)
     {
         $address_list = get_recipients($address_list, $max_recipients);
-        $error = 'TOO_MANY_RECIPIENTS';
+        trigger_error('TOO_MANY_RECIPIENTS');
     }
     
-    if (isset($error))
-    {
-        return get_error(24);
-    }
-
     $enable_bbcode    = ($config['allow_bbcode'] && $config['auth_bbcode_pm'] && $auth->acl_get('u_pm_bbcode')) ? true : false;
     $enable_smilies    = ($config['allow_smilies'] && $config['auth_smilies_pm'] && $auth->acl_get('u_pm_smilies')) ? true : false;
     $img_status        = ($config['auth_img_pm'] && $auth->acl_get('u_pm_img')) ? true : false;

@@ -1,83 +1,42 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
 defined('IN_MOBIQUO') or exit;
 
-function get_forum_func()
+function get_forum_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $mobiquo_config, $phpbb_home;
     
-    $unread = array();
-//    if ($user->data['is_registered'])
-//    {    
-//        $ex_fid_ary = array_unique(array_merge(array_keys($auth->acl_getf('!f_read', true)), array_keys($auth->acl_getf('!f_search', true))));
-//        $not_in_fid = (sizeof($ex_fid_ary)) ? 'WHERE ' . $db->sql_in_set('f.forum_id', $ex_fid_ary, true) . " OR (f.forum_password <> '' AND fa.user_id <> " . (int) $user->data['user_id'] . ')' : "";
-//        
-//        $sql = 'SELECT f.forum_id, f.forum_name, f.parent_id, f.forum_type, f.right_id, f.forum_password, fa.user_id
-//                FROM ' . FORUMS_TABLE . ' f
-//                LEFT JOIN ' . FORUMS_ACCESS_TABLE . " fa ON (fa.forum_id = f.forum_id
-//                AND fa.session_id = '" . $db->sql_escape($user->session_id) . "')
-//                $not_in_fid
-//                ORDER BY f.left_id";
-//        $result = $db->sql_query($sql);
-//        
-//        while ($row = $db->sql_fetchrow($result))
-//        {
-//            if ($row['forum_password'] && $row['user_id'] != $user->data['user_id'])
-//            {
-//                $ex_fid_ary[] = (int) $row['forum_id'];
-//                continue;
-//            }
-//        }
-//        $db->sql_freeresult($result);
-//    
-//        // find out in which forums the user is allowed to view approved posts
-//        if ($auth->acl_get('m_approve'))
-//        {
-//            $m_approve_fid_sql = '';
-//        }
-//        else if ($auth->acl_getf_global('m_approve'))
-//        {
-//            $m_approve_fid_ary = array_diff(array_keys($auth->acl_getf('!m_approve', true)), $ex_fid_ary);
-//            $m_approve_fid_sql = ' AND (t.topic_approved = 1' . ((sizeof($m_approve_fid_ary)) ? ' OR ' . $db->sql_in_set('t.forum_id', $m_approve_fid_ary, true) : '') . ')';
-//        }
-//        else
-//        {
-//            $m_approve_fid_sql = ' AND t.topic_approved = 1';
-//        }
-//    
-//        $sql = 'SELECT t.topic_id, t.forum_id, t.topic_last_post_time FROM ' . TOPICS_TABLE . ' t
-//                WHERE t.topic_last_post_time > ' . $user->data['user_lastvisit'] . '
-//                AND t.topic_moved_id = 0 ' . $m_approve_fid_sql .
-//                ((sizeof($ex_fid_ary)) ? ' AND ' . $db->sql_in_set('t.forum_id', $ex_fid_ary, true) : '');
-//        $result = $db->sql_query($sql);
-//        
-//        while ($row = $db->sql_fetchrow($result))
-//        {
-//            $topic_id = $row['topic_id'];
-//            $forum_id = $row['forum_id'];
-//            $topic_tracking = get_complete_topic_tracking($forum_id, $topic_id);
-//            if ($topic_tracking[$topic_id] < $row['topic_last_post_time'])
-//            {
-//                $unread[$forum_id] += 1;
-//            }
-//        }
-//        $db->sql_freeresult($result);
-//    }
+    $params = php_xmlrpc_decode($xmlrpc_params);
+    
+    $return_description = isset($params[0]) ? $params[0] : false;
+    
+    if (isset($params[1]))
+    {
+        $fid = intval($params[1]);
+        $forum_filter = " WHERE f.parent_id = '$fid'";
+        $root_forum_id = $fid;
+    }
+    else
+    {
+        $forum_filter = '';
+        $root_forum_id = 0;
+    }
     
     $sql = 'SELECT f.* '. ($user->data['is_registered'] ? ', fw.notify_status' : '') . '
             FROM ' . FORUMS_TABLE . ' f ' .
-            ($user->data['is_registered'] ? ' LEFT JOIN ' . FORUMS_WATCH_TABLE . ' fw ON (fw.forum_id = f.forum_id AND fw.user_id = ' . $user->data['user_id'] . ')' : '') . '
+            ($user->data['is_registered'] ? ' LEFT JOIN ' . FORUMS_WATCH_TABLE . ' fw ON (fw.forum_id = f.forum_id AND fw.user_id = ' . $user->data['user_id'] . ')' : '') . 
+            $forum_filter . '
             ORDER BY f.left_id ASC';
     $result = $db->sql_query($sql, 600);
     
     $forum_rows = array();
-    $forum_rows[0] = array('forum_id' => 0, 'parent_id' => -1, 'child' => array());
+    $forum_rows[$root_forum_id] = array('forum_id' => $root_forum_id, 'parent_id' => -1, 'child' => array());
     while ($row = $db->sql_fetchrow($result))
     {
         $forum_id = $row['forum_id'];
@@ -119,17 +78,24 @@ function get_forum_func()
         $forum_rows[$forum_id] = $row;
     }
     $db->sql_freeresult($result);
-
-
-    $forum_rows[0] = array('parent_id' => -1, 'child' => array());
-    while(empty($forum_rows[0]['child']) && count($forum_rows) > 1)
+    
+    $fids = array(-1);
+    foreach($forum_rows as $id => $value)
+    {
+        if (!in_array($value['parent_id'], $fids))
+            unset($forum_rows[$id]);
+        else
+            $fids[] = $id;
+    }
+    
+    while(empty($forum_rows[$root_forum_id]['child']) && count($forum_rows) > 1)
     {
         $current_parent_id = -1;
         $leaves_forum = array();
         foreach($forum_rows as $row)
-        {            
+        {
             $row_parent_id = $row['parent_id'];
-    
+            
             if ($row_parent_id != $current_parent_id)
             {
                 if(isset($leaves_forum[$row_parent_id]))
@@ -159,6 +125,8 @@ function get_forum_func()
         {
             foreach($leaves as $forum_id)
             {
+                $forum =& $forum_rows[$forum_id];
+                
                 $logo_url = '';
                 if (file_exists("./forum_icons/$forum_id.png"))
                 {
@@ -172,51 +140,57 @@ function get_forum_func()
                 {
                     $logo_url = $phpbb_home."mobiquo/forum_icons/default.png";
                 }
-                else if ($forum_rows[$forum_id]['forum_image'])
+                else if ($forum['forum_image'])
                 {
-                    $logo_url = $phpbb_home.$forum_rows[$forum_id]['forum_image'];
+                    $logo_url = $phpbb_home.$forum['forum_image'];
                 }
                 
                 $unread_count = count(get_unread_topics(false, "AND t.forum_id = $forum_id"));
-                $forum_rows[$forum_id]['unread_count'] += $unread_count;
-                if ($forum_rows[$forum_id]['unread_count'])
+                $forum['unread_count'] += $unread_count;
+                if ($forum['unread_count'])
                 {
-                    $forum_rows[$forum_rows[$forum_id]['parent_id']]['unread_count'] += $forum_rows[$forum_id]['unread_count'];
+                    $forum_rows[$forum['parent_id']]['unread_count'] += $forum['unread_count'];
                 }
                 
-                $xmlrpc_forum = new xmlrpcval(array(
+                $xmlrpc_forum = array(
                     'forum_id'      => new xmlrpcval($forum_id),
-                    'forum_name'    => new xmlrpcval(html_entity_decode($forum_rows[$forum_id]['forum_name']), 'base64'),
-                    'description'   => new xmlrpcval(html_entity_decode($forum_rows[$forum_id]['forum_desc']), 'base64'),
+                    'forum_name'    => new xmlrpcval(basic_clean($forum['forum_name']), 'base64'),
                     'parent_id'     => new xmlrpcval($node_forum_id),
                     'logo_url'      => new xmlrpcval($logo_url),
-                    'new_post'      => new xmlrpcval($forum_rows[$forum_id]['unread_count'] ? true : false, 'boolean'),
-                    'unread_count'  => new xmlrpcval($forum_rows[$forum_id]['unread_count'], 'int'),
-                    'is_protected'  => new xmlrpcval($forum_rows[$forum_id]['forum_password'] ? true : false, 'boolean'),
-                    'url'           => new xmlrpcval($forum_rows[$forum_id]['forum_link']),
-                    'sub_only'      => new xmlrpcval(($forum_rows[$forum_id]['forum_type'] == FORUM_POST) ? false : true, 'boolean'),
-                    
-                    'can_subscribe' => new xmlrpcval($forum_rows[$forum_id]['can_subscribe'], 'boolean'),
-                    'is_subscribed' => new xmlrpcval($forum_rows[$forum_id]['is_subscribed'], 'boolean'),
-                ), 'struct');
+                    'url'           => new xmlrpcval($forum['forum_link']),
+                );
                 
-                if (isset($forum_rows[$forum_id]['child']))
+                if ($forum['unread_count'])     $xmlrpc_forum['unread_count']       = new xmlrpcval($forum['unread_count'], 'int');
+                if ($forum['unread_count'])     $xmlrpc_forum['new_post']           = new xmlrpcval(true, 'boolean');
+                if ($forum['forum_password'])   $xmlrpc_forum['is_protected']       = new xmlrpcval(true, 'boolean');
+                if ($forum['can_subscribe'])    $xmlrpc_forum['can_subscribe']      = new xmlrpcval(true, 'boolean');
+                if ($forum['is_subscribed'])    $xmlrpc_forum['is_subscribed']      = new xmlrpcval(true, 'boolean');
+                if ($forum['forum_type'] != FORUM_POST) $xmlrpc_forum['sub_only']   = new xmlrpcval(true, 'boolean');
+                
+                if ($return_description)
                 {
-                    $xmlrpc_forum->addStruct(array('child' => new xmlrpcval($forum_rows[$forum_id]['child'], 'array')));
+                    $description = smiley_text($forum['forum_desc'], true);
+                    $description = generate_text_for_display($description, $forum['forum_desc_uid'], $forum['forum_desc_bitfield'], $forum['forum_desc_options']);
+                    $description = preg_replace('/<br *?\/?>/i', "\n", $description);
+                    $xmlrpc_forum['description'] = new xmlrpcval(basic_clean($description), 'base64');
                 }
                 
-                $forum_rows[$node_forum_id]['child'][] = $xmlrpc_forum;
+                if (isset($forum['child'])) {
+                    $xmlrpc_forum['child'] = new xmlrpcval($forum['child'], 'array');
+                }
+                
+                $forum_rows[$node_forum_id]['child'][] = new xmlrpcval($xmlrpc_forum, 'struct');
                 unset($forum_rows[$forum_id]);
             }
         }
     }
     
-    $response = new xmlrpcval($forum_rows[0]['child'], 'array');
+    $response = new xmlrpcval($forum_rows[$root_forum_id]['child'], 'array');
     
     return new xmlrpcresp($response);
 } // End of get_forum_func
 
-if (!function_exists(get_unread_topics))
+if (!function_exists('get_unread_topics'))
 {
     function get_unread_topics($user_id = false, $sql_extra = '', $sql_sort = '', $sql_limit = 1001)
     {

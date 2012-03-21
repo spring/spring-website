@@ -658,8 +658,8 @@
 						else
 						{
 							// log if receiveing something strange, even though we set the value to false anyway
-							if ($GLOBALS['_xh']['ac']!='0' && strcasecmp($_xh[$parser]['ac'], 'false') != 0)
-								error_log('XML-RPC: invalid value received in BOOLEAN: '.$GLOBALS['_xh']['ac']);
+							//if ($GLOBALS['_xh']['ac']!='0' && strcasecmp($_xh[$parser]['ac'], 'false') != 0)
+								//error_log('XML-RPC: invalid value received in BOOLEAN: '.$GLOBALS['_xh']['ac']);
 							$GLOBALS['_xh']['value']=false;
 						}
 					}
@@ -1966,6 +1966,7 @@
 					$this->valtyp = $valtyp;
 				}
 			}
+			@ob_get_clean();
 		}
 
 		/**

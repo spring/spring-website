@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -13,17 +13,8 @@ function get_box_info_func()
     global $db, $user, $config, $phpbb_root_path, $phpEx;
     $user->setup('ucp');
     
-    // Only registered users can go beyond this point
-    if (!$user->data['is_registered'])
-    {
-        return get_error(9);
-    }
-    
-    // Is PM disabled?
-    if (!$config['allow_privmsg'])
-    {
-        return get_error(21);
-    }
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
+    if (!$config['allow_privmsg']) trigger_error('Module not accessible');
 
     $folder = array();
     $user_id = $user->data['user_id'];
@@ -107,11 +98,7 @@ function get_box_info_func()
     foreach($folder as $box)
     {
         $box_list[] = new xmlrpcval(array(
-
-
-
             'box_id'        => new xmlrpcval($box['folder_id'],"string"),
-
             'box_name'      => new xmlrpcval($box['folder_name'], 'base64'),
             'msg_count'     => new xmlrpcval($box['num_messages'], 'int'),
             'unread_count'  => new xmlrpcval($box['unread_messages'], 'int'),

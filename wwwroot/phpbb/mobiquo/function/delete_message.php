@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,28 +12,19 @@ function delete_message_func($xmlrpc_params)
 {
     global $db, $user, $config, $phpbb_root_path, $phpEx;
     
+    $user->setup('ucp');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    if (!isset($params[0]))     // message id undefine
-    {
-        return get_error(1);
-    }
-
     // get folder id from parameters
-    $msg_id = $params[0];
+    $msg_id = intval($params[0]);
     $user_id = $user->data['user_id'];
     
-    // Only registered users can go beyond this point
-    if (!$user->data['is_registered'])
-    {
-        return get_error(9);
-    }
+    if (!$msg_id) trigger_error('NO_MESSAGE');
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
     
     // Is PM disabled?
-    if (!$config['allow_privmsg'])
-    {
-        return get_error(21);
-    }
+    if (!$config['allow_privmsg']) trigger_error('Module not accessible');
     
     $sql = 'SELECT folder_id
             FROM ' . PRIVMSGS_TO_TABLE . "
@@ -47,7 +38,7 @@ function delete_message_func($xmlrpc_params)
     $result = delete_pm($user_id, $msg_id, $folder_id);
     $response = new xmlrpcval(array(
         'result'      => new xmlrpcval($result, 'boolean'),
-        'result_text' => new xmlrpcval('Delete message failed', 'base64'),
+        'result_text' => new xmlrpcval($result ? '' : 'Delete message failed', 'base64'),
     ), 'struct');
     
     return new xmlrpcresp($response);

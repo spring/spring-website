@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,6 +11,8 @@ defined('IN_MOBIQUO') or exit;
 function get_user_reply_post_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $mobiquo_config;
+    
+    $user->setup('search');
     
     $params = php_xmlrpc_decode($xmlrpc_params);
     $author = $params[0];
@@ -44,30 +46,15 @@ function get_user_reply_post_func($xmlrpc_params)
     // Is user able to search? Has search been disabled?
     if (!$auth->acl_get('u_search') || !$auth->acl_getf_global('f_search') || !$config['load_search'])
     {
-        $template->assign_var('S_NO_SEARCH', true);
-    //    trigger_error('NO_SEARCH');
-        return get_error();
+        trigger_error('NO_SEARCH');
     }
     
     // Check search load limit
     if ($user->load && $config['limit_search_load'] && ($user->load > doubleval($config['limit_search_load'])))
     {
-        $template->assign_var('S_NO_SEARCH', true);
-    //    trigger_error('NO_SEARCH_TIME');
-            return get_error();
+        trigger_error('NO_SEARCH_TIME');
     }
     
-    // Check flood limit ... if applicable
-    $interval = ($user->data['user_id'] == ANONYMOUS) ? $config['search_anonymous_interval'] : $config['search_interval'];
-    if ($interval && !$auth->acl_get('u_ignoreflood'))
-    {
-        if ($user->data['user_last_search'] > time() - $interval)
-        {
-            $template->assign_var('S_NO_SEARCH', true);
-    //        trigger_error('NO_SEARCH_TIME');
-                return get_error();
-        }
-    }
     
     // Define some vars
     $limit_days        = array(0 => $user->lang['ALL_RESULTS'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
@@ -90,8 +77,7 @@ function get_user_reply_post_func($xmlrpc_params)
     
             if ($user->data['user_id'] == ANONYMOUS)
             {
-    //            login_box('', $user->lang['LOGIN_EXPLAIN_EGOSEARCH']);
-                    return get_error();
+                trigger_error('LOGIN_EXPLAIN_EGOSEARCH');
             }
         }
     
@@ -105,8 +91,7 @@ function get_user_reply_post_func($xmlrpc_params)
         {
             if ((strpos($author, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $author)) < $config['min_search_author_chars']))
             {
-    //            trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
-                    return get_error();
+                trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
             }
     
             $sql_where = (strpos($author, '*') !== false) ? ' username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($author))) : " username_clean = '" . $db->sql_escape(utf8_clean_string($author)) . "'";
@@ -125,8 +110,7 @@ function get_user_reply_post_func($xmlrpc_params)
     
             if (!sizeof($author_id_ary))
             {
-    //            trigger_error('NO_SEARCH_RESULTS');
-                    return get_error();
+                trigger_error('NO_SEARCH_RESULTS');
             }
         }
     
@@ -230,8 +214,7 @@ function get_user_reply_post_func($xmlrpc_params)
     
         if (!file_exists($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx))
         {
-    //        trigger_error('NO_SUCH_SEARCH_MODULE');
-                return get_error();
+            trigger_error('NO_SUCH_SEARCH_MODULE');
         }
     
         require("{$phpbb_root_path}includes/search/$search_type.$phpEx");
@@ -242,8 +225,7 @@ function get_user_reply_post_func($xmlrpc_params)
     
         if ($error)
         {
-    //        trigger_error($error);
-        return get_error();
+            trigger_error($error);
         }
     
         // let the search module split up the keywords
@@ -253,8 +235,7 @@ function get_user_reply_post_func($xmlrpc_params)
             if (!$correct_query || (empty($search->search_query) && !sizeof($author_id_ary) && !$search_id))
             {
                 $ignored = (sizeof($search->common_words)) ? sprintf($user->lang['IGNORED_TERMS_EXPLAIN'], implode(' ', $search->common_words)) . '<br />' : '';
-    //          trigger_error($ignored . sprintf($user->lang['NO_KEYWORDS'], $search->word_length['min'], $search->word_length['max']));
-                return get_error();
+                trigger_error($ignored . sprintf($user->lang['NO_KEYWORDS'], $search->word_length['min'], $search->word_length['max']));
             }
         }
     
@@ -302,7 +283,7 @@ function get_user_reply_post_func($xmlrpc_params)
         else if (sizeof($author_id_ary))
         {
             $firstpost_only = ($search_fields === 'firstpost' || $search_fields == 'titleonly') ? true : false;
-            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1'){
+            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1' || $config['version'] == '3.0.9' || $config['version'] == '3.0.10'){
                 $total_match_count = $search->author_search($show_results, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary,$aaa, $id_ary, $start, $per_page);
             } else {
                 $total_match_count = $search->author_search($show_results, $firstpost_only, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary, $id_ary, $start, $per_page);
@@ -582,30 +563,15 @@ function get_user_reply_post_func($xmlrpc_params)
                 
                 $post_sort_dir   = (!empty($user->data['user_post_sortby_dir'])) ? $user->data['user_post_sortby_dir'] : 'a';
                 
-                $my_where = 't.topic_id=' . $row['topic_id'];
-                $my_where .= (sizeof($ex_fid_ary)) ? ' AND (' . $db->sql_in_set('f.forum_id', $ex_fid_ary, true) . ' OR f.forum_id IS NULL)' : '';
-                $my_where .= $m_approve_fid_sql;
-                $my_where .= ($post_sort_dir == 'a') ? ' AND p.post_time < ' . $row['post_time'] : ' AND p.post_time > ' . $row['post_time'];
-                
-                $sql = 'SELECT count(*) AS post_position
-                        FROM ' . POSTS_TABLE . ' p
-                            LEFT JOIN ' . TOPICS_TABLE . ' t ON (p.topic_id = t.topic_id)
-                            LEFT JOIN ' . FORUMS_TABLE . ' f ON (p.forum_id = f.forum_id) ' . "
-                        WHERE $my_where";
-                
-                $result = $db->sql_query_limit($sql, 1);
-                $post_position = (int) $db->sql_fetchfield('post_position');
-                
-                
-                
                 $tpl_ary = array(
                     'POST_AUTHOR_FULL'   => get_username_string('full', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
                     'POST_AUTHOR_COLOUR' => get_username_string('colour', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
                     'POST_AUTHOR'        => get_username_string('username', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
                     'U_POST_AUTHOR'      => get_username_string('profile', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
 
-                    'POST_POSITION'      => $post_position + 1,
                     'LAST_POST_TIME'     => $row['topic_last_post_time'],
+                    'post_approved'      => $row['post_approved'],
+                    'POSTER_ID'          => $row['poster_id'],
                     
                     'POST_SUBJECT'       => $row['post_subject'],
 //                  'POST_DATE'          => (!empty($row['post_time'])) ? $user->format_date($row['post_time']) : '',
@@ -646,12 +612,21 @@ function get_user_reply_post_func($xmlrpc_params)
     {
         foreach($template->_tpldata['searchresults'] as $row)
         {
+            $forum_id = $row['FORUM_ID'];
             $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
-            $topic_tracking = get_complete_topic_tracking($row['FORUM_ID'], $row['TOPIC_ID']);
+            $topic_tracking = get_complete_topic_tracking($forum_id, $row['TOPIC_ID']);
             $new_post = $topic_tracking[$row['TOPIC_ID']] < $row['LAST_POST_TIME'] ? true : false;
+            $can_ban_user = $auth->acl_get('m_ban') && $row['POSTER_ID'] != $user->data['user_id'];
+            
+            if (empty($forum_id))
+            {
+                $user->setup('viewforum');
+                $forum_id = 0;
+                $row['FORUM_TITLE'] = $user->lang['ANNOUNCEMENTS'];
+            }
             
             $xmlrpc_post = new xmlrpcval(array(
-                'forum_id'          => new xmlrpcval($row['FORUM_ID']),
+                'forum_id'          => new xmlrpcval($forum_id),
                 'forum_name'        => new xmlrpcval(html_entity_decode($row['FORUM_TITLE']), 'base64'),
                 'topic_id'          => new xmlrpcval($row['TOPIC_ID']),
                 'topic_title'       => new xmlrpcval(html_entity_decode(strip_tags(censor_text($row['TOPIC_TITLE']))), 'base64'),
@@ -661,9 +636,13 @@ function get_user_reply_post_func($xmlrpc_params)
                 'icon_url'          => new xmlrpcval($user_avatar_url),
                 'reply_number'      => new xmlrpcval($row['TOPIC_REPLIES']+1, 'int'),
                 'view_number'       => new xmlrpcval(intval($row['TOPIC_VIEWS']), 'int'),
-                'post_position'     => new xmlrpcval($row['POST_POSITION'], 'int'),
                 'new_post'          => new xmlrpcval($new_post, 'boolean'),
                 'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($row['POST_DATE']), 'dateTime.iso8601'),
+                'can_delete'        => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
+                'can_move'          => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
+                'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['post_approved'], 'boolean'),
+                'is_approved'       => new xmlrpcval($row['post_approved'] ? true : false, 'boolean'),
+                'can_ban'           => new xmlrpcval($can_ban_user, 'boolean'),
             ), 'struct');
     
             $post_list[] = $xmlrpc_post;

@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,18 +12,12 @@ function subscribe_forum_func($xmlrpc_params)
 {
     global $db, $user, $config, $auth;
     
+    $user->setup('viewforum');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    if (!isset($params[0]))     // forum id undefine
-    {
-        return get_error(1);
-    }
-    else if ($params[0] === 0)  // forum id equal 0
-    {
-        return get_error(7);
-    }
-    
-    $forum_id = $params[0];
+    $forum_id = intval($params[0]);
+    if (!$forum_id) trigger_error('NO_FORUM');
     $user_id = $user->data['user_id'];
 
     $sql_from = FORUMS_TABLE . ' f';
@@ -50,47 +44,42 @@ function subscribe_forum_func($xmlrpc_params)
     $forum_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
 
-    if (!$forum_data)
-    {
-        return get_error(1);
-    }
+    if (!$forum_data) trigger_error('NO_FORUM');
     
     // Permissions check
     if (!$auth->acl_gets('f_list', 'f_read', $forum_id) || ($forum_data['forum_type'] == FORUM_LINK && $forum_data['forum_link'] && !$auth->acl_get('f_read', $forum_id)))
     {
         if ($user->data['user_id'] != ANONYMOUS)
         {
-            return get_error(2);
+            trigger_error('SORRY_AUTH_READ');
         }
     
-        return get_error(20, 'Please login first');
+        trigger_error('LOGIN_VIEWFORUM');
     }
     
     // Forum is passworded ... check whether access has been granted to this
     // user this session, if not show login box
     if ($forum_data['forum_password'] && !check_forum_password($forum_id))
-    {
-        return get_error(6);
-    }
+        trigger_error('LOGIN_FORUM');
     
     // Is this forum a link? ... User got here either because the
     // number of clicks is being tracked or they guessed the id
     if ($forum_data['forum_type'] == FORUM_LINK && $forum_data['forum_link'])
     {
-        return get_error(3);
+        trigger_error('NO_FORUM');
     }
     
     // Not postable forum or showing active topics?
     if (!($forum_data['forum_type'] == FORUM_POST || (($forum_data['forum_flags'] & FORUM_FLAG_ACTIVE_TOPICS) && $forum_data['forum_type'] == FORUM_CAT)))
     {
-        return get_error(3);
+        trigger_error('NO_FORUM');
     }
     
     // Ok, if someone has only list-access, we only display the forum list.
     // We also make this circumstance available to the template in case we want to display a notice. ;)
     if (!$auth->acl_get('f_read', $forum_id))
     {
-        return get_error(2);
+        trigger_error('SORRY_AUTH_READ');
     }
     
     if (($config['email_enable'] || $config['jab_enable']) && $config['allow_forum_notify'] && $forum_data['forum_type'] == FORUM_POST && $auth->acl_get('f_subscribe', $forum_id))
@@ -137,7 +126,7 @@ function subscribe_forum_func($xmlrpc_params)
         }
         else
         {
-            return get_error(20, 'Please login first');
+            trigger_error('LOGIN_VIEWFORUM');
         }
     }
     else

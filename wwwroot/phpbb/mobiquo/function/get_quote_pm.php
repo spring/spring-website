@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -10,23 +10,17 @@ defined('IN_MOBIQUO') or exit;
 
 function get_quote_pm_func($xmlrpc_params)
 {
-    global $db, $auth;
+    global $db, $auth, $user;
+    
+    $user->setup('ucp');
     
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     // get msg id from parameters
-    $msg_id = $params[0];
+    $msg_id = intval($params[0]);
+    if (!$msg_id) trigger_error('NO_MESSAGE');
+    if (!$auth->acl_get('u_sendpm')) trigger_error('NO_AUTH_SEND_MESSAGE');
     
-    if (!$msg_id)
-    {
-        return get_error(1);
-    }
-
-    if (!$auth->acl_get('u_sendpm'))
-    {
-        return get_error(2);
-    }
-
     $sql = 'SELECT p.*, u.username as quote_username
             FROM ' . PRIVMSGS_TABLE . ' p, ' . USERS_TABLE . ' u
             WHERE p.author_id = u.user_id
@@ -38,14 +32,11 @@ function get_quote_pm_func($xmlrpc_params)
     
     $msg_id = (int)$post['msg_id'];
     
-    if (!$post)
-    {
-        return get_error(20);
-    }
-
+    if (!$post) trigger_error('NO_MESSAGE');
+    
     if ((!$post['author_id'] || ($post['author_id'] == ANONYMOUS && $action != 'delete')) && $msg_id)
     {
-        return get_error(25);
+        trigger_error('NO_AUTHOR');
     }
 
     $message_subject = ((!preg_match('/^Re:/', $post['message_subject'])) ? 'Re: ' : '') . censor_text($post['message_subject']);

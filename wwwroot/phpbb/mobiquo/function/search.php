@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -51,31 +51,26 @@ function search_func()
         if ($user->data['user_id'] == ANONYMOUS)
         {
             //login_box('', $user->lang['LOGIN_EXPLAIN_EGOSEARCH']);
-            return get_error(20, $user->lang['LOGIN_EXPLAIN_EGOSEARCH']);
+            trigger_error('LOGIN_EXPLAIN_EGOSEARCH');
         }
     }
     
     // Search for unread posts needs user to be logged in if topics tracking for guests is disabled
     if ($search_id == 'unreadposts' && !$config['load_anon_lastread'] && !$user->data['is_registered'])
     {
-        //login_box('', $user->lang['LOGIN_EXPLAIN_UNREADSEARCH']);
-        return get_error(20, $user->lang['LOGIN_EXPLAIN_UNREADSEARCH']);
+        trigger_error('LOGIN_EXPLAIN_UNREADSEARCH');
     }
     
     // Is user able to search? Has search been disabled?
     if (!$auth->acl_get('u_search') || !$auth->acl_getf_global('f_search') || !$config['load_search'])
     {
-        //$template->assign_var('S_NO_SEARCH', true);
-        //trigger_error('NO_SEARCH');
-        return get_error(2, $user->lang['NO_SEARCH']);
+        trigger_error('NO_SEARCH');
     }
     
     // Check search load limit
     if ($user->load && $config['limit_search_load'] && ($user->load > doubleval($config['limit_search_load'])))
     {
-        //$template->assign_var('S_NO_SEARCH', true);
-        //trigger_error('NO_SEARCH_TIME');
-        return get_error(1, $user->lang['NO_SEARCH_TIME']);
+        trigger_error('NO_SEARCH_TIME');
     }
     
     // Check flood limit ... if applicable
@@ -84,9 +79,7 @@ function search_func()
     {
         if ($user->data['user_last_search'] > time() - $interval)
         {
-            //$template->assign_var('S_NO_SEARCH', true);
-            //trigger_error('NO_SEARCH_TIME');
-            return get_error(2, $user->lang['NO_SEARCH_TIME']);
+            trigger_error('NO_SEARCH_TIME');
         }
     }
     
@@ -113,8 +106,7 @@ function search_func()
         {
             if ((strpos($author, '*') !== false) && (utf8_strlen(str_replace(array('*', '%'), '', $author)) < $config['min_search_author_chars']))
             {
-                //trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
-                return get_error(1, sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
+                trigger_error(sprintf($user->lang['TOO_FEW_AUTHOR_CHARS'], $config['min_search_author_chars']));
             }
     
             $sql_where = (strpos($author, '*') !== false) ? ' username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($author))) : " username_clean = '" . $db->sql_escape(utf8_clean_string($author)) . "'";
@@ -149,8 +141,7 @@ function search_func()
     
             if (!sizeof($author_id_ary))
             {
-                //trigger_error('NO_SEARCH_RESULTS');
-                return get_error(1, $user->lang['NO_SEARCH_RESULTS']);
+                trigger_error('NO_SEARCH_RESULTS');
             }
         }
     
@@ -263,22 +254,20 @@ function search_func()
     
         if (!file_exists($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx))
         {
-            //trigger_error('NO_SUCH_SEARCH_MODULE');
-            return get_error(1, $user->lang['NO_SUCH_SEARCH_MODULE']);
+            trigger_error('NO_SUCH_SEARCH_MODULE');
         }
-    
+        
         require("{$phpbb_root_path}includes/search/$search_type.$phpEx");
     
         // We do some additional checks in the module to ensure it can actually be utilised
         $error = false;
         $search = new $search_type($error);
-    
+        
         if ($error)
         {
-            //trigger_error($error);
-            return get_error(1, 'Other error');
+            trigger_error($error);
         }
-    
+        
         // let the search module split up the keywords
         if ($keywords)
         {
@@ -286,8 +275,7 @@ function search_func()
             if (!$correct_query || (empty($search->search_query) && !sizeof($author_id_ary) && !$search_id))
             {
                 $ignored = (sizeof($search->common_words)) ? sprintf($user->lang['IGNORED_TERMS_EXPLAIN'], implode(' ', $search->common_words)) . '<br />' : '';
-                //trigger_error($ignored . sprintf($user->lang['NO_KEYWORDS'], $search->word_length['min'], $search->word_length['max']));
-                return get_error(18, $ignored . sprintf($user->lang['NO_KEYWORDS'], $search->word_length['min'], $search->word_length['max']));
+                trigger_error($ignored . sprintf($user->lang['NO_KEYWORDS'], $search->word_length['min'], $search->word_length['max']));
             }
         }
     
@@ -499,7 +487,7 @@ function search_func()
     
         if (!empty($search->search_query))
         {
-            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1'){
+            if($config['version'] == '3.0.8' || $config['version'] == '3.0.6' || $config['version'] == '3.0.7' || $config['version'] == '3.0.7-PL1' || $config['version'] == '3.0.9' || $config['version'] == '3.0.10'){
                 $total_match_count = $search->keyword_search($show_results, $search_fields, $search_terms, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary, $aaa, $id_ary, $start, $per_page);
             } else {
                 $total_match_count = $search->keyword_search($show_results, $search_fields, $search_terms, $sort_by_sql, $sort_key, $sort_dir, $sort_days, $ex_fid_ary, $m_approve_fid_ary, $topic_id, $author_id_ary, $id_ary, $start, $per_page);
@@ -514,8 +502,7 @@ function search_func()
         // For some searches we need to print out the "no results" page directly to allow re-sorting/refining the search options.
         if (!sizeof($id_ary) && !$search_id)
         {
-            //trigger_error('NO_SEARCH_RESULTS');
-            return get_error(2, $user->lang['NO_SEARCH_RESULTS']);
+            trigger_error('NO_SEARCH_RESULTS');
         }
     
         $sql_where = '';
@@ -953,6 +940,7 @@ function search_func()
                         'user_avatar'               => $row['user_avatar'],
                         'user_avatar_type'          => $row['user_avatar_type'],
                         'topic_last_post_time'      => $row['topic_last_post_time'],
+                        'topic_approved'            => $row['topic_approved'],
                         // end
                         
                         'LAST_POST_SUBJECT'            => $row['topic_last_post_subject'],
@@ -1049,9 +1037,11 @@ function search_func()
                         'POST_AUTHOR'            => get_username_string('username', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
                         'U_POST_AUTHOR'            => get_username_string('profile', $row['poster_id'], $row['username'], $row['user_colour'], $row['post_username']),
 
+                        'POSTER_ID'             => $row['poster_id'],
                         'user_avatar'           => $row['user_avatar'],
                         'user_avatar_type'      => $row['user_avatar_type'],
                         'topic_last_post_time'  => $row['topic_last_post_time'],
+                        'post_approved'         => $row['post_approved'],
                         
                         'POST_SUBJECT'        => $row['post_subject'],
                         //'POST_DATE'            => (!empty($row['post_time'])) ? $user->format_date($row['post_time']) : '',
@@ -1093,52 +1083,55 @@ function search_func()
     {
         foreach($template->_tpldata['searchresults'] as $row)
         {
+            $forum_id = $row['FORUM_ID'];
             $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
-
-            $sql = 'SELECT count(*) AS post_position
-                    FROM ' . POSTS_TABLE . ' p
-                    WHERE p.topic_id = ' . $row['TOPIC_ID'] . ' AND p.post_time <= ' . $row['POST_DATE'] . $m_approve_fid_sql;
-            $result = $db->sql_query_limit($sql, 1);
-            $post_position = (int) $db->sql_fetchfield('post_position');
-            $db->sql_freeresult($result);
             
-            $sql = 'SELECT t.*, tw.notify_status, bm.topic_id as bookmarked
+            $sql = 'SELECT t.*, tw.notify_status
                     FROM ' . TOPICS_TABLE . ' t 
-                        LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id) 
-                        LEFT JOIN ' . BOOKMARKS_TABLE . ' bm ON (bm.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = bm.topic_id) 
+                        LEFT JOIN ' . TOPICS_WATCH_TABLE . ' tw ON (tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id)
                     WHERE t.topic_id = ' . $row['TOPIC_ID'];
             $result = $db->sql_query($sql);
             $topic_data = $db->sql_fetchrow($result);
             $db->sql_freeresult($result);
             
-            $topic_tracking = get_complete_topic_tracking($row['FORUM_ID'], $row['TOPIC_ID']);
+            $topic_tracking = get_complete_topic_tracking($forum_id, $row['TOPIC_ID']);
             $new_post = $topic_tracking[$row['TOPIC_ID']] < $row['topic_last_post_time'] ? true : false;
             $allow_change_type = ($auth->acl_get('m_', $forum_id) || ($user->data['is_registered'] && $user->data['user_id'] == $topic_data['topic_poster'])) ? true : false;
-
+            $can_ban_user   = $auth->acl_get('m_ban') && $row['POSTER_ID'] != $user->data['user_id'];
+            
+            if (empty($forum_id))
+            {
+                $user->setup('viewforum');
+                $forum_id = 0;
+                $row['FORUM_TITLE'] = $user->lang['ANNOUNCEMENTS'];
+            }
+            
             $xmlrpc_topic = new xmlrpcval(array(
-                'forum_id'          => new xmlrpcval($row['FORUM_ID']),
+                'forum_id'          => new xmlrpcval($forum_id),
                 'forum_name'        => new xmlrpcval(html_entity_decode($row['FORUM_TITLE']), 'base64'),
                 'topic_id'          => new xmlrpcval($row['TOPIC_ID']),
                 'topic_title'       => new xmlrpcval(html_entity_decode(strip_tags($row['TOPIC_TITLE'])), 'base64'),
-                'post_id'           => new xmlrpcval(html_entity_decode(strip_tags($row['POST_ID']))),
+                'post_id'           => new xmlrpcval($row['POST_ID']),
                 'post_title'        => new xmlrpcval(html_entity_decode(strip_tags($row['POST_SUBJECT'])), 'base64'),
                 'reply_number'      => new xmlrpcval($row['TOPIC_REPLIES'], 'int'),
                 'view_number'       => new xmlrpcval($row['TOPIC_VIEWS'], 'int'),
-                'post_position'     => new xmlrpcval($post_position, 'int'),
                 'short_content'     => new xmlrpcval(post_html_clean($row['MESSAGE']), 'base64'),
                 'icon_url'          => new xmlrpcval($user_avatar_url),
                 'post_author_name'  => new xmlrpcval(html_entity_decode($row['POST_AUTHOR']), 'base64'),
                 'new_post'          => new xmlrpcval($new_post, 'boolean'),
                 'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($row['POST_DATE']), 'dateTime.iso8601'),
+                
                 'can_delete'        => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
+                'can_move'          => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
                 'can_subscribe'     => new xmlrpcval(($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'], 'boolean'), 
-                'can_bookmark'      => new xmlrpcval($user->data['is_registered'] && $config['allow_bookmarks'], 'boolean'),
-                'issubscribed'      => new xmlrpcval(!is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
-                'is_subscribed'      => new xmlrpcval(!is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
-                'isbookmarked'      => new xmlrpcval($topic_data['bookmarked'] ? true : false, 'boolean'),
+                'is_subscribed'     => new xmlrpcval(!is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
                 'can_close'         => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $topic_data['topic_poster']), 'boolean'),
                 'is_closed'         => new xmlrpcval($topic_data['topic_status'] == ITEM_LOCKED, 'boolean'),
-                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id) && $topic_data['topic_type'] != POST_STICKY, 'boolean'),
+                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id), 'boolean'),
+                'is_sticky'         => new xmlrpcval($topic_data['topic_type'] == POST_STICKY, 'boolean'),
+                'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['post_approved'], 'boolean'),
+                'is_approved'       => new xmlrpcval($row['post_approved'] ? true : false, 'boolean'),
+                'can_ban'           => new xmlrpcval($can_ban_user, 'boolean'),
             ), 'struct');
 
             $topic_list[] = $xmlrpc_topic;

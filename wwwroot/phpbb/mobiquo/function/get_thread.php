@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -10,58 +10,27 @@ defined('IN_MOBIQUO') or exit;
 
 function get_thread_func($xmlrpc_params)
 {
-    global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_home;
+    global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_home, $forum_id, $topic_data;
+    
+    $user->setup('viewtopic');
     
     include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    $start_num  = 0;            // default start index of posts
-    $end_num    = 19;           // default request posts number is 20
-
-    if (!isset($params[0]))     // topic id undefine
-    {
-        return get_error(1);
-    }
-    else if ($params[0] === 0)  // topic id equal 0
-    {
-        return get_error(7);
-    }
-
+    list($start, $limit) = process_page($params[1], $params[2]);
+    
     // get topic id from parameters
-    $topic_id = $params[0];
+    $topic_id = intval($params[0]);
+    if (!$topic_id) trigger_error('NO_TOPIC');
     
-    // get start index of post from parameters
-    if (isset($params[1]) && is_int($params[1]))
-    {
-        $start_num = $params[1];
-        $end_num = $start_num + 19;
-    }
-    
-    // get end index of post from parameters
-    if (isset($params[2]) && is_int($params[2]))
-    {
-        $end_num = $params[2];
-    }
-    
-    // check if post index is out of range
-    if ($start_num > $end_num)
-    {
-        return get_error(5);
-    }
-    
-    // return at most 50 posts
-    if ($end_num - $start_num >= 50)
-    {
-        $end_num = $start_num + 49;
-    }
+    $GLOBALS['return_html'] = isset($params[3]) ? $params[3] : false;
     
     // Initial var setup
     $post_id  = request_var('p', 0);
     $voted_id = request_var('vote_id', array('' => 0));
     
-    $start = $start_num;
-    $config['posts_per_page'] = $end_num - $start_num + 1;
+    $config['posts_per_page'] = $limit;
     
     $default_sort_days = (!empty($user->data['user_post_show_days'])) ? $user->data['user_post_show_days'] : 0;
     $default_sort_key  = (!empty($user->data['user_post_sortby_type'])) ? $user->data['user_post_sortby_type'] : 't';
@@ -79,7 +48,6 @@ function get_thread_func($xmlrpc_params)
         'FROM'      => array(FORUMS_TABLE => 'f'),
     );
     
-    
     // Topics table need to be the last in the chain
     $sql_array['FROM'][TOPICS_TABLE] = 't';
     
@@ -92,15 +60,6 @@ function get_thread_func($xmlrpc_params)
             'FROM'    => array(TOPICS_WATCH_TABLE => 'tw'),
             'ON'    => 'tw.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = tw.topic_id'
         );
-    
-        if ($config['allow_bookmarks'])
-        {
-            $sql_array['SELECT'] .= ', bm.topic_id as bookmarked';
-            $sql_array['LEFT_JOIN'][] = array(
-                'FROM'    => array(BOOKMARKS_TABLE => 'bm'),
-                'ON'    => 'bm.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = bm.topic_id'
-            );
-        }
     
         if ($config['load_db_lastread'])
         {
@@ -148,11 +107,7 @@ function get_thread_func($xmlrpc_params)
     $topic_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     
-    if (!$topic_data)
-    {
-        return get_error(7);        
-    }
-    
+    if (!$topic_data) trigger_error('NO_TOPIC');
     $forum_id = (int) $topic_data['forum_id'];
     $topic_id = (int) $topic_data['topic_id'];
     
@@ -176,27 +131,25 @@ function get_thread_func($xmlrpc_params)
     
     if (!$topic_data['topic_approved'] && !$auth->acl_get('m_approve', $forum_id))
     {
-//        trigger_error('NO_TOPIC');
-        return get_error(7);
+        trigger_error('NO_TOPIC');
     }
     
     // Start auth check
     if (!$auth->acl_get('f_read', $forum_id))
     {
-//        if ($user->data['user_id'] != ANONYMOUS)
-//        {
-//            trigger_error('SORRY_AUTH_READ');
-            return get_error(2);
-//        }
-    
-//        login_box('', $user->lang['LOGIN_VIEWFORUM']);
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            trigger_error('SORRY_AUTH_READ');
+        }
+        
+        trigger_error('LOGIN_VIEWFORUM');
     }
     
     // Forum is passworded ... check whether access has been granted to this
     // user this session, if not show login box
     if ($topic_data['forum_password'] && !check_forum_password($forum_id))
     {
-        return get_error(6);
+        trigger_error('LOGIN_FORUM');
     }
     
     
@@ -401,7 +354,7 @@ function get_thread_func($xmlrpc_params)
         'S_WATCHING_TOPIC'      => $s_watching_topic['is_watching'],
     
        
-        'L_BOOKMARK_TOPIC'      => ($user->data['is_registered'] && $config['allow_bookmarks'] && $topic_data['bookmarked']) ? $user->lang['BOOKMARK_TOPIC_REMOVE'] : $user->lang['BOOKMARK_TOPIC'],
+        //'L_BOOKMARK_TOPIC'      => ($user->data['is_registered'] && $config['allow_bookmarks'] && $topic_data['bookmarked']) ? $user->lang['BOOKMARK_TOPIC_REMOVE'] : $user->lang['BOOKMARK_TOPIC'],
     
         'U_POST_NEW_TOPIC'      => ($auth->acl_get('f_post', $forum_id) || $user->data['user_id'] == ANONYMOUS) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=post&amp;f=$forum_id") : '',
         'U_POST_REPLY_TOPIC'    => ($auth->acl_get('f_reply', $forum_id) || $user->data['user_id'] == ANONYMOUS) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=reply&amp;f=$forum_id&amp;t=$topic_id") : '',
@@ -564,6 +517,7 @@ function get_thread_func($xmlrpc_params)
     }
     
     // Container for user details, only process once
+    global $post_list, $rowset;
     $post_list = $user_cache = $id_cache = $attachments = $attach_list = $rowset = $update_count = $post_edit_list = array();
     $has_attachments = $display_notice = false;
     $bbcode_bitfield = '';
@@ -589,15 +543,14 @@ function get_thread_func($xmlrpc_params)
     
     if (!sizeof($post_list))
     {
-//        if ($sort_days)
-//        {
-//            trigger_error('NO_POSTS_TIME_FRAME');
-//        }
-//        else
-//        {
-//            trigger_error('NO_TOPIC');
-//        }
-        return get_error();
+        if ($sort_days)
+        {
+            trigger_error('NO_POSTS_TIME_FRAME');
+        }
+        else
+        {
+            trigger_error('NO_TOPIC');
+        }
     }
     
     // Holding maximum post time for marking topic read
@@ -942,7 +895,21 @@ function get_thread_func($xmlrpc_params)
         'S_NUM_POSTS' => sizeof($post_list))
     );
     
+    // tapatalk add for thanks support
+    $support_post_thanks = false;
+    if (file_exists($phpbb_root_path . 'includes/functions_thanks.' . $phpEx))
+    {
+        if (!function_exists('array_all_thanks'))
+        {
+            include($phpbb_root_path . 'includes/functions_thanks.' . $phpEx);
+        }
+        
+        array_all_thanks($post_list);
+        $support_post_thanks = true;
+    }
+    
     // Output the posts
+    global $poster_id, $row;
     $first_unread = $post_unread = false;
     for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
     {
@@ -953,7 +920,7 @@ function get_thread_func($xmlrpc_params)
             continue;
         }
     
-        $row =& $rowset[$post_list[$i]];
+        $row = $rowset[$post_list[$i]];
         $poster_id = $row['user_id'];
     
         // End signature parsing, only if needed
@@ -990,7 +957,7 @@ function get_thread_func($xmlrpc_params)
                 $quote_level++;
             } else if ($block == '[/quote]') {
                 if ($quote_level <= 1) $message .= $block;
-                if ($quote_level >= 1) $quote_level--;            
+                if ($quote_level >= 1) $quote_level--;
             } else {
                 if ($quote_level <= 1) $message .= $block;
             }
@@ -1000,6 +967,13 @@ function get_thread_func($xmlrpc_params)
         // video bbcode encode
         
         $message = preg_replace('/\[(youtube|video|googlevideo|gvideo):'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/sie', "video_bbcode_format('$1', '$2')", $message);
+        $message = preg_replace('/\[(BBvideo)[\d, ]+:'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[url=$2]YouTube Video[/url]", $message);
+        $message = preg_replace('/\[(spoil|spoiler):'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[spoiler]$2[/spoiler]", $message);
+        $message = preg_replace('/\[b:'.$row['bbcode_uid'].'\](.*?)\[\/b:'.$row['bbcode_uid'].'\]/si', '[b]$1[/b]', $message);
+        $message = preg_replace('/\[i:'.$row['bbcode_uid'].'\](.*?)\[\/i:'.$row['bbcode_uid'].'\]/si', '[i]$1[/i]', $message);
+        $message = preg_replace('/\[u:'.$row['bbcode_uid'].'\](.*?)\[\/u:'.$row['bbcode_uid'].'\]/si', '[u]$1[/u]', $message);
+        $message = preg_replace('/\[color=#(\w{6}):'.$row['bbcode_uid'].'\](.*?)\[\/color:'.$row['bbcode_uid'].'\]/si', '[color=#$1]$2[/color]', $message);
+        
         
         // Second parse bbcode here
         if ($row['bbcode_bitfield'])
@@ -1113,8 +1087,10 @@ function get_thread_func($xmlrpc_params)
             $s_first_unread = $first_unread = true;
         }
         
+        global $postrow;
         $postrow = array(
             'enable_smilies'    => $row['enable_smilies'],
+            'post_approved'     => $row['post_approved'],
             
             'POST_AUTHOR_FULL'        => get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']),
             'POST_AUTHOR_COLOUR'    => get_username_string('colour', $poster_id, $row['username'], $row['user_colour'], $row['post_username']),
@@ -1190,7 +1166,13 @@ function get_thread_func($xmlrpc_params)
             'S_IGNORE_POST'        => ($row['hide_post']) ? true : false,
             'L_IGNORE_POST'        => ($row['hide_post']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']), '<a href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
         );
-    
+        
+        // tapatalk add for thanks support
+        if (function_exists(output_thanks) && $support_post_thanks)
+        {
+            output_thanks($row['user_id']);
+        }
+        
         if (isset($cp_row['row']) && sizeof($cp_row['row']))
         {
             $postrow = array_merge($postrow, $cp_row['row']);
@@ -1311,19 +1293,32 @@ function get_thread_func($xmlrpc_params)
                 if(preg_match('/<img src=\".*?(\/download\/file.php\?id=(\d+).*?)\"/is', $attachment['DISPLAY_ATTACHMENT'], $matches))
                 {
                     $file_url = html_entity_decode($phpbb_home.$matches[1]);
+                    $thumbnail_url = '';
+                    
+                    if ($config['img_create_thumbnail'] && preg_match('/&t=1|&amp;t=1/', $file_url))
+                    {
+                        $thumbnail_url = $file_url;
+                        $file_url = preg_replace('/&t=1|&amp;t=1/', '', $file_url);
+                    }
+                    
+                    
                     $attach_id = $matches[2];
                     unset($matches);
-                
+                    
+                    if (strpos($attachment_by_id[$attach_id]['mimetype'], 'image') === 0)
+                        $content_type = 'image';
+                    else
+                        $content_type = $attachment_by_id[$attach_id]['extension'];
+                    
                     $xmlrpc_attachment = new xmlrpcval(array(
                         'filename'      => new xmlrpcval($attachment_by_id[$attach_id]['real_filename'], 'base64'),
                         'filesize'      => new xmlrpcval($attachment_by_id[$attach_id]['filesize'], 'int'),
-                        'content_type'  => new xmlrpcval('image'),
-                        'thumbnail_url' => new xmlrpcval(''),
+                        'content_type'  => new xmlrpcval($content_type),
+                        'thumbnail_url' => new xmlrpcval($thumbnail_url),
                         'url'           => new xmlrpcval($file_url)
                     ), 'struct');
                     $attachments[] = $xmlrpc_attachment;
                 }
-                
             }
         }
         
@@ -1337,16 +1332,19 @@ function get_thread_func($xmlrpc_params)
             ($row['POST_DATE'] > time() - ($config['edit_time'] * 60) || !$config['edit_time'])
         )));
     
-        $delete_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_delete', $forum_id) || (
-            $user->data['user_id'] == $row['POSTER_ID'] &&
-            $auth->acl_get('f_delete', $forum_id) &&
-            $topic_data['topic_last_post_id'] == $row['POST_ID'] &&
-            ($row['POST_DATE'] > time() - ($config['delete_time'] * 60) || !$config['delete_time']) &&
-            // we do not want to allow removal of the last post if a moderator locked it!
-            !$row['post_edit_locked']
-        )));
+//        $delete_allowed = ($user->data['is_registered'] && ($auth->acl_get('m_delete', $forum_id) || (
+//            $user->data['user_id'] == $row['POSTER_ID'] &&
+//            $auth->acl_get('f_delete', $forum_id) &&
+//            $topic_data['topic_last_post_id'] == $row['POST_ID'] &&
+//            ($row['POST_DATE'] > time() - ($config['delete_time'] * 60) || !$config['delete_time']) &&
+//            // we do not want to allow removal of the last post if a moderator locked it!
+//            !$row['post_edit_locked']
+//        )));
         
-        $xmlrpc_post = new xmlrpcval(array(
+        $delete_allowed = $user->data['is_registered'] && $auth->acl_get('m_delete', $forum_id);
+        $can_ban_user   = $auth->acl_get('m_ban') && $row['POSTER_ID'] != $user->data['user_id'];
+        
+        $xmlrpc_post = array(
             'topic_id'          => new xmlrpcval($topic_id),
             'post_id'           => new xmlrpcval($row['POST_ID']),
             'post_title'        => new xmlrpcval(html_entity_decode(strip_tags($row['POST_SUBJECT']), ENT_QUOTES, 'UTF-8'), 'base64'),
@@ -1359,35 +1357,97 @@ function get_thread_func($xmlrpc_params)
             'is_online'         => new xmlrpcval($row['S_ONLINE'], 'boolean'),
             'can_edit'          => new xmlrpcval($edit_allowed, 'boolean'),
             'can_delete'        => new xmlrpcval($delete_allowed, 'boolean'),
+            'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['post_approved'], 'boolean'),
+            'is_approved'       => new xmlrpcval($row['post_approved'] ? true : false, 'boolean'),
+            'can_move'          => new xmlrpcval($auth->acl_get('m_split', $forum_id), 'boolean'),
+            'can_ban'           => new xmlrpcval($can_ban_user, 'boolean'),
             'allow_smilies'     => new xmlrpcval($row['enable_smilies'] ? true : false, 'boolean'),
-        ), 'struct');
+        );
         
-        $post_list[] = $xmlrpc_post;
+        if ($support_post_thanks)
+        {
+            if ((!$row['S_FIRST_POST_ONLY'] || (!$start && $row['S_ROW_COUNT']))
+                && !$row['S_GLOBAL_POST_THANKS']
+                && !$row['S_POST_ANONYMOUS']
+                && $auth->acl_get('f_thanks', $forum_id)
+                && $user->data['user_id'] != ANONYMOUS
+                && $user->data['user_id'] != $row['POSTER_ID']
+                && !$row['S_ALREADY_THANKED']
+            ) {
+                $xmlrpc_post['can_thank'] = new xmlrpcval(true, 'boolean');
+            }
+            
+            if ($row['THANKS'] && $row['THANKS_POSTLIST_VIEW'] && !$row['S_POST_ANONYMOUS'] && empty($user->data['is_bot']))
+            {
+                global $thankers;
+                
+                $count = 0;
+                $thank_list = array();
+                foreach($thankers as $thanker)
+                {
+                    if ($count >= $config['thanks_number_post']) break;
+                    
+                    if ($thanker['poster_id'] == $row['POSTER_ID'])
+                    {
+                        $thank_list[] = new xmlrpcval(array(
+                            'userid'    => new xmlrpcval($thanker['user_id'], 'string'),
+                            'username'  => new xmlrpcval(html_entity_decode($thanker['username']), 'base64'),
+                        ), 'struct');
+                        
+                        $count++;
+                    }
+                }
+                
+                if (!empty($thank_list))
+                    $xmlrpc_post['thanks_info'] = new xmlrpcval($thank_list, 'array');
+            }
+        }
+        
+        $post_list[] = new xmlrpcval($xmlrpc_post, 'struct');
     }
     
-    $allowed = $auth->acl_get('f_attach', $forum_id) && $auth->acl_get('u_attach') && $config['allow_attachments'] && @ini_get('file_uploads') != '0' && strtolower(@ini_get('file_uploads')) != 'off';
+    $allowed = $config['max_attachments'] && $auth->acl_get('f_attach', $forum_id) && $auth->acl_get('u_attach') && $config['allow_attachments'] && @ini_get('file_uploads') != '0' && strtolower(@ini_get('file_uploads')) != 'off';
+    $max_attachment = ($auth->acl_get('a_') || $auth->acl_get('m_', $forum_id)) ? 99 : ($allowed ? $config['max_attachments'] : 0);
+    $max_png_size = ($auth->acl_get('a_') || $auth->acl_get('m_', $forum_id)) ? 10485760 : ($allowed ? ($config['max_filesize'] === '0' ? 10485760 : $config['max_filesize']) : 0);
+    $max_jpg_size = ($auth->acl_get('a_') || $auth->acl_get('m_', $forum_id)) ? 10485760 : ($allowed ? ($config['max_filesize'] === '0' ? 10485760 : $config['max_filesize']) : 0);
     
     return new xmlrpcresp(
         new xmlrpcval(array(
-                'total_post_num' => new xmlrpcval($total_posts, 'int'),
-                'forum_id'          => new xmlrpcval($forum_id),
-                'forum_name'        => new xmlrpcval(html_entity_decode($topic_data['forum_name']), 'base64'),
-                'topic_id'          => new xmlrpcval($topic_id),
-                'topic_title'       => new xmlrpcval(html_entity_decode(strip_tags(censor_text($topic_data['topic_title']))), 'base64'),
-                'can_reply'      => new xmlrpcval($auth->acl_get('f_reply', $forum_id) && $topic_data['forum_status'] != ITEM_LOCKED && $topic_data['topic_status'] != ITEM_LOCKED, 'boolean'),
-                'can_delete'     => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
-                'can_upload'     => new xmlrpcval($allowed, 'boolean'),
-                'can_subscribe'  => new xmlrpcval(($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'], 'boolean'), 
-                'can_bookmark'   => new xmlrpcval($user->data['is_registered'] && $config['allow_bookmarks'], 'boolean'),
-                'issubscribed'   => new xmlrpcval(isset($topic_data['notify_status']) && !is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
-                'is_subscribed'  => new xmlrpcval(isset($topic_data['notify_status']) && !is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
-                'isbookmarked'   => new xmlrpcval(isset($topic_data['bookmarked']) && $topic_data['bookmarked'] ? true : false, 'boolean'),
-                'can_stick'      => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id) && $topic_data['topic_type'] != POST_STICKY, 'boolean'),
-                'can_close'      => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $topic_data['topic_poster']), 'boolean'),
-                'is_closed'      => new xmlrpcval($topic_data['topic_status'] == ITEM_LOCKED, 'boolean'),
-                'posts'          => new xmlrpcval($post_list, 'array'),
-            ),
-            'struct'
-        )
+            'total_post_num' => new xmlrpcval($total_posts, 'int'),
+            'forum_id'       => new xmlrpcval($forum_id),
+            'forum_name'     => new xmlrpcval(html_entity_decode($topic_data['forum_name']), 'base64'),
+            'topic_id'       => new xmlrpcval($topic_id),
+            'topic_title'    => new xmlrpcval(html_entity_decode(strip_tags(censor_text($topic_data['topic_title']))), 'base64'),
+            
+            'can_reply'      => new xmlrpcval($auth->acl_get('f_reply', $forum_id) && $topic_data['forum_status'] != ITEM_LOCKED && $topic_data['topic_status'] != ITEM_LOCKED, 'boolean'),
+            'can_upload'     => new xmlrpcval($allowed, 'boolean'),
+            'can_delete'     => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
+            'can_move'       => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
+            'can_subscribe'  => new xmlrpcval(($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'], 'boolean'), 
+            'is_subscribed'  => new xmlrpcval(isset($topic_data['notify_status']) && !is_null($topic_data['notify_status']) && $topic_data['notify_status'] !== '' ? true : false, 'boolean'),
+            'can_stick'      => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id), 'boolean'),
+            'is_sticky'      => new xmlrpcval($topic_data['topic_type'] == POST_STICKY, 'boolean'),
+            'can_close'      => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $topic_data['topic_poster']), 'boolean'),
+            'is_closed'      => new xmlrpcval($topic_data['topic_status'] == ITEM_LOCKED, 'boolean'),
+            'can_approve'    => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$topic_data['topic_approved'], 'boolean'),
+            'is_approved'    => new xmlrpcval($topic_data['topic_approved'] ? true : false, 'boolean'),
+            
+            'max_attachment' => new xmlrpcval($max_attachment, 'int'),
+            'max_png_size'   => new xmlrpcval($max_png_size, 'int'),
+            'max_jpg_size'   => new xmlrpcval($max_jpg_size, 'int'),
+            
+            'posts'          => new xmlrpcval($post_list, 'array'),
+        ), 'struct')
     );
+}
+
+if (!function_exists('bbcode_nl2br'))
+{
+    function bbcode_nl2br($text)
+    {
+        // custom BBCodes might contain carriage returns so they
+        // are not converted into <br /> so now revert that
+        $text = str_replace(array("\n", "\r"), array('<br />', "\n"), $text);
+        return $text;
+    }
 }

@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -10,31 +10,19 @@ defined('IN_MOBIQUO') or exit;
 
 function get_message_func($xmlrpc_params)
 {
-    global $db, $user, $config, $template, $phpbb_root_path, $phpEx;
+    global $db, $auth, $user, $config, $template, $phpbb_root_path, $phpEx;
     
     $user->setup('ucp');
     
     $params = php_xmlrpc_decode($xmlrpc_params);
     
-    if (!isset($params[0]))     // message id undefine
-    {
-        return get_error(1);
-    }
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
+    if (!$config['allow_privmsg']) trigger_error('Module not accessible');
 
-    // get folder id from parameters
-    $msg_id = $params[0];
-    
-    // Only registered users can go beyond this point
-    if (!$user->data['is_registered'])
-    {
-        return get_error(9);
-    }
-    
-    // Is PM disabled?
-    if (!$config['allow_privmsg'])
-    {
-        return get_error(21);
-    }
+    // get msg id from parameters
+    $msg_id = intval($params[0]);
+    if (!$msg_id) trigger_error('NO_MESSAGE');
+    $GLOBALS['return_html'] = isset($params[2]) ? $params[2] : false;
     
     $message_row = array();
 
@@ -49,11 +37,13 @@ function get_message_func($xmlrpc_params)
     $message_row = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
 
-    if (!$message_row)
-    {
-        return get_error(20);
-    }
-
+    if (!$message_row) trigger_error('NO_MESSAGE');
+    
+    $message_row['message_text'] = preg_replace('/\[b:'.$message_row['bbcode_uid'].'\](.*?)\[\/b:'.$message_row['bbcode_uid'].'\]/si', '[b]$1[/b]', $message_row['message_text']);
+    $message_row['message_text'] = preg_replace('/\[i:'.$message_row['bbcode_uid'].'\](.*?)\[\/i:'.$message_row['bbcode_uid'].'\]/si', '[i]$1[/i]', $message_row['message_text']);
+    $message_row['message_text'] = preg_replace('/\[u:'.$message_row['bbcode_uid'].'\](.*?)\[\/u:'.$message_row['bbcode_uid'].'\]/si', '[u]$1[/u]', $message_row['message_text']);
+    $message_row['message_text'] = preg_replace('/\[color=#(\w{6}):'.$message_row['bbcode_uid'].'\](.*?)\[\/color:'.$message_row['bbcode_uid'].'\]/si', '[color=#$1]$2[/color]', $message_row['message_text']);
+    
     // Update unread status
     $user->add_lang('posting');
     include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
@@ -72,14 +62,30 @@ function get_message_func($xmlrpc_params)
     $icon_url   = ($user->optionget('viewavatars')) ? get_user_avatar_url($message_row['user_avatar'], $message_row['user_avatar_type']) : '';
     $msg_subject = html_entity_decode(strip_tags(censor_text($message_row['message_subject'])));
     $msg_body = post_html_clean(parse_quote($template->_rootref['MESSAGE']));
-
+    
+    if ($config['load_onlinetrack']) {
+        $sql = 'SELECT session_user_id, MAX(session_time) as online_time, MIN(session_viewonline) AS viewonline
+                FROM ' . SESSIONS_TABLE . '
+                WHERE session_user_id=' . $message_row['user_id'] . '
+                GROUP BY session_user_id';
+        $result = $db->sql_query($sql);
+        $online_info = $db->sql_fetchrow($result);
+        
+        $update_time = $config['load_online_time'] * 60;
+        $is_online = (time() - $update_time < $online_info['online_time'] && (($online_info['viewonline']) || $auth->acl_get('u_viewonline'))) ? true : false;
+    } else {
+        $is_online = false;
+    }
+    
     $result = new xmlrpcval(array(
         'msg_from'      => new xmlrpcval($message_row['username'], 'base64'),
         'msg_to'        => new xmlrpcval($msg_to, 'array'),
         'icon_url'      => new xmlrpcval($icon_url),
         'sent_date'     => new xmlrpcval($sent_date,'dateTime.iso8601'),
         'msg_subject'   => new xmlrpcval($msg_subject, 'base64'),
-        'text_body'     => new xmlrpcval($msg_body, 'base64')
+        'text_body'     => new xmlrpcval($msg_body, 'base64'),
+        'is_online'     => new xmlrpcval($is_online, 'boolean'),
+        'allow_smilies' => new xmlrpcval($message_row['enable_smilies'] ? true : false, 'boolean'),
     ), 'struct');
     
     return new xmlrpcresp($result);

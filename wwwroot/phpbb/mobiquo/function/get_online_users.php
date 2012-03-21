@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,6 +11,8 @@ defined('IN_MOBIQUO') or exit;
 function get_online_users_func() 
 {    
     global $db, $auth, $config, $user;
+    
+    $user->setup('memberlist');
 
     // Get and set some variables
     $mode        = '';
@@ -20,11 +22,10 @@ function get_online_users_func()
     $sort_dir    = 'd';
     $show_guests= 0;
     
-    // Can this user view profiles/memberlist?
+    if (!$user->data['is_registered']) 
+        trigger_error('LOGIN_EXPLAIN_VIEWONLINE');
     if (!$auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
-    {
-        return get_error(2);
-    }
+        trigger_error('NO_VIEW_USERS');
     
     $sort_key_sql = array('a' => 'u.username_clean', 'b' => 's.session_time', 'c' => 's.session_page');
     

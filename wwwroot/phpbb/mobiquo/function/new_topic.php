@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,19 +11,21 @@ defined('IN_MOBIQUO') or exit;
 function new_topic_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $phpbb_root_path, $phpEx, $mobiquo_config;
-
+    
+    $user->setup('posting');
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_POST');
+    
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     // get parameters
-    $forum_id   = isset($params[0]) ? $params[0] : '';
+    $forum_id   = isset($params[0]) ? intval($params[0]) : '';
     $subject    = isset($params[1]) ? $params[1] : '';
     $text_body  = isset($params[2]) ? $params[2] : '';
-    $attach_id  = isset($params[4]) ? $params[4] : array();
+    $_POST['attachment_data'] = (isset($params[5]) && $params[5]) ? unserialize(base64_decode($params[5])) : array();
     
-    if (!$forum_id || !$subject || !$text_body)
-    {
-        return get_error(1);
-    }
+    if (!$forum_id) trigger_error('NO_FORUM');
+    if (utf8_clean_string($subject) === '') trigger_error('EMPTY_SUBJECT');
+    if (utf8_clean_string($text_body) === '') trigger_error('TOO_FEW_CHARS');
 
     $post_data = array();
     $current_time = time();
@@ -33,63 +35,46 @@ function new_topic_func($xmlrpc_params)
     $post_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     
-    if (!$post_data)
-    {
-        return get_error(3);
-    }
+    if (!$post_data) trigger_error('NO_FORUM');
     
     // Need to login to passworded forum first?
     if ($post_data['forum_password'] && !check_forum_password($forum_id))
-    {
-        return get_error(6);
-    }
+        trigger_error('LOGIN_FORUM');
     
     // Check permissions
-    if ($user->data['is_bot'])
-    {
-        return get_error(2);
-    }
+    if ($user->data['is_bot']) trigger_error('NOT_AUTHORISED');
     
     // Is the user able to read and post within this forum?
-    if (!$auth->acl_get('f_read', $forum_id) || !$auth->acl_get('f_post', $forum_id))
+    if (!$auth->acl_get('f_read', $forum_id))
     {
-        return get_error(10);
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            trigger_error('USER_CANNOT_READ');
+        }
+        
+        trigger_error('LOGIN_EXPLAIN_POST');
+    }
+    
+    if (!$auth->acl_get('f_post', $forum_id))
+    {
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            trigger_error('USER_CANNOT_POST');
+        }
+        
+        trigger_error('LOGIN_EXPLAIN_POST');
     }
     
     // Is the user able to post within this forum?
     if ($post_data['forum_type'] != FORUM_POST)
     {
-        return get_error(11);
+        trigger_error('USER_CANNOT_FORUM_POST');
     }
     
     // Forum/Topic locked?
     if ($post_data['forum_status'] == ITEM_LOCKED && !$auth->acl_get('m_edit', $forum_id))
     {
-        return get_error(12);
-    }
-    
-    if($attach_id)
-    {
-        $attach_id_str = implode(',', $attach_id);
-        // Get the attachment data, based on the attach id...
-        $sql = 'SELECT attach_id, is_orphan, real_filename, attach_comment
-                FROM ' . ATTACHMENTS_TABLE . "
-                WHERE attach_id IN ($attach_id_str)
-                AND is_orphan = 1
-                AND poster_id = " . $user->data['user_id'];
-        $result = $db->sql_query($sql);
-        
-        $attach_data = array();
-        while ($row = $db->sql_fetchrow($result))
-        {
-            $attach_data['attach_id'] = $row['attach_id'];
-            $attach_data['is_orphan'] = $row['is_orphan'];
-            $attach_data['real_filename'] = $row['real_filename'];
-            $attach_data['attach_comment'] = $row['attach_comment'];
-            
-            $_POST['attachment_data'][] = $attach_data;
-        }
-        $db->sql_freeresult($result);
+        trigger_error('FORUM_LOCKED');
     }
     
     $post_data['quote_username'] = '';
@@ -194,7 +179,7 @@ function new_topic_func($xmlrpc_params)
 
     if (sizeof($message_parser->warn_msg))
     {
-        return get_error();
+        trigger_error(join("\n", $message_parser->warn_msg));
     }
 
     $message_parser->parse($post_data['enable_bbcode'], ($config['allow_post_links']) ? $post_data['enable_urls'] : false, $post_data['enable_smilies'], $img_status, $flash_status, $quote_status, $config['allow_post_links']);
@@ -224,7 +209,7 @@ function new_topic_func($xmlrpc_params)
 
         if ($last_post_time && ($current_time - $last_post_time) < intval($config['flood_interval']))
         {
-            return get_error(13);
+            trigger_error('FLOOD_ERROR');
         }
     }
 
@@ -235,19 +220,14 @@ function new_topic_func($xmlrpc_params)
 
         if (($result = validate_username($post_data['username'], (!empty($post_data['post_username'])) ? $post_data['post_username'] : '')) !== false)
         {
-            return get_error(14);
+            $user->add_lang('ucp');
+            trigger_error($result . '_USERNAME');
         }
     }
-
-    // Parse subject
-    if (utf8_clean_string($post_data['post_subject']) === '')
-    {
-        return get_error(15);
-    }
-
+    
     if (sizeof($message_parser->warn_msg))
     {
-        return get_error();
+        trigger_error(join("\n", $message_parser->warn_msg));
     }
 
     // DNSBL check
@@ -255,54 +235,59 @@ function new_topic_func($xmlrpc_params)
     {
         if (($dnsbl = $user->check_dnsbl('post')) !== false)
         {
-            return get_error(16);
+            trigger_error(sprintf($user->lang['IP_BLACKLISTED'], $user->ip, $dnsbl[1]));
         }
     }
 
     // Store message, sync counters
     $data = array(
-        'topic_title'            => (empty($post_data['topic_title'])) ? $post_data['post_subject'] : $post_data['topic_title'],
-        'topic_first_post_id'    => (isset($post_data['topic_first_post_id'])) ? (int) $post_data['topic_first_post_id'] : 0,
+        'topic_title'           => (empty($post_data['topic_title'])) ? $post_data['post_subject'] : $post_data['topic_title'],
+        'topic_first_post_id'   => (isset($post_data['topic_first_post_id'])) ? (int) $post_data['topic_first_post_id'] : 0,
         'topic_last_post_id'    => (isset($post_data['topic_last_post_id'])) ? (int) $post_data['topic_last_post_id'] : 0,
-        'topic_time_limit'        => (int) $post_data['topic_time_limit'],
-        'topic_attachment'        => (isset($post_data['topic_attachment'])) ? (int) $post_data['topic_attachment'] : 0,
-        'post_id'                => 0,
-        'topic_id'                => 0,
-        'forum_id'                => (int) $forum_id,
-        'icon_id'                => (int) $post_data['icon_id'],
-        'poster_id'                => (int) $post_data['poster_id'],
+        'topic_time_limit'      => (int) $post_data['topic_time_limit'],
+        'topic_attachment'      => (isset($post_data['topic_attachment'])) ? (int) $post_data['topic_attachment'] : 0,
+        'post_id'               => 0,
+        'topic_id'              => 0,
+        'forum_id'              => (int) $forum_id,
+        'icon_id'               => (int) $post_data['icon_id'],
+        'poster_id'             => (int) $post_data['poster_id'],
         'enable_sig'            => (bool) $post_data['enable_sig'],
-        'enable_bbcode'            => (bool) $post_data['enable_bbcode'],
+        'enable_bbcode'         => (bool) $post_data['enable_bbcode'],
         'enable_smilies'        => (bool) $post_data['enable_smilies'],
-        'enable_urls'            => (bool) $post_data['enable_urls'],
-        'enable_indexing'        => (bool) $post_data['enable_indexing'],
-        'message_md5'            => (string) $message_md5,
-        'post_time'                => (isset($post_data['post_time'])) ? (int) $post_data['post_time'] : $current_time,
-        'post_checksum'            => (isset($post_data['post_checksum'])) ? (string) $post_data['post_checksum'] : '',
-        'post_edit_reason'        => $post_data['post_edit_reason'],
+        'enable_urls'           => (bool) $post_data['enable_urls'],
+        'enable_indexing'       => (bool) $post_data['enable_indexing'],
+        'message_md5'           => (string) $message_md5,
+        'post_time'             => (isset($post_data['post_time'])) ? (int) $post_data['post_time'] : $current_time,
+        'post_checksum'         => (isset($post_data['post_checksum'])) ? (string) $post_data['post_checksum'] : '',
+        'post_edit_reason'      => $post_data['post_edit_reason'],
         'post_edit_user'        => (isset($post_data['post_edit_user'])) ? (int) $post_data['post_edit_user'] : 0,
-        'forum_parents'            => $post_data['forum_parents'],
+        'forum_parents'         => $post_data['forum_parents'],
         'forum_name'            => $post_data['forum_name'],
         'notify'                => $notify,
         'notify_set'            => $post_data['notify_set'],
-        'poster_ip'                => (isset($post_data['poster_ip'])) ? $post_data['poster_ip'] : $user->ip,
-        'post_edit_locked'        => (int) $post_data['post_edit_locked'],
-        'bbcode_bitfield'        => $message_parser->bbcode_bitfield,
+        'poster_ip'             => (isset($post_data['poster_ip'])) ? $post_data['poster_ip'] : $user->ip,
+        'post_edit_locked'      => (int) $post_data['post_edit_locked'],
+        'bbcode_bitfield'       => $message_parser->bbcode_bitfield,
         'bbcode_uid'            => $message_parser->bbcode_uid,
-        'message'                => $message_parser->message,
-        'attachment_data'        => $message_parser->attachment_data,
-        'filename_data'            => $message_parser->filename_data,
+        'message'               => $message_parser->message,
+        'attachment_data'       => $message_parser->attachment_data,
+        'filename_data'         => $message_parser->filename_data,
         'topic_approved'        => (isset($post_data['topic_approved'])) ? $post_data['topic_approved'] : false,
-        'post_approved'            => (isset($post_data['post_approved'])) ? $post_data['post_approved'] : false,
+        'post_approved'         => (isset($post_data['post_approved'])) ? $post_data['post_approved'] : false,
+        
+        // for mod post expire compatibility
+        'post_expire_time'      => -1,
     );
 
     $poll = array();
-    //include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-    include('include/functions_posting.' . $phpEx);
+    include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 
     $update_message = true;
+    $cwd = getcwd();
+    chdir('../');
     $redirect_url = submit_post('post', $post_data['post_subject'], $post_data['username'], $post_data['topic_type'], $poll, $data, $update_message);
-
+    chdir($cwd);
+    
     // Check the permissions for post approval, as well as the queue trigger where users are put on approval with a post count lower than specified. Moderators are not affected.
     $approved = true;
     if ((($config['enable_queue_trigger'] && $user->data['user_posts'] < $config['queue_trigger_posts']) || !$auth->acl_get('f_noapprove', $data['forum_id'])) && !$auth->acl_get('m_approve', $data['forum_id']))

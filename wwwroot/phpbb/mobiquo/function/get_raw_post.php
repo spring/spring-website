@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,28 +12,27 @@ function get_raw_post_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_home;
     
+    $user->setup('posting');
+    
     include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
     $params = php_xmlrpc_decode($xmlrpc_params);
     
     // get post id from parameters
-    $post_id = $params[0];
+    $post_id = intval($params[0]);
 
     $post_data = array();
-    $sql = 'SELECT f.*, t.*, p.*
+    $sql = 'SELECT p.*, t.*, f.*
             FROM ' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t, ' . FORUMS_TABLE . " f
             WHERE p.post_id = $post_id
             AND t.topic_id = p.topic_id
-            AND f.forum_id = t.forum_id";
+            AND (f.forum_id = t.forum_id OR (t.topic_type = " . POST_GLOBAL . ' AND f.forum_type = ' . FORUM_POST . '))';
     
-    $result = $db->sql_query($sql);
+    $result = $db->sql_query_limit($sql, 1);
     $post_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
-
-    if (!$post_data)
-    {
-        return get_error(26);
-    }
+    
+    if (!$post_data) trigger_error('NO_POST');
 
     // Use post_row values in favor of submitted ones...
     $forum_id = (int) $post_data['forum_id'];
@@ -43,25 +42,25 @@ function get_raw_post_func($xmlrpc_params)
     // Need to login to passworded forum first?
     if ($post_data['forum_password'] && !check_forum_password($forum_id))
     {
-        return get_error(6);
+        trigger_error('LOGIN_FORUM');
     }
 
     // Is the user able to read within this forum?
     if (!$auth->acl_get('f_read', $forum_id))
     {
-        return get_error(17);
+        trigger_error('USER_CANNOT_READ');
     }
 
     // Permission to do the action asked?
     if (!($user->data['is_registered'] && $auth->acl_gets('f_edit', 'm_edit', $forum_id)))
     {
-        return get_error(2);
+        trigger_error('USER_CANNOT_EDIT');
     }
 
     // Forum/Topic locked?
     if (($post_data['forum_status'] == ITEM_LOCKED || (isset($post_data['topic_status']) && $post_data['topic_status'] == ITEM_LOCKED)) && !$auth->acl_get('m_edit', $forum_id))
     {
-        return get_error(27);
+        trigger_error(($post_data['forum_status'] == ITEM_LOCKED) ? 'FORUM_LOCKED' : 'TOPIC_LOCKED');
     }
 
     // Can we edit this post ... if we're a moderator with rights then always yes
@@ -70,17 +69,17 @@ function get_raw_post_func($xmlrpc_params)
     {
         if ($user->data['user_id'] != $post_data['poster_id'])
         {
-            return get_error(28);
+            trigger_error('USER_CANNOT_EDIT');
         }
     
         if (!($post_data['post_time'] > time() - ($config['edit_time'] * 60) || !$config['edit_time']))
         {
-            return get_error(29);
+            trigger_error('CANNOT_EDIT_TIME');
         }
     
         if ($post_data['post_edit_locked'])
         {
-            return get_error(30);
+            trigger_error('CANNOT_EDIT_POST_LOCKED');
         }
     }
 

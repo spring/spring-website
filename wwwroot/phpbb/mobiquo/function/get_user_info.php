@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -12,32 +12,47 @@ function get_user_info_func($xmlrpc_params)
 {
     global $db, $user, $auth, $template, $config, $phpbb_root_path, $phpEx;
     
-    $params = php_xmlrpc_decode($xmlrpc_params);
-    $username = $params[0];
+    $user->setup(array('memberlist', 'groups'));
     
     if (!$auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
     {
-        return get_error(2);
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            trigger_error('NO_VIEW_USERS');
+        }
+        
+        trigger_error('LOGIN_EXPLAIN_VIEWPROFILE');
     }
     
-    // Display a profile
-    if (!$username)
-    {
-        return get_error(1);
+    $params = php_xmlrpc_decode($xmlrpc_params);
+    $username = $params[0];
+    if (isset($params[1]) && !empty($params[1])){
+        $user_id = $params[1];
     }
+    elseif (isset($params[0]) && !empty($params[0]))
+    {
+        $username = $params[0];
+        $user_id = get_user_id_by_name($username);
+    }
+    else
+    {
+        $user_id = $user->data['user_id'];
+    }
+    
+    $user_id = intval($user_id);
+    
+    // Display a profile
+    if (!$user_id) trigger_error('NO_USER');
     
     // Get user...
     $sql = 'SELECT *
         FROM ' . USERS_TABLE . "
-        WHERE username_clean = '" . $db->sql_escape(utf8_clean_string($username)) . "'";
+        WHERE user_id = '$user_id'";
     $result = $db->sql_query($sql);
     $member = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
     
-    if (!$member)
-    {
-        return get_error(8);
-    }
+    if (!$member) trigger_error('NO_USER');
     
     // a_user admins and founder are able to view inactive users and bots to be able to manage them more easily
     // Normal users are able to see at least users having only changed their profile settings but not yet reactivated.
@@ -45,17 +60,15 @@ function get_user_info_func($xmlrpc_params)
     {
         if ($member['user_type'] == USER_IGNORE)
         {
-            return get_error(8);
+            trigger_error('NO_USER');
         }
         else if ($member['user_type'] == USER_INACTIVE && $member['user_inactive_reason'] != INACTIVE_PROFILE)
         {
-            return get_error(8);
+            trigger_error('NO_USER');
         }
     }
     
     $user_id = (int) $member['user_id'];
-    
-    $user->add_lang(array('memberlist', 'groups'));
     
     // Do the SQL thang
     $sql = 'SELECT g.group_id, g.group_name, g.group_type
@@ -102,15 +115,20 @@ function get_user_info_func($xmlrpc_params)
     
     if ($config['load_onlinetrack'])
     {
-        $sql = 'SELECT MAX(session_time) AS session_time, MIN(session_viewonline) AS session_viewonline
+        $sql = 'SELECT MAX(session_time) AS session_time, MIN(session_viewonline) AS session_viewonline, session_page, session_forum_id
             FROM ' . SESSIONS_TABLE . "
-            WHERE session_user_id = $user_id";
-        $result = $db->sql_query($sql);
+            WHERE session_user_id = $user_id
+            GROUP BY session_page, session_forum_id
+            ORDER BY session_time DESC";
+
+        $result = $db->sql_query_limit($sql, 1);
         $row = $db->sql_fetchrow($result);
         $db->sql_freeresult($result);
     
         $member['session_time'] = (isset($row['session_time'])) ? $row['session_time'] : 0;
         $member['session_viewonline'] = (isset($row['session_viewonline'])) ? $row['session_viewonline'] :    0;
+        $member['session_page'] = (isset($row['session_page'])) ? $row['session_page'] : 0;
+        $member['session_forum_id'] = (isset($row['session_forum_id'])) ? $row['session_forum_id'] : 0;
         unset($row);
     }
     
@@ -283,7 +301,149 @@ function get_user_info_func($xmlrpc_params)
     $custom_fields_list = get_custom_fields();
     $user_avatar_url = get_user_avatar_url($member['user_avatar'], $member['user_avatar_type']);
     
+    // Forum info
+    $sql = 'SELECT forum_id, forum_name, parent_id, forum_type, left_id, right_id
+        FROM ' . FORUMS_TABLE . '
+        ORDER BY left_id ASC';
+    $result = $db->sql_query($sql, 600);
+    
+    $forum_data = array();
+    while ($row = $db->sql_fetchrow($result))
+    {
+        $forum_data[$row['forum_id']] = $row;
+    }
+    $db->sql_freeresult($result);
+    
+    
+    // get user current activity
+    preg_match('#^([a-z0-9/_-]+)#i', $member['session_page'], $on_page);
+    if (!sizeof($on_page))
+    {
+        $on_page[1] = '';
+    }
+
+    switch ($on_page[1])
+    {
+        case 'index':
+            $location = $user->lang['INDEX'];
+        break;
+
+        case 'adm/index':
+            $location = $user->lang['ACP'];
+        break;
+
+        case 'posting':
+        case 'viewforum':
+        case 'viewtopic':
+            $forum_id = $member['session_forum_id'];
+            
+            if ($forum_id && $auth->acl_get('f_list', $forum_id))
+            {
+                $location = '';
+
+                if ($forum_data[$forum_id]['forum_type'] == FORUM_LINK)
+                {
+                    $location = sprintf($user->lang['READING_LINK'], $forum_data[$forum_id]['forum_name']);
+                    break;
+                }
+
+                switch ($on_page[1])
+                {
+                    case 'posting':
+                        preg_match('#mode=([a-z]+)#', $member['session_page'], $on_page);
+                        $posting_mode = (!empty($on_page[1])) ? $on_page[1] : '';
+
+                        switch ($posting_mode)
+                        {
+                            case 'reply':
+                            case 'quote':
+                                $location = sprintf($user->lang['REPLYING_MESSAGE'], $forum_data[$forum_id]['forum_name']);
+                            break;
+
+                            default:
+                                $location = sprintf($user->lang['POSTING_MESSAGE'], $forum_data[$forum_id]['forum_name']);
+                            break;
+                        }
+                    break;
+
+                    case 'viewtopic':
+                        $location = sprintf($user->lang['READING_TOPIC'], $forum_data[$forum_id]['forum_name']);
+                    break;
+
+                    case 'viewforum':
+                        $location = sprintf($user->lang['READING_FORUM'], $forum_data[$forum_id]['forum_name']);
+                    break;
+                }
+            }
+            else
+            {
+                $location = $user->lang['INDEX'];
+            }
+        break;
+
+        case 'search':
+            $location = $user->lang['SEARCHING_FORUMS'];
+        break;
+
+        case 'faq':
+            $location = $user->lang['VIEWING_FAQ'];
+        break;
+
+        case 'viewonline':
+            $location = $user->lang['VIEWING_ONLINE'];
+        break;
+
+        case 'memberlist':
+            $location = (strpos($member['session_page'], 'mode=viewprofile') !== false) ? $user->lang['VIEWING_MEMBER_PROFILE'] : $user->lang['VIEWING_MEMBERS'];
+        break;
+
+        case 'mcp':
+            $location = $user->lang['VIEWING_MCP'];
+        break;
+
+        case 'ucp':
+            $location = $user->lang['VIEWING_UCP'];
+
+            // Grab some common modules
+            $url_params = array(
+                'mode=register'        => 'VIEWING_REGISTER',
+                'i=pm&mode=compose'    => 'POSTING_PRIVATE_MESSAGE',
+                'i=pm&'                => 'VIEWING_PRIVATE_MESSAGES',
+                'i=profile&'        => 'CHANGING_PROFILE',
+                'i=prefs&'            => 'CHANGING_PREFERENCES',
+            );
+
+            foreach ($url_params as $param => $lang)
+            {
+                if (strpos($member['session_page'], $param) !== false)
+                {
+                    $location = $user->lang[$lang];
+                    break;
+                }
+            }
+
+        break;
+
+        case 'download/file':
+            $location = $user->lang['DOWNLOADING_FILE'];
+        break;
+
+        case 'report':
+            $location = $user->lang['REPORTING_POST'];
+        break;
+        
+        case 'mobiquo/mobiquo':
+            $location = 'On Tapatalk';
+        break;
+
+        default:
+            $location = $user->lang['INDEX'];
+        break;
+    }
+    
     $xmlrpc_user_info = new xmlrpcval(array(
+        'user_id'            => new xmlrpcval($member['user_id']),
+        'username'           => new xmlrpcval($member['username'], 'base64'),
         'post_count'         => new xmlrpcval($member['user_posts'], 'int'),
         'reg_time'           => new xmlrpcval(mobiquo_iso8601_encode($member['user_regdate']), 'dateTime.iso8601'),
         'last_activity_time' => new xmlrpcval(mobiquo_iso8601_encode($template->_rootref['VISITED']), 'dateTime.iso8601'),
@@ -291,6 +451,7 @@ function get_user_info_func($xmlrpc_params)
         'accept_pm'          => new xmlrpcval($template->_rootref['U_PM'] ? true : false, 'boolean'),
         'display_text'       => new xmlrpcval('', 'base64'),
         'icon_url'           => new xmlrpcval($user_avatar_url),
+        'current_activity'   => new xmlrpcval($location, 'base64'),
         'custom_fields_list' => new xmlrpcval($custom_fields_list, 'array'),
         
         //'can_ban'            => new xmlrpcval($auth->acl_get('m_ban') && $user_id != $user->data['user_id'] ? true : false, 'boolean'),

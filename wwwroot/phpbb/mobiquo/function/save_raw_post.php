@@ -1,8 +1,8 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
@@ -11,7 +11,9 @@ defined('IN_MOBIQUO') or exit;
 function save_raw_post_func($xmlrpc_params)
 {
     global $db, $auth, $user, $config, $template, $cache, $phpEx, $phpbb_root_path, $phpbb_home;
-
+    
+    $user->setup('posting');
+    
     include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
     $params = php_xmlrpc_decode($xmlrpc_params);
@@ -22,28 +24,26 @@ function save_raw_post_func($xmlrpc_params)
     $mode       = 'edit';
 
     // get post information from parameters
-    $post_id        = $params[0];
+    $post_id        = intval($params[0]);
     $post_title     = $params[1];
     $post_content   = $params[2];
+    $GLOBALS['return_html'] = isset($params[3]) ? $params[3] : false;
 
     $post_data = array();
 
-    $sql = 'SELECT f.*, t.*, p.*, u.username, u.username_clean, u.user_sig, u.user_sig_bbcode_uid, u.user_sig_bbcode_bitfield
-            FROM ' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t, ' . FORUMS_TABLE . ' f, ' . USERS_TABLE . " u
-            WHERE p.post_id = $post_id
-            AND t.topic_id = p.topic_id
-            AND u.user_id = p.poster_id
-            AND f.forum_id = t.forum_id";
+    $sql = 'SELECT p.*, t.*, f.*, u.username
+            FROM ' . POSTS_TABLE . ' p
+                LEFT JOIN ' . TOPICS_TABLE . ' t ON (p.topic_id = t.topic_id) 
+                LEFT JOIN ' . FORUMS_TABLE . ' f ON (t.forum_id = f.forum_id OR (t.topic_type = ' . POST_GLOBAL . ' AND f.forum_type = ' . FORUM_POST . '))
+                LEFT JOIN ' . USERS_TABLE  . ' u ON (p.poster_id = u.user_id)' . "
+            WHERE p.post_id = $post_id";
 
-    $result = $db->sql_query($sql);
+    $result = $db->sql_query_limit($sql, 1);
     $post_data = $db->sql_fetchrow($result);
     $db->sql_freeresult($result);
 
-    if (!$post_data)
-    {
-        return get_error(26);
-    }
-
+    if (!$post_data) trigger_error('NO_POST');
+    
     // Use post_row values in favor of submitted ones...
     $forum_id = (int) $post_data['forum_id'];
     $topic_id = (int) $post_data['topic_id'];
@@ -52,25 +52,25 @@ function save_raw_post_func($xmlrpc_params)
     // Need to login to passworded forum first?
     if ($post_data['forum_password'] && !check_forum_password($forum_id))
     {
-        return get_error(6);
+        trigger_error('LOGIN_FORUM');
     }
 
     // Is the user able to read within this forum?
     if (!$auth->acl_get('f_read', $forum_id))
     {
-        return get_error(17);
+        trigger_error('USER_CANNOT_READ');
     }
 
     // Permission to do the action asked?
     if (!($user->data['is_registered'] && $auth->acl_gets('f_edit', 'm_edit', $forum_id)))
     {
-        return get_error(2);
+        trigger_error('USER_CANNOT_EDIT');
     }
 
     // Forum/Topic locked?
     if (($post_data['forum_status'] == ITEM_LOCKED || (isset($post_data['topic_status']) && $post_data['topic_status'] == ITEM_LOCKED)) && !$auth->acl_get('m_edit', $forum_id))
     {
-        return get_error(27);
+        trigger_error(($post_data['forum_status'] == ITEM_LOCKED) ? 'FORUM_LOCKED' : 'TOPIC_LOCKED');
     }
 
     // Can we edit this post ... if we're a moderator with rights then always yes
@@ -79,17 +79,17 @@ function save_raw_post_func($xmlrpc_params)
     {
         if ($user->data['user_id'] != $post_data['poster_id'])
         {
-            return get_error(28);
+            trigger_error('USER_CANNOT_EDIT');
         }
 
         if (!($post_data['post_time'] > time() - ($config['edit_time'] * 60) || !$config['edit_time']))
         {
-            return get_error(29);
+            trigger_error('CANNOT_EDIT_TIME');
         }
 
         if ($post_data['post_edit_locked'])
         {
-            return get_error(30);
+            trigger_error('CANNOT_EDIT_POST_LOCKED');
         }
     }
 
@@ -243,11 +243,12 @@ function save_raw_post_func($xmlrpc_params)
     $status_switch = (($post_data['enable_bbcode']+1) << 8) + (($post_data['enable_smilies']+1) << 4) + (($post_data['enable_urls']+1) << 2) + (($post_data['enable_sig']+1) << 1);
     $status_switch = ($status_switch != $check_value);
 
-    $post_data['poll_title']        = utf8_normalize_nfc(request_var('poll_title', '', true));
-    $post_data['poll_length']        = request_var('poll_length', 0);
-    $post_data['poll_option_text']    = utf8_normalize_nfc(request_var('poll_option_text', '', true));
-    $post_data['poll_max_options']    = request_var('poll_max_options', 1);
-    $post_data['poll_vote_change']    = ($auth->acl_get('f_votechg', $forum_id) && isset($_POST['poll_vote_change'])) ? 1 : 0;
+    //$post_data['poll_title']        = utf8_normalize_nfc(request_var('poll_title', '', true));
+    //$post_data['poll_length']        = request_var('poll_length', 0);
+    //$post_data['poll_option_text']    = utf8_normalize_nfc(request_var('poll_option_text', '', true));
+    $post_data['poll_option_text'] = implode("\n", $post_data['poll_options']);
+    //$post_data['poll_max_options']    = request_var('poll_max_options', 1);
+    //$post_data['poll_vote_change']    = ($auth->acl_get('f_votechg', $forum_id) && isset($_POST['poll_vote_change'])) ? 1 : 0;
 
     // Parse Attachments - before checksum is calculated
     $message_parser->parse_attachments('fileupload', $mode, $forum_id, $submit, $preview, $refresh);
@@ -263,7 +264,7 @@ function save_raw_post_func($xmlrpc_params)
     {
         if (sizeof($message_parser->warn_msg))
         {
-            return get_error();
+            trigger_error(join("\n", $message_parser->warn_msg));
         }
 
         $message_parser->parse($post_data['enable_bbcode'], ($config['allow_post_links']) ? $post_data['enable_urls'] : false, $post_data['enable_smilies'], $img_status, $flash_status, $quote_status, $config['allow_post_links']);
@@ -281,14 +282,14 @@ function save_raw_post_func($xmlrpc_params)
         if (($result = validate_username($post_data['username'], (!empty($post_data['post_username'])) ? $post_data['post_username'] : '')) !== false)
         {
             $user->add_lang('ucp');
-            return get_error();;
+            trigger_error($result . '_USERNAME');
         }
     }
 
     // Parse subject
     if (utf8_clean_string($post_data['post_subject']) === '' && $post_data['topic_first_post_id'] == $post_id)
     {
-        return get_error(15);
+        trigger_error('EMPTY_SUBJECT');
     }
 
     $post_data['poll_last_vote'] = (isset($post_data['poll_last_vote'])) ? $post_data['poll_last_vote'] : 0;
@@ -353,7 +354,7 @@ function save_raw_post_func($xmlrpc_params)
     {
         if (($dnsbl = $user->check_dnsbl('post')) !== false)
         {
-            return get_error('DNSBL check failed');
+            trigger_error(sprintf($user->lang['IP_BLACKLISTED'], $user->ip, $dnsbl[1]));
         }
     }
 
@@ -403,7 +404,7 @@ function save_raw_post_func($xmlrpc_params)
                 if (!$auth->acl_get('f_post', $to_forum_id))
                 {
                     // This will only be triggered if the user tried to trick the forum.
-                    return get_error(2);
+                    trigger_error('NOT_AUTHORISED');
                 }
 
                 $forum_id = $to_forum_id;
@@ -488,8 +489,11 @@ function save_raw_post_func($xmlrpc_params)
     $data['topic_replies'] = $post_data['topic_replies'];
 
     include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+    $cwd = getcwd();
+    chdir('../');
     $redirect_url = submit_post($mode, $post_data['post_subject'], $post_data['username'], $post_data['topic_type'], $poll, $data, $update_message);
-
+    chdir($cwd);
+    
     // Check the permissions for post approval, as well as the queue trigger where users are put on approval with a post count lower than specified. Moderators are not affected.
     $approved = true;
     if ((($config['enable_queue_trigger'] && $user->data['user_posts'] < $config['queue_trigger_posts']) || !$auth->acl_get('f_noapprove', $data['forum_id'])) && !$auth->acl_get('m_approve', $data['forum_id']))
@@ -504,11 +508,60 @@ function save_raw_post_func($xmlrpc_params)
         preg_match('/&amp;p=(\d+)/', $redirect_url, $matches);
         $post_id = $matches[1];
         $reply_success = true;
+        
+        // get new post_content
+        $message = censor_text($data['message']);
+        $quote_wrote_string = $user->lang['WROTE'];
+        $message = str_replace('[/quote:'.$data['bbcode_uid'].']', '[/quote]', $message);
+        $message = preg_replace('/\[quote(?:=&quot;(.*?)&quot;)?:'.$data['bbcode_uid'].'\]/ise', "'[quote]' . ('$1' ? '$1' . ' $quote_wrote_string:\n' : '\n')", $message);
+        $blocks = preg_split('/(\[\/?quote\])/i', $message, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+        $quote_level = 0;
+        $message = '';
+            
+        foreach($blocks as $block)
+        {
+            if ($block == '[quote]') {
+                if ($quote_level == 0) $message .= $block;
+                $quote_level++;
+            } else if ($block == '[/quote]') {
+                if ($quote_level <= 1) $message .= $block;
+                if ($quote_level >= 1) $quote_level--;
+            } else {
+                if ($quote_level <= 1) $message .= $block;
+            }
+        }
+        
+        $message = preg_replace('/\[(youtube|video|googlevideo|gvideo):'.$data['bbcode_uid'].'\](.*?)\[\/\1:'.$data['bbcode_uid'].'\]/sie', "video_bbcode_format('$1', '$2')", $message);
+        $message = preg_replace('/\[(BBvideo)[\d, ]+:'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[url=$2]YouTube Video[/url]", $message);
+        $message = preg_replace('/\[(spoil|spoiler):'.$row['bbcode_uid'].'\](.*?)\[\/\1:'.$row['bbcode_uid'].'\]/si', "[spoiler]$2[/spoiler]", $message);
+        $message = preg_replace('/\[b:'.$data['bbcode_uid'].'\](.*?)\[\/b:'.$data['bbcode_uid'].'\]/si', '[b]$1[/b]', $message);
+        $message = preg_replace('/\[i:'.$data['bbcode_uid'].'\](.*?)\[\/i:'.$data['bbcode_uid'].'\]/si', '[i]$1[/i]', $message);
+        $message = preg_replace('/\[u:'.$data['bbcode_uid'].'\](.*?)\[\/u:'.$data['bbcode_uid'].'\]/si', '[u]$1[/u]', $message);
+        $message = preg_replace('/\[color=#(\w{6}):'.$data['bbcode_uid'].'\](.*?)\[\/color:'.$data['bbcode_uid'].'\]/si', '[color=#$1]$2[/color]', $message);
+        
+        // Second parse bbcode here
+        if ($data['bbcode_bitfield'])
+        {
+            $bbcode = new bbcode(base64_encode($data['bbcode_bitfield']));
+            $bbcode->bbcode_second_pass($message, $data['bbcode_uid'], $data['bbcode_bitfield']);
+        }
+        
+        $message = bbcode_nl2br($message);
+        $message = smiley_text($message);
+        
+        if (!empty($data['attachment_data']))
+        {
+            parse_attachments($forum_id, $message, $data['attachment_data'], $update_count);
+        }
+        
+        $updated_post_title = html_entity_decode(strip_tags(censor_text($data['topic_title'])), ENT_QUOTES, 'UTF-8');
     }
 
     $xmlrpc_reply_topic = new xmlrpcval(array(
         'result'    => new xmlrpcval($reply_success, 'boolean'),
-        'approved'  => new xmlrpcval($approved ? 0 : 1, 'int'),
+        'state'     => new xmlrpcval($approved ? 0 : 1, 'int'),
+        'post_title'   => new xmlrpcval($updated_post_title, 'base64'),
+        'post_content' => new xmlrpcval(post_html_clean($message), 'base64'),
     ), 'struct');
 
     return new xmlrpcresp($xmlrpc_reply_topic);

@@ -1,65 +1,124 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
 defined('IN_MOBIQUO') or exit;
 
-function log_it($log_data, $is_begin = false)
+function process_page($start_num, $end)
 {
-    global $mobiquo_config;
+    global $start, $limit;
     
-    if(!$mobiquo_config['keep_log'] || !$log_data)
+    $start = intval($start_num);
+    $end = intval($end);
+    $start = empty($start) ? 0 : max($start, 0);
+    $end = (empty($end) || $end < $start) ? ($start + 19) : max($end, $start);
+    if ($end - $start >= 50) {
+        $end = $start + 49;
+    }
+    $limit = $end - $start + 1;
+    
+    return array($start, $limit);
+}
+
+function xmlrpc_error_handler($errno, $msg_text, $errfile, $errline)
+{
+    global $db, $auth, $user, $msg_long_text;
+
+    if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_NOTICE) return;
+    if (isset($msg_long_text) && $msg_long_text && !$msg_text) $msg_text = $msg_long_text;
+    
+    switch ($errno)
     {
-        return;
+        case E_USER_ERROR:
+            if (!empty($user) && !empty($user->lang))
+            {
+                $msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
+            }
+        break;
+
+        case E_USER_NOTICE:
+            if (empty($user->data)) $user->session_begin();
+            $auth->acl($user->data);
+            if (empty($user->lang)) $user->setup();
+            $msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
+        break;
     }
     
-    $log_file = './log/'.date('Ymd_H').'.log';
+    garbage_collection();
     
-    if ($is_begin)
-    {
-        global $user;
-        $method_name = $log_data;
-        $log_data = "\nSTART ======================================== $method_name\n";
-        $log_data .= "TIME: ".date('Y-m-d H:i:s')."\n";
-        $log_data .= "USER ID: ".$user->data['user_id']."\n";
-        $log_data .= "USER NAME: ".$user->data['username']."\n";
-        $log_data .= "PARAMETER:\n";
-    }
+    $result = check_error_status($msg_text);
+    if (MOBIQUO_DEBUG == -1) $msg_text .= " > $errfile, $errline";
     
-    file_put_contents($log_file, print_r($log_data, true), FILE_APPEND);
+    $response = new xmlrpcresp(
+        new xmlrpcval(array(
+            'result'        => new xmlrpcval($result, 'boolean'),
+            'result_text'   => new xmlrpcval(basic_clean($msg_text), 'base64'),
+        ),'struct')
+    );
+    
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
+    exit;
 }
 
 
-function get_method_name()
+function basic_clean($str)
 {
+    $str = strip_tags($str);
+    $str = trim($str);
+    return html_entity_decode($str, ENT_QUOTES, 'UTF-8');
+}
+
+
+function mobi_parse_requrest()
+{
+    global $request_method, $request_params, $params_num;
+    
     $ver = phpversion();
     if ($ver[0] >= 5) {
         $data = file_get_contents('php://input');
     } else {
         $data = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : '';
     }
-    $parsers = php_xmlrpc_decode_xml($data);
-    return trim($parsers->methodname);
-}
-
-
-function get_error($error_code = 99, $error_message = '')
-{
-    global $mobiquo_error_code;
     
-    if(isset($mobiquo_error_code[$error_code]) && $error_message == '')
+    if (count($_SERVER) == 0)
     {
-        $error_message = $mobiquo_error_code[$error_code];
+        $r = new xmlrpcresp('', 15, 'XML-RPC: '.__METHOD__.': cannot parse request headers as $_SERVER is not populated');
+        echo $r->serialize('UTF-8');
+        exit;
     }
     
-    return new xmlrpcresp('', 18, $error_message); // for test purpose
-    //return new xmlrpcresp('', $error_code, $mobiquo_error_code[$error_code]);
+    if(isset($_SERVER['HTTP_CONTENT_ENCODING'])) {
+        $content_encoding = str_replace('x-', '', $_SERVER['HTTP_CONTENT_ENCODING']);
+    } else {
+        $content_encoding = '';
+    }
+    
+    if($content_encoding != '' && strlen($data)) {
+        if($content_encoding == 'deflate' || $content_encoding == 'gzip') {
+            // if decoding works, use it. else assume data wasn't gzencoded
+            if(function_exists('gzinflate')) {
+                if ($content_encoding == 'deflate' && $degzdata = @gzuncompress($data)) {
+                    $data = $degzdata;
+                } elseif ($degzdata = @gzinflate(substr($data, 10))) {
+                    $data = $degzdata;
+                }
+            } else {
+                $r = new xmlrpcresp('', 106, 'Received from client compressed HTTP request and cannot decompress');
+                echo $r->serialize('UTF-8');
+                exit;
+            }
+        }
+    }
+    
+    $parsers = php_xmlrpc_decode_xml($data);
+    $request_method = $parsers->methodname;
+    $request_params = php_xmlrpc_decode(new xmlrpcval($parsers->params, 'array'));
+    $params_num = count($request_params);
 }
-
 
 function get_short_content($post_id, $length = 200)
 {
@@ -72,6 +131,11 @@ function get_short_content($post_id, $length = 200)
     $post_text = $db->sql_fetchfield('post_text');
     $db->sql_freeresult($result);
     
+    return process_short_content($post_text, 200);
+}
+
+function process_short_content($post_text, $length = 200)
+{
     $post_text = censor_text($post_text);
     $post_text = preg_replace('/\[url.*?\].*?\[\/url.*?\]/', '[url]', $post_text);
     $post_text = preg_replace('/\[img.*?\].*?\[\/img.*?\]/', '[img]', $post_text);
@@ -82,21 +146,21 @@ function get_short_content($post_id, $length = 200)
     return $post_text;
 }
 
-
 function post_html_clean($str)
 {
     global $phpbb_root_path, $phpbb_home, $mobiquo_config;
+    
     $search = array(
         "/<a .*?href=\"(.*?)\".*?>(.*?)<\/a>/si",
-        "/<img .*?src=\"(.*?)\".*?\/?>/sei",
-        "/<br\s*\/?>|<\/cite>/si",
+        "/<img .*?src=\"(.*?)\".*?\/?>/si",
+        "/<br\s*\/?>|<\/cite>|<\/dt>/si",
         "/<object .*?data=\"(http:\/\/www\.youtube\.com\/.*?)\" .*?>.*?<\/object>/si",
         "/<object .*?data=\"(http:\/\/video\.google\.com\/.*?)\" .*?>.*?<\/object>/si",
     );
     
     $replace = array(
         '[url=$1]$2[/url]',
-        "'[img]'.url_encode('$1').'[/img]'",
+        '[img]$1[/img]',
         "\n",
         '[url=$1]YouTube Video[/url]',
         '[url=$1]Google Video[/url]'
@@ -112,9 +176,9 @@ function post_html_clean($str)
     $str = strip_tags($str);
     $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
     
-    // change relative path to absolute URL 
-    $str = preg_replace('/\[img\]\.\.\/(.*?)\[\/img\]/si', "[img]$phpbb_home/$1[/img]", $str);
-    $str = preg_replace('#\[img\]'.addslashes($phpbb_root_path).'(.*?)\[/img\]#si', "[img]$phpbb_home$1[/img]", $str);
+    // change relative path to absolute URL and encode url
+    $str = preg_replace('/\[img\](.*?)\[\/img\]/sei', "'[img]'.url_encode('$1').'[/img]'", $str);
+    
     // remove link on img
     $str = preg_replace('/\[url=[^\]]*?\]\s*(\[img\].*?\[\/img\])\s*\[\/url\]/si', '$1', $str);
     
@@ -124,7 +188,32 @@ function post_html_clean($str)
         $str = cut_quote($str, 100);
     }
     
-    return $str;
+    return parse_bbcode($str);
+}
+
+function parse_bbcode($str)
+{
+    $search = array(
+        '#\[(b)\](.*?)\[/b\]#si',
+        '#\[(u)\](.*?)\[/u\]#si',
+        '#\[(i)\](.*?)\[/i\]#si',
+        '#\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\](.*?)\[/color\]#si',
+    );
+    
+    if ($GLOBALS['return_html']) {
+        $str = htmlspecialchars($str);
+        $replace = array(
+            '<$1>$2</$1>',
+            '<$1>$2</$1>',
+            '<$1>$2</$1>',
+            '<font color="$1">$2</font>',
+        );
+        $str = str_replace("\n", '<br />', $str);
+    } else {
+        $replace = '$2';
+    }
+    
+    return preg_replace($search, $replace, $str);
 }
 
 function parse_quote($str)
@@ -155,11 +244,20 @@ function parse_quote($str)
 
 function url_encode($url)
 {
+    global $phpbb_home, $phpbb_root_path;
+    
     $url = rawurlencode($url);
     
     $from = array('/%3A/', '/%2F/', '/%3F/', '/%2C/', '/%3D/', '/%26/', '/%25/', '/%23/', '/%2B/', '/%3B/', '/%5C/');
     $to   = array(':',     '/',     '?',     ',',     '=',     '&',     '%',     '#',     '+',     ';',     '\\');
     $url = preg_replace($from, $to, $url);
+    $root_path = preg_replace('/^\//', '', $phpbb_root_path);
+    $url = preg_replace('#^\.\./|'.addslashes($root_path).'#si', '', $url);
+    
+    if (strpos($url, 'http') !== 0)
+    {
+        $url = $phpbb_home.$url;
+    }
     
     return htmlspecialchars_decode($url);
 }
@@ -212,21 +310,7 @@ function mobiquo_iso8601_encode($timet)
 {
     global $user;
     
-    $timezone = ($user->timezone)/3600;
-    $t = gmdate("Ymd\TH:i:s", $timet + $user->timezone + $user->dst);
-    
-    if($timezone >= 0){
-        $timezone = sprintf("%02d", $timezone);         
-        $timezone = '+'.$timezone;
-    }
-    else{
-        $timezone = $timezone * (-1);
-        $timezone = sprintf("%02d",$timezone);
-        $timezone = '-'.$timezone;
-    }
-    $t = $t.$timezone.':00';
-    
-    return $t;
+    return $user->format_date($timet);
 }
 
 
@@ -239,9 +323,11 @@ function get_user_id_by_name($username)
         return false;
     }
     
+    $username_clean = $db->sql_escape(utf8_clean_string($username));
+    
     $sql = 'SELECT user_id
             FROM ' . USERS_TABLE . "
-            WHERE username = '$username'";
+            WHERE username_clean = '$username_clean'";
     $result = $db->sql_query($sql);
     $user_id = $db->sql_fetchfield('user_id');
     $db->sql_freeresult($result);
@@ -309,14 +395,16 @@ function cut_quote($str, $keep_size)
 
 function video_bbcode_format($type, $url)
 {
+    $url = trim($url);
+    
     switch (strtolower($type)) {
         case 'youtube':
-            if (preg_match('#^\s*http://(www\.)?youtube\.com/watch\?v=(\w+)\s*$#', $url, $matches)) {
-                $key = $matches['2'];
+            if (preg_match('#^(http://)?((www|m)\.)?(youtube\.com/(watch\?.*?v=|v/)|youtu\.be/)([-\w]+)#', $url, $matches)) {
+                $key = $matches['6'];
                 $image = '[img]http://i1.ytimg.com/vi/'.$key.'/hqdefault.jpg[/img]';
                 $url_code = '[url='.$url.']YouTube Video[/url]';
                 $message = $image.$url_code;
-            } else if (preg_match('/^\w+$/', $url)) {
+            } else if (preg_match('/^[-\w]+$/', $url)) {
                 $key = $url;
                 $url = 'http://www.youtube.com/watch?v='.$key;
                 $image = '[img]http://i1.ytimg.com/vi/'.$key.'/hqdefault.jpg[/img]';
@@ -327,7 +415,7 @@ function video_bbcode_format($type, $url)
             }
             break;
         case 'video':
-            if (preg_match('#^\s*http(s)?://#', $url)) {
+            if (preg_match('#^http(s)?://#', $url)) {
                 $message = '[url='.$url.']Video[/url]';
             } else {
                 $message = '';
@@ -335,7 +423,7 @@ function video_bbcode_format($type, $url)
             break;
         case 'gvideo':
         case 'googlevideo':
-            if (preg_match('#^\s*http://video.google.com/(googleplayer.swf|videoplay)?docid=-#', $url)) {
+            if (preg_match('#^http://video.google.com/(googleplayer.swf|videoplay)?docid=-#', $url)) {
                 $message = '[url='.$url.']Google Video[/url]';
             } else if (preg_match('/^-?(\d+)/', $url, $matches)) {
                 $message = '[url=http://video.google.com/videoplay?docid=-'.$matches['1'].']Google Video[/url]';
@@ -376,4 +464,175 @@ function check_forum_password($forum_id)
     }
     
     return true;
+}
+
+function get_participated_user_avatars($tids)
+{
+    global $db, $topic_users, $user_avatar;
+    
+    $topic_users = array();
+    $user_avatar = array();
+    if (!empty($tids))
+    {
+        $posters = array();
+        foreach($tids as $tid)
+        {
+            $sql = 'SELECT poster_id, count(post_id) as num FROM ' . POSTS_TABLE . '
+                    WHERE topic_id=' . $tid . '
+                    GROUP BY poster_id
+                    ORDER BY num DESC';
+            $result = $db->sql_query_limit($sql, 10);
+            while ($row = $db->sql_fetchrow($result))
+            {
+                $posters[$row['poster_id']] = $row['num'];
+                $topic_users[$tid][] = $row['poster_id'];
+            }
+            $db->sql_freeresult($result);
+        }
+        
+        if (!empty($posters))
+        {
+            $user_avatar = get_user_avatars(array_keys($posters));
+        }
+    }
+}
+
+function get_user_avatars($users, $is_username = false)
+{
+    global $db;
+    
+    if (empty($users)) return array();
+    
+    if (!is_array($users)) $users = array($users);
+    
+    if($is_username)
+        foreach($users as $key => $username)
+            $users[$key] = $db->sql_escape(utf8_clean_string($username));
+    
+    $sql = 'SELECT user_id, username, user_avatar, user_avatar_type 
+            FROM ' . USERS_TABLE . '
+            WHERE ' . $db->sql_in_set($is_username ? 'username_clean' : 'user_id', $users);
+    $result = $db->sql_query($sql);
+    $user_avatar = array();
+    $user_key = $is_username ? 'username' : 'user_id';
+    while ($row = $db->sql_fetchrow($result))
+    {
+        $user_avatar[$row[$user_key]] = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
+    }
+    $db->sql_freeresult($result);
+    
+    return $user_avatar;
+}
+
+function xmlresptrue()
+{
+    $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(true, 'boolean'),
+        'result_text'   => new xmlrpcval('', 'base64')
+    ), 'struct');
+    
+    return new xmlrpcresp($result);
+}
+
+function check_error_status(&$str)
+{
+    global $user, $request_method;
+    
+    switch ($request_method) {
+        case 'thank_post':
+            if (strpos($str, $user->lang['THANKS_INFO_GIVE']) !== false) {
+                $str = '';
+                return true;
+            } elseif (strpos($str, $user->lang['GLOBAL_INCORRECT_THANKS']) !== false) {
+                $str = $user->lang['GLOBAL_INCORRECT_THANKS'];
+                return false;
+            } elseif (strpos($str, $user->lang['INCORRECT_THANKS']) !== false) {
+                $str = $user->lang['INCORRECT_THANKS'];
+                return false;
+            } else {
+                return false;
+            }
+            
+        case 'm_stick_topic':
+            if (strpos($str, $user->lang['TOPIC_TYPE_CHANGED']) === false)
+                return false;
+            else {
+                $str = $user->lang['TOPIC_TYPE_CHANGED'];
+                return true;
+            }
+        case 'm_close_topic':
+            if (strpos($str, $user->lang['TOPIC_LOCKED_SUCCESS']) === false && strpos($str, $user->lang['TOPIC_UNLOCKED_SUCCESS']) === false)
+                return false;
+            elseif (strpos($str, $user->lang['TOPIC_LOCKED_SUCCESS']) !== false) {
+                $str = $user->lang['TOPIC_LOCKED_SUCCESS'];
+                return true;
+            } else {
+                $str = $user->lang['TOPIC_UNLOCKED_SUCCESS'];
+                return true;
+            }
+        case 'm_delete_topic':
+            if (strpos($str, $user->lang['TOPIC_DELETED_SUCCESS']) === false)
+                return false;
+            else {
+                $str = $user->lang['TOPIC_DELETED_SUCCESS'];
+                return true;
+            }
+        case 'm_delete_post':
+            if (strpos($str, $user->lang['POST_DELETED_SUCCESS']) === false && strpos($str, $user->lang['TOPIC_DELETED_SUCCESS']) === false)
+                return false;
+            elseif (strpos($str, $user->lang['POST_DELETED_SUCCESS']) !== false) {
+                $str = $user->lang['POST_DELETED_SUCCESS'];
+                return true;
+            } else {
+                $str = $user->lang['TOPIC_DELETED_SUCCESS'];
+                return true;
+            }
+        case 'm_move_topic':
+            if (strpos($str, $user->lang['TOPIC_MOVED_SUCCESS']) === false)
+                return false;
+            else {
+                $str = $user->lang['TOPIC_MOVED_SUCCESS'];
+                return true;
+            }
+        case 'm_move_post':
+            if (strpos($str, $user->lang['TOPIC_SPLIT_SUCCESS']) === false && strpos($str, $user->lang['POSTS_MERGED_SUCCESS']) === false)
+                return false;
+            elseif (strpos($str, $user->lang['TOPIC_SPLIT_SUCCESS']) !== false) {
+                $str = $user->lang['TOPIC_SPLIT_SUCCESS'];
+                return true;
+            } else {
+                $str = $user->lang['POSTS_MERGED_SUCCESS'];
+                return true;
+            }
+        case 'm_merge_topic':
+            if (strpos($str, $user->lang['POSTS_MERGED_SUCCESS']) === false)
+                return false;
+            else {
+                $str = $user->lang['POSTS_MERGED_SUCCESS'];
+                return true;
+            }
+        case 'm_approve_topic':
+            if (strpos($str, $user->lang['TOPIC_APPROVED_SUCCESS']) === false)
+                return false;
+            else {
+                $str = $user->lang['TOPIC_APPROVED_SUCCESS'];
+                return true;
+            }
+        case 'm_approve_post':
+            if (strpos($str, $user->lang['POST_APPROVED_SUCCESS']) === false)
+                return false;
+            else {
+                $str = $user->lang['POST_APPROVED_SUCCESS'];
+                return true;
+            }
+        case 'm_ban_user':
+            if (strpos($str, $user->lang['BAN_UPDATE_SUCCESSFUL']) === false)
+                return false;
+            else {
+                $str = $user->lang['BAN_UPDATE_SUCCESSFUL'];
+                return true;
+            }
+    }
+    
+    return false;
 }

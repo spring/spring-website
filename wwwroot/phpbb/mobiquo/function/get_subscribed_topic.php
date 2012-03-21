@@ -1,22 +1,24 @@
 <?php
 /**
 *
-* @copyright (c) 2009 Quoord Systems Limited
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2009, 2010, 2011 Quoord Systems Limited
+* @license http://opensource.org/licenses/gpl-2.0.php GNU Public License (GPLv2)
 *
 */
 
 defined('IN_MOBIQUO') or exit;
 
-function get_subscribed_topic_func()
+function get_subscribed_topic_func($xmlrpc_params)
 {
     global $config, $db, $user, $auth, $mobiquo_config;
     
-    // Only registered users can go beyond this point
-    if (!$user->data['is_registered'])
-    {
-        return get_error(9);
-    }
+    $user->setup('ucp');
+    
+    $params = php_xmlrpc_decode($xmlrpc_params);
+    
+    list($start, $limit) = process_page($params[0], $params[1]);
+    
+    if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
     
     $topic_list = array();
     if ($config['allow_topic_notify'])
@@ -35,33 +37,33 @@ function get_subscribed_topic_func()
                             u.user_avatar,
                             u.user_avatar_type',
             'FROM'      => array(
-                TOPICS_WATCH_TABLE  => 'tw',
-                TOPICS_TABLE        => 't',
-                USERS_TABLE         => 'u',
+                TOPICS_WATCH_TABLE => 'tw',
+            ),
+            
+            'LEFT_JOIN' => array(
+                array('FROM' => array(TOPICS_TABLE => 't'), 'ON' => 't.topic_id = tw.topic_id'),
+                array('FROM' => array(FORUMS_TABLE => 'f'), 'ON' => 't.forum_id = f.forum_id'),
+                array('FROM' => array(USERS_TABLE => 'u'), 'ON' => 't.topic_last_poster_id = u.user_id'),
             ),
 
             'WHERE' => 'tw.user_id = ' . $user->data['user_id'] . '
-                AND t.topic_id = tw.topic_id
-                AND u.user_id = t.topic_last_poster_id
                 AND ' . $db->sql_in_set('t.forum_id', $forbidden_forum_ary, true, true),
             'ORDER_BY'  => 't.topic_last_post_time DESC'
         );
         
-        $sql_array['LEFT_JOIN'] = array();
-        $sql_array['LEFT_JOIN'][] = array('FROM' => array(FORUMS_TABLE => 'f'), 'ON' => 't.forum_id = f.forum_id');
         
-        if ($config['allow_bookmarks'])
-        {
-            $sql_array['SELECT'] .= ', bm.topic_id as bookmarked';
-            $sql_array['LEFT_JOIN'][] = array(
-                'FROM'  => array(BOOKMARKS_TABLE => 'bm'),
-                'ON'    => 'bm.user_id = ' . $user->data['user_id'] . ' AND t.topic_id = bm.topic_id'
-            );
-        }
+        // count the number
+        $sql_array_count = $sql_array;
+        $sql_array_count['SELECT'] = 'count(*) as num_topics';
+        $sql_array_count['ORDER_BY'] = '';
+        $sql = $db->sql_build_query('SELECT', $sql_array_count);
+        $result = $db->sql_query($sql);
+        $topics_count = (int) $db->sql_fetchfield('num_topics');
+        $db->sql_freeresult($result);
         
         
         $sql = $db->sql_build_query('SELECT', $sql_array);
-        $result = $db->sql_query_limit($sql, 20);
+        $result = $db->sql_query_limit($sql, $limit, $start);
         
         $topic_list = array();
         while ($row = $db->sql_fetchrow($result))
@@ -82,12 +84,23 @@ function get_subscribed_topic_func()
             topic_status($row, $replies, $unread_topic, $folder_img, $folder_alt, $topic_type);
             
             $short_content = get_short_content($row['topic_last_post_id']);
-            $topic_tracking = get_complete_topic_tracking($forum_id, $topic_id);
-            $new_post = $topic_tracking[$topic_id] < $row['topic_last_post_time'] ? true : false;
+            if ($forum_id) {
+                $topic_tracking = get_complete_topic_tracking($forum_id, $topic_id);
+                $new_post = $topic_tracking[$topic_id] < $row['topic_last_post_time'] ? true : false;
+            } else {
+                $new_post = false;
+            }
             $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
             
             $allow_change_type = ($auth->acl_get('m_', $forum_id) || ($user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster'])) ? true : false;
-
+            
+            if (empty($forum_id))
+            {
+                $user->setup('viewforum');
+                $forum_id = 0;
+                $row['forum_name'] = $user->lang['ANNOUNCEMENTS'];
+            }
+            
             $xmlrpc_topic = new xmlrpcval(array(
                 'forum_id'          => new xmlrpcval($forum_id),
                 'forum_name'        => new xmlrpcval(html_entity_decode($row['forum_name']), 'base64'),
@@ -101,12 +114,15 @@ function get_subscribed_topic_func()
                 'new_post'          => new xmlrpcval($new_post, 'boolean'),
                 'post_time'         => new xmlrpcval(mobiquo_iso8601_encode($row['topic_last_post_time']), 'dateTime.iso8601'),
                 'icon_url'          => new xmlrpcval($user_avatar_url),
+                
                 'can_delete'        => new xmlrpcval($auth->acl_get('m_delete', $forum_id), 'boolean'),
-                'can_bookmark'      => new xmlrpcval($user->data['is_registered'] && $config['allow_bookmarks'], 'boolean'),
-                'isbookmarked'      => new xmlrpcval($row['bookmarked'] ? true : false, 'boolean'),
+                'can_move'          => new xmlrpcval($auth->acl_get('m_move', $forum_id), 'boolean'),
                 'can_close'         => new xmlrpcval($auth->acl_get('m_lock', $forum_id) || ($auth->acl_get('f_user_lock', $forum_id) && $user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster']), 'boolean'),
                 'is_closed'         => new xmlrpcval($row['topic_status'] == ITEM_LOCKED, 'boolean'),
-                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id) && $row['topic_type'] != POST_STICKY, 'boolean'),
+                'can_stick'         => new xmlrpcval($allow_change_type && $auth->acl_get('f_sticky', $forum_id), 'boolean'),
+                'is_sticky'         => new xmlrpcval($row['topic_type'] == POST_STICKY, 'boolean'),
+                'can_approve'       => new xmlrpcval($auth->acl_get('m_approve', $forum_id) && !$row['topic_approved'], 'boolean'),
+                'is_approved'       => new xmlrpcval($row['topic_approved'] ? true : false, 'boolean'),
             ), 'struct');
     
             $topic_list[] = $xmlrpc_topic;
@@ -114,11 +130,9 @@ function get_subscribed_topic_func()
         $db->sql_freeresult($result);
     }
     
-    $topic_num = count($topic_list);
-    
     $response = new xmlrpcval(
         array(
-            'total_topic_num' => new xmlrpcval($topic_num, 'int'),
+            'total_topic_num' => new xmlrpcval($topics_count, 'int'),
             'topics'    => new xmlrpcval($topic_list, 'array'),
         ),
         'struct'
