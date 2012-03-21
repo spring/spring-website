@@ -1,0 +1,18 @@
+version = pb30_1.9.0
+is_open = 1
+guest_okay = 1
+php_extension = php
+reg_url = ucp.php?mode=register
+hide_forum_id =
+shorten_quote = 0
+check_dnsbl = 1
+api_level = 3
+keep_log = 1
+
+disable_search = 0
+disable_latest = 0
+disable_pm = 0
+
+report_post = 1
+report_pm = 1
+mark_forum = 1
