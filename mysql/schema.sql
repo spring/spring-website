@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.18, for Linux (i686)
+-- MySQL dump 10.13  Distrib 5.5.24, for Linux (i686)
 --
 -- Host: localhost    Database: spring
 -- ------------------------------------------------------
--- Server version	5.5.18
+-- Server version	5.5.24
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -778,7 +778,7 @@ DROP TABLE IF EXISTS `phpbb3_bbcodes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phpbb3_bbcodes` (
-  `bbcode_id` tinyint(3) NOT NULL DEFAULT '0',
+  `bbcode_id` smallint(4) unsigned NOT NULL DEFAULT '0',
   `bbcode_tag` varchar(16) COLLATE utf8_bin NOT NULL DEFAULT '',
   `bbcode_helpline` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1131,6 +1131,28 @@ CREATE TABLE `phpbb3_log` (
   KEY `reportee_id` (`reportee_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_login_attempts`
+--
+
+DROP TABLE IF EXISTS `phpbb3_login_attempts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_login_attempts` (
+  `attempt_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_browser` varchar(150) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_forwarded_for` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `attempt_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  `username_clean` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '0',
+  KEY `att_ip` (`attempt_ip`,`attempt_time`),
+  KEY `att_for` (`attempt_forwarded_for`,`attempt_time`),
+  KEY `att_time` (`attempt_time`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1832,7 +1854,8 @@ CREATE TABLE `phpbb3_topics_track` (
   `forum_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `mark_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`topic_id`),
-  KEY `forum_id` (`forum_id`)
+  KEY `forum_id` (`forum_id`),
+  KEY `topic_id` (`topic_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
