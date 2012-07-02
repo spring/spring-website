@@ -128,7 +128,7 @@ $lang = array_merge($lang, array(
 	'DB_ERR_QUERY_FIRST_TABLE'	=> 'Error while executing <var>query_first</var>, %s (“%s”).',
 	'DB_ERR_SELECT'				=> 'Error while running <code>SELECT</code> query.',
 	'DB_HOST'					=> 'Database server hostname or DSN',
-	'DB_HOST_EXPLAIN'			=> 'DSN stands for Data Source Name and is relevant only for ODBC installs.',
+	'DB_HOST_EXPLAIN'			=> 'DSN stands for Data Source Name and is relevant only for ODBC installs. On PostgreSQL, use localhost to connect to the local server via UNIX domain socket and 127.0.0.1 to connect via TCP. For SQLite, enter the full path to your database file.',
 	'DB_NAME'					=> 'Database name',
 	'DB_PASSWORD'				=> 'Database password',
 	'DB_PORT'					=> 'Database server port',
@@ -147,10 +147,11 @@ $lang = array_merge($lang, array(
 	'DLL_MBSTRING'				=> 'Multi-byte character support',
 	'DLL_MSSQL'					=> 'MSSQL Server 2000+',
 	'DLL_MSSQL_ODBC'			=> 'MSSQL Server 2000+ via ODBC',
+	'DLL_MSSQLNATIVE'			=> 'MSSQL Server 2005+ [ Native ]',
 	'DLL_MYSQL'					=> 'MySQL',
 	'DLL_MYSQLI'				=> 'MySQL with MySQLi Extension',
 	'DLL_ORACLE'				=> 'Oracle',
-	'DLL_POSTGRES'				=> 'PostgreSQL 7.x/8.x',
+	'DLL_POSTGRES'				=> 'PostgreSQL',
 	'DLL_SQLITE'				=> 'SQLite',
 	'DLL_XML'					=> 'XML support [ Jabber ]',
 	'DLL_ZLIB'					=> 'zlib compression support [ gz, .tar.gz, .zip ]',
@@ -214,6 +215,7 @@ $lang = array_merge($lang, array(
 		<li>SQLite 2.8.2+</li>
 		<li>Firebird 2.1+</li>
 		<li>MS SQL Server 2000 or above (directly or via ODBC)</li>
+		<li>MS SQL Server 2005 or above (native)</li>
 		<li>Oracle</li>
 	</ul>
 
@@ -230,6 +232,7 @@ $lang = array_merge($lang, array(
 	'INST_ERR'					=> 'Installation error',
 	'INST_ERR_DB_CONNECT'		=> 'Could not connect to the database, see error message below.',
 	'INST_ERR_DB_FORUM_PATH'	=> 'The database file specified is within your board directory tree. You should put this file in a non web-accessible location.',
+	'INST_ERR_DB_INVALID_PREFIX'=> 'The prefix you entered is invalid. It must start with a letter and must only contain letters, numbers and underscores.',
 	'INST_ERR_DB_NO_ERROR'		=> 'No error message given.',
 	'INST_ERR_DB_NO_MYSQLI'		=> 'The version of MySQL installed on this machine is incompatible with the “MySQL with MySQLi Extension” option you have selected. Please try the “MySQL” option instead.',
 	'INST_ERR_DB_NO_SQLITE'		=> 'The version of the SQLite extension you have installed is too old, it must be upgraded to at least 2.8.2.',
@@ -300,7 +303,7 @@ $lang = array_merge($lang, array(
 	'PHP_SETTINGS'					=> 'PHP version and settings',
 	'PHP_SETTINGS_EXPLAIN'			=> '<strong>Required</strong> - You must be running at least version 4.3.3 of PHP in order to install phpBB. If <var>safe mode</var> is displayed below your PHP installation is running in that mode. This will impose limitations on remote administration and similar features.',
 	'PHP_URL_FOPEN_SUPPORT'			=> 'PHP setting <var>allow_url_fopen</var> is enabled',
-	'PHP_URL_FOPEN_SUPPORT_EXPLAIN'	=> '<strong>Optional</strong> - This setting is optional, however certain phpBB functions like off-site avatars will not work properly without it. ',
+	'PHP_URL_FOPEN_SUPPORT_EXPLAIN'	=> '<strong>Optional</strong> - This setting is optional, however certain phpBB functions like off-site avatars will not work properly without it.',
 	'PHP_VERSION_REQD'				=> 'PHP version >= 4.3.3',
 	'POST_ID'						=> 'Post ID',
 	'PREFIX_FOUND'					=> 'A scan of your tables has shown a valid installation using <strong>%s</strong> as table prefix.',
@@ -350,6 +353,7 @@ $lang = array_merge($lang, array(
 
 	'TABLES_MISSING'			=> 'Could not find these tables<br />» <strong>%s</strong>.',
 	'TABLE_PREFIX'				=> 'Prefix for tables in database',
+	'TABLE_PREFIX_EXPLAIN'		=> 'The prefix must start with a letter and must only contain letters, numbers and underscores.',
 	'TABLE_PREFIX_SAME'			=> 'The table prefix needs to be the one used by the software you are converting from.<br />» Specified table prefix was %s.',
 	'TESTS_PASSED'				=> 'Tests passed',
 	'TESTS_FAILED'				=> 'Tests failed',
@@ -368,7 +372,7 @@ $lang = array_merge($lang, array(
 
 // Updater
 $lang = array_merge($lang, array(
-	'ALL_FILES_UP_TO_DATE'		=> 'All files are up to date with the latest phpBB version. You should now <a href="../ucp.php?mode=login&amp;redirect=adm/index.php%3Fi=send_statistics%26mode=send_statistics">login to your board</a> and check if everything is working fine. Do not forget to delete, rename or move your install directory! Please send us updated information about your server and board configurations from the <a href="../ucp.php?mode=login&amp;redirect=adm/index.php%3Fi=send_statistics%26mode=send_statistics">Send statistics</a> module in your ACP.',
+	'ALL_FILES_UP_TO_DATE'		=> 'All files are up to date with the latest phpBB version. You should now <a href="../ucp.php?mode=login">login to your board</a> and check if everything is working fine. Do not forget to delete, rename or move your install directory! Please send us updated information about your server and board configurations from the <a href="../ucp.php?mode=login&amp;redirect=adm/index.php%3Fi=send_statistics%26mode=send_statistics">Send statistics</a> module in your ACP.',
 	'ARCHIVE_FILE'				=> 'Source file within archive',
 
 	'BACK'				=> 'Back',
@@ -492,7 +496,7 @@ $lang = array_merge($lang, array(
 	'SHOW_DIFF_NEW'				=> 'Show file contents',
 	'SHOW_DIFF_NEW_CONFLICT'	=> 'Show differences',
 	'SHOW_DIFF_NOT_MODIFIED'	=> 'Show differences',
-	'SOME_QUERIES_FAILED'		=> 'Some queries failed, the statements and errors are listing below.',
+	'SOME_QUERIES_FAILED'		=> 'Some queries failed, the statements and errors are listed below.',
 	'SQL'						=> 'SQL',
 	'SQL_FAILURE_EXPLAIN'		=> 'This is probably nothing to worry about, update will continue. Should this fail to complete you may need to seek help at our support forums. See <a href="../docs/README.html">README</a> for details on how to obtain advice.',
 	'STAGE_FILE_CHECK'			=> 'Check files',
@@ -557,6 +561,7 @@ $lang = array_merge($lang, array(
 	'UPDATING_DATA'					=> 'Updating data',
 	'UPDATING_TO_LATEST_STABLE'		=> 'Updating database to latest stable release',
 	'UPDATED_VERSION'				=> 'Updated version',
+	'UPGRADE_INSTRUCTIONS'			=> 'A new feature release <strong>%1$s</strong> is available. Please read <a href="%2$s" title="%2$s"><strong>the release announcement</strong></a> to learn about what it has to offer, and how to upgrade.',
 	'UPLOAD_METHOD'					=> 'Upload method',
 
 	'UPDATE_DB_SUCCESS'				=> 'Database update was successful.',
@@ -583,16 +588,6 @@ $lang = array_merge($lang, array(
 	'CONFIG_SITENAME'				=> 'yourdomain.com',
 
 	'DEFAULT_INSTALL_POST'			=> 'This is an example post in your phpBB3 installation. Everything seems to be working. You may delete this post if you like and continue to set up your board. During the installation process your first category and your first forum are assigned an appropriate set of permissions for the predefined usergroups administrators, bots, global moderators, guests, registered users and registered COPPA users. If you also choose to delete your first category and your first forum, do not forget to assign permissions for all these usergroups for all new categories and forums you create. It is recommended to rename your first category and your first forum and copy permissions from these while creating new categories and forums. Have fun!',
-
-	'EXT_GROUP_ARCHIVES'			=> 'Archives',
-	'EXT_GROUP_DOCUMENTS'			=> 'Documents',
-	'EXT_GROUP_DOWNLOADABLE_FILES'	=> 'Downloadable Files',
-	'EXT_GROUP_FLASH_FILES'			=> 'Flash Files',
-	'EXT_GROUP_IMAGES'				=> 'Images',
-	'EXT_GROUP_PLAIN_TEXT'			=> 'Plain Text',
-	'EXT_GROUP_QUICKTIME_MEDIA'		=> 'Quicktime Media',
-	'EXT_GROUP_REAL_MEDIA'			=> 'Real Media',
-	'EXT_GROUP_WINDOWS_MEDIA'		=> 'Windows Media',
 
 	'FORUMS_FIRST_CATEGORY'			=> 'Your first category',
 	'FORUMS_TEST_FORUM_DESC'		=> 'Description of your first forum.',

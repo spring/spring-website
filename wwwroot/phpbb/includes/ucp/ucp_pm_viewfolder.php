@@ -65,6 +65,12 @@ function view_folder($id, $mode, $folder_id, $folder)
 
 		$mark_options = array('mark_important', 'delete_marked');
 
+		// Minimise edits
+		if (!$auth->acl_get('u_pm_delete') && $key = array_search('delete_marked', $mark_options))
+		{
+			unset($mark_options[$key]);
+		}
+
 		$s_mark_options = '';
 		foreach ($mark_options as $mark_option)
 		{
@@ -163,11 +169,14 @@ function view_folder($id, $mode, $folder_id, $folder)
 					'PM_IMG'			=> ($row_indicator) ? $user->img('pm_' . $row_indicator, '') : '',
 					'ATTACH_ICON_IMG'	=> ($auth->acl_get('u_pm_download') && $row['message_attachment'] && $config['allow_pm_attach']) ? $user->img('icon_topic_attach', $user->lang['TOTAL_ATTACHMENTS']) : '',
 
+					'S_PM_UNREAD'		=> ($row['pm_unread']) ? true : false,
 					'S_PM_DELETED'		=> ($row['pm_deleted']) ? true : false,
+					'S_PM_REPORTED'		=> (isset($row['report_id'])) ? true : false,
 					'S_AUTHOR_DELETED'	=> ($row['author_id'] == ANONYMOUS) ? true : false,
 
 					'U_VIEW_PM'			=> ($row['pm_deleted']) ? '' : $view_message_url,
 					'U_REMOVE_PM'		=> ($row['pm_deleted']) ? $remove_message_url : '',
+					'U_MCP_REPORT'		=> (isset($row['report_id'])) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=pm_reports&amp;mode=pm_report_details&amp;r=' . $row['report_id']) : '',
 					'RECIPIENTS'		=> ($folder_id == PRIVMSGS_OUTBOX || $folder_id == PRIVMSGS_SENTBOX) ? implode(', ', $address_list[$message_id]) : '')
 				);
 			}
@@ -177,6 +186,7 @@ function view_folder($id, $mode, $folder_id, $folder)
 				'S_SHOW_RECIPIENTS'		=> ($folder_id == PRIVMSGS_OUTBOX || $folder_id == PRIVMSGS_SENTBOX) ? true : false,
 				'S_SHOW_COLOUR_LEGEND'	=> true,
 
+				'REPORTED_IMG'			=> $user->img('icon_topic_reported', 'PM_REPORTED'),
 				'S_PM_ICONS'			=> ($config['enable_pm_icons']) ? true : false)
 			);
 		}
@@ -194,13 +204,15 @@ function view_folder($id, $mode, $folder_id, $folder)
 		else
 		{
 			// Build Recipient List if in outbox/sentbox
-			$address = $data = array();
+
+			$address_temp = $address = $data = array();
 
 			if ($folder_id == PRIVMSGS_OUTBOX || $folder_id == PRIVMSGS_SENTBOX)
 			{
 				foreach ($folder_info['rowset'] as $message_id => $row)
 				{
-					$address[$message_id] = rebuild_header(array('to' => $row['to_address'], 'bcc' => $row['bcc_address']));
+					$address_temp[$message_id] = rebuild_header(array('to' => $row['to_address'], 'bcc' => $row['bcc_address']));
+					$address[$message_id] = array();
 				}
 			}
 
@@ -224,8 +236,12 @@ function view_folder($id, $mode, $folder_id, $folder)
 				$_types = array('u', 'g');
 				foreach ($_types as $ug_type)
 				{
-					if (isset($address[$message_id][$ug_type]) && sizeof($address[$message_id][$ug_type]))
+					if (isset($address_temp[$message_id][$ug_type]) && sizeof($address_temp[$message_id][$ug_type]))
 					{
+						if (!isset($address[$message_id][$ug_type]))
+						{
+							$address[$message_id][$ug_type] = array();
+						}
 						if ($ug_type == 'u')
 						{
 							$sql = 'SELECT user_id as id, username as name
@@ -238,21 +254,31 @@ function view_folder($id, $mode, $folder_id, $folder)
 								FROM ' . GROUPS_TABLE . '
 								WHERE ';
 						}
-						$sql .= $db->sql_in_set(($ug_type == 'u') ? 'user_id' : 'group_id', array_map('intval', array_keys($address[$message_id][$ug_type])));
+						$sql .= $db->sql_in_set(($ug_type == 'u') ? 'user_id' : 'group_id', array_map('intval', array_keys($address_temp[$message_id][$ug_type])));
 
 						$result = $db->sql_query($sql);
 
 						while ($info_row = $db->sql_fetchrow($result))
 						{
-							$address[$message_id][$ug_type][$address[$message_id][$ug_type][$info_row['id']]][] = $info_row['name'];
-							unset($address[$message_id][$ug_type][$info_row['id']]);
+							$address[$message_id][$ug_type][$address_temp[$message_id][$ug_type][$info_row['id']]][] = $info_row['name'];
+							unset($address_temp[$message_id][$ug_type][$info_row['id']]);
 						}
 						$db->sql_freeresult($result);
 					}
 				}
 
-				decode_message($message_row['message_text'], $message_row['bbcode_uid']);
+				// There is the chance that all recipients of the message got deleted. To avoid creating 
+				// exports without recipients, we add a bogus "undisclosed recipient".
+				if (!(isset($address[$message_id]['g']) && sizeof($address[$message_id]['g'])) && 
+				    !(isset($address[$message_id]['u']) && sizeof($address[$message_id]['u'])))
+				{
+					$address[$message_id]['u'] = array();
+					$address[$message_id]['u']['to'] = array();
+					$address[$message_id]['u']['to'][] = $user->lang['UNDISCLOSED_RECIPIENT'];
+				}
 
+				decode_message($message_row['message_text'], $message_row['bbcode_uid']);
+				
 				$data[] = array(
 					'subject'	=> censor_text($row['message_subject']),
 					'sender'	=> $row['username'],
@@ -480,7 +506,7 @@ function get_pm_from($folder_id, $folder, $user_id)
 		$sql_sort_order = $sort_by_sql[$sort_key] . ' ' . $direction;
 	}
 
-	$sql = 'SELECT t.*, p.root_level, p.message_time, p.message_subject, p.icon_id, p.to_address, p.message_attachment, p.bcc_address, u.username, u.username_clean, u.user_colour
+	$sql = 'SELECT t.*, p.root_level, p.message_time, p.message_subject, p.icon_id, p.to_address, p.message_attachment, p.bcc_address, u.username, u.username_clean, u.user_colour, p.message_reported
 		FROM ' . PRIVMSGS_TO_TABLE . ' t, ' . PRIVMSGS_TABLE . ' p, ' . USERS_TABLE . " u
 		WHERE t.user_id = $user_id
 			AND p.author_id = u.user_id
@@ -490,12 +516,33 @@ function get_pm_from($folder_id, $folder, $user_id)
 		ORDER BY $sql_sort_order";
 	$result = $db->sql_query_limit($sql, $sql_limit, $sql_start);
 
+	$pm_reported = array();
 	while ($row = $db->sql_fetchrow($result))
 	{
 		$rowset[$row['msg_id']] = $row;
 		$pm_list[] = $row['msg_id'];
+		if ($row['message_reported'])
+		{
+			$pm_reported[] = $row['msg_id'];
+		}
 	}
 	$db->sql_freeresult($result);
+
+	// Fetch the report_ids, if there are any reported pms.
+	if (!empty($pm_reported) && $auth->acl_getf_global('m_report'))
+	{
+		$sql = 'SELECT pm_id, report_id
+			FROM ' . REPORTS_TABLE . '
+			WHERE report_closed = 0
+				AND ' . $db->sql_in_set('pm_id', $pm_reported);
+		$result = $db->sql_query($sql);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$rowset[$row['pm_id']]['report_id'] = $row['report_id'];
+		}
+		$db->sql_freeresult($result);
+	}
 
 	$pm_list = ($store_reverse) ? array_reverse($pm_list) : $pm_list;
 

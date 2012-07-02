@@ -186,10 +186,17 @@ $sql_array = array(
 	'FROM'		=> array(FORUMS_TABLE => 'f'),
 );
 
+// Firebird handles two columns of the same name a little differently, this
+// addresses that by forcing the forum_id to come from the forums table.
+if ($db->sql_layer === 'firebird')
+{
+	$sql_array['SELECT'] = 'f.forum_id AS forum_id, ' . $sql_array['SELECT'];
+}
+
 // The FROM-Order is quite important here, else t.* columns can not be correctly bound.
 if ($post_id)
 {
-	$sql_array['SELECT'] .= ', p.post_approved';
+	$sql_array['SELECT'] .= ', p.post_approved, p.post_time, p.post_id';
 	$sql_array['FROM'][POSTS_TABLE] = 'p';
 }
 
@@ -307,12 +314,19 @@ if ($post_id)
 	}
 	else
 	{
-		$sql = 'SELECT COUNT(p1.post_id) AS prev_posts
-			FROM ' . POSTS_TABLE . ' p1, ' . POSTS_TABLE . " p2
-			WHERE p1.topic_id = {$topic_data['topic_id']}
-				AND p2.post_id = {$post_id}
-				" . ((!$auth->acl_get('m_approve', $forum_id)) ? 'AND p1.post_approved = 1' : '') . '
-				AND ' . (($sort_dir == 'd') ? 'p1.post_time >= p2.post_time' : 'p1.post_time <= p2.post_time');
+		$sql = 'SELECT COUNT(p.post_id) AS prev_posts
+			FROM ' . POSTS_TABLE . " p
+			WHERE p.topic_id = {$topic_data['topic_id']}
+				" . ((!$auth->acl_get('m_approve', $forum_id)) ? 'AND p.post_approved = 1' : '');
+
+		if ($sort_dir == 'd')
+		{
+			$sql .= " AND (p.post_time > {$topic_data['post_time']} OR (p.post_time = {$topic_data['post_time']} AND p.post_id >= {$topic_data['post_id']}))";
+		}
+		else
+		{
+			$sql .= " AND (p.post_time < {$topic_data['post_time']} OR (p.post_time = {$topic_data['post_time']} AND p.post_id <= {$topic_data['post_id']}))";
+		}
 
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
@@ -470,7 +484,7 @@ if ($start < 0 || $start >= $total_posts)
 }
 
 // General Viewtopic URL for return links
-$viewtopic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start" . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
+$viewtopic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : '') . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
 
 // Are we watching this topic?
 $s_watching_topic = array(
@@ -479,9 +493,10 @@ $s_watching_topic = array(
 	'is_watching'	=> false,
 );
 
-if (($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'])
+if (($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'])
 {
-	watch_topic_forum('topic', $s_watching_topic, $user->data['user_id'], $forum_id, $topic_id, $topic_data['notify_status'], $start);
+	$notify_status = (isset($topic_data['notify_status'])) ? $topic_data['notify_status'] : null;
+	watch_topic_forum('topic', $s_watching_topic, $user->data['user_id'], $forum_id, $topic_id, $notify_status, $start, $topic_data['topic_title']);
 
 	// Reset forum notification if forum notify is set
 	if ($config['allow_forum_notify'] && $auth->acl_get('f_subscribe', $forum_id))
@@ -578,6 +593,24 @@ $server_path = (!$view) ? $phpbb_root_path : generate_board_url() . '/';
 // Replace naughty words in title
 $topic_data['topic_title'] = censor_text($topic_data['topic_title']);
 
+$s_search_hidden_fields = array(
+	't' => $topic_id,
+	'sf' => 'msgonly',
+);
+if ($_SID)
+{
+	$s_search_hidden_fields['sid'] = $_SID;
+}
+
+if (!empty($_EXTRA_URL))
+{
+	foreach ($_EXTRA_URL as $url_param)
+	{
+		$url_param = explode('=', $url_param, 2);
+		$s_hidden_fields[$url_param[0]] = $url_param[1];
+	}
+}
+
 // Send vars to template
 $template->assign_vars(array(
 	'FORUM_ID' 		=> $forum_id,
@@ -594,7 +627,7 @@ $template->assign_vars(array(
 	'PAGINATION' 	=> $pagination,
 	'PAGE_NUMBER' 	=> on_page($total_posts, $config['posts_per_page'], $start),
 	'TOTAL_POSTS'	=> ($total_posts == 1) ? $user->lang['VIEW_TOPIC_POST'] : sprintf($user->lang['VIEW_TOPIC_POSTS'], $total_posts),
-	'U_MCP' 		=> ($auth->acl_get('m_', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "i=main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id&amp;start=$start" . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : ''), true, $user->session_id) : '',
+	'U_MCP' 		=> ($auth->acl_get('m_', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "i=main&amp;mode=topic_view&amp;f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . ((strlen($u_sort_param)) ? "&amp;$u_sort_param" : ''), true, $user->session_id) : '',
 	'MODERATORS'	=> (isset($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id])) ? implode(', ', $forum_moderators[$forum_id]) : '',
 
 	'POST_IMG' 			=> ($topic_data['forum_status'] == ITEM_LOCKED) ? $user->img('button_topic_locked', 'FORUM_LOCKED') : $user->img('button_topic_new', 'POST_NEW_TOPIC'),
@@ -623,13 +656,14 @@ $template->assign_vars(array(
 	'S_SELECT_SORT_KEY' 	=> $s_sort_key,
 	'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
 	'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
-	'S_TOPIC_ACTION' 		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start"),
+	'S_TOPIC_ACTION' 		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start")),
 	'S_TOPIC_MOD' 			=> ($topic_mod != '') ? '<select name="action" id="quick-mod-select">' . $topic_mod . '</select>' : '',
-	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url)), true, $user->session_id),
+	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start") . "&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url)), true, $user->session_id),
 
 	'S_VIEWTOPIC'			=> true,
 	'S_DISPLAY_SEARCHBOX'	=> ($auth->acl_get('u_search') && $auth->acl_get('f_search', $forum_id) && $config['load_search']) ? true : false,
-	'S_SEARCHBOX_ACTION'	=> append_sid("{$phpbb_root_path}search.$phpEx", 't=' . $topic_id),
+	'S_SEARCHBOX_ACTION'	=> append_sid("{$phpbb_root_path}search.$phpEx"),
+	'S_SEARCH_LOCAL_HIDDEN_FIELDS'	=> build_hidden_fields($s_search_hidden_fields),
 
 	'S_DISPLAY_POST_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($auth->acl_get('f_post', $forum_id) || $user->data['user_id'] == ANONYMOUS)) ? true : false,
 	'S_DISPLAY_REPLY_INFO'	=> ($topic_data['forum_type'] == FORUM_POST && ($auth->acl_get('f_reply', $forum_id) || $user->data['user_id'] == ANONYMOUS)) ? true : false,
@@ -715,7 +749,7 @@ if (!empty($topic_data['poll_start']))
 
 		if (!sizeof($voted_id) || sizeof($voted_id) > $topic_data['poll_max_options'] || in_array(VOTE_CONVERTED, $cur_voted_id) || !check_form_key('posting'))
 		{
-			$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start");
+			$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start"));
 
 			meta_refresh(5, $redirect_url);
 			if (!sizeof($voted_id))
@@ -798,7 +832,7 @@ if (!empty($topic_data['poll_start']))
 		//, topic_last_post_time = ' . time() . " -- for bumping topics with new votes, ignore for now
 		$db->sql_query($sql);
 
-		$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start");
+		$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id" . (($start == 0) ? '' : "&amp;start=$start"));
 
 		meta_refresh(5, $redirect_url);
 		trigger_error($user->lang['VOTE_SUBMITTED'] . '<br /><br />' . sprintf($user->lang['RETURN_TOPIC'], '<a href="' . $redirect_url . '">', '</a>'));
@@ -978,7 +1012,7 @@ $sql = $db->sql_build_query('SELECT', array(
 
 $result = $db->sql_query($sql);
 
-$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+$now = phpbb_gmgetdate(time() + $user->timezone + $user->dst);
 
 // Posts are stored in the $rowset array while $attach_list, $user_cache
 // and the global bbcode_bitfield are built
@@ -1139,7 +1173,7 @@ while ($row = $db->sql_fetchrow($result))
 
 			get_user_rank($row['user_rank'], $row['user_posts'], $user_cache[$poster_id]['rank_title'], $user_cache[$poster_id]['rank_image'], $user_cache[$poster_id]['rank_image_src']);
 
-			if (!empty($row['user_allow_viewemail']) || $auth->acl_get('a_email'))
+			if ((!empty($row['user_allow_viewemail']) && $auth->acl_get('u_sendemail')) || $auth->acl_get('a_email'))
 			{
 				$user_cache[$poster_id]['email'] = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=email&amp;u=$poster_id") : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $row['user_email']);
 			}
@@ -1150,7 +1184,7 @@ while ($row = $db->sql_fetchrow($result))
 
 			if (!empty($row['user_icq']))
 			{
-				$user_cache[$poster_id]['icq'] = 'http://www.icq.com/people/webmsg.php?to=' . $row['user_icq'];
+				$user_cache[$poster_id]['icq'] = 'http://www.icq.com/people/' . urlencode($row['user_icq']) . '/';
 				$user_cache[$poster_id]['icq_status_img'] = '<img src="http://web.icq.com/whitepages/online?icq=' . $row['user_icq'] . '&amp;img=5" width="18" height="18" alt="" />';
 			}
 			else
@@ -1506,7 +1540,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'EDIT_REASON'		=> $row['post_edit_reason'],
 		'BUMPED_MESSAGE'	=> $l_bumped_by,
 
-		'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'NEW_POST') : $user->img('icon_post_target', 'POST'),
+		'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'UNREAD_POST') : $user->img('icon_post_target', 'POST'),
 		'POST_ICON_IMG'			=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['img'] : '',
 		'POST_ICON_IMG_WIDTH'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['width'] : '',
 		'POST_ICON_IMG_HEIGHT'	=> ($topic_data['enable_icons'] && !empty($row['icon_id'])) ? $icons[$row['icon_id']]['height'] : '',
@@ -1540,6 +1574,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'U_WARN'			=> ($auth->acl_get('m_warn') && $poster_id != $user->data['user_id'] && $poster_id != ANONYMOUS) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=warn&amp;mode=warn_post&amp;f=' . $forum_id . '&amp;p=' . $row['post_id'], true, $user->session_id) : '',
 
 		'POST_ID'			=> $row['post_id'],
+		'POST_NUMBER'		=> $i + $start + 1,
 		'POSTER_ID'			=> $poster_id,
 
 		'S_HAS_ATTACHMENTS'	=> (!empty($attachments[$row['post_id']])) ? true : false,
@@ -1678,8 +1713,12 @@ else if (!$all_marked_read)
 }
 
 // let's set up quick_reply
-$s_allowed_reply = ((!$auth->acl_get('f_reply', $forum_id) || ($topic_data['forum_status'] == ITEM_LOCKED) || ($topic_data['topic_status'] == ITEM_LOCKED)) && !$auth->acl_get('m_edit', $forum_id)) ? false : true;
-$s_quick_reply = $s_allowed_reply && $user->data['is_registered'] && $config['allow_quick_reply'] && ($topic_data['forum_flags'] & FORUM_FLAG_QUICK_REPLY);
+$s_quick_reply = false;
+if ($user->data['is_registered'] && $config['allow_quick_reply'] && ($topic_data['forum_flags'] & FORUM_FLAG_QUICK_REPLY) && $auth->acl_get('f_reply', $forum_id))
+{
+	// Quick reply enabled forum
+	$s_quick_reply = (($topic_data['forum_status'] == ITEM_UNLOCKED && $topic_data['topic_status'] == ITEM_UNLOCKED) || $auth->acl_get('m_edit', $forum_id)) ? true : false;
+}
 
 if ($s_can_vote || $s_quick_reply)
 {
@@ -1690,7 +1729,7 @@ if ($s_can_vote || $s_quick_reply)
 		$s_attach_sig	= $config['allow_sig'] && $user->optionget('attachsig') && $auth->acl_get('f_sigs', $forum_id) && $auth->acl_get('u_sig');
 		$s_smilies		= $config['allow_smilies'] && $user->optionget('smilies') && $auth->acl_get('f_smilies', $forum_id);
 		$s_bbcode		= $config['allow_bbcode'] && $user->optionget('bbcode') && $auth->acl_get('f_bbcode', $forum_id);
-		$s_notify		= $config['allow_topic_notify'] && $user->data['user_notify'];
+		$s_notify		= $config['allow_topic_notify'] && ($user->data['user_notify'] || $s_watching_topic['is_watching']);
 
 		$qr_hidden_fields = array(
 			'topic_cur_post_id'		=> (int) $topic_data['topic_last_post_id'],
@@ -1724,6 +1763,12 @@ if ($s_can_vote || $s_quick_reply)
 if (empty($_REQUEST['f']))
 {
 	$_REQUEST['f'] = $forum_id;
+}
+
+// We need to do the same with the topic_id. See #53025.
+if (empty($_REQUEST['t']) && !empty($topic_id))
+{
+	$_REQUEST['t'] = $topic_id;
 }
 
 // Output the page

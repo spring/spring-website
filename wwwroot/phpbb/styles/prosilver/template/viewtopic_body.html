@@ -4,13 +4,10 @@
 <!-- NOTE: remove the style="display: none" when you want to have the forum description on the topic body -->
 <!-- IF FORUM_DESC --><div style="display: none !important;">{FORUM_DESC}<br /></div><!-- ENDIF -->
 
-<!-- IF MODERATORS or U_MCP -->
-	<p>
-		<!-- IF MODERATORS -->
-			<strong><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->:</strong> {MODERATORS}
-		<!-- ENDIF -->
-
-	</p>
+<!-- IF MODERATORS -->
+<p>
+	<strong><!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->:</strong> {MODERATORS}
+</p>
 <!-- ENDIF -->
 
 <!-- IF S_FORUM_RULES -->
@@ -38,12 +35,11 @@
 
 	<!-- IF S_DISPLAY_SEARCHBOX -->
 		<div class="search-box">
-			<form method="post" id="topic-search" action="{S_SEARCHBOX_ACTION}">
+			<form method="get" id="topic-search" action="{S_SEARCHBOX_ACTION}">
 			<fieldset>
 				<input class="inputbox search tiny"  type="text" name="keywords" id="search_keywords" size="20" value="{L_SEARCH_TOPIC}" onclick="if(this.value=='{LA_SEARCH_TOPIC}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_TOPIC}';" />
 				<input class="button2" type="submit" value="{L_SEARCH}" />
-				<input type="hidden" value="{TOPIC_ID}" name="t" />
-				<input type="hidden" value="msgonly" name="sf" />
+				{S_SEARCH_LOCAL_HIDDEN_FIELDS}
 			</fieldset>
 			</form>
 		</div>

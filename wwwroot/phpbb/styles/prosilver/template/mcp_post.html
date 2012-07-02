@@ -54,6 +54,8 @@
 		</ul>
 		<!-- ENDIF -->
 
+		<span class="right-box" id="expand"><a href="#post_details" onclick="viewableArea(getElementById('post_details'), true); var rev_text = getElementById('expand').getElementsByTagName('a').item(0).firstChild; if (rev_text.data == '{LA_EXPAND_VIEW}'){rev_text.data = '{LA_COLLAPSE_VIEW}'; } else if (rev_text.data == '{LA_COLLAPSE_VIEW}'){rev_text.data = '{LA_EXPAND_VIEW}'}; return false;">{L_EXPAND_VIEW}</a></span>
+
 		<h3><a href="{U_VIEW_POST}">{POST_SUBJECT}</a></h3>
 		<!-- IF S_PM -->
 		<p class="author">
@@ -70,8 +72,9 @@
 			<form method="post" id="mcp_approve" action="{U_APPROVE_ACTION}">
 
 			<p class="rules">
-				<input class="button1" type="submit" value="{L_APPROVE}" name="action[approve]" /> &nbsp;
-				<input class="button2" type="submit" value="{L_DISAPPROVE}" name="action[disapprove]" />
+				<input class="button2" type="submit" value="{L_DISAPPROVE}" name="action[disapprove]" /> &nbsp;
+				<input class="button1" type="submit" value="{L_APPROVE}" name="action[approve]" />
+				<!-- IF not S_FIRST_POST --><input type="hidden" name="mode" value="unapproved_posts" /><!-- ENDIF -->
 				<input type="hidden" name="post_id_list[]" value="{POST_ID}" />
 				{S_FORM_TOKEN}
 			</p>
@@ -84,7 +87,7 @@
 			</p>
 		<!-- ENDIF -->
 
-		<div class="content">
+		<div class="content" id="post_details">
 			{POST_PREVIEW}
 		</div>
 
@@ -103,7 +106,7 @@
 
 		<!-- IF S_MCP_REPORT and S_CAN_VIEWIP -->
 			<hr />
-			<div>{L_THIS_POST_IP}: <!-- IF U_WHOIS -->
+			<div><!-- IF S_PM -->{L_THIS_PM_IP}<!-- ELSE -->{L_THIS_POST_IP}<!-- ENDIF -->: <!-- IF U_WHOIS -->
 				<a href="{U_WHOIS}"><!-- IF POST_IPADDR -->{POST_IPADDR}<!-- ELSE -->{POST_IP}<!-- ENDIF --></a> (<!-- IF POST_IPADDR -->{POST_IP}<!-- ELSE --><a href="{U_LOOKUP_IP}">{L_LOOKUP_IP}</a><!-- ENDIF -->)
 			<!-- ELSE -->
 				<!-- IF POST_IPADDR -->{POST_IPADDR} ({POST_IP})<!-- ELSE -->{POST_IP}<!-- IF U_LOOKUP_IP --> (<a href="{U_LOOKUP_IP}">{L_LOOKUP_IP}</a>)<!-- ENDIF --><!-- ENDIF -->

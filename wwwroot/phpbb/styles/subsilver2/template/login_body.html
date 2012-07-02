@@ -72,6 +72,7 @@
 	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
 
+{S_LOGIN_REDIRECT}
 <tr>
 	<td class="cat" <!-- IF not S_ADMIN_AUTH or S_CONFIRM_CODE -->colspan="2"<!-- ENDIF --> align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="btnmain" value="{L_LOGIN}" tabindex="5" /></td>
 </tr>
@@ -87,5 +88,22 @@
 <br clear="all" />
 
 <div align="{S_CONTENT_FLOW_END}"><!-- INCLUDE jumpbox.html --></div>
+
+<script type="text/javascript">
+// <![CDATA[
+	(function()
+	{
+		var elements = document.getElementsByName("<!-- IF S_ADMIN_AUTH -->{PASSWORD_CREDENTIAL}<!-- ELSE -->{USERNAME_CREDENTIAL}<!-- ENDIF -->");
+		for (var i = 0; i < elements.length; ++i)
+		{
+			if (elements[i].tagName.toLowerCase() == 'input')
+			{
+				elements[i].focus();
+				break;
+			}
+		}
+	})();
+// ]]>
+</script>
 
 <!-- INCLUDE overall_footer.html -->

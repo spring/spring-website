@@ -176,7 +176,7 @@ function mcp_post_details($id, $mode, $action)
 	}
 
 	$template->assign_vars(array(
-		'U_MCP_ACTION'			=> "$url&amp;i=main&amp;quickmod=1", // Use this for mode paramaters
+		'U_MCP_ACTION'			=> "$url&amp;i=main&amp;quickmod=1&amp;mode=post_details", // Use this for mode paramaters
 		'U_POST_ACTION'			=> "$url&amp;i=$id&amp;mode=post_details", // Use this for action parameters
 		'U_APPROVE_ACTION'		=> append_sid("{$phpbb_root_path}mcp.$phpEx", "i=queue&amp;p=$post_id&amp;f={$post_info['forum_id']}"),
 
@@ -200,7 +200,7 @@ function mcp_post_details($id, $mode, $action)
 		'U_VIEW_POST'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $post_info['forum_id'] . '&amp;p=' . $post_info['post_id'] . '#p' . $post_info['post_id']),
 		'U_VIEW_TOPIC'			=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $post_info['forum_id'] . '&amp;t=' . $post_info['topic_id']),
 
-		'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'NEW_POST') : $user->img('icon_post_target', 'POST'),
+		'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'UNREAD_POST') : $user->img('icon_post_target', 'POST'),
 
 		'RETURN_TOPIC'			=> sprintf($user->lang['RETURN_TOPIC'], '<a href="' . append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f={$post_info['forum_id']}&amp;p=$post_id") . "#p$post_id\">", '</a>'),
 		'RETURN_FORUM'			=> sprintf($user->lang['RETURN_FORUM'], '<a href="' . append_sid("{$phpbb_root_path}viewforum.$phpEx", "f={$post_info['forum_id']}&amp;start={$start}") . '">', '</a>'),
@@ -227,10 +227,10 @@ function mcp_post_details($id, $mode, $action)
 
 	// Get User Notes
 	$log_data = array();
-	$log_count = 0;
+	$log_count = false;
 	view_log('user', $log_data, $log_count, $config['posts_per_page'], 0, 0, 0, $post_info['user_id']);
 
-	if ($log_count)
+	if (!empty($log_data))
 	{
 		$template->assign_var('S_USER_NOTES', true);
 
@@ -246,7 +246,7 @@ function mcp_post_details($id, $mode, $action)
 	}
 
 	// Get Reports
-	if ($auth->acl_get('m_', $post_info['forum_id']))
+	if ($auth->acl_get('m_report', $post_info['forum_id']))
 	{
 		$sql = 'SELECT r.*, re.*, u.user_id, u.username
 			FROM ' . REPORTS_TABLE . ' r, ' . USERS_TABLE . ' u, ' . REPORTS_REASONS_TABLE . " re

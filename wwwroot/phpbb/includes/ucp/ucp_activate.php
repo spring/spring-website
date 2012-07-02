@@ -98,6 +98,13 @@ class ucp_activate
 				SET user_actkey = ''
 				WHERE user_id = {$user_row['user_id']}";
 			$db->sql_query($sql);
+
+			// Create the correct logs
+			add_log('user', $user_row['user_id'], 'LOG_USER_ACTIVE_USER');
+			if ($auth->acl_get('a_user'))
+			{
+				add_log('admin', 'LOG_USER_ACTIVE', $user_row['username']);
+			}
 		}
 
 		if ($config['require_activation'] == USER_ACTIVATION_ADMIN && !$update_password)
@@ -110,10 +117,7 @@ class ucp_activate
 
 			$messenger->to($user_row['user_email'], $user_row['username']);
 
-			$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-			$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-			$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-			$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+			$messenger->anti_abuse_headers($config, $user);
 
 			$messenger->assign_vars(array(
 				'USERNAME'	=> htmlspecialchars_decode($user_row['username']))

@@ -1,10 +1,5 @@
-/* proSilver Print Style Sheet
--------------------------------------------------
-	Author: subBlue  ( http://www.subBlue.com/ )
-	Version: 25 August 2004
-
-	Copyright 2004 phpBB Group
--------------------------------------------------*/
+/* Print Style Sheet
+---------------------------------------- */
 
 
 /* Lots still TODO here! */
@@ -60,7 +55,7 @@ h3 { font-size: 14pt; margin-top: 1em; }
 }
 
 /* CSS2 Print tip from: http://www.alistapart.com/articles/goingtoprint/ */
-.postbody a:link, .postbody a:visited, .postbody a:active, .postbody a:hover {
+.postbody a:link, .postbody a:visited, .postbody a:hover, .postbody a:active {
 	text-decoration: underline;
 	padding: 0.1em 0.2em;
 	margin: -0.1em -0.2em;
@@ -140,3 +135,5 @@ div.spacer { clear: both; }
 
 /* Accessibility tweaks: Mozilla.org */
 .skip_link { display: none; }
+
+dl.codebox dt { display: none; }

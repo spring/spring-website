@@ -25,7 +25,7 @@ if (!defined('IN_PHPBB'))
 */
 
 // phpBB Version
-define('PHPBB_VERSION', '3.0.6');
+define('PHPBB_VERSION', '3.0.10');
 
 // QA-related
 // define('PHPBB_QA', 1);
@@ -68,6 +68,10 @@ define('LOGIN_ERROR_ACTIVE', 12);
 define('LOGIN_ERROR_ATTEMPTS', 13);
 define('LOGIN_ERROR_EXTERNAL_AUTH', 14);
 define('LOGIN_ERROR_PASSWORD_CONVERT', 15);
+
+// Maximum login attempts
+// The value is arbitrary, but it has to fit into the user_login_attempts field.
+define('LOGIN_ATTEMPTS_MAX', 100);
 
 // Group settings
 define('GROUP_OPEN', 0);
@@ -117,6 +121,10 @@ define('NOTIFY_EMAIL', 0);
 define('NOTIFY_IM', 1);
 define('NOTIFY_BOTH', 2);
 
+// Notify status
+define('NOTIFY_YES', 0);
+define('NOTIFY_NO', 1);
+
 // Email Priority Settings
 define('MAIL_LOW_PRIORITY', 4);
 define('MAIL_NORMAL_PRIORITY', 3);
@@ -164,6 +172,9 @@ define('BBCODE_UID_LEN', 8);
 
 // Number of core BBCodes
 define('NUM_CORE_BBCODES', 12);
+
+// BBCode hard limit
+define('BBCODE_LIMIT', 1511);
 
 // Smiley hard limit
 define('SMILEY_LIMIT', 1000);
@@ -225,6 +236,7 @@ define('GROUPS_TABLE',				$table_prefix . 'groups');
 define('ICONS_TABLE',				$table_prefix . 'icons');
 define('LANG_TABLE',				$table_prefix . 'lang');
 define('LOG_TABLE',					$table_prefix . 'log');
+define('LOGIN_ATTEMPT_TABLE',		$table_prefix . 'login_attempts');
 define('MODERATOR_CACHE_TABLE',		$table_prefix . 'moderator_cache');
 define('MODULES_TABLE',				$table_prefix . 'modules');
 define('POLL_OPTIONS_TABLE',		$table_prefix . 'poll_options');

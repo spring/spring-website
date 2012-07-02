@@ -149,7 +149,18 @@ class custom_profile
 
 			case FIELD_DROPDOWN:
 				$field_value = (int) $field_value;
-			
+
+				// retrieve option lang data if necessary
+				if (!isset($this->options_lang[$field_data['field_id']]) || !isset($this->options_lang[$field_data['field_id']][$field_data['lang_id']]) || !sizeof($this->options_lang[$file_data['field_id']][$field_data['lang_id']]))
+				{
+					$this->get_option_lang($field_data['field_id'], $field_data['lang_id'], FIELD_DROPDOWN, false);
+				}
+
+				if (!isset($this->options_lang[$field_data['field_id']][$field_data['lang_id']][$field_value]))
+				{
+					return 'FIELD_INVALID_VALUE';
+				}
+
 				if ($field_value == $field_data['field_novalue'] && $field_data['field_required'])
 				{
 					return 'FIELD_REQUIRED';
@@ -158,11 +169,11 @@ class custom_profile
 
 			case FIELD_STRING:
 			case FIELD_TEXT:
-				if (empty($field_value) && !$field_data['field_required'])
+				if (trim($field_value) === '' && !$field_data['field_required'])
 				{
 					return false;
 				}
-				else if (empty($field_value) && $field_data['field_required'])
+				else if (trim($field_value) === '' && $field_data['field_required'])
 				{
 					return 'FIELD_REQUIRED';
 				}
@@ -302,6 +313,7 @@ class custom_profile
 				switch ($cp_result)
 				{
 					case 'FIELD_INVALID_DATE':
+					case 'FIELD_INVALID_VALUE':
 					case 'FIELD_REQUIRED':
 						$error = sprintf($user->lang[$cp_result], $row['lang_name']);
 					break;
@@ -366,6 +378,7 @@ class custom_profile
 			case 'sqlite':
 			case 'mssql':
 			case 'mssql_odbc':
+			case 'mssqlnative':
 				$right_delim = ']';
 				$left_delim = '[';
 			break;
@@ -542,8 +555,9 @@ class custom_profile
 				else if ($day && $month && $year)
 				{
 					global $user;
-					// d/m/y 00:00 GMT isn't necessarily on the same d/m/y in the user's timezone, so add the timezone seconds
-					return $user->format_date(gmmktime(0, 0, 0, $month, $day, $year) + $user->timezone + $user->dst, $user->lang['DATE_FORMAT'], true);
+					// Date should display as the same date for every user regardless of timezone, so remove offset
+					// to compensate for the offset added by user::format_date()
+					return $user->format_date(gmmktime(0, 0, 0, $month, $day, $year) - ($user->timezone + $user->dst), $user->lang['DATE_FORMAT'], true);
 				}
 
 				return $value;
@@ -875,6 +889,11 @@ class custom_profile
 			{
 				$now = getdate();
 				$row['field_default_value'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year']);
+			}
+			else if ($row['field_default_value'] === '' && $row['field_type'] == FIELD_INT)
+			{
+				// We cannot insert an empty string into an integer column.
+				$row['field_default_value'] = NULL;
 			}
 
 			$cp_data['pf_' . $row['field_ident']] = (in_array($row['field_type'], array(FIELD_TEXT, FIELD_STRING))) ? $row['lang_default_value'] : $row['field_default_value'];

@@ -74,7 +74,7 @@ function init_ldap()
 
 	if ($search === false)
 	{
-		return $user->lang['LDAP_NO_SERVER_CONNECTION'];
+		return $user->lang['LDAP_SEARCH_FAILED'];
 	}
 
 	$result = @ldap_get_entries($ldap, $search);
@@ -335,7 +335,7 @@ function acp_ldap(&$new)
 	</dl>
 	<dl>
 		<dt><label for="ldap_password">' . $user->lang['LDAP_PASSWORD'] . ':</label><br /><span>' . $user->lang['LDAP_PASSWORD_EXPLAIN'] . '</span></dt>
-		<dd><input type="password" id="ldap_password" size="40" name="config[ldap_password]" value="' . $new['ldap_password'] . '" /></dd>
+		<dd><input type="password" id="ldap_password" size="40" name="config[ldap_password]" value="' . $new['ldap_password'] . '" autocomplete="off" /></dd>
 	</dl>
 	';
 

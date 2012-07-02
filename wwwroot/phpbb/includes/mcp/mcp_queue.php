@@ -196,7 +196,7 @@ class mcp_queue
 					'U_VIEW_POST'			=> $post_url,
 					'U_VIEW_TOPIC'			=> $topic_url,
 
-					'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'NEW_POST') : $user->img('icon_post_target', 'POST'),
+					'MINI_POST_IMG'			=> ($post_unread) ? $user->img('icon_post_target_unread', 'UNREAD_POST') : $user->img('icon_post_target', 'POST'),
 
 					'RETURN_QUEUE'			=> sprintf($user->lang['RETURN_QUEUE'], '<a href="' . append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue' . (($topic_id) ? '&amp;mode=unapproved_topics' : '&amp;mode=unapproved_posts')) . "&amp;start=$start\">", '</a>'),
 					'RETURN_POST'			=> sprintf($user->lang['RETURN_POST'], '<a href="' . $post_url . '">', '</a>'),
@@ -216,6 +216,7 @@ class mcp_queue
 					'POST_IP'				=> $post_info['poster_ip'],
 					'POST_IPADDR'			=> ($auth->acl_get('m_info', $post_info['forum_id']) && request_var('lookup', '')) ? @gethostbyaddr($post_info['poster_ip']) : '',
 					'POST_ID'				=> $post_info['post_id'],
+					'S_FIRST_POST'			=> ($post_info['topic_first_post_id'] == $post_id),
 
 					'U_LOOKUP_IP'			=> ($auth->acl_get('m_info', $post_info['forum_id'])) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=approve_details&amp;f=' . $post_info['forum_id'] . '&amp;p=' . $post_id . '&amp;lookup=' . $post_info['poster_ip']) . '#ip' : '',
 				));
@@ -428,7 +429,7 @@ class mcp_queue
 
 						'POST_ID'		=> $row['post_id'],
 						'FORUM_NAME'	=> (!$global_topic) ? $forum_names[$row['forum_id']] : $user->lang['GLOBAL_ANNOUNCEMENT'],
-						'POST_SUBJECT'	=> $row['post_subject'],
+						'POST_SUBJECT'	=> ($row['post_subject'] != '') ? $row['post_subject'] : $user->lang['NO_SUBJECT'],
 						'TOPIC_TITLE'	=> $row['topic_title'],
 						'POST_TIME'		=> $user->format_date($row['post_time']))
 					);
@@ -691,16 +692,19 @@ function approve_post($post_id_list, $id, $mode)
 	{
 		$show_notify = false;
 
-		foreach ($post_info as $post_data)
+		if ($config['email_enable'] || $config['jab_enable'])
 		{
-			if ($post_data['poster_id'] == ANONYMOUS)
+			foreach ($post_info as $post_data)
 			{
-				continue;
-			}
-			else
-			{
-				$show_notify = true;
-				break;
+				if ($post_data['poster_id'] == ANONYMOUS)
+				{
+					continue;
+				}
+				else
+				{
+					$show_notify = true;
+					break;
+				}
 			}
 		}
 
@@ -775,6 +779,8 @@ function disapprove_post($post_id_list, $id, $mode)
 		if (!$row || (!$reason && strtolower($row['reason_title']) == 'other'))
 		{
 			$additional_msg = $user->lang['NO_REASON_DISAPPROVAL'];
+			unset($_REQUEST['confirm_key']);
+			unset($_POST['confirm_key']);
 			unset($_POST['confirm']);
 		}
 		else

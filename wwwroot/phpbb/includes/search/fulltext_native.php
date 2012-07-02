@@ -83,7 +83,9 @@ class fulltext_native extends search_backend
 	{
 		global $db, $user, $config;
 
-		$keywords = trim($this->cleanup($keywords, '+-|()*'));
+		$tokens = '+-|()*';
+
+		$keywords = trim($this->cleanup($keywords, $tokens));
 
 		// allow word|word|word without brackets
 		if ((strpos($keywords, ' ') === false) && (strpos($keywords, '|') !== false) && (strpos($keywords, '(') === false))
@@ -113,6 +115,15 @@ class fulltext_native extends search_backend
 					case '-':
 					case ' ':
 						$keywords[$i] = '|';
+					break;
+					case '*':
+						if ($i === 0 || ($keywords[$i - 1] !== '*' && strcspn($keywords[$i - 1], $tokens) === 0))
+						{
+							if ($i === $n - 1 || ($keywords[$i + 1] !== '*' && strcspn($keywords[$i + 1], $tokens) === 0))
+							{
+								$keywords = substr($keywords, 0, $i) . substr($keywords, $i + 1);
+							}
+						}
 					break;
 				}
 			}
@@ -202,7 +213,8 @@ class fulltext_native extends search_backend
 		{
 			$sql = 'SELECT word_id, word_text, word_common
 				FROM ' . SEARCH_WORDLIST_TABLE . '
-				WHERE ' . $db->sql_in_set('word_text', $exact_words);
+				WHERE ' . $db->sql_in_set('word_text', $exact_words) . '
+				ORDER BY word_count ASC';
 			$result = $db->sql_query($sql);
 
 			// store an array of words and ids, remove common words
@@ -377,10 +389,6 @@ class fulltext_native extends search_backend
 			return false;
 		}
 
-		sort($this->must_contain_ids);
-		sort($this->must_not_contain_ids);
-		sort($this->must_exclude_one_ids);
-
 		if (!empty($this->search_query))
 		{
 			return true;
@@ -420,11 +428,19 @@ class fulltext_native extends search_backend
 			return false;
 		}
 
+		$must_contain_ids = $this->must_contain_ids;
+		$must_not_contain_ids = $this->must_not_contain_ids;
+		$must_exclude_one_ids = $this->must_exclude_one_ids;
+
+		sort($must_contain_ids);
+		sort($must_not_contain_ids);
+		sort($must_exclude_one_ids);
+
 		// generate a search_key from all the options to identify the results
 		$search_key = md5(implode('#', array(
-			serialize($this->must_contain_ids),
-			serialize($this->must_not_contain_ids),
-			serialize($this->must_exclude_one_ids),
+			serialize($must_contain_ids),
+			serialize($must_not_contain_ids),
+			serialize($must_exclude_one_ids),
 			$type,
 			$fields,
 			$terms,
@@ -739,7 +755,7 @@ class fulltext_native extends search_backend
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$id_ary[] = $row[(($type == 'posts') ? 'post_id' : 'topic_id')];
+			$id_ary[] = (int) $row[(($type == 'posts') ? 'post_id' : 'topic_id')];
 		}
 		$db->sql_freeresult($result);
 
@@ -981,7 +997,7 @@ class fulltext_native extends search_backend
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$id_ary[] = $row[$field];
+			$id_ary[] = (int) $row[$field];
 		}
 		$db->sql_freeresult($result);
 

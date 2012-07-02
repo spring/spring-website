@@ -919,6 +919,9 @@ class acp_language
 				$default_lang_id = (int) $db->sql_fetchfield('lang_id');
 				$db->sql_freeresult($result);
 
+				// We want to notify the admin that custom profile fields need to be updated for the new language.
+				$notify_cpf_update = false;
+
 				// From the mysql documentation:
 				// Prior to MySQL 4.0.14, the target table of the INSERT statement cannot appear in the FROM clause of the SELECT part of the query. This limitation is lifted in 4.0.14.
 				// Due to this we stay on the safe side if we do the insertion "the manual way"
@@ -932,6 +935,7 @@ class acp_language
 				{
 					$row['lang_id'] = $lang_id;
 					$db->sql_query('INSERT INTO ' . PROFILE_LANG_TABLE . ' ' . $db->sql_build_array('INSERT', $row));
+					$notify_cpf_update = true;
 				}
 				$db->sql_freeresult($result);
 
@@ -944,12 +948,15 @@ class acp_language
 				{
 					$row['lang_id'] = $lang_id;
 					$db->sql_query('INSERT INTO ' . PROFILE_FIELDS_LANG_TABLE . ' ' . $db->sql_build_array('INSERT', $row));
+					$notify_cpf_update = true;
 				}
 				$db->sql_freeresult($result);
 
 				add_log('admin', 'LOG_LANGUAGE_PACK_INSTALLED', $lang_pack['name']);
 
-				trigger_error(sprintf($user->lang['LANGUAGE_PACK_INSTALLED'], $lang_pack['name']) . adm_back_link($this->u_action));
+				$message = sprintf($user->lang['LANGUAGE_PACK_INSTALLED'], $lang_pack['name']);
+				$message .= ($notify_cpf_update) ? '<br /><br />' . $user->lang['LANGUAGE_PACK_CPF_UPDATE'] : '';
+				trigger_error($message . adm_back_link($this->u_action));
 
 			break;
 
@@ -1055,14 +1062,14 @@ class acp_language
 				$iso_src .= htmlspecialchars_decode($row['lang_author']);
 				$compress->add_data($iso_src, 'language/' . $row['lang_iso'] . '/iso.txt');
 
-				// index.html files
-				$compress->add_data('', 'language/' . $row['lang_iso'] . '/index.html');
-				$compress->add_data('', 'language/' . $row['lang_iso'] . '/email/index.html');
-				$compress->add_data('', 'language/' . $row['lang_iso'] . '/acp/index.html');
+				// index.htm files
+				$compress->add_data('', 'language/' . $row['lang_iso'] . '/index.htm');
+				$compress->add_data('', 'language/' . $row['lang_iso'] . '/email/index.htm');
+				$compress->add_data('', 'language/' . $row['lang_iso'] . '/acp/index.htm');
 
 				if (sizeof($mod_files))
 				{
-					$compress->add_data('', 'language/' . $row['lang_iso'] . '/mods/index.html');
+					$compress->add_data('', 'language/' . $row['lang_iso'] . '/mods/index.htm');
 				}
 
 				$compress->close();
@@ -1120,7 +1127,12 @@ class acp_language
 		{
 			while (($file = readdir($dp)) !== false)
 			{
-				if ($file[0] != '.' && file_exists("{$phpbb_root_path}language/$file/iso.txt"))
+				if ($file[0] == '.' || !is_dir($phpbb_root_path . 'language/' . $file))
+				{
+					continue;
+				}
+
+				if (file_exists("{$phpbb_root_path}language/$file/iso.txt"))
 				{
 					if (!in_array($file, $installed))
 					{
@@ -1212,7 +1224,7 @@ $lang = array_merge($lang, array(
 ';
 
 		// Language files in language root directory
-		$this->main_files = array("common.$phpEx", "groups.$phpEx", "install.$phpEx", "mcp.$phpEx", "memberlist.$phpEx", "posting.$phpEx", "search.$phpEx", "ucp.$phpEx", "viewforum.$phpEx", "viewtopic.$phpEx", "help_bbcode.$phpEx", "help_faq.$phpEx");
+		$this->main_files = array("captcha_qa.$phpEx", "captcha_recaptcha.$phpEx", "common.$phpEx", "groups.$phpEx", "install.$phpEx", "mcp.$phpEx", "memberlist.$phpEx", "posting.$phpEx", "search.$phpEx", "ucp.$phpEx", "viewforum.$phpEx", "viewtopic.$phpEx", "help_bbcode.$phpEx", "help_faq.$phpEx");
 	}
 
 	/**

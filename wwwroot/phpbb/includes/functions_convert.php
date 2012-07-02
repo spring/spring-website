@@ -205,10 +205,12 @@ function get_group_id($group_name)
 
 /**
 * Generate the email hash stored in the users table
+*
+* Note: Deprecated, calls should directly go to phpbb_email_hash()
 */
 function gen_email_hash($email)
 {
-	return (crc32(strtolower($email)) . strlen($email));
+	return phpbb_email_hash($email);
 }
 
 /**
@@ -1023,6 +1025,9 @@ function set_user_options()
 		'bbcode'		=> array('bit' => 8, 'default' => 1),
 		'smilies'		=> array('bit' => 9, 'default' => 1),
 		'popuppm'		=> array('bit' => 10, 'default' => 0),
+		'sig_bbcode'	=> array('bit' => 15, 'default' => 1),
+		'sig_smilies'	=> array('bit' => 16, 'default' => 1),
+		'sig_links'		=> array('bit' => 17, 'default' => 1),
 	);
 
 	$option_field = 0;
@@ -1232,6 +1237,11 @@ function get_config()
 			$convert->p_master->error($user->lang['FILE_NOT_FOUND'] . ': ' . $filename, __LINE__, __FILE__);
 		}
 
+		if (isset($convert->config_schema['array_name']))
+		{
+			unset($convert->config_schema['array_name']);
+		}
+
 		$convert_config = extract_variables_from_file($filename);
 		if (!empty($convert->config_schema['array_name']))
 		{
@@ -1274,7 +1284,15 @@ function restore_config($schema)
 		}
 		else
 		{
-			$config_value = (isset($convert_config[$src])) ? $convert_config[$src] : '';
+			if ($schema['table_format'] != 'file' || empty($schema['array_name']))
+			{
+				$config_value = (isset($convert_config[$src])) ? $convert_config[$src] : '';
+			}
+			else if (!empty($schema['array_name']))
+			{
+				$src_ary = $schema['array_name'];
+				$config_value = (isset($convert_config[$src_ary][$src])) ? $convert_config[$src_ary][$src] : '';
+			}
 		}
 
 		if ($config_value !== '')
@@ -1629,6 +1647,7 @@ function mass_auth($ug_type, $forum_id, $ug_id, $acl_list, $setting = ACL_NO)
 
 					case 'mssql':
 					case 'sqlite':
+					case 'mssqlnative':
 						$sql = implode(' UNION ALL ', preg_replace('#^(.*?)$#', 'SELECT \1', $sql_subary));
 					break;
 
@@ -1796,6 +1815,7 @@ function add_bots()
 		'Alta Vista [Bot]'			=> array('Scooter/', ''),
 		'Ask Jeeves [Bot]'			=> array('Ask Jeeves', ''),
 		'Baidu [Spider]'			=> array('Baiduspider+(', ''),
+		'Bing [Bot]'				=> array('bingbot/', ''),
 		'Exabot [Bot]'				=> array('Exabot/', ''),
 		'FAST Enterprise [Crawler]'	=> array('FAST Enterprise Crawler', ''),
 		'FAST WebCrawler [Crawler]'	=> array('FAST-WebCrawler/', ''),
@@ -2286,7 +2306,7 @@ function copy_file($src, $trg, $overwrite = false, $die_on_failure = true, $sour
 		}
 	}
 
-	if (!is_writable($path))
+	if (!phpbb_is_writable($path))
 	{
 		@chmod($path, 0777);
 	}
@@ -2321,7 +2341,7 @@ function copy_dir($src, $trg, $copy_subdirs = true, $overwrite = false, $die_on_
 		@chmod($trg_path, 0777);
 	}
 
-	if (!@is_writable($trg_path))
+	if (!phpbb_is_writable($trg_path))
 	{
 		$bad_dirs[] = path($config['script_path']) . $trg;
 	}
@@ -2388,7 +2408,7 @@ function copy_dir($src, $trg, $copy_subdirs = true, $overwrite = false, $die_on_
 				@chmod($trg_path . $dir, 0777);
 			}
 
-			if (!@is_writable($trg_path . $dir))
+			if (!phpbb_is_writable($trg_path . $dir))
 			{
 				$bad_dirs[] = $trg . $dir;
 				$bad_dirs[] = $trg_path . $dir;

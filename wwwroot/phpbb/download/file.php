@@ -31,6 +31,7 @@ else if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'
 
 if (isset($_GET['avatar']))
 {
+	require($phpbb_root_path . 'includes/startup.' . $phpEx);
 	require($phpbb_root_path . 'config.' . $phpEx);
 
 	if (!defined('PHPBB_INSTALLED') || empty($dbms) || empty($acm_type))
@@ -42,6 +43,7 @@ if (isset($_GET['avatar']))
 	require($phpbb_root_path . 'includes/cache.' . $phpEx);
 	require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
 	require($phpbb_root_path . 'includes/constants.' . $phpEx);
+	require($phpbb_root_path . 'includes/functions.' . $phpEx);
 
 	$db = new $sql_db();
 	$cache = new cache();
@@ -57,11 +59,11 @@ if (isset($_GET['avatar']))
 	$browser = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : 'msie 6.0';
 
 	$config = $cache->obtain_config();
-	$filename = $_GET['avatar'];
+	$filename = request_var('avatar', '');
 	$avatar_group = false;
 	$exit = false;
 
-	if ($filename[0] === 'g')
+	if (isset($filename[0]) && $filename[0] === 'g')
 	{
 		$avatar_group = true;
 		$filename = substr($filename, 1);
@@ -70,7 +72,7 @@ if (isset($_GET['avatar']))
 	// '==' is not a bug - . as the first char is as bad as no dot at all
 	if (strpos($filename, '.') == false)
 	{
-		header('HTTP/1.0 403 Forbidden');
+		send_status_line(403, 'Forbidden');
 		$exit = true;
 	}
 
@@ -84,7 +86,7 @@ if (isset($_GET['avatar']))
 	if (!$exit && !in_array($ext, array('png', 'gif', 'jpg', 'jpeg')))
 	{
 		// no way such an avatar could exist. They are not following the rules, stop the show.
-		header("HTTP/1.0 403 Forbidden");
+		send_status_line(403, 'Forbidden');
 		$exit = true;
 	}
 
@@ -94,7 +96,7 @@ if (isset($_GET['avatar']))
 		if (!$filename)
 		{
 			// no way such an avatar could exist. They are not following the rules, stop the show.
-			header("HTTP/1.0 403 Forbidden");
+			send_status_line(403, 'Forbidden');
 		}
 		else
 		{
@@ -118,11 +120,13 @@ $user->setup('viewtopic');
 
 if (!$download_id)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('NO_ATTACHMENT_SELECTED');
 }
 
 if (!$config['allow_attachments'] && !$config['allow_pm_attach'])
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ATTACHMENT_FUNCTIONALITY_DISABLED');
 }
 
@@ -135,11 +139,13 @@ $db->sql_freeresult($result);
 
 if (!$attachment)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
 if ((!$attachment['in_message'] && !$config['allow_attachments']) || ($attachment['in_message'] && !$config['allow_pm_attach']))
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ATTACHMENT_FUNCTIONALITY_DISABLED');
 }
 
@@ -152,6 +158,7 @@ if ($attachment['is_orphan'])
 
 	if (!$own_attachment || ($attachment['in_message'] && !$auth->acl_get('u_pm_download')) || (!$attachment['in_message'] && !$auth->acl_get('u_download')))
 	{
+		send_status_line(404, 'Not Found');
 		trigger_error('ERROR_NO_ATTACHMENT');
 	}
 
@@ -184,6 +191,7 @@ else
 		}
 		else
 		{
+			send_status_line(403, 'Forbidden');
 			trigger_error('SORRY_AUTH_VIEW_ATTACH');
 		}
 	}
@@ -192,7 +200,7 @@ else
 		$row['forum_id'] = false;
 		if (!$auth->acl_get('u_pm_download'))
 		{
-			header('HTTP/1.0 403 Forbidden');
+			send_status_line(403, 'Forbidden');
 			trigger_error('SORRY_AUTH_VIEW_ATTACH');
 		}
 
@@ -215,7 +223,7 @@ else
 
 		if (!$allowed)
 		{
-			header('HTTP/1.0 403 Forbidden');
+			send_status_line(403, 'Forbidden');
 			trigger_error('ERROR_NO_ATTACHMENT');
 		}
 	}
@@ -224,13 +232,14 @@ else
 	$extensions = array();
 	if (!extension_allowed($row['forum_id'], $attachment['extension'], $extensions))
 	{
+		send_status_line(404, 'Forbidden');
 		trigger_error(sprintf($user->lang['EXTENSION_DISABLED_AFTER_POSTING'], $attachment['extension']));
 	}
 }
 
 if (!download_allowed())
 {
-	header('HTTP/1.0 403 Forbidden');
+	send_status_line(403, 'Forbidden');
 	trigger_error($user->lang['LINKAGE_FORBIDDEN']);
 }
 
@@ -246,6 +255,7 @@ $db->sql_freeresult($result);
 
 if (!$attachment)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
@@ -288,6 +298,7 @@ else
 		// This presenting method should no longer be used
 		if (!@is_dir($phpbb_root_path . $config['upload_path']))
 		{
+			send_status_line(500, 'Internal Server Error');
 			trigger_error($user->lang['PHYSICAL_DOWNLOAD_NOT_POSSIBLE']);
 		}
 
@@ -376,7 +387,7 @@ function send_avatar_to_browser($file, $browser)
 	}
 	else
 	{
-		header('HTTP/1.0 404 Not Found');
+		send_status_line(404, 'Not Found');
 	}
 }
 
@@ -412,6 +423,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 
 	if (!@file_exists($filename))
 	{
+		send_status_line(404, 'Not Found');
 		trigger_error($user->lang['ERROR_NO_ATTACHMENT'] . '<br /><br />' . sprintf($user->lang['FILE_NOT_FOUND_404'], $filename));
 	}
 
@@ -438,9 +450,11 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 		// PHP track_errors setting On?
 		if (!empty($php_errormsg))
 		{
+			send_status_line(500, 'Internal Server Error');
 			trigger_error($user->lang['UNABLE_TO_DELIVER_FILE'] . '<br />' . sprintf($user->lang['TRACKED_PHP_ERROR'], $php_errormsg));
 		}
 
+		send_status_line(500, 'Internal Server Error');
 		trigger_error('UNABLE_TO_DELIVER_FILE');
 	}
 
@@ -668,17 +682,9 @@ function set_modified_headers($stamp, $browser)
 	$last_load 	=  isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime(trim($_SERVER['HTTP_IF_MODIFIED_SINCE'])) : false;
 	if ((strpos(strtolower($browser), 'msie 6.0') === false) && (strpos(strtolower($browser), 'msie 8.0') === false))
 	{
-		if ($last_load !== false && $last_load <= $stamp)
+		if ($last_load !== false && $last_load >= $stamp)
 		{
-			if (substr(strtolower(@php_sapi_name()),0,3) === 'cgi')
-			{
-				// in theory, we shouldn't need that due to php doing it. Reality offers a differing opinion, though
-				header('Status: 304 Not Modified', true, 304);
-			}
-			else
-			{
-				header('HTTP/1.0 304 Not Modified', true, 304);
-			}
+			send_status_line(304, 'Not Modified');
 			// seems that we need those too ... browsers
 			header('Pragma: public');
 			header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 31536000));

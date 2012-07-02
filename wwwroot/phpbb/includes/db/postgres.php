@@ -18,6 +18,11 @@ if (!defined('IN_PHPBB'))
 
 include_once($phpbb_root_path . 'includes/db/dbal.' . $phpEx);
 
+if (!class_exists('phpbb_error_collector'))
+{
+	include($phpbb_root_path . 'includes/error_collector.' . $phpEx);
+}
+
 /**
 * PostgreSQL Database Abstraction Layer
 * Minimum Requirement is Version 7.3+
@@ -26,6 +31,7 @@ include_once($phpbb_root_path . 'includes/db/dbal.' . $phpEx);
 class dbal_postgres extends dbal
 {
 	var $last_query_text = '';
+	var $connect_error = '';
 
 	/**
 	* Connect to server
@@ -46,7 +52,10 @@ class dbal_postgres extends dbal
 
 		if ($sqlserver)
 		{
-			if (strpos($sqlserver, ':') !== false)
+			// $sqlserver can carry a port separated by : for compatibility reasons
+			// If $sqlserver has more than one : it's probably an IPv6 address.
+			// In this case we only allow passing a port via the $port variable.
+			if (substr_count($sqlserver, ':') === 1)
 			{
 				list($sqlserver, $port) = explode(':', $sqlserver);
 			}
@@ -76,7 +85,30 @@ class dbal_postgres extends dbal
 
 		$this->persistency = $persistency;
 
-		$this->db_connect_id = ($this->persistency) ? @pg_pconnect($connect_string, $new_link) : @pg_connect($connect_string, $new_link);
+		if ($this->persistency)
+		{
+			if (!function_exists('pg_pconnect'))
+			{
+				$this->connect_error = 'pg_pconnect function does not exist, is pgsql extension installed?';
+				return $this->sql_error('');
+			}
+			$collector = new phpbb_error_collector;
+			$collector->install();
+			$this->db_connect_id = (!$new_link) ? @pg_pconnect($connect_string) : @pg_pconnect($connect_string, PGSQL_CONNECT_FORCE_NEW);
+		}
+		else
+		{
+			if (!function_exists('pg_connect'))
+			{
+				$this->connect_error = 'pg_connect function does not exist, is pgsql extension installed?';
+				return $this->sql_error('');
+			}
+			$collector = new phpbb_error_collector;
+			$collector->install();
+			$this->db_connect_id = (!$new_link) ? @pg_connect($connect_string) : @pg_connect($connect_string, PGSQL_CONNECT_FORCE_NEW);
+		}
+
+		$collector->uninstall();
 
 		if ($this->db_connect_id)
 		{
@@ -92,19 +124,21 @@ class dbal_postgres extends dbal
 			return $this->db_connect_id;
 		}
 
+		$this->connect_error = $collector->format_errors();
 		return $this->sql_error('');
 	}
 
 	/**
 	* Version information about used database
 	* @param bool $raw if true, only return the fetched sql_server_version
+	* @param bool $use_cache If true, it is safe to retrieve the value from the cache
 	* @return string sql server version
 	*/
-	function sql_server_info($raw = false)
+	function sql_server_info($raw = false, $use_cache = true)
 	{
 		global $cache;
 
-		if (empty($cache) || ($this->sql_server_version = $cache->get('pgsql_version')) === false)
+		if (!$use_cache || empty($cache) || ($this->sql_server_version = $cache->get('pgsql_version')) === false)
 		{
 			$query_id = @pg_query($this->db_connect_id, 'SELECT VERSION() AS version');
 			$row = @pg_fetch_assoc($query_id, null);
@@ -112,7 +146,7 @@ class dbal_postgres extends dbal
 
 			$this->sql_server_version = (!empty($row['version'])) ? trim(substr($row['version'], 10)) : 0;
 
-			if (!empty($cache))
+			if (!empty($cache) && $use_cache)
 			{
 				$cache->put('pgsql_version', $this->sql_server_version);
 			}
@@ -360,8 +394,19 @@ class dbal_postgres extends dbal
 	*/
 	function _sql_error()
 	{
+		// pg_last_error only works when there is an established connection.
+		// Connection errors have to be tracked by us manually.
+		if ($this->db_connect_id)
+		{
+			$message = @pg_last_error($this->db_connect_id);
+		}
+		else
+		{
+			$message = $this->connect_error;
+		}
+
 		return array(
-			'message'	=> (!$this->db_connect_id) ? @pg_last_error() : @pg_last_error($this->db_connect_id),
+			'message'	=> $message,
 			'code'		=> ''
 		);
 	}

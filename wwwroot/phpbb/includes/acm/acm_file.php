@@ -78,15 +78,21 @@ class acm
 
 		if (!$this->_write('data_global'))
 		{
+			if (!function_exists('phpbb_is_writable'))
+			{
+				global $phpbb_root_path;
+				include($phpbb_root_path . 'includes/functions.' . $phpEx);
+			}
+
 			// Now, this occurred how often? ... phew, just tell the user then...
-			if (!@is_writable($this->cache_dir))
+			if (!phpbb_is_writable($this->cache_dir))
 			{
 				// We need to use die() here, because else we may encounter an infinite loop (the message handler calls $cache->unload())
-				die($this->cache_dir . ' is NOT writable.');
+				die('Fatal: ' . $this->cache_dir . ' is NOT writable.');
 				exit;
 			}
 
-			die('Not able to open ' . $this->cache_dir . 'data_global.' . $phpEx);
+			die('Fatal: Not able to open ' . $this->cache_dir . 'data_global.' . $phpEx);
 			exit;
 		}
 
@@ -410,7 +416,7 @@ class acm
 	{
 		if ($this->sql_row_pointer[$query_id] < sizeof($this->sql_rowset[$query_id]))
 		{
-			return (isset($this->sql_rowset[$query_id][$this->sql_row_pointer[$query_id]][$field])) ? $this->sql_rowset[$query_id][$this->sql_row_pointer[$query_id]][$field] : false;
+			return (isset($this->sql_rowset[$query_id][$this->sql_row_pointer[$query_id]][$field])) ? $this->sql_rowset[$query_id][$this->sql_row_pointer[$query_id]++][$field] : false;
 		}
 
 		return false;
@@ -707,7 +713,13 @@ class acm
 	*/
 	function remove_file($filename, $check = false)
 	{
-		if ($check && !@is_writable($this->cache_dir))
+		if (!function_exists('phpbb_is_writable'))
+		{
+			global $phpbb_root_path, $phpEx;
+			include($phpbb_root_path . 'includes/functions.' . $phpEx);
+		}
+
+		if ($check && !phpbb_is_writable($this->cache_dir))
 		{
 			// E_USER_ERROR - not using language entry - intended.
 			trigger_error('Unable to remove files within ' . $this->cache_dir . '. Please check directory permissions.', E_USER_ERROR);

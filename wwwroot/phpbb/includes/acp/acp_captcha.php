@@ -56,6 +56,7 @@ class acp_captcha
 				'enable_post_confirm'	=> array('tpl' => 'POST_ENABLE', 'default' => false),
 				'confirm_refresh'		=> array('tpl' => 'CONFIRM_REFRESH', 'default' => false),
 				'max_reg_attempts'		=> array('tpl' => 'REG_LIMIT', 'default' => 0),
+				'max_login_attempts'		=> array('tpl' => 'MAX_LOGIN_ATTEMPTS', 'default' => 0),
 			);
 
 			$this->tpl_name = 'acp_captcha';
@@ -88,14 +89,14 @@ class acp_captcha
 					}
 					else
 					{
-						trigger_error($user->lang['CAPTCHA_UNAVAILABLE'] . adm_back_link($this->u_action));
+						trigger_error($user->lang['CAPTCHA_UNAVAILABLE'] . adm_back_link($this->u_action), E_USER_WARNING);
 					}
 				}
 				trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
 			}
 			else if ($submit)
 			{
-				trigger_error($user->lang['FORM_INVALID'] . adm_back_link());
+				trigger_error($user->lang['FORM_INVALID'] . adm_back_link(), E_USER_WARNING);
 			}
 			else
 			{

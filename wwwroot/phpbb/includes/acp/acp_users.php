@@ -105,7 +105,7 @@ class acp_users
 				LEFT JOIN ' . SESSIONS_TABLE . ' s ON (s.session_user_id = u.user_id)
 			WHERE u.user_id = ' . $user_id . '
 			ORDER BY s.session_time DESC';
-		$result = $db->sql_query($sql);
+		$result = $db->sql_query_limit($sql, 1);
 		$user_row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -191,24 +191,31 @@ class acp_users
 							trigger_error($user->lang['CANNOT_REMOVE_YOURSELF'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 						}
 
-						if (confirm_box(true))
+						if ($delete_type)
 						{
-							user_delete($delete_type, $user_id, $user_row['username']);
+							if (confirm_box(true))
+							{
+								user_delete($delete_type, $user_id, $user_row['username']);
 
-							add_log('admin', 'LOG_USER_DELETED', $user_row['username']);
-							trigger_error($user->lang['USER_DELETED'] . adm_back_link($this->u_action));
+								add_log('admin', 'LOG_USER_DELETED', $user_row['username']);
+								trigger_error($user->lang['USER_DELETED'] . adm_back_link($this->u_action));
+							}
+							else
+							{
+								confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
+									'u'				=> $user_id,
+									'i'				=> $id,
+									'mode'			=> $mode,
+									'action'		=> $action,
+									'update'		=> true,
+									'delete'		=> 1,
+									'delete_type'	=> $delete_type))
+								);
+							}
 						}
 						else
 						{
-							confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
-								'u'				=> $user_id,
-								'i'				=> $id,
-								'mode'			=> $mode,
-								'action'		=> $action,
-								'update'		=> true,
-								'delete'		=> 1,
-								'delete_type'	=> $delete_type))
-							);
+							trigger_error($user->lang['NO_MODE'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 						}
 					}
 
@@ -222,6 +229,11 @@ class acp_users
 							if ($user_id == $user->data['user_id'])
 							{
 								trigger_error($user->lang['CANNOT_BAN_YOURSELF'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
+							}
+
+							if ($user_id == ANONYMOUS)
+							{
+								trigger_error($user->lang['CANNOT_BAN_ANONYMOUS'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 							}
 
 							if ($user_row['user_type'] == USER_FOUNDER)
@@ -307,10 +319,7 @@ class acp_users
 
 								$server_url = generate_board_url();
 
-								$user_actkey = gen_rand_string(10);
-								$key_len = 54 - (strlen($server_url));
-								$key_len = ($key_len > 6) ? $key_len : 6;
-								$user_actkey = substr($user_actkey, 0, $key_len);
+								$user_actkey = gen_rand_string(mt_rand(6, 10));
 								$email_template = ($user_row['user_type'] == USER_NORMAL) ? 'user_reactivate_account' : 'user_resend_inactive';
 
 								if ($user_row['user_type'] == USER_NORMAL)
@@ -339,10 +348,7 @@ class acp_users
 
 								$messenger->to($user_row['user_email'], $user_row['username']);
 
-								$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-								$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-								$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-								$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+								$messenger->anti_abuse_headers($config, $user);
 
 								$messenger->assign_vars(array(
 									'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),
@@ -397,10 +403,7 @@ class acp_users
 
 									$messenger->to($user_row['user_email'], $user_row['username']);
 
-									$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-									$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-									$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-									$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+									$messenger->anti_abuse_headers($config, $user);
 
 									$messenger->assign_vars(array(
 										'USERNAME'	=> htmlspecialchars_decode($user_row['username']))
@@ -809,7 +812,7 @@ class acp_users
 
 					// Which updates do we need to do?
 					$update_username = ($user_row['username'] != $data['username']) ? $data['username'] : false;
-					$update_password = ($data['new_password'] && !phpbb_check_hash($user_row['user_password'], $data['new_password'])) ? true : false;
+					$update_password = ($data['new_password'] && !phpbb_check_hash($data['new_password'], $user_row['user_password'])) ? true : false;
 					$update_email = ($data['email'] != $user_row['user_email']) ? $data['email'] : false;
 
 					if (!sizeof($error))
@@ -1115,7 +1118,7 @@ class acp_users
 				// Grab log data
 				$log_data = array();
 				$log_count = 0;
-				view_log('user', $log_data, $log_count, $config['topics_per_page'], $start, 0, 0, $user_id, $sql_where, $sql_sort);
+				$start = view_log('user', $log_data, $log_count, $config['topics_per_page'], $start, 0, 0, $user_id, $sql_where, $sql_sort);
 
 				$template->assign_vars(array(
 					'S_FEEDBACK'	=> true,
@@ -1416,7 +1419,7 @@ class acp_users
 
 				$now = getdate();
 				$s_birthday_year_options = '<option value="0"' . ((!$data['bday_year']) ? ' selected="selected"' : '') . '>--</option>';
-				for ($i = $now['year'] - 100; $i < $now['year']; $i++)
+				for ($i = $now['year'] - 100; $i <= $now['year']; $i++)
 				{
 					$selected = ($i == $data['bday_year']) ? ' selected="selected"' : '';
 					$s_birthday_year_options .= "<option value=\"$i\"$selected>$i</option>";
@@ -1550,6 +1553,31 @@ class acp_users
 							WHERE user_id = $user_id";
 						$db->sql_query($sql);
 
+						// Check if user has an active session
+						if ($user_row['session_id'])
+						{
+							// We'll update the session if user_allow_viewonline has changed and the user is a bot
+							// Or if it's a regular user and the admin set it to hide the session
+							if ($user_row['user_allow_viewonline'] != $sql_ary['user_allow_viewonline'] && $user_row['user_type'] == USER_IGNORE
+								|| $user_row['user_allow_viewonline'] && !$sql_ary['user_allow_viewonline'])
+							{
+								// We also need to check if the user has the permission to cloak.
+								$user_auth = new auth();
+								$user_auth->acl($user_row);
+
+								$session_sql_ary = array(
+									'session_viewonline'	=> ($user_auth->acl_get('u_hideonline')) ? $sql_ary['user_allow_viewonline'] : true,
+								);
+
+								$sql = 'UPDATE ' . SESSIONS_TABLE . '
+									SET ' . $db->sql_build_array('UPDATE', $session_sql_ary) . "
+									WHERE session_user_id = $user_id";
+								$db->sql_query($sql);
+
+								unset($user_auth);
+							}
+						}
+
 						trigger_error($user->lang['USER_PREFS_UPDATED'] . adm_back_link($this->u_action . '&amp;u=' . $user_id));
 					}
 
@@ -1664,7 +1692,7 @@ class acp_users
 				include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
-				$can_upload = (file_exists($phpbb_root_path . $config['avatar_path']) && @is_writable($phpbb_root_path . $config['avatar_path']) && $file_uploads) ? true : false;
+				$can_upload = (file_exists($phpbb_root_path . $config['avatar_path']) && phpbb_is_writable($phpbb_root_path . $config['avatar_path']) && $file_uploads) ? true : false;
 
 				if ($submit)
 				{
@@ -1674,7 +1702,7 @@ class acp_users
 							trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 					}
 
-					if (avatar_process_user($error, $user_row))
+					if (avatar_process_user($error, $user_row, $can_upload))
 					{
 						trigger_error($user->lang['USER_AVATAR_UPDATED'] . adm_back_link($this->u_action . '&amp;u=' . $user_row['user_id']));
 					}
@@ -2084,7 +2112,7 @@ class acp_users
 									LEFT JOIN ' . SESSIONS_TABLE . ' s ON (s.session_user_id = u.user_id)
 								WHERE u.user_id = ' . $user_id . '
 								ORDER BY s.session_time DESC';
-							$result = $db->sql_query($sql);
+							$result = $db->sql_query_limit($sql, 1);
 							$user_row = $db->sql_fetchrow($result);
 							$db->sql_freeresult($result);
 						}
