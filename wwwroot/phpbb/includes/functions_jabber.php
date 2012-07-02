@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_jabber.php 10245 2009-10-29 15:04:19Z acydburn $
+* @version $Id$
 * @copyright (c) 2007 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

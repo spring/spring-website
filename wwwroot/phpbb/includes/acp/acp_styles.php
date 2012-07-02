@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_styles.php 10074 2009-08-31 11:25:28Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1049,12 +1049,12 @@ parse_css_file = {PARSE_CSS_FILE}
 
 		foreach ($file_ary as $file)
 		{
-			$file 		= str_replace('/', '.', $file);
+			$file		= str_replace('/', '.', $file);
 
 			// perform some dirty guessing to get the path right.
 			// We assume that three dots in a row were '../'
-			$tpl_file 	= str_replace('.', '/', $file);
-			$tpl_file 	= str_replace('///', '../', $tpl_file);
+			$tpl_file	= str_replace('.', '/', $file);
+			$tpl_file	= str_replace('///', '../', $tpl_file);
 
 			$filename = "{$cache_prefix}_$file.html.$phpEx";
 
@@ -1295,7 +1295,6 @@ parse_css_file = {PARSE_CSS_FILE}
 			'TEXT_ROWS'			=> $text_rows)
 		);
 	}
-
 
 	/**
 	* Edit imagesets
@@ -2617,7 +2616,6 @@ parse_css_file = {PARSE_CSS_FILE}
 			}
 		}
 
-
 		if ($mode == 'template')
 		{
 			$super = array();
@@ -3438,7 +3436,6 @@ parse_css_file = {PARSE_CSS_FILE}
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-
 		if ($row)
 		{
 			// If it exist, we just use the style on installation
@@ -3757,7 +3754,6 @@ parse_css_file = {PARSE_CSS_FILE}
 				$sql_from = STYLES_IMAGESET_TABLE;
 			break;
 		}
-
 
 		$sql = "SELECT {$mode}_inherits_id
 			FROM $sql_from

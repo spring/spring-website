@@ -4,7 +4,7 @@
 * mcp [English]
 *
 * @package language
-* @version $Id: mcp.php 9854 2009-07-25 18:06:25Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_user.php 10214 2009-10-05 17:54:55Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -2523,6 +2523,7 @@ function group_create(&$group_id, $type, $name, $desc, $group_attributes, $allow
 			{
 				remove_default_avatar($group_id, $user_ary);
 			}
+
 			if (isset($sql_ary['group_rank']) && !$sql_ary['group_rank'])
 			{
 				remove_default_rank($group_id, $user_ary);
@@ -2574,6 +2575,7 @@ function group_create(&$group_id, $type, $name, $desc, $group_attributes, $allow
 		if (!$group_id)
 		{
 			$group_id = $db->sql_nextid();
+
 			if (isset($sql_ary['group_avatar_type']) && $sql_ary['group_avatar_type'] == AVATAR_UPLOAD)
 			{
 				group_correct_avatar($group_id, $sql_ary['group_avatar']);

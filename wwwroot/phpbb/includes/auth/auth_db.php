@@ -7,7 +7,7 @@
 * This is for authentication via the integrated user table
 *
 * @package login
-* @version $Id: auth_db.php 10143 2009-09-15 09:08:37Z Kellanved $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

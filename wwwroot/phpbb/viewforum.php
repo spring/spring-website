@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: viewforum.php 10067 2009-08-30 17:13:28Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

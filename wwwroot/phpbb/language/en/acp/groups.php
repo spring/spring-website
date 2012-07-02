@@ -4,7 +4,7 @@
 * acp_groups [English]
 *
 * @package language
-* @version $Id: groups.php 9701 2009-06-28 12:13:11Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

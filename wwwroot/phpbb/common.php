@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: common.php 8760 2008-08-15 19:46:51Z aptx $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_queue.php 10252 2009-11-03 14:51:07Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

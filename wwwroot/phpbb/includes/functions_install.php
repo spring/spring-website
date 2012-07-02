@@ -2,7 +2,7 @@
 /**
 *
 * @package install
-* @version $Id: functions_install.php 9970 2009-08-13 15:25:20Z acydburn $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

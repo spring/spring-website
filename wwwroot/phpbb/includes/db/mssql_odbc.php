@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id: mssql_odbc.php 8967 2008-10-02 12:04:12Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

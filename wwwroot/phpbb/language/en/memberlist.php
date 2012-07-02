@@ -4,7 +4,7 @@
 * memberlist [English]
 *
 * @package language
-* @version $Id: memberlist.php 9933 2009-08-06 09:12:21Z marshalrusty $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

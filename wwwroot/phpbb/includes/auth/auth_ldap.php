@@ -6,7 +6,7 @@
 * Authentication plug-ins is largely down to Sergey Kanareykin, our thanks to him.
 *
 * @package login
-* @version $Id: auth_ldap.php 9783 2009-07-18 21:20:20Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

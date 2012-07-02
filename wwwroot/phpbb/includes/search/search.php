@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id: search.php 8782 2008-08-23 17:20:55Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

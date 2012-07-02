@@ -2,7 +2,7 @@
 /**
 *
 * @package search
-* @version $Id: fulltext_native.php 9931 2009-08-05 15:28:46Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

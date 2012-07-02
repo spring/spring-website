@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: memberlist.php 10257 2009-11-07 15:11:40Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1027,6 +1027,7 @@ switch ($mode)
 			$joined_select	= request_var('joined_select', 'lt');
 			$active_select	= request_var('active_select', 'lt');
 			$count_select	= request_var('count_select', 'eq');
+
 			$joined			= explode('-', request_var('joined', ''));
 			$active			= explode('-', request_var('active', ''));
 			$count			= (request_var('count', '') !== '') ? request_var('count', 0) : '';

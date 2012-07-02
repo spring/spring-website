@@ -1,7 +1,7 @@
 <?php
 /**
 * @package ucp
-* @version $Id: ucp_pm.php 10204 2009-10-04 11:08:12Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

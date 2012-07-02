@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id: sqlite.php 8814 2008-09-04 12:01:47Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

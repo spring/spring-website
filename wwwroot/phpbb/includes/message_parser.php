@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: message_parser.php 10249 2009-11-01 15:33:44Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_permissions.php 10017 2009-08-18 14:37:49Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -231,7 +231,6 @@ class acp_permissions
 		{
 			trigger_error($user->lang['WRONG_PERMISSION_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
 		}
-
 
 		// Handle actions
 		if (strpos($mode, 'setting_') === 0 && $action)

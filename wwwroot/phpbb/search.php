@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: search.php 10120 2009-09-08 08:53:01Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -361,7 +361,6 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				{
 					$last_post_time = '';
 				}
-
 
 				if ($sort_key == 'a')
 				{
@@ -1024,7 +1023,6 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 
 	page_footer();
 }
-
 
 // Search forum
 $s_forums = '';

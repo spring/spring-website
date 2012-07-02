@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_icons.php 10234 2009-10-26 13:59:02Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -547,7 +547,6 @@ class acp_icons
 							trigger_error($user->lang['WRONG_PAK_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
 						}
 					}
-
 
 					// The user has already selected a smilies_pak file
 					if ($current == 'delete')

@@ -2,7 +2,7 @@
 /**
 *
 * @package acm
-* @version $Id: cache.php 9726 2009-07-07 12:59:30Z rxu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

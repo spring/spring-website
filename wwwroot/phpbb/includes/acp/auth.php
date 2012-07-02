@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: auth.php 9400 2009-03-20 13:22:19Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

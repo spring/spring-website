@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_prune.php 9754 2009-07-14 12:02:11Z rxu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

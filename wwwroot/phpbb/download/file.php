@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: file.php 9905 2009-08-01 12:28:50Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_prefs.php 9734 2009-07-08 13:03:43Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

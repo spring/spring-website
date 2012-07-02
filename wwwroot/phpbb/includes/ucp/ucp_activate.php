@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_activate.php 9520 2009-05-29 19:55:42Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

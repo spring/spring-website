@@ -1,7 +1,7 @@
 <?php
 /**
 * @package phpBB3
-* @version $Id: feed.php 10244 2009-10-29 14:00:43Z acydburn $
+* @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

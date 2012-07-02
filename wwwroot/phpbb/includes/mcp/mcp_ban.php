@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_ban.php 8589 2008-06-04 11:11:48Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

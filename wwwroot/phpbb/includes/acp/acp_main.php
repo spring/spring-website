@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_main.php 10081 2009-09-01 11:21:42Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

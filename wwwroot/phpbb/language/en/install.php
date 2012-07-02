@@ -4,7 +4,7 @@
 * install [English]
 *
 * @package language
-* @version $Id: install.php 10152 2009-09-16 13:02:13Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

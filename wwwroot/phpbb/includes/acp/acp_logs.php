@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_logs.php 10042 2009-08-22 02:56:05Z terrafrost $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

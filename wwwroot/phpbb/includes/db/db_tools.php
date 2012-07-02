@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id: db_tools.php 10248 2009-10-30 19:19:48Z acydburn $
+* @version $Id$
 * @copyright (c) 2007 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1125,6 +1125,7 @@ class phpbb_db_tools
 					FROM sqlite_master
 					WHERE type = 'table'
 						AND name = '{$table}'";
+
 				$result = $this->db->sql_query($sql);
 
 				if (!$result)
@@ -1459,7 +1460,6 @@ class phpbb_db_tools
 		if (strpos($column_data[0], ':') !== false)
 		{
 			list($orig_column_type, $column_length) = explode(':', $column_data[0]);
-
 			if (!is_array($this->dbms_type_map[$this->sql_layer][$orig_column_type . ':']))
 			{
 				$column_type = sprintf($this->dbms_type_map[$this->sql_layer][$orig_column_type . ':'], $column_length);
@@ -1575,6 +1575,7 @@ class phpbb_db_tools
 				$sql_default .= 'NOT NULL';
 
 				$return_array['column_type_sql_default'] = $sql_default;
+
 			break;
 
 			case 'mysql_40':
@@ -1650,6 +1651,7 @@ class phpbb_db_tools
 					$return_array['constraint'] = "CHECK ({$column_name} >= 0)";
 					$sql .= " CHECK ({$column_name} >= 0)";
 				}
+
 			break;
 
 			case 'sqlite':
@@ -1666,6 +1668,7 @@ class phpbb_db_tools
 
 				$sql .= ' NOT NULL ';
 				$sql .= (!is_null($column_data[1])) ? "DEFAULT '{$column_data[1]}'" : '';
+
 			break;
 		}
 

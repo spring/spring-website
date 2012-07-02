@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions.php 10172 2009-09-20 18:50:35Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -3072,7 +3072,6 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 				));
 
 				$err = $user->lang[$result['error_msg']];
-
 			break;
 
 			case LOGIN_ERROR_PASSWORD_CONVERT:

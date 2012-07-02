@@ -4,7 +4,7 @@
 * acp_posting [English]
 *
 * @package language
-* @version $Id: posting.php 9902 2009-08-01 11:07:48Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

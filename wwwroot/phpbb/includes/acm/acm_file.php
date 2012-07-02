@@ -2,7 +2,7 @@
 /**
 *
 * @package acm
-* @version $Id: acm_file.php 9543 2009-06-05 14:51:17Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005, 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

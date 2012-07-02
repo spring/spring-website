@@ -4,7 +4,7 @@
 * acp_common [English]
 *
 * @package language
-* @version $Id: common.php 10134 2009-09-10 15:32:16Z marshalrusty $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

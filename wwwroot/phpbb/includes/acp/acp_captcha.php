@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_captcha.php 10177 2009-09-22 10:03:17Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */

@@ -4,7 +4,7 @@
 * acp_ban [English]
 *
 * @package language
-* @version $Id: ban.php 9727 2009-07-07 13:33:53Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

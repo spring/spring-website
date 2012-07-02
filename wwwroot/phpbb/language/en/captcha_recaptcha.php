@@ -4,7 +4,7 @@
 * recaptcha [English]
 *
 * @package language
-* @version $Id: captcha_recaptcha.php 9933 2009-08-06 09:12:21Z marshalrusty $
+* @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

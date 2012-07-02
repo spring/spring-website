@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: phpbb_captcha_qa_plugin.php 10239 2009-10-27 13:54:03Z Kellanved $
+* @version $Id$
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -408,7 +408,6 @@ class phpbb_captcha_qa
 	function select_question()
 	{
 		global $db, $user;
-
 
 		if (!sizeof($this->question_ids))
 		{

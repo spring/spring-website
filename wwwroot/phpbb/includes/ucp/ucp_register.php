@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_register.php 10095 2009-09-03 20:06:57Z Kellanved $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -52,7 +52,6 @@ class ucp_register
 			add_form_key('ucp_register_terms');
 		}
 
-
 		if ($change_lang || $user_lang != $config['default_lang'])
 		{
 			$use_lang = ($change_lang) ? basename($change_lang) : basename($user_lang);
@@ -79,10 +78,10 @@ class ucp_register
 			}
 		}
 
+
 		$cp = new custom_profile();
 
 		$error = $cp_data = $cp_error = array();
-
 
 		if (!$agreed || ($coppa === false && $config['coppa_enable']) || ($coppa && !$config['coppa_enable']))
 		{
@@ -213,10 +212,12 @@ class ucp_register
 				'tz'				=> array('num', false, -14, 14),
 				'lang'				=> array('language_iso_name'),
 			));
+
 			if (!check_form_key('ucp_register'))
 			{
 				$error[] = $user->lang['FORM_INVALID'];
 			}
+
 			// Replace "error" strings with their real, localised form
 			$error = preg_replace('#^([A-Z_]+)$#e', "(!empty(\$user->lang['\\1'])) ? \$user->lang['\\1'] : '\\1'", $error);
 

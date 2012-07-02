@@ -4,7 +4,7 @@
 * acp_styles [English]
 *
 * @package language
-* @version $Id: styles.php 10074 2009-08-31 11:25:28Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -292,7 +292,6 @@ $lang = array_merge($lang, array(
 	'LINE_SPACING'				=> 'Line spacing',
 	'LOCALISED_IMAGES'			=> 'Localised',
 	'LOCATION_DISABLED_EXPLAIN'	=> 'This setting is inherited and cannot be changed.',
-
 
 	'NO_CLASS'					=> 'Cannot find class in stylesheet.',
 	'NO_IMAGESET'				=> 'Cannot find imageset on filesystem.',

@@ -2,7 +2,7 @@
 /**
 *
 * @package utf
-* @version $Id: utf_tools.php 10041 2009-08-21 21:47:19Z terrafrost $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

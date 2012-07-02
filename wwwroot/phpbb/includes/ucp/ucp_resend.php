@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_resend.php 10060 2009-08-28 09:26:43Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

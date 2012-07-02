@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_email.php 9011 2008-10-13 18:45:24Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

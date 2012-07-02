@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_template.php 10064 2009-08-30 11:15:24Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group, sections (c) 2001 ispi of Lincoln Inc
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

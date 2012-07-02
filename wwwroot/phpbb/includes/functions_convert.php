@@ -2,7 +2,7 @@
 /**
 *
 * @package install
-* @version $Id: functions_convert.php 9905 2009-08-01 12:28:50Z acydburn $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -1274,6 +1274,7 @@ function restore_config($schema)
 	global $db, $config;
 
 	$convert_config = get_config();
+
 	foreach ($schema['settings'] as $config_name => $src)
 	{
 		if (preg_match('/(.*)\((.*)\)/', $src, $m))
@@ -1293,7 +1294,7 @@ function restore_config($schema)
 				$src_ary = $schema['array_name'];
 				$config_value = (isset($convert_config[$src_ary][$src])) ? $convert_config[$src_ary][$src] : '';
 			}
-		}
+   		}
 
 		if ($config_value !== '')
 		{

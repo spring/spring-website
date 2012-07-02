@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: functions_admin.php 10261 2009-11-09 16:29:30Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
