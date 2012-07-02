@@ -1,7 +1,7 @@
 
 <!-- IF not S_VIEW_MESSAGE -->
 	{S_FORM_TOKEN}
-	{S_FORM_TOKEN}</form>
+	</form>
 <!-- ENDIF -->
 
 <table class="tablebg" width="100%" cellspacing="1" cellpadding="0">
@@ -26,13 +26,13 @@
 							<input type="hidden" name="p" value="{MSG_ID}" />
 							<select name="dest_folder">{S_TO_FOLDER_OPTIONS}</select>&nbsp;<input class="btnlite" type="submit" name="move_pm" value="{L_MOVE_TO_FOLDER}" />
 						{S_FORM_TOKEN}
-						{S_FORM_TOKEN}</form>
+						</form>
 					<!-- ENDIF -->
 				<!-- ELSE -->
 					<form name="sortmsg" method="post" action="{S_PM_ACTION}" style="margin:0px">
 						<span class="gensmall">{L_DISPLAY_MESSAGES}:</span> {S_SELECT_SORT_DAYS} <span class="gensmall">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR} <input class="btnlite" type="submit" name="sort" value="{L_GO}" />
 					{S_FORM_TOKEN}
-					{S_FORM_TOKEN}</form>
+					</form>
 				<!-- ENDIF -->
 			</td>
 		</tr>
