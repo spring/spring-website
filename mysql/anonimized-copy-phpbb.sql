@@ -93,9 +93,9 @@ INSERT INTO phpbb3_users (user_id, user_type, group_id, user_permissions, user_p
 SELECT user_id, user_type, group_id, user_permissions, user_perm_from, user_regdate, username, username_clean, user_rank, user_avatar, user_avatar_type, user_avatar_width, user_avatar_height
 FROM spring.phpbb3_users WHERE user_new = 0;
 
--- username: Admin    password: admin (change this or remove it once everything is working!)
+-- username: Admin    password: Admin123 (change this or remove it once everything is working!)
 INSERT INTO phpbb3_users (user_type, group_id, username, username_clean, user_regdate, user_password, user_email, user_lang, user_style, user_rank, user_colour, user_posts, user_permissions, user_ip, user_birthday, user_lastpage, user_last_confirm_key, user_post_sortby_type, user_post_sortby_dir, user_topic_sortby_type, user_topic_sortby_dir, user_avatar, user_sig, user_sig_bbcode_uid, user_from, user_icq, user_aim, user_yim, user_msnm, user_jabber, user_website, user_occ, user_interests, user_actkey, user_newpasswd) VALUES
-	(3, 5, 'Admin', 'admin', 0, '$H$9SDdY/PsGuE0g19dsIDLNipast7JL2.', 'admin@yourdomain.com', 'en', 0, 1, 'AA0000', 0, '', '', '', '', '', 't', 'a', 't', 'd', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+	(3, 5, 'Admin', 'admin', 0, '$H$98YQ36026niEFIpBNs5ytBMAFTLou50', 'admin@example.com', 'en', 0, 1, 'AA0000', 0, '', '', '', '', '', 't', 'a', 't', 'd', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 INSERT INTO phpbb3_user_group (group_id, user_id, user_pending, group_leader) VALUES
 	(3569, (SELECT LAST_INSERT_ID()), 0, 0),
