@@ -10,7 +10,7 @@
 	<td class="row1" align="center">
 		<table cellspacing="1" cellpadding="2" border="0">
 		<tr>
-			<td class="gen" align="center"><!-- IF USER_COLOR --><b style="color: #{USER_COLOR}"><!-- ELSE --><b><!-- ENDIF -->{USERNAME}</b></td>
+			<td class="gen" align="center"><b>{USERNAME_FULL}</b></td>
 		</tr>
 		<!-- IF RANK_TITLE -->
 			<tr>
@@ -54,6 +54,9 @@
 </tr>
 <!-- IF S_USER_NOTES -->
 
+	<tr align="center">
+		<td colspan="5" class="row3"><span class="gensmall">{L_SEARCH_KEYWORDS}:</span> <input type="text" name="keywords" value="{S_KEYWORDS}" />&nbsp;<input type="submit" class="btnlite" name="filter" value="{L_SEARCH}" /></td>
+	</tr>
 	<tr align="center">
 		<td colspan="5" class="row3"><span class="gensmall">{L_DISPLAY_LOG}:</span> {S_SELECT_SORT_DAYS}&nbsp;<span class="gensmall">{L_SORT_BY}:</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR}&nbsp;<input class="btnlite" type="submit" value="{L_GO}" name="sort" /></td>
 	</tr>

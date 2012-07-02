@@ -1,14 +1,9 @@
-/*  phpBB 3.0 Style Sheet
+/*  phpBB3 Style Sheet
     --------------------------------------------------------------
-	Style name:		subsilver2
-	Based on style:	subSilver (the default phpBB 2 style)
-	Original author:	subBlue ( http://www.subBlue.com/ )
-	Modified by:		psoTFX and the phpBB team ( http://www.phpbb.com )
-	
-	This is an alternative style for phpBB3 for those wishing to stay with
-	the familiar subSilver style of phpBB version 2.x
-	
-	Copyright 2006 phpBB Group ( http://www.phpbb.com/ )
+	Style name:			subsilver2
+	Based on style:		subSilver (the default phpBB 2.0.x style)
+	Original author:	Tom Beddard ( http://www.subblue.com/ )
+	Modified by:		phpBB Group ( http://www.phpbb.com/ )
     --------------------------------------------------------------
 */
 
@@ -34,12 +29,7 @@ body {
 }
 
 #wrapheader {
-	min-height: 20px;
 	height: auto !important;
-	height: 20px;
-/*	background-image: url('./images/background.gif');
-	background-repeat: repeat-x;*/
-/*	padding: 0 25px 15px 25px;*/
 	padding: 0;
 }
 
@@ -62,10 +52,11 @@ body {
 }
 
 #logodesc {
-	margin-bottom: 5px;
-	padding: 5px 25px;
-	background: #D9DFE4;
-	border-bottom: 1px solid #4787A7;
+	background-color: #C1CAD2;
+	background-image: url('./images/background.gif');
+	background-repeat: repeat-x;
+	background-position: center bottom;
+	padding: 0 25px 15px 25px;
 }
 
 #menubar {
@@ -214,19 +205,20 @@ p.topicdetails {
 	margin: 1px 0;
 }
 
-.postreported, .postreported a:visited, .postreported a:hover, .postreported a:link, .postreported a:active {
+.postreported, .postreported a:link, .postreported a:visited, .postreported a:hover, .postreported a:active {
 	margin: 1px 0;
 	color: red;
 	font-weight:bold;
 }
 
-.postapprove, .postapprove a:visited, .postapprove a:hover, .postapprove a:link, .postapprove a:active {
+.postapprove, .postapprove a:link, .postapprove a:visited, .postapprove a:hover, .postapprove a:active {
 	color: green;
 	font-weight:bold;
 }
 
 .postapprove img, .postreported img {
 	vertical-align: bottom;
+	padding-top: 5px;
 }
 
 .postauthor {
@@ -388,12 +380,20 @@ hr {
 
 /* Links
  ------------ */
+
+/* Links adjustment to correctly display an order of rtl/ltr mixed content */
+.rtl a {
+	direction: rtl;
+	unicode-bidi: embed;
+}
+
+/* CSS spec requires a:link, a:visited, a:hover and a:active rules to be specified in this order. */
+/* See http://www.phpbb.com/bugs/phpbb3/59685 */
 a:link {
 	color: #006597;
 	text-decoration: none;
 }
 
-a:active,
 a:visited {
 	color: #005784;
 	text-decoration: none;
@@ -402,6 +402,11 @@ a:visited {
 a:hover {
 	color: #D46400;
 	text-decoration: underline;
+}
+
+a:active {
+	color: #005784;
+	text-decoration: none;
 }
 
 a.forumlink {

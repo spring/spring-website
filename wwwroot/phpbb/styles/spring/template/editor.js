@@ -6,6 +6,7 @@
 // Startup variables
 var imageTag = false;
 var theSelection = false;
+var bbcodeEnabled = true;
 
 // Check for Browser & Platform for PC & IE specific bits
 // More details from: http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html
@@ -16,7 +17,6 @@ var is_ie = ((clientPC.indexOf('msie') != -1) && (clientPC.indexOf('opera') == -
 var is_win = ((clientPC.indexOf('win') != -1) || (clientPC.indexOf('16bit') != -1));
 
 var baseHeight;
-window.onload = initInsertions;
 
 /**
 * Shows the help messages in the helpline window
@@ -151,13 +151,15 @@ function insert_text(text, spaces, popup)
 	{
 		text = ' ' + text + ' ';
 	}
-	
-	if (!isNaN(textarea.selectionStart))
+
+	// Since IE9, IE also has textarea.selectionStart, but it still needs to be treated the old way.
+	// Therefore we simply add a !is_ie here until IE fixes the text-selection completely.
+	if (!isNaN(textarea.selectionStart) && !is_ie)
 	{
 		var sel_start = textarea.selectionStart;
 		var sel_end = textarea.selectionEnd;
 
-		mozWrap(textarea, text, '')
+		mozWrap(textarea, text, '');
 		textarea.selectionStart = sel_start + text.length;
 		textarea.selectionEnd = sel_end + text.length;
 	}	
@@ -196,11 +198,17 @@ function attach_inline(index, filename)
 /**
 * Add quote text to message
 */
-function addquote(post_id, username)
+function addquote(post_id, username, l_wrote)
 {
 	var message_name = 'message_' + post_id;
 	var theSelection = '';
 	var divarea = false;
+
+	if (l_wrote === undefined)
+	{
+		// Backwards compatibility
+		l_wrote = 'wrote';
+	}
 
 	if (document.all)
 	{
@@ -212,11 +220,12 @@ function addquote(post_id, username)
 	}
 
 	// Get text selection - not only the post content :(
-	if (window.getSelection)
+	// IE9 must use the document.selection method but has the *.getSelection so we just force no IE
+	if (window.getSelection && !is_ie)
 	{
 		theSelection = window.getSelection().toString();
 	}
-	else if (document.getSelection)
+	else if (document.getSelection && !is_ie)
 	{
 		theSelection = document.getSelection();
 	}
@@ -234,6 +243,7 @@ function addquote(post_id, username)
 			theSelection = theSelection.replace(/&lt\;/ig, '<');
 			theSelection = theSelection.replace(/&gt\;/ig, '>');
 			theSelection = theSelection.replace(/&amp\;/ig, '&');
+			theSelection = theSelection.replace(/&nbsp\;/ig, ' ');
 		}
 		else if (document.all)
 		{
@@ -251,10 +261,60 @@ function addquote(post_id, username)
 
 	if (theSelection)
 	{
-		insert_text('[quote="' + username + '"]' + theSelection + '[/quote]');
+		if (bbcodeEnabled)
+		{
+			insert_text('[quote="' + username + '"]' + theSelection + '[/quote]');
+		}
+		else
+		{
+			insert_text(username + ' ' + l_wrote + ':' + '\n');
+			var lines = split_lines(theSelection);
+			for (i = 0; i < lines.length; i++)
+			{
+				insert_text('> ' + lines[i] + '\n');
+			}
+		}
 	}
 
 	return;
+}
+
+
+function split_lines(text)
+{
+	var lines = text.split('\n');
+	var splitLines = new Array();
+	var j = 0;
+	for(i = 0; i < lines.length; i++)
+	{
+		if (lines[i].length <= 80)
+		{
+			splitLines[j] = lines[i];
+			j++;
+		}
+		else
+		{
+			var line = lines[i];
+			do
+			{
+				var splitAt = line.indexOf(' ', 80);
+				
+				if (splitAt == -1)
+				{
+					splitLines[j] = line;
+					j++;
+				}
+				else
+				{
+					splitLines[j] = line.substring(0, splitAt);
+					line = line.substring(splitAt);
+					j++;
+				}
+			}
+			while(splitAt != -1);
+		}
+	}
+	return splitLines;
 }
 
 /**
@@ -262,7 +322,7 @@ function addquote(post_id, username)
 */
 function mozWrap(txtarea, open, close)
 {
-	var selLength = txtarea.textLength;
+	var selLength = (typeof(txtarea.textLength) == 'undefined') ? txtarea.value.length : txtarea.textLength;
 	var selStart = txtarea.selectionStart;
 	var selEnd = txtarea.selectionEnd;
 	var scrollTop = txtarea.scrollTop;
@@ -273,12 +333,12 @@ function mozWrap(txtarea, open, close)
 	}
 
 	var s1 = (txtarea.value).substring(0,selStart);
-	var s2 = (txtarea.value).substring(selStart, selEnd)
+	var s2 = (txtarea.value).substring(selStart, selEnd);
 	var s3 = (txtarea.value).substring(selEnd, selLength);
 
 	txtarea.value = s1 + open + s2 + close + s3;
-	txtarea.selectionStart = selEnd + open.length + close.length;
-	txtarea.selectionEnd = txtarea.selectionStart;
+	txtarea.selectionStart = selStart + open.length;
+	txtarea.selectionEnd = selEnd + open.length;
 	txtarea.focus();
 	txtarea.scrollTop = scrollTop;
 
@@ -331,8 +391,8 @@ function colorPalette(dir, width, height)
 			for (b = 0; b < 5; b++)
 			{
 				color = String(numberList[r]) + String(numberList[g]) + String(numberList[b]);
-				document.write('<td bgcolor="#' + color + '">');
-				document.write('<a href="#" onclick="bbfontstyle(\'[color=#' + color + ']\', \'[/color]\'); return false;" onmouseover="helpline(\'s\');"  onmouseout="helpline(\'tip\');"><img src="images/spacer.gif" width="' + width + '" height="' + height + '" alt="#' + color + '" title="#' + color + '" /></a>');
+				document.write('<td bgcolor="#' + color + '" style="width: ' + width + 'px; height: ' + height + 'px;">');
+				document.write('<a href="#" onclick="bbfontstyle(\'[color=#' + color + ']\', \'[/color]\'); return false;"><img src="images/spacer.gif" width="' + width + '" height="' + height + '" alt="#' + color + '" title="#' + color + '" /></a>');
 				document.writeln('</td>');
 			}
 
