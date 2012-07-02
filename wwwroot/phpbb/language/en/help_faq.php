@@ -4,7 +4,7 @@
 * help_faq [English]
 *
 * @package language
-* @version $Id: help_faq.php 9623 2009-06-18 18:12:28Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -60,7 +60,7 @@ $help = array(
 	),
 	array(
 		0 => 'I registered in the past but cannot login any more?!',
-		1 => 'Attempt to locate the e-mail sent to you when you first registered, check your username and password and try again. It is possible an administrator has deactivated or deleted your account for some reason. Also, many boards periodically remove users who have not posted for a long time to reduce the size of the database. If this has happened, try registering again and being more involved in discussions.'
+		1 => 'It is possible an administrator has deactivated or deleted your account for some reason. Also, many boards periodically remove users who have not posted for a long time to reduce the size of the database. If this has happened, try registering again and being more involved in discussions.'
 	),
 	array(
 		0 => 'What is COPPA?',
@@ -95,8 +95,8 @@ $help = array(
 		1 => 'Either the administrator has not installed your language or nobody has translated this board into your language. Try asking the board administrator if they can install the language pack you need. If the language pack does not exist, feel free to create a new translation. More information can be found at the phpBB website (see link at the bottom of board pages).'
 	),
 	array(
-		0 => 'How do I show an image below my username?',
-		1 => 'There are two images that may appear below a username when viewing posts. Depending on the used style, the first may be an image associated with your rank, generally in the form of stars, blocks or dots, indicating how many posts you have made or your status on the board. The second, usually a larger image, is known as an avatar and is generally unique or personal to each user. It is up to the board administrator to enable avatars and to choose the way in which avatars can be made available. If you are unable to use avatars, contact a board administrator and ask them for their reasons.'
+		0 => 'How do I show an image along with my username?',
+		1 => 'There are two images which may appear along with a username when viewing posts. One of them may be an image associated with your rank, generally in the form of stars, blocks or dots, indicating how many posts you have made or your status on the board. Another, usually a larger image, is known as an avatar and is generally unique or personal to each user. It is up to the board administrator to enable avatars and to choose the way in which avatars can be made available. If you are unable to use avatars, contact a board administrator and ask them for their reasons.'
 	),
 	array(
 		0 => 'What is my rank and how do I change it?',
@@ -116,7 +116,7 @@ $help = array(
 	),
 	array(
 		0 => 'How do I edit or delete a post?',
-		1 => 'Unless you are a board administrator or moderator, you can only edit or delete your own posts. You can edit a post by clicking the edit button for the relevant post, sometimes for only a limited time after the post was made. If someone has already replied to the post, you will find a small piece of text output below the post when you return to the topic which lists the number of times you edited it along with the date and time. This will only appear if someone has made a reply; it will not appear if a moderator or administrator edited the post, though they may leave a note as to why they’ve edited the post at their own digression. Please note that normal users cannot delete a post once someone has replied.'
+		1 => 'Unless you are a board administrator or moderator, you can only edit or delete your own posts. You can edit a post by clicking the edit button for the relevant post, sometimes for only a limited time after the post was made. If someone has already replied to the post, you will find a small piece of text output below the post when you return to the topic which lists the number of times you edited it along with the date and time. This will only appear if someone has made a reply; it will not appear if a moderator or administrator edited the post, though they may leave a note as to why they’ve edited the post at their own discretion. Please note that normal users cannot delete a post once someone has replied.'
 	),
 	array(
 		0 => 'How do I add a signature to my post?',
@@ -128,7 +128,7 @@ $help = array(
 	),
 	array(
 		0 => 'Why can’t I add more poll options?',
-		1 => 'The limit for poll options is set by the board administrator. If you feel you need to add more options to your poll then the allowed amount, contact the board administrator.'
+		1 => 'The limit for poll options is set by the board administrator. If you feel you need to add more options to your poll than the allowed amount, contact the board administrator.'
 	),
 	array(
 		0 => 'How do I edit or delete a poll?',

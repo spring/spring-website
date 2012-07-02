@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: faq.php 9961 2009-08-12 10:30:37Z Kellanved $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

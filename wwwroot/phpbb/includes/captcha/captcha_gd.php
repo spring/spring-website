@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: captcha_gd.php 9609 2009-06-17 13:29:26Z Kellanved $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -26,6 +26,7 @@ class captcha
 {
 	var $width = 360;
 	var $height = 96;
+
 
 	/**
 	* Create the image containing $code with a seed of $seed
@@ -76,7 +77,7 @@ class captcha
 		{
 			$denom = ($code_len - $i);
 			$denom = max(1.3, $denom);
-			$offset[$i] = mt_rand(0, (1.5 * $width_avail) / $denom);
+			$offset[$i] = phpbb_mt_rand(0, (int) round((1.5 * $width_avail) / $denom));
 			$width_avail -= $offset[$i];
 		}
 
@@ -111,7 +112,7 @@ class captcha
 			$noise_bitmaps = $this->captcha_noise_bg_bitmaps();
 			for ($i = 0; $i < $code_len; ++$i)
 			{
-				$noise[$i] = new char_cube3d($noise_bitmaps, mt_rand(1, count($noise_bitmaps['data'])));
+				$noise[$i] = new char_cube3d($noise_bitmaps, mt_rand(1, sizeof($noise_bitmaps['data'])));
 
 				list($min, $max) = $noise[$i]->range();
 				//$box = $noise[$i]->dimensions($sizes[$i]);
@@ -145,7 +146,6 @@ class captcha
 		{
 			$this->noise_line($img, 0, 0, $this->width, $this->height, $colour->get_resource('background'), $scheme, $bg_colours);
 		}
-
 		// Send image
 		header('Content-Type: image/png');
 		header('Cache-control: no-cache, no-store');
@@ -1669,32 +1669,32 @@ class captcha
 			'height'	=> 15,
 			'data'		=> array(
 
-			'A' =>	$chars['A'][mt_rand(0, min(count($chars['A']), $config['captcha_gd_fonts']) -1)],
-			'B' =>	$chars['B'][mt_rand(0, min(count($chars['B']), $config['captcha_gd_fonts']) -1)],
-			'C' =>	$chars['C'][mt_rand(0, min(count($chars['C']), $config['captcha_gd_fonts']) -1)],
-			'D' =>	$chars['D'][mt_rand(0, min(count($chars['D']), $config['captcha_gd_fonts']) -1)],
-			'E' =>	$chars['E'][mt_rand(0, min(count($chars['E']), $config['captcha_gd_fonts']) -1)],
-			'F' =>	$chars['F'][mt_rand(0, min(count($chars['F']), $config['captcha_gd_fonts']) -1)],
-			'G' =>	$chars['G'][mt_rand(0, min(count($chars['G']), $config['captcha_gd_fonts']) -1)],
-			'H' =>	$chars['H'][mt_rand(0, min(count($chars['H']), $config['captcha_gd_fonts']) -1)],
-			'I' =>	$chars['I'][mt_rand(0, min(count($chars['I']), $config['captcha_gd_fonts']) -1)],
-			'J' =>	$chars['J'][mt_rand(0, min(count($chars['J']), $config['captcha_gd_fonts']) -1)],
-			'K' =>	$chars['K'][mt_rand(0, min(count($chars['K']), $config['captcha_gd_fonts']) -1)],
-			'L' =>	$chars['L'][mt_rand(0, min(count($chars['L']), $config['captcha_gd_fonts']) -1)],
-			'M' =>	$chars['M'][mt_rand(0, min(count($chars['M']), $config['captcha_gd_fonts']) -1)],  
-			'N' =>	$chars['N'][mt_rand(0, min(count($chars['N']), $config['captcha_gd_fonts']) -1)],
-			'O' =>	$chars['O'][mt_rand(0, min(count($chars['O']), $config['captcha_gd_fonts']) -1)],
-			'P' =>	$chars['P'][mt_rand(0, min(count($chars['P']), $config['captcha_gd_fonts']) -1)],
-			'Q' =>	$chars['Q'][mt_rand(0, min(count($chars['Q']), $config['captcha_gd_fonts']) -1)],
-			'R' =>	$chars['R'][mt_rand(0, min(count($chars['R']), $config['captcha_gd_fonts']) -1)],
-			'S' =>	$chars['S'][mt_rand(0, min(count($chars['S']), $config['captcha_gd_fonts']) -1)],
-			'T' =>	$chars['T'][mt_rand(0, min(count($chars['T']), $config['captcha_gd_fonts']) -1)],
-			'U' =>	$chars['U'][mt_rand(0, min(count($chars['U']), $config['captcha_gd_fonts']) -1)],
-			'V' =>	$chars['V'][mt_rand(0, min(count($chars['V']), $config['captcha_gd_fonts']) -1)],
-			'W' =>	$chars['W'][mt_rand(0, min(count($chars['W']), $config['captcha_gd_fonts']) -1)],
-			'X' =>	$chars['X'][mt_rand(0, min(count($chars['X']), $config['captcha_gd_fonts']) -1)],
-			'Y' =>	$chars['Y'][mt_rand(0, min(count($chars['Y']), $config['captcha_gd_fonts']) -1)],
-			'Z' =>	$chars['Z'][mt_rand(0, min(count($chars['Z']), $config['captcha_gd_fonts']) -1)],
+			'A' =>	$chars['A'][mt_rand(0, min(sizeof($chars['A']), $config['captcha_gd_fonts']) -1)],
+			'B' =>	$chars['B'][mt_rand(0, min(sizeof($chars['B']), $config['captcha_gd_fonts']) -1)],
+			'C' =>	$chars['C'][mt_rand(0, min(sizeof($chars['C']), $config['captcha_gd_fonts']) -1)],
+			'D' =>	$chars['D'][mt_rand(0, min(sizeof($chars['D']), $config['captcha_gd_fonts']) -1)],
+			'E' =>	$chars['E'][mt_rand(0, min(sizeof($chars['E']), $config['captcha_gd_fonts']) -1)],
+			'F' =>	$chars['F'][mt_rand(0, min(sizeof($chars['F']), $config['captcha_gd_fonts']) -1)],
+			'G' =>	$chars['G'][mt_rand(0, min(sizeof($chars['G']), $config['captcha_gd_fonts']) -1)],
+			'H' =>	$chars['H'][mt_rand(0, min(sizeof($chars['H']), $config['captcha_gd_fonts']) -1)],
+			'I' =>	$chars['I'][mt_rand(0, min(sizeof($chars['I']), $config['captcha_gd_fonts']) -1)],
+			'J' =>	$chars['J'][mt_rand(0, min(sizeof($chars['J']), $config['captcha_gd_fonts']) -1)],
+			'K' =>	$chars['K'][mt_rand(0, min(sizeof($chars['K']), $config['captcha_gd_fonts']) -1)],
+			'L' =>	$chars['L'][mt_rand(0, min(sizeof($chars['L']), $config['captcha_gd_fonts']) -1)],
+			'M' =>	$chars['M'][mt_rand(0, min(sizeof($chars['M']), $config['captcha_gd_fonts']) -1)],  
+			'N' =>	$chars['N'][mt_rand(0, min(sizeof($chars['N']), $config['captcha_gd_fonts']) -1)],
+			'O' =>	$chars['O'][mt_rand(0, min(sizeof($chars['O']), $config['captcha_gd_fonts']) -1)],
+			'P' =>	$chars['P'][mt_rand(0, min(sizeof($chars['P']), $config['captcha_gd_fonts']) -1)],
+			'Q' =>	$chars['Q'][mt_rand(0, min(sizeof($chars['Q']), $config['captcha_gd_fonts']) -1)],
+			'R' =>	$chars['R'][mt_rand(0, min(sizeof($chars['R']), $config['captcha_gd_fonts']) -1)],
+			'S' =>	$chars['S'][mt_rand(0, min(sizeof($chars['S']), $config['captcha_gd_fonts']) -1)],
+			'T' =>	$chars['T'][mt_rand(0, min(sizeof($chars['T']), $config['captcha_gd_fonts']) -1)],
+			'U' =>	$chars['U'][mt_rand(0, min(sizeof($chars['U']), $config['captcha_gd_fonts']) -1)],
+			'V' =>	$chars['V'][mt_rand(0, min(sizeof($chars['V']), $config['captcha_gd_fonts']) -1)],
+			'W' =>	$chars['W'][mt_rand(0, min(sizeof($chars['W']), $config['captcha_gd_fonts']) -1)],
+			'X' =>	$chars['X'][mt_rand(0, min(sizeof($chars['X']), $config['captcha_gd_fonts']) -1)],
+			'Y' =>	$chars['Y'][mt_rand(0, min(sizeof($chars['Y']), $config['captcha_gd_fonts']) -1)],
+			'Z' =>	$chars['Z'][mt_rand(0, min(sizeof($chars['Z']), $config['captcha_gd_fonts']) -1)],
 
 			'1' => array(
 				array(0,0,0,1,1,0,0,0,0),

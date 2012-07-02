@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: functions_admin.php 10261 2009-11-09 16:29:30Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -66,8 +66,6 @@ function make_forum_select($select_id = false, $ignore_id = false, $ignore_acl =
 {
 	global $db, $user, $auth;
 
-	$acl = ($ignore_acl) ? '' : (($only_acl_post) ? 'f_post' : array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'));
-
 	// This query is identical to the jumpbox one
 	$sql = 'SELECT forum_id, forum_name, parent_id, forum_type, forum_flags, forum_options, left_id, right_id
 		FROM ' . FORUMS_TABLE . '
@@ -98,17 +96,16 @@ function make_forum_select($select_id = false, $ignore_id = false, $ignore_acl =
 		$right = $row['right_id'];
 		$disabled = false;
 
-		if ($acl && !$auth->acl_gets($acl, $row['forum_id']))
+		if (!$ignore_acl && $auth->acl_gets(array('f_list', 'a_forum', 'a_forumadd', 'a_forumdel'), $row['forum_id']))
 		{
-			// List permission?
-			if ($auth->acl_get('f_list', $row['forum_id']))
+			if ($only_acl_post && !$auth->acl_get('f_post', $row['forum_id']) || (!$auth->acl_get('m_approve', $row['forum_id']) && !$auth->acl_get('f_noapprove', $row['forum_id'])))
 			{
 				$disabled = true;
 			}
-			else
-			{
-				continue;
-			}
+		}
+		else if (!$ignore_acl)
+		{
+			continue;
 		}
 
 		if (
@@ -576,8 +573,8 @@ function move_posts($post_ids, $topic_id, $auto_sync = true)
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$forum_ids[] = $row['forum_id'];
-		$topic_ids[] = $row['topic_id'];
+		$forum_ids[] = (int) $row['forum_id'];
+		$topic_ids[] = (int) $row['topic_id'];
 	}
 	$db->sql_freeresult($result);
 
@@ -594,7 +591,7 @@ function move_posts($post_ids, $topic_id, $auto_sync = true)
 	}
 
 	$sql = 'UPDATE ' . POSTS_TABLE . '
-		SET forum_id = ' . $forum_row['forum_id'] . ", topic_id = $topic_id
+		SET forum_id = ' . (int) $forum_row['forum_id'] . ", topic_id = $topic_id
 		WHERE " . $db->sql_in_set('post_id', $post_ids);
 	$db->sql_query($sql);
 
@@ -605,7 +602,7 @@ function move_posts($post_ids, $topic_id, $auto_sync = true)
 
 	if ($auto_sync)
 	{
-		$forum_ids[] = $forum_row['forum_id'];
+		$forum_ids[] = (int) $forum_row['forum_id'];
 
 		sync('topic_reported', 'topic_id', $topic_ids);
 		sync('topic_attachment', 'topic_id', $topic_ids);
@@ -679,7 +676,7 @@ function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_s
 
 	$db->sql_transaction('begin');
 
-	$table_ary = array(TOPICS_TRACK_TABLE, TOPICS_POSTED_TABLE, POLL_VOTES_TABLE, POLL_OPTIONS_TABLE, TOPICS_WATCH_TABLE, TOPICS_TABLE);
+	$table_ary = array(BOOKMARKS_TABLE, TOPICS_TRACK_TABLE, TOPICS_POSTED_TABLE, POLL_VOTES_TABLE, POLL_OPTIONS_TABLE, TOPICS_WATCH_TABLE, TOPICS_TABLE);
 
 	foreach ($table_ary as $table)
 	{
@@ -923,7 +920,13 @@ function delete_attachments($mode, $ids, $resync = true)
 {
 	global $db, $config;
 
-	if (is_array($ids) && sizeof($ids))
+	// 0 is as bad as an empty array
+	if (empty($ids))
+	{
+		return false;
+	}
+
+	if (is_array($ids))
 	{
 		$ids = array_unique($ids);
 		$ids = array_map('intval', $ids);
@@ -931,11 +934,6 @@ function delete_attachments($mode, $ids, $resync = true)
 	else
 	{
 		$ids = array((int) $ids);
-	}
-
-	if (!sizeof($ids))
-	{
-		return false;
 	}
 
 	$sql_where = '';
@@ -1138,53 +1136,65 @@ function delete_attachments($mode, $ids, $resync = true)
 }
 
 /**
-* Remove topic shadows
+* Deletes shadow topics pointing to a specified forum.
+*
+* @param int		$forum_id		The forum id
+* @param string		$sql_more		Additional WHERE statement, e.g. t.topic_time < (time() - 1234)
+* @param bool		$auto_sync		Will call sync() if this is true
+*
+* @return array		Array with affected forums
+*
+* @author bantu
 */
-function delete_topic_shadows($max_age, $forum_id = '', $auto_sync = true)
+function delete_topic_shadows($forum_id, $sql_more = '', $auto_sync = true)
 {
-	$where = (is_array($forum_id)) ? 'AND ' . $db->sql_in_set('t.forum_id', array_map('intval', $forum_id)) : (($forum_id) ? 'AND t.forum_id = ' . (int) $forum_id : '');
+	global $db;
 
-	switch ($db->sql_layer)
+	if (!$forum_id)
 	{
-		case 'mysql4':
-		case 'mysqli':
-			$sql = 'DELETE t.*
-				FROM ' . TOPICS_TABLE . ' t, ' . TOPICS_TABLE . ' t2
-				WHERE t.topic_moved_id = t2.topic_id
-					AND t.topic_time < ' . (time() - $max_age)
-				. $where;
-			$db->sql_query($sql);
-		break;
-
-		default:
-			$sql = 'SELECT t.topic_id
-				FROM ' . TOPICS_TABLE . ' t, ' . TOPICS_TABLE . ' t2
-				WHERE t.topic_moved_id = t2.topic_id
-					AND t.topic_time < ' . (time() - $max_age)
-				. $where;
-			$result = $db->sql_query($sql);
-
-			$topic_ids = array();
-			while ($row = $db->sql_fetchrow($result))
-			{
-				$topic_ids[] = $row['topic_id'];
-			}
-			$db->sql_freeresult($result);
-
-			if (sizeof($topic_ids))
-			{
-				$sql = 'DELETE FROM ' . TOPICS_TABLE . '
-					WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
-				$db->sql_query($sql);
-			}
-		break;
+		// Nothing to do.
+		return;
 	}
+
+	// Set of affected forums we have to resync
+	$sync_forum_ids = array();
+
+	// Amount of topics we select and delete at once.
+	$batch_size = 500;
+
+	do
+	{
+		$sql = 'SELECT t2.forum_id, t2.topic_id
+			FROM ' . TOPICS_TABLE . ' t2, ' . TOPICS_TABLE . ' t
+			WHERE t2.topic_moved_id = t.topic_id
+				AND t.forum_id = ' . (int) $forum_id . '
+				' . (($sql_more) ? 'AND ' . $sql_more : '');
+		$result = $db->sql_query_limit($sql, $batch_size);
+
+		$topic_ids = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$topic_ids[] = (int) $row['topic_id'];
+
+			$sync_forum_ids[(int) $row['forum_id']] = (int) $row['forum_id'];
+		}
+		$db->sql_freeresult($result);
+
+		if (!empty($topic_ids))
+		{
+			$sql = 'DELETE FROM ' . TOPICS_TABLE . '
+				WHERE ' . $db->sql_in_set('topic_id', $topic_ids);
+			$db->sql_query($sql);
+		}
+	}
+	while (sizeof($topic_ids) == $batch_size);
 
 	if ($auto_sync)
 	{
-		$where_type = ($forum_id) ? 'forum_id' : '';
-		sync('forum', $where_type, $forum_id, true, true);
+		sync('forum', 'forum_id', $sync_forum_ids, true, true);
 	}
+
+	return $sync_forum_ids;
 }
 
 /**
@@ -2507,6 +2517,7 @@ function cache_moderators()
 
 /**
 * View log
+* If $log_count is set to false, we will skip counting all entries in the database.
 */
 function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id = 0, $topic_id = 0, $user_id = 0, $limit_days = 0, $sort_by = 'l.log_time DESC', $keywords = '')
 {
@@ -2593,6 +2604,35 @@ function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id 
 			$sql_keywords .= $db->sql_in_set('l.log_operation', $operations) . ' OR ';
 		}
 		$sql_keywords .= 'LOWER(l.log_data) ' . implode(' OR LOWER(l.log_data) ', $keywords) . ')';
+	}
+
+	if ($log_count !== false)
+	{
+		$sql = 'SELECT COUNT(l.log_id) AS total_entries
+			FROM ' . LOG_TABLE . ' l, ' . USERS_TABLE . " u
+			WHERE l.log_type = $log_type
+				AND l.user_id = u.user_id
+				AND l.log_time >= $limit_days
+				$sql_keywords
+				$sql_forum";
+		$result = $db->sql_query($sql);
+		$log_count = (int) $db->sql_fetchfield('total_entries');
+		$db->sql_freeresult($result);
+	}
+
+	// $log_count may be false here if false was passed in for it,
+	// because in this case we did not run the COUNT() query above.
+	// If we ran the COUNT() query and it returned zero rows, return;
+	// otherwise query for logs below.
+	if ($log_count === 0)
+	{
+		// Save the queries, because there are no logs to display
+		return 0;
+	}
+
+	if ($offset >= $log_count)
+	{
+		$offset = ($offset - $limit < 0) ? 0 : $offset - $limit;
 	}
 
 	$sql = "SELECT l.*, u.username, u.username_clean, u.user_colour
@@ -2762,18 +2802,7 @@ function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id 
 		}
 	}
 
-	$sql = 'SELECT COUNT(l.log_id) AS total_entries
-		FROM ' . LOG_TABLE . ' l, ' . USERS_TABLE . " u
-		WHERE l.log_type = $log_type
-			AND l.user_id = u.user_id
-			AND l.log_time >= $limit_days
-			$sql_keywords
-			$sql_forum";
-	$result = $db->sql_query($sql);
-	$log_count = (int) $db->sql_fetchfield('total_entries');
-	$db->sql_freeresult($result);
-
-	return;
+	return $offset;
 }
 
 /**
@@ -2904,6 +2933,12 @@ function view_inactive_users(&$users, &$user_count, $limit = 0, $offset = 0, $li
 	$result = $db->sql_query($sql);
 	$user_count = (int) $db->sql_fetchfield('user_count');
 	$db->sql_freeresult($result);
+
+	if ($user_count == 0)
+	{
+		// Save the queries, because there are no users to display
+		return 0;
+	}
 
 	if ($offset >= $user_count)
 	{
@@ -3051,6 +3086,7 @@ function get_database_size()
 
 		case 'mssql':
 		case 'mssql_odbc':
+		case 'mssqlnative':
 			$sql = 'SELECT ((SUM(size) * 8.0) * 1024.0) as dbsize
 				FROM sysfiles';
 			$result = $db->sql_query($sql, 7200);
@@ -3109,7 +3145,7 @@ function get_database_size()
 /**
 * Retrieve contents from remotely stored file
 */
-function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port = 80, $timeout = 10)
+function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port = 80, $timeout = 6)
 {
 	global $user;
 
@@ -3118,6 +3154,9 @@ function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port 
 		@fputs($fsock, "GET $directory/$filename HTTP/1.1\r\n");
 		@fputs($fsock, "HOST: $host\r\n");
 		@fputs($fsock, "Connection: close\r\n\r\n");
+
+		$timer_stop = time() + $timeout;
+		stream_set_timeout($fsock, $timeout);
 
 		$file_info = '';
 		$get_info = false;
@@ -3140,6 +3179,14 @@ function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port 
 					$errstr = $user->lang['FILE_NOT_FOUND'] . ': ' . $filename;
 					return false;
 				}
+			}
+
+			$stream_meta_data = stream_get_meta_data($fsock);
+
+			if (!empty($stream_meta_data['timed_out']) || time() >= $timer_stop)
+			{
+				$errstr = $user->lang['FSOCK_TIMEOUT'];
+				return false;
 			}
 		}
 		@fclose($fsock);
@@ -3299,7 +3346,7 @@ function obtain_latest_version_info($force_update = false, $warn_fail = false, $
 		$errstr = '';
 		$errno = 0;
 
-		$info = get_remote_file('www.phpbb.com', '/updatecheck',
+		$info = get_remote_file('version.phpbb.com', '/phpbb',
 				((defined('PHPBB_QA')) ? '30x_qa.txt' : '30x.txt'), $errstr, $errno);
 
 		if ($info === false)
@@ -3316,6 +3363,26 @@ function obtain_latest_version_info($force_update = false, $warn_fail = false, $
 	}
 
 	return $info;
+}
+
+/**
+ * Enables a particular flag in a bitfield column of a given table.
+ *
+ * @param string	$table_name		The table to update
+ * @param string	$column_name	The column containing a bitfield to update
+ * @param int		$flag			The binary flag which is OR-ed with the current column value
+ * @param string	$sql_more		This string is attached to the sql query generated to update the table.
+ *
+ * @return void
+ */
+function enable_bitfield_column_flag($table_name, $column_name, $flag, $sql_more = '')
+{
+	global $db;
+
+	$sql = 'UPDATE ' . $table_name . '
+		SET ' . $column_name . ' = ' . $db->sql_bit_or($column_name, $flag) . '
+		' . $sql_more;
+	$db->sql_query($sql);
 }
 
 ?>

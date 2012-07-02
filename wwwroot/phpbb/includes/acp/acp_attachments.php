@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_attachments.php 9905 2009-08-01 12:28:50Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -90,6 +90,7 @@ class acp_attachments
 				$s_assigned_groups = array();
 				while ($row = $db->sql_fetchrow($result))
 				{
+					$row['group_name'] = (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'];
 					$s_assigned_groups[$row['cat_id']][] = $row['group_name'];
 				}
 				$db->sql_freeresult($result);
@@ -124,11 +125,11 @@ class acp_attachments
 						'legend2'					=> $l_legend_cat_images,
 						'img_display_inlined'		=> array('lang' => 'DISPLAY_INLINED',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'img_create_thumbnail'		=> array('lang' => 'CREATE_THUMBNAIL',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'img_max_thumb_width'		=> array('lang' => 'MAX_THUMB_WIDTH',		'validate' => 'int',	'type' => 'text:7:15', 'explain' => true, 'append' => ' px'),
+						'img_max_thumb_width'		=> array('lang' => 'MAX_THUMB_WIDTH',		'validate' => 'int',	'type' => 'text:7:15', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
 						'img_min_thumb_filesize'	=> array('lang' => 'MIN_THUMB_FILESIZE',	'validate' => 'int',	'type' => 'text:7:15', 'explain' => true, 'append' => ' ' . $user->lang['BYTES']),
 						'img_imagick'				=> array('lang' => 'IMAGICK_PATH',			'validate' => 'string',	'type' => 'text:20:200', 'explain' => true, 'append' => '&nbsp;&nbsp;<span>[ <a href="' . $this->u_action . '&amp;action=imgmagick">' . $user->lang['SEARCH_IMAGICK'] . '</a> ]</span>'),
-						'img_max'					=> array('lang' => 'MAX_IMAGE_SIZE',		'validate' => 'int',	'type' => 'dimension:3:4', 'explain' => true, 'append' => ' px'),
-						'img_link'					=> array('lang' => 'IMAGE_LINK_SIZE',		'validate' => 'int',	'type' => 'dimension:3:4', 'explain' => true, 'append' => ' px'),
+						'img_max'					=> array('lang' => 'MAX_IMAGE_SIZE',		'validate' => 'int',	'type' => 'dimension:3:4', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
+						'img_link'					=> array('lang' => 'IMAGE_LINK_SIZE',		'validate' => 'int',	'type' => 'dimension:3:4', 'explain' => true, 'append' => ' ' . $user->lang['PIXEL']),
 					)
 				);
 
@@ -494,6 +495,10 @@ class acp_attachments
 						$sql = 'SELECT group_id
 							FROM ' . EXTENSION_GROUPS_TABLE . "
 							WHERE LOWER(group_name) = '" . $db->sql_escape(utf8_strtolower($new_group_name)) . "'";
+						if ($group_id)
+						{
+							$sql .= ' AND group_id <> ' . $group_id;
+						}
 						$result = $db->sql_query($sql);
 
 						if ($db->sql_fetchrow($result))
@@ -551,6 +556,7 @@ class acp_attachments
 							$group_id = $db->sql_nextid();
 						}
 
+						$group_name = (isset($user->lang['EXT_GROUP_' . $group_name])) ? $user->lang['EXT_GROUP_' . $group_name] : $group_name;
 						add_log('admin', 'LOG_ATTACH_EXTGROUP_' . strtoupper($action), $group_name);
 					}
 
@@ -858,7 +864,7 @@ class acp_attachments
 						'U_EDIT'		=> $this->u_action . "&amp;action=edit&amp;g={$row['group_id']}",
 						'U_DELETE'		=> $this->u_action . "&amp;action=delete&amp;g={$row['group_id']}",
 
-						'GROUP_NAME'	=> $row['group_name'],
+						'GROUP_NAME'	=> (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'],
 						'CATEGORY'		=> $cat_lang[$row['cat_id']],
 						)
 					);
@@ -1118,6 +1124,7 @@ class acp_attachments
 		$group_name = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
+			$row['group_name'] = (isset($user->lang['EXT_GROUP_' . $row['group_name']])) ? $user->lang['EXT_GROUP_' . $row['group_name']] : $row['group_name'];
 			$group_name[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1215,7 +1222,7 @@ class acp_attachments
 			return;
 		}
 
-		if (!is_writable($phpbb_root_path . $upload_dir))
+		if (!phpbb_is_writable($phpbb_root_path . $upload_dir))
 		{
 			$error[] = sprintf($user->lang['NO_WRITE_UPLOAD'], $upload_dir);
 			return;

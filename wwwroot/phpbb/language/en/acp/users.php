@@ -4,7 +4,7 @@
 * acp_users [English]
 *
 * @package language
-* @version $Id: users.php 9767 2009-07-17 11:27:50Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -42,6 +42,7 @@ $lang = array_merge($lang, array(
 	'BAN_ALREADY_ENTERED'	=> 'The ban had been previously entered successfully. The ban list has not been updated.',
 	'BAN_SUCCESSFUL'		=> 'Ban entered successfully.',
 
+	'CANNOT_BAN_ANONYMOUS'			=> 'You are not allowed to ban the anonymous account. Permissions for anonymous users can be set under the Permissions tab.',
 	'CANNOT_BAN_FOUNDER'			=> 'You are not allowed to ban founder accounts.',
 	'CANNOT_BAN_YOURSELF'			=> 'You are not allowed to ban yourself.',
 	'CANNOT_DEACTIVATE_BOT'			=> 'You are not allowed to deactivate bot accounts. Please deactivate the bot within the bots page instead.',

@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_prune.php 9754 2009-07-14 12:02:11Z rxu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -315,8 +315,8 @@ class acp_prune
 					'mode'			=> $mode,
 					'prune'			=> 1,
 
-					'users'			=> request_var('users', '', true),
-					'username'		=> request_var('username', '', true),
+					'users'			=> utf8_normalize_nfc(request_var('users', '', true)),
+					'username'		=> utf8_normalize_nfc(request_var('username', '', true)),
 					'email'			=> request_var('email', ''),
 					'joined_select'	=> request_var('joined_select', ''),
 					'joined'		=> request_var('joined', ''),
@@ -369,7 +369,7 @@ class acp_prune
 	{
 		global $user, $db;
 
-		$users = request_var('users', '', true);
+		$users = utf8_normalize_nfc(request_var('users', '', true));
 		
 		if ($users)
 		{
@@ -378,7 +378,7 @@ class acp_prune
 		}
 		else
 		{
-			$username = request_var('username', '', true);
+			$username = utf8_normalize_nfc(request_var('username', '', true));
 			$email = request_var('email', '');
 
 			$joined_select = request_var('joined_select', 'lt');

@@ -3,7 +3,7 @@
 * acp_permissions_phpbb (phpBB Permission Set) [English]
 *
 * @package language
-* @version $Id: permissions_phpbb.php 9686 2009-06-26 11:52:54Z rxu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 */

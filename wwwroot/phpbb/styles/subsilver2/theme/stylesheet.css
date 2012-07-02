@@ -1,14 +1,9 @@
-/*  phpBB 3.0 Style Sheet
+/*  phpBB3 Style Sheet
     --------------------------------------------------------------
-	Style name:		subsilver2
-	Based on style:	subSilver (the default phpBB 2 style)
-	Original author:	subBlue ( http://www.subBlue.com/ )
-	Modified by:		psoTFX and the phpBB team ( http://www.phpbb.com )
-	
-	This is an alternative style for phpBB3 for those wishing to stay with
-	the familiar subSilver style of phpBB version 2.x
-	
-	Copyright 2006 phpBB Group ( http://www.phpbb.com/ )
+	Style name:			subsilver2
+	Based on style:		subSilver (the default phpBB 2.0.x style)
+	Original author:	Tom Beddard ( http://www.subblue.com/ )
+	Modified by:		phpBB Group ( http://www.phpbb.com/ )
     --------------------------------------------------------------
 */
 
@@ -210,13 +205,13 @@ p.topicdetails {
 	margin: 1px 0;
 }
 
-.postreported, .postreported a:visited, .postreported a:hover, .postreported a:link, .postreported a:active {
+.postreported, .postreported a:link, .postreported a:visited, .postreported a:hover, .postreported a:active {
 	margin: 1px 0;
 	color: red;
 	font-weight:bold;
 }
 
-.postapprove, .postapprove a:visited, .postapprove a:hover, .postapprove a:link, .postapprove a:active {
+.postapprove, .postapprove a:link, .postapprove a:visited, .postapprove a:hover, .postapprove a:active {
 	color: green;
 	font-weight:bold;
 }
@@ -379,12 +374,20 @@ hr {
 
 /* Links
  ------------ */
+
+/* Links adjustment to correctly display an order of rtl/ltr mixed content */
+.rtl a {
+	direction: rtl;
+	unicode-bidi: embed;
+}
+
+/* CSS spec requires a:link, a:visited, a:hover and a:active rules to be specified in this order. */
+/* See http://www.phpbb.com/bugs/phpbb3/59685 */
 a:link {
 	color: #006597;
 	text-decoration: none;
 }
 
-a:active,
 a:visited {
 	color: #005784;
 	text-decoration: none;
@@ -393,6 +396,11 @@ a:visited {
 a:hover {
 	color: #D46400;
 	text-decoration: underline;
+}
+
+a:active {
+	color: #005784;
+	text-decoration: none;
 }
 
 a.forumlink {

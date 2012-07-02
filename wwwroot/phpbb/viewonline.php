@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: viewonline.php 9566 2009-06-09 15:52:03Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

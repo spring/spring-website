@@ -74,7 +74,7 @@
 			<!-- ELSEIF draftrow.S_LINK_PM --><br /><span class="gensmall">{L_PRIVATE_MESSAGE}</span>
 			<!-- ELSE --><br /><span class="gensmall">{L_NO_TOPIC_FORUM}</span><!-- ENDIF -->
 		</td>
-		<td style="padding: 4px;" align="center"><span class="gen"><a href="{draftrow.U_INSERT}">{L_LOAD_DRAFT}</a></td>
+		<td style="padding: 4px;" align="center"><span class="gen"><a href="{draftrow.U_INSERT}">{L_LOAD_DRAFT}</a></span></td>
 	</tr>
 	<!-- END draftrow -->
 	</table>
@@ -210,7 +210,7 @@
 		<table width="100%" cellspacing="0" cellpadding="0" border="0">
 		<!-- INCLUDE posting_buttons.html -->
 		<tr>
-			<td valign="top" style="width: 100%;"><textarea name="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" style="width: 98%;">{MESSAGE}</textarea></td>
+			<td valign="top" style="width: 100%;"><textarea name="message" rows="15" cols="76" tabindex="3" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="width: 98%; height: 270px;">{MESSAGE}</textarea></td>
 			<!-- IF S_BBCODE_ALLOWED -->
 			<td width="80" align="center" valign="top">
 				<script type="text/javascript">
@@ -249,10 +249,10 @@
 		<tr>
 			<td class="gensmall">{URL_STATUS}</td>
 		</tr>
+		<!-- ENDIF -->
 		<tr>
 			<td class="gensmall">{SMILIES_STATUS}</td>
 		</tr>
-		<!-- ENDIF -->
 		</table>
 	</td>
 	<td class="row2">
@@ -332,32 +332,18 @@
 	</tr>
 <!-- ENDIF -->
 
-<!-- IF S_CONFIRM_CODE -->
-	<tr>
-		<th colspan="2" valign="middle">{L_POST_CONFIRMATION}</th>
-	</tr>
-	<tr>
-		<td class="row3" colspan="2"><span class="gensmall">{L_POST_CONFIRM_EXPLAIN}</span></td>
-	</tr>
-	<tr>
-		<td class="row1" colspan="2" align="center">
-			<input type="hidden" name="confirm_id" value="{CONFIRM_ID}" />
-			{CONFIRM_IMAGE}
-		</td>
-	</tr>
-	<tr>
-		<td class="row1"><b class="genmed">{L_CONFIRM_CODE}: </b><br /><span class="gensmall">{L_CONFIRM_CODE_EXPLAIN}</span></td>
-		<td class="row2"><input class="post" type="text" name="confirm_code" size="8" maxlength="8" /></td>
-	</tr>
-<!-- ENDIF -->
+		<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+		<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+		<!-- ENDIF -->
+
 
 <!-- IF S_SHOW_ATTACH_BOX or S_SHOW_POLL_BOX -->
 	<tr>
 		<td class="cat" colspan="2" align="center">
 			<input class="btnlite" type="submit" tabindex="5" name="preview" value="{L_PREVIEW}" />
 			&nbsp; <input class="btnmain" type="submit" accesskey="s" tabindex="6" name="post" value="{L_SUBMIT}" />
-			<!-- IF S_SAVE_ALLOWED -->&nbsp; <input class="btnlite" type="submit" accesskey="k" tabindex="7" name="save" value="{L_SAVE}" /><!-- ENDIF -->
-			<!-- IF S_HAS_DRAFTS -->&nbsp; <input class="btnlite" type="submit" accesskey="d" tabindex="8" name="load" value="{L_LOAD}" /><!-- ENDIF -->
+			<!-- IF S_SAVE_ALLOWED -->&nbsp; <input class="btnlite" type="submit" accesskey="k" tabindex="7" name="save" value="{L_SAVE_DRAFT}" /><!-- ENDIF -->
+			<!-- IF S_HAS_DRAFTS -->&nbsp; <input class="btnlite" type="submit" accesskey="d" tabindex="8" name="load" value="{L_LOAD_DRAFT}" /><!-- ENDIF -->
 			&nbsp; <input class="btnlite" type="submit" accesskey="c" tabindex="9" name="cancel" value="{L_CANCEL}" />
 		</td>
 	</tr>
@@ -379,14 +365,17 @@
 		<input class="btnlite" type="submit" tabindex="10" name="preview" value="{L_PREVIEW}" />
 		&nbsp; <input class="btnmain" type="submit" accesskey="s" tabindex="11" name="post" value="{L_SUBMIT}" />
 		<!-- IF not S_SHOW_ATTACH_BOX and not S_SHOW_POLL_BOX -->
-			<!-- IF S_SAVE_ALLOWED -->&nbsp; <input class="btnlite" type="submit" accesskey="k" tabindex="12" name="save" value="{L_SAVE}" /><!-- ENDIF -->
-			<!-- IF S_HAS_DRAFTS -->&nbsp; <input class="btnlite" type="submit" accesskey="d" tabindex="13" name="load" value="{L_LOAD}" /><!-- ENDIF -->
+			<!-- IF S_SAVE_ALLOWED -->&nbsp; <input class="btnlite" type="submit" accesskey="k" tabindex="12" name="save" value="{L_SAVE_DRAFT}" /><!-- ENDIF -->
+			<!-- IF S_HAS_DRAFTS -->&nbsp; <input class="btnlite" type="submit" accesskey="d" tabindex="13" name="load" value="{L_LOAD_DRAFT}" /><!-- ENDIF -->
 		<!-- ENDIF -->
 		&nbsp; <input class="btnlite" type="submit" accesskey="c" tabindex="14" name="cancel" value="{L_CANCEL}" />
 	</td>
 </tr>
 </table>
-
+<!-- IF not S_PRIVMSGS -->
+	{S_FORM_TOKEN}
+	</form>
+<!-- ENDIF -->
 <br clear="all" />
 
 <!-- IF S_DISPLAY_REVIEW --><!-- INCLUDE posting_topic_review.html --><!-- ENDIF -->
@@ -397,8 +386,7 @@
 <!-- ELSE -->
 
 	<!-- INCLUDE breadcrumbs.html -->
-	{S_FORM_TOKEN}
-	</form>
+
 
 	<!-- IF S_DISPLAY_ONLINE_LIST -->
 		<br clear="all" />

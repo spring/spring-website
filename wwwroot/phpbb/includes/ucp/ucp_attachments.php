@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_attachments.php 9500 2009-04-30 08:30:01Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

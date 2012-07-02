@@ -4,7 +4,7 @@
 * acp_posting [English]
 *
 * @package language
-* @version $Id: posting.php 9902 2009-08-01 11:07:48Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -41,6 +41,9 @@ $lang = array_merge($lang, array(
 	'ACP_BBCODES_EXPLAIN'		=> 'BBCode is a special implementation of HTML offering greater control over what and how something is displayed. From this page you can add, remove and edit custom BBCodes.',
 	'ADD_BBCODE'				=> 'Add a new BBCode',
 
+	'BBCODE_DANGER'				=> 'The BBCode you are trying to add seems to use a {TEXT} token inside a HTML attribute. This is a possible XSS security issue. Try using the more restrictive {SIMPLETEXT} or {INTTEXT} types instead. Only proceed if you understand the risks involved and you consider the use of {TEXT} absolutely unavoidable.',
+	'BBCODE_DANGER_PROCEED'		=> 'Proceed', //'I understand the risk',
+
 	'BBCODE_ADDED'				=> 'BBCode added successfully.',
 	'BBCODE_EDITED'				=> 'BBCode edited successfully.',
 	'BBCODE_NOT_EXIST'			=> 'The BBCode you selected does not exist.',
@@ -73,8 +76,9 @@ $lang = array_merge($lang, array(
 	'TOO_MANY_BBCODES'		=> 'You cannot create any more BBCodes. Please remove one or more BBCodes then try again.',
 
 	'tokens'	=>	array(
-		'TEXT'			=> 'Any text, including foreign characters, numbers, etc… You should not use this token in HTML tags. Instead try to use IDENTIFIER or SIMPLETEXT.',
+		'TEXT'			=> 'Any text, including foreign characters, numbers, etc… You should not use this token in HTML tags. Instead try to use IDENTIFIER, INTTEXT or SIMPLETEXT.',
 		'SIMPLETEXT'	=> 'Characters from the latin alphabet (A-Z), numbers, spaces, commas, dots, minus, plus, hyphen and underscore',
+		'INTTEXT'		=> 'Unicode letter characters, numbers, spaces, commas, dots, minus, plus, hyphen, underscore and whitespaces.',
 		'IDENTIFIER'	=> 'Characters from the latin alphabet (A-Z), numbers, hyphen and underscore',
 		'NUMBER'		=> 'Any series of digits',
 		'EMAIL'			=> 'A valid e-mail address',
@@ -164,8 +168,9 @@ $lang = array_merge($lang, array(
 	'SMILIES_CONFIG'			=> 'Smiley configuration',
 	'SMILIES_DELETED'			=> 'The smiley has been removed successfully.',
 	'SMILIES_EDIT'				=> 'Edit smiley',
-	'SMILIE_NO_CODE'			=> 'The smilie “%s”  was ignored, as there was no code entered.',
-	'SMILIE_NO_EMOTION'			=> 'The smilie “%s” was ignored, as there was no emotion entered.',
+	'SMILIE_NO_CODE'			=> 'The smiley “%s” was ignored, as there was no code entered.',
+	'SMILIE_NO_EMOTION'			=> 'The smiley “%s” was ignored, as there was no emotion entered.',
+	'SMILIE_NO_FILE'			=> 'The smiley “%s” was ignored, as the file is missing.',
 	'SMILIES_NONE_EDITED'		=> 'No smilies were updated.',
 	'SMILIES_ONE_EDITED'		=> 'The smiley has been updated successfully.',
 	'SMILIES_EDITED'			=> 'The smilies have been updated successfully.',
@@ -229,13 +234,13 @@ $lang = array_merge($lang, array(
 
 // Disallow Usernames
 $lang = array_merge($lang, array(
-	'ACP_DISALLOW_EXPLAIN'	=> 'Here you can control usernames which will not be allowed to be used. Disallowed usernames are allowed to contain a wildcard character of *. Please note that you will not be allowed to specify any username that has already been registered, you must first delete that name then disallow it.',
+	'ACP_DISALLOW_EXPLAIN'	=> 'Here you can control usernames which will not be allowed to be used. Disallowed usernames are allowed to contain a wildcard character of *.',
 	'ADD_DISALLOW_EXPLAIN'	=> 'You can disallow a username using the wildcard character * to match any character.',
 	'ADD_DISALLOW_TITLE'	=> 'Add a disallowed username',
 
 	'DELETE_DISALLOW_EXPLAIN'	=> 'You can remove a disallowed username by selecting the username from this list and clicking submit.',
 	'DELETE_DISALLOW_TITLE'		=> 'Remove a disallowed username',
-	'DISALLOWED_ALREADY'		=> 'The name you entered could not be disallowed. It either already exists in the list, exists in the word censor list, or a matching username is present.',
+	'DISALLOWED_ALREADY'		=> 'The name you entered is already disallowed.',
 	'DISALLOWED_DELETED'		=> 'The disallowed username has been successfully removed.',
 	'DISALLOW_SUCCESSFUL'		=> 'The disallowed username has been successfully added.',
 

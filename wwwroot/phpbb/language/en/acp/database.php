@@ -4,7 +4,7 @@
 * acp_database [English]
 *
 * @package language
-* @version $Id: database.php 9765 2009-07-17 10:11:10Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -59,6 +59,7 @@ $lang = array_merge($lang, array(
 
 	'RESTORE_FAILURE'		=> 'The backup file may be corrupt.',
 	'RESTORE_OPTIONS'		=> 'Restore options',
+	'RESTORE_SELECTED_BACKUP'	=> 'Are you sure you want to restore the selected backup?',
 	'RESTORE_SUCCESS'		=> 'The database has been successfully restored.<br /><br />Your board should be back to the state it was when the backup was made.',
 
 	'SELECT_ALL'			=> 'Select all',

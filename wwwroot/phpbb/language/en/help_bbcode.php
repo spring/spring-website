@@ -4,7 +4,7 @@
 * help_bbcode [English]
 *
 * @package language
-* @version $Id: help_bbcode.php 9623 2009-06-18 18:12:28Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

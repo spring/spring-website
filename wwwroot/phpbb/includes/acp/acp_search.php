@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_search.php 9502 2009-05-01 09:59:57Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -392,7 +392,18 @@ class acp_search
 									AND post_id <= ' . (int) ($post_counter + $this->batch_size);
 							$result = $db->sql_query($sql);
 
-							while ($row = $db->sql_fetchrow($result))
+							$buffer = $db->sql_buffer_nested_transactions();
+
+							if ($buffer)
+							{
+								$rows = $db->sql_fetchrowset($result);
+								$rows[] = false; // indicate end of array for while loop below
+
+								$db->sql_freeresult($result);
+							}
+
+							$i = 0;
+							while ($row = ($buffer ? $rows[$i++] : $db->sql_fetchrow($result)))
 							{
 								// Indexing enabled for this forum or global announcement?
 								// Global announcements get indexed by default.
@@ -402,7 +413,10 @@ class acp_search
 								}
 								$row_count++;
 							}
-							$db->sql_freeresult($result);
+							if (!$buffer)
+							{
+								$db->sql_freeresult($result);
+							}
 
 							$post_counter += $this->batch_size;
 						}

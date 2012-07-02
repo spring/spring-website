@@ -4,7 +4,7 @@
 * acp_attachments [English]
 *
 * @package language
-* @version $Id: attachments.php 8946 2008-09-26 18:32:05Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -85,7 +85,7 @@ $lang = array_merge($lang, array(
 	'DISPLAY_INLINED_EXPLAIN'		=> 'If set to No image attachments will show as a link.',
 	'DISPLAY_ORDER'					=> 'Attachment display order',
 	'DISPLAY_ORDER_EXPLAIN'			=> 'Display attachments ordered by time.',
-	
+
 	'EDIT_EXTENSION_GROUP'			=> 'Edit extension group',
 	'EXCLUDE_ENTERED_IP'			=> 'Enable this to exclude the entered IP/hostname.',
 	'EXCLUDE_FROM_ALLOWED_IP'		=> 'Exclude IP from allowed IPs/hostnames',
@@ -96,6 +96,16 @@ $lang = array_merge($lang, array(
 	'EXTENSION_GROUPS'				=> 'Extension groups',
 	'EXTENSION_GROUP_DELETED'		=> 'Extension group successfully deleted.',
 	'EXTENSION_GROUP_EXIST'			=> 'The extension group %s already exists.',
+
+	'EXT_GROUP_ARCHIVES'			=> 'Archives',
+	'EXT_GROUP_DOCUMENTS'			=> 'Documents',
+	'EXT_GROUP_DOWNLOADABLE_FILES'	=> 'Downloadable Files',
+	'EXT_GROUP_FLASH_FILES'			=> 'Flash Files',
+	'EXT_GROUP_IMAGES'				=> 'Images',
+	'EXT_GROUP_PLAIN_TEXT'			=> 'Plain Text',
+	'EXT_GROUP_QUICKTIME_MEDIA'		=> 'Quicktime Media',
+	'EXT_GROUP_REAL_MEDIA'			=> 'Real Media',
+	'EXT_GROUP_WINDOWS_MEDIA'		=> 'Windows Media',
 
 	'GO_TO_EXTENSIONS'		=> 'Go to extension management screen',
 	'GROUP_NAME'			=> 'Group name',

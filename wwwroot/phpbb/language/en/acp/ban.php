@@ -4,7 +4,7 @@
 * acp_ban [English]
 *
 * @package language
-* @version $Id: ban.php 9727 2009-07-07 13:33:53Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -67,6 +67,9 @@ $lang = array_merge($lang, array(
 	'IP_UNBAN_EXPLAIN'			=> 'You can unban (or un-exclude) multiple IP addresses in one go using the appropriate combination of mouse and keyboard for your computer and browser. Excluded IPs are emphasised.',
 
 	'LENGTH_BAN_INVALID'		=> 'The date has to be formatted <kbd>YYYY-MM-DD</kbd>.',
+
+	'OPTIONS_BANNED'			=> 'Banned',
+	'OPTIONS_EXCLUDED'			=> 'Excluded',
 
 	'PERMANENT'		=> 'Permanent',
 

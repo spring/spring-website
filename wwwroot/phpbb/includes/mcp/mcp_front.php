@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_front.php 10139 2009-09-12 13:17:58Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -350,7 +350,7 @@ function mcp_front_view($id, $mode, $action)
 			// Add forum_id 0 for global announcements
 			$forum_list[] = 0;
 
-			$log_count = 0;
+			$log_count = false;
 			$log = array();
 			view_log('mod', $log, $log_count, 5, 0, $forum_list);
 

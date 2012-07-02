@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_privmsgs.php 10165 2009-09-19 12:21:39Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -894,6 +894,13 @@ function handle_mark_actions($user_id, $mark_action)
 
 		case 'delete_marked':
 
+			global $auth;
+
+			if (!$auth->acl_get('u_pm_delete'))
+			{
+				trigger_error('NO_AUTH_DELETE_MESSAGE');
+			}
+
 			if (confirm_box(true))
 			{
 				delete_pm($user_id, $msg_ids, $cur_folder_id);
@@ -1373,6 +1380,9 @@ function submit_pm($mode, $subject, &$data, $put_in_outbox = true)
 		}
 	}
 
+	// First of all make sure the subject are having the correct length.
+	$subject = truncate_string($subject);
+
 	$db->sql_transaction('begin');
 
 	$sql = '';
@@ -1597,7 +1607,7 @@ function submit_pm($mode, $subject, &$data, $put_in_outbox = true)
 	// Send Notifications
 	if ($mode != 'edit')
 	{
-		pm_notification($mode, $data['from_username'], $recipients, $subject, $data['message']);
+		pm_notification($mode, $data['from_username'], $recipients, $subject, $data['message'], $data['msg_id']);
 	}
 
 	return $data['msg_id'];
@@ -1606,7 +1616,7 @@ function submit_pm($mode, $subject, &$data, $put_in_outbox = true)
 /**
 * PM Notification
 */
-function pm_notification($mode, $author, $recipients, $subject, $message)
+function pm_notification($mode, $author, $recipients, $subject, $message, $msg_id)
 {
 	global $db, $user, $config, $phpbb_root_path, $phpEx, $auth;
 
@@ -1678,8 +1688,9 @@ function pm_notification($mode, $author, $recipients, $subject, $message)
 			'AUTHOR_NAME'	=> htmlspecialchars_decode($author),
 			'USERNAME'		=> htmlspecialchars_decode($addr['name']),
 
-			'U_INBOX'		=> generate_board_url() . "/ucp.$phpEx?i=pm&folder=inbox")
-		);
+			'U_INBOX'			=> generate_board_url() . "/ucp.$phpEx?i=pm&folder=inbox",
+			'U_VIEW_MESSAGE'	=> generate_board_url() . "/ucp.$phpEx?i=pm&mode=view&p=$msg_id",
+		));
 
 		$messenger->send($addr['method']);
 	}
@@ -1744,6 +1755,8 @@ function message_history($msg_id, $user_id, $message_row, $folder, $in_post_mode
 		return false;
 	}
 
+	$title = $row['message_subject'];
+
 	$rowset = array();
 	$bbcode_bitfield = '';
 	$folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm') . '&amp;folder=';
@@ -1766,8 +1779,6 @@ function message_history($msg_id, $user_id, $message_row, $folder, $in_post_mode
 	}
 	while ($row = $db->sql_fetchrow($result));
 	$db->sql_freeresult($result);
-
-	$title = $row['message_subject'];
 
 	if (sizeof($rowset) == 1 && !$in_post_mode)
 	{

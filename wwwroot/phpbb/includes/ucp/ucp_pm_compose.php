@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_pm_compose.php 10251 2009-11-03 14:40:25Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 * Compose private message
 * Called from ucp_pm with mode == 'compose'
 */
-function compose_pm($id, $mode, $action)
+function compose_pm($id, $mode, $action, $user_folders = array())
 {
 	global $template, $db, $auth, $user;
 	global $phpbb_root_path, $phpEx, $config;
@@ -135,6 +135,7 @@ function compose_pm($id, $mode, $action)
 	}
 
 	$sql = '';
+	$folder_id = 0;
 
 	// What is all this following SQL for? Well, we need to know
 	// some basic information in all cases before we do anything.
@@ -398,7 +399,7 @@ function compose_pm($id, $mode, $action)
 	unset($message_text);
 
 	$s_action = append_sid("{$phpbb_root_path}ucp.$phpEx", "i=$id&amp;mode=$mode&amp;action=$action", true, $user->session_id);
-	$s_action .= ($msg_id) ? "&amp;p=$msg_id" : '';
+	$s_action .= (($folder_id) ? "&amp;f=$folder_id" : '') . (($msg_id) ? "&amp;p=$msg_id" : '');
 
 	// Delete triggered ?
 	if ($action == 'delete')
@@ -741,10 +742,30 @@ function compose_pm($id, $mode, $action)
 			$msg_id = submit_pm($action, $subject, $pm_data);
 
 			$return_message_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=view&amp;p=' . $msg_id);
-			$return_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=outbox');
-			meta_refresh(3, $return_message_url);
+			$inbox_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox');
+			$outbox_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=outbox');
 
-			$message = $user->lang['MESSAGE_STORED'] . '<br /><br />' . sprintf($user->lang['VIEW_PRIVATE_MESSAGE'], '<a href="' . $return_message_url . '">', '</a>') . '<br /><br />' . sprintf($user->lang['CLICK_RETURN_FOLDER'], '<a href="' . $return_folder_url . '">', '</a>', $user->lang['PM_OUTBOX']);
+			$folder_url = '';
+			if (($folder_id > 0) && isset($user_folders[$folder_id]))
+			{
+				$folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=' . $folder_id);
+			}
+
+			$return_box_url = ($action === 'post' || $action === 'edit') ? $outbox_folder_url : $inbox_folder_url;
+			$return_box_lang = ($action === 'post' || $action === 'edit') ? 'PM_OUTBOX' : 'PM_INBOX';
+
+
+			$message = $user->lang['MESSAGE_STORED'] . '<br /><br />' . sprintf($user->lang['VIEW_PRIVATE_MESSAGE'], '<a href="' . $return_message_url . '">', '</a>');
+
+			$last_click_type = 'CLICK_RETURN_FOLDER';
+			if ($folder_url)
+			{
+				$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_FOLDER'], '<a href="' . $folder_url . '">', '</a>', $user_folders[$folder_id]['folder_name']);
+				$last_click_type = 'CLICK_GOTO_FOLDER';
+			}
+			$message .= '<br /><br />' . sprintf($user->lang[$last_click_type], '<a href="' . $return_box_url . '">', '</a>', $user->lang[$return_box_lang]);
+
+			meta_refresh(3, $return_message_url);
 			trigger_error($message);
 		}
 
@@ -767,7 +788,7 @@ function compose_pm($id, $mode, $action)
 			$parse_sig->bbcode_uid = $preview_signature_uid;
 			$parse_sig->bbcode_bitfield = $preview_signature_bitfield;
 
-			$parse_sig->format_display($enable_bbcode, $enable_urls, $enable_smilies);
+			$parse_sig->format_display($config['allow_sig_bbcode'], $config['allow_sig_links'], $config['allow_sig_smilies']);
 			$preview_signature = $parse_sig->message;
 			unset($parse_sig);
 		}
@@ -1054,7 +1075,7 @@ function compose_pm($id, $mode, $action)
 		'S_COMPOSE_PM'			=> true,
 		'S_EDIT_POST'			=> ($action == 'edit'),
 		'S_SHOW_PM_ICONS'		=> $s_pm_icons,
-		'S_BBCODE_ALLOWED'		=> $bbcode_status,
+		'S_BBCODE_ALLOWED'		=> ($bbcode_status) ? 1 : 0,
 		'S_BBCODE_CHECKED'		=> ($bbcode_checked) ? ' checked="checked"' : '',
 		'S_SMILIES_ALLOWED'		=> $smilies_status,
 		'S_SMILIES_CHECKED'		=> ($smilies_checked) ? ' checked="checked"' : '',

@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: captcha_factory.php 10224 2009-10-15 10:52:41Z Kellanved $
+* @version $Id$
 * @copyright (c) 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

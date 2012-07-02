@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: phpbb_captcha_nogd_plugin.php 9940 2009-08-07 15:37:27Z Kellanved $
+* @version $Id$
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

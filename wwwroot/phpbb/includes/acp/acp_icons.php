@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_icons.php 10234 2009-10-26 13:59:02Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -394,6 +394,10 @@ class acp_icons
 					{
 						// skip images where add wasn't checked
 					}
+					else if (!file_exists($phpbb_root_path . $img_path . '/' . $image))
+					{
+						$errors[$image] = 'SMILIE_NO_FILE';
+					}
 					else
 					{
 						if ($image_width[$image] == 0 || $image_height[$image] == 0)
@@ -543,7 +547,6 @@ class acp_icons
 							trigger_error($user->lang['WRONG_PAK_TYPE'] . adm_back_link($this->u_action), E_USER_WARNING);
 						}
 					}
-
 
 					// The user has already selected a smilies_pak file
 					if ($current == 'delete')
@@ -942,11 +945,12 @@ class acp_icons
 	{
 		global $db;
 
-		$sql = "SELECT COUNT(*) AS count
+		$sql = "SELECT COUNT(*) AS item_count
 			FROM $table";
 		$result = $db->sql_query($sql);
-		$item_count = (int) $db->sql_fetchfield('count');
+		$item_count = (int) $db->sql_fetchfield('item_count');
 		$db->sql_freeresult($result);
+
 		return $item_count;
 	}
 }

@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: memberlist.php 10257 2009-11-07 15:11:40Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -430,21 +430,71 @@ switch ($mode)
 
 		$user_id = (int) $member['user_id'];
 
+		// Get group memberships
+		// Also get visiting user's groups to determine hidden group memberships if necessary.
+		$auth_hidden_groups = ($user_id === (int) $user->data['user_id'] || $auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel')) ? true : false;
+		$sql_uid_ary = ($auth_hidden_groups) ? array($user_id) : array($user_id, (int) $user->data['user_id']);
+
 		// Do the SQL thang
-		$sql = 'SELECT g.group_id, g.group_name, g.group_type
-			FROM ' . GROUPS_TABLE . ' g, ' . USER_GROUP_TABLE . " ug
-			WHERE ug.user_id = $user_id
-				AND g.group_id = ug.group_id" . ((!$auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel')) ? ' AND g.group_type <> ' . GROUP_HIDDEN : '') . '
-				AND ug.user_pending = 0
-			ORDER BY g.group_type, g.group_name';
+		$sql = 'SELECT g.group_id, g.group_name, g.group_type, ug.user_id
+			FROM ' . GROUPS_TABLE . ' g, ' . USER_GROUP_TABLE . ' ug
+			WHERE ' . $db->sql_in_set('ug.user_id', $sql_uid_ary) . '
+				AND g.group_id = ug.group_id
+				AND ug.user_pending = 0';
 		$result = $db->sql_query($sql);
 
-		$group_options = '';
+		// Divide data into profile data and current user data
+		$profile_groups = $user_groups = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$group_options .= '<option value="' . $row['group_id'] . '"' . (($row['group_id'] == $member['group_id']) ? ' selected="selected"' : '') . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</option>';
+			$row['user_id'] = (int) $row['user_id'];
+			$row['group_id'] = (int) $row['group_id'];
+
+			if ($row['user_id'] == $user_id)
+			{
+				$profile_groups[] = $row;
+			}
+			else
+			{
+				$user_groups[$row['group_id']] = $row['group_id'];
+			}
 		}
 		$db->sql_freeresult($result);
+
+		// Filter out hidden groups and sort groups by name
+		$group_data = $group_sort = array();
+		foreach ($profile_groups as $row)
+		{
+			if ($row['group_type'] == GROUP_SPECIAL)
+			{
+				// Lookup group name in language dictionary
+				if (isset($user->lang['G_' . $row['group_name']]))
+				{
+					$row['group_name'] = $user->lang['G_' . $row['group_name']];
+				}
+			}
+			else if (!$auth_hidden_groups && $row['group_type'] == GROUP_HIDDEN && !isset($user_groups[$row['group_id']]))
+			{
+				// Skip over hidden groups the user cannot see
+				continue;
+			}
+
+			$group_sort[$row['group_id']] = utf8_clean_string($row['group_name']);
+			$group_data[$row['group_id']] = $row;
+		}
+		unset($profile_groups);
+		unset($user_groups);
+		asort($group_sort);
+
+		$group_options = '';
+		foreach ($group_sort as $group_id => $null)
+		{
+			$row = $group_data[$group_id];
+
+			$group_options .= '<option value="' . $row['group_id'] . '"' . (($row['group_id'] == $member['group_id']) ? ' selected="selected"' : '') . '>' . $row['group_name'] . '</option>';
+		}
+		unset($group_data);
+		unset($group_sort);
 
 		// What colour is the zebra
 		$sql = 'SELECT friend, foe
@@ -849,10 +899,7 @@ switch ($mode)
 						$notify_type = NOTIFY_EMAIL;
 					}
 
-					$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-					$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-					$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-					$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+					$messenger->anti_abuse_headers($config, $user);
 
 					$messenger->assign_vars(array(
 						'BOARD_CONTACT'	=> $config['board_contact'],
@@ -980,6 +1027,7 @@ switch ($mode)
 			$joined_select	= request_var('joined_select', 'lt');
 			$active_select	= request_var('active_select', 'lt');
 			$count_select	= request_var('count_select', 'eq');
+
 			$joined			= explode('-', request_var('joined', ''));
 			$active			= explode('-', request_var('active', ''));
 			$count			= (request_var('count', '') !== '') ? request_var('count', 0) : '';
@@ -1018,8 +1066,32 @@ switch ($mode)
 			$sql_where .= ($msn) ? ' AND u.user_msnm ' . $db->sql_like_expression(str_replace('*', $db->any_char, $msn)) . ' ' : '';
 			$sql_where .= ($jabber) ? ' AND u.user_jabber ' . $db->sql_like_expression(str_replace('*', $db->any_char, $jabber)) . ' ' : '';
 			$sql_where .= (is_numeric($count) && isset($find_key_match[$count_select])) ? ' AND u.user_posts ' . $find_key_match[$count_select] . ' ' . (int) $count . ' ' : '';
-			$sql_where .= (sizeof($joined) > 1 && isset($find_key_match[$joined_select])) ? " AND u.user_regdate " . $find_key_match[$joined_select] . ' ' . gmmktime(0, 0, 0, intval($joined[1]), intval($joined[2]), intval($joined[0])) : '';
-			$sql_where .= ($auth->acl_get('u_viewonline') && sizeof($active) > 1 && isset($find_key_match[$active_select])) ? " AND u.user_lastvisit " . $find_key_match[$active_select] . ' ' . gmmktime(0, 0, 0, $active[1], intval($active[2]), intval($active[0])) : '';
+
+			if (isset($find_key_match[$joined_select]) && sizeof($joined) == 3)
+			{
+				// Before PHP 5.1 an error value -1 can be returned instead of false.
+				// Theoretically gmmktime() can also legitimately return -1 as an actual timestamp.
+				// But since we do not pass the $second parameter to gmmktime(),
+				// an actual unix timestamp -1 cannot be returned in this case.
+				// Thus we can check whether it is -1 and treat -1 as an error.
+				$joined_time = gmmktime(0, 0, 0, (int) $joined[1], (int) $joined[2], (int) $joined[0]);
+
+				if ($joined_time !== false && $joined_time !== -1)
+				{
+					$sql_where .= " AND u.user_regdate " . $find_key_match[$joined_select] . ' ' . $joined_time;
+				}
+			}
+
+			if (isset($find_key_match[$active_select]) && sizeof($active) == 3 && $auth->acl_get('u_viewonline'))
+			{
+				$active_time = gmmktime(0, 0, 0, (int) $active[1], (int) $active[2], (int) $active[0]);
+
+				if ($active_time !== false && $active_time !== -1)
+				{
+					$sql_where .= " AND u.user_lastvisit " . $find_key_match[$active_select] . ' ' . $active_time;
+				}
+			}
+
 			$sql_where .= ($search_group_id) ? " AND u.user_id = ug.user_id AND ug.group_id = $search_group_id AND ug.user_pending = 0 " : '';
 
 			if ($search_group_id)
@@ -1218,13 +1290,6 @@ switch ($mode)
 			$total_users = $config['num_users'];
 		}
 
-		$s_char_options = '<option value=""' . ((!$first_char) ? ' selected="selected"' : '') . '>&nbsp; &nbsp;</option>';
-		for ($i = 97; $i < 123; $i++)
-		{
-			$s_char_options .= '<option value="' . chr($i) . '"' . (($first_char == chr($i)) ? ' selected="selected"' : '') . '>' . chr($i-32) . '</option>';
-		}
-		$s_char_options .= '<option value="other"' . (($first_char == 'other') ? ' selected="selected"' : '') . '>' . $user->lang['OTHER'] . '</option>';
-
 		// Build a relevant pagination_url
 		$params = $sort_params = array();
 
@@ -1254,6 +1319,7 @@ switch ($mode)
 			'first_char'	=> array('first_char', ''),
 		);
 
+		$u_first_char_params = array();
 		foreach ($check_params as $key => $call)
 		{
 			if (!isset($_REQUEST[$key]))
@@ -1265,6 +1331,10 @@ switch ($mode)
 			$param = urlencode($key) . '=' . ((is_string($param)) ? urlencode($param) : $param);
 			$params[] = $param;
 
+			if ($key != 'first_char')
+			{
+				$u_first_char_params[] = $param;
+			}
 			if ($key != 'sk' && $key != 'sd')
 			{
 				$sort_params[] = $param;
@@ -1283,6 +1353,27 @@ switch ($mode)
 		$sort_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", implode('&amp;', $sort_params));
 
 		unset($search_params, $sort_params);
+
+		$u_first_char_params = implode('&amp;', $u_first_char_params);
+		$u_first_char_params .= ($u_first_char_params) ? '&amp;' : '';
+
+		$first_characters = array();
+		$first_characters[''] = $user->lang['ALL'];
+		for ($i = 97; $i < 123; $i++)
+		{
+			$first_characters[chr($i)] = chr($i - 32);
+		}
+		$first_characters['other'] = $user->lang['OTHER'];
+
+		foreach ($first_characters as $char => $desc)
+		{
+			$template->assign_block_vars('first_char', array(
+				'DESC'			=> $desc,
+				'VALUE'			=> $char,
+				'S_SELECTED'	=> ($first_char == $char) ? true : false,
+				'U_SORT'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", $u_first_char_params . 'first_char=' . $char) . '#memberlist',
+			));
+		}
 
 		// Some search user specific data
 		if ($mode == 'searchuser' && ($config['load_search'] || $auth->acl_get('a_')))
@@ -1528,7 +1619,6 @@ switch ($mode)
 			'S_LEADERS_SET'		=> $leaders_set,
 			'S_MODE_SELECT'		=> $s_sort_key,
 			'S_ORDER_SELECT'	=> $s_sort_dir,
-			'S_CHAR_OPTIONS'	=> $s_char_options,
 			'S_MODE_ACTION'		=> $pagination_url)
 		);
 }
@@ -1556,7 +1646,7 @@ function show_profile($data, $user_notes_enabled = false, $warn_user_enabled = f
 	$rank_title = $rank_img = $rank_img_src = '';
 	get_user_rank($data['user_rank'], (($user_id == ANONYMOUS) ? false : $data['user_posts']), $rank_title, $rank_img, $rank_img_src);
 
-	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_user'))
+	if ((!empty($data['user_allow_viewemail']) && $auth->acl_get('u_sendemail')) || $auth->acl_get('a_user'))
 	{
 		$email = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=email&amp;u=' . $user_id) : (($config['board_hide_emails'] && !$auth->acl_get('a_user')) ? '' : 'mailto:' . $data['user_email']);
 	}
@@ -1592,7 +1682,7 @@ function show_profile($data, $user_notes_enabled = false, $warn_user_enabled = f
 
 		if ($bday_year)
 		{
-			$now = getdate(time() + $user->timezone + $user->dst - date('Z'));
+			$now = phpbb_gmgetdate(time() + $user->timezone + $user->dst);
 
 			$diff = $now['mon'] - $bday_month;
 			if ($diff == 0)
@@ -1604,7 +1694,7 @@ function show_profile($data, $user_notes_enabled = false, $warn_user_enabled = f
 				$diff = ($diff < 0) ? 1 : 0;
 			}
 
-			$age = (int) ($now['year'] - $bday_year - $diff);
+			$age = max(0, (int) ($now['year'] - $bday_year - $diff));
 		}
 	}
 
@@ -1641,7 +1731,7 @@ function show_profile($data, $user_notes_enabled = false, $warn_user_enabled = f
 		'U_EMAIL'		=> $email,
 		'U_WWW'			=> (!empty($data['user_website'])) ? $data['user_website'] : '',
 		'U_SHORT_WWW'			=> (!empty($data['user_website'])) ? ((strlen($data['user_website']) > 55) ? substr($data['user_website'], 0, 39) . ' ... ' . substr($data['user_website'], -10) : $data['user_website']) : '',
-		'U_ICQ'			=> ($data['user_icq']) ? 'http://www.icq.com/people/webmsg.php?to=' . urlencode($data['user_icq']) : '',
+		'U_ICQ'			=> ($data['user_icq']) ? 'http://www.icq.com/people/' . urlencode($data['user_icq']) . '/' : '',
 		'U_AIM'			=> ($data['user_aim'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=contact&amp;action=aim&amp;u=' . $user_id) : '',
 		'U_YIM'			=> ($data['user_yim']) ? 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($data['user_yim']) . '&amp;.src=pg' : '',
 		'U_MSN'			=> ($data['user_msnm'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=contact&amp;action=msnm&amp;u=' . $user_id) : '',

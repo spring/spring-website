@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_board.php 10080 2009-08-31 14:57:04Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -29,11 +29,12 @@ class acp_board
 	{
 		global $db, $user, $auth, $template;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
+		global $cache;
 
 		$user->add_lang('acp/board');
 
 		$action	= request_var('action', '');
-		$submit = (isset($_POST['submit'])) ? true : false;
+		$submit = (isset($_POST['submit']) || isset($_POST['allow_quick_reply_enable'])) ? true : false;
 
 		$form_key = 'acp_board';
 		add_form_key($form_key);
@@ -57,7 +58,7 @@ class acp_board
 						'board_disable_msg'		=> false,
 						'default_lang'			=> array('lang' => 'DEFAULT_LANGUAGE',		'validate' => 'lang',	'type' => 'select', 'function' => 'language_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => false),
 						'default_dateformat'	=> array('lang' => 'DEFAULT_DATE_FORMAT',	'validate' => 'string',	'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
-						'board_timezone'		=> array('lang' => 'SYSTEM_TIMEZONE',		'validate' => 'string',	'type' => 'select', 'function' => 'tz_select', 'params' => array('{CONFIG_VALUE}', 1), 'explain' => false),
+						'board_timezone'		=> array('lang' => 'SYSTEM_TIMEZONE',		'validate' => 'string',	'type' => 'select', 'function' => 'tz_select', 'params' => array('{CONFIG_VALUE}', 1), 'explain' => true),
 						'board_dst'				=> array('lang' => 'SYSTEM_DST',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
 						'default_style'			=> array('lang' => 'DEFAULT_STYLE',			'validate' => 'int',	'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', false), 'explain' => false),
 						'override_user_style'	=> array('lang' => 'OVERRIDE_STYLE',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
@@ -88,7 +89,7 @@ class acp_board
 						'allow_nocensors'		=> array('lang' => 'ALLOW_NO_CENSORS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'allow_bookmarks'		=> array('lang' => 'ALLOW_BOOKMARKS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'allow_birthdays'		=> array('lang' => 'ALLOW_BIRTHDAYS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_quick_reply'		=> array('lang' => 'ALLOW_QUICK_REPLY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_quick_reply'		=> array('lang' => 'ALLOW_QUICK_REPLY',		'validate' => 'bool',	'type' => 'custom', 'method' => 'quick_reply', 'explain' => true),
 
 						'legend2'				=> 'ACP_LOAD_SETTINGS',
 						'load_birthdays'		=> array('lang' => 'YES_BIRTHDAYS',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
@@ -172,7 +173,7 @@ class acp_board
 						'allow_nocensors'		=> array('lang' => 'ALLOW_NO_CENSORS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'allow_bookmarks'		=> array('lang' => 'ALLOW_BOOKMARKS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'enable_post_confirm'	=> array('lang' => 'VISUAL_CONFIRM_POST',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
-						'allow_quick_reply'		=> array('lang' => 'ALLOW_QUICK_REPLY',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'allow_quick_reply'		=> array('lang' => 'ALLOW_QUICK_REPLY',		'validate' => 'bool',	'type' => 'custom', 'method' => 'quick_reply', 'explain' => true),
 
 						'legend2'				=> 'POSTING',
 						'bump_type'				=> false,
@@ -187,7 +188,7 @@ class acp_board
 						'hot_threshold'			=> array('lang' => 'HOT_THRESHOLD',			'validate' => 'int:0',		'type' => 'text:3:4', 'explain' => true),
 						'max_poll_options'		=> array('lang' => 'MAX_POLL_OPTIONS',		'validate' => 'int:2:127',	'type' => 'text:4:4', 'explain' => false),
 						'max_post_chars'		=> array('lang' => 'CHAR_LIMIT',			'validate' => 'int:0',		'type' => 'text:4:6', 'explain' => true),
-						'min_post_chars'		=> array('lang' => 'MIN_CHAR_LIMIT',		'validate' => 'int:0',		'type' => 'text:4:6', 'explain' => true),
+						'min_post_chars'		=> array('lang' => 'MIN_CHAR_LIMIT',		'validate' => 'int:1',		'type' => 'text:4:6', 'explain' => true),
 						'max_post_smilies'		=> array('lang' => 'SMILIES_LIMIT',			'validate' => 'int:0',		'type' => 'text:4:4', 'explain' => true),
 						'max_post_urls'			=> array('lang' => 'MAX_POST_URLS',			'validate' => 'int:0',		'type' => 'text:5:4', 'explain' => true),
 						'max_post_font_size'	=> array('lang' => 'MAX_POST_FONT_SIZE',	'validate' => 'int:0',		'type' => 'text:5:4', 'explain' => true, 'append' => ' %'),
@@ -266,14 +267,22 @@ class acp_board
 						'legend1'					=> 'ACP_FEED_GENERAL',
 						'feed_enable'				=> array('lang' => 'ACP_FEED_ENABLE',				'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
 						'feed_item_statistics'		=> array('lang' => 'ACP_FEED_ITEM_STATISTICS',		'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true),
-						'feed_limit'				=> array('lang' => 'ACP_FEED_LIMIT',				'validate' => 'int:5',	'type' => 'text:3:4',				'explain' => true),
-						'feed_overall_forums'		=> array('lang'	=> 'ACP_FEED_OVERALL_FORUMS',		'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
-						'feed_overall_forums_limit'	=> array('lang' => 'ACP_FEED_OVERALL_FORUMS_LIMIT',	'validate' => 'int:5',	'type' => 'text:3:4',				'explain' => false),
-						'feed_overall_topics'		=> array('lang' => 'ACP_FEED_OVERALL_TOPIC',		'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
-						'feed_overall_topics_limit'	=> array('lang' => 'ACP_FEED_OVERALL_TOPIC_LIMIT',	'validate' => 'int:5',	'type' => 'text:3:4',				'explain' => false),
+						'feed_http_auth'			=> array('lang' => 'ACP_FEED_HTTP_AUTH',			'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true),
+
+						'legend2'					=> 'ACP_FEED_POST_BASED',
+						'feed_limit_post'			=> array('lang' => 'ACP_FEED_LIMIT',				'validate' => 'int:5',	'type' => 'text:3:4',				'explain' => true),
+						'feed_overall'				=> array('lang' => 'ACP_FEED_OVERALL',				'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
 						'feed_forum'				=> array('lang' => 'ACP_FEED_FORUM',				'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
 						'feed_topic'				=> array('lang' => 'ACP_FEED_TOPIC',				'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
+
+						'legend3'					=> 'ACP_FEED_TOPIC_BASED',
+						'feed_limit_topic'			=> array('lang' => 'ACP_FEED_LIMIT',				'validate' => 'int:5',	'type' => 'text:3:4',				'explain' => true),
+						'feed_topics_new'			=> array('lang' => 'ACP_FEED_TOPICS_NEW',			'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
+						'feed_topics_active'		=> array('lang' => 'ACP_FEED_TOPICS_ACTIVE',		'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
 						'feed_news_id'				=> array('lang' => 'ACP_FEED_NEWS',					'validate' => 'string',	'type' => 'custom', 'method' => 'select_news_forums', 'explain' => true),
+
+						'legend4'					=> 'ACP_FEED_SETTINGS_OTHER',
+						'feed_overall_forums'		=> array('lang'	=> 'ACP_FEED_OVERALL_FORUMS',		'validate' => 'bool',	'type' => 'radio:enabled_disabled',	'explain' => true ),
 						'feed_exclude_id'			=> array('lang' => 'ACP_FEED_EXCLUDE_ID',			'validate' => 'string',	'type' => 'custom', 'method' => 'select_exclude_forums', 'explain' => true),
 					)
 				);
@@ -310,6 +319,7 @@ class acp_board
 						'load_online_guests'	=> array('lang' => 'YES_ONLINE_GUESTS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'load_onlinetrack'		=> array('lang' => 'YES_ONLINE_TRACK',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'load_birthdays'		=> array('lang' => 'YES_BIRTHDAYS',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
+						'load_unreads_search'	=> array('lang' => 'YES_UNREAD_SEARCH',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
 						'load_moderators'		=> array('lang' => 'YES_MODERATORS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
 						'load_jumpbox'			=> array('lang' => 'YES_JUMPBOX',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => false),
 						'load_user_activity'	=> array('lang' => 'LOAD_USER_ACTIVITY',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
@@ -376,6 +386,9 @@ class acp_board
 						'pass_complex'			=> array('lang' => 'PASSWORD_TYPE',			'validate' => 'string',	'type' => 'select', 'method' => 'select_password_chars', 'explain' => true),
 						'chg_passforce'			=> array('lang' => 'FORCE_PASS_CHANGE',		'validate' => 'int:0',	'type' => 'text:3:3', 'explain' => true, 'append' => ' ' . $user->lang['DAYS']),
 						'max_login_attempts'	=> array('lang' => 'MAX_LOGIN_ATTEMPTS',	'validate' => 'int:0',	'type' => 'text:3:3', 'explain' => true),
+						'ip_login_limit_max'	=> array('lang' => 'IP_LOGIN_LIMIT_MAX',	'validate' => 'int:0',	'type' => 'text:3:3', 'explain' => true),
+						'ip_login_limit_time'	=> array('lang' => 'IP_LOGIN_LIMIT_TIME',	'validate' => 'int:0',	'type' => 'text:5:5', 'explain' => true, 'append' => ' ' . $user->lang['SECONDS']),
+						'ip_login_limit_use_forwarded'	=> array('lang' => 'IP_LOGIN_LIMIT_USE_FORWARDED',	'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'tpl_allow_php'			=> array('lang' => 'TPL_ALLOW_PHP',			'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
 						'form_token_lifetime'	=> array('lang' => 'FORM_TIME_MAX',			'validate' => 'int:-1',	'type' => 'text:5:5', 'explain' => true, 'append' => ' ' . $user->lang['SECONDS']),
 						'form_token_sid_guests'	=> array('lang' => 'FORM_SID_GUESTS',		'validate' => 'bool',	'type' => 'radio:yes_no', 'explain' => true),
@@ -463,12 +476,20 @@ class acp_board
 			if ($submit)
 			{
 				set_config($config_name, $config_value);
+
+				if ($config_name == 'allow_quick_reply' && isset($_POST['allow_quick_reply_enable']))
+				{
+					enable_bitfield_column_flag(FORUMS_TABLE, 'forum_flags', log(FORUM_FLAG_QUICK_REPLY, 2));
+				}
 			}
 		}
 
 		// Store news and exclude ids
 		if ($mode == 'feed' && $submit)
 		{
+			$cache->destroy('_feed_news_forum_ids');
+			$cache->destroy('_feed_excluded_forum_ids');
+
 			$this->store_feed_forums(FORUM_OPTION_FEED_NEWS, 'feed_news_id');
 			$this->store_feed_forums(FORUM_OPTION_FEED_EXCLUDE, 'feed_exclude_id');
 		}
@@ -751,13 +772,20 @@ class acp_board
 	{
 		global $user, $config;
 
-		$radio_ary = array(USER_ACTIVATION_DISABLE => 'ACC_DISABLE', USER_ACTIVATION_NONE => 'ACC_NONE');
+		$radio_ary = array(
+			USER_ACTIVATION_DISABLE => 'ACC_DISABLE',
+			USER_ACTIVATION_NONE => 'ACC_NONE',
+		);
+
 		if ($config['email_enable'])
 		{
-			$radio_ary += array(USER_ACTIVATION_SELF => 'ACC_USER', USER_ACTIVATION_ADMIN => 'ACC_ADMIN');
+			$radio_ary[USER_ACTIVATION_SELF] = 'ACC_USER';
+			$radio_ary[USER_ACTIVATION_ADMIN] = 'ACC_ADMIN';
 		}
 
-		return h_radio('config[require_activation]', $radio_ary, $value, $key);
+		$radio_text = h_radio('config[require_activation]', $radio_ary, $value, 'require_activation', $key, '<br />');
+
+		return $radio_text;
 	}
 
 	/**
@@ -847,6 +875,20 @@ class acp_board
 	}
 
 	/**
+	* Global quick reply enable/disable setting and button to enable in all forums
+	*/
+	function quick_reply($value, $key)
+	{
+		global $user;
+
+		$radio_ary = array(1 => 'YES', 0 => 'NO');
+
+		return h_radio('config[allow_quick_reply]', $radio_ary, $value) .
+			'<br /><br /><input class="button2" type="submit" id="' . $key . '_enable" name="' . $key . '_enable" value="' . $user->lang['ALLOW_QUICK_REPLY_BUTTON'] . '" />';
+	}
+
+
+	/**
 	* Select default dateformat
 	*/
 	function dateformat_select($value, $key)
@@ -857,8 +899,8 @@ class acp_board
 		$old_tz = $user->timezone;
 		$old_dst = $user->dst;
 
-		$user->timezone = $config['board_timezone'];
-		$user->dst = $config['board_dst'];
+		$user->timezone = $config['board_timezone'] * 3600;
+		$user->dst = $config['board_dst'] * 3600;
 
 		$dateformat_options = '';
 
@@ -910,7 +952,7 @@ class acp_board
 	{
 		global $user, $config;
 
-		$forum_list = make_forum_select(false, false, true, false, false, false, true);
+		$forum_list = make_forum_select(false, false, true, true, true, false, true);
 
 		// Build forum options
 		$s_forum_options = '<select id="' . $key . '" name="' . $key . '[]" multiple="multiple">';

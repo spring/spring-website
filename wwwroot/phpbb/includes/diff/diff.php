@@ -2,7 +2,7 @@
 /**
 *
 * @package diff
-* @version $Id: diff.php 10168 2009-09-20 16:20:20Z acydburn $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -908,7 +908,7 @@ class diff3_op
 				return;
 			}
 
-			// Try to solve $Id: diff.php 10168 2009-09-20 16:20:20Z acydburn $ issues. ;)
+			// Try to solve $Id$ issues. ;)
 			if (sizeof($this->orig) == 1 && sizeof($this->final1) == 1 && sizeof($this->final2) == 1)
 			{
 				$match = '#^' . preg_quote('* @version $Id: ', '#') . '[a-z\._\- ]+[0-9]+ [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9\:Z]+ [a-z0-9_\- ]+\$$#';

@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: functions_messenger.php 10178 2009-09-22 15:09:09Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -163,6 +163,22 @@ class messenger
 	}
 
 	/**
+	* Adds X-AntiAbuse headers
+	*
+	* @param array $config		Configuration array
+	* @param user $user			A user object
+	*
+	* @return null
+	*/
+	function anti_abuse_headers($config, $user)
+	{
+		$this->headers('X-AntiAbuse: Board servername - ' . mail_encode($config['server_name']));
+		$this->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
+		$this->headers('X-AntiAbuse: Username - ' . mail_encode($user->data['username']));
+		$this->headers('X-AntiAbuse: User IP - ' . $user->ip);
+	}
+
+	/**
 	* Set the email priority
 	*/
 	function set_mail_priority($priority = MAIL_NORMAL_PRIORITY)
@@ -184,6 +200,9 @@ class messenger
 
 		if (!trim($template_lang))
 		{
+			// fall back to board default language if the user's language is
+			// missing $template_file.  If this does not exist either,
+			// $tpl->set_custom_template will do a trigger_error
 			$template_lang = basename($config['default_lang']);
 		}
 
@@ -193,13 +212,23 @@ class messenger
 			$this->tpl_msg[$template_lang . $template_file] = new template();
 			$tpl = &$this->tpl_msg[$template_lang . $template_file];
 
+			$fallback_template_path = false;
+
 			if (!$template_path)
 			{
 				$template_path = (!empty($user->lang_path)) ? $user->lang_path : $phpbb_root_path . 'language/';
 				$template_path .= $template_lang . '/email';
+
+				// we can only specify default language fallback when the path is not a custom one for which we
+				// do not know the default language alternative
+				if ($template_lang !== basename($config['default_lang']))
+				{
+					$fallback_template_path = (!empty($user->lang_path)) ? $user->lang_path : $phpbb_root_path . 'language/';
+					$fallback_template_path .= basename($config['default_lang']) . '/email';
+				}
 			}
 
-			$tpl->set_custom_template($template_path, $template_lang . '_email', 'email');
+			$tpl->set_custom_template($template_path, $template_lang . '_email', $fallback_template_path);
 
 			$tpl->set_filenames(array(
 				'body'		=> $template_file . '.txt',
@@ -619,6 +648,64 @@ class queue
 	}
 
 	/**
+	* Obtains exclusive lock on queue cache file.
+	* Returns resource representing the lock
+	*/
+	function lock()
+	{
+		// For systems that can't have two processes opening
+		// one file for writing simultaneously
+		if (file_exists($this->cache_file . '.lock'))
+		{
+			$mode = 'rb';
+		}
+		else
+		{
+			$mode = 'wb';
+		}
+
+		$lock_fp = @fopen($this->cache_file . '.lock', $mode);
+
+		if ($mode == 'wb')
+		{
+			if (!$lock_fp)
+			{
+				// Two processes may attempt to create lock file at the same time.
+				// Have the losing process try opening the lock file again for reading
+				// on the assumption that the winning process created it
+				$mode = 'rb';
+				$lock_fp = @fopen($this->cache_file . '.lock', $mode);
+			}
+			else
+			{
+				// Only need to set mode when the lock file is written
+				@chmod($this->cache_file . '.lock', 0666);
+			}
+		}
+
+		if ($lock_fp)
+		{
+			@flock($lock_fp, LOCK_EX);
+		}
+
+		return $lock_fp;
+	}
+
+	/**
+	* Releases lock on queue cache file, using resource obtained from lock()
+	*/
+	function unlock($lock_fp)
+	{
+		// lock() will return null if opening lock file, and thus locking, failed.
+		// Accept null values here so that client code does not need to check them
+		if ($lock_fp)
+		{
+			@flock($lock_fp, LOCK_UN);
+			fclose($lock_fp);
+		}
+	}
+
+	/**
 	* Process queue
 	* Using lock file
 	*/
@@ -626,23 +713,15 @@ class queue
 	{
 		global $db, $config, $phpEx, $phpbb_root_path, $user;
 
+		$lock_fp = $this->lock();
+
 		set_config('last_queue_run', time(), true);
 
-		// Delete stale lock file
-		if (file_exists($this->cache_file . '.lock') && !file_exists($this->cache_file))
+		if (!file_exists($this->cache_file) || filemtime($this->cache_file) > time() - $config['queue_interval'])
 		{
-			@unlink($this->cache_file . '.lock');
+			$this->unlock($lock_fp);
 			return;
 		}
-
-		if (!file_exists($this->cache_file) || (file_exists($this->cache_file . '.lock') && filemtime($this->cache_file) > time() - $config['queue_interval']))
-		{
-			return;
-		}
-
-		$fp = @fopen($this->cache_file . '.lock', 'wb');
-		fclose($fp);
-		@chmod($this->cache_file . '.lock', 0777);
 
 		include($this->cache_file);
 
@@ -658,11 +737,18 @@ class queue
 			$package_size = $data_ary['package_size'];
 			$num_items = (!$package_size || sizeof($data_ary['data']) < $package_size) ? sizeof($data_ary['data']) : $package_size;
 
+			/*
+			* This code is commented out because it causes problems on some web hosts.
+			* The core problem is rather restrictive email sending limits.
+			* This code is nly useful if you have no such restrictions from the
+			* web host and the package size setting is wrong.
+
 			// If the amount of emails to be sent is way more than package_size than we need to increase it to prevent backlogs...
 			if (sizeof($data_ary['data']) > $package_size * 2.5)
 			{
 				$num_items = sizeof($data_ary['data']);
 			}
+			*/
 
 			switch ($object)
 			{
@@ -700,6 +786,7 @@ class queue
 				break;
 
 				default:
+					$this->unlock($lock_fp);
 					return;
 			}
 
@@ -725,8 +812,6 @@ class queue
 
 						if (!$result)
 						{
-							@unlink($this->cache_file . '.lock');
-
 							messenger::error('EMAIL', $err_msg);
 							continue 2;
 						}
@@ -770,16 +855,14 @@ class queue
 		{
 			if ($fp = @fopen($this->cache_file, 'wb'))
 			{
-				@flock($fp, LOCK_EX);
 				fwrite($fp, "<?php\nif (!defined('IN_PHPBB')) exit;\n\$this->queue_data = unserialize(" . var_export(serialize($this->queue_data), true) . ");\n\n?>");
-				@flock($fp, LOCK_UN);
 				fclose($fp);
 
 				phpbb_chmod($this->cache_file, CHMOD_READ | CHMOD_WRITE);
 			}
 		}
 
-		@unlink($this->cache_file . '.lock');
+		$this->unlock($lock_fp);
 	}
 
 	/**
@@ -791,6 +874,8 @@ class queue
 		{
 			return;
 		}
+
+		$lock_fp = $this->lock();
 
 		if (file_exists($this->cache_file))
 		{
@@ -811,13 +896,13 @@ class queue
 
 		if ($fp = @fopen($this->cache_file, 'w'))
 		{
-			@flock($fp, LOCK_EX);
 			fwrite($fp, "<?php\nif (!defined('IN_PHPBB')) exit;\n\$this->queue_data = unserialize(" . var_export(serialize($this->data), true) . ");\n\n?>");
-			@flock($fp, LOCK_UN);
 			fclose($fp);
 
 			phpbb_chmod($this->cache_file, CHMOD_READ | CHMOD_WRITE);
 		}
+
+		$this->unlock($lock_fp);
 	}
 }
 
@@ -906,9 +991,16 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	$smtp->add_backtrace('Connecting to ' . $config['smtp_host'] . ':' . $config['smtp_port']);
 
 	// Ok we have error checked as much as we can to this point let's get on it already.
-	ob_start();
+	if (!class_exists('phpbb_error_collector'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . 'includes/error_collector.' . $phpEx);
+	}
+	$collector = new phpbb_error_collector;
+	$collector->install();
 	$smtp->socket = fsockopen($config['smtp_host'], $config['smtp_port'], $errno, $errstr, 20);
-	$error_contents = ob_get_clean();
+	$collector->uninstall();
+	$error_contents = $collector->format_errors();
 
 	if (!$smtp->socket)
 	{
@@ -1539,18 +1631,27 @@ function mail_encode($str, $eol = "\r\n")
 */
 function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 {
-	global $config;
+	global $config, $phpbb_root_path, $phpEx;
 
 	// We use the EOL character for the OS here because the PHP mail function does not correctly transform line endings. On Windows SMTP is used (SMTP is \r\n), on UNIX a command is used...
 	// Reference: http://bugs.php.net/bug.php?id=15841
 	$headers = implode($eol, $headers);
 
-	ob_start();
+	if (!class_exists('phpbb_error_collector'))
+	{
+		include($phpbb_root_path . 'includes/error_collector.' . $phpEx);
+	}
+
+	$collector = new phpbb_error_collector;
+	$collector->install();
+
 	// On some PHP Versions mail() *may* fail if there are newlines within the subject.
 	// Newlines are used as a delimiter for lines in mail_encode() according to RFC 2045 section 6.8.
 	// Because PHP can't decide what is wanted we revert back to the non-RFC-compliant way of separating by one space (Use '' as parameter to mail_encode() results in SPACE used)
 	$result = $config['email_function_name']($to, mail_encode($subject, ''), wordwrap(utf8_wordwrap($msg), 997, "\n", true), $headers);
-	$err_msg = ob_get_clean();
+
+	$collector->uninstall();
+	$err_msg = $collector->format_errors();
 
 	return $result;
 }

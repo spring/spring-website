@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: phpbb_captcha_gd_wave_plugin.php 9942 2009-08-10 09:46:38Z Kellanved $
+* @version $Id$
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

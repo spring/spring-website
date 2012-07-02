@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_logs.php 10109 2009-09-05 12:06:12Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -170,16 +170,16 @@ class mcp_logs
 		// Grab log data
 		$log_data = array();
 		$log_count = 0;
-		view_log('mod', $log_data, $log_count, $config['topics_per_page'], $start, $forum_list, $topic_id, 0, $sql_where, $sql_sort, $keywords);
+		$start = view_log('mod', $log_data, $log_count, $config['topics_per_page'], $start, $forum_list, $topic_id, 0, $sql_where, $sql_sort, $keywords);
 
 		$template->assign_vars(array(
 			'PAGE_NUMBER'		=> on_page($log_count, $config['topics_per_page'], $start),
 			'TOTAL'				=> ($log_count == 1) ? $user->lang['TOTAL_LOG'] : sprintf($user->lang['TOTAL_LOGS'], $log_count),
-			'PAGINATION'		=> generate_pagination($this->u_action . "&amp;$u_sort_param$keywords_param", $log_count, $config['topics_per_page'], $start, true),
+			'PAGINATION'		=> generate_pagination($this->u_action . "&amp;$u_sort_param$keywords_param", $log_count, $config['topics_per_page'], $start),
 
 			'L_TITLE'			=> $user->lang['MCP_LOGS'],
 
-			'U_POST_ACTION'			=> $this->u_action,
+			'U_POST_ACTION'			=> $this->u_action . "&amp;$u_sort_param$keywords_param&amp;start=$start",
 			'S_CLEAR_ALLOWED'		=> ($auth->acl_get('a_clearlogs')) ? true : false,
 			'S_SELECT_SORT_DIR'		=> $s_sort_dir,
 			'S_SELECT_SORT_KEY'		=> $s_sort_key,

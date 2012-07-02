@@ -1,4 +1,4 @@
-/* proSilver Style Sheet Tweaks
+/* Style Sheet Tweaks
 
 These style definitions are mainly IE specific 
 tweaks required due to its poor CSS support.
@@ -89,4 +89,13 @@ dl.icon {
 
 * html .forumbg table.table1 {
 	margin: 0 -2px 0px -1px;
+}
+
+/* Headerbar height fix for IE7 and below */
+* html #site-description p {
+	margin-bottom: 1.0em;
+}
+
+*:first-child+html #site-description p {
+	margin-bottom: 1.0em;
 }

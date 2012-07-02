@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_profile.php 10060 2009-08-28 09:26:43Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -78,14 +78,14 @@ class ucp_profile
 
 					$error = validate_data($data, $check_ary);
 
-					if ($auth->acl_get('u_chgpasswd') && $data['new_password'] && $data['password_confirm'] != $data['new_password'])
+					if ($auth->acl_get('u_chgemail') && $data['email'] != $user->data['user_email'] && $data['email_confirm'] != $data['email'])
 					{
-						$error[] = 'NEW_PASSWORD_ERROR';
+						$error[] = ($data['email_confirm']) ? 'NEW_EMAIL_ERROR' : 'NEW_EMAIL_CONFIRM_EMPTY';
 					}
 
-					if (($data['new_password'] || ($auth->acl_get('u_chgemail') && $data['email'] != $user->data['user_email']) || ($data['username'] != $user->data['username'] && $auth->acl_get('u_chgname') && $config['allow_namechange'])) && !phpbb_check_hash($data['cur_password'], $user->data['user_password']))
+					if ($auth->acl_get('u_chgpasswd') && $data['new_password'] && $data['password_confirm'] != $data['new_password'])
 					{
-						$error[] = 'CUR_PASSWORD_ERROR';
+						$error[] = ($data['password_confirm']) ? 'NEW_PASSWORD_ERROR' : 'NEW_PASSWORD_CONFIRM_EMPTY';
 					}
 
 					// Only check the new password against the previous password if there have been no errors
@@ -94,9 +94,9 @@ class ucp_profile
 						$error[] = 'SAME_PASSWORD_ERROR';
 					}
 
-					if ($auth->acl_get('u_chgemail') && $data['email'] != $user->data['user_email'] && $data['email_confirm'] != $data['email'])
+					if (!phpbb_check_hash($data['cur_password'], $user->data['user_password']))
 					{
-						$error[] = 'NEW_EMAIL_ERROR';
+						$error[] = ($data['cur_password']) ? 'CUR_PASSWORD_ERROR' : 'CUR_PASSWORD_EMPTY';
 					}
 
 					if (!check_form_key('ucp_reg_details'))
@@ -133,7 +133,7 @@ class ucp_profile
 
 						$message = 'PROFILE_UPDATED';
 
-						if ($config['email_enable'] && $data['email'] != $user->data['user_email'] && $user->data['user_type'] != USER_FOUNDER && ($config['require_activation'] == USER_ACTIVATION_SELF || $config['require_activation'] == USER_ACTIVATION_ADMIN))
+						if ($auth->acl_get('u_chgemail') && $config['email_enable'] && $data['email'] != $user->data['user_email'] && $user->data['user_type'] != USER_FOUNDER && ($config['require_activation'] == USER_ACTIVATION_SELF || $config['require_activation'] == USER_ACTIVATION_ADMIN))
 						{
 							$message = ($config['require_activation'] == USER_ACTIVATION_SELF) ? 'ACCOUNT_EMAIL_CHANGED' : 'ACCOUNT_EMAIL_CHANGED_ADMIN';
 
@@ -141,10 +141,7 @@ class ucp_profile
 
 							$server_url = generate_board_url();
 
-							$user_actkey = gen_rand_string(10);
-							$key_len = 54 - (strlen($server_url));
-							$key_len = ($key_len > 6) ? $key_len : 6;
-							$user_actkey = substr($user_actkey, 0, $key_len);
+							$user_actkey = gen_rand_string(mt_rand(6, 10));
 
 							$messenger = new messenger(false);
 
@@ -153,10 +150,7 @@ class ucp_profile
 
 							$messenger->to($data['email'], $data['username']);
 
-							$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-							$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-							$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-							$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+							$messenger->anti_abuse_headers($config, $user);
 
 							$messenger->assign_vars(array(
 								'USERNAME'		=> htmlspecialchars_decode($data['username']),
@@ -564,7 +558,7 @@ class ucp_profile
 				$avatar_select = basename(request_var('avatar_select', ''));
 				$category = basename(request_var('category', ''));
 
-				$can_upload = (file_exists($phpbb_root_path . $config['avatar_path']) && @is_writable($phpbb_root_path . $config['avatar_path']) && $auth->acl_get('u_chgavatar') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
+				$can_upload = (file_exists($phpbb_root_path . $config['avatar_path']) && phpbb_is_writable($phpbb_root_path . $config['avatar_path']) && $auth->acl_get('u_chgavatar') && (@ini_get('file_uploads') || strtolower(@ini_get('file_uploads')) == 'on')) ? true : false;
 
 				add_form_key('ucp_avatar');
 
@@ -572,7 +566,7 @@ class ucp_profile
 				{
 					if (check_form_key('ucp_avatar'))
 					{
-						if (avatar_process_user($error))
+						if (avatar_process_user($error, false, $can_upload))
 						{
 							meta_refresh(3, $this->u_action);
 							$message = $user->lang['PROFILE_UPDATED'] . '<br /><br />' . sprintf($user->lang['RETURN_UCP'], '<a href="' . $this->u_action . '">', '</a>');

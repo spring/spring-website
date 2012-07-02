@@ -2,7 +2,7 @@
 /**
 *
 * @package diff
-* @version $Id: renderer.php 9861 2009-07-26 17:58:10Z toonarmy $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

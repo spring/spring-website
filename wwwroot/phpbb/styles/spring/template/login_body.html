@@ -15,7 +15,7 @@
 		<td class="row3" colspan="2" align="center"><span class="gensmall">{LOGIN_EXPLAIN}</span></td>
 	</tr>
 <!-- ENDIF -->
-<tr><!-- IF not S_ADMIN_AUTH -->
+<tr><!-- IF not S_ADMIN_AUTH and S_REGISTER_ENABLED -->
 	<td class="row1" width="50%">
 		<p class="genmed">{L_LOGIN_INFO}</p>
 
@@ -36,7 +36,7 @@
 		<tr>
 			<td valign="top" <!-- IF S_ADMIN_AUTH -->style="width: 50%; text-align: {S_CONTENT_FLOW_END};"<!-- ENDIF -->><b class="gensmall">{L_USERNAME}:</b></td>
 			<td><input class="post" type="text" name="{USERNAME_CREDENTIAL}" size="25" value="{USERNAME}" tabindex="1" />
-				<!-- IF not S_ADMIN_AUTH -->
+				<!-- IF not S_ADMIN_AUTH and S_REGISTER_ENABLED -->
 					<br /><a class="gensmall" href="{U_REGISTER}">{L_REGISTER}</a>
 				<!-- ENDIF -->
 			</td>
@@ -65,32 +65,19 @@
 	</td>
 </tr>
 
-<!-- IF S_CONFIRM_CODE -->
+<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
 </table>
 <table class="tablebg" width="100%" cellspacing="1">
-	<tr> 
-		<th colspan="2" valign="middle">{L_LOGIN_CONFIRMATION}</th>
-	</tr>
-	<tr> 
-		<td class="row3" colspan="2"><span class="gensmall">{L_LOGIN_CONFIRM_EXPLAIN}</span></td>
-	</tr>
-	<tr>
-		<td class="row1" colspan="2" align="center">
-			<input type="hidden" name="confirm_id" value="{CONFIRM_ID}" />
-			{CONFIRM_IMAGE}
-		</td>
-	</tr>
-	<tr> 
-		<td class="row1"><b class="genmed">{L_CONFIRM_CODE}: </b><br /><span class="gensmall">{L_CONFIRM_CODE_EXPLAIN}</span></td>
-		<td class="row2"><input class="post" type="text" name="confirm_code" size="8" maxlength="8" /></td>
-	</tr>
+		
+	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
 <!-- ENDIF -->
+
+{S_LOGIN_REDIRECT}
 <tr>
 	<td class="cat" <!-- IF not S_ADMIN_AUTH or S_CONFIRM_CODE -->colspan="2"<!-- ENDIF --> align="center">{S_HIDDEN_FIELDS}<input type="submit" name="login" class="btnmain" value="{L_LOGIN}" tabindex="5" /></td>
 </tr>
 </table>
 {S_FORM_TOKEN}
-
 </form>
 
 <br clear="all" />
@@ -100,5 +87,22 @@
 <br clear="all" />
 
 <div align="{S_CONTENT_FLOW_END}"><!-- INCLUDE jumpbox.html --></div>
+
+<script type="text/javascript">
+// <![CDATA[
+	(function()
+	{
+		var elements = document.getElementsByName("<!-- IF S_ADMIN_AUTH -->{PASSWORD_CREDENTIAL}<!-- ELSE -->{USERNAME_CREDENTIAL}<!-- ENDIF -->");
+		for (var i = 0; i < elements.length; ++i)
+		{
+			if (elements[i].tagName.toLowerCase() == 'input')
+			{
+				elements[i].focus();
+				break;
+			}
+		}
+	})();
+// ]]>
+</script>
 
 <!-- INCLUDE overall_footer.html -->

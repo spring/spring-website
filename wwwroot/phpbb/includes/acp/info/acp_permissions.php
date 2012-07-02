@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_permissions.php 9887 2009-07-28 22:09:46Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

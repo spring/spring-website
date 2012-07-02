@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_zebra.php 9597 2009-06-16 14:06:56Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

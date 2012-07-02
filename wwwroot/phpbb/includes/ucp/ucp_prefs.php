@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_prefs.php 9734 2009-07-08 13:03:43Z nickvergessen $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -65,7 +65,7 @@ class ucp_prefs
 
 					$error = validate_data($data, array(
 						'dateformat'	=> array('string', false, 1, 30),
-						'lang'			=> array('match', false, '#^[a-z0-9_\-]{2,}$#i'),
+						'lang'			=> array('language_iso_name'),
 						'tz'			=> array('num', false, -14, 14),
 					));
 

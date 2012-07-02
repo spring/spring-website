@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_words.php 10039 2009-08-21 09:44:55Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -85,6 +85,7 @@ class acp_words
 				{
 					trigger_error($user->lang['FORM_INVALID']. adm_back_link($this->u_action), E_USER_WARNING);
 				}
+
 				$word_id		= request_var('id', 0);
 				$word			= utf8_normalize_nfc(request_var('word', '', true));
 				$replacement	= utf8_normalize_nfc(request_var('replacement', '', true));
@@ -93,6 +94,9 @@ class acp_words
 				{
 					trigger_error($user->lang['ENTER_WORD'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
+
+				// Replace multiple consecutive asterisks with single one as those are not needed
+				$word = preg_replace('#\*{2,}#', '*', $word);
 
 				$sql_ary = array(
 					'word'			=> $word,

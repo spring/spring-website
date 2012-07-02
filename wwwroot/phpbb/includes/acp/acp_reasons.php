@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_reasons.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -233,6 +233,7 @@ class acp_reasons
 						// Standard? What's that?
 						case 'mssql':
 						case 'mssql_odbc':
+						case 'mssqlnative':
 							// Change the reports using this reason to 'other'
 							$sql = "DECLARE @ptrval binary(16)
 

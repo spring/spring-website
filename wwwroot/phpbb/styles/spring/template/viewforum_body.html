@@ -58,7 +58,7 @@
 			<td class="row1" width="140" align="center">
 				<p class="topicdetails" style="white-space: nowrap;">{topicrow.LAST_POST_TIME}</p>
 				<p class="topicdetails">{topicrow.LAST_POST_AUTHOR_FULL}
-					<a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a>
+					<!-- IF not S_IS_BOT --><a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a><!-- ENDIF -->
 				</p>
 			</td>
 		</tr>
@@ -105,7 +105,7 @@
 	</tr>
 	</table>
 
-	<!-- IF not S_USER_LOGGED_IN -->
+	<!-- IF not S_USER_LOGGED_IN and not S_IS_BOT -->
 
 		<br /><br />
 
@@ -119,7 +119,7 @@
 			<td class="row1" align="center"><span class="genmed">{L_USERNAME}:</span> <input class="post" type="text" name="username" size="10" />&nbsp; <span class="genmed">{L_PASSWORD}:</span> <input class="post" type="password" name="password" size="10" /><!-- IF S_AUTOLOGIN_ENABLED -->&nbsp; <span class="gensmall">{L_LOG_ME_IN}</span> <input type="checkbox" class="radio" name="autologin" /><!-- ENDIF -->&nbsp; <input type="submit" class="btnmain" name="login" value="{L_LOGIN}" /></td>
 		</tr>
 		</table>
-		
+		{S_LOGIN_REDIRECT}
 		</form>
 
 	<!-- ENDIF -->
@@ -203,7 +203,7 @@
 				<td class="row1" width="140" align="center">
 					<p class="topicdetails" style="white-space: nowrap;">{topicrow.LAST_POST_TIME}</p>
 					<p class="topicdetails">{topicrow.LAST_POST_AUTHOR_FULL}
-						<a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a>
+						<!-- IF not S_IS_BOT --><a href="{topicrow.U_LAST_POST}">{LAST_POST_IMG}</a><!-- ENDIF -->
 					</p>
 				</td>
 			</tr>
@@ -220,6 +220,7 @@
 			<!-- ENDIF -->
 		<!-- END topicrow -->
 
+		<!-- IF not S_IS_BOT -->
 		<tr align="center">
 			<!-- IF S_TOPIC_ICONS -->
 				<td class="cat" colspan="7">
@@ -229,6 +230,7 @@
 					<form method="post" action="{S_FORUM_ACTION}"><span class="gensmall">{L_DISPLAY_TOPICS}:</span>&nbsp;{S_SELECT_SORT_DAYS}&nbsp;<span class="gensmall">{L_SORT_BY}</span> {S_SELECT_SORT_KEY} {S_SELECT_SORT_DIR}&nbsp;<input class="btnlite" type="submit" name="sort" value="{L_GO}" /></form>
 				</td>
 		</tr>
+		<!-- ENDIF -->
 		</table>
 	<!-- ENDIF -->
 
@@ -279,31 +281,31 @@
 		<td align="{S_CONTENT_FLOW_BEGIN}" valign="top">
 			<table cellspacing="3" cellpadding="0" border="0">
 			<tr>
-				<td width="20" style="text-align: center;">{FOLDER_NEW_IMG}</td>
-				<td class="gensmall">{L_NEW_POSTS}</td>
+				<td width="20" style="text-align: center;">{FOLDER_UNREAD_IMG}</td>
+				<td class="gensmall">{L_UNREAD_POSTS}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td width="20" style="text-align: center;">{FOLDER_IMG}</td>
-				<td class="gensmall">{L_NO_NEW_POSTS}</td>
+				<td class="gensmall">{L_NO_UNREAD_POSTS}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td width="20" style="text-align: center;">{FOLDER_ANNOUNCE_IMG}</td>
 				<td class="gensmall">{L_ICON_ANNOUNCEMENT}</td>
 			</tr>
 			<tr>
-				<td style="text-align: center;">{FOLDER_HOT_NEW_IMG}</td>
-				<td class="gensmall">{L_NEW_POSTS_HOT}</td>
+				<td style="text-align: center;">{FOLDER_HOT_UNREAD_IMG}</td>
+				<td class="gensmall">{L_UNREAD_POSTS_HOT}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td style="text-align: center;">{FOLDER_HOT_IMG}</td>
-				<td class="gensmall">{L_NO_NEW_POSTS_HOT}</td>
+				<td class="gensmall">{L_NO_UNREAD_POSTS_HOT}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td style="text-align: center;">{FOLDER_STICKY_IMG}</td>
-				<td class="gensmall">{L_ICON_STICKY}</td>			
+				<td class="gensmall">{L_ICON_STICKY}</td>
 			</tr>
 			<tr>
-				<td style="text-align: center;">{FOLDER_LOCKED_NEW_IMG}</td>
-				<td class="gensmall">{L_NEW_POSTS_LOCKED}</td>
+				<td style="text-align: center;">{FOLDER_LOCKED_UNREAD_IMG}</td>
+				<td class="gensmall">{L_UNREAD_POSTS_LOCKED}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td style="text-align: center;">{FOLDER_LOCKED_IMG}</td>
-				<td class="gensmall">{L_NO_NEW_POSTS_LOCKED}</td>
+				<td class="gensmall">{L_NO_UNREAD_POSTS_LOCKED}</td>
 				<td>&nbsp;&nbsp;</td>
 				<td style="text-align: center;">{FOLDER_MOVED_IMG}</td>
 				<td class="gensmall">{L_TOPIC_MOVED}</td>

@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_database.php 10174 2009-09-21 17:59:39Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -109,6 +109,7 @@ class acp_database
 
 							case 'mssql':
 							case 'mssql_odbc':
+							case 'mssqlnative':
 								$extractor = new mssql_extractor($download, $store, $format, $filename, $time);
 							break;
 
@@ -138,6 +139,7 @@ class acp_database
 
 									case 'mssql':
 									case 'mssql_odbc':
+									case 'mssqlnative':
 										$extractor->flush('TRUNCATE TABLE ' . $table_name . "GO\n");
 									break;
 
@@ -219,6 +221,7 @@ class acp_database
 					case 'submit':
 						$delete = request_var('delete', '');
 						$file = request_var('file', '');
+						$download = request_var('download', '');
 
 						if (!preg_match('#^backup_\d{10,}_[a-z\d]{16}\.(sql(?:\.(?:gz|bz2))?)$#', $file, $matches))
 						{
@@ -245,10 +248,8 @@ class acp_database
 								confirm_box(false, $user->lang['DELETE_SELECTED_BACKUP'], build_hidden_fields(array('delete' => $delete, 'file' => $file)));
 							}
 						}
-						else
+						else if ($download || confirm_box(true))
 						{
-							$download = request_var('download', '');
-
 							if ($download)
 							{
 								$name = $matches[0];
@@ -392,6 +393,7 @@ class acp_database
 
 								case 'mssql':
 								case 'mssql_odbc':
+								case 'mssqlnative':
 									while (($sql = $fgetd($fp, "GO\n", $read, $seek, $eof)) !== false)
 									{
 										$db->sql_query($sql);
@@ -407,6 +409,10 @@ class acp_database
 							add_log('admin', 'LOG_DB_RESTORE');
 							trigger_error($user->lang['RESTORE_SUCCESS'] . adm_back_link($this->u_action));
 							break;
+						}
+						else if (!$download)
+						{
+							confirm_box(false, $user->lang['RESTORE_SELECTED_BACKUP'], build_hidden_fields(array('file' => $file)));
 						}
 
 					default:
@@ -435,7 +441,7 @@ class acp_database
 								{
 									if (in_array($matches[2], $methods))
 									{
-										$backup_files[gmdate("d-m-Y H:i:s", $matches[1])] = $file;
+										$backup_files[(int) $matches[1]] = $file;
 									}
 								}
 							}
@@ -450,7 +456,7 @@ class acp_database
 							{
 								$template->assign_block_vars('files', array(
 									'FILE'		=> $file,
-									'NAME'		=> $name,
+									'NAME'		=> $user->format_date($name, 'd-m-Y H:i:s', true),
 									'SUPPORTED'	=> true,
 								));
 							}
@@ -556,6 +562,7 @@ class base_extractor
 	function write_end()
 	{
 		static $close;
+
 		if ($this->store)
 		{
 			if ($close === null)
@@ -1508,6 +1515,10 @@ class mssql_extractor extends base_extractor
 		{
 			$this->write_data_mssql($table_name);
 		}
+		else if($db->sql_layer === 'mssqlnative')
+		{
+			$this->write_data_mssqlnative($table_name);
+		}
 		else
 		{
 			$this->write_data_odbc($table_name);
@@ -1607,7 +1618,111 @@ class mssql_extractor extends base_extractor
 		}
 		$this->flush($sql_data);
 	}
+	
+	function write_data_mssqlnative($table_name)
+	{
+		global $db;
+		$ary_type = $ary_name = array();
+		$ident_set = false;
+		$sql_data = '';
 
+		// Grab all of the data from current table.
+		$sql = "SELECT * FROM $table_name";
+		$db->mssqlnative_set_query_options(array('Scrollable' => SQLSRV_CURSOR_STATIC));
+		$result = $db->sql_query($sql);
+
+		$retrieved_data = $db->mssqlnative_num_rows($result);
+
+		if (!$retrieved_data)
+		{
+			$db->sql_freeresult($result);
+			return;
+		}
+
+		$sql = "SELECT * FROM $table_name";
+		$result_fields = $db->sql_query_limit($sql, 1);
+
+		$row = new result_mssqlnative($result_fields);
+		$i_num_fields = $row->num_fields();
+		
+		for ($i = 0; $i < $i_num_fields; $i++)
+		{
+			$ary_type[$i] = $row->field_type($i);
+			$ary_name[$i] = $row->field_name($i);
+		}
+		$db->sql_freeresult($result_fields);
+
+		$sql = "SELECT 1 as has_identity
+			FROM INFORMATION_SCHEMA.COLUMNS
+			WHERE COLUMNPROPERTY(object_id('$table_name'), COLUMN_NAME, 'IsIdentity') = 1";
+		$result2 = $db->sql_query($sql);
+		$row2 = $db->sql_fetchrow($result2);
+		
+		if (!empty($row2['has_identity']))
+		{
+			$sql_data .= "\nSET IDENTITY_INSERT $table_name ON\nGO\n";
+			$ident_set = true;
+		}
+		$db->sql_freeresult($result2);
+
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$schema_vals = $schema_fields = array();
+
+			// Build the SQL statement to recreate the data.
+			for ($i = 0; $i < $i_num_fields; $i++)
+			{
+				$str_val = $row[$ary_name[$i]];
+
+				// defaults to type number - better quote just to be safe, so check for is_int too
+				if (is_int($ary_type[$i]) || preg_match('#char|text|bool|varbinary#i', $ary_type[$i]))
+				{
+					$str_quote = '';
+					$str_empty = "''";
+					$str_val = sanitize_data_mssql(str_replace("'", "''", $str_val));
+				}
+				else if (preg_match('#date|timestamp#i', $ary_type[$i]))
+				{
+					if (empty($str_val))
+					{
+						$str_quote = '';
+					}
+					else
+					{
+						$str_quote = "'";
+					}
+				}
+				else
+				{
+					$str_quote = '';
+					$str_empty = 'NULL';
+				}
+
+				if (empty($str_val) && $str_val !== '0' && !(is_int($str_val) || is_float($str_val)))
+				{
+					$str_val = $str_empty;
+				}
+
+				$schema_vals[$i] = $str_quote . $str_val . $str_quote;
+				$schema_fields[$i] = $ary_name[$i];
+			}
+
+			// Take the ordered fields and their associated data and build it
+			// into a valid sql statement to recreate that field in the data.
+			$sql_data .= "INSERT INTO $table_name (" . implode(', ', $schema_fields) . ') VALUES (' . implode(', ', $schema_vals) . ");\nGO\n";
+
+			$this->flush($sql_data);
+			$sql_data = '';
+		}
+		$db->sql_freeresult($result);
+
+		if ($ident_set)
+		{
+			$sql_data .= "\nSET IDENTITY_INSERT $table_name OFF\nGO\n";
+		}
+		$this->flush($sql_data);
+	}	
+	
 	function write_data_odbc($table_name)
 	{
 		global $db;

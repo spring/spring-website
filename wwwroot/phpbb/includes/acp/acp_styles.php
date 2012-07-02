@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_styles.php 10074 2009-08-31 11:25:28Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -510,6 +510,7 @@ parse_css_file = {PARSE_CSS_FILE}
 							$db->sql_transaction('commit');
 
 							$cache->destroy('sql', STYLES_IMAGESET_DATA_TABLE);
+							$cache->destroy('imageset_site_logo_md5');
 
 							add_log('admin', 'LOG_IMAGESET_REFRESHED', $imageset_row['imageset_name']);
 							trigger_error($user->lang['IMAGESET_REFRESHED'] . adm_back_link($this->u_action));
@@ -643,8 +644,13 @@ parse_css_file = {PARSE_CSS_FILE}
 		{
 			while (($file = readdir($dp)) !== false)
 			{
+				if ($file[0] == '.' || !is_dir($phpbb_root_path . 'styles/' . $file))
+				{
+					continue;
+				}
+
 				$subpath = ($mode != 'style') ? "$mode/" : '';
-				if ($file[0] != '.' && file_exists("{$phpbb_root_path}styles/$file/$subpath$mode.cfg"))
+				if (file_exists("{$phpbb_root_path}styles/$file/$subpath$mode.cfg"))
 				{
 					if ($cfg = file("{$phpbb_root_path}styles/$file/$subpath$mode.cfg"))
 					{
@@ -711,7 +717,7 @@ parse_css_file = {PARSE_CSS_FILE}
 		$save_changes	= (isset($_POST['save'])) ? true : false;
 
 		// make sure template_file path doesn't go upwards
-		$template_file = str_replace('..', '.', $template_file);
+		$template_file = preg_replace('#\.{2,}#', '.', $template_file);
 
 		// Retrieve some information about the template
 		$sql = 'SELECT template_storedb, template_path, template_name
@@ -743,7 +749,7 @@ parse_css_file = {PARSE_CSS_FILE}
 			$additional = '';
 
 			// If the template is stored on the filesystem try to write the file else store it in the database
-			if (!$safe_mode && !$template_info['template_storedb'] && file_exists($file) && @is_writable($file))
+			if (!$safe_mode && !$template_info['template_storedb'] && file_exists($file) && phpbb_is_writable($file))
 			{
 				if (!($fp = @fopen($file, 'wb')))
 				{
@@ -1043,12 +1049,12 @@ parse_css_file = {PARSE_CSS_FILE}
 
 		foreach ($file_ary as $file)
 		{
-			$file 		= str_replace('/', '.', $file);
+			$file		= str_replace('/', '.', $file);
 
 			// perform some dirty guessing to get the path right.
 			// We assume that three dots in a row were '../'
-			$tpl_file 	= str_replace('.', '/', $file);
-			$tpl_file 	= str_replace('///', '../', $tpl_file);
+			$tpl_file	= str_replace('.', '/', $file);
+			$tpl_file	= str_replace('///', '../', $tpl_file);
 
 			$filename = "{$cache_prefix}_$file.html.$phpEx";
 
@@ -1150,7 +1156,7 @@ parse_css_file = {PARSE_CSS_FILE}
 			$message = $user->lang['THEME_UPDATED'];
 
 			// If the theme is stored on the filesystem try to write the file else store it in the database
-			if (!$safe_mode && !$theme_info['theme_storedb'] && file_exists($file) && @is_writable($file))
+			if (!$safe_mode && !$theme_info['theme_storedb'] && file_exists($file) && phpbb_is_writable($file))
 			{
 				if (!($fp = @fopen($file, 'wb')))
 				{
@@ -1289,7 +1295,6 @@ parse_css_file = {PARSE_CSS_FILE}
 			'TEXT_ROWS'			=> $text_rows)
 		);
 	}
-
 
 	/**
 	* Edit imagesets
@@ -1583,23 +1588,23 @@ parse_css_file = {PARSE_CSS_FILE}
 		{
 			case 'style':
 				$sql_from = STYLES_TABLE;
-				$sql_select = 'style_name';
+				$sql_select = 'style_id, style_name, template_id, theme_id, imageset_id';
 				$sql_where = 'AND style_active = 1';
 			break;
 
 			case 'template':
 				$sql_from = STYLES_TEMPLATE_TABLE;
-				$sql_select = 'template_name, template_path, template_storedb';
+				$sql_select = 'template_id, template_name, template_path, template_storedb';
 			break;
 
 			case 'theme':
 				$sql_from = STYLES_THEME_TABLE;
-				$sql_select = 'theme_name, theme_path, theme_storedb';
+				$sql_select = 'theme_id, theme_name, theme_path, theme_storedb';
 			break;
 
 			case 'imageset':
 				$sql_from = STYLES_IMAGESET_TABLE;
-				$sql_select = 'imageset_name, imageset_path';
+				$sql_select = 'imageset_id, imageset_name, imageset_path';
 			break;
 		}
 
@@ -1629,37 +1634,21 @@ parse_css_file = {PARSE_CSS_FILE}
 			trigger_error($user->lang['NO_' . $l_prefix] . adm_back_link($this->u_action), E_USER_WARNING);
 		}
 
-		$sql = "SELECT {$mode}_id, {$mode}_name
-			FROM $sql_from
-			WHERE {$mode}_id <> $style_id
-			$sql_where
-			ORDER BY {$mode}_name ASC";
-		$result = $db->sql_query($sql);
+		$s_only_component = $this->display_component_options($mode, $style_row[$mode . '_id'], $style_row);
 
-		$s_options = '';
-
-		if ($row = $db->sql_fetchrow($result))
-		{
-			do
-			{
-				$s_options .= '<option value="' . $row[$mode . '_id'] . '">' . $row[$mode . '_name'] . '</option>';
-			}
-			while ($row = $db->sql_fetchrow($result));
-		}
-		else
+		if ($s_only_component)
 		{
 			trigger_error($user->lang['ONLY_' . $l_prefix] . adm_back_link($this->u_action), E_USER_WARNING);
 		}
-		$db->sql_freeresult($result);
 
 		if ($update)
 		{
-			$sql = "DELETE FROM $sql_from
-				WHERE {$mode}_id = $style_id";
-			$db->sql_query($sql);
-
 			if ($mode == 'style')
 			{
+				$sql = "DELETE FROM $sql_from
+					WHERE {$mode}_id = $style_id";
+				$db->sql_query($sql);
+
 				$sql = 'UPDATE ' . USERS_TABLE . "
 					SET user_style = $new_id
 					WHERE user_style = $style_id";
@@ -1674,19 +1663,19 @@ parse_css_file = {PARSE_CSS_FILE}
 				{
 					set_config('default_style', $new_id);
 				}
+
+				// Remove the components
+				$components = array('template', 'theme', 'imageset');
+				foreach ($components as $component)
+				{
+					$new_id = request_var('new_' . $component . '_id', 0);
+					$component_id = $style_row[$component . '_id'];
+					$this->remove_component($component, $component_id, $new_id, $style_id);
+				}
 			}
 			else
 			{
-				if ($mode == 'imageset')
-				{
-					$sql = 'DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . "
-						WHERE imageset_id = $style_id";
-					$db->sql_query($sql);
-				}
-				$sql = 'UPDATE ' . STYLES_TABLE . "
-					SET {$mode}_id = $new_id
-					WHERE {$mode}_id = $style_id";
-				$db->sql_query($sql);
+				$this->remove_component($mode, $style_id, $new_id);
 			}
 
 			$cache->destroy('sql', STYLES_TABLE);
@@ -1700,7 +1689,6 @@ parse_css_file = {PARSE_CSS_FILE}
 
 		$template->assign_vars(array(
 			'S_DELETE'			=> true,
-			'S_REPLACE_OPTIONS'	=> $s_options,
 
 			'L_TITLE'			=> $user->lang[$this->page_title],
 			'L_EXPLAIN'			=> $user->lang[$this->page_title . '_EXPLAIN'],
@@ -1714,6 +1702,211 @@ parse_css_file = {PARSE_CSS_FILE}
 			'NAME'			=> $style_row[$mode . '_name'],
 			)
 		);
+
+		if ($mode == 'style')
+		{
+			$template->assign_vars(array(
+				'S_DELETE_STYLE'		=> true,
+			));
+		}
+	}
+
+	/**
+	* Remove template/theme/imageset entry from the database
+	*/
+	function remove_component($component, $component_id, $new_id, $style_id = false)
+	{
+		global $db;
+
+		if (($new_id == 0) || ($component === 'template' && ($conflicts = $this->check_inheritance($component, $component_id))))
+		{
+			// We can not delete the template, as the user wants to keep the component or an other template is inheriting from this one.
+			return;
+		}
+
+		$component_in_use = array();
+		if ($component != 'style')
+		{
+			$component_in_use = $this->component_in_use($component, $component_id, $style_id);
+		}
+
+		if (($new_id == -1) && !empty($component_in_use))
+		{
+			// We can not delete the component, as it is still in use
+			return;
+		}
+
+		if ($component == 'imageset')
+		{
+			$sql = 'DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . "
+				WHERE imageset_id = $component_id";
+			$db->sql_query($sql);
+		}
+
+		switch ($component)
+		{
+			case 'template':
+				$sql_from = STYLES_TEMPLATE_TABLE;
+			break;
+
+			case 'theme':
+				$sql_from = STYLES_THEME_TABLE;
+			break;
+
+			case 'imageset':
+				$sql_from = STYLES_IMAGESET_TABLE;;
+			break;
+		}
+
+		$sql = "DELETE FROM $sql_from
+			WHERE {$component}_id = $component_id";
+		$db->sql_query($sql);
+
+		$sql = 'UPDATE ' . STYLES_TABLE . "
+			SET {$component}_id = $new_id
+			WHERE {$component}_id = $component_id";
+		$db->sql_query($sql);
+	}
+
+	/**
+	* Display the options which can be used to replace a style/template/theme/imageset
+	*
+	* @return boolean Returns true if the component is the only component and can not be deleted.
+	*/
+	function display_component_options($component, $component_id, $style_row = false, $style_id = false)
+	{
+		global $db, $template, $user;
+
+		$is_only_component = true;
+		$component_in_use = array();
+		if ($component != 'style')
+		{
+			$component_in_use = $this->component_in_use($component, $component_id, $style_id);
+		}
+
+		$sql_where = '';
+		switch ($component)
+		{
+			case 'style':
+				$sql_from = STYLES_TABLE;
+				$sql_where = 'WHERE style_active = 1';
+			break;
+
+			case 'template':
+				$sql_from = STYLES_TEMPLATE_TABLE;
+				$sql_where = 'WHERE template_inherits_id <> ' . $component_id;
+			break;
+
+			case 'theme':
+				$sql_from = STYLES_THEME_TABLE;
+			break;
+
+			case 'imageset':
+				$sql_from = STYLES_IMAGESET_TABLE;
+			break;
+		}
+
+		$s_options = '';
+		if (($component != 'style') && empty($component_in_use))
+		{
+			// If it is not in use, there must be another component
+			$is_only_component = false;
+
+			$sql = "SELECT {$component}_id, {$component}_name
+				FROM $sql_from
+				WHERE {$component}_id = {$component_id}";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			$s_options .= '<option value="-1" selected="selected">' . $user->lang['DELETE_' . strtoupper($component)] . '</option>';
+			$s_options .= '<option value="0">' . sprintf($user->lang['KEEP_' . strtoupper($component)], $row[$component . '_name']) . '</option>';
+		}
+		else
+		{
+			$sql = "SELECT {$component}_id, {$component}_name
+				FROM $sql_from
+				$sql_where
+				ORDER BY {$component}_name ASC";
+			$result = $db->sql_query($sql);
+
+			$s_keep_option = $s_options = '';
+			while ($row = $db->sql_fetchrow($result))
+			{
+				if ($row[$component . '_id'] != $component_id)
+				{
+					$is_only_component = false;
+					$s_options .= '<option value="' . $row[$component . '_id'] . '">' . sprintf($user->lang['REPLACE_WITH_OPTION'], $row[$component . '_name']) . '</option>';
+				}
+				else if ($component != 'style')
+				{
+					$s_keep_option = '<option value="0" selected="selected">' . sprintf($user->lang['KEEP_' . strtoupper($component)], $row[$component . '_name']) . '</option>';
+				}
+			}
+			$db->sql_freeresult($result);
+			$s_options = $s_keep_option . $s_options;
+		}
+
+		if (!$style_row)
+		{
+			$template->assign_var('S_REPLACE_' . strtoupper($component) . '_OPTIONS', $s_options);
+		}
+		else
+		{
+			$template->assign_var('S_REPLACE_OPTIONS', $s_options);
+			if ($component == 'style')
+			{
+				$components = array('template', 'theme', 'imageset');
+				foreach ($components as $component)
+				{
+					$this->display_component_options($component, $style_row[$component . '_id'], false, $component_id, true);
+				}
+			}
+		}
+
+		return $is_only_component;
+	}
+
+	/**
+	* Check whether the component is still used by another style or component
+	*/
+	function component_in_use($component, $component_id, $style_id = false)
+	{
+		global $db;
+
+		$component_in_use = array();
+
+		if ($style_id)
+		{
+			$sql = 'SELECT style_id, style_name
+				FROM ' . STYLES_TABLE . "
+				WHERE {$component}_id = {$component_id}
+					AND style_id <> {$style_id}
+				ORDER BY style_name ASC";
+		}
+		else
+		{
+			$sql = 'SELECT style_id, style_name
+				FROM ' . STYLES_TABLE . "
+				WHERE {$component}_id = {$component_id}
+				ORDER BY style_name ASC";
+		}
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$component_in_use[] = $row['style_name'];
+		}
+		$db->sql_freeresult($result);
+
+		if ($component === 'template' && ($conflicts = $this->check_inheritance($component, $component_id)))
+		{
+			foreach ($conflicts as $temp_id => $conflict_data)
+			{
+				$component_in_use[] = $conflict_data['template_name'];
+			}
+		}
+
+		return $component_in_use;
 	}
 
 	/**
@@ -2036,23 +2229,18 @@ parse_css_file = {PARSE_CSS_FILE}
 			{
 				case 'tar':
 					$ext = '.tar';
-					$mimetype = 'x-tar';
-					$compress = 'compress_tar';
 				break;
 
 				case 'zip':
 					$ext = '.zip';
-					$mimetype = 'zip';
 				break;
 
 				case 'tar.gz':
 					$ext = '.tar.gz';
-					$mimetype = 'x-gzip';
 				break;
 
 				case 'tar.bz2':
 					$ext = '.tar.bz2';
-					$mimetype = 'x-bzip2';
 				break;
 
 				default:
@@ -2242,7 +2430,7 @@ parse_css_file = {PARSE_CSS_FILE}
 			{
 				// a rather elaborate check we have to do here once to avoid trouble later
 				$check = "{$phpbb_root_path}styles/" . $style_row["{$mode}_path"] . (($mode === 'theme') ? '/theme/stylesheet.css' : '/template');
-				if (($style_row["{$mode}_storedb"] != $store_db) && !$store_db && ($safe_mode || !@is_writable($check)))
+				if (($style_row["{$mode}_storedb"] != $store_db) && !$store_db && ($safe_mode || !phpbb_is_writable($check)))
 				{
 					$error[] = $user->lang['EDIT_' . strtoupper($mode) . '_STORED_DB'];
 					$store_db = 1;
@@ -2322,7 +2510,7 @@ parse_css_file = {PARSE_CSS_FILE}
 						{
 							$theme_data = $this->db_theme_data($style_row);
 						}
-						else if (!$store_db && !$safe_mode && @is_writable("{$phpbb_root_path}styles/{$style_row['theme_path']}/theme/stylesheet.css"))
+						else if (!$store_db && !$safe_mode && phpbb_is_writable("{$phpbb_root_path}styles/{$style_row['theme_path']}/theme/stylesheet.css"))
 						{
 							$store_db = 1;
 							$theme_data = $style_row['theme_data'];
@@ -2353,7 +2541,7 @@ parse_css_file = {PARSE_CSS_FILE}
 						}
 						else
 						{
-							if (!$store_db && !$safe_mode && @is_writable("{$phpbb_root_path}styles/{$style_row['template_path']}/template"))
+							if (!$store_db && !$safe_mode && phpbb_is_writable("{$phpbb_root_path}styles/{$style_row['template_path']}/template"))
 							{
 								$err = $this->store_in_fs('template', $style_row['template_id']);
 								if ($err)
@@ -2427,7 +2615,6 @@ parse_css_file = {PARSE_CSS_FILE}
 				$db->sql_freeresult($result);
 			}
 		}
-
 
 		if ($mode == 'template')
 		{
@@ -2528,13 +2715,21 @@ parse_css_file = {PARSE_CSS_FILE}
 
 		// Match CSS imports
 		$matches = array();
-		preg_match_all('/@import url\(["\'](.*)["\']\);/i', $stylesheet, $matches);
+		preg_match_all('/@import url\((["\'])(.*)\1\);/i', $stylesheet, $matches);
+
+		// remove commented stylesheets (very simple parser, allows only whitespace
+		// around an @import statement)
+		preg_match_all('#/\*\s*@import url\((["\'])(.*)\1\);\s\*/#i', $stylesheet, $commented);
+		$matches[2] = array_diff($matches[2], $commented[2]);
 
 		if (sizeof($matches))
 		{
 			foreach ($matches[0] as $idx => $match)
 			{
-				$stylesheet = str_replace($match, acp_styles::load_css_file($theme_row['theme_path'], $matches[1][$idx]), $stylesheet);
+				if (isset($matches[2][$idx]))
+				{
+					$stylesheet = str_replace($match, acp_styles::load_css_file($theme_row['theme_path'], $matches[2][$idx]), $stylesheet);
+				}
 			}
 		}
 
@@ -3241,7 +3436,6 @@ parse_css_file = {PARSE_CSS_FILE}
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-
 		if ($row)
 		{
 			// If it exist, we just use the style on installation
@@ -3561,7 +3755,6 @@ parse_css_file = {PARSE_CSS_FILE}
 			break;
 		}
 
-
 		$sql = "SELECT {$mode}_inherits_id
 			FROM $sql_from
 			WHERE {$mode}_id = " . (int) $id;
@@ -3727,7 +3920,7 @@ parse_css_file = {PARSE_CSS_FILE}
 
 		$store_db = 0;
 		$error = array();
-		if (!$safe_mode && @is_writable("{$phpbb_root_path}styles/{$path}/template"))
+		if (!$safe_mode && phpbb_is_writable("{$phpbb_root_path}styles/{$path}/template"))
 		{
 			$sql = 'SELECT *
 					FROM ' . STYLES_TEMPLATE_DATA_TABLE . "

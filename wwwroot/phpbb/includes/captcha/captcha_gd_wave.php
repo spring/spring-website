@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: captcha_gd_wave.php 9891 2009-07-29 22:59:51Z bantu $
+* @version $Id$
 * @copyright (c) 2006 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -62,8 +62,8 @@ class captcha
 				'y' => mt_rand(10, 17)
 			),
 			'lower_left'	=> array(
-				'x' => mt_rand($img_x - 5, $img_x - 45),
-				'y' => mt_rand($img_y - 0, $img_y - 15)
+				'x' => mt_rand($img_x - 45, $img_x - 5),
+				'y' => mt_rand($img_y - 15, $img_y - 0),
 			),
 		);
 

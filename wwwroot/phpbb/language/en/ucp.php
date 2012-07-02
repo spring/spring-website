@@ -4,7 +4,7 @@
 * ucp [English]
 *
 * @package language
-* @version $Id: ucp.php 10138 2009-09-11 14:38:23Z Kellanved $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -119,6 +119,7 @@ $lang = array_merge($lang, array(
 	'CANNOT_REMOVE_FOLDER'		=> 'This folder cannot be removed.',
 	'CHANGE_DEFAULT_GROUP'		=> 'Change default group',
 	'CHANGE_PASSWORD'			=> 'Change password',
+	'CLICK_GOTO_FOLDER'			=> '%1$sGo to your “%3$s” folder%2$s',
 	'CLICK_RETURN_FOLDER'		=> '%1$sReturn to your “%3$s” folder%2$s',
 	'CONFIRMATION'				=> 'Confirmation of registration',
 	'CONFIRM_CHANGES'			=> 'Confirm changes',
@@ -137,6 +138,7 @@ $lang = array_merge($lang, array(
 	'CURRENT_IMAGE'				=> 'Current image',
 	'CURRENT_PASSWORD'			=> 'Current password',
 	'CURRENT_PASSWORD_EXPLAIN'	=> 'You must confirm your current password if you wish to change it, alter your e-mail address or username.',
+	'CUR_PASSWORD_EMPTY'		=> 'You did not enter your current password.',
 	'CUR_PASSWORD_ERROR'		=> 'The current password you entered is incorrect.',
 	'CUSTOM_DATEFORMAT'			=> 'Custom…',
 
@@ -194,6 +196,7 @@ $lang = array_merge($lang, array(
 	'FIELD_INVALID_CHARS_ALPHA_ONLY'	=> 'The field “%s” has invalid characters, only alphanumeric characters are allowed.',
 	'FIELD_INVALID_CHARS_SPACERS_ONLY'	=> 'The field “%s” has invalid characters, only alphanumeric, space or -+_[] characters are allowed.',
 	'FIELD_INVALID_DATE'				=> 'The field “%s” has an invalid date.',
+	'FIELD_INVALID_VALUE'				=> 'The field “%s” has an invalid value.',
 
 	'FOE_MESSAGE'				=> 'Message from foe',
 	'FOES_EXPLAIN'				=> 'Foes are users which will be ignored by default. Posts by these users will not be fully visible. Personal messages from foes are still permitted. Please note that you cannot ignore moderators or administrators.',
@@ -266,9 +269,11 @@ $lang = array_merge($lang, array(
 	'MOVE_TO_FOLDER'				=> 'Move to folder',
 	'MOVE_UP'						=> 'Move up',
 
+	'NEW_EMAIL_CONFIRM_EMPTY'		=> 'You did not enter a confirm e-mail address.',
 	'NEW_EMAIL_ERROR'				=> 'The e-mail addresses you entered do not match.',
 	'NEW_FOLDER_NAME'				=> 'New folder name',
 	'NEW_PASSWORD'					=> 'New password',
+	'NEW_PASSWORD_CONFIRM_EMPTY'	=> 'You did not enter a confirm password.',
 	'NEW_PASSWORD_ERROR'			=> 'The passwords you entered do not match.',
 	'NOTIFY_METHOD'					=> 'Notification method',
 	'NOTIFY_METHOD_BOTH'			=> 'Both',
@@ -460,6 +465,7 @@ $lang = array_merge($lang, array(
 	'UCP_ZEBRA'						=> 'Friends &amp; Foes',
 	'UCP_ZEBRA_FOES'				=> 'Manage foes',
 	'UCP_ZEBRA_FRIENDS'				=> 'Manage friends',
+	'UNDISCLOSED_RECIPIENT'			=> 'Undisclosed Recipient',
 	'UNKNOWN_FOLDER'				=> 'Unknown folder',
 	'UNWATCH_MARKED'				=> 'Unwatch marked',
 	'UPLOAD_AVATAR_FILE'			=> 'Upload from your machine',

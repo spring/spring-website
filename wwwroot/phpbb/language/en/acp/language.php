@@ -4,7 +4,7 @@
 * acp_language [English]
 *
 * @package language
-* @version $Id: language.php 9649 2009-06-21 19:17:20Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -59,6 +59,7 @@ $lang = array_merge($lang, array(
 	'LANGUAGE_PACK_DELETED'				=> 'The language pack <strong>%s</strong> has been removed successfully. All users using this language have been reset to the boards default language.',
 	'LANGUAGE_PACK_DETAILS'				=> 'Language pack details',
 	'LANGUAGE_PACK_INSTALLED'			=> 'The language pack <strong>%s</strong> has been successfully installed.',
+	'LANGUAGE_PACK_CPF_UPDATE'			=> 'The custom profile fields’ language strings were copied from the default language. Please change them if necessary.',
 	'LANGUAGE_PACK_ISO'					=> 'ISO',
 	'LANGUAGE_PACK_LOCALNAME'			=> 'Local name',
 	'LANGUAGE_PACK_NAME'				=> 'Name',

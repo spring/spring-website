@@ -2,7 +2,7 @@
 /**
 *
 * @package dbal
-* @version $Id: firebird.php 9970 2009-08-13 15:25:20Z acydburn $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -28,6 +28,7 @@ class dbal_firebird extends dbal
 	var $last_query_text = '';
 	var $service_handle = false;
 	var $affected_rows = 0;
+	var $connect_error = '';
 
 	/**
 	* Connect to server
@@ -53,9 +54,35 @@ class dbal_firebird extends dbal
 			$use_database = $this->server . ':' . $this->dbname;
 		}
 
-		$this->db_connect_id = ($this->persistency) ? @ibase_pconnect($use_database, $this->user, $sqlpassword, false, false, 3) : @ibase_connect($use_database, $this->user, $sqlpassword, false, false, 3);
+		if ($this->persistency)
+		{
+			if (!function_exists('ibase_pconnect'))
+			{
+				$this->connect_error = 'ibase_pconnect function does not exist, is interbase extension installed?';
+				return $this->sql_error('');
+			}
+			$this->db_connect_id = @ibase_pconnect($use_database, $this->user, $sqlpassword, false, false, 3);
+		}
+		else
+		{
+			if (!function_exists('ibase_connect'))
+			{
+				$this->connect_error = 'ibase_connect function does not exist, is interbase extension installed?';
+				return $this->sql_error('');
+			}
+			$this->db_connect_id = @ibase_connect($use_database, $this->user, $sqlpassword, false, false, 3);
+		}
 
-		$this->service_handle = (function_exists('ibase_service_attach') && $this->server) ? @ibase_service_attach($this->server, $this->user, $sqlpassword) : false;
+		// Do not call ibase_service_attach if connection failed,
+		// otherwise error message from ibase_(p)connect call will be clobbered.
+		if ($this->db_connect_id && function_exists('ibase_service_attach') && $this->server)
+		{
+			$this->service_handle = @ibase_service_attach($this->server, $this->user, $sqlpassword);
+		}
+		else
+		{
+			$this->service_handle = false;
+		}
 
 		return ($this->db_connect_id) ? $this->db_connect_id : $this->sql_error('');
 	}
@@ -63,10 +90,19 @@ class dbal_firebird extends dbal
 	/**
 	* Version information about used database
 	* @param bool $raw if true, only return the fetched sql_server_version
+	* @param bool $use_cache forced to false for Interbase
 	* @return string sql server version
 	*/
-	function sql_server_info($raw = false)
+	function sql_server_info($raw = false, $use_cache = true)
 	{
+		/**
+		* force $use_cache false.  I didn't research why the caching code there is no caching code
+		* but I assume its because the IB extension provides a direct method to access it
+		* without a query.
+		*/
+
+		$use_cache = false;
+
 		if ($this->service_handle !== false && function_exists('ibase_server_info'))
 		{
 			return @ibase_server_info($this->service_handle, IBASE_SVC_SERVER_VERSION);
@@ -451,14 +487,35 @@ class dbal_firebird extends dbal
 		return 'BIN_AND(' . $column_name . ', ' . (1 << $bit) . ')' . (($compare) ? ' ' . $compare : '');
 	}
 
+	function _sql_bit_or($column_name, $bit, $compare = '')
+	{
+		return 'BIN_OR(' . $column_name . ', ' . (1 << $bit) . ')' . (($compare) ? ' ' . $compare : '');
+	}
+
 	/**
 	* return sql error array
 	* @access private
 	*/
 	function _sql_error()
 	{
+		// Need special handling here because ibase_errmsg returns
+		// connection errors, however if the interbase extension
+		// is not installed then ibase_errmsg does not exist and
+		// we cannot call it.
+		if (function_exists('ibase_errmsg'))
+		{
+			$msg = @ibase_errmsg();
+			if (!$msg)
+			{
+				$msg = $this->connect_error;
+			}
+		}
+		else
+		{
+			$msg = $this->connect_error;
+		}
 		return array(
-			'message'	=> @ibase_errmsg(),
+			'message'	=> $msg,
 			'code'		=> (@function_exists('ibase_errcode') ? @ibase_errcode() : '')
 		);
 	}

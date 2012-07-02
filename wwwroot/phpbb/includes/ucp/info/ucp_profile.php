@@ -2,7 +2,7 @@
 /**
 *
 * @package ucp
-* @version $Id: ucp_profile.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -22,7 +22,7 @@ class ucp_profile_info
 			'modes'		=> array(
 				'profile_info'	=> array('title' => 'UCP_PROFILE_PROFILE_INFO', 'auth' => '', 'cat' => array('UCP_PROFILE')),
 				'signature'		=> array('title' => 'UCP_PROFILE_SIGNATURE', 'auth' => '', 'cat' => array('UCP_PROFILE')),
-				'avatar'		=> array('title' => 'UCP_PROFILE_AVATAR', 'auth' => '', 'cat' => array('UCP_PROFILE')),
+				'avatar'		=> array('title' => 'UCP_PROFILE_AVATAR', 'auth' => 'cfg_allow_avatar && (cfg_allow_avatar_local || cfg_allow_avatar_remote || cfg_allow_avatar_upload || cfg_allow_avatar_remote_upload)', 'cat' => array('UCP_PROFILE')),
 				'reg_details'	=> array('title' => 'UCP_PROFILE_REG_DETAILS', 'auth' => '', 'cat' => array('UCP_PROFILE')),
 			),
 		);

@@ -2,7 +2,7 @@
 /**
 *
 * @package VC
-* @version $Id: phpbb_captcha_gd_plugin.php 10177 2009-09-22 10:03:17Z acydburn $
+* @version $Id$
 * @copyright (c) 2006, 2008 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

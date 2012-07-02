@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_disallow.php 8479 2008-03-29 00:22:48Z naderman $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -54,6 +54,18 @@ class acp_disallow
 			if (!$disallowed_user)
 			{
 				trigger_error($user->lang['NO_USERNAME_SPECIFIED'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			$sql = 'SELECT disallow_id
+				FROM ' . DISALLOW_TABLE . "
+				WHERE disallow_username = '" . $db->sql_escape($disallowed_user) . "'";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if ($row)
+			{
+				trigger_error($user->lang['DISALLOWED_ALREADY'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			$sql = 'INSERT INTO ' . DISALLOW_TABLE . ' ' . $db->sql_build_array('INSERT', array('disallow_username' => $disallowed_user));

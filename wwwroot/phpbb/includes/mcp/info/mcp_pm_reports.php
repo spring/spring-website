@@ -2,7 +2,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_pm_reports.php 9816 2009-07-21 21:21:11Z bantu $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

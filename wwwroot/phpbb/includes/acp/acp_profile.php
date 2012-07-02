@@ -2,7 +2,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_profile.php 10216 2009-10-07 14:54:10Z toonarmy $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -512,7 +512,7 @@ class acp_profile
 					else if ($field_type == FIELD_INT && $key == 'field_default_value')
 					{
 						// Permit an empty string
-						if (request_var('field_default_value', '') === '')
+						if ($action == 'create' && request_var('field_default_value', '') === '')
 						{
 							$var = '';
 						}
@@ -1480,6 +1480,7 @@ class acp_profile
 
 			case 'mssql':
 			case 'mssql_odbc':
+			case 'mssqlnative':
 
 				// We are defining the biggest common value, because of the possibility to edit the min/max values of each field.
 				$sql = 'ALTER TABLE [' . PROFILE_FIELDS_DATA_TABLE . "] ADD [$field_ident] ";
