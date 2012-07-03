@@ -211,7 +211,8 @@ code pre                 {padding-left: 5px; border-left: #333 1px solid; backgr
 /* FIXES FOR MEDIAWIKI 1.16.0 */
 .headertd                {line-height: 0;}
 body.ns-0                {background-color: inherit;} /* fix white background */
-table.wikitable          {background: inherit;}       /* fix white-on-white wikitables */
-.wikitable th            {background: #38474E;}
+table.wikitable          {background-color: inherit;} /* fix white-on-white wikitables */
+table.wikitable > tr > th,
+table.wikitable > * > tr > th {background-color: #38474E;}
 .mw-search-formheader    {background-color: inherit;} /* fix backgroundcolors in search */
 fieldset#mw-searchoptions{background-color: inherit;}
