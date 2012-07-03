@@ -8,6 +8,8 @@
  * @file
  *
  * @author 2Q
+ * @author Andrijko Z.
+ * @author Comp1089
  * @author Trần Nguyễn Minh Huy
  */
 
@@ -105,18 +107,19 @@ $messages = array(
 'jumptosearch'     => 'ettsüse',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'      => 'Tääteja {{GRAMMAR:elative|{{SITENAME}}}}',
-'aboutpage'      => 'Project:Täätühsed',
-'copyright'      => 'Sisälto on $1 litsentsii mukka svobodnoi.',
-'copyrightpage'  => '{{ns:project}}:Kopiraitti',
-'disclaimers'    => 'Tšeeltümin vassamizõõ',
-'disclaimerpage' => 'Project:Tšeeltümin vassamizõõ',
-'edithelp'       => 'Muutuzavid',
-'edithelppage'   => 'Help:Kui muuttaa tšültšiä',
-'helppage'       => 'Help:Sisälto',
-'mainpage'       => 'Esitšültši',
-'privacy'        => 'Salaštrahuituz',
-'privacypage'    => 'Project:Salaštrahuituz',
+'aboutsite'            => 'Tääteja {{GRAMMAR:elative|{{SITENAME}}}}',
+'aboutpage'            => 'Project:Täätühsed',
+'copyright'            => 'Sisälto on $1 litsentsii mukka svobodnoi.',
+'copyrightpage'        => '{{ns:project}}:Kopiraitti',
+'disclaimers'          => 'Tšeeltümin vassamizõõ',
+'disclaimerpage'       => 'Project:Tšeeltümin vassamizõõ',
+'edithelp'             => 'Muutuzavid',
+'edithelppage'         => 'Help:Kui muuttaa tšültšiä',
+'helppage'             => 'Help:Sisälto',
+'mainpage'             => 'Esitšültši',
+'mainpage-description' => 'Esicülci',
+'privacy'              => 'Salaštrahuituz',
+'privacypage'          => 'Project:Salaštrahuituz',
 
 'badaccess' => 'Lupa tšeeltistü',
 
@@ -160,7 +163,7 @@ Kui tšüsümüssessä ebõõ rootšittu tšültši, võib õlla õlõttõ löü
 # Login and logout pages
 'yourname'                => 'Tšäüttijänimi:',
 'yourpassword'            => 'Salasõna',
-'remembermypassword'      => 'Mäleht minuu',
+'remembermypassword'      => 'Mäleht minuu (enintään $1 {{PLURAL:$1|päivä|päivää}})',
 'login'                   => 'Tširjut süäme',
 'nav-login-createaccount' => 'Tširjut süäme vai registriiroit tšäüttijässi',
 'userlogin'               => 'Tširjut süäme',
@@ -181,8 +184,6 @@ Kui tšüsümüssessä ebõõ rootšittu tšültši, võib õlla õlõttõ löü
 'extlink_tip'     => 'Eräpooliin linkki (mäleht http:// prefiksi)',
 'headline_sample' => 'Zagolofkka-teksti',
 'headline_tip'    => 'Zagolofkka',
-'math_sample'     => 'Lissä formula tänne',
-'math_tip'        => 'Matematillin formula (LaTeX)',
 'nowiki_sample'   => 'Lissä formattimatoo teksti tänne',
 'nowiki_tip'      => 'Ignoriiroit viki formatti',
 'image_tip'       => 'Kuva',
@@ -203,7 +204,7 @@ Kui tšüsümüssessä ebõõ rootšittu tšültši, võib õlla õlõttõ löü
 'summary-preview'                  => 'Turvotuhsõ prestavleńńa',
 'newarticle'                       => '(Uusi)',
 'newarticletext'                   => 'Sitä tšültšiä veel ebõõ.
-Võitta loovva tšüľľee tširjuttamall alla õlõvasõõ tilaa. Kui että taho loovva tšültšiä, menka takaz Web-brauzeraa "back"-napuukaa.',
+Võitta loovva tšüľľee tširjuttamall alla õlõvasõõ tilaa. Kui että taho loovva [[{{MediaWiki:Helppage}}|tšültšiä]], menka takaz Web-brauzeraa "back"-napuukaa.',
 'noarticletext'                    => '{{GRAMMAR:inessive|{{SITENAME}}}} ebõõ sene nimissä tšültšiä.
 * Võid [[Special:Search/{{PAGENAME}}|ettsiä tšüľľee nimellä]] muilta tšüľľeltä.
 * Võid tširjuttõma uuvvõõ tšüľľee <span class="plainlinks">[{{fullurl:{{FULLPAGENAME}}|action=edit}} {{PAGENAME}}]</span>.',
@@ -211,8 +212,8 @@ Võitta loovva tšüľľee tširjuttamall alla õlõvasõõ tilaa. Kui että tah
 'editing'                          => 'Muutun $1',
 'editingsection'                   => 'Muuttõmizõll on õsa tšüľľess $1',
 'copyrightwarning'                 => "Kõik {{SITENAME}}'lle formittu saatšid katsotaa julkaistussi $2 -litsentsi mukka ($1). Kui että taho, jot Teďďee tširjutussa muutõtaa armõttomassi ja svobodno tšävvää uuvvõllõõ, elä tširjuttõga.<br />Toož, Te luppattõ, jot tširjutittä Teďďee teksti ize, vai kopiiroizitta slobodnoissa tšüľľessä.<br />'''ELÄ TŠÄÜTTEGA TETŠEJÄÕIKUSÕKAA OĎĎÕLTUIT MAŤERIIT ILMA LUPPA!'''",
-'templatesused'                    => 'Sell tšüľľell tšäütetüd šabloonid:',
-'templatesusedpreview'             => 'Šabloonid sellä prestavleńńalla:',
+'templatesused'                    => 'Sell tšüľľell {{PLURAL:$1|tšäütetüd šabloonid}}:',
+'templatesusedpreview'             => '{{PLURAL:$1|Šabloonid}} sellä prestavleńńalla:',
 'template-protected'               => '(oďďõttu)',
 'template-semiprotected'           => '(varjõttu anonüümeilt ja uusilt tšäüttijilt)',
 'hiddencategories'                 => 'Kase tšültši kuulub {{PLURAL:$1|vahtiaavaa salautõttuu gruppaa|vahtiaavii salautõttuisõõ gruppoisõõ}}:',
@@ -255,7 +256,7 @@ Võitta loovva tšüľľee tširjuttamall alla õlõvasõõ tilaa. Kui että tah
 'searchsubtitleinvalid'     => "Ettsizittä: '''$1'''",
 'notitlematches'            => 'Eb löütännü miltäiss tšültšiä sene ettsüsõnaaka',
 'notextmatches'             => 'Ettsisõnaa eb löütünnü tšüľľee tekstiissä',
-'prevn'                     => 'entiiss $1',
+'prevn'                     => '{{PLURAL:$1|edellinen|$1 entiiss}}',
 'nextn'                     => '{{PLURAL:$1|$1}} vahtiaava →',
 'viewprevnext'              => 'Näüt ($1 {{int:pipe-separator}} $2) ($3)',
 'search-result-size'        => '$1 ({{PLURAL:$2|1 sõna|$2 sõna}})',
@@ -375,8 +376,7 @@ Tšüľľed, kummad õmad teďďellä [[Special:Watchlist|kattsõspiizgalla]] on
 'linksearch' => 'Ulkopoolizõd linkid',
 
 # Special:Log/newusers
-'newuserlogpage'          => 'Uuvvõd tšäüttijäd',
-'newuserlog-create-entry' => 'Uusi tšäüttijä',
+'newuserlogpage' => 'Uuvvõd tšäüttijäd',
 
 # Special:ListGroupRights
 'listgrouprights-members' => '(selttsilainspiiska)',
@@ -387,12 +387,9 @@ Tšüľľed, kummad õmad teďďellä [[Special:Watchlist|kattsõspiizgalla]] on
 # Watchlist
 'watchlist'         => 'Minu kattsõspiiska',
 'mywatchlist'       => 'Minu kattsõspiiska',
-'watchlistfor'      => '$1',
-'addedwatch'        => 'Lisättü kattsospiizgallõ',
 'addedwatchtext'    => "Tšültši \"[[:\$1]]\" on lisättü Teďďee [[Special:Watchlist|kattsospiizgallõ]].
-Tšültšese ja sene juttutšültšese tehäväd tulõvaizõd muutuhsõd leeväd tšisloitõtud siäll. 
+Tšültšese ja sene juttutšültšese tehäväd tulõvaizõd muutuhsõd leeväd tšisloitõtud siäll.
 Tšültši leeb tširjutõttu '''pimmiässi''' [[Special:RecentChanges|spiizgall viimeizije muutuhsijõ]].",
-'removedwatch'      => 'Pantu kattsõspiizgalt poiz',
 'removedwatchtext'  => 'Tšültši "[[:$1]]" on pantu [[Special:Watchlist|teďďee kattsõspiizgalt]] poiz.',
 'watch'             => 'Katso',
 'watchthispage'     => 'Katso sitä tšültšiä',
@@ -409,9 +406,8 @@ Tšültši leeb tširjutõttu '''pimmiässi''' [[Special:RecentChanges|spiizgall
 'deletepage'            => 'Pühi tšültši',
 'confirmdeletetext'     => 'Õlõtta pühtšimässä tšüľľee vai failii ja kõigõ sene istorii. Õlka nii üvä, kõvissõga jot tahotta sitä tehä, jot saatta arvoa sledstvijäd jot pühtšimüz on [[{{MediaWiki:Policy-url}}|poolissaa]] mukka.',
 'actioncomplete'        => 'Töö tehtü lõppuu',
-'deletedtext'           => '"<nowiki>$1</nowiki>" on pühittü.
+'deletedtext'           => '"$1" on pühittü.
 Tšüľľellä $2 on spiiska viimeiziss pühtšimühsiiss.',
-'deletedarticle'        => 'roottšiz tšüľľee $1',
 'dellogpage'            => 'Pühitüd tšüľľed',
 'deletecomment'         => 'Süü',
 'deleteotherreason'     => 'Muu vai lisä süü',
@@ -428,7 +424,7 @@ Tšüľľellä $2 on spiiska viimeiziss pühtšimühsiiss.',
 'protectexpiry'               => 'Lõpub:',
 'protect_expiry_invalid'      => 'Lõppuaika eb kõlpa.',
 'protect_expiry_old'          => 'Lõppuaika on meneväz.',
-'protect-text'                => "Võitta kattsoa ja muuttaa tšüľľee '''<nowiki>$1</nowiki>''' lupoit.",
+'protect-text'                => "Võitta kattsoa ja muuttaa tšüľľee '''$1''' lupoit.",
 'protect-locked-access'       => "Että või muuttaa tšüľľee varjauztasoa. All on tšüľľee \"'''\$1'''\" nütšüized varjauztazod:",
 'protect-cascadeon'           => 'Kase tšültši on varjõttu, ku on sisällütettü all {{PLURAL:$1|õlõvaa jadgotussi varjõttuhõõ tšültšese|õlõvii jadgotussi varjõttuisõ tšültšiise}}. Võitta muuttaa sene tšüľľee varjuztasoa, mutta se eb vaikuta jadgotõttuu varjuhsiise.',
 'protect-default'             => 'Salli kõik tšäüttijäd',
@@ -443,8 +439,7 @@ Tšüľľellä $2 on spiiska viimeiziss pühtšimühsiiss.',
 'restriction-level'           => 'Varjauz',
 
 # Undelete
-'undeletelink'     => 'näüt/vääntee',
-'undeletedarticle' => '"[[$1]]" vääneltü',
+'undeletelink' => 'näüt/vääntee',
 
 # Namespace form on various pages
 'namespace'      => 'Nimiruumi:',
@@ -521,8 +516,6 @@ Neill kõhtoill piättä liikuttaa vai ühissää tšüľľee tšäzi.",
 'talkexists'       => "'''Tšüľľee liikka tuli valmessi, a juttitšültšiä eb õli liikutõttu, ku uuvvõ zagolofkaa all on jo juttutšültši. Juttutšültšije sisälto piättä ühinessä tšäzi.'''",
 'movedto'          => 'liikutõttu',
 'movetalk'         => 'Liikut toož juttutšültši',
-'1movedto2'        => 'Tšültši [[$1]] on liikutõttu uuvvõllõ nimõllõ [[$2]]',
-'1movedto2_redir'  => 'liikuti tšüľľee [[$1]] mešaituhsõõ [[$2]] päälle',
 'movelogpage'      => 'Liikkalogi',
 'movereason'       => 'Süü',
 'revertmove'       => 'kummut',
@@ -557,6 +550,7 @@ Että või muuttaa tšültšia, mutta võittõ kattsoa sene lähtekoodi.',
 'tooltip-search-go'               => 'Mee tšüľľelee, kummall on vakurat sesama nimi (kui eloz on)',
 'tooltip-search-fulltext'         => 'Etsi tšültšiltä sitä tekstiä',
 'tooltip-n-mainpage'              => 'Mee esitšüľľelee',
+'tooltip-n-mainpage-description'  => 'Mee esitšüľľelee',
 'tooltip-n-portal'                => 'Juttua projektissa: Mitä tüü võittõ tehä, kuza levvette mitä',
 'tooltip-n-currentevents'         => 'Lugõ soobšeńńad nütšüizess kõhtoiss',
 'tooltip-n-recentchanges'         => 'Spiiska uusissa muutussissa',
@@ -586,7 +580,7 @@ Että või muuttaa tšültšia, mutta võittõ kattsoa sene lähtekoodi.',
 'tooltip-compareselectedversions' => 'Näütää vahõd 2 valitsõttuďďõ verzijoďďõ väliz',
 'tooltip-watch'                   => 'Lissä kase tšültši kattsõspiizgallõ',
 'tooltip-rollback'                => 'Vääntega tšüľľee teksti vanõmpi verzijalõõ',
-'tooltip-undo'                    => '"Kummut" väänteeb kasene muutusõõ ja avab artikkelii prestavleńńaa. 
+'tooltip-undo'                    => '"Kummut" väänteeb kasene muutusõõ ja avab artikkelii prestavleńńaa.
 Toož, võittõ tširjutta väänteüssee süü.',
 
 # Browsing diffs
@@ -594,11 +588,10 @@ Toož, võittõ tširjutta väänteüssee süü.',
 'nextdiff'     => 'Uuvvõpi muutuz →',
 
 # Media information
-'file-info-size'       => '($1 × $2 px, $3, MIME-sortta: $4)',
-'file-nohires'         => '<small>Suurõpaa kuva ebõõ.</small>',
-'svg-long-desc'        => '(SVG-faili $1 × $2 px, failii suuruz: $3)',
-'show-big-image'       => 'Kõrka-rezoľuuttsiin verzija',
-'show-big-image-thumb' => '<small>Prestavľeńńaa suuruz: $1 × $2 px</small>',
+'file-info-size' => '$1 × $2 px, $3, MIME-sortta: $4',
+'file-nohires'   => 'Suurõpaa kuva ebõõ.',
+'svg-long-desc'  => 'SVG-faili $1 × $2 px, failii suuruz: $3',
+'show-big-image' => 'Kõrka-rezoľuuttsiin verzija',
 
 # Bad image list
 'bad_image_list' => 'Spiizgaa formatti on:
@@ -620,11 +613,17 @@ Kui faili on muutõttu, siiz detaaľid võivad õlla kahõllaizõd muutõtull fa
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # External editor support
 'edit-externally'      => 'Muuttaa sitä failia ulkopoolizõõ prograammiikaa.',
-'edit-externally-help' => '(Kattsoga [http://www.mediawiki.org/wiki/Manual:External_editors praavilõd], kui tahotta lisäinformaattsia.)',
+'edit-externally-help' => '(Kattsoga [//www.mediawiki.org/wiki/Manual:External_editors praavilõd], kui tahotta lisäinformaattsia.)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'koko istori',

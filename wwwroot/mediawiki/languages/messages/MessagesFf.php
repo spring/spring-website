@@ -8,9 +8,10 @@
  * @file
  *
  * @author Amkoullel
+ * @author Guaka (on ff.wikipedia.org)
  */
 
-$fallback='fr';
+$fallback = 'fr';
 
 $messages = array(
 'mytalk' => 'kaldigal am',
