@@ -143,9 +143,6 @@ require_once './extensions/Auth_phpBB.php';
 // CSS extension
 require_once './extensions/CSS/CSS.php';
 
-// BreadCrumb extension
-// require_once './extensions/BreadCrumbs/BreadCrumbs.php';
-
 $wgAuth_Config = array(); // Clean.
 
 $wgAuth_Config['WikiGroupName'][] = 'REGISTERED';
