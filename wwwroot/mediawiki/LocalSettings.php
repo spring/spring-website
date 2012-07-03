@@ -83,7 +83,7 @@ $wgDBmwschema       = "mediawiki";
 $wgDBts2schema      = "public";
 
 ## Shared memory settings
-$wgMainCacheType = CACHE_ACCEL;
+$wgMainCacheType = CACHE_NONE; // FIXME: CACHE_ACCEL;
 $wgMemCachedServers = array();
 
 ## To enable image uploads, make sure the 'images' directory
