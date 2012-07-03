@@ -9,12 +9,11 @@ html {
 
 
 /* MEDIAWIKI */
-#article                 {width: 748px; overflow: hidden;
+#mw-content-text         {width: 748px; overflow: hidden;
                           margin-left: 10px; margin-right: 0; padding-top: 10px;
                           font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
-#article > *             {margin-right: 10px;}
-#article > td            {margin-right: 0;}
+#mw-content-text > *     {margin-right: 10px;}
 #specialform             {display: inline;}
 #content                 {top: 0; margin: 0; padding: 0;}
 #topbar                  {padding: 0px;}
@@ -94,30 +93,30 @@ html {
 
 
 /* SOME STUFF */
-#article p               {margin-top: 1ex;
+#mw-content-text p       {margin-top: 1ex;
                           font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
-#article td,#article th  {font-family: Verdana, Arial, sans-serif;
+#mw-content-text td,#mw-content-text th {font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; color: #eeeeee;}
-#article p.subtitle      {color: #666666; font-size: 11pt; font-weight: bold;
+#mw-content-text p.subtitle {color: #666666; font-size: 11pt; font-weight: bold;
                           padding-top: 0; margin-top: 0; padding-bottom: 1ex;}
 p, pre, td, 
 th, li, dd, dt           {line-height: 12pt;}
 textarea                 {overflow: auto;}
 hr                       {border-bottom: 1px #eee solid;}
 
-/* if first element is H1 undo the padding-top:10px from #article */
-#article > a:first-child + h1,
-#article > table:first-child + script + a + h1 {margin-top: -5px}
+/* if first element is H1 undo the padding-top:10px from #mw-content-text */
+#mw-content-text > a:first-child + h1,
+#mw-content-text > table:first-child + script + a + h1 {margin-top: -5px}
 
 
 /* LINKS */
 a:link,a:visited         {color: #D8EFFF; text-decoration: none;}
 a:hover                  {text-decoration: underline;}
-#article a.new           {color: #f55; text-decoration: none; text-shadow: #333 2px 2px 3px;}
-#article a               {color: #bbf; text-decoration: none; text-shadow: #333 2px 2px 3px;}
-#article a:visited       {color: #a0a0ff; text-decoration: none; text-shadow: #222 2px 2px 2px;}
-#article a:hover         {text-decoration: underline;}
+#mw-content-text a.new           {color: #f55; text-decoration: none; text-shadow: #333 2px 2px 3px;}
+#mw-content-text a               {color: #bbf; text-decoration: none; text-shadow: #333 2px 2px 3px;}
+#mw-content-text a:visited       {color: #a0a0ff; text-decoration: none; text-shadow: #222 2px 2px 2px;}
+#mw-content-text a:hover         {text-decoration: underline;}
 a.external               {color: #E9D8FF;}
 a.printable              {text-decoration: underline;}
 a.stub, #quickbar a.stub {color:#772233; text-decoration:none;}
@@ -128,12 +127,12 @@ a.new, #quickbar a.new   {color: #CC2200;}
 h1, h2, h3, h4, h5, h6   {color: #eeeeee;
                           font-family: Verdana,Arial,sans-serif;
                           margin-bottom: 0.1ex; margin-top: 0.1ex;}
-#article h1,
-#article h2, 
-#article h3,
-#article h4              {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;
+#mw-content-text h1,
+#mw-content-text h2,
+#mw-content-text h3,
+#mw-content-text h4      {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;
                           font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;}
-#article h1              {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
+#mw-content-text h1      {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
 h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
 h3 .mw-headline          {font-size: 14.5px; margin-left: 5px}
@@ -147,19 +146,19 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .editsection             {margin-right: 5px;}
 
 /* LEFT SHIFT AFTER H1 HEADERS */
-#article > * + p         {margin-left: 15px;}
-#article > *             {margin-left: 15px;}
+#mw-content-text > * + p         {margin-left: 15px;}
+#mw-content-text > *             {margin-left: 15px;}
 
-#article > p:first-child,
-#article > p:first-child + p,
-#article > p:first-child + p + p,
-#article > p:first-child + p + p + p,
-#article > p:first-child + p + p + p + p {margin-left: 0px;}
+#mw-content-text > p:first-child,
+#mw-content-text > p:first-child + p,
+#mw-content-text > p:first-child + p + p,
+#mw-content-text > p:first-child + p + p + p,
+#mw-content-text > p:first-child + p + p + p + p {margin-left: 0px;}
 
-#article ul,
-#article ol              {margin-left: 5px;}
-#article hr              {margin-left: 0px;}
-#article table           {margin-left: 0px;}
+#mw-content-text ul,
+#mw-content-text ol              {margin-left: 5px;}
+#mw-content-text hr              {margin-left: 0px;}
+#mw-content-text table           {margin-left: 0px;}
 
 
 /* MEDIAWIKI SPECIALS */
