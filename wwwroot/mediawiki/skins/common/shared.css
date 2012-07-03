@@ -166,6 +166,7 @@ div.searchresult {
 }
 
 .mw-search-formheader {
+	background-color: #f3f3f3;
 	margin-top: 1em;
 	border: 1px solid silver;
 }
@@ -219,6 +220,7 @@ fieldset#mw-searchoptions {
 	padding-bottom: 0.5em !important;
 	padding-top: 0.5em !important;
 	border: none;
+	background-color: #f9f9f9;
 	border: 1px solid silver !important;
 	border-top-width: 0 !important;
 }
