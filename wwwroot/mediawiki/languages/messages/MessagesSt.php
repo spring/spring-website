@@ -8,6 +8,7 @@
  * @file
  *
  * @author Cbrown1023
+ * @author Zyxoas (on st.wikipedia.org)
  */
 
 $messages = array(
@@ -60,7 +61,6 @@ $messages = array(
 'search'         => 'Fuputsa',
 'history'        => 'Nalane',
 'history_short'  => 'Nalane',
-'info_short'     => 'Tlhahiso-leseding',
 'newpage'        => 'Leqephe le letjha',
 'talkpage'       => 'Qoqa ka leqephe lena',
 'talk'           => 'Moqoqo',
@@ -85,7 +85,7 @@ $messages = array(
 
 # Login and logout pages
 'yourpasswordagain'  => 'Ngola lepetjo hape',
-'remembermypassword' => 'O nkgopole',
+'remembermypassword' => 'O nkgopole (for a maximum of $1 {{PLURAL:$1|day|days}})',
 'nologinlink'        => 'Ingodisetse',
 'createaccount'      => 'Ingodisetse',
 'gotaccount'         => "O se o ingodisitse? '''$1'''.",
@@ -93,7 +93,7 @@ $messages = array(
 'badretype'          => 'Mapetjo a mabedi o a ngotseng ha a tshwane.',
 'mailmypassword'     => 'Nthomele password ya ka ka email',
 
-# Password reset dialog
+# Change password dialog
 'oldpassword' => 'Lepetjo la kgale:',
 'newpassword' => 'Lepetjo le letjha:',
 'retypenew'   => 'Ngola lepetjo le letjha hape:',
@@ -134,14 +134,16 @@ $messages = array(
 
 # Special:Categories
 'categories'         => 'Mekga',
-'categoriespagetext' => 'Wiki e na le mekga ena',
+'categoriespagetext' => 'Wiki e na le mekga ena.
+[[Special:UnusedCategories|Unused categories]] are not shown here.
+Also see [[Special:WantedCategories|wanted categories]].',
 
 # E-mail user
 'emailuser'     => 'Romela motho enwa email',
-'emailfrom'     => 'E tswa ho',
-'emailto'       => 'Ho',
-'emailsubject'  => 'Ka',
-'emailmessage'  => 'O re',
+'emailfrom'     => 'E tswa ho:',
+'emailto'       => 'Ho:',
+'emailsubject'  => 'Ka:',
+'emailmessage'  => 'O re:',
 'emailsend'     => 'E romele',
 'emailsent'     => 'E rometswe',
 'emailsenttext' => 'Email ya molaetsa wa hao e se e rometswe.',
@@ -158,8 +160,5 @@ $messages = array(
 'allmessagesname'    => 'Lebitso',
 'allmessagesdefault' => 'Se neng se ngotswe pele',
 'allmessagescurrent' => 'Se ngotsweng hona jwale',
-
-# Info page
-'infosubtitle' => 'Tlhahiso-leseding ka leqephe',
 
 );

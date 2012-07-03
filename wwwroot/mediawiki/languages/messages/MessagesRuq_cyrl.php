@@ -1,5 +1,5 @@
 <?php
-/** Megleno-Romanian (Cyrillic) (Vlăheşte (Cyrillic))
+/** Megleno-Romanian (Cyrillic script) (Влахесте)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Andrijko Z.
  * @author Кумулај Маркус
  * @author Макѕе
  * @author Приетен тев
@@ -133,8 +134,7 @@ $messages = array(
 'nstab-category' => 'категориа',
 
 # General errors
-'viewsource'    => 'баганаере',
-'viewsourcefor' => 'пентру $1',
+'viewsource' => 'баганаере',
 
 # Login and logout pages
 'yourname'                => 'Ном дутилизатору:',
@@ -154,8 +154,6 @@ $messages = array(
 'extlink_tip'     => 'Легајтул ќстернул (вец префикс http://)',
 'headline_sample' => 'Ескрире с-титлус',
 'headline_tip'    => 'Титлу де нивел 2',
-'math_sample'     => 'Интродуца формула иси',
-'math_tip'        => 'Формула с-математикс (LaTeX)',
 'nowiki_sample'   => 'Интродуца но-Вики иси',
 'nowiki_tip'      => 'Но-Бики клашу',
 'image_tip'       => 'Сантигул инсерат',
@@ -201,7 +199,7 @@ $messages = array(
 
 # Recent changes
 'recentchanges'   => 'шумбајрае рецентае',
-'rcnote'          => "Маи хос се флај {{PLURAL:$|ултима модификаре|ултимеле '''$1''' модификајри}} дин {{PLURAL:$2|ултима зи|ултимеле '''$2''' зиле}}, енцепонд цу $3.",
+'rcnote'          => "Маи хос се флај {{PLURAL:$|ултима модификаре|ултимеле '''$1''' модификајри}} дин {{PLURAL:$2|ултима зи|ултимеле '''$2''' зиле}}, енцепонд цу $5, $4.",
 'rcshowhideminor' => '$1 модификајриле миноре',
 'rcshowhidebots'  => '$1 роботи',
 'rcshowhideliu'   => '$1 утилизатори приласнаери',
@@ -233,8 +231,8 @@ $3',
 'filehist-user'       => 'Утилизатору',
 'filehist-dimensions' => 'Дименционс',
 'filehist-comment'    => 'коментарул',
-'imagelinks'          => 'легајтул',
-'linkstoimage'        => 'Цес пажи легајтент а це фиширул:',
+'imagelinks'          => 'Легајтул фиширул де медиа',
+'linkstoimage'        => 'Цес {{PLURAL:$1|page links||пажи легајтент}} а це фиширул:',
 
 # Random page
 'randompage' => 'алаећу',
@@ -254,18 +252,14 @@ $3',
 'allpagessubmit' => 'Треме',
 
 # Watchlist
-'watchlist'    => 'Мај клајаеру',
-'mywatchlist'  => 'Мај клајаере',
-'watchlistfor' => "(пентру '''$1''')",
-'watch'        => 'клајаере',
-'unwatch'      => 'Деклајаера',
+'watchlist'   => 'Мај клајаеру',
+'mywatchlist' => 'Мај клајаере',
+'watch'       => 'клајаере',
+'unwatch'     => 'Деклајаера',
 
 # Displayed when you click the "watch" button and it is in the process of watching
 'watching'   => 'О клајаере...',
 'unwatching' => 'О деклајаере...',
-
-# Delete
-'deletedarticle' => 'делајрај "[[$1]]"',
 
 # Rollback
 'rollbacklink' => 'ревенире',
@@ -335,7 +329,7 @@ $3',
 'tooltip-diff'              => 'Ратај це модификајри аи фајцут текстулуи.',
 
 # Media information
-'file-nohires'   => '<small>Це-н-ест нресолуцион маи мари.</small>',
+'file-nohires'   => 'Це-н-ест нресолуцион маи мари.',
 'show-big-image' => 'Мареште ресолуцион',
 
 # Bad image list

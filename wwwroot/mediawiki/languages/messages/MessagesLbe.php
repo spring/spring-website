@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Amire80
  */
 
 $fallback = 'ru';
@@ -38,16 +39,20 @@ $namespaceNames = array(
 	NS_CATEGORY_TALK    => 'Категориялиясса_ихтилат',
 );
 
+// Remove Russian aliases
+$namespaceGenderAliases = array();
+
 $linkTrail = '/^([a-zабвгдеёжзийклмнопрстуфхцчшщъыьэюяӀ1“»]+)(.*)$/sDu';
 
 $messages = array(
 'article' => 'Тарих',
+'mytalk'  => 'На цӀухху-бусу байсса интернетрал лажин',
 
 # Cologne Blue skin
 'qbedit' => 'Дакьин дуван',
 
-'history'          => 'Макьала',
-'history_short'    => 'Макьала',
+'history'          => 'Тарих',
+'history_short'    => 'Тарих',
 'edit'             => 'Дакьин дуван',
 'talkpagelinktext' => 'Ихтилат',
 'talk'             => 'Ихтилат',
@@ -69,6 +74,18 @@ $messages = array(
 'nstab-template' => 'Шаблон',
 'nstab-category' => 'Категория',
 
+# Login and logout pages
+'userlogin'  => 'Системалухь цу уссарав бусан',
+'logout'     => 'Уккаву',
+'userlogout' => 'Уккаву',
+
+# Edit pages
+'minoredit'   => 'Мюрщсса дахханашиву',
+'watchthis'   => 'Ва лажин ябитаврил сияхӀравун ххи дан',
+'savearticle' => 'Лажин ядан',
+'preview'     => 'Цалсса ххалбаву',
+'showpreview' => 'Цалсса ххалбаву',
+
 # Recent changes
 'recentchanges' => 'Махъсса дахханашивурту',
 
@@ -77,11 +94,26 @@ $messages = array(
 'filehist-user'    => 'Гьурттучув',
 
 # Miscellaneous special pages
-'move' => 'ЦIа даххана дан',
+'move' => 'ЦӀа даххана дан',
 
 # Special:Log
 'specialloguserlabel' => 'Гьурттучув:',
 
+# E-mail user
+'emailuser' => 'ГьурттучувначӀансса чагьар',
+
+# Watchlist
+'watchlist' => 'Ябитаврил сияхӀ',
+'watch'     => 'Хъирив агьан',
+'unwatch'   => 'Хъирив къаагьан',
+
+# Contributions
+'contributions' => 'Гьурттучунал бутӀа',
+'mycontris'     => 'Ттул даву',
+
 'sp-contributions-talk' => 'Ихтилат',
+
+# Move page
+'move-watch' => 'Ва лажин ябитаврил сияхӀравун ххи дан',
 
 );

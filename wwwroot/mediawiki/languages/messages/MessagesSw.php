@@ -7,6 +7,9 @@
  * @ingroup Language
  * @file
  *
+ * @author Ikiwaner
+ * @author Jagwar
+ * @author Kaganer
  * @author Lloffiwr
  * @author Malangali
  * @author Marcos
@@ -43,80 +46,80 @@ $namespaceAliases = array(
 );
 
 $specialPageAliases = array(
-	'DoubleRedirects'           => array( 'ElekezoMbili' ),
+	'Allmessages'               => array( 'UjumbeZote' ),
+	'Allpages'                  => array( 'KurasaZote' ),
+	'Ancientpages'              => array( 'KurasazaZamani' ),
+	'Blankpage'                 => array( 'KurasaTupu' ),
+	'Block'                     => array( 'Zui', 'ZuiaIP', 'ZuiaMtumiaji' ),
+	'Blockme'                   => array( 'Nizuiye' ),
+	'Booksources'               => array( 'ZuiaChanzo' ),
 	'BrokenRedirects'           => array( 'ElekezoIliovunjika' ),
-	'Disambiguations'           => array( 'Maana' ),
-	'Userlogin'                 => array( 'IngiaMtumiaji' ),
-	'Userlogout'                => array( 'TokaMtumiaji' ),
+	'Categories'                => array( 'Jamii' ),
+	'Confirmemail'              => array( 'ThibitishaBaruapepe' ),
+	'Contributions'             => array( 'Michango' ),
 	'CreateAccount'             => array( 'SajiliAkaunti' ),
-	'Preferences'               => array( 'Mapendekezo' ),
-	'Watchlist'                 => array( 'Maangalizi' ),
-	'Recentchanges'             => array( 'MabadalikoyaKaribuni' ),
-	'Upload'                    => array( 'Pakia' ),
+	'Deadendpages'              => array( 'KurasaZilizoondoshwa' ),
+	'DeletedContributions'      => array( 'MichangoIliyofutwa' ),
+	'Disambiguations'           => array( 'Maana' ),
+	'DoubleRedirects'           => array( 'ElekezoMbili' ),
+	'Emailuser'                 => array( 'BaruapepeyaMtumiaji' ),
+	'Export'                    => array( 'Toa' ),
+	'Fewestrevisions'           => array( 'MarejeoMadogo' ),
+	'Import'                    => array( 'Ingiza' ),
+	'BlockList'                 => array( 'OrodhayaIPZilizozuiliwa' ),
+	'LinkSearch'                => array( 'TafutaKiungo' ),
+	'Listadmins'                => array( 'OrodhayaWakabidhi' ),
+	'Listbots'                  => array( 'OrodhayaVikaragosi' ),
 	'Listfiles'                 => array( 'OrodhayaFali', 'OrodhayaPicha' ),
-	'Newimages'                 => array( 'FailiMpya', 'FailimpyazaPicha' ),
-	'Listusers'                 => array( 'OrodhayaWatumiaji', 'OrodhayaMtumiaji' ),
 	'Listgrouprights'           => array( 'OrodhayaWasimamizi' ),
-	'Statistics'                => array( 'Takwimu' ),
-	'Randompage'                => array( 'UkurasawaBahati' ),
+	'Listusers'                 => array( 'OrodhayaWatumiaji', 'OrodhayaMtumiaji' ),
+	'Lockdb'                    => array( 'FungaDB' ),
+	'Log'                       => array( 'Kumbukumbu' ),
 	'Lonelypages'               => array( 'KurasaPweke' ),
-	'Uncategorizedpages'        => array( 'KurasaZisizonajamii' ),
-	'Uncategorizedcategories'   => array( 'JamiiZisizopangwa' ),
-	'Uncategorizedimages'       => array( 'FailiZisizonajamii' ),
-	'Uncategorizedtemplates'    => array( 'VigezoVisivyonajamii' ),
-	'Unusedcategories'          => array( 'JamiiZisizotumika' ),
-	'Unusedimages'              => array( 'FailiZisizotumika', 'PichaZisizotumika' ),
-	'Wantedpages'               => array( 'KurasaZinazotakikana', 'ViungoVilivyovunjika' ),
-	'Wantedcategories'          => array( 'JamiiZinazotakikana' ),
-	'Wantedfiles'               => array( 'FailiZinazotakikana' ),
-	'Wantedtemplates'           => array( 'VigezoVinavyotakikana' ),
+	'Longpages'                 => array( 'KurasaNdefu' ),
+	'MIMEsearch'                => array( 'TafutaMIME' ),
+	'Mostcategories'            => array( 'JamiiZaidi' ),
+	'Mostimages'                => array( 'FailiZilizoungwasana', 'PichaZilizoungwasana' ),
 	'Mostlinked'                => array( 'KurasaZilizoungwasana' ),
 	'Mostlinkedcategories'      => array( 'JamiiZilizoungwasana' ),
 	'Mostlinkedtemplates'       => array( 'VigezoVilivyoungwasana' ),
-	'Mostimages'                => array( 'FailiZilizoungwasana', 'PichaZilizoungwasana' ),
-	'Mostcategories'            => array( 'JamiiZaidi' ),
 	'Mostrevisions'             => array( 'MarejeoZaidi' ),
-	'Fewestrevisions'           => array( 'MarejeoMadogo' ),
-	'Shortpages'                => array( 'KurasaFupi' ),
-	'Longpages'                 => array( 'KurasaNdefu' ),
-	'Newpages'                  => array( 'KurasaMpya' ),
-	'Ancientpages'              => array( 'KurasazaZamani' ),
-	'Deadendpages'              => array( 'KurasaZilizoondoshwa' ),
-	'Protectedpages'            => array( 'KurasaZilizolindwa' ),
-	'Protectedtitles'           => array( 'JinaLililolindwa' ),
-	'Allpages'                  => array( 'KurasaZote' ),
-	'Prefixindex'               => array( 'KurasaKuu' ),
-	'Ipblocklist'               => array( 'OrodhayaIPZilizozuiliwa' ),
-	'Specialpages'              => array( 'KurasaMaalum' ),
-	'Contributions'             => array( 'Michango' ),
-	'Emailuser'                 => array( 'BaruapepeyaMtumiaji' ),
-	'Confirmemail'              => array( 'ThibitishaBaruapepe' ),
-	'Whatlinkshere'             => array( 'VingoViungavyoUkurasahuu' ),
 	'Movepage'                  => array( 'HamishaKurasa' ),
-	'Blockme'                   => array( 'Nizuiye' ),
-	'Booksources'               => array( 'ZuiaChanzo' ),
-	'Categories'                => array( 'Jamii' ),
-	'Export'                    => array( 'Toa' ),
-	'Version'                   => array( 'Toleo' ),
-	'Allmessages'               => array( 'UjumbeZote' ),
-	'Log'                       => array( 'Kumbukumbu' ),
-	'Blockip'                   => array( 'Zui', 'ZuiaIP', 'ZuiaMtumiaji' ),
-	'Undelete'                  => array( 'Usifute' ),
-	'Import'                    => array( 'Ingiza' ),
-	'Lockdb'                    => array( 'FungaDB' ),
-	'Unlockdb'                  => array( 'FunguaDB' ),
-	'Userrights'                => array( 'HakizaMtumiaji' ),
-	'MIMEsearch'                => array( 'TafutaMIME' ),
+	'Mycontributions'           => array( 'MichangoYangu' ),
 	'Mypage'                    => array( 'KurasaYangu' ),
 	'Mytalk'                    => array( 'MajadilianoYangu' ),
-	'Mycontributions'           => array( 'MichangoYangu' ),
-	'Listadmins'                => array( 'OrodhayaWakabidhi' ),
-	'Listbots'                  => array( 'OrodhayaVikaragosi' ),
+	'Newimages'                 => array( 'FailiMpya', 'FailimpyazaPicha' ),
+	'Newpages'                  => array( 'KurasaMpya' ),
 	'Popularpages'              => array( 'KurasaMaarufu' ),
+	'Preferences'               => array( 'Mapendekezo' ),
+	'Prefixindex'               => array( 'KurasaKuu' ),
+	'Protectedpages'            => array( 'KurasaZilizolindwa' ),
+	'Protectedtitles'           => array( 'JinaLililolindwa' ),
+	'Randompage'                => array( 'UkurasawaBahati' ),
+	'Recentchanges'             => array( 'MabadalikoyaKaribuni' ),
 	'Search'                    => array( 'Tafuta' ),
-	'Blankpage'                 => array( 'KurasaTupu' ),
-	'LinkSearch'                => array( 'TafutaKiungo' ),
-	'DeletedContributions'      => array( 'MichangoIliyofutwa' ),
+	'Shortpages'                => array( 'KurasaFupi' ),
+	'Specialpages'              => array( 'KurasaMaalum' ),
+	'Statistics'                => array( 'Takwimu' ),
+	'Uncategorizedcategories'   => array( 'JamiiZisizopangwa' ),
+	'Uncategorizedimages'       => array( 'FailiZisizonajamii' ),
+	'Uncategorizedpages'        => array( 'KurasaZisizonajamii' ),
+	'Uncategorizedtemplates'    => array( 'VigezoVisivyonajamii' ),
+	'Undelete'                  => array( 'Usifute' ),
+	'Unlockdb'                  => array( 'FunguaDB' ),
+	'Unusedcategories'          => array( 'JamiiZisizotumika' ),
+	'Unusedimages'              => array( 'FailiZisizotumika', 'PichaZisizotumika' ),
+	'Upload'                    => array( 'Pakia' ),
+	'Userlogin'                 => array( 'IngiaMtumiaji' ),
+	'Userlogout'                => array( 'TokaMtumiaji' ),
+	'Userrights'                => array( 'HakizaMtumiaji' ),
+	'Version'                   => array( 'Toleo' ),
+	'Wantedcategories'          => array( 'JamiiZinazotakikana' ),
+	'Wantedfiles'               => array( 'FailiZinazotakikana' ),
+	'Wantedpages'               => array( 'KurasaZinazotakikana', 'ViungoVilivyovunjika' ),
+	'Wantedtemplates'           => array( 'VigezoVinavyotakikana' ),
+	'Watchlist'                 => array( 'Maangalizi' ),
+	'Whatlinkshere'             => array( 'VingoViungavyoUkurasahuu' ),
 );
 
 $messages = array(
@@ -135,8 +138,7 @@ $messages = array(
 'tog-editsection'             => 'Wezesha sehemu ya kuandikia kwa kutumia viungo vya [hariri]',
 'tog-editsectiononrightclick' => 'Wezesha sehemu ya kuandikia kwa kubonyeza kitufe cha kulia cha puku yako juu ya sehemu ya majina husika (JavaScript)',
 'tog-showtoc'                 => 'Onyesha mistari ya yaliyomo (kwa kila kurasa iliyo na zaidi ya vichwa vya habari 3)',
-'tog-rememberpassword'        => 'Kumbuka kuingia kwangu katika kompyuta hii',
-'tog-editwidth'               => 'Sanduku la kuhariri liwe na upana wa kujaza skrini nzima',
+'tog-rememberpassword'        => 'Kumbuka kuingia kwangu pamoja na neno la siri katika kivinjari hiki (kwa muda usiozidi {{PLURAL:$1|siku}} $1)',
 'tog-watchcreations'          => 'Weka kurasa nilizoumba katika maangalizi yangu',
 'tog-watchdefault'            => 'Weka kurasa zote nilizohariri katika maangalizi yangu',
 'tog-watchmoves'              => 'Weka kurasa zote nilizohamisha katika maangalizi yangu',
@@ -144,16 +146,16 @@ $messages = array(
 'tog-minordefault'            => 'Weka alama zote za mabadiliko madogo kama matumizi mbadala',
 'tog-previewontop'            => 'Onyesha mandhari kabla ya sanduku la kuhariria',
 'tog-previewonfirst'          => 'Onyesha mandhari unapoanza kuhariri',
-'tog-nocache'                 => 'Lemaza mabaki ya kurasa',
+'tog-nocache'                 => 'Kurasa zisiwekwe katika kache (akiba ya muda) ya kivinjari',
 'tog-enotifwatchlistpages'    => 'Nitumie barua pepe pale kurasa zilizopo katika maangalizi yangu zikibadilishwa',
 'tog-enotifusertalkpages'     => 'Nitumie barua pepe pale ukurasa wangu wa majadiliano ukiwa na mabadiliko',
 'tog-enotifminoredits'        => 'Pia nitumie barua pale mabadiliko ya ukurasa yanapokuwa madogo tu',
 'tog-enotifrevealaddr'        => 'Onyesha anwani ya barua pepe yangu katika barua pepe za taarifa',
 'tog-shownumberswatching'     => 'Onyesha idadi ya watumiaji waangalizi',
-'tog-oldsig'                  => 'Sahihi jinsi inayoonekana sasa:',
+'tog-oldsig'                  => 'Sahihi iliyopo:',
 'tog-fancysig'                => 'Weka sahihi tu (bila kujiweka kiungo yenyewe)',
-'tog-externaleditor'          => 'Tumia kiharirio cha nje inaposhindikana (kwa wataalamu tu, inahitaji marekebisho maalum kwenye tarakilishi yako)',
-'tog-externaldiff'            => 'Tumia diff za nje inaposhindikana (kwa wataalamu tu, inahitaji marekebisho maalum kwenye tarakilishi yako)',
+'tog-externaleditor'          => 'Tumia kiharirio cha nje inaposhindikana (kwa wataalamu tu, inahitaji marekebisho maalum kwenye tarakilishi yako. [//www.mediawiki.org/wiki/Manual:External_editors Maelezo zaidi.])',
+'tog-externaldiff'            => 'Tumia diff za nje inaposhindikana (kwa wataalamu tu, inahitaji marekebisho maalum kwenye tarakilishi yako. [//www.mediawiki.org/wiki/Manual:External_editors Maelezo zaidi.])',
 'tog-showjumplinks'           => 'Wezesha "ruka hadi" viungo vya mafikio',
 'tog-uselivepreview'          => 'Tumia kihakikio cha papohapo (JavaScript) (Experimental)',
 'tog-forceeditsummary'        => 'Nishtue pale ninapoingiza muhtasari mtupu wa kuhariri',
@@ -250,14 +252,7 @@ $messages = array(
 'listingcontinuesabbrev'         => 'endelea',
 'index-category'                 => 'Kurasa kuu',
 'noindex-category'               => 'Kurasa zisizokuu',
-
-'mainpagetext'      => "'''MediaWiki imefanikiwa kuingizwa.'''",
-'mainpagedocfooter' => 'Shauriana na [http://meta.wikimedia.org/wiki/Help:Contents Mwongozo wa Mtumiaji] kwa habari juu ya utumiaji wa bidhaa pepe ya wiki.
-
-== Msaada wa kianzio ==
-* [http://www.mediawiki.org/wiki/Manual:Configuration_settings Orodha ya mipangilio ya msingi]
-* [http://www.mediawiki.org/wiki/Manual:FAQ FAQ ya MediaWiki]
-* [https://lists.wikimedia.org/mailman/listinfo/mediawiki-announce Orodha ya utoaji wa habari za MediaWiki]',
+'broken-file-category'           => 'Kurasa zenye viungo vilivyovunjika',
 
 'about'         => 'Kuhusu',
 'article'       => 'Makala',
@@ -282,31 +277,21 @@ $messages = array(
 'faqpage'        => 'Project:Maswali Yaulizwayo Marakwamara',
 
 # Vector skin
-'vector-action-addsection'   => 'Weka mada',
-'vector-action-delete'       => 'Futa',
-'vector-action-move'         => 'Hamisha',
-'vector-action-protect'      => 'Linda',
-'vector-action-undelete'     => 'Rudisha',
-'vector-action-unprotect'    => 'Ondoa tunzo',
-'vector-namespace-category'  => 'Jamii',
-'vector-namespace-help'      => 'Ukurasa wa msaada',
-'vector-namespace-image'     => 'Faili',
-'vector-namespace-main'      => 'Ukurasa',
-'vector-namespace-media'     => 'Ukurasa wa faili',
-'vector-namespace-mediawiki' => 'Ujumbe',
-'vector-namespace-project'   => 'Ukurasa wa mradi',
-'vector-namespace-special'   => 'Ukurasa maalum',
-'vector-namespace-talk'      => 'Majadiliano',
-'vector-namespace-template'  => 'Kigezo',
-'vector-namespace-user'      => 'Ukurasa wa mtumiaji',
-'vector-view-create'         => 'Anzisha',
-'vector-view-edit'           => 'Hariri',
-'vector-view-history'        => 'Fungua historia',
-'vector-view-view'           => 'Soma',
-'vector-view-viewsource'     => 'Kuonyesha kodi',
-'actions'                    => 'Vitendo',
-'namespaces'                 => 'Maeneo ya wiki',
-'variants'                   => 'Vibadala',
+'vector-action-addsection'       => 'Weka mada',
+'vector-action-delete'           => 'Futa',
+'vector-action-move'             => 'Hamisha',
+'vector-action-protect'          => 'Linda',
+'vector-action-undelete'         => 'Rudisha',
+'vector-action-unprotect'        => 'Badilisha ulinzi',
+'vector-simplesearch-preference' => 'Kuwezesha madokezo imara ya tafutaji (umbo la Vector tu)',
+'vector-view-create'             => 'Anzisha',
+'vector-view-edit'               => 'Hariri',
+'vector-view-history'            => 'Fungua historia',
+'vector-view-view'               => 'Soma',
+'vector-view-viewsource'         => 'Kuonyesha kodi',
+'actions'                        => 'Vitendo',
+'namespaces'                     => 'Maeneo ya wiki',
+'variants'                       => 'Vibadala',
 
 'errorpagetitle'    => 'Hitilafu',
 'returnto'          => 'Rudia $1.',
@@ -319,10 +304,10 @@ $messages = array(
 'history'           => 'Historia ya ukurasa',
 'history_short'     => 'Historia',
 'updatedmarker'     => 'imebadilishwa tangu nilipoutazama mara ya mwisho',
-'info_short'        => 'Maarifa',
 'printableversion'  => 'Ukurasa wa kuchapika',
 'permalink'         => 'Kiungo cha daima',
 'print'             => 'Chapisha',
+'view'              => 'Tazama',
 'edit'              => 'Hariri',
 'create'            => 'Anzisha kurasa',
 'editthispage'      => 'Hariri ukurasa huu',
@@ -330,11 +315,12 @@ $messages = array(
 'delete'            => 'Futa',
 'deletethispage'    => 'Futa ukurasa huo',
 'undelete_short'    => 'Rudisha {{PLURAL:$1|haririo moja|maharirio $1}}',
+'viewdeleted_short' => 'Tazama {{PLURAL:$1|sahihisho lililofutwa moja|masahihisho yaliyofutwa $1}}',
 'protect'           => 'Linda',
 'protect_change'    => 'badilisha',
 'protectthispage'   => 'Linda ukurasa huu',
-'unprotect'         => 'Ondoa tunzo',
-'unprotectthispage' => 'Ondoa tunzo la ukurasa',
+'unprotect'         => 'Badilisha ulinzi',
+'unprotectthispage' => 'Badilisha ulinzi wa ukurasa huu',
 'newpage'           => 'Ukurasa mpya',
 'talkpage'          => 'Jadilia ukurasa huu',
 'talkpagelinktext'  => 'Majadiliano',
@@ -367,6 +353,9 @@ Watumiaji wengi mno wanajaribu kutazama ukurasa huu.
 Tafadhali subiri kwa muda kadhaa kabla ya kujaribu kufungua tena.
 
 $1',
+'pool-timeout'      => 'Muda umeisha inasubiria kufunga',
+'pool-queuefull'    => 'Foleni ya michakato imejaa',
+'pool-errorunknown' => 'Hitilafu isiyojulikana',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'Kuhusu {{SITENAME}}',
@@ -411,6 +400,8 @@ Tazama [[Special:Version|ukurasa wa toleo]].',
 'toc'                     => 'Yaliyomo',
 'showtoc'                 => 'fichua',
 'hidetoc'                 => 'ficha',
+'collapsible-collapse'    => 'Kunja',
+'collapsible-expand'      => 'Tanua',
 'thisisdeleted'           => 'Tazama au rudisha $1?',
 'viewdeleted'             => 'Tazama $1?',
 'restorelink'             => '{{PLURAL:$1|sahihisho lililofutwa moja|masahihisho yaliyofutwa $1}}',
@@ -422,6 +413,8 @@ Tazama [[Special:Version|ukurasa wa toleo]].',
 'page-rss-feed'           => 'Tawanyiko la RSS la "$1"',
 'page-atom-feed'          => 'Tawanyiko la Atom la "$1"',
 'red-link-title'          => '$1 (bado haujaandikwa)',
+'sort-descending'         => 'Pangia kwa kushuka',
+'sort-ascending'          => 'Pangia kwa kupanda',
 
 # Short words for each namespace, by default used in the namespace tab in monobook
 'nstab-main'      => 'Makala',
@@ -489,31 +482,34 @@ Tafadhali ripoti hili kwa [[Special:ListUsers/sysop|mkabidhi]], na uache jina la
 'badarticleerror'      => 'Ukurasa huu hauwezi kutendewa kitendo hiki.',
 'cannotdelete'         => 'Haikuweza kufuta kurasa au faili linaloitwa "$1".
 Huenda likawa tayari lishafutwa na mtu mwingine.',
+'cannotdelete-title'   => 'Wezi futa ukurasa "$1"',
 'badtitle'             => 'Jina halifai',
-'badtitletext'         => 'Jina la ukurasa ulilotaka ni batilifu, tupu, au limeungwa vibaya na jina la lugha nyingine au Wiki nyingine.  Labda linazo herufi moja a zaidi ambazo hazitumiki katika majina.',
-'perfcached'           => 'Data zifuatazo zinatoka kwenye kache na huenda si ya kisasa.',
-'perfcachedts'         => 'Data zifuatazo zimetoka kwenye kache iliobadilishwa mara ya mwisho saa $3, tarehe $2.',
+'badtitletext'         => 'Jina la ukurasa ulilotaka ni batilifu, tupu, au limeungwa vibaya na jina la lugha nyingine au Wiki nyingine.  Labda linazo herufi moja au zaidi ambazo hazitumiki katika majina.',
+'perfcached'           => 'Data zifuatazo zimekachewa na huenda zisiwe za kisasa. Mwisho wa {{PLURAL:$1|jibu moja linapatikana|majibu $1 yanapatikana}} katika kache.',
+'perfcachedts'         => 'Data zifuatazo zimetoka kwenye kache iliobadilishwa mara ya mwisho saa $3, tarehe $2. Mwisho wa {{PLURAL:$1|jibu moja linapatikana|majibu $1 yanapatikana}} katika kache.',
 'querypage-no-updates' => 'Mabadiliko kwa ajili ya ukurasa huu yamesimamishwa.
 Data za hapa haziwezi kunawirishwa kwa sasa.',
 'wrong_wfQuery_params' => 'Parameta za ulizio zilizoingizwa wfQuery() na zisizo sahihi ni<br />
 Kitenda: $1<br />
 Ulizio: $2',
 'viewsource'           => 'Onyesha kodi za ukurasa',
-'viewsourcefor'        => 'kwa $1',
+'viewsource-title'     => 'Tazama chanzo cha $1',
 'actionthrottled'      => 'Tendo limesimamishwa',
 'actionthrottledtext'  => 'Ikiwa kama hatua ya kupambana na uharibifu, umefika kikomo katika kutenda jambo hili kwa mara nyingi mno tena kwa kipindi cha muda mfupi kama huu, na umevuka kiwango hiki.
 Tafadhali jaribu tena baada ya muda mfupi.',
 'protectedpagetext'    => 'Ukurasa huu umefungwa ili kuepuka uhariri.',
 'viewsourcetext'       => 'Unaweza kutazama na kuiga chanzo cha ukurasa huu:',
+'viewyourtext'         => "Unaweza kutazama na kunakili chanzo cha ''maharirio yako'' katika ukurasa huu:",
 'protectedinterface'   => 'Ukurasa huu unatoa maelezo ya msingi ya bidhaa pepe, na pia umefungwa ili kuzuiya uharibifu.',
 'editinginterface'     => "'''Ilani:''' Una hariri ukurasa unaotumika kutoa maelezo ya msingi ya bidhaa pepe.
 Mabadiliko katika ukurasa huu yataathiri mwonekano mzima wa viungo vya watumiaji wengine.
-Kwa lengo la kutaka kutafsiri, tafadhali fikiria kutumia  [http://translatewiki.net/wiki/Main_Page?setlang=en translatewiki.net], kwa kuweka miradi ya MediaWiki kwa kienyeji.",
+Kwa lengo la kutaka kutafsiri, tafadhali fikiria kutumia  [//translatewiki.net/wiki/Main_Page?setlang=en translatewiki.net], kwa kuweka miradi ya MediaWiki kwa kienyeji.",
 'sqlhidden'            => '(maulizo ya SQL yamefichwa)',
 'cascadeprotected'     => 'Ukurasa huu umekingwa usihaririwe, kwa sababu umejumlishwa katika {{PLURAL:$1|ukurasa ufuatao, ambao umekingwa|kurasa zifuatazo, ambazo zimekingwa}} na chagua la "cascadi" iliwashwa:
 $2',
 'namespaceprotected'   => "Huna ruhusa ya kuhariri kurasa za eneo la wiki la '''$1'''.",
-'customcssjsprotected' => 'Huna ruhusa ya kuhariri ukurasa huu, kwa sababu ukurasa umejumlisha mipangilio binafsi ya mtumiaji mwingine.',
+'customcssprotected'   => 'Huna ruksa ya kuhariri ukurasa huu wa CSS, kwa sababu una mapendekezo ya binafsi ya mtumiaji mwingine.',
+'customjsprotected'    => 'Huna ruksa ya kuhariri ukurasa huu wa JavaScript, kwa sababu una mapendendekezo ya binafsi ya mtumiaji mwingine.',
 'ns-specialprotected'  => 'Kurasa maalumu haziwezi kuhaririwa.',
 'titleprotected'       => 'Jina hili limekingwa lisiumbwe na [[User:$1|$1]].
 Sababu zilizotolewa ni "\'\'$2\'\'".',
@@ -533,7 +529,8 @@ Usisahau kubadilisha mapendekezo yako ya [[Special:Preferences|{{SITENAME}}]].',
 'yourname'                   => 'Jina la mtumiaji:',
 'yourpassword'               => 'Neno la siri:',
 'yourpasswordagain'          => 'Andika tena neno la siri',
-'remembermypassword'         => 'Nikumbuke katika tarakilishi hii',
+'remembermypassword'         => 'Kumbuka kuingia kwangu katika kivinjari hiki (kwa muda usiozidi {{PLURAL:$1|siku}} $1)',
+'securelogin-stick-https'    => 'Endelea kuunganishwa na HTTPS baada ya kuingia',
 'yourdomainname'             => 'Tovuti yako:',
 'externaldberror'            => 'Huenda kulikuwa na hitilafu ya database au labda hauruhusiwi kubadilisha akaunti yako ya nje.',
 'login'                      => 'Ingia',
@@ -549,7 +546,9 @@ Usisahau kubadilisha mapendekezo yako ya [[Special:Preferences|{{SITENAME}}]].',
 'createaccount'              => 'Sajili akaunti',
 'gotaccount'                 => "Unayo akaunti tayari? '''$1'''",
 'gotaccountlink'             => 'Ingia',
+'userlogin-resetlink'        => 'Umesahau maelezo yako ya kuingia?',
 'createaccountmail'          => 'Kwa barua pepe',
+'createaccountreason'        => 'Sababu:',
 'badretype'                  => 'Maneno uliyoyaandika ni tofauti.',
 'userexists'                 => 'Jina la mtumiaji uliloingiza tayari linatumika.
 Tafadhali chagua jina lingine.',
@@ -559,13 +558,15 @@ Tafadhali chagua jina lingine.',
 'nocookieslogin'             => '{{SITENAME}} inatumia kuki ili watumiaji waweze kuingia.
 Tarakilishi yako inakataa kupokea kuki.
 Tafadhali, ondoa kizuizi hicho, halafu jaribu tena.',
+'nocookiesfornew'            => 'Akaunti ya mtumiaji haijaianzishwa,kwa vile hatujaweza kuthibitisha lilitoka wapi.
+Hakikisha kwamba kuki zimewezeshwa kwenye tarakalishi yako, fungua upya ukurasa huu na ujaribu tena.',
 'noname'                     => 'Hauja dhihilisha jina la mtumiaji.',
 'loginsuccesstitle'          => 'Umefaulu kuingia',
 'loginsuccess'               => "'''Umeingia {{SITENAME}} kama \"\$1\".'''",
-'nosuchuser'                 => 'Hakuna mtumiaji mwenye jina "$1". 
+'nosuchuser'                 => 'Hakuna mtumiaji mwenye jina "$1".
 Kumbuka kwamba programu inatofautishana kati ya herufi kubwa na ndogo.
 Labda umeandika vibaya, au [[Special:UserLogin/signup|sajili akaunti mpya]].',
-'nosuchusershort'            => 'Hakuna mtumiaji mwenye jina "<nowiki>$1</nowiki>". Labda umeandika vibaya.',
+'nosuchusershort'            => 'Hakuna mtumiaji mwenye jina "$1". Labda umeandika vibaya.',
 'nouserspecified'            => 'Lazima uandike jina la mtumiaji.',
 'login-userblocked'          => 'Mtumiaji huyu amezuiwa. Hawezi kuingia.',
 'wrongpassword'              => 'Umeingiza neno la siri la makosa.
@@ -573,6 +574,7 @@ Jaribu tena.',
 'wrongpasswordempty'         => 'Neno la siri lilikuwa tupu. Jaribu tena.',
 'passwordtooshort'           => 'Ni lazima neno la siri liwe na {{PLURAL:$1|herufi}} $1 au zaidi.',
 'password-name-match'        => 'Neno lako la siri lazima liwe tofauti na jina lako la mtumiaji.',
+'password-login-forbidden'   => 'Utumiaji wa jina hili na neno lake siri imekatazwa.',
 'mailmypassword'             => 'Nitume neno la siri jipya kwa barua-pepe',
 'passwordremindertitle'      => 'Neno la siri jipya la muda kwa ajili ya {{SITENAME}}',
 'passwordremindertext'       => 'Mtu mmoja (yamkini wewe, kutoka anwani ya IP $1)
@@ -603,6 +605,7 @@ Hakuna hata barua  pepe moja itakayotumwa kwa lolote katika vipengele hivi vifua
 'emailconfirmlink'           => 'Yakinisha anwani yako ya barua pepe',
 'invalidemailaddress'        => 'Anwani ya barua pepe haiwezi kukubalika ikiwa inaonekana kuwa na muundo batili.
 Tafadhali ingiza anwani ya miundo-mizuri au acha tupu kipengele hicho.',
+'cannotchangeemail'          => 'Anwani za barua pepe haziwezi kubadilishwa katika akaunti za wiki hii.',
 'accountcreated'             => 'Akaunti imeundwa',
 'accountcreatedtext'         => 'Akaunti imeundwa kwa ajili ya mtumiaji $1.',
 'createaccount-title'        => 'Kuanzisha akaunti kwa ajili ya {{SITENAME}}',
@@ -613,10 +616,15 @@ Unaweza kupuuza ujumbe huu, endapo akaunti hii ilianzishwa kimakosa.',
 'usernamehasherror'          => 'Jina la mtumiaji haliwezi kuwa na herufi ya alama ya reli',
 'login-throttled'            => 'Umejaribu kadha wa kadha kuingia akaunti hii.
 Tafadhali subiri kwanza kabla ya kujaribu tena.',
+'login-abort-generic'        => 'Kuingia kwako hakujafaulu: Iliachishwa',
 'loginlanguagelabel'         => 'Lugha: $1',
 'suspicious-userlogout'      => 'Ombi lako la kutoka kwenye akaunti yako limehiniwa, kwa sababu inaonekana kwamba ombi lilitumwa na kivinjari kilichoharibika au seva ya kuwakilisha yenye kache.',
 
-# Password reset dialog
+# E-mail sending
+'php-mail-error-unknown' => 'Hitilafu isiyojulikana katika ufanyajikazi wa barua za PHP ().',
+'user-mail-no-addy'      => 'Umejaribu kutuma barua pepe bila anwani ya barua pepe.',
+
+# Change password dialog
 'resetpass'                 => 'Kubadilisha neno la siri',
 'resetpass_announce'        => 'Umeingia na kodi za barua pepe za muda tu.
 Kumalizia kuingia ndani, ni lazima urekebishe neno la siri jipya hapa:',
@@ -634,6 +642,47 @@ Kumalizia kuingia ndani, ni lazima urekebishe neno la siri jipya hapa:',
 Inawezekana ikawa tayari umefaulu kubadilisha neno lako la siri au neno la siri jipya la muda.',
 'resetpass-temp-password'   => 'Neno la siri la muda:',
 
+# Special:PasswordReset
+'passwordreset'                    => 'Seti upya neno la siri',
+'passwordreset-text'               => 'Jaza fomu hii ili upate barua pepe inayotoa maelezo ya akaunti yako.',
+'passwordreset-legend'             => 'Seti upya neno la siri',
+'passwordreset-disabled'           => 'Kuweka neno la siri jipya kumeshitishwa katika wiki hii.',
+'passwordreset-pretext'            => '{{PLURAL:$1||Ingiza moja kati ya data hizi hapo chini}}',
+'passwordreset-username'           => 'Jina la mtumiaji:',
+'passwordreset-domain'             => 'Miliki',
+'passwordreset-capture'            => 'Ioneshe barua-pepe itakayotumwa?',
+'passwordreset-capture-help'       => 'Iwapo utatia alama kisanduku hiki, barua-pepe (pamoja na nenosiri la muda) litaoneshwa kwako na vilevile litatumwa kwa mtumiaji.',
+'passwordreset-email'              => 'Anwani ya barua pepe:',
+'passwordreset-emailtitle'         => 'Maelezo ya akaunti kwenye {{SITENAME}}',
+'passwordreset-emailtext-ip'       => 'Kuna mtu (huenda ikawa ni wewe, kutoka anwani ya IP $1) aliyeomba kukumbushwa kuhusu maelezo ya akaunti yako katika {{SITENAME}} ($4). {{PLURAL:$3|Akaunti inayofuata imeunganishwa|Akaunti zinazofuata zimeunganishwa}} na anwani ya barua pepe hii:
+
+$2
+
+{{PLURAL:$3|Neno la siri hili litakwisha|Maneno ya siri haya yatakwisha}} baada ya siku {{PLURAL:$5|$5}}.
+Tafadhali ingia sasa na uchague neno jipya la siri. Kama mtu mwingine ameomba hili, au ikiwa umekumbuka neno lako la siri na hutaki kulibadilisha tena, basi usijali ujumbe huu, na uendelee kutumia neno la siri lako la zamani.',
+'passwordreset-emailtext-user'     => 'Mtumiaji $1 kwenye {{SITENAME}} ameomba akumbushwe maelezo ya akaunti yako katika {{SITENAME}} ($4). {{PLURAL:$3|Akaunti inayofuata imeunganishwa|Akaunti zinazofuata zimeunganishwa}} na anwani ya barua pepe hii:
+
+$2
+
+{{PLURAL:$3|Neno la siri hili litakwisha|Maneno ya siri haya yatakwisha}} baada ya siku {{PLURAL:$5|$5}}.
+Tafadhali ingia sasa na uchague neno jipya la siri. Kama mtu mwingine ameomba hili, au ikiwa umekumbuka neno lako la siri na hutaki kulibadilisha tena, basi usijali ujumbe huu, na uendelee kutumia neno la siri lako la zamani.',
+'passwordreset-emailelement'       => 'Jina la mtumiaji: $1
+Neno la siri la muda: $2',
+'passwordreset-emailsent'          => 'Barua pepe ya ukumbusho imetumwa.',
+'passwordreset-emailsent-capture'  => 'Barua pepe ya ukukumbusho imetumwa, ambayo inaonekana hapo chini.',
+'passwordreset-emailerror-capture' => 'Barua pepe ya ukukumbusho imetengenezwa, ambayo inaonekana hapo chini, lakini kuituma kwa mtumiaji imeshindikana: $1',
+
+# Special:ChangeEmail
+'changeemail'          => 'Badilisha anwani ya barua pepe',
+'changeemail-header'   => 'Badilisha anwani ya barua pepe ya akaunti yako',
+'changeemail-text'     => 'Jaza fomu hii ili kubadilisha anwani yako ya barua pepe. Itabidi uingize neno lako la siri ili kukamilisha badiliko hili.',
+'changeemail-no-info'  => 'Lazima uwe umeingia ili kuweza kutumia kurasa hii moja kwa moja.',
+'changeemail-oldemail' => 'Anwani ya barua pepe ya sasa:',
+'changeemail-newemail' => 'Anwani mpya ya barua pepe:',
+'changeemail-none'     => '(hakuna)',
+'changeemail-submit'   => 'Badilisha anwani ya barua pepe',
+'changeemail-cancel'   => 'Batilisha',
+
 # Edit page toolbar
 'bold_sample'     => 'Maandishi ya kooze',
 'bold_tip'        => 'Kukoozesha maandishi',
@@ -645,8 +694,6 @@ Inawezekana ikawa tayari umefaulu kubadilisha neno lako la siri au neno la siri 
 'extlink_tip'     => 'Kiungo cha nje (kumbuka kuanza na http:// )',
 'headline_sample' => 'Matini ya kichwa cha habari',
 'headline_tip'    => 'Kichwa cha habari, saizi 2',
-'math_sample'     => 'Ingiza formula hapa',
-'math_tip'        => 'Formula ya kihesabu (LaTeX)',
 'nowiki_sample'   => 'Weka matini bila fomati hapa',
 'nowiki_tip'      => 'Puuza fomati ya Wiki',
 'image_tip'       => 'Faili lililotiwa',
@@ -665,6 +712,7 @@ Inawezekana ikawa tayari umefaulu kubadilisha neno lako la siri au neno la siri 
 'showlivepreview'                  => 'Tazama moja kwa moja',
 'showdiff'                         => 'Onyesha mabadiliko',
 'anoneditwarning'                  => "'''Ilani:''' Wewe hujaingia rasmi kwenye tovuti. Anwani ya IP ya tarakilishi yako itahifadhiwa katika historia ya uhariri wa ukurasa huu.",
+'anonpreviewwarning'               => "''Hujaingia rasmi kwenye tovuti. Ukihifadhi ukurasa anwani ya IP ya tarakilishi yako itahifadhiwa katika historia ya uhariri wa ukurasa huu.''",
 'missingsummary'                   => "'''Taarifa:''' Hujaandika muhtasari ya kuhariri.
 Ukibonyeza 'Hifadhi ukurasa' tena, badilisho lako litahifadhiwa bila muhtasari.",
 'missingcommenttext'               => 'Tafadhali andika muhtasari chini.',
@@ -675,7 +723,7 @@ Iwapo utabonyeza tena Hifadhi, haririo lako litahifadhiwa bila kichwa cha habari
 'blockedtitle'                     => 'Mtumiaji amezuiwa',
 'blockedtext'                      => "'''Jina lako la mtumiaji au anwani yako ya IP imezuiwa.'''
 
-Umezuiwa na $1. 
+Umezuiwa na $1.
 Sababu aliyetambua ni ''$2''
 
 * Mwanzo wa uzuio: $8
@@ -683,7 +731,7 @@ Sababu aliyetambua ni ''$2''
 * Aliyezuiwa: $7
 
 Unaweza kuwasiliana na $1 au [[{{MediaWiki:Grouppage-sysop}}|mkabidhi]] kuzungumza uzuio.
-Huwezi kutumia kipengele 'kumtuma mtumiaji barua pepe' isipopatikana anwani halisi ya barua pepe katika
+Huwezi kutumia kipengele cha 'kumtuma mtumiaji barua pepe' isipopatikana anwani halisi ya barua pepe katika
 [[Special:Preferences|mapendekezo ya akaunti]] yako, na usipozuiwa kuitumia.
 Anwani yako ya IP ni $3, na namba ya uzuio ni #$5. Tafadhali taja namba hizi ukitaka kuwasiliana kuhusu uzuio huu.",
 'autoblockedtext'                  => 'Anwani yako ya IP imezuiwa na mashine kwa sababu ilikuwa ikitumiwa na mtumiaji mwingine, ambaye amezuiliwa na $1.
@@ -702,9 +750,6 @@ Elewa kwamba huwezi kutumia kipengele cha "umtumie barua pepe mtuaji huyu" bila 
 Anwani yako ya sasa ya IP ni $3, na namba ya kuzuiliwa ni #$5.
 Tafadhali jumlisha maelezo yote ya juu kwenye kila ulizo utakalolifanya.',
 'blockednoreason'                  => 'sababu haikutajwa',
-'blockedoriginalsource'            => "Kodi ya '''$1''' imeonyeshwa hapo chini:",
-'blockededitsource'                => "Maandishi ya '''maharirio yako''' kwa '''$1''' yameonyeshwa chini:",
-'whitelistedittitle'               => 'Kuingia kunahitajika ili uweze kuhariri',
 'whitelistedittext'                => 'Inabidi $1 ili uweze kuhariri kurasa.',
 'confirmedittext'                  => 'Lazima uthibitishe anwani ya barua pepe yako kabla ya kuhariri kurasa.
 Tafadhali thibitisha anwani ya barua pepe yako kupitia [[Special:Preferences|mapendekezo yako ya mtumiaji]].',
@@ -714,7 +759,7 @@ Labda ilihamishwa au ilifutwa endapo unatazama ukurasa.',
 'loginreqtitle'                    => 'Unatakiwa kuingia kwanza',
 'loginreqlink'                     => 'uingie',
 'loginreqpagetext'                 => 'Inabidi $1 ili uweze kutazama kurasa zingine.',
-'accmailtitle'                     => 'Neno la siri limeshakutumiwa.',
+'accmailtitle'                     => 'Neno la siri limetumwa.',
 'accmailtext'                      => "Neno la siri limetolewa na programu kwa ajili ya [[User talk:$1|$1]] na limetumwa kwa $2.
 
 Unaweza kubadilisha neno la siri hili kwenye ukurasa wa ''[[Special:ChangePassword|kubadilisha neno la siri]]'' baada ya kuingia kwenye wiki.",
@@ -728,24 +773,29 @@ Labda itakusumbua kwamba kuna maoni mengine yanawekwa hapa na unaamini kwamba ha
 'noarticletext-nopermission'       => 'Kwa sasa hakuna maandishi katika ukurasa huu.
 Unaweza [[Special:Search/{{PAGENAME}}|kutafuta jina la ukurasa huu]] katika kurasa nyingine,
 au <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} tafuta ingizo linalofanana]</span>.',
-'userpage-userdoesnotexist'        => 'Akaunti ya mtumiaji "$1" haijasajilishwa.
+'userpage-userdoesnotexist'        => 'Akaunti ya mtumiaji "<nowiki>$1</nowiki>" haijasajilishwa.
 Ukitaka kuanzisha au kuhariri ukurasa huu tafadhali ucheki jina la akaunti.',
 'userpage-userdoesnotexist-view'   => 'Akaunti ya mtumiaji "$1" haijasajilishwa.',
 'blocked-notice-logextract'        => 'Mtumiaji huyu bado amezuiwa.
 Rejea kumbukumbu ya uzuio ya mwisho inayoandikwa chini:',
-'clearyourcache'                   => "'''Elewa - Baada ya kuhifadhi, itakubidi uzungushe kivinjali kache chako ili kuona mabadiliko.'''
-'''Mozilla / Firefox / Safari:''' shikiria ''Shift'' wakati unabonyeza ''Reload'', au aidha bonyeza ''Ctrl-F5'' au ''Ctrl-R'' (''Command-R'' kwa Macintosh);
-'''Konqueror: '''bonyeza ''Reload'' au bonyeza ''F5'';
-'''Opera:''' futa kache kwenye ''Tools → Preferences'';
-'''Internet Explorer:''' shikiria ''Ctrl'' wakati unabonyeza ''Refresh,'' au bonyeza ''Ctrl-F5''.",
+'clearyourcache'                   => "Elewa - Baada ya kuhifadhi, itakubidi uzungushe kivinjali kache chako ili kuona mabadiliko.'''
+*'''Firefox / Safari:''' Shikiria ''Shift'' wakati unabonyeza ''Reload'', au aidha bonyeza ''Ctrl-F5'' au ''Ctrl-R'' (''⌘-R'' kwa Mac);
+*'''Google Chrome:''' Bonyeza ''Ctrl-Shift-R'' (''⌘-Shift-R'' kwa Mac)
+*'''Konqueror: '''Bonyeza ''Reload'' au bonyeza ''F5'';
+*'''Opera:''' Futa kache kwenye ''Tools → Preferences'';
+*'''Internet Explorer:''' Shikiria ''Ctrl'' wakati unabonyeza ''Refresh,'' au bonyeza ''Ctrl-F5''.",
 'usercssyoucanpreview'             => "'''Kidokezi:''' Bonyeza \"{{int:showpreview}}\" kujaribu CSS hii mpya kabla hujaihifadhi.",
 'userjsyoucanpreview'              => "'''Kidokezi:''' Bonyeza \"{{int:showpreview}}\" kujaribu JS hii mpya kabla hujaihifadhi.",
 'usercsspreview'                   => "'''Kumbuka kwamba unahakiki mandhari ya CSS za ukurasa wako tu.'''
 '''Haijahifadhiwa bado!'''",
 'userjspreview'                    => "'''Kumbuka kwamba unajaribu/kuhakiki mandhari ya ukurasa wako wa JavaScript tu.'''
 '''Haijahifadhiwa bado!'''",
+'sitecsspreview'                   => "'''Kumbuka kwamba unahakiki tu mandhari ya CSS hii.'''
+'''Haijahifadhiwa bado!'''",
+'sitejspreview'                    => "'''Kumbuka kwamba unahakiki tu mandhari ya JavaScript hii.'''
+'''Haijahifadhiwa bado!'''",
 'userinvalidcssjstitle'            => "'''Onyo:''' Hakuna umbo \"\$1\".
-Kumbuka kwamba desturi ya kurasa za .css na .js hutumia herufi ndogo, yaani, {{ns:user}}:Foo/monobook.css na si {{ns:user}}:Foo/Monobook.css.",
+Kumbuka kwamba desturi ya kurasa za .css na .js hutumia herufi ndogo, yaani, {{ns:user}}:Foo/vector.css na si {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(Imesasishwa)',
 'note'                             => "'''Taarifa:'''",
 'previewnote'                      => "'''Hii ni hakikisho tu; mabadiliko hayajahifadhiwa bado!'''",
@@ -760,8 +810,9 @@ Kama bado haifanyi kazi, jaribu [[Special:UserLogout|kutoka kwenye akaunti yako]
 '''Iwapo hili ni haririo la jaribio halali, tafadhali jaribu tena.'''
 Iwapo bado haifanyikazi, jaribu [[Special:UserLogout|kutoka]] na uingie tena.",
 'token_suffix_mismatch'            => "'''Uhariri wako umekataliwa kwa sababu koteja yako imeharibu herufi za ishara ya kuhariri.'''
-Uharirio umekataliwa ili kuzuia uharibifu wa maandishi ya kurasa.
+Haririo umekataliwa ili kuzuia uharibifu wa maandishi ya kurasa.
 Haya hutokea kwa muda ambao unatumia huduma ya seva ya wavu isiyotiwa jina na yenye hitilafu nyingi.",
+'edit_form_incomplete'             => "'''Baadhi ya sehemu za fomu ya kuhariria hazikufikia seva. Hakikisha kwamba haririo lako bado lipo na kisha jaribu tena.'''",
 'editing'                          => 'Kuhariri $1',
 'editingsection'                   => 'Unahariri $1 (fungu)',
 'editingcomment'                   => 'Una hariri $1 (sehemu mpya)',
@@ -770,9 +821,11 @@ Haya hutokea kwa muda ambao unatumia huduma ya seva ya wavu isiyotiwa jina na ye
 Sanduku la juu inaonyesha maandiko yaliyopo sasa hivi kwenye ukurasa.
 Mabadiliko yako yanaonyeshwa kwenye sanduku la chini.
 Inabidi uingize mabadiliko yako ndani ya sanduku la juu.
-Ni maandiko yaliyopo ndani ya sanduku la juu '''tu''' ambayo yatahifadhiwa utakapobonyeza \"Hifadhi ukurasa\".",
+Ni maandiko yaliyopo ndani ya sanduku la juu '''tu''' ambayo yatahifadhiwa utakapobonyeza \"{{int:savearticle}}\".",
 'yourtext'                         => 'Maandishi yako',
 'storedversion'                    => 'Pitio lililohifadhiwa mwishoni',
+'nonunicodebrowser'                => "'''Ilani: Kivinjari chako hakikubaliani na Unicode.''' 
+Ili uweze kuhariri kurasa sawasawa, herufi zisizo za ASCII zitaonekana katika sanduku la kuhariri kama kodi za hexadecimali.",
 'editingold'                       => "'''ANGALIA: Unakuwa unahariri toleo la zamani la ukurasa huu.
 Ukiendelea kulihariri, mabadilisho yote yaliyofanywa tangu pale yatapotezwa.'''",
 'yourdiff'                         => 'Tofauti',
@@ -781,11 +834,9 @@ Usipotaka maandishi yako yaweze kuharirishwa bure na kutolewa wakati wowote, bas
 Unakuwa unaahidi kwamba maandishi unayoyaingia ni yako tu, au uliyapata kutoka bure au ni mali ya watu wote. '''USITOLEE MAKALA YALIYOHIFADHIWA HAKI ZAO ZA KUTUMIWA BILA KUPATA RUHUSA HALALI!'''",
 'copyrightwarning2'                => "Tafadhali elewa kwamba michango yote ya {{SITENAME}} inaweza kuhahariwa, kubadilishwa, au kuondolewa na wachangiaji wengine.
 Ikiwa hutaki maandishi yako yasihaririwe na yeyote, basi usiyaweke hapa.<br />
-Pia una tuahidi kwamba umeandika haya wewe mwenyewe, au umenakili kutoka katika tovuti ya umma au chanzo cha wazo sawa na hiki (tazama  $1 kwa maelezo).
-'''Usiandike makala yenye hatimiliki bila ya ruhusa halali!'''",
-'longpagewarning'                  => "'''ILANI: Urefu wa ukurasa huu ni kilobaiti $1; vivinjari kadhaa vinaweza kuwa na matatizo ukihariri ukurasa wenye urefu zaidi ya kb 32 hivi.
-Tafadhali fikiria kuhusu kuvunja ukurasa kwa vipande vifupi.'''",
-'longpageerror'                    => "'''Hitilafu: Maandishi uliyoyaweka yana urefu wa kilobati $1, ambayo ni marefu kuliko kiwango cha kawaida cha kilobaiti $2.'''
+Pia una tuahidi kwamba umeandika haya wewe mwenyewe, au umenakili kutoka katika tovuti ya umma au chanzo cha wazi sawa na hiki (tazama  $1 kwa maelezo).
+'''Usiandike makala yenye hakimiliki bila ya ruhusa halali!'''",
+'longpageerror'                    => "'''Hitilafu: Maandishi uliyoyaweka yana kilobaiti $1, ambayo ni urefu kuliko kiwango cha kawaida cha kilobaiti $2.'''
 Hayawezi kuhifadhiwa.",
 'readonlywarning'                  => "'''Onyo: Hifadhidata imefungwa kwa ajili ya matengenezo, kwa hiyo hautakuwa na uwezo wa kuhifadhi maharirio yako kwa sasa.'''
 Unaweza kukata-na-kabandika maandishi yako kwenye faili na kulihifadhi kwa ajili ya baadaye.
@@ -806,7 +857,7 @@ Rejea kumbukumbu ya mwisho inayoandikwa chini:",
 'hiddencategories'                 => 'Ukurasa huu uliomo katika jamii $1 {{PLURAL:$1|iliofichwa|zilizofichwa}}:',
 'nocreatetitle'                    => 'Si wote wanaoweza kuanzisha ukurasa',
 'nocreatetext'                     => '{{SITENAME}} imebana uwezekano kutengeneza kurasa mpya. Unaweza kurudia na kuhariri kurasa zilizomo, au [[Special:UserLogin|ingia au anza akaunti]].',
-'nocreate-loggedin'                => 'Huna ruhusa ya kuazisha kurasa mpya.',
+'nocreate-loggedin'                => 'Huna ruhusa ya kuanzisha ukurasa mpya.',
 'sectioneditnotsupported-title'    => 'Kuhariri sehemu kwa sehemu haiwezikani',
 'sectioneditnotsupported-text'     => 'Haiwezikani kuhariri ukurasa huu sehemu kwa sehemu.',
 'permissionserrors'                => 'Hitilafu za ruhusa',
@@ -825,6 +876,13 @@ Inaonekana kwamba ukurasa umefutwa.',
 'edit-no-change'                   => 'Uhariri wako haukufanikiwa, kwa sababu hapakuwa na mabadiliko yoyote kwenye maandishi.',
 'edit-already-exists'              => 'Haikufanikiwa kuanzisha ukurasa mpya.
 Ukurasa wa jina hilo unapatikana tayari.',
+
+# Parser/template warnings
+'post-expand-template-inclusion-warning'  => "'''Ilani:''' Kigezo kinajumlisha ukubwa uliozidi mno.
+Baadhi ya vigezo havitaweza kuingizwa.",
+'post-expand-template-inclusion-category' => 'Kurasa ambapo vigezo vinajumlisha ukubwa uliozidi',
+'post-expand-template-argument-warning'   => "'''Ilani:'''Ukurasa huu una angalau kigezo kimoja au zaidi vye matatizo, ambavyo ukubwa wake wa kupanuliwa unazidi mipaka. Kwa hiyo sehemu za vigezo havitaonekana.",
+'post-expand-template-argument-category'  => 'Kurasa zenye shida ya vigezo vilivyorukwa',
 
 # "Undo" feature
 'undo-success' => 'Sahihisho linaweza kutenguliwa.
@@ -872,7 +930,7 @@ Labda umeshafutwa, au umebadilishwa jina.
 Jaribu [[Special:Search|kutafuta kurasa mpya zinazohusika kwenye wiki]].',
 
 # Revision deletion
-'rev-deleted-comment'         => '(muhtasari ilifutwa)',
+'rev-deleted-comment'         => '(muhtasari wa kuhariri ulifutwa)',
 'rev-deleted-user'            => '(jina la mtumiaji lilifutwa)',
 'rev-deleted-event'           => '(ingizo lilifutwa)',
 'rev-deleted-user-contribs'   => '[jina la mtumiaji au anwani wa IP umetolewa - sahihisho lilifichwa kutoka kwa orodha ya michango]',
@@ -909,7 +967,7 @@ Wakabidhi wengine wa {{SITENAME}} bado wataweza kuliona lile lililofichwa pamoja
 'revdelete-hide-text'         => 'Ficha maandishi ya pitio',
 'revdelete-hide-image'        => 'Ficha yaliyomo kwenye faili',
 'revdelete-hide-name'         => 'Ficha tendo na shabaha',
-'revdelete-hide-comment'      => 'Ficha muhtasari wa sahihisho',
+'revdelete-hide-comment'      => 'Ficha muhtasari wa kuhariri',
 'revdelete-hide-user'         => 'Ficha jina la mhariri/anwani ya IP ya mhariri',
 'revdelete-hide-restricted'   => 'Wakabidhi (vilevile wengine) wasiweze kuona data',
 'revdelete-radio-same'        => '(isibadilishwe)',
@@ -919,8 +977,6 @@ Wakabidhi wengine wa {{SITENAME}} bado wataweza kuliona lile lililofichwa pamoja
 'revdelete-unsuppress'        => 'Uzuio wa kuona mapitio uondolewe, mapitio yanaporudishwa',
 'revdelete-log'               => 'Sababu:',
 'revdelete-submit'            => '{{PLURAL:$1|Pitio lililochaguliwa lifanyiwe|Mapitio yaliyochaguliwa yafanyiwe}} kazi.',
-'revdelete-logentry'          => 'alibadilisha uwezo wa kuona maelezo ya mapitio ya ukurasa wa [[$1]]',
-'logdelete-logentry'          => 'alibadilisha uwezo wa kuona matukio ya ukurasa wa [[$1]]',
 'revdelete-success'           => "'''Kubadilisha uwezo wa kuona pitio ulifaulu.'''",
 'revdelete-failure'           => "'''Kubadilisha uwezo wa kuona pitio hakufaulu:'''
 $1",
@@ -928,21 +984,14 @@ $1",
 'logdelete-failure'           => "'''Kubadilisha uwezo wa kuona kumbukumbu ulifaulu:'''
 $1",
 'revdel-restore'              => 'badilisha mwonekano',
+'revdel-restore-deleted'      => 'mapitio yaliyofutwa',
+'revdel-restore-visible'      => 'mapitio yanayoonekana',
 'pagehist'                    => 'Historia ya ukurasa',
 'deletedhist'                 => 'Historia iliyofutwa',
-'revdelete-content'           => 'maandiko',
-'revdelete-summary'           => 'muhtasari wa kuhariri',
-'revdelete-uname'             => 'jina la mtumiaji',
-'revdelete-restricted'        => 'aliwazuia pia wakabidhi wasiyaone maelezo',
-'revdelete-unrestricted'      => 'aliwarudishia wakabidhi uwezo wa kuona maelezo',
-'revdelete-hid'               => 'alificha $1',
-'revdelete-unhid'             => 'aliacha kuficha $1',
-'revdelete-log-message'       => '$1 kwenye {{PLURAL:$2|pitio|mapitio}} $2',
-'logdelete-log-message'       => '$1 kwenye {{PLURAL:$2|tukio|matukio}} $2',
 'revdelete-hide-current'      => 'Hitilafu ya kuficha pitio lililotengenezwa saa $2, tarehe $1: hilo ndilo pitio la sasa hivi.
 Haliwezi kufichwa.',
 'revdelete-reason-dropdown'   => '*Sababu za kufuta zinazotokea mara kwa mara
-** Ukiukaji wa hatimiliki
+** Ukiukaji wa hakimiliki
 ** Taarifa za mtu binafsi zisizofaa
 ** Taarifa zinazowezekana kwamba ni za kukashifu',
 'revdelete-otherreason'       => 'Sababu nyingine:',
@@ -953,32 +1002,40 @@ Haliwezi kufichwa.',
 # Suppression log
 'suppressionlog'     => 'Kumbukumbu za kuficha',
 'suppressionlogtext' => 'Hapo chini panaonyeshwa orodha ya matukio ya ufutaji na ya uzuio ambayo maelezo yao yamefichwa kutoka kwa wakabidhi.
-Tazama [[Special:IPBlockList|orodha ya uzuio wa IP]] kuona orodha ya zuio zilizopo sasa hivi.',
+Tazama [[Special:BlockList|orodha ya uzuio wa IP]] kuona orodha ya zuio zilizopo sasa hivi.',
 
 # History merging
-'mergehistory'                  => 'Unganisha historia za kurasa',
-'mergehistory-box'              => 'Unganisha mapitio ya kurasa mbili:',
-'mergehistory-from'             => 'Ukurasa wa chanzo:',
-'mergehistory-into'             => 'Ukurasa wa mwishilio:',
-'mergehistory-autocomment'      => '[[:$1]] uliunganishwa ndani wa [[:$2]]',
-'mergehistory-comment'          => '[[:$1]] uliunganishwa ndani wa [[:$2]]: $3',
-'mergehistory-same-destination' => 'Kurasa za chanzo na za mwishilio haziwezi kuwa sawa',
-'mergehistory-reason'           => 'Sababu:',
+'mergehistory'                     => 'Unganisha historia za kurasa',
+'mergehistory-box'                 => 'Unganisha mapitio ya kurasa mbili:',
+'mergehistory-from'                => 'Ukurasa wa chanzo:',
+'mergehistory-into'                => 'Ukurasa wa mwishilio:',
+'mergehistory-submit'              => 'Unganisha mapitio',
+'mergehistory-empty'               => 'Hakuna mapitio yanayoweza kuunganishwa',
+'mergehistory-success'             => '{{PLURAL:$3|Pitio $3 la [[:$1]] liliingizwa|Mapitio $3 ya [[:$1]] yaliingizwa}} ndani ya [[:$2]].',
+'mergehistory-no-source'           => 'Chanzo cha ukurasa $1 hakipo.',
+'mergehistory-no-destination'      => 'Ukurasa wa makusudio $1 haupo.',
+'mergehistory-invalid-source'      => 'Chanzo cha ukurasa lazima kiwe na jina uhalali.',
+'mergehistory-invalid-destination' => 'Ukurasa wa makusudio lazima uwe na jina halali.',
+'mergehistory-autocomment'         => '[[:$1]] uliunganishwa ndani wa [[:$2]]',
+'mergehistory-comment'             => '[[:$1]] uliunganishwa ndani wa [[:$2]]: $3',
+'mergehistory-same-destination'    => 'Kurasa za chanzo na za mwishilio haziwezi kuwa sawa',
+'mergehistory-reason'              => 'Sababu:',
 
 # Merge log
 'mergelog'           => 'Kumbukumbu za kuunganisha',
 'pagemerge-logentry' => 'aliunganisha [[$1]] ndani wa [[$2]] (mapitio hadi $3)',
-'revertmerge'        => 'Usiunganishe',
+'revertmerge'        => 'Toa muungano',
 'mergelogpagetext'   => 'Hapo chini yanaorodheshwa matukio ya hivi karibuni ya kuunganisha historia za kurasa mbili.',
 
 # Diffs
 'history-title'            => 'Historia ya mapitio ya "$1"',
 'difference'               => '(Tofauti baina ya mapitio)',
+'difference-multipage'     => '(Tofauti kati ya kurasa)',
 'lineno'                   => 'Mstari $1:',
 'compareselectedversions'  => 'Linganisha mapitio mawili uliyochagua',
 'showhideselectedversions' => 'Onyesha/ficha mapitio yaliyoteuliwa',
 'editundo'                 => 'tengua',
-'diff-multi'               => '(Hatuonyeshi {{PLURAL:$1|pitio moja la katikati|mapitio $1 ya katikati}}.)',
+'diff-multi'               => '(Haionyeshwi {{PLURAL:$1|pitio moja la katikati lililoandikwa|mapitio $1 ya katikati yaliyoandikwa}} na {{PLURAL:$2|mtumiaji moja|watumiaji $2}})',
 
 # Search results
 'searchresults'                    => 'Matokeo ya utafutaji',
@@ -1013,6 +1070,7 @@ Tazama [[Special:IPBlockList|orodha ya uzuio wa IP]] kuona orodha ya zuio zilizo
 'searchprofile-everything-tooltip' => 'Tafuta wiki nzima (pamoja na kurasa za majadiliano)',
 'searchprofile-advanced-tooltip'   => 'Tafuta katika maeneo ya wiki utakayoyachagua',
 'search-result-size'               => '$1 ({{PLURAL:$2|neno 1|maneno $2}})',
+'search-result-category-size'      => '{{PLURAL:$1|ukurasa 1|kurasa $1}} ({{PLURAL:$2|kijamii 1|vijamii $2}}, {{PLURAL:$3|faili 1|mafaili $3}})',
 'search-result-score'              => 'Kiwango cha ulinganisho na ulizo: $1%',
 'search-redirect'                  => '(elekezo toka kwa $1)',
 'search-section'                   => '(fungu $1)',
@@ -1061,21 +1119,23 @@ Ujue lakini kwamba kumbukumbu za {{SITENAME}} kule Google labda zilipitwa na wak
 'prefsnologin'                  => 'Hujaingia',
 'prefsnologintext'              => 'Inabidi <span class="plainlinks">[{{fullurl:{{#Special:UserLogin}}|returnto=$1}} uingie akaunti yako]</span> ili ubadilishe mapendekezo yako.',
 'changepassword'                => 'Badilisha neno la siri',
-'prefs-skin'                    => 'Sura',
+'prefs-skin'                    => 'Umbo',
 'skin-preview'                  => 'Hakiki',
-'prefs-math'                    => 'Hisabati',
 'datedefault'                   => 'Chaguo-msingi',
+'prefs-beta'                    => 'Zana za Beta',
 'prefs-datetime'                => 'Tarehe na saa',
 'prefs-personal'                => 'Kuhusu mtumiaji',
 'prefs-rc'                      => 'Mabadiliko ya karibuni',
 'prefs-watchlist'               => 'Maangalizi',
 'prefs-watchlist-days'          => 'Ionyeshwe siku ngapi kwenye orodha ya maangalizi?',
-'prefs-watchlist-days-max'      => 'Isizidi siku 7',
+'prefs-watchlist-days-max'      => 'Isizidi {{PLURAL:$1|siku}} $1',
 'prefs-watchlist-edits'         => 'Upeo ya idadi ya mabadiliko yatakayoonyeshwa kwenye orodha ya maangalizi iliyotanuka:',
 'prefs-watchlist-edits-max'     => 'Idadi isiyopitishwa: 1000',
 'prefs-watchlist-token'         => 'Ufunguo wa orodha ya maangalizi:',
 'prefs-misc'                    => 'Mengineyo',
 'prefs-resetpass'               => 'Kubadilisha neno la siri',
+'prefs-changeemail'             => 'Badilisha anwani ya barua pepe',
+'prefs-setemail'                => 'Weka anwani ya barua pepe',
 'prefs-email'                   => 'Hitiari za barua pepe',
 'prefs-rendering'               => 'Umbo',
 'saveprefs'                     => 'Hifadhi',
@@ -1087,20 +1147,19 @@ Ujue lakini kwamba kumbukumbu za {{SITENAME}} kule Google labda zilipitwa na wak
 'columns'                       => 'Safu:',
 'searchresultshead'             => 'Kutafuta',
 'resultsperpage'                => 'Matokeo yanayoorodheshwa katika ukurasa mmoja:',
-'contextlines'                  => 'Mistari kwa kila tokeo:',
-'contextchars'                  => 'Herufi za muktadha kwa kila mstari:',
 'stub-threshold'                => 'Kiwango cha juu cha kuonyesha kiungo kama <a href="#" class="stub">kiungo kinachoelekea mbegu</a> (baiti):',
+'stub-threshold-disabled'       => 'Imelemazwa',
 'recentchangesdays'             => 'Ionyeshwe siku ngapi kwenye orodha ya mabadiliko ya karibuni?',
 'recentchangesdays-max'         => 'Isizidi {{PLURAL:$1|siku}} $1',
 'recentchangescount'            => 'Idadi ya masahihisho yatakayoonyeshwa kwa kawaida:',
 'prefs-help-recentchangescount' => 'Kwenye kurasa za mabadiliko ya karibuni, za historia ya ukurasa, na za kumbukumbu.',
 'prefs-help-watchlist-token'    => 'Ukiandika ufunguo wa siri kwenye kisanduku hiki, programu itaanzisha tawanyiko la RSS kwa ajili ya maangalizi yako.
-Mtu wowote anayejua ufunguo wa siri huu ataweza kusoma orodha yako ya maangalizi, kwa hiyo chagua ufunguo salama. 
+Mtu wowote anayejua ufunguo wa siri huu ataweza kusoma orodha yako ya maangalizi, kwa hiyo chagua ufunguo salama.
 Hapo kuna ufunguo uliotolewa na programu kwa kubahatisha, ambao unaweza kuutumia: $1',
 'savedprefs'                    => 'Mapendekezo yako yamehifadhiwa.',
 'timezonelegend'                => 'Ukanda saa:',
 'localtime'                     => 'Saa ya kwetu:',
-'timezoneuseserverdefault'      => 'Tumia saa ya seva',
+'timezoneuseserverdefault'      => 'Tumia saa inayokubali na wiki yenyewe ($1)',
 'timezoneuseoffset'             => 'Nyingine (weka tofauti ya saa)',
 'timezoneoffset'                => 'Tofauti ya saa¹:',
 'servertime'                    => 'Saa ya seva:',
@@ -1123,6 +1182,7 @@ Hapo kuna ufunguo uliotolewa na programu kwa kubahatisha, ambao unaweza kuutumia
 'prefs-files'                   => 'Mafaili',
 'prefs-custom-css'              => 'CSS niliyotunga mwenyewe',
 'prefs-custom-js'               => 'JS niliyotunga mwenyewe',
+'prefs-common-css-js'           => 'CSS/JS inayoshirikishwa na maumbo yote:',
 'prefs-reset-intro'             => 'Unaweza kutumia ukurasa huu ili kurudisha mapendekezo yako kwenye yale ya msingi ya tovuti.
 Hutaweza kulibatilisha tendo hili baadaye.',
 'prefs-emailconfirm-label'      => 'Kuhakikisha barua pepe:',
@@ -1149,8 +1209,8 @@ Haiwezi kuzidi {{PLURAL:$1|tarakimu|tarakimu}} $1.',
 Taarifa hii itakuwa wazi.',
 'email'                         => 'Barua pepe',
 'prefs-help-realname'           => 'Jina la kweli si lazima. Ukichagua kutaja jina lako hapa, litatumiwa kuonyesha kwamba ndiyo ulifanya kazi unayochangia.',
-'prefs-help-email'              => 'Barua-pepe sio lazima, lakini inawezesha kupokea neno jipya la siri kwa kupitia barua-pepe yako endapo utakuwa umelisahau.
-Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia ukurasa wako wa mtumiaji au ule wa majadiliano bila ya kuonyesha jina la akaunti yako.',
+'prefs-help-email'              => 'Barua-pepe sio lazima, lakini inawezesha kupokea neno jipya la siri kwa kupitia barua-pepe yako endapo utakuwa umelisahau.',
+'prefs-help-email-others'       => 'Unaweza pia kuwezesha wengine wawasiliane nawe kwa njia ya ukurasa wako wa mtumiaji au ukurasa wako wa majadiliano. Anwani ya barua-pepe yako haioneshwi wakati watumiaji wanawasiliana na wewe.',
 'prefs-help-email-required'     => 'Barua pepe inahitajika.',
 'prefs-info'                    => 'Maelezo ya kimsingi',
 'prefs-i18n'                    => 'Lugha',
@@ -1162,10 +1222,17 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'prefs-advancedrendering'       => 'Hitiari za hali ya juu',
 'prefs-advancedsearchoptions'   => 'Hitiari za hali ya juu',
 'prefs-advancedwatchlist'       => 'Hitiari za hali ya juu',
-'prefs-display'                 => 'Hitiari za kutandaza',
+'prefs-displayrc'               => 'Hitiari za kutandaza',
+'prefs-displaysearchoptions'    => 'Mapendekezo ya kuzinza',
+'prefs-displaywatchlist'        => 'Mapendekezo ya kuzinza',
+'prefs-diffs'                   => 'Tofauti',
+
+# User preference: e-mail validation using jQuery
+'email-address-validity-valid'   => 'Anwani ya barua pepe inaonekana kuwa sawa',
+'email-address-validity-invalid' => 'Ingiza anwani halisi ya barua pepe',
 
 # User rights
-'userrights'                   => 'Usimamizi wa haki za mtumiaji',
+'userrights'                   => 'Usimamizi wa wezo za mtumiaji',
 'userrights-lookup-user'       => 'Kusimamia kundi za watumiaji',
 'userrights-user-editname'     => 'Andika jina la mtumiaji:',
 'editusergroup'                => 'Kuhariri vikundi vya watumiaji',
@@ -1179,24 +1246,36 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 * Mtumiaji si mwanachama wa kundi fulani kama kisanduku chake hakina alama.
 * Alama ya * ina maana ya kwamba ukiongeza kundi fulani, hutaweza kuitoa tena, au ukitoa kundi fulani, hutaweza kuiongeza tena.',
 'userrights-reason'            => 'Sababu:',
+'userrights-no-interwiki'      => 'Huna ruhusa ya kuhariri haki za mtumiaji kwenye wiki zingine.',
 'userrights-nodatabase'        => 'Hakuna hifadhidata inayoitwa $1 au haimo katiko jumuia hii ya wiki.',
+'userrights-nologin'           => 'Lazima [[Special:UserLogin|uingie ndani]] ya akaunti ya mkabidhi ili kupanga haki za mtumiaji.',
+'userrights-notallowed'        => 'Akaunti yako haina ruhusa ya kupanga haki za mtumiaji.',
 'userrights-changeable-col'    => 'Makundi unayoweza kuyabadilisha',
 'userrights-unchangeable-col'  => 'Makundi usiyoweza kuyabadilisha',
 
 # Groups
-'group'       => 'Kundi:',
-'group-user'  => 'Watumiaji',
-'group-bot'   => 'Boti',
-'group-sysop' => 'Wakabidhi',
-'group-all'   => '(vyote)',
+'group'               => 'Kundi:',
+'group-user'          => 'Watumiaji',
+'group-autoconfirmed' => 'Watumiaji waliothibitishwa na tarakilishi',
+'group-bot'           => 'Boti',
+'group-sysop'         => 'Wakabidhi',
+'group-bureaucrat'    => 'Warasimu',
+'group-suppress'      => 'Ukomeshaji',
+'group-all'           => '(vyote)',
 
-'group-user-member'  => 'Mtumiaji',
-'group-bot-member'   => 'Bot',
-'group-sysop-member' => 'Mkabidhi',
+'group-user-member'          => '{{GENDER:$1|mtumiaji}}',
+'group-autoconfirmed-member' => '{{GENDER:$1|mtumiaji aliyethibitishwa na tarakilishi}}',
+'group-bot-member'           => '{{GENDER:$1|boti}}',
+'group-sysop-member'         => '{{GENDER:$1|mkabidhi}}',
+'group-bureaucrat-member'    => '{{GENDER:$1|mrasimu}}',
+'group-suppress-member'      => 'usimamizi',
 
-'grouppage-user'  => '{{ns:project}}:Watumiaji',
-'grouppage-bot'   => '{{ns:project}}:Boti',
-'grouppage-sysop' => '{{ns:project}}:Wakabidhi',
+'grouppage-user'          => '{{ns:project}}:Watumiaji',
+'grouppage-autoconfirmed' => '{{ns:project}}:Watumiaji waliothibitishwa na tarakilishi',
+'grouppage-bot'           => '{{ns:project}}:Boti',
+'grouppage-sysop'         => '{{ns:project}}:Wakabidhi',
+'grouppage-bureaucrat'    => '{{ns:project}}:Warasimu',
+'grouppage-suppress'      => '{{ns:project}}:Usimamizi',
 
 # Rights
 'right-read'                 => 'Kusoma kurasa',
@@ -1207,11 +1286,18 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'right-minoredit'            => 'Kutia alama kwamba badiliko ni dogo',
 'right-move'                 => 'Kuhamisha kurasa',
 'right-move-subpages'        => 'Kuhamisha kurasa pamoja na kurasa zake ndogo',
+'right-move-rootuserpages'   => 'Kuhamisha kurasa za watumiaji',
 'right-movefile'             => 'Kuhamisha mafaili',
+'right-suppressredirect'     => 'Usianzishe elekezo kutoka katika kurasa za chanzo wakati kuhamisha kurasa',
 'right-upload'               => 'Kupakia mafaili',
 'right-reupload'             => 'Kuandikiza mafaili yaliyopo tayari',
 'right-reupload-own'         => 'Kuandikiza mafaili yaliyopakizwa na mimi mwenyewe',
+'right-reupload-shared'      => 'Kupuuza mafaili yaliyopo hifadhi ya pamoja ya faili hapo wiki hii',
 'right-upload_by_url'        => 'Kupakia mafaili kutoka kwa URL',
+'right-purge'                => 'Safisha kache za wavuti kwa ajili ya ukurasa usio na uthibitisho',
+'right-autoconfirmed'        => 'Hariri kurasa zilizokingwa-kiasi',
+'right-nominornewtalk'       => 'Isiwe kwamba maharirio madogo kwenye kurasa za majadiliano fyatua kunijulisha kuhusu jumbe mpya',
+'right-writeapi'             => 'Tumia API ya kuandika',
 'right-delete'               => 'Kufuta kurasa',
 'right-bigdelete'            => 'Kufuta kurasa zenye mabadiliko mengi',
 'right-deleterevision'       => 'Kufuta na kurudisha mapitio fulani ya kurasa',
@@ -1223,17 +1309,26 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'right-suppressionlog'       => 'Kutazama kumbukumbu za faragha',
 'right-block'                => 'Kuwazuia watumiaji wengine wasihariri',
 'right-blockemail'           => 'Kumzuia mtumiaji asitume barua-pepe',
+'right-hideuser'             => 'Kuzuia jina la mtumiaji, lisionekane mbele ya kadamnasi',
+'right-protect'              => 'Badilisha viwango vya ulinzi na hariri kurasa zilizolindwa',
+'right-editinterface'        => 'Kuhariri kusano ya mtumiaji',
+'right-editusercssjs'        => 'Kuhariri mafaili ya CSS na JavaScript ya watumiaji wengine',
+'right-editusercss'          => 'Hariri mafaili ya CSS ya watumiaji wengine',
+'right-edituserjs'           => 'Hariri mafaili ya JavaScript ya watumiaji wengine',
 'right-import'               => 'Kuleta kurasa kutoka kwa wiki zingine',
+'right-importupload'         => 'Ingiza kurasa kutoka kwa faili lililopakiwa',
+'right-unwatchedpages'       => 'Kutazama orodha ya kurasa zisizofuatiliwa',
 'right-mergehistory'         => 'Kuunganisha historia ya kurasa zingine',
 'right-userrights'           => 'Kubadilisha wezo zote za watumiaji',
 'right-userrights-interwiki' => 'Kuhariri wezo za watumiaji kwenye wiki zingine',
 'right-siteadmin'            => 'Kufunga na kufungua hifadhidata',
 'right-sendemail'            => 'Kutuma barua-pepe kwa watumiaji wengine',
+'right-passwordreset'        => 'Kuona barua pepe zinazoweka neno la siri upya',
 
 # User rights log
 'rightslog'      => 'Kumbukumbu za vyeo vya watumiaji',
 'rightslogtext'  => 'Hii ni kumbukumbu za mabadiliko za wezo za watumiaji.',
-'rightslogentry' => 'alibadilisha wezo za $1 aliyekuwa na uwezo wa kundi $2 awe $3',
+'rightslogentry' => 'alibadilisha wezo za $1 aliyekuwa na wezo za kundi $2 awe mwanachama wa $3',
 'rightsnone'     => '(hana)',
 
 # Associated actions - in the sentence "You do not have permission to X"
@@ -1245,10 +1340,13 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'action-minoredit'            => 'kutia alama ya badiliko dogo',
 'action-move'                 => 'kuhamisha ukurasa huu',
 'action-move-subpages'        => 'kuhamisha ukurasa huu, pamoja na kurasa zake ndogo',
+'action-move-rootuserpages'   => 'kuhamisha kurasa za watumiaji',
 'action-movefile'             => 'kuhamisha faili hili',
 'action-upload'               => 'kupakia faili hili',
 'action-reupload'             => 'kuandikiza faili lililopo tayari',
+'action-reupload-shared'      => 'kupuuza faili lililopo hifadhi ya pamoja ya faili',
 'action-upload_by_url'        => 'kupakia faili hili kutoka kwa gombo wavu',
+'action-writeapi'             => 'tumia API ya kuandika',
 'action-delete'               => 'kufuta ukurasa huu',
 'action-deleterevision'       => 'kufuta pitio hili',
 'action-deletedhistory'       => 'kutazama historia iliyofutwa ya ukurasa huu',
@@ -1257,7 +1355,10 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'action-suppressrevision'     => 'kuangalia na kurudisha pitio hilo lililofichwa kwa wakabidhi',
 'action-suppressionlog'       => 'kutazama kumbukumbu za faragha',
 'action-block'                => 'kumzuia mtumiaji huyu asihariri',
+'action-protect'              => 'badilisha viwango vya ulinzi vya ukurasa huu',
 'action-import'               => 'kuleta ukurasa huu kutoka kwa wiki nyingine',
+'action-importupload'         => 'Ingiza ukurasa huu kutoka kwa faili lilopakiwa',
+'action-unwatchedpages'       => 'kutazama orodha ya kurasa zisizofuatiliwa',
 'action-mergehistory'         => 'kuunganisha historia ya ukurasa huu',
 'action-userrights'           => 'kubadilisha wezo zote za watumiaji',
 'action-userrights-interwiki' => 'kuhariri wezo za watumiaji kwenye wiki zingine',
@@ -1269,13 +1370,10 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'recentchanges-legend'              => "Machaguo ya 'mabadaliko ya karibuni'",
 'recentchangestext'                 => 'Orodha ya mabadilisho yaliyofanywa katika {{SITENAME}} siku zilizopita.',
 'recentchanges-feed-description'    => 'Tumia tawanyiko hili kufuatilia mabadiliko yote ya hivi karibuni katika Wiki.',
-'recentchanges-label-legend'        => 'Hekaya: $1.',
-'recentchanges-legend-newpage'      => '$1 - ukurasa mpya',
 'recentchanges-label-newpage'       => 'Ukurasa mpya ulianzishwa hapo',
-'recentchanges-legend-minor'        => '$1 - badiliko dogo',
 'recentchanges-label-minor'         => 'Hili ni badiliko dogo',
-'recentchanges-legend-bot'          => '$1 - sahihisho la bot',
 'recentchanges-label-bot'           => 'Sahihisho hili lilitekelezwa na bot',
+'recentchanges-label-unpatrolled'   => 'Haririo hili bado halijafanyiwa doria',
 'rcnote'                            => "{{PLURAL:$1|Linalofuata ni badiliko '''1'''|Yanayofuata ni mabadiliko '''$1''' ya mwisho}} kutoka katika {{PLURAL:$2|siku iliyopita|siku '''$2''' zilizopita}}, hadi saa $5, tarehe $4.",
 'rcnotefrom'                        => "Hapo chini yaonekana mabadiliko tangu '''$2''' (tunaonyesha hadi '''$1''').",
 'rclistfrom'                        => 'Onyesha mabadiliko mapya kuanzia $1',
@@ -1311,95 +1409,196 @@ Pia unaweza kuchagua kuwawezesha watumiaji wengine wawasiliane nawe kwa kupitia 
 'recentchangeslinked-to'       => 'Onyesha mabadiliko yaliyotokea kwenye kurasa zile zinazoungwa kufikia ukurasa uliotajwa',
 
 # Upload
-'upload'                 => 'Pakia faili',
-'uploadbtn'              => 'Pakia faili',
-'reuploaddesc'           => 'Kubatilisha kupakia na kurudi kwenye fomu ya kupakia',
-'upload-tryagain'        => 'Wasilisha maelezo ya faili lililobadilishwa',
-'uploadnologin'          => 'Hujaingia',
-'uploadnologintext'      => 'Lazima [[Special:UserLogin|uingie akaunti yako]] ile upakie mafaili.',
-'uploaderror'            => 'Hitilafu ya kupia',
-'uploadtext'             => "Tumia fomu hapo chini kwa kupakizia mafaili.
+'upload'                      => 'Pakia faili',
+'uploadbtn'                   => 'Pakia faili',
+'reuploaddesc'                => 'Kubatilisha kupakia na kurudi kwenye fomu ya kupakia',
+'upload-tryagain'             => 'Wasilisha maelezo ya faili lililobadilishwa',
+'uploadnologin'               => 'Hujaingia',
+'uploadnologintext'           => 'Lazima [[Special:UserLogin|uingie akaunti yako]] ile upakie mafaili.',
+'uploaderror'                 => 'Hitilafu ya kupia',
+'upload-recreate-warning'     => "'''Ilani: Faili lenye jina hilo limeshafutwa au limeshasogezwa.'''
+
+Rejea kumbukumbu za kufuta au kuhamisha ukurasa huu zinazotolewa chini:",
+'uploadtext'                  => "Tumia fomu hapo chini kwa kupakizia mafaili.
 Kwa kutazama au kutafuta faili zilizopakiwa awali, tafadhali nenda kwenye [[Special:FileList|orodha ya mafaili yaliyopakiwa]]. Kwa zile faili ambazo zishapitiwa, basi angalia [[Special:Log/upload|kumbukumbu ya mafaili]]. Kwa mafaili yaliyofutwa, tafadhali [[Special:Log/delete|tazama hapa]].
 
 Kwa kutumia faili katika makala, tumia moja kati ya viungo vifuatavyo:
 * '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Picha.jpg]]</nowiki></tt>''' kwa kutumia toleo zima la faili
 * '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Picha.png|200px|thumb|left|maelezo ya picha]]</nowiki></tt>''' tumia pixel 200 kwa ukubwa mzuri na sehemu ya 'maelezo ya picha' ikiwa kama maelezo husika na picha iliyopo
 * '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' kwa kuunga moja kwa moja bila kuonyesga faili",
-'upload-permitted'       => 'Aina ya mafaili yanayoruhusiwa: $1.',
-'upload-preferred'       => 'Aina za mafaili yaliyopendelewa: $1.',
-'upload-prohibited'      => 'Aina za mafaili yanayokataliwa: $1.',
-'uploadlog'              => 'kumbukumbu za kupakia',
-'uploadlogpage'          => 'Kumbukumbu ya upakiaji',
-'uploadlogpagetext'      => 'Hapo chini kuna orodha wa mafaili yaliyopakizwa hivi karibuni.
+'upload-permitted'            => 'Aina ya mafaili yanayoruhusiwa: $1.',
+'upload-preferred'            => 'Aina za mafaili yaliyopendelewa: $1.',
+'upload-prohibited'           => 'Aina za mafaili yanayokataliwa: $1.',
+'uploadlog'                   => 'kumbukumbu za kupakia',
+'uploadlogpage'               => 'Kumbukumbu ya upakiaji',
+'uploadlogpagetext'           => 'Hapo chini kuna orodha wa mafaili yaliyopakizwa hivi karibuni.
 Tazama [[Special:NewFiles|mkusanyiko wa mafaili mapya]] kuona picha zenyewe.',
-'filename'               => 'Jina la faili',
-'filedesc'               => 'Muhtasari',
-'fileuploadsummary'      => 'Muhtasari:',
-'filereuploadsummary'    => 'Mabadiliko ya faili:',
-'filestatus'             => 'Hali ya hatimiliki:',
-'filesource'             => 'Chanzo:',
-'uploadedfiles'          => 'Mafaili yaliyopakiwa:',
-'ignorewarning'          => 'Hifadhi bila kujali maonyo yoyote.',
-'ignorewarnings'         => 'Usijali ilani zozote',
-'minlength1'             => 'Majina ya mafaili yanatakiwa kuwa na herufi moja au zaidi.',
-'illegalfilename'        => 'Jina la faili la "$1" lina herufi zisizoruhusiwa katika majina ya kurasa.
+'filename'                    => 'Jina la faili',
+'filedesc'                    => 'Muhtasari',
+'fileuploadsummary'           => 'Muhtasari:',
+'filereuploadsummary'         => 'Mabadiliko ya faili:',
+'filestatus'                  => 'Hali ya hakimiliki:',
+'filesource'                  => 'Chanzo:',
+'uploadedfiles'               => 'Mafaili yaliyopakiwa:',
+'ignorewarning'               => 'Hifadhi bila kujali maonyo yoyote.',
+'ignorewarnings'              => 'Usijali ilani zozote',
+'minlength1'                  => 'Majina ya mafaili yanatakiwa kuwa na herufi moja au zaidi.',
+'illegalfilename'             => 'Jina la faili la "$1" lina herufi zisizoruhusiwa katika majina ya kurasa.
 Tafadhali uweke jina jipya kwenye faili, halafu jaribu kulipakia upya.',
-'badfilename'            => 'Jina la faili limebadilishwa kuwa "$1".',
-'filetype-mime-mismatch' => 'Tawi (extension) la faili halingani na aina ya MIME.',
-'large-file'             => 'Tunashauri mafaili yasizidi $1;
+'filename-toolong'            => 'Majina ya mafaili yasizidi baiti 240.',
+'badfilename'                 => 'Jina la faili limebadilishwa kuwa "$1".',
+'filetype-mime-mismatch'      => 'Tawi (extension) ".$1" la faili halingani na aina yake ya MIME ($2).',
+'filetype-badmime'            => 'Mafaili ya aina ya MIME ya "$1" hayaruhusiwi kupakiwa.',
+'filetype-bad-ie-mime'        => 'Haiwezi kupakia faili hili kwa sababu Internet Explorer ingefikiri kwamba ni "$1". Mafaili ya aina hii hayaruhusiwa, na huenda ni ya hatari.',
+'filetype-unwanted-type'      => "Aina la faili '''\".\$1\"''' halitakiwi.
+{{PLURAL:\$3|Aina ya faili inayopendelewa|Aina za faili zinazopendelewa}} ni \$2.",
+'filetype-banned-type'        => '\'\'\'".$1"\'\'\' sio aina {{PLURAL:$4|ya faili linaloruhusiwa|za faili zinazoruhusiwa}}.
+{{PLURAL:$3|Aina ya faili inayoruhusiwa|Aina za faili zinazoruhusiwa}} ni $2.',
+'filetype-missing'            => 'Faili halina mnyambuliko (kama ".jpg").',
+'empty-file'                  => 'Faili ulilowasilisha ni tupu.',
+'file-too-large'              => 'Faili ulilowasilisha ni kubwa mno.',
+'filename-tooshort'           => 'Jina la faili ni fupi mno.',
+'filetype-banned'             => 'Aina hili la faili haliruhusiwi.',
+'verification-error'          => 'Faili hili halikupitishwa katika ukaguzi wa faili.',
+'illegal-filename'            => 'Jina hilo la faili haliruhusiwi.',
+'overwrite'                   => 'Kuandikiza faili lililopo tayari hairuhusiwi.',
+'unknown-error'               => 'Ilitokea hitilafu isiyojulikana.',
+'tmp-create-error'            => 'Haikuweza kuanzisha faili la muda.',
+'tmp-write-error'             => 'Hitilafu ya kuandika faili la muda.',
+'large-file'                  => 'Tunashauri mafaili yasizidi $1;
 faili hili lina $2.',
-'successfulupload'       => 'Upakiaji ulifaulu',
-'uploadwarning'          => 'Ilani kuhusu kupakia',
-'savefile'               => 'Hifadhi faili',
-'uploadedimage'          => 'ameipakia "[[$1]]"',
-'overwroteimage'         => 'alipakia toleo jipya la "[[$1]]"',
-'uploadvirus'            => 'Faili lina kirusi!
+'largefileserver'             => 'Faili hili ni kubwa kuliko seva ilivyopangwa kuruhusu.',
+'emptyfile'                   => 'Faili ulilolipakia linaonekana kuwa tupu.
+Hii huenda ikawa jina lake limeandikwa vibaya.
+Tafadhali uhakikishe kwamba ni kweli unataka kupakia faili hili.',
+'windows-nonascii-filename'   => 'Wiki hii haiwezi kutumia majina ya mafaili yenye herufi maalum.',
+'fileexists'                  => "Faili lenye jina hili lipo tayari, tafadhali tazama '''<tt>[[:$1]]</tt>''' ikiwa una mashaka kuhusu kulibadilisha.
+[[$1|thumb]]",
+'filepageexists'              => "Ukurasa wa maelezo kwa ajili ya faili hili tayari umeshaanzishwa katika '''<tt>[[:$1]]</tt>''', lakini bado hakuna faili lenye jina hili kwa sasa.
+Muhtasari utakaoandika hautaonekana katika ukurasa wa maelezo.
+Kufanya muhtasari wako uonekana pale, utahitajika uhariri ukurasa kwa mikono.
+[[$1|thumb]]",
+'fileexists-extension'        => "Faili lenye jina linalofanana nalo lipo tayari:[[$2|thumb]]
+* Jina la faili linalopakiwa: '''<tt>[[:$1]]</tt>'''
+* Jina la faili lililopo tayari: '''<tt>[[:$2]]</tt>'''
+Tafadhali chagua jina lingine.",
+'fileexists-thumbnail-yes'    => "Faili linaonekana kuwa ni ''picha'' iliyopunguzwa ukubwa.
+[[$1|thumb]]
+Tafadhali tazama faili la '''<tt>[[:$1]]</tt>'''.
+Ikiwa faili hili linaonyesha picha ile ile kwa ukubwa wa kawaida hakuna haja ya kupakia faili lingine la picha ndogo.",
+'file-thumbnail-no'           => "Jina la faili linaloanza na '''<tt>$1</tt>'''.
+Inaonekana kuwa ni picha iliyopunguzwa ukubwa''(thumbnail)''.
+Ikiwa unaoyo picha hii kwa ukubwa wa kawaida tafadhali pakia picha hii, vinginevyo tafadhali badilisha jina la faili.",
+'fileexists-forbidden'        => 'Faili lenye jina hili lipo tayari, na haliwezi kuandikizwa.
+Kama unataka kupakia faili lako, tafadhali rudia kwa kutumia jina lingine. [[File:$1|thumb|center|$1]]',
+'fileexists-shared-forbidden' => 'Faili lenye jina hili tayari lipo katika hifadhi ya pamoja ya faili.
+Kama bado unataka kupakia faili lako, tafadhali rudi na utumie jina jipya.
+[[File:$1|thumb|center|$1]]',
+'file-exists-duplicate'       => 'Faili hili ni nakala ya {{PLURAL:$1|faili lifuatalo|mafaili yafuatayo}}:',
+'file-deleted-duplicate'      => 'Faili linalofanana na faili hili ([[:$1]]) limeshafutwa hapo awali.
+Tazama kumbukumbu za kufuta faili lile kabla hujaendelea kulipakia upya.',
+'uploadwarning'               => 'Ilani kuhusu kupakia',
+'uploadwarning-text'          => 'Tafadhali ubadilishe maelezo ya faili hapo chini, halafu jaribu tena.',
+'savefile'                    => 'Hifadhi faili',
+'uploadedimage'               => 'ameipakia "[[$1]]"',
+'overwroteimage'              => 'alipakia toleo jipya la "[[$1]]"',
+'uploaddisabled'              => 'Upakiaji umelemazwa.',
+'copyuploaddisabled'          => 'Kupakia kwa kupitia URL kumelemazwa.',
+'uploadfromurl-queued'        => 'Upakiaji wako umewekwa kwenye foleni.',
+'uploaddisabledtext'          => 'Upakiaji wa mafaili umelemazwa.',
+'php-uploaddisabledtext'      => 'Upakiaji wa mafaili umelemazwa katika PHP.
+Tafadhali utazame kipimo cha file_uploads.',
+'uploadscripted'              => 'Faili hili lina HTML au kodi ambazo labda itaeleweka vibaya na kivinjari.',
+'uploadvirus'                 => 'Faili lina kirusi!
 Maelezo mengine: $1',
-'upload-source'          => 'Faili la chanzo',
-'sourcefilename'         => 'Jina la faili la chanzo:',
-'sourceurl'              => 'URL ya chanzo:',
-'destfilename'           => 'Jina la faili la mwishilio:',
-'upload-maxfilesize'     => 'Ukubwa wa faili lisizidi: $1',
-'upload-description'     => 'Elezo la faili',
-'upload-options'         => 'Machaguo ya kupakia',
-'watchthisupload'        => 'Kufuatilia faili hili',
-'filewasdeleted'         => 'Faili lenye jina hili limeshapakiwa halafu limefutwa. 
+'uploadjava'                  => 'Faili ZIP hili lina faili Java .class humo ndani.
+Hairuhusiki kupakia mafaili ya Java, kwa sababu yanawezesha kuambaa vizuio vya usalama.',
+'upload-source'               => 'Faili la chanzo',
+'sourcefilename'              => 'Jina la faili la chanzo:',
+'sourceurl'                   => 'URL ya chanzo:',
+'destfilename'                => 'Jina la faili la mwishilio:',
+'upload-maxfilesize'          => 'Ukubwa wa faili lisizidi: $1',
+'upload-description'          => 'Elezo la faili',
+'upload-options'              => 'Machaguo ya kupakia',
+'watchthisupload'             => 'Kufuatilia faili hili',
+'filewasdeleted'              => 'Faili lenye jina hili limeshapakiwa halafu limefutwa.
 Unapaswa kuangalia $1 kabla hujapakia tena.',
-'upload-wasdeleted'      => "'''Ilani: Unapakia upya faili lililofutwa tayari.'''
-
-Fikiria kama inafaa kuendelea kupakia faili hili.
-Kumbukumbu ya kufuta faili hili inapatikana hapa kukusaidia:",
-'filename-bad-prefix'    => "Jina la faili unalolipakia huanza na '''\"\$1\"''', ambalo ni jina lisilo na maana yanayoeleweka kirahisi, ya aina inayotolewa huwa na kamera dijiti. 
+'filename-bad-prefix'         => "Jina la faili unalolipakia huanza na '''\"\$1\"''', ambalo ni jina lisilo na maana yanayoeleweka kirahisi, ya aina inayotolewa huwa na kamera dijiti.
 Tafadhali chagua jina linaloeleweka kirahisi kwa ajili ya faili lako.",
+'upload-success-subj'         => 'Upakiaji ulifaulu',
+'upload-success-msg'          => 'Umefaulu kupakia faili kutoka kwa [$2]. Faili linapatikana hapa: [[:{{ns:file}}:$1]]',
+'upload-failure-subj'         => 'Hitilafu ya kupakia',
+'upload-failure-msg'          => 'Kulikuwa na tatizo ulipopakia faili kutoka kwa [$2]:
 
-'upload-file-error'   => 'Hitilafu ya ndani',
-'upload-misc-error'   => 'Hitilafu ya kupakia isiyojulikana',
-'upload-unknown-size' => 'Ukubwa haujulikani',
-'upload-http-error'   => 'Imetokea hitilafu ya HTTP: $1',
+$1',
+'upload-warning-subj'         => 'Ilani ya kupakia',
+'upload-warning-msg'          => 'Kulitokea tatizo na upakiaji wako kuanzia [$2]. Unaweza kurudi katika [[Special:Upload/stash/$1|fomu ya kupakia]] ili kurekebisha tatizo hili.',
+
+'upload-proto-error'        => 'Itifaki isio sahihi',
+'upload-proto-error-text'   => 'Upakiaji wa mbali lazima URL ianze na <code>http://</code> au <code>ftp://</code>.',
+'upload-file-error'         => 'Hitilafu ya ndani',
+'upload-file-error-text'    => 'Hitilafu ya ndani ilitokea wakati unajaribu kuanzisha faili la muda kwenye seva.
+Tafadhali wasiliana na [[Special:ListUsers/sysop|mkabidhi]].',
+'upload-misc-error'         => 'Hitilafu ya kupakia isiyojulikana',
+'upload-misc-error-text'    => 'Hitilafu isiyojulikana ilitokea wakati wa kupakia.
+Tafadhali uhakikishe kwamba URL ni halali na inafikika, halafu jaribu tena.
+Tatizo likiendelea, uwasiliane na [[Special:ListUsers/sysop|mkabidhi]].',
+'upload-too-many-redirects' => 'URL ilikuwa na maelekezo mengi mno',
+'upload-unknown-size'       => 'Ukubwa haujulikani',
+'upload-http-error'         => 'Imetokea hitilafu ya HTTP: $1',
+
+# File backend
+'backend-fail-alreadyexists' => 'Faili $1 linapatikana tayari.',
+
+# ZipDirectoryReader
+'zip-file-open-error' => 'Ilitokea hitilafu wakati wa kufungua faili kwa ajili ya ukaguzi wa ZIP.',
+'zip-wrong-format'    => 'Faili lililotajwa si faili la ZIP.',
+'zip-bad'             => 'Faili ZIP hili limevurugika ama halisomeka.
+Haliwezi kugakuliwa ili kukinga usalama.',
+'zip-unsupported'     => 'Faili ZIP hili linatumia bidhaa pepe ya ZIP zisizoeleweka na MediaWiki.
+Haliwezi kugakuliwa ili kukinga usalama.',
+
+# Special:UploadStash
+'uploadstash-refresh' => 'Zimua orodha ya mafaili',
 
 # img_auth script messages
-'img-auth-nofile' => 'Hakuna faili la "$1".',
+'img-auth-accessdenied' => 'Ruksa imekataliwa',
+'img-auth-nofile'       => 'Hakuna faili la "$1".',
+'img-auth-noread'       => 'Mtumiaji hana fursa ya kusoma "$1".',
 
 # HTTP errors
-'http-invalid-url' => 'URL batili: $1',
-'http-timed-out'   => 'Ombi la HTTP muda umepita.',
+'http-invalid-url'      => 'URL batili: $1',
+'http-request-error'    => 'Ombi la HTTP limeshindikana kutokana na hitilafu isiyojulikana.',
+'http-read-error'       => 'Hitilafu ya kusoma HTTP.',
+'http-timed-out'        => 'Ombi la HTTP muda umepita.',
+'http-curl-error'       => 'Hitilafu ya kuleta URL: $1',
+'http-host-unreachable' => 'KISARA (URL) haikupatikana',
+'http-bad-status'       => 'Kulikuwa na tatizo wakati wa kutekeleza ombi la HTTP: $1 $2',
 
 # Some likely curl errors. More could be added from <http://curl.haxx.se/libcurl/c/libcurl-errors.html>
 'upload-curl-error6'       => 'KISARA (URL) haikupatikana',
+'upload-curl-error6-text'  => 'URL iliyotajwa haikuweza kupatikana.
+Tafadhali hakikisha kwamba URL ni sahihi na tovuti inafanya kazi.',
 'upload-curl-error28'      => 'Muda wa upakiaji umeisha',
-'upload-curl-error28-text' => 'Tovuti imechelewa mno kuitikia. 
-Tafadhali uhakikishe kwamba tovuti inafanya kazi, subiri kidogo halafu jaribu tena. 
+'upload-curl-error28-text' => 'Tovuti imechelewa mno kuitikia.
+Tafadhali uhakikishe kwamba tovuti inafanya kazi, subiri kidogo halafu jaribu tena.
 Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 
 'license'            => 'Hatimiliki:',
 'license-header'     => 'Hatimiliki',
 'nolicense'          => 'Haikuchaguliwa',
 'license-nopreview'  => '(Hakikisho hakipatikani)',
+'upload_source_url'  => '(URL halali, inayopatikana kwa umma)',
 'upload_source_file' => '(faili kwenye tarakilishi yako)',
 
 # Special:ListFiles
+'listfiles-summary'     => 'Ukurasa huu maalum unaonyesha mafaili yote yaliyopakiwa.
+Kwa kawaida mafaili ya mwisho kupakiwa yanaonekana juu kabisa ya orodha.
+Ukibofya kichwa cha safu mtindo wa kupanga orodha utabadilika.',
+'listfiles_search_for'  => 'Tafuta jina la faili:',
 'imgfile'               => 'faili',
 'listfiles'             => 'Orodha ya mafaili',
+'listfiles_thumb'       => 'Picha ndogo',
 'listfiles_date'        => 'Tarehe',
 'listfiles_name'        => 'Jina',
 'listfiles_user'        => 'Mtumiaji',
@@ -1424,43 +1623,62 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'filehist-filesize'         => 'Ukubwa wa faili',
 'filehist-comment'          => 'Maelezo',
 'filehist-missing'          => 'Faili halipo',
-'imagelinks'                => 'Viungo vya mafaili',
+'imagelinks'                => 'Matumizi ya faili',
 'linkstoimage'              => '{{PLURAL:$1|Ukurasa huu umeunganishwa|Kurasa hizi $1 zimeunganishwa}} na faili hili:',
+'linkstoimage-more'         => 'Zipo {{PLURAL:$1|kurasa|kurasa}} zaidi ya $1 zinazounga na faili hili.
+Orodha inayofuata inaonyesha {{PLURAL:$1|kiungo cha kwanza|viungo $1 vya kwanza}} tu vinavyoungana na faili hili.
+[[Special:WhatLinksHere/$2|Orodha nzima]] inapatikana.',
 'nolinkstoimage'            => 'Hakuna kurasa zozote zilizounganishwa na faili hii.',
+'morelinkstoimage'          => 'Tazama [[Special:WhatLinksHere/$1|viungo vingine]] vinavyoelekeza faili hili.',
+'linkstoimage-redirect'     => '$1 (elekezo la faili) $2',
+'duplicatesoffile'          => '{{PLURAL:$1|Faili linalofuata ni nakala ya|Mafaili $1 yanayofuata ni nakala za}} faili hili ([[Special:FileDuplicateSearch/$2|maelezo mengine]]):',
 'sharedupload'              => 'Faili hili linatoka $1 na linaweza kushirikiwa na miradi mingine.',
+'sharedupload-desc-there'   => 'Faili hili linatoka $1 na huenda likawa limetumika na miradi mingine.
+Tafadhali tazama [$2 ukurasa wa maelezo ya faili] kwa maelezo zaidi.',
+'sharedupload-desc-here'    => 'Faili hili linatoka $1 na huenda likawa limetumika na miradi mingine.
+Maelezo yaliyopo katika [$2 ukurasa wa maelezo ya faili] linaonyeshwa hapa.',
 'filepage-nofile'           => 'Hakuna faili yenye jina hili.',
-'uploadnewversion-linktext' => 'Pakia toleo jipya la faili hii',
+'filepage-nofile-link'      => 'Hakuna faili lenye jina hili, lakini unaweza [$1 kulipakia].',
+'uploadnewversion-linktext' => 'Pakia toleo jipya la faili hili',
 'shared-repo-from'          => 'kutoka kwa $1',
+'shared-repo'               => 'hifadhi ya pamoja',
 
 # File reversion
 'filerevert'                => 'Rejesha $1',
 'filerevert-legend'         => 'Rejesha faili',
+'filerevert-intro'          => "Unataka kulirudisha faili la '''[[Media:$1|$1]]''' hadi [$4 pitio la saa $3, tarehe $2].",
 'filerevert-comment'        => 'Sababu:',
 'filerevert-defaultcomment' => 'Ilirejeshwa hadi sahihisho lile la $2, $1',
 'filerevert-submit'         => 'Rejesha',
+'filerevert-success'        => "'''[[Media:$1|$1]]''' limerudishwa hadi [$4 pitio la saa $3, tarehe $2].",
+'filerevert-badversion'     => 'Katika wiki hii hakuna mtindo wa awali wa faili hili lenye stempu ya saa iliyotajwa.',
 
 # File deletion
-'filedelete'                  => 'Futa $1',
-'filedelete-legend'           => 'Futa faili',
-'filedelete-intro-old'        => "You are deleting the version of '''[[Media:$1|$1]]''' as of [$4 $3, $2].",
-'filedelete-comment'          => 'Sababu:',
-'filedelete-submit'           => 'Futa',
-'filedelete-success'          => "'''$1''' limefutwa.",
-'filedelete-success-old'      => "The version of '''[[Media:$1|$1]]''' as of $3, $2 has been deleted.",
-'filedelete-nofile'           => "Hakuna faili la '''$1'''.",
-'filedelete-nofile-old'       => "There is no archived version of '''$1''' with the specified attributes.",
-'filedelete-otherreason'      => 'Sababu nyingine:',
-'filedelete-reason-otherlist' => 'Sababu nyingine',
-'filedelete-reason-dropdown'  => '*Sababu zinazotolewa mara kwa mara
-** Kosa la hatimiliki
+'filedelete'                   => 'Futa $1',
+'filedelete-legend'            => 'Futa faili',
+'filedelete-intro'             => "Unataka kufuta faili la '''[[Media:$1|$1]]''' pamoja na historia yake yote.",
+'filedelete-intro-old'         => "You are deleting the version of '''[[Media:$1|$1]]''' as of [$4 $3, $2].",
+'filedelete-comment'           => 'Sababu:',
+'filedelete-submit'            => 'Futa',
+'filedelete-success'           => "'''$1''' limefutwa.",
+'filedelete-success-old'       => "The version of '''[[Media:$1|$1]]''' as of $3, $2 has been deleted.",
+'filedelete-nofile'            => "Hakuna faili la '''$1'''.",
+'filedelete-nofile-old'        => "There is no archived version of '''$1''' with the specified attributes.",
+'filedelete-otherreason'       => 'Sababu nyingine:',
+'filedelete-reason-otherlist'  => 'Sababu nyingine',
+'filedelete-reason-dropdown'   => '*Sababu zinazotolewa mara kwa mara
+** Kosa la hakimiliki
 ** Faili la nakili',
-'filedelete-edit-reasonlist'  => 'Kuhariri orodha ya sababu za kufuta',
-'filedelete-maintenance'      => 'Tovuti inarekebishwa. Kwa muda huo kufuta na kurudisha mafaili haiwezikani.',
+'filedelete-edit-reasonlist'   => 'Kuhariri orodha ya sababu za kufuta',
+'filedelete-maintenance'       => 'Tovuti inarekebishwa. Kwa muda huo kufuta na kurudisha mafaili haiwezikani.',
+'filedelete-maintenance-title' => 'Faili hilifutiki',
 
 # MIME search
-'mimesearch' => 'Utafutaji wa MIME',
-'mimetype'   => 'Aina ya MIME:',
-'download'   => 'pakua',
+'mimesearch'         => 'Utafutaji wa MIME',
+'mimesearch-summary' => 'Ukarasa huu unawezesha kuchuja mafaili kutokana na aina ya MIME. 
+Ingiza: aina ya faili/aina mahususi, kwa mfano <tt>image/jpeg</tt>.',
+'mimetype'           => 'Aina ya MIME:',
+'download'           => 'pakua',
 
 # Unwatched pages
 'unwatchedpages' => 'Kurasa zisizofuatiliwa',
@@ -1469,15 +1687,18 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'listredirects' => 'Maelekezo',
 
 # Unused templates
-'unusedtemplates'    => 'Vigezo ambavyo havitumiwi',
-'unusedtemplateswlh' => 'viungo vingine',
+'unusedtemplates'     => 'Vigezo ambavyo havitumiwi',
+'unusedtemplatestext' => 'Ukurasa huu unaorodhesha kurasa zote katika eneo la wiki la {{ns:template}} zisizowekwa ndani ya ukurasa mwingine.
+Kumbuka kuhakikisha kwamba hakuna viungo vingine vinavyoelekea kigezo fulani kabla hujakifuta.',
+'unusedtemplateswlh'  => 'viungo vingine',
 
 # Random page
 'randompage'         => 'Ukurasa wa bahati',
 'randompage-nopages' => 'Hakuna kurasa katika {{PLURAL:$2|eneo la wiki lifuatalo|maeneo ya wiki yafuatayo}}: $1.',
 
 # Random redirect
-'randomredirect' => 'Elekezo la bahati',
+'randomredirect'         => 'Elekezo la bahati',
+'randomredirect-nopages' => 'Hakuna maelekezo katika eneo la wiki la "$1".',
 
 # Statistics
 'statistics'                   => 'Takwimu',
@@ -1493,18 +1714,29 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'statistics-edits'             => 'Kurasa zilizohaririwa tangu {{SITENAME}} ilivyoanzishwa',
 'statistics-edits-average'     => 'Wastani wa uhariri kwa kurasa',
 'statistics-views-total'       => 'Jumla ya mitazamaji',
+'statistics-views-total-desc'  => 'Ziara za kurasa zisizopatikana na kurasa maalum hazihesabiwi',
 'statistics-views-peredit'     => 'Mitazamaji kwa haririo',
-'statistics-jobqueue'          => 'Urefu wa [http://www.mediawiki.org/wiki/Manual:Job_queue foleni ya kazi]',
 'statistics-users'             => '[[Special:ListUsers|Watumiaji]] waliojisajiri',
 'statistics-users-active'      => 'Watumiaji wanaofanya kazi',
 'statistics-users-active-desc' => 'Watumiaji waliofanya kazi katika siku {{PLURAL:$1|iliyopita|$1 zilizopita}}',
 'statistics-mostpopular'       => 'Kurasa zinazotazamwa sana',
 
-'disambiguations' => 'Kurasa za kuainisha maneno',
+'disambiguations'      => 'Kurasa za kuainisha maneno',
+'disambiguationspage'  => 'Template:Maana',
+'disambiguations-text' => "Kurasa zinazofuata zina viungo vinavyoelekea '''kurasa ya kutofautishana maana'''.
+Ni afadhali kiungo kiende makala inayostahili moja kwa moja.<br />
+Kurasa za kutofautishana maana ni zile zinazotumia kigezo kinachoorodheshwa katika ukurasa wa [[MediaWiki:Disambiguationspage]].",
 
-'doubleredirects' => 'Maelekezo mawilimawili',
+'doubleredirects'                   => 'Maelekezo mawilimawili',
+'doubleredirectstext'               => 'Ukurasa huu unaorodhesha kurasa zinazoelekeza kurasa zingine za kuelekeza.
+Katika kila mstari kuna viungo vinavyokwenda katika kurasa za kuelekeza zote mbili, pamoja na ukurasa wa mwishilio mwa elekezo la pili. Ukurasa huu wa mwishilio huwa ni ukurasa unaostahili kuelekezwa kutoka kwa ukurasa wa kuelekeza wa kwanza. Vitu <del>vilivyokatwa kwa mstari</del> vimeshatatuliwa.',
+'double-redirect-fixed-move'        => '[[$1]] umehamishwa.
+Sasa unaelekeza [[$2]].',
+'double-redirect-fixed-maintenance' => 'Elekezo maradufu inarekebishwa toka [[$1]] kwenda [[$2]].',
+'double-redirect-fixer'             => 'Boti ya kurekebisha maelekezo',
 
 'brokenredirects'        => 'Maelekezo yenye hitilafu',
+'brokenredirectstext'    => 'Maelekezo yafuatayo yanaelekeza katika kurasa zisizopatikana:',
 'brokenredirects-edit'   => 'hariri',
 'brokenredirects-delete' => 'futa',
 
@@ -1522,6 +1754,8 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'nmembers'                => '{{PLURAL:$1|kitu|vitu}} $1',
 'nrevisions'              => '{{PLURAL:$1|pitio|mapitio}} $1',
 'nviews'                  => '{{PLURAL:$1|mtazamaji|mitazamaji}} $1',
+'nimagelinks'             => 'Inatumika katika {{PLURAL:$1|ukurasa moja tu|kurasa $1}}',
+'ntransclusions'          => 'inatumika katika {{PLURAL:$1|ukurasa moja tu|kurasa $1}}',
 'specialpage-empty'       => 'Hakuna matokeo katika taarifa hii.',
 'lonelypages'             => 'Kurasa ambazo haziungwi kutoka ukurasa mwingine wowote',
 'uncategorizedpages'      => 'Kurasa ambazo hazijawekwa katika jamii',
@@ -1533,6 +1767,7 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'popularpages'            => 'Kurasa zinazopendelewa',
 'wantedcategories'        => 'Jamii zinazotakiwa',
 'wantedpages'             => 'Kurasa zinazotakiwa',
+'wantedpages-badtitle'    => 'Lipo jina batili katika matokeo: $1',
 'wantedfiles'             => 'Mafaili yanayokosekana',
 'wantedtemplates'         => 'Vigezo vinavyotakiwa',
 'mostlinked'              => 'Kurasa zinazoungwa kuliko zote',
@@ -1547,18 +1782,22 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'deadendpages'            => 'Kurasa ambazo haziungi na ukurasa mwingine wowote',
 'deadendpagestext'        => 'Kurasa zifuatazo haziungana na kurasa zingine katika {{SITENAME}}.',
 'protectedpages'          => 'Kurasa zinazolindwa',
+'protectedpages-indef'    => 'Zinazolindwa kwa muda wote tu',
+'protectedpages-cascade'  => 'zinazokuwa na ulindaji kwa kurasa chini zake tu',
+'protectedpagestext'      => 'Kurasa zifuatazo zinalindwa zisisogezwe wala zisihaririwe',
 'protectedtitles'         => 'Majina yanayozuluiwa',
 'protectedtitlestext'     => 'Yafuatayo ni majina ya kurasa yanayozuluiwa kuyatumia',
 'listusers'               => 'Orodha ya Watumiaji',
 'listusers-editsonly'     => 'Onyesha watumiaji wenye kuhariri tu',
 'listusers-creationsort'  => 'Panga kwa tarehe ya kuanzishwa',
 'usereditcount'           => '{{PLURAL:$1|haririo|maharirio}} $1',
-'usercreated'             => 'Iliwekewa tarehe $1 saa $2',
+'usercreated'             => '{{GENDER:$3|Iliwekewa}} saa $2 tarehe $1',
 'newpages'                => 'Kurasa mpya',
 'newpages-username'       => 'Jina la mtumiaji:',
 'ancientpages'            => 'Kurasa za kale',
-'move'                    => 'Sogeza',
-'movethispage'            => 'Sogeza ukurasa huu',
+'move'                    => 'Hamisha',
+'movethispage'            => 'Hamisha ukurasa huu',
+'unusedcategoriestext'    => 'Kurasa za jamii zifuatazo zinapatikana, ingawaje hakuna ukurasa wala jamii nyingine iliyowekwa ndani ya jamii hizi.',
 'pager-newer-n'           => '{{PLURAL:$1|1 ya karibu zaidi|$1 ya karibu zaidi}}',
 'pager-older-n'           => '{{PLURAL:$1|$1 ya zamani zaidi}}',
 
@@ -1566,10 +1805,11 @@ Unaweza kujaribu wakati tovuti haina kazi nyingi.',
 'booksources'               => 'Vyanzo vya vitabu',
 'booksources-search-legend' => 'Tafuta mahali panopopatikana kitabu',
 'booksources-go'            => 'Nenda',
+'booksources-invalid-isbn'  => 'ISBN iliyoandikwa haonekani kuwa halali; hakikisha kwamba ni sawa na ISBN ya asili.',
 
 # Special:Log
 'specialloguserlabel'  => 'Mtumiaji:',
-'speciallogtitlelabel' => 'Kichwa:',
+'speciallogtitlelabel' => 'Cheo:',
 'log'                  => 'Kumbukumbu',
 'all-logs-page'        => 'Kumbukumbu zote zilizo wazi',
 'alllogstext'          => 'Hapa panaonyeshwa kumbukumbu zote za {{SITENAME}} kwa pamoja.
@@ -1610,9 +1850,14 @@ Tazama pia [[Special:WantedCategories|jamii zinazohitajika]].',
 'sp-deletedcontributions-contribs' => 'michango',
 
 # Special:LinkSearch
-'linksearch'    => 'Viungo vya nje',
-'linksearch-ns' => 'Eneo la wiki:',
-'linksearch-ok' => 'Tafuta',
+'linksearch'       => 'Kutafuta viungo vya nje',
+'linksearch-pat'   => 'Herufi zitakazotafutwa:',
+'linksearch-ns'    => 'Eneo la wiki:',
+'linksearch-ok'    => 'Tafuta',
+'linksearch-text'  => 'Alama maalum za kutafuta kama "*.wikipedia.org" zinaweza kutumika.<br />
+Itifaki zinazoungwa mkono: <tt>$1</tt>',
+'linksearch-line'  => '$2 umeungwa kutoka $1',
+'linksearch-error' => 'Alama maalum za kutafuta zinaweza kutumika mwanzoni mwa URL tu.',
 
 # Special:ListUsers
 'listusersfrom'      => 'Onyesha watumiaji kuanzia:',
@@ -1630,12 +1875,8 @@ Tazama pia [[Special:WantedCategories|jamii zinazohitajika]].',
 'activeusers-noresult'   => 'Watumiaji hawakupatikana.',
 
 # Special:Log/newusers
-'newuserlogpage'              => 'Kumbukumbu za kuanzisha akaunti za watumiaji',
-'newuserlogpagetext'          => 'Hii ni kumbukumbu ya akaunti mpya zilizosajiliwa.',
-'newuserlog-byemail'          => 'neno la siri limetumwa kwa barua pepe',
-'newuserlog-create-entry'     => 'Akaunti ya mtumiaji mgeni',
-'newuserlog-create2-entry'    => 'amesajili akaunti mpya $1',
-'newuserlog-autocreate-entry' => 'Akaunti imejifungua yenyewe',
+'newuserlogpage'     => 'Kumbukumbu za kuanzisha akaunti za watumiaji',
+'newuserlogpagetext' => 'Hii ni kumbukumbu ya akaunti mpya zilizosajiliwa.',
 
 # Special:ListGroupRights
 'listgrouprights'                      => 'Wezo za kundi za watumiaji',
@@ -1657,66 +1898,86 @@ Labda patakuwa na [[{{MediaWiki:Listgrouprights-helppage}}|maelezo mengine]] kuh
 'listgrouprights-removegroup-self-all' => 'Kuondoa makundi yote kutoka akaunti ya binafsi',
 
 # E-mail user
-'mailnologin'      => 'Hakuna anwani wa kutuma',
-'mailnologintext'  => 'Ukitaka kutuma barua pepe kwa watumiaji wengine inabidi uwe [[Special:UserLogin|umeshaingia kwenye akaunti yako]] na pia uwe na anwani ya barua pepe sahihi pale [[Special:Preferences|mapendekezo yako]].',
-'emailuser'        => 'Mtumie mtumiaji huyu barua pepe',
-'emailpage'        => 'Kumtumia mtumiaji barua pepe',
-'emailpagetext'    => 'Utumie fomu iliopo chini ili kutuma barua pepe kwa mtumiaji huyu.
+'mailnologin'          => 'Hakuna anwani wa kutuma',
+'mailnologintext'      => 'Ukitaka kutuma barua pepe kwa watumiaji wengine inabidi uwe [[Special:UserLogin|umeshaingia kwenye akaunti yako]] na pia uwe na anwani ya barua pepe sahihi pale [[Special:Preferences|mapendekezo yako]].',
+'emailuser'            => 'Mtumie mtumiaji huyu barua pepe',
+'emailpage'            => 'Kumtumia mtumiaji barua pepe',
+'emailpagetext'        => 'Utumie fomu iliopo chini ili kutuma barua pepe kwa mtumiaji huyu.
 Anwani yako ya barua pepe ulioitaja katika [[Special:Preferences|mapendekezo yako]] itaandikwa kwenye sanduku la anwani "Kutoka kwa" katika barua pepe, ili mtu atakayeipokea aweze kukujibu moja kwa moja.',
-'usermailererror'  => 'Chombo cha ujumbe kimerejesha hitilafu:',
-'defemailsubject'  => 'Barua pepe ya {{SITENAME}}',
-'noemailtitle'     => 'Anwani ya barua pepe hakuna',
-'noemailtext'      => 'Mtumiaji huyu hajataja anwani sahihi ya barua pepe.',
-'nowikiemailtitle' => 'Barua pepe haziruhusiwi',
-'nowikiemailtext'  => 'Mtumiaji huyu hajakubali kupokea barua pepe kutoka kwa watumiaji wengine.',
-'email-legend'     => 'Tuma barua pepe kwa mtumiaji mwingine wa {{SITENAME}}',
-'emailfrom'        => 'Kutoka kwa:',
-'emailto'          => 'Kwa:',
-'emailsubject'     => 'Mada:',
-'emailmessage'     => 'Ujumbe:',
-'emailsend'        => 'Tuma',
-'emailccme'        => 'Tuma nakala ya barua yangu ya pepe kwangu.',
-'emailccsubject'   => 'Nakala ya barua pepe uliotuma kwa $1: $2',
-'emailsent'        => 'Barua pepe imetumwa',
-'emailsenttext'    => 'Barua pepe yako imetumwa.',
-'emailuserfooter'  => 'Barua pepe hii imetumwa na $1 kwa $2 kwa kutumia zana ya "Kumtumia mtumiaji barua pepe" iliyopo {{SITENAME}}.',
+'usermailererror'      => 'Chombo cha ujumbe kimerejesha hitilafu:',
+'defemailsubject'      => 'Barua pepe ya {{SITENAME}} iliyotumwa na mtumiaji "$1"',
+'usermaildisabled'     => 'Uwezo wa kutuma barua pepe kwa mtumiaji umesitishwa',
+'usermaildisabledtext' => 'Huwezi kutuma barua pepe kwa watumiaji wengine wa wiki hii',
+'noemailtitle'         => 'Anwani ya barua pepe hakuna',
+'noemailtext'          => 'Mtumiaji huyu hajataja anwani sahihi ya barua pepe.',
+'nowikiemailtitle'     => 'Barua pepe haziruhusiwi',
+'nowikiemailtext'      => 'Mtumiaji huyu hajakubali kupokea barua pepe kutoka kwa watumiaji wengine.',
+'emailnotarget'        => 'Jina la mpokeaji uliloweka halipatikani',
+'emailtarget'          => 'Andika jina la mtumiaji la mpokeaji',
+'emailusername'        => 'Jina la mtumiaji:',
+'emailusernamesubmit'  => 'Wasilisha',
+'email-legend'         => 'Tuma barua pepe kwa mtumiaji mwingine wa {{SITENAME}}',
+'emailfrom'            => 'Kutoka kwa:',
+'emailto'              => 'Kwa:',
+'emailsubject'         => 'Mada:',
+'emailmessage'         => 'Ujumbe:',
+'emailsend'            => 'Tuma',
+'emailccme'            => 'Tuma nakala ya barua yangu ya pepe kwangu.',
+'emailccsubject'       => 'Nakala ya barua pepe uliotuma kwa $1: $2',
+'emailsent'            => 'Barua pepe imetumwa',
+'emailsenttext'        => 'Barua pepe yako imetumwa.',
+'emailuserfooter'      => 'Barua pepe hii imetumwa na $1 kwa $2 kwa kutumia zana ya "Kumtumia mtumiaji barua pepe" iliyopo {{SITENAME}}.',
 
 # Watchlist
-'watchlist'         => 'Maangalizi yangu',
-'mywatchlist'       => 'Maangalizi yangu',
-'watchlistfor'      => "(kwa '''$1''')",
-'nowatchlist'       => 'Hamna vitu katika maangalizi yako.',
-'watchlistanontext' => 'Tafadhali $1 ili kutazama au kuhariri vitu vilivyopo katika orodha yako ya maangalizi.',
-'watchnologin'      => 'Hujaingia',
-'watchnologintext'  => 'Lazima uwe [[Special:UserLogin|umeshaingia]] ili uweze kuhariri orodha ya maangalizi yako.',
-'addedwatch'        => 'Imeongezwa kwenye maangalizi yako',
-'addedwatchtext'    => "Ukurasa \"[[:\$1]]\" umewekwa kwenye [[Special:Watchlist|maangalizi]] yako.
+'watchlist'            => 'Maangalizi yangu',
+'mywatchlist'          => 'Maangalizi yangu',
+'watchlistfor2'        => 'Kwa ajili ya $1 $2',
+'nowatchlist'          => 'Hamna vitu katika maangalizi yako.',
+'watchlistanontext'    => 'Tafadhali $1 ili kutazama au kuhariri vitu vilivyopo katika orodha yako ya maangalizi.',
+'watchnologin'         => 'Hujaingia',
+'watchnologintext'     => 'Lazima uwe [[Special:UserLogin|umeshaingia]] ili uweze kuhariri orodha ya maangalizi yako.',
+'addwatch'             => 'Ongeza kwenye orodha ya maangalizi',
+'addedwatchtext'       => "Ukurasa \"[[:\$1]]\" umewekwa kwenye [[Special:Watchlist|maangalizi]] yako.
 Mabadiliko katika ukurasa huo na ukurasa wake wa majadiliano utaonekana hapo,
 na ukurasa utaonyeshwa wenye '''koze''' kwenye [[Special:RecentChanges|orodha ya mabadiliko ya karibuni]]
 ili kukusaidia kutambua.
 
 Ukitaka kufuta ukurasa huo kutoka maangalizi yako baadaye, bonyeza \"Acha kufuatilia\" katika mwamba pembeni.",
-'removedwatch'      => 'Imefutwa kutoka maangalizi yako',
-'removedwatchtext'  => 'Ukurasa "[[:$1]]" umeondoshwa kutoka katika [[Special:Watchlist|maangalizi yako]].',
-'watch'             => 'Fuatilia',
-'watchthispage'     => 'Fuatilia ukurasa huu',
-'unwatch'           => 'Acha kufuatilia',
-'unwatchthispage'   => 'Acha kufuatilia',
-'notanarticle'      => 'Ukurasa nje ya kusudi ya wiki',
-'notvisiblerev'     => 'Haririo ya mwisho, iliotendwa na mtumiaji mwingine, imefutwa',
-'watchlist-details' => 'Unafuatilia {{PLURAL:$1|ukurasa $1|kurasa $1}} bila kuzingatia kurasa za majadiliano.',
-'wlshowlast'        => 'Onyesha kutoka masaa $1 siku $2 $3',
-'watchlist-options' => 'Hitiari za maangalizi',
+'removewatch'          => 'Ondoa kutoka orodha ya maangalizi',
+'removedwatchtext'     => 'Ukurasa "[[:$1]]" umeondoshwa kutoka katika [[Special:Watchlist|maangalizi yako]].',
+'watch'                => 'Fuatilia',
+'watchthispage'        => 'Fuatilia ukurasa huu',
+'unwatch'              => 'Acha kufuatilia',
+'unwatchthispage'      => 'Acha kufuatilia',
+'notanarticle'         => 'Ukurasa nje ya kusudi ya wiki',
+'notvisiblerev'        => 'Haririo ya mwisho, iliotendwa na mtumiaji mwingine, imefutwa',
+'watchnochange'        => 'Hakuna kitu kati ya maangalizi yako kilichohaririwa katika kipindi kilichotajwa.',
+'watchlist-details'    => 'Unafuatilia {{PLURAL:$1|ukurasa $1|kurasa $1}} bila kuzingatia kurasa za majadiliano.',
+'wlheader-enotif'      => '* Huduma ya kuarifu kwa barua pepe imewezeshwa.',
+'wlheader-showupdated' => "* Kurasa zilizobadilika tangu ulipoziona mwishoni zinaonyeshwa '''kooze'''",
+'watchmethod-recent'   => 'kupitia madabiliko ya karibuni ili kupata kurasa za maangalizi',
+'watchmethod-list'     => 'kupitia kurasa za maangalizi ili kupata madabiliko ya karibuni',
+'watchlistcontains'    => 'Orodha ya maangalizi yako ina {{PLURAL:$1|kitu|vitu}} $1.',
+'iteminvalidname'      => "Kitu '$1' kina tatizo la jina batili...",
+'wlnote'               => "{{PLURAL:$1|Badiliko la|Mabadiliko '''$1''' ya}} mwisho katika {{PLURAL:$2|saa iliyopita linaonyeshwa|masaa '''$2''' yaliyopita yanaonyeshwa}} chini.",
+'wlshowlast'           => 'Onyesha kutoka masaa $1 siku $2 $3',
+'watchlist-options'    => 'Hitiari za maangalizi',
 
 # Displayed when you click the "watch" button and it is in the process of watching
-'watching'   => 'Unafuatilia...',
-'unwatching' => 'Umeacha kufuatilia...',
+'watching'       => 'Unafuatilia...',
+'unwatching'     => 'Umeacha kufuatilia...',
+'watcherrortext' => 'Hitilafu ilitokea ulipojaribu kubadilisha vipimo vya maangalizi yako kwa ajili ya "$1".',
 
+'enotif_mailer'                => 'Huduma ya taarifa ya barua pepe kutoka kwa {{SITENAME}}',
+'enotif_reset'                 => 'Weka alama ya kutembelewa kwenye kurasa zote',
 'enotif_newpagetext'           => 'Ukurasa huu ni mpya.',
 'enotif_impersonal_salutation' => 'Kwa mtumiaji wa {{SITENAME}}',
 'changed'                      => 'alibadilisha',
 'created'                      => 'alianzisha',
 'enotif_subject'               => '$PAGEEDITOR $CHANGEDORCREATED ukurasa wa $PAGETITLE kwenye {{SITENAME}}',
+'enotif_lastvisited'           => 'Tazama mabadiliko yote tangu ziara yako iliyopita kwenye ukurasa wa $1.',
+'enotif_lastdiff'              => 'Tazama badiliko hili hapo $1.',
+'enotif_anon_editor'           => 'mtumiaji bila jina $1',
 'enotif_body'                  => 'Mpendwa $WATCHINGUSERNAME,
 
 
@@ -1730,24 +1991,27 @@ Uwasiliane na mhariri kwa njia hizi:
 barua pepe: $PAGEEDITOR_EMAIL
 wiki: $PAGEEDITOR_WIKI
 
-Hutapata taarifa za mabadiliko mengine yatakayotokea kwenye ukurasa huu hadi utakapotazama ukurasa. 
+Hutapata taarifa za mabadiliko mengine yatakayotokea kwenye ukurasa huu hadi utakapotazama ukurasa.
 Au unaweza kuweka upya maombi ya kupewa taarifa kwa ajili ya kurasa zote zilizopo kwenye orodha yako ya maangalizi.
 
              Kutoka kwa {{SITENAME}}
 
 --
 Ukitaka kubadilisha mapendekezo yako yanayohusika orodha ya maangalizi yako, nenda
-{{fullurl:{{#special:Watchlist}}/edit}}
+{{canonicalurl:{{#special:EditWatchlist}}}}
 
 Ukitaka kutoa ukurasa huu kwenye orodha ya maangalizi yako, nenda
 $UNWATCHURL
 
 Kutoa maoni yako au kupata msaada mwingine:
-{{fullurl:{{MediaWiki:Helppage}}}}',
+{{canonicalurl:{{MediaWiki:Helppage}}}}',
 
 # Delete
 'deletepage'             => 'Futa ukurasa',
+'confirm'                => 'Yakinisha',
 'excontent'              => "iliyokuwemo: '$1'",
+'excontentauthor'        => 'yaliyomo yalikuwa: "$1" (yaliyechangiwa na mchangiaji mmoja tu anayeitwa "[[Special:Contributions/$2|$2]]")',
+'exbeforeblank'          => 'maandishi kabla hayajafutwa yote yalikuwa: "$1"',
 'exblank'                => 'ukurasa ulikuwa tupu',
 'delete-confirm'         => 'Futa "$1"',
 'delete-legend'          => 'Futa',
@@ -1755,9 +2019,10 @@ Kutoa maoni yako au kupata msaada mwingine:
 'confirmdeletetext'      => 'Wewe unategemea kufuta ukurasa pamoja na historia yake yote.
 Tafadhali hakikisha kwamba unalenga kufanya hivyo, na kwamba unaelewa matokeo yake, na kwamba unafuata [[{{MediaWiki:Policy-url}}|sera]].',
 'actioncomplete'         => 'Kitendo kimekwisha',
-'deletedtext'            => '"<nowiki>$1</nowiki>" imefutwa. Ona $2 kwa historia ya kurasa zilizofutwa hivi karibuni.',
-'deletedarticle'         => 'alifuta "[[$1]]"',
+'actionfailed'           => 'Tendo halikufaulu',
+'deletedtext'            => '"$1" imefutwa. Ona $2 kwa historia ya kurasa zilizofutwa hivi karibuni.',
 'dellogpage'             => 'Kumbukumbu ya ufutaji',
+'dellogpagetext'         => 'Kurasa na mafaili zilizofutwa hivi karibuni zinaorodheshwa chini.',
 'deletionlog'            => 'kumbukumbu za kufuta',
 'reverted'               => 'Ilirejeshwa hadi pitio la zamani',
 'deletecomment'          => 'Sababu:',
@@ -1768,28 +2033,47 @@ Tafadhali hakikisha kwamba unalenga kufanya hivyo, na kwamba unaelewa matokeo ya
 ** Ukiukaji wa hakimiliki
 ** Uharabu',
 'delete-edit-reasonlist' => 'Uhariri orodha ya sababu za kufuta',
+'delete-toobig'          => 'Ukurasa huu una historia ya kuhariri ndefu sana, yenye {{PLURAL:$1|badiliko|mabadiliko}} zaidi na $1.
+Ufutaji wa kurasa hizi moja kwa moja umezuluiwa ili {{SITENAME}} isivurugwe kwa bahati mbaya.',
+'delete-warning-toobig'  => 'Ukurasa huu unao mapitio mengi, zaida ya {{PLURAL:$1|pitio|mapitio}} $1.
+Ukiufuta labda itavuruga uendeshaji wa hifadhidata ya {{SITENAME}};
+endelea kwa uangalifu.',
 
 # Rollback
-'rollback'         => 'Rejesha masahihisho',
-'rollback_short'   => 'Rejesha',
-'rollbacklink'     => 'rejesha',
-'rollbackfailed'   => 'Haikufaulu kurejesha',
-'cantrollback'     => 'Haiwezekana kujesha sahihisho;
+'rollback'          => 'Rejesha masahihisho',
+'rollback_short'    => 'Rejesha',
+'rollbacklink'      => 'rejesha',
+'rollbackfailed'    => 'Haikufaulu kurejesha',
+'cantrollback'      => 'Haiwezekana kujesha sahihisho;
 ukurasa huu una mhariri mmoja tu.',
-'revertpage'       => 'Masahihisho aliyefanya [[Special:Contributions/$2|$2]] ([[User talk:$2|Majadiliano]]) yalirejeshwa hadi sahihisho la mwisho na [[User:$1|$1]]',
-'rollback-success' => 'Masahihisho aliyeyafanya $1 yalirejeshwa hadi kufika sahihisho la mwisho aliyefanya $2.',
+'editcomment'       => "Muhtasari wa kuhariri ilikuwa: \"''\$1''\".",
+'revertpage'        => 'Masahihisho aliyefanya [[Special:Contributions/$2|$2]] ([[User talk:$2|Majadiliano]]) yalirejeshwa hadi sahihisho la mwisho na [[User:$1|$1]]',
+'revertpage-nouser' => 'Masahihisho ya mtumiaji (jina lake limefichwa) yamerudishwa hadi pitio la mwisho lililotengenezwa na [[User:$1|$1]].',
+'rollback-success'  => 'Masahihisho aliyeyafanya $1 yalirejeshwa hadi kufika sahihisho la mwisho aliyefanya $2.',
+
+# Edit tokens
+'sessionfailure-title' => 'Kushindikana cha kipindi',
 
 # Protect
 'protectlogpage'              => 'Kumbukumbu ya ulindaji',
 'protectedarticle'            => 'aliulinda "[[$1]]"',
 'modifiedarticleprotection'   => 'alibadilisha kiwango cha ulindaji kwa ajili ya "[[$1]]"',
-'prot_1movedto2'              => 'alisogeza [[$1]] hadi [[$2]]',
+'unprotectedarticle'          => 'alitoa ulindaji wa "[[$1]]"',
+'movedarticleprotection'      => 'alihamisha ulindaji wa "[[$2]]" hadi "[[$1]]"',
+'protect-title'               => 'Kubadilisha kiwango cha ulindaji wa "$1"',
+'protect-title-notallowed'    => 'Tazama kiwango cha ulindaji wa "$1"',
+'prot_1movedto2'              => 'alihamisha [[$1]] hadi [[$2]]',
+'protect-badnamespace-title'  => 'Eneo la wiki lisiloweza kulindwa',
+'protect-badnamespace-text'   => 'Kurasa zilizopo katika eneo hili la wiki haziwezi kulindwa',
 'protect-legend'              => 'Hakikisha ukingo',
 'protectcomment'              => 'Sababu:',
 'protectexpiry'               => 'Itakwisha:',
 'protect_expiry_invalid'      => 'Muda wa kwisha ni batilifu.',
 'protect_expiry_old'          => 'Muda wa kuishi umepita tayari.',
-'protect-text'                => "Unaweza kutazama na kubadilisha kiwango cha ulindaji hapa kwa ukurasa '''<nowiki>$1</nowiki>'''.",
+'protect-unchain-permissions' => 'Fungua chaguzi zingine za ulinzi',
+'protect-text'                => "Unaweza kutazama na kubadilisha kiwango cha ulindaji hapa kwa ukurasa '''$1'''.",
+'protect-locked-dblock'       => "Viwango vya ulindaji haviwezi kubadilishwa kwa sababu hifadhidata imefungwa.
+Hapo panaandikwa viwango vya ulindaji wa ukurasa '''$1''':",
 'protect-locked-access'       => "Akaunti yako hairuhusiwi kubadilisha viwango vya ulindaji.
 Hivi ni vipimo kwa ukurasa '''$1''':",
 'protect-cascadeon'           => 'Ukurasa huu umelindwa kwa sababu umezingatiwa katika {{PLURAL:$1|ukurasa $1 unaolinda kurasa chini yake|kurasa $1 zinazolinda kurasa chini yake}}. Unaweza kubadilisha kiwango cha ulindaji wa ukurasa huu, lakini hutaathirika ulindaji kutoka kurasa juu yake.',
@@ -1799,13 +2083,15 @@ Hivi ni vipimo kwa ukurasa '''$1''':",
 'protect-level-sysop'         => 'Wakabidhi tu',
 'protect-summary-cascade'     => 'ulindaji kwa kurasa chini yake',
 'protect-expiring'            => 'itakwisha $1 (UTC)',
+'protect-expiring-local'      => 'inaishia saa $1',
 'protect-expiry-indefinite'   => 'bila mwisho',
 'protect-cascade'             => 'Linda kurasa zinazozingatiwa chini ya ukurasa huu',
 'protect-cantedit'            => 'Huwezi kubadilisha kiwango cha ulindaji wa ukurasa huu, kwa sababu huruhusiwi kuuhariri.',
 'protect-othertime'           => 'Kipindi kingine:',
 'protect-othertime-op'        => 'kipindi kingine',
+'protect-existing-expiry'     => 'Kipindi cha ulindaji uliowekwa unaishia: $3, $2',
 'protect-otherreason'         => 'Sababu nyingine:',
-'protect-otherreason-op'      => 'sababu nyingine',
+'protect-otherreason-op'      => 'Sababu nyingine',
 'protect-dropdown'            => '*Sababu za kawaida za ulindaji
 ** Uharabu kupindukia
 ** Upuuzi kupindukia
@@ -1815,6 +2101,8 @@ Hivi ni vipimo kwa ukurasa '''$1''':",
 'protect-expiry-options'      => 'saa 1:1 hour,siku 1:1 day,wiki 1:1 week,wiki 2:2 weeks,mwezi 1:1 month,miezi 3:3 months,miezi 6:6 months,mwaka 1:1 year,milele:infinite',
 'restriction-type'            => 'Ruhusa:',
 'restriction-level'           => 'Kiwango cha kizuia:',
+'minimum-size'                => 'Saizi ndogo mno',
+'maximum-size'                => 'Saizi kubwa mno:',
 'pagesize'                    => '(baiti)',
 
 # Restrictions (nouns)
@@ -1823,16 +2111,23 @@ Hivi ni vipimo kwa ukurasa '''$1''':",
 'restriction-create' => 'Kuanzisha',
 'restriction-upload' => 'Kupakia',
 
+# Restriction levels
+'restriction-level-sysop'         => 'umelindwa kabisa',
+'restriction-level-autoconfirmed' => 'umelindwa kwa kiasi',
+'restriction-level-all'           => 'chochote',
+
 # Undelete
 'undelete'                  => 'Kuzitazama kurasa zilizofutwa',
 'undeletepage'              => 'Kutazama na kurudisha kurasa zilizofutwa',
+'undeletepagetitle'         => "'''Ifuatayo ni mapitio yaliyofutwa ya [[:$1|$1]]'''.",
 'viewdeletedpage'           => 'Tazama kurasa zilizofutwa',
 'undelete-fieldset-title'   => 'Kurudisha mapitio',
 'undeletebtn'               => 'Rudisha',
 'undeletelink'              => 'onyesha/rejesha',
 'undeleteviewlink'          => 'tazama',
+'undeletereset'             => 'Seti upya',
+'undeleteinvert'            => 'Geuza uteuzi',
 'undeletecomment'           => 'Sababu:',
-'undeletedarticle'          => 'alirudisha "[[$1]]"',
 'undeletedrevisions'        => '{{PLURAL:$1|pitio 1 lilirudishwa|mapitio $1 yalirudishwa}}',
 'undeletedfiles'            => '{{PLURAL:$1|faili 1 lilirudishwa|mafaili $1 yalirudishwa}}',
 'cannotundelete'            => 'Kurudisha ukurasa imeshindikana;
@@ -1842,30 +2137,44 @@ huenda ikawa mtu mwingine ameurudisha tayari.',
 'undelete-search-prefix'    => 'Onyesha kurasa kuanzia na:',
 'undelete-search-submit'    => 'Tafuta',
 'undelete-error-short'      => 'Hitilafu wakati wa kurudisha faili: $1',
+'undelete-error-long'       => 'Ilitokea hitilafu wakati wa kurudisha faili:
+
+$1',
 'undelete-show-file-submit' => 'Ndiyo',
 
 # Namespace form on various pages
-'namespace'      => 'Chagua eneo la wiki:',
-'invert'         => 'Geuza uteuzi',
-'blanknamespace' => '(Kuu)',
+'namespace'             => 'Chagua eneo la wiki:',
+'invert'                => 'Geuza uteuzi',
+'namespace_association' => 'Eneo linalohusisha',
+'blanknamespace'        => '(Kuu)',
 
 # Contributions
 'contributions'       => 'Michango ya mtumiaji',
 'contributions-title' => 'Michango ya mtumiaji $1',
 'mycontris'           => 'Michango yangu',
 'contribsub2'         => 'Kwa $1 ($2)',
+'nocontribs'          => 'Mabadiliko yanayolingana na vigezo vilivyoulizwa hayakupatikana.',
 'uctop'               => '(juu)',
 'month'               => 'Kutoka mwezi (na zamani zaidi):',
 'year'                => 'Kutoka mwakani (na zamani zaidi):',
 
-'sp-contributions-newbies'     => 'Onyesha michango ya akaunti mpya tu',
-'sp-contributions-newbies-sub' => 'Kwa akaunti mpya',
-'sp-contributions-blocklog'    => 'Kumbukumbu ya uzuio',
-'sp-contributions-logs'        => 'kumbukumbu',
-'sp-contributions-talk'        => 'majadiliano',
-'sp-contributions-search'      => 'Tafuta michango',
-'sp-contributions-username'    => 'Anwani ya IP au jina la mtumiaji:',
-'sp-contributions-submit'      => 'Tafuta',
+'sp-contributions-newbies'             => 'Onyesha michango ya akaunti mpya tu',
+'sp-contributions-newbies-sub'         => 'Kwa akaunti mpya',
+'sp-contributions-newbies-title'       => 'Michango ya watumiaji wenye akaunti mpya',
+'sp-contributions-blocklog'            => 'Kumbukumbu ya uzuio',
+'sp-contributions-deleted'             => 'michango iliyofutwa ya mtumiaji',
+'sp-contributions-uploads'             => 'vipakizaji',
+'sp-contributions-logs'                => 'kumbukumbu',
+'sp-contributions-talk'                => 'majadiliano',
+'sp-contributions-userrights'          => 'usimamizi wa wezo za mtumiaji',
+'sp-contributions-blocked-notice'      => 'Mtumiaji huyu bado amezuiwa.
+Rejea kumbukumbu ya uzuio ya mwisho inayoandikwa chini:',
+'sp-contributions-blocked-notice-anon' => 'Anwani huyu ya IP bado imezuiwa.
+Rejea kumbukumbu ya uzuio ya mwisho inayoandikwa chini:',
+'sp-contributions-search'              => 'Tafuta michango',
+'sp-contributions-username'            => 'Anwani ya IP au jina la mtumiaji:',
+'sp-contributions-toponly'             => 'Onesha maharirio ambayo ni mapitio mapya tu',
+'sp-contributions-submit'              => 'Tafuta',
 
 # What links here
 'whatlinkshere'            => 'Viungo viungavyo ukurasa huu',
@@ -1873,22 +2182,28 @@ huenda ikawa mtu mwingine ameurudisha tayari.',
 'whatlinkshere-page'       => 'Ukurasa:',
 'linkshere'                => "Kurasa zifuatazo zimeunganishwa na '''[[:$1]]''':",
 'nolinkshere'              => "Hakuna kurasa zilizounganishwa na '''[[:$1]]'''.",
+'nolinkshere-ns'           => "Hakuna kurasa zilizounganishwa na '''[[:$1]]''' katika eneo la wiki lililochaguliwa.",
 'isredirect'               => 'elekeza ukurasa',
 'istemplate'               => 'jumuisho',
-'isimage'                  => 'kiungo cha picha',
+'isimage'                  => 'kiungo cha faili',
 'whatlinkshere-prev'       => '{{PLURAL:$1|uliotangulia|$1 zilizotangulia}}',
 'whatlinkshere-next'       => '{{PLURAL:$1|ujao|$1 zijazo}}',
 'whatlinkshere-links'      => '← viungo',
 'whatlinkshere-hideredirs' => '$1 maelekezo',
 'whatlinkshere-hidetrans'  => '$1 majumuisho',
 'whatlinkshere-hidelinks'  => '$1 viungo',
+'whatlinkshere-hideimages' => '$1 viungo vya picha',
 'whatlinkshere-filters'    => 'Machujio',
 
 # Block/unblock
+'block'                      => 'Kumzuia mtumiaji',
+'unblock'                    => 'Kuacha kumzuia mtumiaji',
 'blockip'                    => 'Zuia mtumiaji',
 'blockip-title'              => 'Kumzuia mtumiaji',
 'blockip-legend'             => 'Kumzuia mtumiaji',
-'ipaddress'                  => 'Anwani ya IP:',
+'blockiptext'                => 'Tumia fomu iliyopo chini kumzuia mtu asihariri kwa kupitia anwani fulani wa IP au kwa kutumia jina fulani la mtumiaji.
+Nia ya kumzuia mtu inatakiwa kuwa kuzuia uharibifu tu, na ifanikiwe kutokana na masharti ya [[{{MediaWiki:Policy-url}}|sera]].
+Andika sababu ya kuzuia chini (kwa mfano, kwa kutaja mifano ya kurasa zilizoharibiwa).',
 'ipadressorusername'         => 'Anwani ya IP au jina la mtumiaji:',
 'ipbexpiry'                  => 'Itakwisha:',
 'ipbreason'                  => 'Sababu:',
@@ -1901,7 +2216,7 @@ huenda ikawa mtu mwingine ameurudisha tayari.',
 ** Adabu mbaya/kero
 ** Kusumbua akaunti nyinginyingi
 ** Jina la mutumiaji lisilokubalika',
-'ipbanononly'                => 'Zuia watumiaji wasio na majina tu',
+'ipb-hardblock'              => 'Kuzuia watumiaji walioingia katika akaunti zao wasihariri kwa kutumia anwani hii ya IP',
 'ipbcreateaccount'           => 'Kinga usajili wa akaunti',
 'ipbemailban'                => 'Kinga mtumiaji asitume barua-pepe',
 'ipbenableautoblock'         => 'Mashine izuie anwani ya mwisho ya IP iliotumiwa na mtumiaji huyu, na IP zozote za baadaye atakayejaribu kutumia',
@@ -1912,12 +2227,21 @@ huenda ikawa mtu mwingine ameurudisha tayari.',
 'ipbotherreason'             => 'Engine/sababu ya ziada:',
 'ipbhidename'                => 'Ficha jina la mtumiaji katika orodha na kuhariri',
 'ipbwatchuser'               => 'Fuatilia kurasa za mtumiaji na majadiliano ya mtumiaji huyu.',
-'ipballowusertalk'           => 'Ruhusu mtumiaji huyu kuhariri ukurasa wake mwenyewe wa majadiliano wakati kazuiliwa',
+'ipb-disableusertalk'        => 'Kuzuia mtumiaji huu asihariri ukurasa wake mwenyewe wa majadiliano wakati amezuluiwa',
+'ipb-confirm'                => 'Uthibitishe uzuio',
 'badipaddress'               => 'Anwani batili ya IP',
 'blockipsuccesssub'          => 'Kulifaulu kumzuia',
-'ipblocklist'                => 'Anwani za IP na majina ya watumiaji waliozuiliwa',
+'ipb-edit-dropdown'          => 'Hariri sababu za kuzuia',
+'ipb-unblock-addr'           => 'Acha kumzuia $1',
+'ipb-unblock'                => 'Acha kumzuia mtumiaji au anwani wa IP',
+'ipb-blocklist-contribs'     => 'Michango ya $1',
+'blocklist'                  => 'Watumiaji waliozuiliwa',
+'ipblocklist'                => 'Watumiaji waliozuiliwa',
+'blocklist-timestamp'        => 'Tarehe na saa',
+'blocklist-expiry'           => 'Itakwisha',
+'blocklist-reason'           => 'Sababu',
 'ipblocklist-submit'         => 'Tafuta',
-'blocklistline'              => '$1, $2 alimzuia $3 ($4)',
+'ipblocklist-otherblocks'    => ' {{PLURAL:$1|Uzuio mwingine|Zuio zingine}}',
 'infiniteblock'              => 'milele',
 'expiringblock'              => 'inakwisha tarehe $1 saa $2',
 'emailblock'                 => 'barua pepe imezuiliwa',
@@ -1929,13 +2253,32 @@ huenda ikawa mtu mwingine ameurudisha tayari.',
 'blocklogentry'              => 'amemzuia [[$1]] mpaka $2 $3',
 'unblocklogentry'            => 'aliachisha kuzuia $1',
 'block-log-flags-nocreate'   => 'uwezo wa kuunda akaunti imesitishwa',
+'block-log-flags-noemail'    => 'barua pepe imezuiliwa',
 'block-log-flags-hiddenname' => 'jina la mtumiaji limefichwa',
+'ipb_already_blocked'        => '"$1" tayari imeshazuiwa',
+'blockme'                    => 'Unizuishe',
 'proxyblocksuccess'          => 'Tayari.',
 
+# Developer tools
+'lockdb'              => 'Kufunga hifadhidata',
+'unlockdb'            => 'Kufungua hifadhidata',
+'lockconfirm'         => 'Ndiyo, kwa kweli nataka kufunga hifadhidata.',
+'unlockconfirm'       => 'Ndiyo, kwa kweli nataka kufungua hifadhidata.',
+'lockbtn'             => 'Funga hifadhidata',
+'unlockbtn'           => 'Fungua hifadhidata',
+'locknoconfirm'       => 'Hujaweka alama katika sanduku la kuitika kitendo.',
+'lockdbsuccesssub'    => 'Kufunga hifadhidata kumefaulu',
+'unlockdbsuccesssub'  => 'Kufungua hifadhidata kumefaulu',
+'lockdbsuccesstext'   => 'Hifadhidata imefungwa.<br />
+Kumbuka [[Special:UnlockDB|kuifungua tena]] baada ya kumaliza kuitengeneza.',
+'unlockdbsuccesstext' => 'Hifadhidata imefunguliwa.',
+'databasenotlocked'   => 'Hifadhidata haijafunguliwa.',
+'lockedbyandtime'     => '(kwa $1 saa $3 tarehe $2)',
+
 # Move page
-'move-page'               => 'Hamisha $1',
-'move-page-legend'        => 'Sogeza ukurasa',
-'movepagetext'            => "Tumia fomu hapo chini ili kubadilisha jina la ukurasa, pamoja na kuhamisha historia yake yote katika jina jipya lile lile.
+'move-page'                    => 'Hamisha $1',
+'move-page-legend'             => 'Kuhamisha ukurasa',
+'movepagetext'                 => "Tumia fomu hapo chini ili kubadilisha jina la ukurasa, pamoja na kuhamisha historia yake yote katika jina jipya lile lile.
 Jina la awali litahamishwa na kuelekezwa kwa ukurasa wa jina jipya.
 Unaweza kurekebisha maelekezo yanayokwenda kwenye ukurasa wa zamani kwa kujiendesha.
 Usipotaka marekebisho yafanyike kwa kujiendesha, kumbuka kutafutia maelekezo [[Special:DoubleRedirects|mawilimawili]] au maelezo [[Special:BrokenRedirects|yenye hitilafu]].
@@ -1947,41 +2290,89 @@ Yaani unaweza kurudisha ukurasa kwenye jina la awali ukikosea, na haiwezekani ku
 '''ILANI!'''
 Kuhamisha ukurasa wenye wasomaji wengi kunaweza kuathirika watumiaji wetu.
 Tafadhali hakikisha kwamba unaelewa matokeo ya kitendo hiki kabla ya kuendelea.",
-'movepagetalktext'        => "Ukurasa wa majadiliano wa ukurasa huu utasogezwa pamoja yake
+'movepagetalktext'             => "Ukurasa wa majadiliano wa ukurasa huu utasogezwa pamoja yake
 '''ila:'''
 *tayari kuna ukurasa wa majadiliano (usiyo tupu) kwenye jina jipya, au
 *ukifuta tiki katika kisanduku hapa chini.
 
 Kama tayari kuna ukurasa au ukifuta tiki, itabidi usogeze au uunganishe ukurasa kwa mkono ukitaka.",
-'movearticle'             => "Ukurasa wa majadiliano wa ukurasa huu utasogezwa pamoja yake '''ila:'''
+'movearticle'                  => "Ukurasa wa majadiliano wa ukurasa huu utasogezwa pamoja yake '''ila:'''
 *tayari kuna ukurasa wa majadiliano (usiyo tupu) kwenye jina jipya, au
 *ukifuta tiki katika kisanduku hapa chini.
 
 Kama tayari kuna ukurasa au ukifuta tiki, itabidi usogeze au uunganishe ukurasa kwa mkono ukitaka.",
-'movenologin'             => 'Hujaingia',
-'newtitle'                => 'Kuelekeza jina jipya:',
-'move-watch'              => 'Fuatilia ukurasa huu',
-'movepagebtn'             => 'Sogeza ukurasa',
-'pagemovedsub'            => 'Umefaulu kuhamisha ukurasa',
-'movepage-moved'          => '\'\'\'"$1" imesogezwa kwenye "$2"\'\'\'',
-'articleexists'           => 'Tayari kuna ukurasa wenye jina hilo, au
+'moveuserpage-warning'         => "'''Ilani:''' Unatarajia kuhamisha ukurasa wa mtumiaji. Tafadhali kumbuka kwamba ni ukurasa tu utakaohamishwa; jina la mtumiaji ''haitabadilishwa''.",
+'movenologin'                  => 'Hujaingia',
+'movenologintext'              => 'Lazima uwe mtumiaji uliyesajiliwa na [[Special:UserLogin|uliyeingizwa]] ili uhamishe ukurasa.',
+'movenotallowed'               => 'Huna ruhusa ya kuhamisha kurasa.',
+'movenotallowedfile'           => 'Huna ruhusa ya kuhamisha mafaili.',
+'cant-move-user-page'          => 'Huna fursa ya kuhamisha ukurasa wa mtumiaji (isopokuwa kurasa ndogo).',
+'cant-move-to-user-page'       => 'Huna ruhusa ya kuhamisha ukurasa katika ukurasa wa mtumiaji (isipokuwa katika ukurasa mdogo wa mtumiaji).',
+'newtitle'                     => 'Kuelekeza jina jipya:',
+'move-watch'                   => 'Fuatilia ukurasa huu',
+'movepagebtn'                  => 'Hamisha ukurasa',
+'pagemovedsub'                 => 'Umefaulu kuhamisha ukurasa',
+'movepage-moved'               => '\'\'\'"$1" imesogezwa kwenye "$2"\'\'\'',
+'movepage-moved-redirect'      => 'Elekezo limetengenezwa.',
+'articleexists'                => 'Tayari kuna ukurasa wenye jina hilo, au
 jina ulilochagua ni batilifu.
 Chagua jina lengine.',
-'talkexists'              => "'''Ukurasa wenyewe ulisogezwa salama, lakini ukurasa wake wa majadiliano haujasogezwa kwa sababu tayari kuna ukurasa wenye jina lake.  Tafadhali ziunganishe kwa mkono.'''",
-'movedto'                 => 'imesogezwa hadi',
-'movetalk'                => 'Sogeza ukurasa wake wa majadiliano',
-'1movedto2'               => '[[$1]] umesogezwa hapa [[$2]]',
-'1movedto2_redir'         => 'alihamisha [[$1]] kwenda [[$2]] kwa kutengeneza elekezo',
-'movelogpage'             => 'Kumbukumbu ya uhamiaji',
-'movereason'              => 'Sababu:',
-'revertmove'              => 'rejesha',
-'delete_and_move'         => 'Kufuta na kuhamisha',
-'delete_and_move_confirm' => 'Ndiyo, ukurasa ufutwe',
+'talkexists'                   => "'''Ukurasa wenyewe ulisogezwa salama, lakini ukurasa wake wa majadiliano haujasogezwa kwa sababu tayari kuna ukurasa wenye jina lake.  Tafadhali ziunganishe kwa mkono.'''",
+'movedto'                      => 'imesogezwa hadi',
+'movetalk'                     => 'Hamisha ukurasa wake wa majadiliano',
+'move-subpages'                => 'Hamisha kurasa ndogo (hadi $1)',
+'move-talk-subpages'           => 'Hamisha kurasa ndogo za ukurasa wa majadiliano (hadi $1)',
+'movepage-page-moved'          => 'Ukurasa wa $1 umehamishwa hadi $2.',
+'movepage-page-unmoved'        => 'Ukurasa wa $1 hakuweza kuhamishwa hadi $2.',
+'movelogpage'                  => 'Kumbukumbu ya uhamiaji',
+'movelogpagetext'              => 'Hapo chini panaorodheshwa kurasa zote zilizohamishwa.',
+'movesubpage'                  => '{{PLURAL:$1|Ukurasa mdogo|Kurasa ndogo}}',
+'movesubpagetext'              => 'Ukurasa huu una {{PLURAL:$1|ukurasa mdogo unao|kurasa ndogo $1 zinazo}}onyeshwa hapo.',
+'movenosubpage'                => 'Ukurasa huu hauna kurasa ndogo.',
+'movereason'                   => 'Sababu:',
+'revertmove'                   => 'rejesha',
+'delete_and_move'              => 'Kufuta na kuhamisha',
+'delete_and_move_confirm'      => 'Ndiyo, ukurasa ufutwe',
+'immobile-source-namespace'    => 'Kurasa haziwezi kuhamisha ndani ya eneo la wiki la "$1"',
+'immobile-target-namespace'    => 'Kurasa haziwezi kuhamishwa zifike eneo la wiki la "$1"',
+'immobile-target-namespace-iw' => 'Kiungo kinachoelekea wiki nyingine hakiwezi kuwa ukurasa wa mwishilio wa kuhamisha ukurasa.',
+'immobile-source-page'         => 'Ukurasa huu hauwezi kuhamishwa.',
+'immobile-target-page'         => 'Kuhamisha katika jina hilo la mwishilio haiwezikani.',
+'imagenocrossnamespace'        => 'Faili linaweza kuhamishwa katika eneo la wiki la faili tu.',
+'nonfile-cannot-move-to-file'  => 'Ni mafaili tu yanayoweza kuhamishwa katika eneo la faili',
+'imageinvalidfilename'         => 'Jina la faili la mwishilio ni batili',
+'fix-double-redirects'         => 'Sasisha maelekezo yanayoelekeza jina la awali la faili',
+'move-leave-redirect'          => 'Weka elekezo mahali pake',
+'protectedpagemovewarning'     => "'''Ilani:''' Ukurasa huu umelindwa, kwa hiyo ni watumiaji wenye wezo za wakabidhi tu wanaoweza  kuuhamisha.
+Kumbukumbu ya mwisho inaandikwa chini:",
+'semiprotectedpagemovewarning' => "'''Ilani:''' Ukurasa huu umelindwa, kwa hiyo ni watumiaji waliosajiliwa tu wanaoweza  kuuhamisha.
+Kumbukumbu ya mwisho inaandikwa chini:",
+'move-over-sharedrepo'         => '== Faili linapatikana ==
+[[:$1]] lipo katika hifadhi ya pamoja. Ukihamisha faili kwa jina hili litapuuza faili la hifadhi ya pamoja.',
+'file-exists-sharedrepo'       => 'Jina la faili ulilolichagua linatumiwa tayari katika hifadhi ya pamoja.
+Tafadhali chagua jina lingine.',
 
 # Export
-'export'        => 'Hamisha kurasa',
-'export-addcat' => 'Ongeza',
-'export-addns'  => 'Ongeza',
+'export'            => 'Peleka kurasa',
+'exporttext'        => 'Unaweza kupeleka nakala za maandishi ya kurasa fulani, pamoja na mapitio yao, kwa kuiviringishia na XML.
+Nakala hizi zinaweza kuletwa katika wiki nyingine ya MediaWiki kwa kupitia [[Special:Import|ukurasa wa kuleta]].
+
+Kupeleka kurasa, andika majina yao katika sanduku chini, jina moja kwa kila mstari. Chagua kupeleka ama haririo ya kisasa pamoja na mapitio yote ya awali na maelezo ya historia, ama haririo ya kisasa pamoja na maelezo ya haririo la mwisho tu.
+
+Ukipeleka haririo ya kisasa tu, unaweza kutumia kiungo kinachokwenda ukurasa wa chanzo, kwa mfano [[{{#Special:Export}}/{{MediaWiki:Mainpage}}]] kwa ajili ya ukurasa wa "[[{{MediaWiki:Mainpage}}]]".',
+'exportall'         => 'Peleka kurasa zote',
+'exportcuronly'     => 'Peleka haririo la kisasa tu, bila mapitio ya awali',
+'exportnohistory'   => "----
+'''Ilani:''' Kupeleka mapitio yote ya kurasa kwa kutumia fomu hii kumesimamishwa ili utendaji wa tovuti isiathiriwe.",
+'exportlistauthors' => 'Weka orodha nzima wa wachangiaji kwa kila ukurasa',
+'export-submit'     => 'Peleka',
+'export-addcattext' => 'Ongeza kurasa kutoka jamii:',
+'export-addcat'     => 'Ongeza',
+'export-addnstext'  => 'Ongeza kurasa kutoka eneo la wiki:',
+'export-addns'      => 'Ongeza',
+'export-download'   => 'Hifadhi kama faili',
+'export-templates'  => 'Peleka pamoja na vigezo vyote',
+'export-pagelinks'  => 'Ni pamoja na kurasa zinazoungwa kwa kina cha:',
 
 # Namespace 8 related
 'allmessages'                   => 'Jumbe za mfumo',
@@ -1989,7 +2380,7 @@ Chagua jina lengine.',
 'allmessagesdefault'            => 'Ujumbe uliopo bidhaa pepe',
 'allmessagescurrent'            => 'Ujumbe unapo sasa hivi',
 'allmessagestext'               => 'Hii ni orodha ya jumbe za mfumo zilizopo katika eneo la MediaWiki.
-Ukitaka kusaidia kazi ya kutohoa MediaWiki yote katika lugha nyingi, tafadhali uende tovuti ya [http://www.mediawiki.org/wiki/Localisation Kutohoa MediaWiki Kwenye Lugha Nyingi] na [http://translatewiki.net translatewiki.net].',
+Ukitaka kusaidia kazi ya kutohoa MediaWiki yote katika lugha nyingi, tafadhali uende tovuti ya [//www.mediawiki.org/wiki/Localisation Kutohoa MediaWiki Kwenye Lugha Nyingi] na [//translatewiki.net translatewiki.net].',
 'allmessagesnotsupportedDB'     => "Ukurasa huu hauwezi kutumika kwa sababu '''\$wgUseDatabaseMessages''' imelemazwa.",
 'allmessages-filter-legend'     => 'Chuja',
 'allmessages-filter'            => 'Zichujwe kwa hali ya kutengenezwa:',
@@ -2001,18 +2392,42 @@ Ukitaka kusaidia kazi ya kutohoa MediaWiki yote katika lugha nyingi, tafadhali u
 'allmessages-filter-submit'     => 'Uende',
 
 # Thumbnails
-'thumbnail-more'  => 'Kuza',
-'filemissing'     => 'Faili halipo',
-'thumbnail_error' => 'Hitilafu kutengeneza picha ndogo: $1',
+'thumbnail-more'          => 'Kuza',
+'filemissing'             => 'Faili halipo',
+'thumbnail_error'         => 'Hitilafu kutengeneza picha ndogo: $1',
+'thumbnail_image-missing' => 'Faili halipatikani: $1',
 
 # Special:Import
-'import-upload-filename' => 'Jina la faili:',
-'import-comment'         => 'Maelezo:',
-'import-token-mismatch'  => 'Data ya kipindi zilipotelewa.
+'import'                     => 'Kuleta kurasa',
+'importinterwiki'            => 'Kuleta kutoka wiki nyingine',
+'import-interwiki-text'      => 'Chagua wiki na jina la ukurasa unaotaka kuuleta.
+Tarehe za mapitio na majina ya wahariri zitaletwa pia.
+Vitendo vyote vya kuleta kutoka wiki nyingine vinaandikwa katika [[Special:Log/import|kumbukumbu za kuleta]].',
+'import-interwiki-source'    => 'Wiki/ukurasa wa chanzo:',
+'import-interwiki-history'   => 'Leta pamoja na mapitio yote ya ukurasa huu',
+'import-interwiki-templates' => 'Leta pamoja na vigezo vyote',
+'import-interwiki-submit'    => 'Leta',
+'import-interwiki-namespace' => 'Eneo la wiki la mwishilio:',
+'import-upload-filename'     => 'Jina la faili:',
+'import-comment'             => 'Maelezo:',
+'importtext'                 => 'Tafadhali upeleke faili kutoka wiki lake kwa kutumia [[Special:Export|zana ya kupeleka]].
+Ulihafadhie katika tarakalishi yako, halafu ulipakie hapa.',
+'importstart'                => 'Kurasa zinaletwa...',
+'import-revision-count'      => '{{PLURAL:$1|pitio|mapitio}} $1',
+'importnopages'              => 'Hakuna kurasa za kuleta.',
+'imported-log-entries'       => 'Kumbukumbu $1 {{PLURAL:$1|ililetwa|zililetwa}}.',
+'importfailed'               => 'Kuleta hakufaulu: <nowiki>$1</nowiki>',
+'importunknownsource'        => 'Aina ya kitu unacholeta haijulikani',
+'importcantopen'             => 'Faili lililoletwa halikuweza kufunguliwa',
+'importbadinterwiki'         => 'Kiungo kibovu kati za wiki',
+'importnotext'               => 'Tupu au bila maandishi',
+'importsuccess'              => 'Kuleta kumekamilishwa!',
+'import-noarticle'           => 'Hakuna kurasa za kuleta!',
+'import-token-mismatch'      => 'Data ya kipindi zilipotelewa.
 Tafadhali jaribu tena.',
 
 # Import log
-'importlogpage'                 => 'Kumbukumbu ya kuingizwa',
+'importlogpage'                 => 'Kumbukumbu ya kuleta',
 'import-logentry-upload-detail' => '{{PLURAL:$1|pitio|mapitio}} $1',
 
 # Tooltip help for the actions
@@ -2035,7 +2450,7 @@ Tafadhali jaribu tena.',
 'tooltip-ca-unprotect'            => 'Kuondoa tunzo la ukurasa',
 'tooltip-ca-delete'               => 'Futa ukurasa huu',
 'tooltip-ca-undelete'             => 'Rudisha masahihisho yaliyofanyiwa katika ukurasa huu kabla haujafutwa',
-'tooltip-ca-move'                 => 'Sogeza ukurasa huu',
+'tooltip-ca-move'                 => 'Kuhamisha ukurasa huu',
 'tooltip-ca-watch'                => 'Fuatilia ukurasa huu kwenye maangalizi yako',
 'tooltip-ca-unwatch'              => 'Futa ukurasa huu kutoka maangalizi yako',
 'tooltip-search'                  => 'Tafuta {{SITENAME}}',
@@ -2079,6 +2494,8 @@ Tafadhali jaribu tena.',
 'tooltip-upload'                  => 'Kuanza kupakia',
 'tooltip-rollback'                => '"Rejesha" inarejesha (ma)sahihisho ya ukurasa huu yaliyofanyika na yule aliyeuhariri mwishoni, kwa kubofya mara moja tu.',
 'tooltip-undo'                    => 'Ukibonyeza "tengua" sahihisho hili litarejeshwa na hakiki yake itaonekana pamoja na dirisha la kuhariri, ili uweze kuandika sababu na maelezo kwenye muhtasari.',
+'tooltip-preferences-save'        => 'Uhifadhi mapendekezo',
+'tooltip-summary'                 => 'Andika muhtasari mfupi',
 
 # Attribution
 'anonymous'        => '{{PLURAL:$1|mtumiaji bila jina|watumiaji bila majina}} wa {{SITENAME}}',
@@ -2093,18 +2510,13 @@ Tafadhali jaribu tena.',
 'nocredits'        => 'Taarifa kuhusu wandishi wa ukurasa huu haipatikana.',
 
 # Info page
-'infosubtitle'   => 'Taarifa juu ya ukurasa',
-'numedits'       => 'Idadi ya haririo (ukurasa): $1',
-'numtalkedits'   => 'Idadi ya uhariri (ukurasa wa majadiliano): $1',
-'numwatchers'    => 'Idadi ya wanaofuatilia ukurasa: $1',
-'numauthors'     => 'Idadi ya waandishi tofauti (ukurasa): $1',
-'numtalkauthors' => 'Idadi ya waandishi tofauti (ukurasa wa majadiliano): $1',
-
-# Math errors
-'math_unknown_error' => 'hitilafu isiyojulikana',
-
-# Patrol log
-'patrol-log-auto' => '(kwa kujiendesha)',
+'pageinfo-title'            => 'Taarifa juu ya "$1"',
+'pageinfo-header-edits'     => 'Maharirio',
+'pageinfo-header-watchlist' => 'Maangalizi',
+'pageinfo-subjectpage'      => 'Ukurasa',
+'pageinfo-talkpage'         => 'Ukurasa wa majadiliano',
+'pageinfo-watchers'         => 'Idadi ya wanaofuatilia',
+'pageinfo-edits'            => 'Idadi ya haririo',
 
 # Image deletion
 'deletedrevision'                 => 'Pitio la awali lililofutwa $1',
@@ -2118,16 +2530,21 @@ Tafadhali jaribu tena.',
 'nextdiff'     => 'Badilisho lijalo →',
 
 # Media information
-'mediawarning'         => 'Ilani: Huenda faili hili lina msimbo mbaya.
+'mediawarning'           => 'Ilani: Huenda faili hili lina msimbo mbaya.
 Ukilitekeleza faili, mashine yako huenda ikawa matatani.',
-'thumbsize'            => 'Ukubwa wa picha ndogo:',
-'widthheightpage'      => '$1×$2, {{PLURAL:$3|ukurasa|kurasa}} $3',
-'file-info'            => '(ukubwa wa faili: $1, aina ya MIME: $2)',
-'file-info-size'       => '(piseli $1 × $2, saizi ya faili: $3, aina ya MIME: $4)',
-'file-nohires'         => '<small>Hakuna saizi kubwa zaidi.</small>',
-'svg-long-desc'        => '(faili la SVG, husemwa kuwa piseli $1 × $2, saizi ya faili: $3)',
-'show-big-image'       => 'Ukubwa wa awali',
-'show-big-image-thumb' => '<small>Ukubwa wa hakikisho hili: piseli $1 x $2</small>',
+'imagemaxsize'           => "Kikomo cha ukubwa wa picha:<br />''(cha kurasa za maelezo ya mafaili)''",
+'thumbsize'              => 'Ukubwa wa picha ndogo:',
+'widthheightpage'        => '$1 × $2, {{PLURAL:$3|ukurasa|kurasa}} $3',
+'file-info'              => 'ukubwa wa faili: $1, aina ya MIME: $2',
+'file-info-size'         => 'piseli $1 × $2, saizi ya faili: $3, aina ya MIME: $4',
+'file-info-size-pages'   => 'Piseli $1 × $2, ukubwa wa faili: $3, aina ya MIME: $4, {{PLURAL:$5|ukurasa|kurasa}} $5',
+'file-nohires'           => 'Hakuna saizi kubwa zaidi.',
+'svg-long-desc'          => 'faili la SVG, husemwa kuwa piseli $1 × $2, saizi ya faili: $3',
+'show-big-image'         => 'Ukubwa wa awali',
+'show-big-image-preview' => 'Ukubwa wa hakikisho: $1.',
+'show-big-image-other'   => '{{PLURAL:$2|Ukubwa mwingine|Ukubwa zingine}}: $1.',
+'show-big-image-size'    => 'piseli $1 × $2',
+'file-info-png-repeat'   => 'inachezwa {{PLURAL:$1|mara}} $1',
 
 # Special:NewFiles
 'newimages'             => 'Mkusanyiko wa mafaili mapya',
@@ -2141,16 +2558,23 @@ Ukilitekeleza faili, mashine yako huenda ikawa matatani.',
 'bydate'                => 'kwa tarehe',
 'sp-newimages-showfrom' => 'Onyesha mafaili mapya kuanzia saa $2, tarehe $1',
 
+# Video information, used by Language::formatTimePeriod() to format lengths in the above messages
+'seconds' => 'sekunde {{PLURAL:$1|$1}}',
+'minutes' => 'dakika {{PLURAL:$1|$1}}',
+'hours'   => '{{PLURAL:$1|saa $1|masaa $1}}',
+'days'    => 'siku {{PLURAL:$1|$1}}',
+'ago'     => '$1 zilizopita',
+
 # Bad image list
 'bad_image_list' => 'Fomati ni hii:
 
-Tunazingatia madondoo katika orodha (mistari inayoanza na *) tu.  
+Tunazingatia madondoo katika orodha (mistari inayoanza na *) tu.
 Inabidi kiungo cha kwanza katika mstari kiunge na faili baya.
 Viungo vinavyofuata katika mstari ule ule vitaelewa kuwa mambo ya pekee, yaani kurasa zinazoruhusiwa kuonyesha faili hilo.',
 
 # Metadata
 'metadata'          => 'Data juu',
-'metadata-help'     => 'Faili hili lina maarifa mengine, yamkini kutoka kemra au skana iliyotumiwa kulitengeneza au kuliandaa kwa tarakilishi.  
+'metadata-help'     => 'Faili hili lina maarifa mengine, yamkini kutoka kemra au skana iliyotumiwa kulitengeneza au kuliandaa kwa tarakilishi.
 Kama faili limebadilishwa kutoka hali yake ya awali, inawezekana kwamba vipengele kadhaa vitakuwa tofauti kuliko hali ya picha ilivyo sasa.',
 'metadata-expand'   => 'Onyesha maarifa vinaganaga',
 'metadata-collapse' => 'Ficha maarifa vinaganaga',
@@ -2163,18 +2587,105 @@ likifupishwa. Nyuga zingine zitafichwa kama chaguo-msingi.
 * exposuretime
 * fnumber
 * isospeedratings
-* focallength',
+* focallength
+* artist
+* copyright
+* imagedescription
+* gpslatitude
+* gpslongitude
+* gpsaltitude',
 
 # EXIF tags
-'exif-imagewidth'              => 'Upana',
-'exif-imagelength'             => 'Urefu',
-'exif-componentsconfiguration' => 'Maana ya kila kijenzi',
-'exif-makernote'               => 'Maelezo ya mtengenezaji',
-'exif-usercomment'             => 'Maoni ya mtumiaji',
-'exif-relatedsoundfile'        => 'Faili la sauti linalohusika',
+'exif-imagewidth'                  => 'Upana',
+'exif-imagelength'                 => 'Urefu',
+'exif-jpeginterchangeformatlength' => 'Idadi ya baiti za data ya JPEG',
+'exif-datetime'                    => 'Tarehe na saa ya kubadilisha faili',
+'exif-imagedescription'            => 'Jina la picha',
+'exif-make'                        => 'Mtengenezaji wa kamera',
+'exif-model'                       => 'Aina ya<!--Mtindo wa--> kamera',
+'exif-software'                    => 'Bidhaa pepe inayotumika',
+'exif-artist'                      => 'Mwandishi',
+'exif-copyright'                   => 'Mwenye hatimiliki',
+'exif-exifversion'                 => 'Mtindo wa Exif',
+'exif-componentsconfiguration'     => 'Maana ya kila kijenzi',
+'exif-pixelydimension'             => 'Upana wa picha',
+'exif-pixelxdimension'             => 'Urefu wa picha',
+'exif-usercomment'                 => 'Maoni ya mtumiaji',
+'exif-relatedsoundfile'            => 'Faili la sauti linalohusika',
+'exif-lightsource'                 => 'Mwanga',
+'exif-flash'                       => 'Taa ya picha',
+'exif-flashenergy'                 => 'Nguvu ya taa ya picha',
+'exif-gpslatituderef'              => 'Latitudo kwenda kaskazini au kusini',
+'exif-gpslatitude'                 => 'Latitudo',
+'exif-gpslongituderef'             => 'Longitudo kwenda mashariki au magharibi',
+'exif-gpslongitude'                => 'Longitudo',
+'exif-gpsaltituderef'              => 'Rejeo ya mwinuko',
+'exif-gpsaltitude'                 => 'Mwinuko',
+'exif-gpsspeedref'                 => 'Kizio cha kupima mwendo',
+'exif-gpsspeed'                    => 'Mwendo wa sanduku la GPS',
+'exif-gpsdestlatitude'             => 'Latitudo ya kikomo',
+'exif-gpsdestlongitude'            => 'Longitudo ya kikomo',
+'exif-gpsdestdistance'             => 'Mbali wa kikomo',
+'exif-gpsareainformation'          => 'Jina la eneo la GPS',
+'exif-gpsdatestamp'                => 'Tarehe ya GPS',
+'exif-jpegfilecomment'             => 'Maoni juu ya faili la JPEG',
+'exif-keywords'                    => 'Maneno yahusika',
+'exif-worldregioncreated'          => 'Eneo la dunia palipopigwa picha',
+'exif-countrycreated'              => 'Nchi palipopigwa picha',
+'exif-countrycodecreated'          => 'Kodi ya nchi picha palipopigwa',
+'exif-countrydest'                 => 'Nchi inayoonyeshwa',
+'exif-objectname'                  => 'Jina fupi',
+'exif-specialinstructions'         => 'Maelekezo maalum',
+'exif-headline'                    => 'Kichwa cha habari',
+'exif-urgency'                     => 'Umuhimu',
+'exif-writer'                      => 'Mwandishi',
+'exif-languagecode'                => 'Lugha',
+'exif-iimcategory'                 => 'Jamii',
+'exif-cameraownername'             => 'Mwenye kamera',
+'exif-copyrighted'                 => 'Hali ya hakimiliki',
+'exif-copyrightowner'              => 'Mwenye hatimiliki',
+'exif-pngfilecomment'              => 'Maoni juu ya faili la PNG',
+'exif-giffilecomment'              => 'Maoni juu ya faili la GIF',
+'exif-personinimage'               => 'Mtu aliyepigwa picha',
+
+'exif-unknowndate' => 'Tarehe haijulikani',
+
+'exif-orientation-1' => 'Kawaida',
+
+'exif-componentsconfiguration-0' => 'haipo',
+
+'exif-exposureprogram-1' => 'Kwa mikono',
+'exif-exposureprogram-2' => 'Programu ya kawaida',
+
+'exif-subjectdistance-value' => 'mita $1',
+
+'exif-meteringmode-0'   => 'Haijulikani',
+'exif-meteringmode-1'   => 'Wastani',
+'exif-meteringmode-3'   => 'Ibura',
+'exif-meteringmode-4'   => 'IburaMengi',
+'exif-meteringmode-5'   => 'Rembo',
+'exif-meteringmode-6'   => 'Ya sehemu',
+'exif-meteringmode-255' => 'Nyingine',
+
+'exif-lightsource-0'   => 'Haijulikani',
+'exif-lightsource-1'   => 'Jua',
+'exif-lightsource-2'   => 'Taa ya kuakisi mwanga',
+'exif-lightsource-4'   => 'Taa ya picha',
+'exif-lightsource-9'   => 'Mwangaza wa mchana',
+'exif-lightsource-10'  => 'Mawingu',
+'exif-lightsource-11'  => 'Kivuli',
+'exif-lightsource-255' => 'Mwingine',
+
+'exif-focalplaneresolutionunit-2' => 'inchi',
+
+'exif-scenecapturetype-0' => 'Kawaida',
+'exif-scenecapturetype-1' => 'Mandhari',
+'exif-scenecapturetype-2' => 'Watu',
+'exif-scenecapturetype-3' => 'Usiku',
 
 'exif-gaincontrol-0' => 'Bila',
 
+'exif-contrast-0' => 'Kawaida',
 'exif-contrast-1' => 'Laini',
 'exif-contrast-2' => 'Gumu',
 
@@ -2204,48 +2715,92 @@ likifupishwa. Nyuga zingine zitafichwa kama chaguo-msingi.
 'exif-gpsspeed-m' => 'Maili kwa saa',
 'exif-gpsspeed-n' => 'Noti',
 
+# Pseudotags used for GPSDestDistanceRef
+'exif-gpsdestdistance-k' => 'Kilomita',
+'exif-gpsdestdistance-m' => 'Maili',
+'exif-gpsdestdistance-n' => 'Maili ya baharia',
+
+'exif-gpsdop-excellent' => 'Nzuri sana ($1)',
+'exif-gpsdop-good'      => 'Nzuri ($1)',
+'exif-gpsdop-moderate'  => 'Nzuri kiasi ($)',
+'exif-gpsdop-fair'      => 'Nzuri kidogo ($1)',
+'exif-gpsdop-poor'      => ' Si nzuri ($1)',
+
+'exif-objectcycle-a' => 'Asubuhi tu',
+'exif-objectcycle-p' => 'Jioni tu',
+'exif-objectcycle-b' => 'Asubuhi na jioni zote mbili',
+
 # Pseudotags used for GPSTrackRef, GPSImgDirectionRef and GPSDestBearingRef
 'exif-gpsdirection-t' => 'Mwelekeo halisi',
 'exif-gpsdirection-m' => 'Mwelekeo wa sumaku',
 
+'exif-dc-contributor' => 'Wengine waliochangia',
+'exif-dc-date'        => 'Tarehe',
+'exif-dc-publisher'   => 'Mchapishaji',
+'exif-dc-rights'      => 'Haki',
+
+'exif-rating-rejected' => 'Lilikataliwa',
+
+'exif-isospeedratings-overflow' => 'Zaidi na 65535',
+
+'exif-iimcategory-ace' => 'Sanaa, utamaduni na burudani',
+'exif-iimcategory-clj' => 'Uhalifu na sheria',
+'exif-iimcategory-dis' => 'Maafa na ajali',
+'exif-iimcategory-fin' => 'Uchumi na biashara',
+'exif-iimcategory-edu' => 'Elimu',
+'exif-iimcategory-evn' => 'Mazingira',
+'exif-iimcategory-hth' => 'Afya',
+'exif-iimcategory-hum' => 'Maslahi ya binadamu',
+'exif-iimcategory-lab' => 'Kazi',
+'exif-iimcategory-lif' => 'Mtindo wa maisha na burudani',
+'exif-iimcategory-pol' => 'Siasa',
+'exif-iimcategory-rel' => 'Dini na imani',
+'exif-iimcategory-sci' => 'Sayansi na teknolojia',
+'exif-iimcategory-spo' => 'Michezo',
+'exif-iimcategory-war' => 'Vita, migogoro na vurugu',
+'exif-iimcategory-wea' => 'Hali ya hewa',
+
+'exif-urgency-normal' => 'Kawaida ($1)',
+'exif-urgency-low'    => 'Chini ($1)',
+'exif-urgency-high'   => 'Juu ($1)',
+'exif-urgency-other'  => 'Upaumbele uliotajwa na mtumiaji ($1)',
+
 # External editor support
 'edit-externally'      => 'Tumia programu ya nje kuhariri faili hii',
-'edit-externally-help' => '(Ona [http://www.mediawiki.org/wiki/Manual:External_editors maelezo (kwa Kiingereza)] kwa maarifa mengine.)',
+'edit-externally-help' => '(Ona [//www.mediawiki.org/wiki/Manual:External_editors maelezo (kwa Kiingereza)] kwa maarifa mengine.)',
 
 # 'all' in various places, this might be different for inflected languages
-'recentchangesall' => 'yote',
-'imagelistall'     => 'zote',
-'watchlistall2'    => 'zote',
-'namespacesall'    => 'zote',
-'monthsall'        => 'yote',
-'limitall'         => 'zote',
+'watchlistall2' => 'zote',
+'namespacesall' => 'zote',
+'monthsall'     => 'yote',
+'limitall'      => 'zote',
 
 # E-mail address confirmation
-'confirmemail'             => 'Kuyakinisha anwani ya barua pepe',
-'confirmemail_noemail'     => 'Hakuna anwani ya barua pepe halali kwenye [[Special:Preferences|mapendekezo yako]].',
-'confirmemail_text'        => '{{SITENAME}} inakutakia uyakinishe anwani yako ya barua pepe kabla kutumia zana zinazohusika barua pepe.
+'confirmemail'              => 'Kuyakinisha anwani ya barua pepe',
+'confirmemail_noemail'      => 'Hakuna anwani ya barua pepe halali kwenye [[Special:Preferences|mapendekezo yako]].',
+'confirmemail_text'         => '{{SITENAME}} inakutakia uyakinishe anwani yako ya barua pepe kabla kutumia zana zinazohusika barua pepe.
 Bofya kibonyezi cha chini kuituma barua pepe ya kuyakinisha kwa anwani yako.
 Ndani ya barua pepe patakuwa na kiungo chenye ishara;
 tumia kiungo kwenye kivinjari chako ili kuyakinisha kwamba anwani yako ya barua pepe ni halali.',
-'confirmemail_pending'     => 'Ishara za kuidhinisha zimeshatumwa kwako kwa njia ya barua pepe;
+'confirmemail_pending'      => 'Ishara za kuidhinisha zimeshatumwa kwako kwa njia ya barua pepe;
 ikiwa umeanzisha akaunti yako sasa hivi tu, tafadhali subiri dakika chache zifike, kabla hujaribu kuomba ishara zingine.',
-'confirmemail_send'        => 'Nitumie ishara za kuyakinisha',
-'confirmemail_sent'        => 'Barua pepe ya kuyakinisha imetumwa.',
-'confirmemail_oncreate'    => 'Ishara za kuyakinisha zilitumwa kwa anwani yako ya barua pepe.
+'confirmemail_send'         => 'Nitumie ishara za kuyakinisha',
+'confirmemail_sent'         => 'Barua pepe ya kuyakinisha imetumwa.',
+'confirmemail_oncreate'     => 'Ishara za kuyakinisha zilitumwa kwa anwani yako ya barua pepe.
 Huhitaji ishara hizi ili kuingia akaunti yako, lakini utazihitaji ili kuwezesha zana zozote za wiki hii zinazotumia barua pepe.',
-'confirmemail_sendfailed'  => '{{SITENAME}} haikufaulu kutuma barua pepe ya kuyakinisha kwako.
+'confirmemail_sendfailed'   => '{{SITENAME}} haikufaulu kutuma barua pepe ya kuyakinisha kwako.
 Tafadhali uhakikishe kwamba hakuna ishara batili katika anwani yako ya barua pepe.
 
 Huduma ya barua pepe inasema: $1',
-'confirmemail_invalid'     => 'Ishara za kuyakinisha ni batili.
+'confirmemail_invalid'      => 'Ishara za kuyakinisha ni batili.
 Huenda zimepitwa na wakati.',
-'confirmemail_needlogin'   => 'Unahitajika $1 kuthibitisha anwani ya barua pepe yako.',
-'confirmemail_success'     => 'Barua pepe yako imethibitishwa.
+'confirmemail_needlogin'    => 'Unahitajika $1 kuthibitisha anwani ya barua pepe yako.',
+'confirmemail_success'      => 'Barua pepe yako imethibitishwa.
 Sasa unaweza [[Special:UserLogin|kuingia]] na kuifurahia {{SITENAME}}.',
-'confirmemail_loggedin'    => 'Anwani ya barua pepe yako imethibishwa sasa.',
-'confirmemail_error'       => 'Kuna mambo yameenda kombo hifadhi ukamilisho wako.',
-'confirmemail_subject'     => 'Barua pepe ya uthibitisho ya {{SITENAME}}',
-'confirmemail_body'        => 'Kuna mtu, huenda ikawa wewe, kutoka anwani ya IP $1, amesajili akaunti "$2" na anwani ya barua pepe hii kwenye {{SITENAME}}.
+'confirmemail_loggedin'     => 'Anwani ya barua pepe yako imethibishwa sasa.',
+'confirmemail_error'        => 'Kuna mambo yameenda kombo hifadhi ukamilisho wako.',
+'confirmemail_subject'      => 'Barua pepe ya uthibitisho ya {{SITENAME}}',
+'confirmemail_body'         => 'Kuna mtu, huenda ikawa wewe, kutoka anwani ya IP $1, amesajili akaunti "$2" na anwani ya barua pepe hii kwenye {{SITENAME}}.
 
 Kuthibitisha ya kwamba akaunti hii inamilikiwa na wewe, unatakiwa kuwezesha njia ya barua pepe kwenye  {{SITENAME}}, fungua kiungo hiki katika kivinjari chako:
 
@@ -2256,24 +2811,53 @@ na kama *huja* sajili akaunti hii, fuata kiungo hiki ili kubatilisha uthibitisho
 $5
 
 Kodi hizi za uthibitisho zitaishia mnamo $4.',
-'confirmemail_invalidated' => 'Uthibitisho wa barua pepe umebatilishwa.',
-'invalidateemail'          => 'Batilisha barua pepe ya uthibitisho.',
+'confirmemail_body_changed' => 'Kuna mtu, huenda ikawa wewe, kutoka anwani ya IP $1, ambaye amebadilisha anwani ya barua pepe ya akaunti "$2" iwe anwani ya barua pepe hii, kule {{SITENAME}}.
+
+Ili kuthibitisha ya kwamba akaunti hii inamilikiwa na wewe, pamoja na kuwezesha upya zana zinazotumia barua pepe kule {{SITENAME}}, ufungue kiungo hiki katika kivinjari chako:
+
+$3
+
+na kama *huja* sajili akaunti hii, fuata kiungo hiki ili kubatilisha uthibitisho wa anwani ya barua pepe:
+
+$5
+
+Ishara hizi za uthibitisho zitaishia mnamo $4.',
+'confirmemail_body_set'     => 'Kuna mtu, huenda ikawa wewe, kutoka anwani ya IP $1, ambaye ameweka anwani ya barua pepe ya akaunti "$2" iwe anwani ya barua pepe hii, kule {{SITENAME}}.
+
+Ili kuthibitisha ya kwamba akaunti hii inamilikiwa na wewe, pamoja na kuwezesha upya zana zinazotumia barua pepe kule {{SITENAME}}, ufungue kiungo hiki katika kivinjari chako:
+
+$3
+
+na kama *huja* sajili akaunti hii, fuata kiungo hiki ili kubatilisha uthibitisho wa anwani ya barua pepe:
+
+$5
+
+Ishara hizi za uthibitisho zitaishia mnamo $4.',
+'confirmemail_invalidated'  => 'Uthibitisho wa barua pepe umebatilishwa.',
+'invalidateemail'           => 'Batilisha barua pepe ya uthibitisho.',
 
 # Scary transclusion
 'scarytranscludefailed'  => '[Kuleta kigezo imeshindikana kwa ajili ya $1]',
 'scarytranscludetoolong' => '[URL ni ndefu mno]',
 
 # Delete conflict
-'deletedwhileediting' => "'''Ilani''': Ukurasa huu ulifutwa ulipokwisha kuanza huuhariri!",
-'confirmrecreate'     => "Mtumiaji [[User:$1|$1]] ([[User talk:$1|majadiliano]]) aliufuta ukurasa huu wakati umeshaanza kuuhariri, akaandika sababu hii ya kufuta:
+'deletedwhileediting'      => "'''Ilani''': Ukurasa huu ulifutwa ulipokwisha kuanza huuhariri!",
+'confirmrecreate'          => "Mtumiaji [[User:$1|$1]] ([[User talk:$1|majadiliano]]) aliufuta ukurasa huu wakati umeshaanza kuuhariri, akaandika sababu hii ya kufuta:
 : ''$2''
 Tafadhali uthibitishe kwamba kweli unataka kuanzisha ukurasa huu upya.",
-'recreate'            => 'Anzisha upya',
+'confirmrecreate-noreason' => 'Mtumiaji [[User:$1|$1]] ([[User talk:$1|majadiliano]]) aliufuta ukurasa huu wakati umeshaanza kuuhariri. Tafadhali uthibitishe kwamba kweli unataka kuanzisha ukurasa huu upya.',
+'recreate'                 => 'Anzisha upya',
 
 # action=purge
 'confirm_purge_button' => 'Sawa',
 'confirm-purge-top'    => 'Ghili ya ukurasa huu ifutwe?',
-'confirm-purge-bottom' => 'Unaposafisha ukurasa ghili yake inasafishwa na haririo wa kisasa unaonekana.',
+'confirm-purge-bottom' => 'Unaposafisha ukurasa ghili yake inasafishwa na haririo la kisasa linaonekana.',
+
+# action=watch/unwatch
+'confirm-watch-button'   => 'Sawa',
+'confirm-watch-top'      => 'Je, ukurasa huu uongezwe katika maangalizi yako?',
+'confirm-unwatch-button' => 'Sawa',
+'confirm-unwatch-top'    => 'Ukurasa huu uondolewa katika orodha ya maangalizi yako?',
 
 # Multipage image navigation
 'imgmultipageprev' => '← ukurasa uliotangulia',
@@ -2289,11 +2873,12 @@ Tafadhali uthibitishe kwamba kweli unataka kuanzisha ukurasa huu upya.",
 'table_pager_first'        => 'Ukurasa wa kwanza',
 'table_pager_last'         => 'Ukurasa wa mwisho',
 'table_pager_limit'        => 'Ionyeshwe vitu $1 katika kila ukurasa',
+'table_pager_limit_label'  => 'Vitu kwa ukurasa:',
 'table_pager_limit_submit' => 'Nenda',
 'table_pager_empty'        => 'Hakuna matokeo',
 
 # Auto-summaries
-'autosumm-blank'   => 'Ukurasa ulimwagika',
+'autosumm-blank'   => 'Kaondosha yaliyomo',
 'autosumm-replace' => "Maandishi yaliyokuwepo yalichukuliwa nafasi na '$1'",
 'autoredircomment' => 'Ukurasa umeelekezwa kwenda [[$1]]',
 'autosumm-new'     => "Ukurasa ulianzishwa kwa kuandika '$1'",
@@ -2315,16 +2900,16 @@ Jaribu hakikisho la kawaida.',
 'watchlistedit-noitems'        => 'Orodha ya maangalizi yako haina kitu.',
 'watchlistedit-normal-title'   => 'Kuhariri orodha ya maangalizi',
 'watchlistedit-normal-legend'  => 'Kuondoa majina kwenye orodha ya maangalizi',
-'watchlistedit-normal-explain' => 'Majina kwenye orodha ya maangalizi yako yapo chini. 
-Ili kuondoa jina, weka alama katika kisanduku chake, na bonyeza "{{int:Watchlistedit-normal-submit}}". 
-Unaweza pia [[Special:Watchlist/raw|kuhariri orodha ya ghafi]].',
+'watchlistedit-normal-explain' => 'Majina kwenye orodha ya maangalizi yako yapo chini.
+Ili kuondoa jina, weka alama katika kisanduku chake, na bonyeza "{{int:Watchlistedit-normal-submit}}".
+Unaweza pia [[Special:EditWatchlist/raw|kuhariri orodha ya ghafi]].',
 'watchlistedit-normal-submit'  => 'Ondoa majina',
 'watchlistedit-normal-done'    => '{{PLURAL:$1|Jina 1 iliondolewa|Majina $1 yaliondolewa}} kutoka kwa orodha yako ya maangalizi:',
 'watchlistedit-raw-title'      => 'Kuhariri maangalizi ghafi',
 'watchlistedit-raw-legend'     => 'Kuhariri maangalizi ghafi',
 'watchlistedit-raw-explain'    => 'Majina ya kwenye ukurasa wako wa maangalizi yanaonekana hapo chini, na yanaweza kuharirika kwa kuongezea au hata kuondoa katika orodha; na liwe jina moja kwa mstari.
 Ukimaliza, bonyeza "{{int:Watchlistedit-raw-submit}}".
-Pia unaweza [[Special:Watchlist/edit|kutumia kihariri cha kawaida]].',
+Pia unaweza [[Special:EditWatchlist|kutumia kihariri cha kawaida]].',
 'watchlistedit-raw-titles'     => 'Majina:',
 'watchlistedit-raw-submit'     => 'Sasisha orodha ya maangalizi',
 'watchlistedit-raw-done'       => 'Orodha yako ya maangalizi imesasishwa.',
@@ -2336,42 +2921,53 @@ Pia unaweza [[Special:Watchlist/edit|kutumia kihariri cha kawaida]].',
 'watchlisttools-edit' => 'Tazama na hariri maangalizi',
 'watchlisttools-raw'  => 'Hariri maangalizi ghafi',
 
+# Signatures
+'signature' => '[[{{ns:user}}:$1|$2]] ([[{{ns:user_talk}}:$1|majadiliano]])',
+
+# Core parser functions
+'duplicate-defaultsort' => '!\'\'\'Ilani:\'\'\' Neno msingi la kupanga "$2" linafunika neno msingi la kupanga la awali "$1".',
+
 # Special:Version
-'version'                  => 'Toleo',
-'version-specialpages'     => 'Kurasa maalum',
-'version-other'            => 'Zingine',
-'version-version'          => '(Toleo $1)',
-'version-license'          => 'Ruhusa',
-'version-software'         => 'Bidhaa pepe iliyosakinishwa',
-'version-software-product' => 'Bidhaa',
-'version-software-version' => 'Toleo',
+'version'                   => 'Toleo',
+'version-specialpages'      => 'Kurasa maalum',
+'version-skins'             => 'Maumbo',
+'version-other'             => 'Zingine',
+'version-version'           => '(Toleo $1)',
+'version-license'           => 'Ruhusa',
+'version-poweredby-credits' => "Wiki hii inaendeshwa na bidhaa pepe ya '''[//www.mediawiki.org/ MediaWiki]''', hakimiliki © 2001-$1 $2.",
+'version-poweredby-others'  => 'wengine',
+'version-license-info'      => 'MediaWiki ni bidhaa pepe huru; unaweza kuisambaza pamoja na kuitumia na kuibadilisha kutokana na masharti ya leseni ya GNU General Public License inayotolewa na Free Software Foundation (Shirika la Bidhaa Pepe Huru); ama toleo 2 la hakimiliki, ama (ukitaka) toleo lolote linalofuata.
+
+MediaWiki inatolewa kwa matumaini ya kwamba ni ya manufaa, lakini BILA JUKUMU; hata bila jukumu linalojitokeza la KUWA TAYARI KUUZIKA KIBIASHARA au KUFAA KWA KUSUDIO FULANI. Tazama leseni ya GNU General Public License kuona maelezo mengine.
+
+Huwa unapokea [{{SERVER}}{{SCRIPTPATH}}/COPYING nakala ya GNU General Public License] pamoja na programu hii; la sivyo, andika kuomba nakala kwa Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA au [//www.gnu.org/licenses/old-licenses/gpl-2.0.html uisome mkondoni].',
+'version-software'          => 'Bidhaa pepe iliyosakinishwa',
+'version-software-product'  => 'Bidhaa',
+'version-software-version'  => 'Toleo',
 
 # Special:FilePath
 'filepath'         => 'Njia ya faili',
 'filepath-page'    => 'Faili:',
 'filepath-submit'  => 'Nenda',
-'filepath-summary' => 'Ukurasa maalum huu unakwenda kwenye faili pamoja na kuonyesha anwani yake kamili (URL) katika sanduku la anwani juu.
-Picha zinaonyeshwa kwenye ukubwa mzima, na mafaili ya aina zingine yanaanzishwa kwa kutumia programu zinazozihusika moja kwa moja.
-
-Andika jina la faili bila kiambishi awali cha "{{ns:file}}:".',
+'filepath-summary' => 'Ukurasa huu maalumu unarejesha njia kamili ya faili. Picha inaonyeshwa ukubwa wote, faili za aina zingine zinaanza na programu zake zinazohusiana moja kwa moja.',
 
 # Special:FileDuplicateSearch
-'fileduplicatesearch'          => 'Tafuta mafaili ya nakili',
-'fileduplicatesearch-summary'  => 'Kutafuta mafaili ya nakili kwa kuzingatia thamani za reli.
-
-Andika jina la faili bila kiambishi awali cha "{{ns:file}}:".',
-'fileduplicatesearch-legend'   => 'Kutafuta kifani',
-'fileduplicatesearch-filename' => 'Jina la faili:',
-'fileduplicatesearch-submit'   => 'Tafuta',
-'fileduplicatesearch-info'     => 'Piseli $1 × $2<br />Ukubwa wa faili: $3<br />Aina ya MIME: $4',
-'fileduplicatesearch-result-1' => 'Faili la "$1" halina kifani.',
-'fileduplicatesearch-result-n' => 'Faili la "$1" lina {{PLURAL:$2|kifani 1|vifani $2}}.',
+'fileduplicatesearch'           => 'Tafuta mafaili ya nakili',
+'fileduplicatesearch-summary'   => 'Kutafuta mafaili ya nakili kwa kuzingatia thamani za reli.',
+'fileduplicatesearch-legend'    => 'Kutafuta kifani',
+'fileduplicatesearch-filename'  => 'Jina la faili:',
+'fileduplicatesearch-submit'    => 'Tafuta',
+'fileduplicatesearch-info'      => 'Piseli $1 × $2<br />Ukubwa wa faili: $3<br />Aina ya MIME: $4',
+'fileduplicatesearch-result-1'  => 'Faili la "$1" halina kifani.',
+'fileduplicatesearch-result-n'  => 'Faili la "$1" lina {{PLURAL:$2|kifani 1|vifani $2}}.',
+'fileduplicatesearch-noresults' => 'Faili linaloitwa "$1" halikupatikana.',
 
 # Special:SpecialPages
 'specialpages'                   => 'Kurasa maalum',
 'specialpages-note'              => '----
-* Kurasa maalum ya kawaida.
-* <strong class="mw-specialpagerestricted">Kurasa maalum zisizoonekana na wote.</strong>',
+* Kurasa maalum za kawaida.
+* <span class="mw-specialpagerestricted">Kurasa maalum zisizoonekana na wote.</span>
+* <span class="mw-specialpagecached">Kurasa maalum zinazotoka "cache" (might be obsolete).</span>',
 'specialpages-group-maintenance' => 'Ripoti za kurekebisha na kutunza kurasa',
 'specialpages-group-other'       => 'Kurasa maalum zingine',
 'specialpages-group-login'       => 'Ingia / sajili akaunti',
@@ -2388,23 +2984,95 @@ Andika jina la faili bila kiambishi awali cha "{{ns:file}}:".',
 'blankpage'              => 'Ukurasa tupu',
 'intentionallyblankpage' => 'Ukurasa huu umeachwa tupu kwa makusudi.',
 
+# External image whitelist
+'external_image_whitelist' => '#Acha mstari huu jinsi vile ulivyo<pre>
+#Weka vipande vya uchanuzi wa kawaida (regex) (kipande kinachoingia kati ya // tu) hapo chini
+#Vipande hivi vitaoanishwa na URL ya picha za nje (na kiungo cha moto)
+#Vipande vinavyooanishwa vitaonekana kama picha, la sivyo, itaonyeshwa kiungo kinachokwenda katika picha tu
+#Mistari inayoanza na # inachukuliwa kama maelezo tu
+#Haita-tofautishwa kati ya herufi kubwa na ndogo
+
+#Weka vipande vyote vya regex juu ya mstari huu. Acha mstari huu jinsi vile ulivyo</pre>',
+
 # Special:Tags
-'tag-filter'        => 'Chujio cha [[Special:Tags|tagi]]:',
-'tag-filter-submit' => 'Chuja',
-'tags-title'        => 'Tagi',
-'tags-edit'         => 'hariri',
-'tags-hitcount'     => '{{PLURAL:$1|badiliko|mabadiliko}} $1',
+'tag-filter'              => 'Chujio cha [[Special:Tags|tagi]]:',
+'tag-filter-submit'       => 'Chuja',
+'tags-title'              => 'Tagi',
+'tags-description-header' => 'Maelezo kamili ya maana',
+'tags-edit'               => 'hariri',
+'tags-hitcount'           => '{{PLURAL:$1|badiliko|mabadiliko}} $1',
+
+# Special:ComparePages
+'comparepages'                => 'Linganisha kurasa',
+'compare-selector'            => 'Kulinganisha mapitio',
+'compare-page1'               => 'Ukurasa wa kwanza',
+'compare-page2'               => 'Ukurasa wa pili',
+'compare-rev1'                => 'Pitio la kwanza',
+'compare-rev2'                => 'Pitio la pili',
+'compare-submit'              => 'Linganisha',
+'compare-invalid-title'       => 'Jina la ukurasa uliloliandika ni batili.',
+'compare-title-not-exists'    => 'Jina la ukurasa ulilotaja halipatikani.',
+'compare-revision-not-exists' => 'Pitio ulilotaja halipatikani.',
 
 # Database error messages
-'dberr-header'    => 'Wiki imekuta tatizo',
-'dberr-problems'  => 'Kumradhi!
+'dberr-header'      => 'Wiki imekuta tatizo',
+'dberr-problems'    => 'Kumradhi!
 Tovuti hii inapata matatatizo wakati huu.',
-'dberr-again'     => 'Jaribu tena baada ya kusubiri dakika chache.',
-'dberr-info'      => '(Hamna mawasiliano na seva ya hifadhidata: $1)',
-'dberr-usegoogle' => 'Unaposubiri unaweza kujaribu kutafuta kwa kutumia Google.',
+'dberr-again'       => 'Jaribu tena baada ya kusubiri dakika chache.',
+'dberr-info'        => '(Hamna mawasiliano na seva ya hifadhidata: $1)',
+'dberr-usegoogle'   => 'Unaposubiri unaweza kujaribu kutafuta kwa kutumia Google.',
+'dberr-outofdate'   => 'Elewa kwamba fahirisi yao ya yaliyomo katika tovuti hii inaweza kuwa imepitwa na wakati.',
+'dberr-cachederror' => 'Ifuatayo ni nakala ya kache ya ukurasa uliyoombwa, na huenda isiwe ya sasa.',
 
 # HTML forms
+'htmlform-invalid-input'       => 'Kuna matatizo na baadhi ya maingizo yako',
+'htmlform-select-badoption'    => 'Thamani ulioiandika si chaguo halali.',
+'htmlform-int-invalid'         => 'Kitu ulichokiandika si namba kamili.',
+'htmlform-float-invalid'       => 'Kitu ulichokiandika si namba.',
+'htmlform-int-toolow'          => 'Namba uliyoiandika iko chini ya kiwango cha chini cha $1',
+'htmlform-int-toohigh'         => 'Namba uliyoiandika iko juu ya kiwango cha juu cha $1',
+'htmlform-required'            => 'Ni lazima kujaza kitu hapa',
+'htmlform-submit'              => 'Wasilisha',
 'htmlform-reset'               => 'Tengua mabadiliko',
 'htmlform-selectorother-other' => 'Nyingine',
+
+# New logging system
+'logentry-delete-delete'            => '$1 alifuta ukurasa wa $3',
+'logentry-delete-restore'           => '$1 alirudisha ukurasa wa $3',
+'logentry-delete-event'             => '$1 alibadilisha hali ya kuonekana wazi ya {{PLURAL:$5|kumbukumbu $5}} katika $3: $4',
+'logentry-delete-revision'          => '$1 alibadilisha hali ya kuonekana wazi ya {{PLURAL:$5|pitio 1|mapitio $5}} kwenye ukurasa wa $3: $4',
+'logentry-delete-event-legacy'      => '$1 alibadilisha hali ya kuonekana wazi ya kumbukumbu za $3',
+'logentry-delete-revision-legacy'   => '$1 alibadilisha hali ya kuonekana wazi ya mapitio ya ukurasa $3',
+'logentry-suppress-delete'          => '$1 alificha ukurasa wa $3',
+'logentry-suppress-event'           => '$1 alibadilisha kwa siri hali ya kuonekana wazi {{PLURAL:$5|kumbukumbu $5}} katika $3: $4',
+'logentry-suppress-revision'        => '$1 alibadilisha kwa siri hali ya kuonekana wazi {{PLURAL:$5|kumbukumbu $5 ya|kumbukumbu $5 za}} ukurasa wa $3: $4',
+'logentry-suppress-event-legacy'    => '$1 alibadilisha kwa siri hali ya kuonekana wazi ya kumbukumbu za $3',
+'logentry-suppress-revision-legacy' => '$1 alibadilisha kwa siri hali ya kuonekana wazi mapitio ya ukurasa $3',
+'revdelete-restricted'              => 'aliwazuia pia wakabidhi wasiyaone maelezo',
+'revdelete-unrestricted'            => 'aliwarudishia wakabidhi uwezo wa kuona maelezo',
+'logentry-move-move'                => '$1 alihamisha ukurasa wa $3 hadi $4',
+'logentry-newusers-newusers'        => '$1 alianzisha akaunti ya mtumiaji',
+'logentry-newusers-create'          => '$1 alianzisha akaunti ya mtumiaji',
+'logentry-newusers-create2'         => '$1 alianzisha akaunti ya mtumiaji $3',
+'logentry-newusers-autocreate'      => 'Akaunti ya mtumiaji $1 ilianzishwa na mashine',
+'newuserlog-byemail'                => 'neno la siri limetumwa kwa barua pepe',
+
+# Feedback
+'feedback-subject' => 'Mada:',
+'feedback-message' => 'Ujumbe:',
+'feedback-cancel'  => 'Batilisha',
+'feedback-submit'  => 'Tuma maoni yako',
+'feedback-adding'  => 'Maoni yako yanaongezwa katika ukurasa...',
+'feedback-error1'  => 'Hitilafu: Matokeo ya API hayafahamiki',
+'feedback-error2'  => 'Hitilafu: Hiririo halikufaulu',
+'feedback-error3'  => 'Hitilafu: API ya wiki haiitiki',
+'feedback-thanks'  => 'Ahsante! Maoni yako yamewekwa kwenye ukurasa wa "[$2 $1]".',
+'feedback-close'   => 'Tayari',
+
+# API errors
+'api-error-unclassified'    => 'Ilitokea hitilafu isiyojulikana.',
+'api-error-unknown-code'    => 'Hitilafu isiyojulikana: "$1".',
+'api-error-unknown-warning' => 'Ilani isiyojulikana: "$1".',
+'api-error-unknownerror'    => 'Hitilafu isiyojulikana: "$1".',
 
 );
