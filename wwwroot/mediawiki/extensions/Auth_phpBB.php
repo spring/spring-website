@@ -680,11 +680,11 @@
     	 * @param UserLoginTemplate $template
     	 * @access public
     	 */
-    	public function modifyUITemplate( &$template )
+    	public function modifyUITemplate( &$template, &$type )
     	{
     		$template->set('usedomain',   false); // We do not want a domain name.
     		$template->set('create',      false); // Remove option to create new accounts from the wiki.
-            $template->set('useemail',    false); // Disable the mail new password box.
+    		$template->set('useemail',    false); // Disable the mail new password box.
     	}
 
 
