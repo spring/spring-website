@@ -1,19 +1,31 @@
 <?php
 /**
- * See skin.txt
+ * SpringNew skin
  *
- * @todo document
- * @addtogroup Skins
+ * @ingroup Skins
  */
 
 if( !defined( 'MEDIAWIKI' ) )
-	die( -1 );
+	die( 1 );
 
-/**
- * @todo document
- * @addtogroup Skins
- */
-class SkinSpringNew extends Skin {
+class SkinSpringNew extends SkinLegacy {
+
+	var $useHeadElement = true;
+
+	function initPage(OutputPage $out) {
+		parent::initPage($out);
+		$this->skinname = 'springnew';
+		$this->stylename = 'springnew';
+		$this->template = 'SpringNewTemplate';
+	}
+
+	function setupSkinUserCss(OutputPage $out) {
+		parent::setupSkinUserCss($out);
+		$out->addStyle('../../skins/mediawiki/spring.css');
+	}
+};
+
+class SpringNewTemplate extends LegacyTemplate {
 
 	protected $searchboxes = '';
 	// How many search boxes have we made?  Avoid duplicate id's.
@@ -28,7 +40,7 @@ class SkinSpringNew extends Skin {
 	function doBeforeContent() {
 		global $wgOut;
 		$s = "";
-		$qb = $this->qbSetting();
+		$qb = $this->getSkin()->qbSetting();
 		$mainPageObj = Title::newMainPage();
 
 		$s .= file_get_contents('../templates/header.html');
@@ -50,7 +62,7 @@ class SkinSpringNew extends Skin {
 
 		$s .= "<div id='article'>";
 
-		$notice = wfGetSiteNotice();
+		$notice = $this->data['sitenotice'];
 		if( $notice ) {
 			$s .= "\n<div id='siteNotice'>$notice</div>\n";
 		}
@@ -71,21 +83,26 @@ class SkinSpringNew extends Skin {
 		//$s .= '</tr></table>';
 
 		// category fix
-		$catstr = $this->getCategories();
-		$catlinks = $this->getCategoryLinks();
+		$catstr = $this->getSkin()->getCategories();
+		$catlinks = $this->getSkin()->getCategoryLinks();
 		if (strlen($catlinks) > 2) {
 			$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories"><tr>';
 			$s .= '<td width="10">&nbsp;</td><td>';
 
 			$s .= '<table border="0" cellpadding="0" width="100%" id="toc"><tr><td>';
+
+			// Mediawiki 1.19 adds the ul and li tags, which mediawiki 1.16 did not have.
+			$catstr = str_replace('<ul>', '', str_replace('</ul>', '', $catstr));
+			$catstr = str_replace('<li>', '', str_replace('</li>', '', $catstr));
 			$s .= $catstr;
+
 			$s .= '</td></tr></table>';
 
 			$s .= '</td><td width="10">&nbsp;</td></tr></table>';
 		}
 
 
-		$qb = $this->qbSetting();
+		$qb = $this->getSkin()->qbSetting();
 		if ( 0 != $qb ) { $s .= $this->quickBar(); }
 
 		$s .= "\n<div id='footer'>";
@@ -130,9 +147,9 @@ class SkinSpringNew extends Skin {
 
 		$s .= " | ";
 		if ( $wgUser->isLoggedIn() ) {
-			$s .=  $this->makeKnownLink( $lo, wfMsg( "logout" ), $q );
+			$s .=  Linker::makeKnownLinkObj( $lo, wfMsg( "logout" ), $q );
 		} else {
-			$s .=  $this->makeKnownLink( $li, wfMsg( "login" ), $q );
+			$s .=  Linker::makeKnownLinkObj( $li, wfMsg( "login" ), $q );
 		}
 
 		return $s;
@@ -166,8 +183,7 @@ class SkinSpringNew extends Skin {
 		$s .= $this->menuHead( "qbbrowse" );
 
 		# Use the first heading from the Monobook sidebar as the "browse" section
-		$bar = $this->buildSidebar();
-		$browseLinks = reset( $bar );
+		$browseLinks = reset($this->data['sidebar']);
 
 		foreach ( $browseLinks as $link ) {
 			if ( $link['text'] != '-' ) {
@@ -182,7 +198,7 @@ class SkinSpringNew extends Skin {
 			$s .= $this->menuHead( "qbedit" );
 			$s .= "<strong>" . $this->editThisPage() . "</strong>";
 
-			$s .= $sep . $this->makeKnownLink( wfMsgForContent( "edithelppage" ), wfMsg( "edithelp" ) );
+			$s .= $sep . Linker::makeKnownLinkObj( Title::newFromText( wfMsgForContent("edithelppage") ), wfMsg( "edithelp" ) );
 
 			if( $wgUser->isLoggedIn() ) {
 				$s .= $sep . $this->moveThisPage();
@@ -222,7 +238,7 @@ class SkinSpringNew extends Skin {
 				$id=User::idFromName($wgTitle->getText());
 				if ($id != 0) {
 					$s .= $sep . $this->userContribsLink();
-					if( $this->showEmailUser( $id ) ) {
+					if( $this->getSkin()->showEmailUser( $id ) ) {
 						$s .= $sep . $this->emailUserLink();
 					}
 				}
@@ -234,33 +250,33 @@ class SkinSpringNew extends Skin {
 		$s .= $this->menuHead( "qbmyoptions" );
 		if ( $wgUser->isLoggedIn() ) {
 			$name = $wgUser->getName();
-			$tl = $this->makeKnownLinkObj( $wgUser->getTalkPage(),
+			$tl = Linker::makeKnownLinkObj( $wgUser->getTalkPage(),
 				wfMsg( 'mytalk' ) );
 			if ( $wgUser->getNewtalk() ) {
 				$tl .= " *";
 			}
 
-			$s .= $this->makeKnownLinkObj( $wgUser->getUserPage(),
+			$s .= Linker::makeKnownLinkObj( $wgUser->getUserPage(),
 				wfMsg( "mypage" ) )
 			  . $sep . $tl
-			  . $sep . $this->specialLink( "watchlist" )
-			  . $sep . $this->makeKnownLinkObj( SpecialPage::getSafeTitleFor( "Contributions", $wgUser->getName() ),
+			  . $sep . Linker::specialLink( "watchlist" )
+			  . $sep . Linker::makeKnownLinkObj( SpecialPage::getSafeTitleFor( "Contributions", $wgUser->getName() ),
 			  	wfMsg( "mycontris" ) )
-		  	  . $sep . $this->specialLink( "preferences" )
-		  	  . $sep . $this->specialLink( "userlogout" );
+			  . $sep . Linker::specialLink( "preferences" )
+			  . $sep . Linker::specialLink( "userlogout" );
 		} else {
-			$s .= $this->specialLink( "userlogin" );
+			$s .= Linker::specialLink( "userlogin" );
 		}
 
 		$s .= '</td><td>';
 
 		$s .= $this->menuHead( "qbspecialpages" )
-		  . $this->specialLink( "newpages" )
-		  . $sep . $this->specialLink( "imagelist" )
-		  . $sep . $this->specialLink( "statistics" );
+		  . Linker::specialLink( "newpages" )
+		  . $sep . Linker::specialLink( "imagelist" )
+		  . $sep . Linker::specialLink( "statistics" );
 //		  . $sep . $this->bugReportsLink();
 		if ( $wgUser->isLoggedIn() && $wgEnableUploads ) {
-			$s .= $sep . $this->specialLink( "upload" );
+			$s .= $sep . Linker::specialLink( "upload" );
 		}
 		global $wgSiteSupportPage;
 		if( $wgSiteSupportPage) {
@@ -268,7 +284,7 @@ class SkinSpringNew extends Skin {
 			      .wfMsg( "sitesupport" )."</a>";
 		}
 
-		$s .= $sep . $this->makeKnownLinkObj(
+		$s .= $sep . Linker::makeKnownLinkObj(
 			SpecialPage::getTitleFor( 'Specialpages' ),
 			wfMsg( 'moredotdotdot' ) );
 
@@ -293,7 +309,7 @@ class SkinSpringNew extends Skin {
 		global $wgRequest;
 
 		$search = $wgRequest->getText( 'search' );
-		$action = $this->escapeSearchLink();
+		$action = $this->getSkin()->escapeSearchLink();
 		$s = "<div id=\"cse\" style=\"width: 100%;\"><form id=\"searchform{$this->searchboxes}\" method=\"get\" class=\"inline\" action=\"$action\">";
 		if ( "" != $label ) { $s .= "{$label}: "; }
 
