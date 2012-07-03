@@ -216,3 +216,4 @@ table.wikitable > tr > th,
 table.wikitable > * > tr > th {background-color: #38474E;}
 .mw-search-formheader    {background-color: inherit;} /* fix backgroundcolors in search */
 fieldset#mw-searchoptions{background-color: inherit;}
+#catlinks                {text-align: center;}
