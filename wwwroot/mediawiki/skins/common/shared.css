@@ -570,6 +570,7 @@ a.feedlink {
 /* wikitable class for skinning normal tables */
 table.wikitable {
     margin: 1em 1em 1em 0;
+    background: #f9f9f9;
     border: 1px #aaa solid;
     border-collapse: collapse;
 }
@@ -578,7 +579,7 @@ table.wikitable {
     padding: 0.2em;
 }
 .wikitable th {
-    background: #38474E;
+    background: #f2f2f2;
     text-align: center;
 }
 .wikitable caption {
