@@ -84,7 +84,12 @@ html {
   #toc tr td > ul         {margin: 0; padding: 5px;
                            border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
 }
-#toc tr td ul ul         {margin-left: 2.5ex;}
+.mw-content-ltr .toc ul ul,
+.mw-content-ltr #toc ul ul,
+.mw-content-rtl .mw-content-ltr .toc ul ul,
+.mw-content-rtl .mw-content-ltr #toc ul ul {
+	margin: 0 0 0 2.5ex;
+}
 #toc                     {background-color: #38474E; border-color: #20292E;
                           float: right;}
 #toc *                   {color: #EEE; text-shadow: #41545F 2px 2px 2px;}
