@@ -192,11 +192,4 @@ $wgDefaultSkin = 'springnew';
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
-// Enable WYSIWYG editor
-require_once("$IP/extensions/WYSIWYG/WYSIWYG.php");
-// allow registered users to use it
-$wgGroupPermissions['registered_users']['wysiwyg']=true;
-// don't show it as default
-$wgDefaultUserOptions['riched_load_semantic_toolbar'] = 0;
-
 ?>
