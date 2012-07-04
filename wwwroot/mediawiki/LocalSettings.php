@@ -192,4 +192,10 @@ $wgDefaultSkin = 'springnew';
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
+require_once './extensions/WikiEditor/WikiEditor.php';
+
+$wgDefaultUserOptions['usebetatoolbar'] = 1;
+$wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
+$wgDefaultUserOptions['wikieditor-preview'] = 1;
+
 ?>
