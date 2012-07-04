@@ -151,7 +151,8 @@ class utf_normalizer
 	* @param	string	&$str	Unchecked UTF string
 	* @return	string			The string, validated and in normal form
 	*/
-	function nfkc(&$str)
+	// TVO 2012/07/04: Added 'static' to get rid of PHP warnings in the wiki. (Auth_phpBB plugin?)
+	static function nfkc(&$str)
 	{
 		$pos = strspn($str, UTF8_ASCII_RANGE);
 		$len = strlen($str);
