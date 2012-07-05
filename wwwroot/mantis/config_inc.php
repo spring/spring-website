@@ -75,6 +75,7 @@
 	# resolution, fixed_in_version, view_state, os, os_build, platform, version, date_submitted, attachment,
 	# category, sponsorship_total, severity, status, last_updated, summary, bugnotes_count
 	$g_view_issues_page_columns = array ( 'selection', 'edit', 'priority', 'id', 'sponsorship_total', 'bugnotes_count', 'attachment', 'category','version', 'severity', 'status', 'last_updated', 'summary' );
-
+	# disable profiles (platform selection) in reports
+	$g_enable_profiles = OFF;
 
 ?>
