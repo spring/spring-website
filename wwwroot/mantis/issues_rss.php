@@ -1,44 +1,43 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: issues_rss.php,v 1.8.2.1 2007-10-13 22:33:16 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	#
-	# GET PARAMETERS FOR THIS PAGE
-	#
-	# project_id: 0 - all projects, otherwise project id.
-	# filter_id: The filter id to use for generating the rss.
-	# sort: This parameter is ignore if filter_id is supplied and is not equal to 0.
-	#		"update": issues ordered descending by last updated date.
-	#       "submit": issues ordered descending by submit date (default).
-
+	/**
+	 *
+	 * GET PARAMETERS FOR THIS PAGE
+	 *
+	 * project_id: 0 - all projects, otherwise project id.
+	 * filter_id: The filter id to use for generating the rss.
+	 * sort: This parameter is ignore if filter_id is supplied and is not equal to 0.
+	 *		"update": issues ordered descending by last updated date.
+	 *       "submit": issues ordered descending by submit date (default).
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'class.RSSBuilder.inc.php' );
-	require_once( $t_core_path . 'user_api.php' );
-	require_once( $t_core_path . 'filter_api.php' );
-	require_once( $t_core_path . 'rss_api.php' );
+	require_once( 'rssbuilder' . DIRECTORY_SEPARATOR . 'class.RSSBuilder.inc.php' );
+	require_once( 'user_api.php' );
+	require_once( 'filter_api.php' );
+	require_once( 'rss_api.php' );
 
 	$f_project_id = gpc_get_int( 'project_id', ALL_PROJECTS );
 	$f_filter_id = gpc_get_int( 'filter_id', 0 );
@@ -77,13 +76,13 @@
 
 	# construct rss file
 
-	$encoding = lang_get( 'charset' );
+	$encoding = 'utf-8';
 	$about = $t_path;
-	$title = string_rss_links( config_get( 'window_title' ) );
+	$title = config_get( 'window_title' );
 	$image_link = $t_path . 'images/mantis_logo_button.gif';
 
 	# only rss 2.0
-	$category = string_rss_links( project_get_name( $f_project_id ) );
+	$category = project_get_name( $f_project_id );
 	if ( $f_project_id !== 0 ) {
 		$title .= ' - ' . $category;
 	}
@@ -122,11 +121,7 @@
 	# person, an organization, or a service
 	$contributor = (string) '';
 
-	$rssfile->setPublisher( $publisher );
-	$rssfile->setCreator( $creator );
-	$rssfile->setRights( $rights );
-	$rssfile->setCoverage( $coverage );
-	$rssfile->setContributor( $contributor );
+	$rssfile->addDCdata( $publisher, $creator, $date, $language, $rights, $coverage, $contributor );
 
 	# hourly / daily / weekly / ...
 	$period = (string) 'hourly';
@@ -139,7 +134,7 @@
 	# add missing : in the O part of the date.  PHP 5 supports a 'c' format which will output the format
 	# exactly as we want it.
 	# // 2002-10-02T10:00:00-0500 -> // 2002-10-02T10:00:00-05:00
-	$base = substr( $base, 0, 22 ) . ':' . substr( $base, -2 );
+	$base = utf8_substr( $base, 0, 22 ) . ':' . utf8_substr( $base, -2 );
 
 	$rssfile->addSYdata( $period, $frequency, $base );
 
@@ -170,53 +165,54 @@
 
 	$t_issues = filter_get_bug_rows( $t_page_number, $t_issues_per_page, $t_page_count, $t_issues_count,
 									 $t_custom_filter, $t_project_id, $t_user_id, $t_show_sticky );
+	$t_issues_count = count( $t_issues );
 
 	# Loop through results
-	for ( $i = 0; $i < count( $t_issues ); $i++ ) {
-		$row = $t_issues[$i];
+	for ( $i = 0; $i < $t_issues_count; $i++ ) {
+		$t_bug = $t_issues[$i];
 
-		$t_bug = bug_get( $row['id'], true );
+		$about = $link = $t_path . "view.php?id=" . $t_bug->id;
+		$title = bug_format_id( $t_bug->id ) . ': ' . $t_bug->summary;
 
-		$about = $link = $t_path . "view.php?id=" . $row['id'];
-		$title = string_rss_links( bug_format_id( $row['id'] ) . ': ' . $t_bug->summary );
-		
-		if ( $row['view_state'] == VS_PRIVATE ) {
+		if ( $t_bug->view_state == VS_PRIVATE ) {
 			$title .= ' [' . lang_get( 'private' ) . ']';
 		}
-                
+
 		$description = string_rss_links( $t_bug->description );
 
 		# subject is category.
-		$subject = string_rss_links( $t_bug->category );
+		$subject = category_full_name( $t_bug->category_id, false );
 
 		# optional DC value
-		$date = date( 'Y-m-d\TH:i:sO', $t_bug->last_updated );
+		$date = $t_bug->last_updated;
 
 		# author of item
-		$author = string_rss_links( user_get_name( $t_bug->reporter_id ) );
+		$author = '';
 		if ( access_has_global_level( config_get( 'show_user_email_threshold' ) ) ) {
+			$t_author_name = user_get_name( $t_bug->reporter_id );
 			$t_author_email = user_get_field( $t_bug->reporter_id, 'email' );
-			if ( is_blank( $t_author_email ) ) {
-				$t_author_email = $author . '@example.com';
+
+			if ( !is_blank( $t_author_email ) ) {
+				if ( !is_blank( $t_author_name ) ) {
+					$author = $t_author_name . ' <' . $t_author_email . '>';
+				} else {
+					$author = $t_author_email;
+				}
 			}
-		} else {
-			$t_author_email = $author . '@example.com';
 		}
-		$author .= ' &lt;' . $t_author_email . '&gt;';
 
 		# $comments = 'http://www.example.com/sometext.php?somevariable=somevalue&comments=1';	# url to comment page rss 2.0 value
-		$comments = $t_path . 'view.php?id=' . $row['id'] . '#bugnotes';
+		$comments = $t_path . 'view.php?id=' . $t_bug->id . '#bugnotes';
 
 		# optional mod_im value for dispaying a different pic for every item
 		$image = '';
 
-		$rssfile->addItem( $about, $title, $link, $description, $subject, $date,
+		$rssfile->addRSSItem( $about, $title, $link, $description, $subject, $date,
 							$author, $comments, $image );
 	}
 
-	# @@@ consider making this a configuration option.
-	# 0.91 / 1.0 / 2.0
+	/** @todo consider making this a configuration option - 0.91 / 1.0 / 2.0 */
 	$version = '2.0';
 
 	$rssfile->outputRSS( $version );
-?>
+

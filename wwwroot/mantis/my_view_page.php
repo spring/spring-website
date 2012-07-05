@@ -1,40 +1,45 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: my_view_page.php,v 1.17.2.1 2007-10-13 22:33:59 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'compress_api.php' );
-	require_once( $t_core_path . 'filter_api.php' );
-	require_once( $t_core_path . 'last_visited_api.php' );
+	require_once( 'compress_api.php' );
+	require_once( 'filter_api.php' );
+	require_once( 'last_visited_api.php' );
 
 	auth_ensure_user_authenticated();
 
 	$t_current_user_id = auth_get_current_user_id();
 
+	# Improve performance by caching category data in one pass
+	category_get_all_rows( helper_get_current_project() );
+
 	compress_enable();
+
+	# don't index my view page
+	html_robots_noindex();
 
 	html_page_top1( lang_get( 'my_view_link' ) );
 
@@ -43,7 +48,7 @@
 	}
 
 	html_page_top2();
-	
+
 	print_recently_visited();
 
 	$f_page_number		= gpc_get_int( 'page_number', 1 );
@@ -61,19 +66,15 @@
 ?>
 
 <div align="center">
-<table class="hide" border="0" cellspacing="3" cellpadding="0">
-
 <?php
 	$t_status_legend_position = config_get( 'status_legend_position' );
 
 	if ( $t_status_legend_position == STATUS_LEGEND_POSITION_TOP || $t_status_legend_position == STATUS_LEGEND_POSITION_BOTH ) {
-		echo '<tr>';
-		echo '<td colspan="2">';
 		html_status_legend();
-		echo '</td>';
-		echo '</tr>';
+		echo '<br />';
 	}
 ?>
+<table class="hide" border="0" cellspacing="3" cellpadding="0">
 
 <?php
 	$t_number_of_boxes = count ( $t_boxes );
@@ -97,7 +98,7 @@
 		}
 
 		# don't display "Reported by Me" bugs to users that can't report bugs
-		else if ( in_array( $t_box_title, array( 'reported', 'feedback', 'verify' ) ) && 
+		else if ( in_array( $t_box_title, array( 'reported', 'feedback', 'verify' ) ) &&
 				( current_user_is_anonymous() OR !access_has_project_level( config_get( 'report_bug_threshold' ), $t_project_id, $t_current_user_id ) ) ) {
 			$t_number_of_boxes = $t_number_of_boxes - 1;
 		}
@@ -111,20 +112,15 @@
 				# for even box number start new row and column
 				if ( 1 == $t_counter%2 ) {
 					echo '<tr><td valign="top" width="50%">';
-					include( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'my_view_inc.php' );
+					include 'my_view_inc.php';
 					echo '</td>';
 				}
 
 				# for odd box number only start new column
-				elseif ( 0 == $t_counter%2 ) {
+				else if ( 0 == $t_counter%2 ) {
 					echo '<td valign="top" width="50%">';
-					include( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'my_view_inc.php' );
+					include 'my_view_inc.php';
 					echo '</td></tr>';
-				}
-
-				# for odd number of box display one empty table cell in second column
-				if ( ( $t_counter == $t_number_of_boxes ) && 1 == $t_counter%2 ) {
-					echo '<td valign="top" width="50%"></td></tr>';
 				}
 			}
 			else if ( OFF == $t_boxes_position ) {
@@ -139,37 +135,36 @@
 				}
 
 				# display the required box
-				include( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'my_view_inc.php' );
+				include 'my_view_inc.php';
 				echo '<br />';
 
 				# close the first column for first half of boxes
 				if ( $t_counter == ceil ($t_number_of_boxes/2) ) {
 					echo '</td>';
 				}
-
-				# close the table row after all of the boxes
-				if ( $t_counter == $t_number_of_boxes ) {
-					echo '</td></tr>';
-				}
 			}
 		}
 	}
 
-?>
 
-<?php
-	if ( $t_status_legend_position == STATUS_LEGEND_POSITION_BOTTOM || $t_status_legend_position == STATUS_LEGEND_POSITION_BOTH ) {
-		echo '<tr>';
-		echo '<td colspan="2">';
-		html_status_legend();
-		echo '</td>';
-		echo '</tr>';
+	# Close the box groups depending on the layout mode and whether an empty cell
+	# is required to pad the number of cells in the last row to the full width of
+	# the table.
+	if ( ON == $t_boxes_position && $t_counter == $t_number_of_boxes && 1 == $t_counter%2 ) {
+		echo '<td valign="top" width="50%"></td></tr>';
+	} else if ( OFF == $t_boxes_position && $t_counter == $t_number_of_boxes ) {
+		echo '</td></tr>';
 	}
+
 ?>
 
 </table>
+<?php
+	if ( $t_status_legend_position == STATUS_LEGEND_POSITION_BOTTOM || $t_status_legend_position == STATUS_LEGEND_POSITION_BOTH ) {
+		html_status_legend();
+	}
+?>
 </div>
 
 <?php
-	html_page_bottom1( __FILE__ );
-?>
+	html_page_bottom();

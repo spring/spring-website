@@ -1,31 +1,31 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_custom_field_edit_page.php,v 1.26.2.1 2007-10-13 22:33:28 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'custom_field_api.php' );
+	require_once( 'custom_field_api.php' );
 
 	auth_reauthenticate();
 
@@ -36,8 +36,7 @@
 
 	custom_field_ensure_exists( $f_field_id );
 
-	html_page_top1();
-	html_page_top2();
+	html_page_top();
 
 	print_manage_menu( 'manage_custom_field_edit_page.php' );
 
@@ -79,7 +78,7 @@
 				<?php echo lang_get( 'custom_field_possible_values' ) ?>
 			</td>
 			<td>
-				<input type="text" name="possible_values" size="32" maxlength="255" value="<?php echo string_attribute( $t_definition['possible_values'] ) ?>" />
+				<input type="text" name="possible_values" size="32" value="<?php echo string_attribute( $t_definition['possible_values'] ) ?>" />
 			</td>
 		</tr>
 		<tr <?php echo helper_alternate_class() ?>>
@@ -134,14 +133,14 @@
 				<input type="text" name="length_max" size="32" maxlength="64" value="<?php echo $t_definition['length_max'] ?>" />
 			</td>
 		</tr>
-		<tr <?php echo helper_alternate_class() ?>>
-			<td class="category">
-				<?php echo lang_get( 'custom_field_advanced' ) ?>
-			</td>
-			<td>
-				<input type="checkbox" name="advanced" value="1" <?php check_checked( $t_definition['advanced'] ) ?> />
-			</td>
-		</tr>
+        <tr <?php echo helper_alternate_class() ?>>
+            <td class="category">
+                <?php echo lang_get( 'custom_field_filter_by' ) ?>
+            </td>
+            <td>
+                <input type="checkbox" name="filter_by" <?php if ( $t_definition['filter_by'] ) { ?>checked="checked"<?php } ?>  />
+            </td>
+        </tr>
 		<tr <?php echo helper_alternate_class() ?>>
 			<td class="category">
 				<?php echo lang_get( 'custom_field_display_report' ) ?>
@@ -207,7 +206,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>&nbsp;</td>
+			<td>&#160;</td>
 			<td>
 				<input type="submit" class="button" value="<?php echo lang_get( 'update_custom_field_button' ) ?>" />
 			</td>
@@ -218,7 +217,7 @@
 
 <br />
 
-<div class="border-center">
+<div class="border center">
 	<form method="post" action="manage_custom_field_delete.php">
 <?php echo form_security_field( 'manage_custom_field_delete' ); ?>
 		<input type="hidden" name="field_id" value="<?php echo $f_field_id ?>" />
@@ -227,9 +226,10 @@
 	</form>
 </div>
 
-<!-- @@@ There is access checking in the ADD action page and at the top of this file.
-         We may need to add extra checks to exclude projects from the list that the user
-		 can't link/unlink fields from/to. -->
+<?php /** @todo There is access checking in the ADD action page and at the top of this file.
+           * We may need to add extra checks to exclude projects from the list that the user
+		   * can't link/unlink fields from/to. */
+?>
 <br />
 <div align="center">
 <form method="post" action="manage_custom_field_proj_add.php">
@@ -285,4 +285,5 @@
 </form>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

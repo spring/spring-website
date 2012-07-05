@@ -1,33 +1,32 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: lost_pwd.php,v 1.7.2.1 2007-10-13 22:33:21 giallu Exp $
-	# --------------------------------------------------------
-
-	# ======================================================================
-	# Author: Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
-	# ======================================================================
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @author Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	# helper_ensure_post();
+	form_security_validate( 'lost_pwd' );
 
 	# lost password feature disabled or reset password via email disabled -> stop here!
 	if( OFF == config_get( 'lost_password_feature' ) ||
@@ -47,14 +46,11 @@
 	$f_email = email_append_domain( $f_email );
 	email_ensure_valid( $f_email );
 
-	$c_username = db_prepare_string( $f_username );
-	$c_email = db_prepare_string( $f_email );
+	$t_user_table = db_get_table( 'mantis_user_table' );
 
-	$t_user_table = config_get( 'mantis_user_table' );
-
-	# @@@ Consider moving this query to user_api.php
-	$query = 'SELECT id FROM ' . $t_user_table . ' WHERE username = \'' . $c_username . '\' AND email = \'' . $c_email . '\' AND enabled=1';
-	$result = db_query( $query );
+	/** @todo Consider moving this query to user_api.php */
+	$query = 'SELECT id FROM ' . $t_user_table . ' WHERE username = ' . db_param() . ' AND email = ' . db_param() . ' AND enabled=' . db_param();
+	$result = db_query_bound( $query, Array( $f_username, $f_email, true ) );
 
 	if ( 0 == db_num_rows( $result ) ) {
 		trigger_error( ERROR_LOST_PASSWORD_NOT_MATCHING_DATA, ERROR );
@@ -80,10 +76,11 @@
 
 	user_increment_lost_password_in_progress_count( $t_user_id );
 
+	form_security_purge( 'lost_pwd' );
+
 	$t_redirect_url = 'login_page.php';
 
-	html_page_top1();
-	html_page_top2();
+	html_page_top();
 ?>
 
 <br />
@@ -96,9 +93,9 @@
 </tr>
 <tr>
 	<td>
-		<br/>
+		<br />
 		<?php echo lang_get( 'reset_request_in_progress_msg' ) ?>
-		<br/><br/>
+		<br /><br />
 	</td>
 </tr>
 </table>
@@ -106,4 +103,5 @@
 <?php print_bracket_link( 'login_page.php', lang_get( 'proceed' ) ); ?>
 </div>
 
-<?php html_page_bottom1a( __FILE__ ) ?>
+<?php
+	html_page_bottom1a( __FILE__ );

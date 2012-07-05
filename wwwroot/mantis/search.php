@@ -1,37 +1,32 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-       # --------------------------------------------------------
-       # $Revision: 1.5.2.1 $
-       # $Author: giallu $
-       # $Date: 2007-10-13 22:34:29 $
-       #
-       # $Id: search.php,v 1.5.2.1 2007-10-13 22:34:29 giallu Exp $
-       # --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'compress_api.php' );
-	require_once( $t_core_path . 'filter_api.php' );
+	require_once( 'compress_api.php' );
+	require_once( 'filter_api.php' );
 
 	auth_ensure_user_authenticated();
 
@@ -93,13 +88,13 @@
 	$my_filter[FILTER_PROPERTY_RELATIONSHIP_TYPE] = gpc_get_int( FILTER_SEARCH_RELATIONSHIP_TYPE, -1 );
 	$my_filter[FILTER_PROPERTY_RELATIONSHIP_BUG] = gpc_get_int( FILTER_SEARCH_RELATIONSHIP_BUG, 0 );
 
-	$my_filter[FILTER_PROPERTY_HIDE_STATUS_ID] = gpc_get_int( FILTER_SEARCH_HIDE_STATUS_ID );
-	$my_filter[FILTER_PROPERTY_SHOW_STICKY_ISSUES] = gpc_get_bool( FILTER_SEARCH_SHOW_STICKY_ISSUES );
+	$my_filter[FILTER_PROPERTY_HIDE_STATUS_ID] = gpc_get_int( FILTER_SEARCH_HIDE_STATUS_ID, config_get( 'hide_status_default' ) );
+	$my_filter[FILTER_PROPERTY_SHOW_STICKY_ISSUES] = gpc_get_bool( FILTER_SEARCH_SHOW_STICKY_ISSUES, config_get( 'show_sticky_issues' ) );
 
 	$my_filter[FILTER_PROPERTY_SORT_FIELD_NAME] = gpc_get_string( FILTER_SEARCH_SORT_FIELD_NAME, '' );
 	$my_filter[FILTER_PROPERTY_SORT_DIRECTION] = gpc_get_string( FILTER_SEARCH_SORT_DIRECTION, '' );
 	$my_filter[FILTER_PROPERTY_ISSUES_PER_PAGE] = gpc_get_int( FILTER_SEARCH_ISSUES_PER_PAGE, config_get( 'default_limit_view' ) );
-	
+
 	$t_highlight_changed = gpc_get_int( FILTER_SEARCH_HIGHLIGHT_CHANGED, -1 );
 	if ( $t_highlight_changed != -1 ) {
 		$my_filter[FILTER_PROPERTY_HIGHLIGHT_CHANGED] = $t_highlight_changed;
@@ -109,7 +104,7 @@
 	$t_custom_fields = array();
 	foreach( $_GET as $t_var_name => $t_var_value ) {
 		if ( strpos( $t_var_name, 'custom_field_' ) === 0 ) {
-			$t_custom_field_id = substr( $t_var_name, 13 );
+			$t_custom_field_id = utf8_substr( $t_var_name, 13 );
 			$t_custom_fields[$t_custom_field_id] = $t_var_value;
 		}
 	}
@@ -141,4 +136,3 @@
 	}
 
 	print_header_redirect( $t_redirect_url );
-?>

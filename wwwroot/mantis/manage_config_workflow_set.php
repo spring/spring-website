@@ -1,32 +1,33 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_config_workflow_set.php,v 1.9.2.1 2007-10-13 22:33:26 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-	require_once( $t_core_path.'email_api.php' );
+	require_once( 'email_api.php' );
 
-	# helper_ensure_post();
+	form_security_validate( 'manage_config_workflow_set' );
 
 	auth_reauthenticate();
 
@@ -37,9 +38,7 @@
 	$t_project = helper_get_current_project();
 	$t_access = current_user_get_access_level();
 
-	html_page_top1( lang_get( 'manage_workflow_config' ) );
-	html_meta_redirect( $t_redirect_url );
-	html_page_top2();
+	html_page_top( lang_get( 'manage_workflow_config' ), $t_redirect_url );
 
 	# process the changes to threshold values
 	$t_valid_thresholds = array( 'bug_submit_status', 'bug_resolved_status_threshold', 'bug_reopen_status' );
@@ -48,7 +47,8 @@
 		if( config_get_access( $t_threshold ) <= $t_access ) {
 			$f_value = gpc_get( 'threshold_' . $t_threshold );
 			$f_access = gpc_get( 'access_' . $t_threshold );
-			if ( $f_value != config_get( $t_threshold ) ) {
+			if ( ( $f_value != config_get( $t_threshold ) )
+					|| ( $f_access != config_get_access( $t_threshold ) ) ) {
 				config_set( $t_threshold, $f_value, NO_USER, $t_project, $f_access );
 			}
 		}
@@ -61,10 +61,10 @@
 		$t_matrix = array();
 
 		foreach( $f_value as $t_transition ) {
-			list( $t_from, $t_to ) = split( ':', $t_transition );
+			list( $t_from, $t_to ) = explode( ':', $t_transition );
 			$t_matrix[$t_from][$t_to] = '';
 		}
-		$t_statuses = get_enum_to_array( config_get( 'status_enum_string' ) );
+		$t_statuses = MantisEnum::getAssocArrayIndexedByValues( config_get( 'status_enum_string' ) );
 		foreach( $t_statuses as $t_state => $t_label) {
 			$t_workflow_row = '';
 			$t_default = gpc_get_int( 'default_' . $t_state );
@@ -90,7 +90,8 @@
 				$t_workflow[$t_state] = $t_workflow_row;
 			}
 		}
-		if ( $t_workflow != config_get( 'status_enum_workflow' ) ) {
+		if ( ( $t_workflow != config_get( 'status_enum_workflow' ) )
+				|| ( $f_access != config_get_access( 'status_enum_workflow' ) ) ) {
 			config_set( 'status_enum_workflow', $t_workflow, NO_USER, $t_project, $f_access );
 		}
 	}
@@ -101,11 +102,11 @@
 		$f_access = gpc_get( 'status_access' );
 
 		# walk through the status labels to set the status threshold
-		$t_enum_status = explode_enum_string( config_get( 'status_enum_string' ) );
+		$t_enum_status = explode( ',', config_get( 'status_enum_string' ) );
 		$t_set_status = array();
 		foreach( $t_statuses as $t_status_id => $t_status_label) {
 			$f_level = gpc_get( 'access_change_' . $t_status_id );
-			if ( NEW_ == $t_status_id ) {
+			if ( config_get( 'bug_submit_status' ) == $t_status_id ) {
 				if ( (int)$f_level != config_get( 'report_bug_threshold' ) ) {
 					config_set( 'report_bug_threshold', (int)$f_level, ALL_USERS, $t_project, $f_access );
 				}
@@ -114,10 +115,13 @@
 			}
 		}
 
-		if ( $t_set_status != config_get( 'set_status_threshold' ) ) {
+		if ( ( $t_set_status != config_get( 'set_status_threshold' ) )
+				|| ( $f_access != config_get_access( 'status_enum_workflow' ) ) ) {
 			config_set( 'set_status_threshold', $t_set_status, ALL_USERS, $t_project, $f_access );
 		}
 	}
+
+	form_security_purge( 'manage_config_workflow_set' );
 ?>
 
 <br />
@@ -128,4 +132,5 @@
 ?>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

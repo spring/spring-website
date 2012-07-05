@@ -1,39 +1,39 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_assign.php,v 1.42.16.1 2007-10-13 22:32:34 giallu Exp $
-	# --------------------------------------------------------
-
-	# Assign bug to user then redirect to viewing page
-
+	/**
+	 * Assign bug to user then redirect to viewing page
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'bug_api.php' );
 
-	require_once( $t_core_path.'bug_api.php' );
-
-	# helper_ensure_post();
+	form_security_validate( 'bug_assign' );
 
 	$f_bug_id = gpc_get_int( 'bug_id' );
 	$t_bug = bug_get( $f_bug_id );
-	
+
 	if( $t_bug->project_id != helper_get_current_project() ) {
 		# in case the current project is not the same project of the bug we are viewing...
 		# ... override the current project. This to avoid problems with categories and handlers lists etc.
@@ -63,7 +63,21 @@
 		}
 	}
 
-	bug_assign( $f_bug_id, $f_handler_id );
+	# Update handler and status
+	$t_bug->handler_id = $f_handler_id;
+	if( ( ON == config_get( 'auto_set_status_to_assigned' ) ) && ( NO_USER != $f_handler_id ) ) {
+		$t_bug->status = config_get( 'bug_assigned_status' );
+	}
+
+	# Plugin support
+	$t_new_bug = event_signal( 'EVENT_UPDATE_BUG', $t_bug, $f_bug_id );
+	if ( !is_null( $t_new_bug ) ) {
+		$t_bug = $t_new_bug;
+	}
+
+	# Update bug and send notifications
+	$t_bug->update();
+
+	form_security_purge( 'bug_assign' );
 
 	print_successful_redirect_to_bug( $f_bug_id );
-?>

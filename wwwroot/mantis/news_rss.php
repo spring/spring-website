@@ -1,40 +1,41 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: news_rss.php,v 1.11.2.1 2007-10-13 22:34:08 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'class.RSSBuilder.inc.php' );
-	require_once( $t_core_path . 'news_api.php' );
-	require_once( $t_core_path . 'project_api.php' );
-	require_once( $t_core_path . 'print_api.php' );
-	require_once( $t_core_path . 'rss_api.php' );
+	require_once( 'rssbuilder' . DIRECTORY_SEPARATOR . 'class.RSSBuilder.inc.php' );
+	require_once( 'news_api.php' );
+	require_once( 'project_api.php' );
+	require_once( 'print_api.php' );
+	require_once( 'rss_api.php' );
 
 	$f_username = gpc_get_string( 'username', null );
 	$f_key = gpc_get_string( 'key', null );
 	$f_project_id = gpc_get_int( 'project_id', ALL_PROJECTS );
+
+	news_ensure_enabled();
 
 	# make sure RSS syndication is enabled.
 	if ( OFF == config_get( 'rss_enabled' ) ) {
@@ -59,7 +60,7 @@
 
 	# construct rss file
 
-	$encoding = lang_get( 'charset' );
+	$encoding = 'utf-8';
 	$about = config_get( 'path' );
 	$title = string_rss_links( config_get( 'window_title' ) . ' - ' . lang_get( 'news' ) );
 
@@ -95,11 +96,7 @@
 	# person, an organization, or a service
 	$contributor = (string) '';
 
-	$rssfile->setPublisher( $publisher );
-	$rssfile->setCreator( $creator );
-	$rssfile->setRights( $rights );
-	$rssfile->setCoverage( $coverage );
-	$rssfile->setContributor( $contributor );
+	$rssfile->addDCdata( $publisher, $creator, $date, $language, $rights, $coverage, $contributor );
 
 	# hourly / daily / weekly / ...
 	$period = (string) 'daily';
@@ -112,14 +109,15 @@
 	# add missing : in the O part of the date.  PHP 5 supports a 'c' format which will output the format
 	# exactly as we want it.
 	# // 2002-10-02T10:00:00-0500 -> // 2002-10-02T10:00:00-05:00
-	$base = substr( $base, 0, 22 ) . ':' . substr( $base, -2 );
+	$base = utf8_substr( $base, 0, 22 ) . ':' . utf8_substr( $base, -2 );
 
 	$rssfile->addSYdata( $period, $frequency, $base );
 
 	$news_rows = news_get_limited_rows( 0 /* offset */, $f_project_id );
+	$t_news_count = count( $news_rows );
 
 	# Loop through results
-	for ( $i = 0; $i < count( $news_rows ); $i++ ) {
+	for ( $i = 0; $i < $t_news_count; $i++ ) {
 		$row = $news_rows[$i];
 		extract( $row, EXTR_PREFIX_ALL, 'v' );
 
@@ -131,7 +129,6 @@
 
 		$v_headline 	= string_rss_links( $v_headline );
 		$v_body 	= string_rss_links( $v_body );
-		$v_date_posted 	= date( 'Y-m-d\TH:i:sO', $v_date_posted );
 
 		$about = $link = config_get( 'path' ) . "news_view_page.php?news_id=$v_id";
 		$title = $v_headline;
@@ -144,16 +141,19 @@
 		$date = $v_date_posted;
 
 		# author of item
-		$author = string_rss_links( user_get_name( $v_poster_id ) );
+		$author = '';
 		if ( access_has_global_level( config_get( 'show_user_email_threshold' ) ) ) {
+			$t_author_name = string_rss_links( user_get_name( $v_poster_id ) );
 			$t_author_email = user_get_field( $v_poster_id, 'email' );
-			if ( is_blank( $t_author_email ) ) {
-				$t_author_email = $author . '@example.com';
+
+			if ( !is_blank( $t_author_email ) ) {
+				if ( !is_blank( $t_author_name ) ) {
+					$author = $t_author_name . ' &lt;' . $t_author_email . '&gt;';
+				} else {
+					$author = $t_author_email;
+				}
 			}
-		} else {
-			$t_author_email = $author . '@example.com';
 		}
-		$author .= ' &lt;' . $t_author_email . '&gt;';
 
 		# $comments = 'http://www.example.com/sometext.php?somevariable=somevalue&comments=1';	# url to comment page rss 2.0 value
 		$comments = '';
@@ -161,13 +161,11 @@
 		# optional mod_im value for dispaying a different pic for every item
 		$image = '';
 
-		$rssfile->addItem(	$about, $title, $link, $description, $subject, $date,
+		$rssfile->addRSSItem( $about, $title, $link, $description, $subject, $date,
 					$author, $comments, $image);
 	}
 
-	# @@@ consider making this a configuration option.
-	# 0.91 / 1.0 / 2.0
+	/** @todo consider making this a configuration option - 0.91 / 1.0 / 2.0 */
 	$version = '2.0';
 
 	$rssfile->outputRSS( $version );
-?>

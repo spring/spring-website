@@ -1,37 +1,37 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bugnote_update.php,v 1.44.2.1 2007-10-13 22:33:09 giallu Exp $
-	# --------------------------------------------------------
-
-	# Update bugnote data then redirect to the appropriate viewing page
-
+	/**
+	 * Update bugnote data then redirect to the appropriate viewing page
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'bug_api.php' );
+	require_once( 'bugnote_api.php' );
+	require_once( 'current_user_api.php' );
 
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'bugnote_api.php' );
-	require_once( $t_core_path.'current_user_api.php' );
-
-	# helper_ensure_post();
+	form_security_validate( 'bugnote_update' );
 
 	$f_bugnote_id	 = gpc_get_int( 'bugnote_id' );
 	$f_bugnote_text	 = gpc_get_string( 'bugnote_text', '' );
@@ -57,5 +57,9 @@
 	bugnote_set_text( $f_bugnote_id, $f_bugnote_text );
 	bugnote_set_time_tracking( $f_bugnote_id, $f_time_tracking );
 
+	# Plugin integration
+	event_signal( 'EVENT_BUGNOTE_EDIT', array( $t_bug_id, $f_bugnote_id ) );
+
+	form_security_purge( 'bugnote_update' );
+
 	print_successful_redirect( string_get_bug_view_url( $t_bug_id ) . '#bugnotes' );
-?>

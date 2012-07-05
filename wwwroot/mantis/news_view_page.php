@@ -1,40 +1,39 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: news_view_page.php,v 1.34.22.1 2007-10-13 22:34:10 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'news_api.php' );
+	require_once( 'print_api.php' );
 
-	require_once( $t_core_path . 'news_api.php' );
-	require_once( $t_core_path . 'print_api.php' );
-?>
-<?php
+	news_ensure_enabled();
+
 	$f_news_id = gpc_get_int( 'news_id', null );
-?>
-<?php html_page_top1() ?>
-<?php html_page_top2() ?>
 
+	html_page_top();
+?>
 <br />
 
 <?php
@@ -56,4 +55,5 @@
 	<?php print_bracket_link( 'news_list_page.php', lang_get( 'archives' ) ); ?>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

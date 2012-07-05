@@ -1,46 +1,44 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: print_all_bug_page_word.php,v 1.65.2.1 2007-10-13 22:34:17 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	# Word 2000 export page
-	# The bugs displayed in print_all_bug_page.php are saved in a .doc file
-	# The IE icon allows to see or directly print the same result
-?>
-<?php
+	/**
+	 * Word 2000 export page
+	 * The bugs displayed in print_all_bug_page.php are saved in a .doc file
+	 * The IE icon allows to see or directly print the same result
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'current_user_api.php' );
+	require_once( 'bug_api.php' );
+	require_once( 'custom_field_api.php' );
+	require_once( 'string_api.php' );
+	require_once( 'date_api.php' );
 
-	require_once( $t_core_path.'current_user_api.php' );
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'custom_field_api.php' );
-	require_once( $t_core_path.'string_api.php' );
-	require_once( $t_core_path.'date_api.php' );
-?>
-<?php auth_ensure_user_authenticated() ?>
-<?php
+	auth_ensure_user_authenticated();
+
 	$f_type_page	= gpc_get_string( 'type_page', 'word' );
-	$f_search		= gpc_get_string( 'search', false ); # @@@ need a better default
+	$f_search		= gpc_get_string( 'search', false ); /** @todo need a better default */
 	$f_offset		= gpc_get_int( 'offset', 0 );
 	$f_export		= gpc_get_string( 'export' );
 	$f_show_flag	= gpc_get_bool( 'show_flag' );
@@ -50,18 +48,15 @@
 	# word or html export
 	if ( $f_type_page != 'html' ) {
 		$t_export_title = helper_get_default_export_filename( '' );
-		$t_export_title = ereg_replace( '[\/:*?"<>|]', '', $t_export_title );
+		$t_export_title = preg_replace( '/[\/:*?"<>|]/', '', $t_export_title );
+		$t_export_title .= '.doc';
 
 		# Make sure that IE can download the attachments under https.
 		header( 'Pragma: public' );
 
 		header( 'Content-Type: application/msword' );
 
-		if ( preg_match( "/MSIE/", $_SERVER["HTTP_USER_AGENT"] ) ) {
-                        header( 'Content-Disposition: attachment; filename="' . urlencode( $t_export_title ) . '.doc"' );
-                } else {
-                        header( 'Content-Disposition: attachment; filename="' . $t_export_title . '.doc"' );
-                }
+		http_content_disposition_header( $t_export_title );
 	}
 
 	# This is where we used to do the entire actual filter ourselves
@@ -71,63 +66,87 @@
 	$t_page_count = null;
 
 	$result = filter_get_bug_rows( $t_page_number, $t_per_page, $t_page_count, $t_bug_count );
-	$row_count = sizeof( $result );
-
+	$t_row_count = count( $result );
 ?>
 
-<?php # Word Export ?>
 <html xmlns:o="urn:schemas-microsoft-com:office:office"
 xmlns:w="urn:schemas-microsoft-com:office:word"
 xmlns="http://www.w3.org/TR/REC-html40">
 
-<?php html_page_top1() ?>
-<?php html_head_end() ?>
-<?php html_body_begin() ?>
-
 <?php
-	//$t_bug_arr_sort[$row_count]=-1;
-	$f_bug_arr = explode_enum_string( $f_export );
+	html_page_top1();
+	html_head_end();
+	html_body_begin();
 
-	for( $j=0; $j < $row_count; $j++ ) {
+	$f_bug_arr = explode( ',', $f_export );
+	$t_count_exported = 0;
+	$t_date_format = config_get( 'normal_date_format' );
+	$t_short_date_format = config_get( 'short_date_format' );
 
-		# prefix bug data with v_
-		extract( $result[$j], EXTR_PREFIX_ALL, 'v' );
+	$t_lang_bug_view_title = lang_get( 'bug_view_title' );
+	$t_lang_id = lang_get( 'id' );
+	$t_lang_category = lang_get( 'category' );
+	$t_lang_severity = lang_get( 'severity' );
+	$t_lang_reproducibility = lang_get( 'reproducibility' );
+	$t_lang_date_submitted = lang_get( 'date_submitted' );
+	$t_lang_last_update = lang_get( 'last_update' );
+	$t_lang_reporter = lang_get( 'reporter' );
+	$t_lang_assigned_to = lang_get( 'assigned_to' );
+	$t_lang_platform = lang_get( 'platform' );
+	$t_lang_due_date = lang_get( 'due_date' );
+	$t_lang_os = lang_get( 'os' );
+	$t_lang_os_version = lang_get( 'os_version' );
+	$t_lang_fixed_in_version = lang_get( 'fixed_in_version' );
+	$t_lang_resolution = lang_get( 'resolution' );
+	$t_lang_priority = lang_get( 'priority' );
+	$t_lang_product_build = lang_get( 'product_build' );
+	$t_lang_eta = lang_get( 'eta' );
+	$t_lang_status = lang_get( 'status' );
+	$t_lang_product_version = lang_get( 'product_version' );
+	$t_lang_no_bugnotes_msg = lang_get( 'no_bugnotes_msg' );
+	$t_lang_projection = lang_get( 'projection' );
+	$t_lang_target_version = lang_get( 'target_version' );
+	$t_lang_summary = lang_get( 'summary' );
+	$t_lang_description = lang_get( 'description' );
+	$t_lang_steps_to_reproduce = lang_get( 'steps_to_reproduce' );
+	$t_lang_additional_information = lang_get( 'additional_information' );
+	$t_lang_bug_notes_title = lang_get( 'bug_notes_title' );
+	$t_lang_system_profile = lang_get( 'system_profile' );
+	$t_lang_attached_files = lang_get( 'attached_files' );
+
+	$t_current_user_id = auth_get_current_user_id();
+	$t_user_bugnote_order = user_pref_get_pref ( $t_current_user_id, 'bugnote_order' );
+
+	for( $j=0; $j < $t_row_count; $j++ ) {
+		$t_bug = $result[$j];
+		$t_id = $t_bug->id;
+
+		if ( $j % 50 == 0 ) {
+			# to save ram as report will list data once, clear cache after 50 bugs
+			bug_text_clear_cache();
+			bug_clear_cache();
+			bugnote_clear_cache();
+		}
 
 		# display the available and selected bugs
-		if ( in_array( $v_id, $f_bug_arr ) || ( $f_show_flag==0 ) ) {
+		if ( in_array( $t_id, $f_bug_arr ) || !$f_show_flag ) {
+			if ( $t_count_exported > 0 ) {
+				echo "<br clear=all style='mso-special-character:line-break; page-break-before:always'>";
+			}
 
-            $t_last_updated = date( $g_short_date_format, $v_last_updated );
+			$t_count_exported++;
 
-            # grab the bugnote count
-            $bugnote_count = bug_get_bugnote_count( $v_id );
+			$t_last_updated = date( $g_short_date_format, $t_bug->last_updated );
 
             # grab the project name
-            $t_project_name = project_get_field( $v_project_id, 'name' );
-
-            # bug text infos
-            $t_bug_text_table = config_get( 'mantis_bug_text_table' );
-            $query3 = "SELECT *
-                FROM $t_bug_text_table
-                WHERE id='$v_bug_text_id'";
-            $result3 = db_query( $query3 );
-            $row = db_fetch_array( $result3 );
-            extract( $row, EXTR_PREFIX_ALL, 'v2' );
-
-            $v_os 						= string_display( $v_os );
-            $v_os_build					= string_display( $v_os_build );
-            $v_platform					= string_display( $v_platform );
-            $v_version 					= string_display( $v_version );
-            $v_summary 					= string_display_links( $v_summary );
-            $v2_description 			= string_display_links( $v2_description );
-            $v2_steps_to_reproduce 		= string_display_links( $v2_steps_to_reproduce );
-            $v2_additional_information 	= string_display_links( $v2_additional_information );
-            ### note that dates are converted to unix format in filter_get_bug_rows
+            $t_project_name = project_get_field( $t_bug->project_id, 'name' );
+			$t_category_name = category_full_name( $t_bug->category_id, false );
 ?>
 <br />
 <table class="width100" cellspacing="1">
 <tr>
 	<td class="form-title" colspan="3">
-		<?php echo lang_get( 'viewing_bug_advanced_details_title' ) ?>
+		<?php echo $t_lang_bug_view_title ?>
 	</td>
 </tr>
 <tr>
@@ -137,42 +156,42 @@ xmlns="http://www.w3.org/TR/REC-html40">
 </tr>
 <tr class="print-category">
 	<td class="print" width="16%">
-		<?php echo lang_get( 'id' ) ?>:
+		<?php echo $t_lang_id ?>:
 	</td>
 	<td class="print" width="16%">
-		<?php echo lang_get( 'category' ) ?>:
+		<?php echo $t_lang_category ?>:
 	</td>
 	<td class="print" width="16%">
-		<?php echo lang_get( 'severity' ) ?>:
+		<?php echo $t_lang_severity ?>:
 	</td>
 	<td class="print" width="16%">
-		<?php echo lang_get( 'reproducibility' ) ?>:
+		<?php echo $t_lang_reproducibility ?>:
 	</td>
 	<td class="print" width="16%">
-		<?php echo lang_get( 'date_submitted' ) ?>:
+		<?php echo $t_lang_date_submitted ?>:
 	</td>
 	<td class="print" width="16%">
-		<?php echo lang_get( 'last_update' ) ?>:
+		<?php echo $t_lang_last_update ?>:
 	</td>
 </tr>
 <tr class="print">
 	<td class="print">
-		<?php echo $v_id ?>
+		<?php echo $t_id ?>
 	</td>
 	<td class="print">
-		<?php echo "[$t_project_name] $v_category" ?>
+		<?php echo '[' . string_display_line( $t_project_name ) . '] ' . string_display_line( $t_category_name ) ?>
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'severity', $v_severity ) ?>
+		<?php echo get_enum_element( 'severity', $t_bug->severity, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'reproducibility', $v_reproducibility ) ?>
+		<?php echo get_enum_element( 'reproducibility', $t_bug->reproducibility, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
 	<td class="print">
-		<?php print_date( config_get( 'normal_date_format' ), $v_date_submitted ) ?>
+		<?php echo date( $t_date_format, $t_bug->date_submitted ) ?>
 	</td>
 	<td class="print">
-		<?php print_date( config_get( 'normal_date_format' ), $v_last_updated ) ?>
+		<?php echo date( $t_date_format, $t_bug->last_updated ) ?>
 	</td>
 </tr>
 <tr>
@@ -182,126 +201,159 @@ xmlns="http://www.w3.org/TR/REC-html40">
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'reporter' ) ?>:
+		<?php echo $t_lang_reporter ?>:
 	</td>
 	<td class="print">
-		<?php print_user_with_subject( $v_reporter_id, $v_id ) ?>
+		<?php print_user_with_subject( $t_bug->reporter_id, $t_id ) ?>
 	</td>
 	<td class="print-category">
-		<?php echo lang_get( 'platform' ) ?>:
+		<?php echo $t_lang_platform ?>:
 	</td>
 	<td class="print">
-		<?php echo $v_platform ?>
+		<?php echo string_display_line( $t_bug->platform ) ?>
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+<?php if ( access_has_bug_level( config_get( 'due_date_view_threshold' ), $t_id ) ) { ?>
+	<td class="print-category">
+		<?php echo $t_lang_due_date ?>:
+	</td>
+<?php
+		if ( bug_is_overdue( $t_id ) ) { ?>
+		<td class="print-overdue">
+<?php
+		} else	{ ?>
+		<td class="print">
+<?php
+		}
+		if ( !date_is_null( $t_bug->due_date ) ) {
+				echo date( $t_short_date_format, $t_bug->due_date );
+		print "\t\t</td>\n";
+		}
+	} else {
+?>
+	<td class="print" colspan="2">&#160;</td>
+<?php } ?>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'assigned_to' ) ?>:
+		<?php echo $t_lang_assigned_to ?>:
 	</td>
 	<td class="print">
-		<?php 
-			if ( access_has_bug_level( config_get( 'view_handler_threshold' ), $v_id ) ) {
-				print_user_with_subject( $v_handler_id, $v_id ); 
+		<?php
+			if ( access_has_bug_level( config_get( 'view_handler_threshold' ), $t_id ) ) {
+				print_user_with_subject( $t_bug->handler_id, $t_id );
 			}
 		?>
 	</td>
 	<td class="print-category">
-		<?php echo lang_get( 'os' ) ?>:
+		<?php echo $t_lang_os ?>:
 	</td>
 	<td class="print">
-		<?php echo $v_os ?>
+		<?php echo string_display_line( $t_bug->os ) ?>
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'priority' ) ?>:
+		<?php echo $t_lang_priority ?>:
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'priority', $v_priority ) ?>
+		<?php echo get_enum_element( 'priority', $t_bug->priority, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
 	<td class="print-category">
-		<?php echo lang_get( 'os_version' ) ?>:
+		<?php echo $t_lang_os_version ?>:
 	</td>
 	<td class="print">
-		<?php echo $v_os_build ?>
+		<?php echo string_display_line( $t_bug->os_build ) ?>
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'status' ) ?>:
+		<?php echo $t_lang_status ?>:
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'status', $v_status ) ?>
+		<?php echo get_enum_element( 'status', $t_bug->status, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
 	<td class="print-category">
-		<?php echo lang_get( 'product_version' ) ?>:
+		<?php echo $t_lang_product_version ?>:
 	</td>
 	<td class="print">
-		<?php echo $v_version ?>
+		<?php echo string_display_line( $t_bug->version ) ?>
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'product_build' ) ?>:
+		<?php echo $t_lang_product_build ?>:
 	</td>
 	<td class="print">
-		<?php echo $v_build?>
+		<?php echo string_display_line( $t_bug->build ) ?>
 	</td>
 	<td class="print-category">
-		<?php echo lang_get( 'resolution' ) ?>:
+		<?php echo $t_lang_resolution ?>:
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'resolution', $v_resolution ) ?>
+		<?php echo get_enum_element( 'resolution', $t_bug->resolution, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'projection' ) ?>:
+		<?php echo $t_lang_projection ?>:
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'projection', $v_projection ) ?>
+		<?php echo get_enum_element( 'projection', $t_bug->projection, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
 	<td class="print-category">
-		<?php
-			if ( !config_get( 'enable_relationship' ) ) {
-				echo lang_get( 'duplicate_id' );
-			} # MASC RELATIONSHIP
-		?>&nbsp;
+		&#160;
 	</td>
 	<td class="print">
-		<?php
-			if ( !config_get( 'enable_relationship' ) ) {
-				print_duplicate_id( $v_duplicate_id );
-			} # MASC RELATIONSHIP
-		?>&nbsp;
+		&#160;
 	</td>
-	<td class="print" colspan="2">&nbsp;</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'eta' ) ?>:
+		<?php echo $t_lang_eta ?>:
 	</td>
 	<td class="print">
-		<?php echo get_enum_element( 'eta', $v_eta ) ?>
+		<?php echo get_enum_element( 'eta', $t_bug->eta, auth_get_current_user_id(), $t_bug->project_id ) ?>
 	</td>
-	<td class="print" colspan="4">&nbsp;</td>
+	<td class="print-category">
+		<?php echo $t_lang_fixed_in_version ?>:
+	</td>
+	<td class="print">
+		<?php echo string_display_line( $t_bug->fixed_in_version ) ?>
+	</td>
+	<td class="print" colspan="2">&#160;</td>
+
+</tr>
+<tr class="print">
+	<td class="print-category">
+		&#160;
+	</td>
+	<td class="print">
+		&#160;
+	</td>
+	<td class="print-category">
+		<?php echo $t_lang_target_version ?>:
+	</td>
+	<td class="print">
+		<?php echo string_display_line( $t_bug->target_version ) ?>
+	</td>
+	<td class="print" colspan="2">&#160;</td>
 </tr>
 <?php
-$t_related_custom_field_ids = custom_field_get_linked_ids( $v_project_id );
-foreach( $t_related_custom_field_ids as $t_id ) {
-	$t_def = custom_field_get_definition( $t_id );
+$t_related_custom_field_ids = custom_field_get_linked_ids( $t_bug->project_id );
+foreach( $t_related_custom_field_ids as $t_custom_field_id ) {
+	$t_def = custom_field_get_definition( $t_custom_field_id );
 ?>
 <tr class="print">
 	<td class="print-category">
 		<?php echo lang_get_defaulted( $t_def['name'] ) ?>:
 	</td>
 	<td class="print" colspan="5">
-		<?php print_custom_field_value( $t_def, $t_id, $v_id ); ?>
+		<?php print_custom_field_value( $t_def, $t_custom_field_id, $t_id ); ?>
 	</td>
 </tr>
 <?php
@@ -314,54 +366,46 @@ foreach( $t_related_custom_field_ids as $t_id ) {
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'summary' ) ?>:
+		<?php echo $t_lang_summary ?>:
 	</td>
 	<td class="print" colspan="5">
-		<?php echo $v_summary ?>
+		<?php echo string_display_line_links( $t_bug->summary ) ?>
 	</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'description' ) ?>:
+		<?php echo $t_lang_description ?>:
 	</td>
 	<td class="print" colspan="5">
-		<?php echo $v2_description ?>
+		<?php echo string_display_links( $t_bug->description ) ?>
 	</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'steps_to_reproduce' ) ?>:
+		<?php echo $t_lang_steps_to_reproduce ?>:
 	</td>
 	<td class="print" colspan="5">
-		<?php echo $v2_steps_to_reproduce ?>
+		<?php echo string_display_links( $t_bug->steps_to_reproduce ) ?>
 	</td>
 </tr>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'additional_information' ) ?>:
+		<?php echo $t_lang_additional_information ?>:
 	</td>
 	<td class="print" colspan="5">
-		<?php echo $v2_additional_information ?>
+		<?php echo string_display_links( $t_bug->additional_information ) ?>
 	</td>
 </tr>
 <?php
 	# account profile description
-	if ( $v_profile_id > 0 ) {
-	   $t_user_prof_table = config_get( 'mantis_user_profile_table' );
-		$query4 = "SELECT description
-				FROM $t_user_prof_table
-				WHERE id='$v_profile_id'";
-		$result4 = db_query( $query4 );
-		$t_profile_description = '';
-		if ( db_num_rows( $result4 ) > 0 ) {
-			$t_profile_description = db_result( $result4, 0 );
-		}
-		$t_profile_description = string_display( $t_profile_description );
+	if ( $t_bug->profile_id > 0 ) {
+		$t_profile_row = profile_get_row_direct( $t_bug->profile_id );
+		$t_profile_description = string_display( $t_profile_row['description'] );
 
 ?>
 <tr class="print">
 	<td class="print-category">
-		<?php echo lang_get( 'system_profile' ) ?>
+		<?php echo $t_lang_system_profile ?>
 	</td>
 	<td class="print" colspan="5">
 		<?php echo $t_profile_description ?>
@@ -371,94 +415,66 @@ foreach( $t_related_custom_field_ids as $t_id ) {
 	} # profile description
 ?>
 <tr class="print">
-	<td class="print-category">
-		<?php echo lang_get( 'attached_files' ) ?>:
+	<td class="print-category" valign="top">
+		<?php echo $t_lang_attached_files ?>:
 	</td>
 	<td class="print" colspan="5">
 		<?php
-	        $t_bug_file_table = config_get( 'mantis_bug_file_table' );
-			$query5 = "SELECT filename, filesize, date_added
-					FROM $t_bug_file_table
-					WHERE bug_id='$v_id'";
-			$result5 = db_query( $query5 );
-			$num_files = db_num_rows( $result5 );
-			for ( $i=0;$i<$num_files;$i++ ) {
-				$row = db_fetch_array( $result5 );
-				extract( $row, EXTR_PREFIX_ALL, 'v2' );
-				$v2_filename = file_get_display_name( $v2_filename );
-				$v2_filesize = round( $v2_filesize / 1024 );
-				$v2_date_added = date( config_get( 'normal_date_format' ), db_unixtimestamp( $v2_date_added ) );
+			$t_attachments = file_get_visible_attachments( $t_id );
+			$t_first_attachment = true;
+			$t_path = config_get_global( 'path' );
 
-				switch ( $g_file_upload_method ) {
-					case DISK:	PRINT "$v2_filename ($v2_filesize KB) <span class=\"italic\">$v2_date_added</span>";
-							break;
-					case DATABASE:	PRINT "$v2_filename ($v2_filesize KB) <span class=\"italic\">$v2_date_added</span>";
-							break;
+			foreach ( $t_attachments as $t_attachment  ) {
+				if ( $t_first_attachment ) {
+					$t_first_attachment = false;
+				} else {
+					echo '<br />';
 				}
 
-				if ( $i != ( $num_files - 1 ) ) {
-					PRINT '<br />';
+				$c_filename = string_display_line( $t_attachment['display_name'] );
+				$c_download_url = $t_path . htmlspecialchars( $t_attachment['download_url'] );
+				$c_filesize = number_format( $t_attachment['size'] );
+				$c_date_added = date( $t_date_format, $t_attachment['date_added'] );
+				echo "$c_filename ($c_filesize) <span class=\"italic\">$c_date_added</span><br />$c_download_url";
+
+				if ( $t_attachment['preview'] && $t_attachment['type'] == 'image' && $f_type_page == 'html' ) {
+					echo '<br /><img src="', $t_attachment['download_url'], '" alt="', $t_attachment['alt'], '" border="0" /><br />';
 				}
 			}
 		?>
 	</td>
 </tr>
 <?php
-	# get the bugnote data
- 	if ( !access_has_bug_level( config_get( 'private_bugnote_threshold' ), $v_id ) ) {
- 		$t_restriction = 'AND view_state=' . VS_PUBLIC;
- 	} else {
- 		$t_restriction = '';
- 	}
+	$t_user_bugnote_limit = 0;
 
-	$t_bugnote_table		= config_get( 'mantis_bugnote_table' );
-	$t_bugnote_text_table	= config_get( 'mantis_bugnote_text_table' );
-	$t_bugnote_order = current_user_get_pref( 'bugnote_order' );
-
-	$query6 = "SELECT *
-			FROM $t_bugnote_table
-			WHERE bug_id='$v_id' $t_restriction
-			ORDER BY date_submitted $t_bugnote_order";
-	$result6 = db_query( $query6 );
-	$num_notes = db_num_rows( $result6 );
+	$t_bugnotes = bugnote_get_all_visible_bugnotes( $t_id, $t_user_bugnote_order, $t_user_bugnote_limit );
 ?>
-
-<?php # Bugnotes BEGIN ?>
 <br />
 <table class="width100" cellspacing="1">
 <?php
 	# no bugnotes
-	if ( 0 == $num_notes ) {
+	if ( 0 == count( $t_bugnotes ) ) {
 	?>
 <tr>
 	<td class="print" colspan="2">
-		<?php echo lang_get( 'no_bugnotes_msg' ) ?>
+		<?php echo $t_lang_no_bugnotes_msg ?>
 	</td>
 </tr>
-	<?php }
-		else { # print bugnotes ?>
+<?php
+	} else { # print bugnotes ?>
 <tr>
 	<td class="form-title" colspan="2">
-			<?php echo lang_get( 'bug_notes_title' ) ?>
+			<?php echo $t_lang_bug_notes_title ?>
 	</td>
 </tr>
 	<?php
-		for ( $k=0; $k < $num_notes; $k++ ) {
+		foreach ( $t_bugnotes as $t_bugnote ) {
 			# prefix all bugnote data with v3_
-			$row = db_fetch_array( $result6 );
-			extract( $row, EXTR_PREFIX_ALL, 'v3' );
-			$v3_date_submitted = date( config_get( 'normal_date_format' ), ( db_unixtimestamp( $v3_date_submitted ) ) );
-			$v3_last_modified = date( config_get( 'normal_date_format' ), ( db_unixtimestamp( $v3_last_modified ) ) );
+			$t_date_submitted = date( $t_date_format, $t_bugnote->date_submitted );
+			$t_last_modified = date( $t_date_format, $t_bugnote->last_modified );
 
 			# grab the bugnote text and id and prefix with v3_
-			$query6 = "SELECT note, id
-					FROM $t_bugnote_text_table
-					WHERE id='$v3_bugnote_text_id'";
-			$result7 = db_query( $query6 );
-			$v3_note = db_result( $result7, 0, 0 );
-			$v3_bugnote_text_id = db_result( $result7, 0, 1 );
-
-			$v3_note = string_display_links( $v3_note );
+			$t_note = string_display_links( $t_bugnote->note );
 	?>
 <tr>
 	<td class="print-spacer" colspan="2">
@@ -470,19 +486,19 @@ foreach( $t_related_custom_field_ids as $t_id ) {
 		<table class="hide" cellspacing="1">
 		<tr>
 			<td class="print">
-				(<?php echo bugnote_format_id( $v3_id ) ?>)
+				(<?php echo bugnote_format_id( $t_bugnote->id ) ?>)
 			</td>
 		</tr>
 		<tr>
 			<td class="print">
-				<?php print_user( $v3_reporter_id ) ?>&nbsp;&nbsp;&nbsp;
+				<?php print_user( $t_bugnote->reporter_id ) ?>&#160;&#160;&#160;
 			</td>
 		</tr>
 		<tr>
 			<td class="print">
-				<?php echo $v3_date_submitted ?>&nbsp;&nbsp;&nbsp;
-				<?php if ( db_unixtimestamp( $v3_date_submitted ) != db_unixtimestamp( $v3_last_modified ) ) {
-					echo '<br />(' . lang_get( 'edited_on').' '. $v3_last_modified . ')';
+				<?php echo $t_date_submitted ?>&#160;&#160;&#160;
+				<?php if ( $t_bugnote->date_submitted != $t_bugnote->last_modified ) {
+					echo '<br />(' . lang_get( 'edited_on') . lang_get( 'word_separator' ) . $t_last_modified . ')';
 				} ?>
 			</td>
 		</tr>
@@ -493,17 +509,17 @@ foreach( $t_related_custom_field_ids as $t_id ) {
 		<tr>
 			<td class="print">
 				<?php
-					switch ( $v3_note_type ) {
+					switch ( $t_bugnote->note_type ) {
 						case REMINDER:
 							echo lang_get( 'reminder_sent_to' ) . ': ';
-							$v3_note_attr = substr( $v3_note_attr, 1, strlen( $v3_note_attr ) - 2 );
+							$t_note_attr = utf8_substr( $t_bugnote->note_attr, 1, utf8_strlen( $t_bugnote->note_attr ) - 2 );
 							$t_to = array();
-							foreach ( explode( '|', $v3_note_attr ) as $t_recipient ) {
+							foreach ( explode( '|', $t_note_attr ) as $t_recipient ) {
 								$t_to[] = prepare_user_name( $t_recipient );
 							}
 							echo implode( ', ', $t_to ) . '<br />';
 						default:
-							echo $v3_note;
+							echo string_display_links( $t_bugnote->note );
 					}
 				?>
 			</td>
@@ -525,4 +541,3 @@ foreach( $t_related_custom_field_ids as $t_id ) {
 echo '<br /><br />';
 		} # end in_array
 }  # end main loop
-?>

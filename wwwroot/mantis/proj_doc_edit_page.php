@@ -1,31 +1,31 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: proj_doc_edit_page.php,v 1.39.2.1 2007-10-13 22:34:24 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'string_api.php' );
+	require_once( 'string_api.php' );
 
 	# Check if project documentation feature is enabled.
 	if ( OFF == config_get( 'enable_project_documentation' ) ||
@@ -41,11 +41,11 @@
 
 	access_ensure_project_level( config_get( 'upload_project_file_threshold' ), $t_project_id );
 
-	$t_proj_file_table = config_get( 'mantis_project_file_table' );
+	$t_proj_file_table = db_get_table( 'mantis_project_file_table' );
 	$query = "SELECT *
 			FROM $t_proj_file_table
-			WHERE id='$c_file_id'";
-	$result = db_query( $query );
+			WHERE id=" . db_param();
+	$result = db_query_bound( $query, Array( $c_file_id ) );
 	$row = db_fetch_array( $result );
 	extract( $row, EXTR_PREFIX_ALL, 'v' );
 
@@ -54,13 +54,13 @@
 
 	$t_max_file_size = (int)min( ini_get_number( 'upload_max_filesize' ), ini_get_number( 'post_max_size' ), config_get( 'max_file_size' ) );
 
+	html_page_top();
 ?>
-<?php html_page_top1() ?>
-<?php html_page_top2() ?>
 
 <br />
 <div align="center">
 <form method="post" enctype="multipart/form-data" action="proj_doc_update.php">
+<?php echo form_security_field( 'proj_doc_update' ) ?>
 <table class="width75" cellspacing="1">
 <tr>
 	<td class="form-title">
@@ -96,14 +96,14 @@
 			$t_href = '<a href="file_download.php?file_id='.$v_id.'&amp;type=doc">';
 			echo $t_href;
 			print_file_icon( $v_filename );
-			echo '</a>&nbsp;' . $t_href . file_get_display_name( $v_filename ) . '</a>';
+			echo '</a>&#160;' . $t_href . file_get_display_name( $v_filename ) . '</a>';
 		?>
 	</td>
 </tr>
 <tr class="row-2">
 	<td class="category">
-		<?php echo lang_get( 'select_file' ) ?>
-		<?php echo '<br /><span class="small">(' . lang_get( 'max_file_size' ) . ': ' . number_format( $t_max_file_size/1000 ) . 'k)</span>'?>
+		<?php echo lang_get( 'select_file' );
+				  echo '<br /><span class="small">(' . lang_get( 'max_file_size' ) . ': ' . number_format( $t_max_file_size/1000 ) . 'k)</span>'?>
 	</td>
 	<td>
 		<input type="hidden" name="max_file_size" value="<?php echo $t_max_file_size ?>" />
@@ -125,6 +125,7 @@
 <br />
 
 		<form method="post" action="proj_doc_delete.php">
+		<?php echo form_security_field( 'proj_doc_delete' ) ?>
 		<input type="hidden" name="file_id" value="<?php echo $f_file_id ?>" />
 		<input type="hidden" name="title" value="<?php echo $v_title ?>" />
 		<input type="submit" class="button" value="<?php echo lang_get( 'file_delete_button' ) ?>" />
@@ -132,4 +133,5 @@
 
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

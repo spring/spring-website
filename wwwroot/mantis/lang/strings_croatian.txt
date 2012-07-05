@@ -1,29 +1,27 @@
 <?php
-/** Mantis - a php based bugtracking system
+/** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
- * Mantis is free software: you can redistribute it and/or modify
+ * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * Mantis is distributed in the hope that it will be useful,
+ * MantisBT is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Revision$
- * $Author$
- * $Date$
- * $Id$
+ * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** Croatian (Hrvatski)
+ *
+ * See the qqq 'language' for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
  *
  * @ingroup Language
  * @file
@@ -31,7 +29,6 @@
  * @author Dejan Gambin, dejan.gambin@grad-pula.hinet.hr
  */
 
-$s_charset = 'utf-8';
 $s_all_projects = 'Svi projekti';
 $s_move_bugs = 'Premjesti bugove';
 $s_operation_successful = 'Operacija uspješna.';
@@ -42,19 +39,18 @@ $s_jump_to_bugnotes = 'Skoči na Bug bilješke';
 $s_public_project_msg = 'Ovaj projekt je JAVAN.  Svi korisnici imaju pristup.';
 $s_private_project_msg = 'Ovaj projekt je PRIVATAN.  Samo administratori i ručno dodani korisnici imaju pristup.';
 $s_access_level_project = 'Razina pristupa projektu';
-$s_view_submitted_bug_link = 'Vidi prijavljene bugove';
+$s_view_submitted_bug_link = 'Vidi prijavljene bugove %1$s';
 $s_assigned_projects = 'Dodijeljeni projekti';
 $s_unassigned_projects = 'Nedodijeljeni projekti';
 $s_print = 'Ispiši';
 $s_jump = 'Skoči';
 $s_copy_users = 'Kopiraj korisnike';
 $MANTIS_ERROR[ERROR_GENERIC] = 'U toku ove akcije pojavila se greška. Možete prijaviti grešku administratoru.';
-$MANTIS_ERROR[ERROR_SQL] = 'SQL greška detektirana.  Molimo Vas da to prijavite.';
+$MANTIS_ERROR[ERROR_SQL] = 'SQL greška detektirana.';
 $MANTIS_ERROR[ERROR_REPORT] = 'Greška u izvješću.';
 $MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED] = 'Nije naznačena datoteka';
 $MANTIS_ERROR[ERROR_FILE_DISALLOWED] = 'Tip datoteke nije dozvoljen';
 $MANTIS_ERROR[ERROR_NO_DIRECTORY] = 'Mapa ne postoji. Molimo Vas da provjerite postavke projekta.';
-$MANTIS_ERROR[ERROR_DUPLICATE_FILE] = 'Ovo je duplicirana datoteka. Molimo Vas da najprije obrišete datoteku.';
 $MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'Potrebno polje je prazno. Molimo Vas da ponovno provjerite ulazne podatke.';
 $MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT] = 'Korisnički račun je zaštićen. Za to vrijeme Vam nije omogućen pristup.';
 $s_go_back = 'Idi natrag';
@@ -101,9 +97,6 @@ $s_access_level = 'Razina pristupa';
 $s_update_user_button = 'Ažuriraj korisnika';
 $s_default_account_preferences_title = 'Korisničke preference';
 $s_default_project = 'Polazni Projekt';
-$s_advanced_report = 'Napredno izvješće';
-$s_advanced_view = 'Napredni pregled';
-$s_advanced_update = 'Napredno ažuriranje';
 $s_refresh_delay = 'Vrijeme između obnavljanja';
 $s_redirect_delay = 'Vrijeme prije redirekcije';
 $s_bugnote_order = 'Bugnotes Sort Order';
@@ -185,7 +178,6 @@ $s_summary = 'Sažetak';
 $s_description = 'Opis';
 $s_steps_to_reproduce = 'Koraci za reproduciranje';
 $s_update_information_button = 'Ažuriraj informaciju';
-$s_update_advanced_link = 'Ažuriraj napredno';
 $s_updating_bug_simple_title = 'Ažuriram informacije o bugu';
 $s_vote_added_msg = 'Glas je dodan...';
 $s_bugnote_added_msg = 'Bilješka dodana...';
@@ -208,9 +200,6 @@ $s_choose_project = 'Odaberi projekt';
 $s_login_button = 'Prijava';
 $s_signup_link = 'Prijavi se za novi korisnički račun';
 $s_select_project_button = 'Odaberi projekt';
-$s_logged_out_title = 'Odjavljen...';
-$s_redirecting = '...Redirekcija';
-$s_here = 'Ovdje';
 $s_open_and_assigned_to_me = 'Otvoreni i dodijeljeni meni';
 $s_open_and_reported_to_me = 'Otvoreni i prijavljeni od mene';
 $s_newer_news_link = 'Novije vijesti';
@@ -357,7 +346,6 @@ $s_assign_to = 'Dodijeli';
 $s_additional_information = 'Dodatna infomacija';
 $s_submit_report_button = 'Podnesi izvješće';
 $s_check_report_more_bugs = 'označi za prijavu više bugova';
-$s_advanced_report_link = 'Napredno izvješće';
 $s_report_stay = 'Izvješće ostaje';
 $s_selected_project = 'Odabrani projekt';
 $s_valid_project_msg = 'Morate odabrati valjan projekt';
@@ -370,7 +358,7 @@ $s_system_info_link = 'Info sustava';
 $s_site_settings_link = 'Postavke sustava';
 $s_site_settings_updated_msg = 'Postavke sustava su ažurirane';
 $s_summary_title = 'Sažetak';
-$s_summary_jpgraph_link = 'Napredni sažetak';
+$s_summary_advanced_link = 'Napredni sažetak';
 $s_by_project = 'by project';
 $s_by_status = 'prema statusu';
 $s_by_date = 'prema datumu (danima)';
@@ -398,11 +386,8 @@ $s_search = 'Traži';
 $s_view_prev_link = 'Vidi prethodno';
 $s_view_next_link = 'Vidi slijedeće';
 $s_view_simple_link = 'Vidi jednostavno';
-$s_viewing_bug_advanced_details_title = 'Pregled naprednih detalja buga';
 $s_product_build = 'Produkt Build';
 $s_system_profile = 'Opis sustava';
 $s_update_bug_button = 'Ažuriraj bug';
 $s_reopen_bug_button = 'Ponovno otvori bug';
 $s_attached_files = 'Pridružene datoteke';
-$s_view_advanced_link = 'Vidi napredno';
-$s_viewing_bug_simple_details_title = 'Pregled jednostavnih detalja buga';

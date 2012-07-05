@@ -1,26 +1,28 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_proj_ver_edit_page.php,v 1.31.2.1 2007-10-13 22:33:48 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
 	auth_reauthenticate();
@@ -31,11 +33,9 @@
 
 	access_ensure_project_level( config_get( 'manage_project_threshold' ), $t_version->project_id );
 
-	html_page_top1();
-	html_page_top2();
+	html_page_top();
 
 	print_manage_menu( 'manage_proj_ver_edit_page.php' );
-
 ?>
 <br />
 <div align="center">
@@ -61,7 +61,11 @@
 		<?php echo lang_get( 'date_order' ) ?>
 	</td>
 	<td>
-		<input type="text" name="date_order" size="32" value="<?php echo string_attribute( date( 'Y-m-d H:i:s', $t_version->date_order ) ) ?>" />
+		<input type="text" id="date_order" name="date_order" size="32" value="<?php echo (date_is_null( $t_version->date_order ) ? '' : string_attribute( date( config_get( 'calendar_date_format' ), $t_version->date_order ) ) ) ?>" />
+		<?php 
+			date_print_calendar();
+			date_finish_calendar( 'date_order', 'trigger');
+		?>
 	</td>
 </tr>
 <tr <?php echo helper_alternate_class() ?>>
@@ -80,9 +84,18 @@
 		<input type="checkbox" name="released" <?php check_checked( $t_version->released, VERSION_RELEASED ); ?> />
 	</td>
 </tr>
+<tr <?php echo helper_alternate_class() ?>>
+	<td class="category">
+		<?php echo lang_get( 'obsolete' ) ?>
+	</td>
+	<td>
+		<input type="checkbox" name="obsolete" <?php check_checked( $t_version->obsolete, true ); ?> />
+	</td>
+</tr>
+<?php event_signal( 'EVENT_MANAGE_VERSION_UPDATE_FORM', array( $t_version->id ) ); ?>
 <tr>
 	<td>
-		&nbsp;
+		&#160;
 	</td>
 	<td>
 		<input type="submit" class="button" value="<?php echo lang_get( 'update_version_button' ) ?>" />
@@ -94,11 +107,13 @@
 
 <br />
 
-<div class="border-center">
+<div class="border center">
 	<form method="post" action="manage_proj_ver_delete.php">
+	<?php echo form_security_field( 'manage_proj_ver_delete' ) ?>
 	<input type="hidden" name="version_id" value="<?php echo string_attribute( $t_version->id ) ?>" />
 	<input type="submit" class="button" value="<?php echo lang_get( 'delete_version_button' ) ?>" />
 	</form>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

@@ -1,38 +1,31 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: history_inc.php,v 1.32.2.1 2007-10-13 22:33:15 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	# This include file prints out the bug history
+	/**
+	 * This include file prints out the bug history
+	 * $f_bug_id must already be defined
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
 
-	# $f_bug_id must already be defined
-?>
-<?php
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'history_api.php' );
 
-	require_once( $t_core_path.'history_api.php' );
-?>
-
-<?php
 	$t_access_level_needed = config_get( 'view_history_threshold' );
 	if ( !access_has_bug_level( $t_access_level_needed, $f_bug_id ) ) {
 		return;
@@ -81,14 +74,13 @@
 		<?php echo string_display( $t_item['note'] ) ?>
 	</td>
 	<td class="small-caption">
-		<?php echo string_display_line_links( $t_item['change'] ) ?>
+		<?php echo ( $t_item['raw'] ? string_display_line_links( $t_item['change'] ) : $t_item['change'] ) ?>
 	</td>
 </tr>
 <?php
 	} # end for loop
 ?>
 </table>
-</div>
 <?php
 	collapse_closed( 'history' );
 ?>
@@ -103,4 +95,3 @@
 
 <?php
 	collapse_end( 'history' );
-?>

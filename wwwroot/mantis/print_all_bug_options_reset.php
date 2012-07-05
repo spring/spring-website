@@ -1,36 +1,36 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: print_all_bug_options_reset.php,v 1.15.18.1 2007-10-13 22:34:13 giallu Exp $
-	# --------------------------------------------------------
-
-	# Reset prefs to defaults then redirect to account_prefs_page.php3
-
+	/**
+	 * Reset prefs to defaults then redirect to account_prefs_page.php
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
-
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'current_user_api.php' );
+	
+	require_once( 'current_user_api.php' );
 	require( 'print_all_bug_options_inc.php' );
 
-	# helper_ensure_post();
+	form_security_validate( 'print_all_bug_options_reset' );
 
 	auth_ensure_user_authenticated();
 
@@ -51,19 +51,20 @@
 	$t_default = implode('',$t_default_arr) ;
 
 	# reset to defaults
-	$t_user_print_pref_table = config_get( 'mantis_user_print_pref_table' );
+	$t_user_print_pref_table = db_get_table( 'mantis_user_print_pref_table' );
 	$query = "UPDATE $t_user_print_pref_table
-			SET print_pref='$t_default'
-			WHERE user_id='$t_user_id'";
+			SET print_pref=" . db_param() . "
+			WHERE user_id=" . db_param();
 
-	$result = db_query( $query );
+	$result = db_query_bound( $query, Array( $t_default, $t_user_id ) );
+
+	form_security_purge( 'print_all_bug_options_reset' );
 
 	$t_redirect_url = 'print_all_bug_options_page.php';
 
-	html_page_top1();
-	html_meta_redirect( $t_redirect_url );
-	html_page_top2();
-	PRINT '<br /><div align="center">';
+	html_page_top( null, $t_redirect_url );
+
+	echo '<br /><div align="center">';
 
 	if ( $result ) {
 		print lang_get( 'operation_successful' );
@@ -71,9 +72,7 @@
 		print error_string( ERROR_GENERIC );
 	}
 
-	PRINT '<br />';
+	echo '<br />';
 	print_bracket_link( $t_redirect_url, lang_get( 'proceed' ) );
-	PRINT '<br /></div>';
-	html_page_bottom1( __FILE__ );
-?>
-
+	echo '<br /></div>';
+	html_page_bottom();

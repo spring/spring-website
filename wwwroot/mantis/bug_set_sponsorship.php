@@ -1,37 +1,33 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_set_sponsorship.php,v 1.5.14.1 2007-10-13 22:32:53 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'sponsorship_api.php' );
 
-	require_once( $t_core_path . 'sponsorship_api.php' );
-
-	# helper_ensure_post();
-
-	if ( config_get( 'enable_sponsorship' ) == OFF ) {
-		trigger_error( ERROR_SPONSORSHIP_NOT_ENABLED, ERROR );
-	}
+	form_security_validate( 'bug_set_sponsorship' );
 
 	# anonymous users are not allowed to sponsor issues
 	if ( current_user_is_anonymous() ) {
@@ -48,12 +44,16 @@
 		$g_project_override = $t_bug->project_id;
 	}
 
+	if ( config_get( 'enable_sponsorship' ) == OFF ) {
+		trigger_error( ERROR_SPONSORSHIP_NOT_ENABLED, ERROR );
+	}
+
 	access_ensure_bug_level( config_get( 'sponsor_threshold' ), $f_bug_id );
 
-	helper_ensure_confirmed( 
+	helper_ensure_confirmed(
 		sprintf( lang_get( 'confirm_sponsorship' ), $f_bug_id, sponsorship_format_amount( $f_amount ) ),
 		lang_get( 'sponsor_issue' ) );
-			
+
 	if ( $f_amount == 0 ) {
 		# if amount == 0, delete sponsorship by current user (if any)
 		$t_sponsorship_id = sponsorship_get_id( $f_bug_id );
@@ -75,5 +75,6 @@
 		}
 	}
 
+	form_security_purge( 'bug_set_sponsorship' );
+
 	print_header_redirect_view( $f_bug_id );
-?>

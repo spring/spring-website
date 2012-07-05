@@ -1,51 +1,56 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: account_prefs_update.php,v 1.36.16.1 2007-10-13 22:32:08 giallu Exp $
-	# --------------------------------------------------------
-
-	# Updates prefs then redirect to account_prefs_page.php3
-
+	/**
+	 * Updates prefs then redirect to account_prefs_page.php
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'user_pref_api.php' );
 
-	require_once( $t_core_path.'user_pref_api.php' );
-
-	# helper_ensure_post();
+	form_security_validate( 'account_prefs_update' );
 
 	auth_ensure_user_authenticated();
 
 	$f_user_id					= gpc_get_int( 'user_id' );
 	$f_redirect_url				= gpc_get_string( 'redirect_url' );
 
-	# If the user is trying to modify an account other than their own
-	#  they must have high enough permissions to do so
-	# @@@ should we really be sharing this file between the manage section
-	#  and the account section.  The account section should always be operating
-	#  on the current user, so passing in a user ID here is a little odd.
+	user_ensure_exists( $f_user_id );
+
+	$t_user = user_get_row( $f_user_id );
+
+	# This page is currently called from the manage_* namespace and thus we
+	# have to allow authorised users to update the accounts of other users.
+	# TODO: split this functionality into manage_user_prefs_update.php
 	if ( auth_get_current_user_id() != $f_user_id ) {
 		access_ensure_global_level( config_get( 'manage_user_threshold' ) );
+		access_ensure_global_level( $t_user['access_level'] );
+	} else {
+		# Protected users should not be able to update the preferences of their
+		# user account. The anonymous user is always considered a protected
+		# user and hence will also not be allowed to update preferences.
+		user_ensure_unprotected( $f_user_id );
 	}
-
-	user_ensure_unprotected( $f_user_id );
 
 	$t_prefs = user_pref_get( $f_user_id );
 
@@ -58,9 +63,6 @@
 		$t_prefs->language = $t_lang;
 	}
 
-	$t_prefs->advanced_report	= gpc_get_bool( 'advanced_report' );
-	$t_prefs->advanced_view		= gpc_get_bool( 'advanced_view' );
-	$t_prefs->advanced_update	= gpc_get_bool( 'advanced_update' );
 	$t_prefs->email_on_new		= gpc_get_bool( 'email_on_new' );
 	$t_prefs->email_on_assigned	= gpc_get_bool( 'email_on_assigned' );
 	$t_prefs->email_on_feedback	= gpc_get_bool( 'email_on_feedback' );
@@ -83,22 +85,31 @@
 	$t_prefs->bugnote_order = gpc_get_string( 'bugnote_order' );
 	$t_prefs->email_bugnote_limit = gpc_get_int( 'email_bugnote_limit' );
 
-	# prevent users from changing other user's accounts
-	if ( $f_user_id != auth_get_current_user_id() ) {
-		access_ensure_project_level( ADMINISTRATOR );
-	}
-
 	# make sure the delay isn't too low
 	if (( config_get( 'min_refresh_delay' ) > $t_prefs->refresh_delay )&&
 		( $t_prefs->refresh_delay != 0 )) {
 		$t_prefs->refresh_delay = config_get( 'min_refresh_delay' );
 	}
 
+	if ( function_exists( 'timezone_identifiers_list' ) ) {
+		$t_timezone = gpc_get_string( 'timezone' );
+		if ( in_array( $t_timezone, timezone_identifiers_list() ) ) {
+			if ( $t_timezone == config_get_global( 'default_timezone' ) ) {
+				$t_prefs->timezone = '';
+			} else {
+				$t_prefs->timezone = $t_timezone;
+			}
+		}
+	}
+
+	event_signal( 'EVENT_ACCOUNT_PREF_UPDATE', array( $f_user_id ) );
+
 	user_pref_set( $f_user_id, $t_prefs );
 
-	html_page_top1();
-	html_meta_redirect( $f_redirect_url );
-	html_page_top2();
+	form_security_purge( 'account_prefs_update' );
+
+	html_page_top( null, $f_redirect_url );
+
 	echo '<br /><div align="center">';
 
 	echo lang_get( 'operation_successful' );
@@ -106,5 +117,4 @@
 	echo '<br />';
 	print_bracket_link( $f_redirect_url, lang_get( 'proceed' ) );
 	echo '<br /></div>';
-	html_page_bottom1( __FILE__ );
-?>
+	html_page_bottom();

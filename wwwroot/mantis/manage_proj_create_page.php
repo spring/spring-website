@@ -1,34 +1,35 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_proj_create_page.php,v 1.14.2.1 2007-10-13 22:33:34 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
 	auth_reauthenticate();
 
 	access_ensure_global_level( config_get( 'create_project_threshold' ) );
 
-	html_page_top1();
-	html_page_top2();
+	html_page_top();
 
 	print_manage_menu( 'manage_proj_create_page.php' );
 
@@ -38,9 +39,9 @@
 <br />
 <div align="center">
 <form method="post" action="manage_proj_create.php">
-<?php 
+<?php
 	echo form_security_field( 'manage_proj_create' );
-	if ( null !== $f_parent_id ) { 
+	if ( null !== $f_parent_id ) {
 		$f_parent_id = (int) $f_parent_id;
 ?>
 <input type="hidden" name="parent_id" value="<?php echo $f_parent_id ?>">
@@ -85,15 +86,39 @@
 		</select>
 	</td>
 </tr>
-<?php
+<tr class="row-2">
+	<td class="category">
+		<?php echo lang_get( 'inherit_global' ) ?>
+	</td>
+	<td>
+		<input type="checkbox" name="inherit_global" checked="checked" />
+	</td>
+</tr>
+<?php if ( !is_null( $f_parent_id ) ) { ?>
+<tr class="row-1">
+	<td class="category">
+		<?php echo lang_get( 'inherit_parent' ) ?>
+	</td>
+	<td>
+		<input type="checkbox" name="inherit_parent" checked="checked" />
+	</td>
+</tr>
+<?php 
+	} 
+
 	if ( config_get( 'allow_file_upload' ) ) {
+		$t_default_upload_path = '';
+		# Don't reveal the absolute path to non-administrators for security reasons
+		if ( current_user_is_administrator() ) {
+			$t_default_upload_path = config_get( 'absolute_path_default_upload_folder' );
+		}
 	?>
 		<tr class="row-2">
 			<td class="category">
 				<?php echo lang_get( 'upload_file_path' ) ?>
 			</td>
 			<td>
-				<input type="text" name="file_path" size="70" maxlength="250" />
+				<input type="text" name="file_path" size="70" maxlength="250" value="<?php echo $t_default_upload_path ?>" />
 			</td>
 		</tr>
 		<?php
@@ -107,6 +132,9 @@
 		<textarea name="description" cols="60" rows="5"></textarea>
 	</td>
 </tr>
+
+<?php event_signal( 'EVENT_MANAGE_PROJECT_CREATE_FORM' ) ?>
+
 <tr>
 	<td class="center" colspan="2">
 		<input type="submit" class="button" value="<?php echo lang_get( 'add_project_button' ) ?>" />
@@ -116,4 +144,5 @@
 </form>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

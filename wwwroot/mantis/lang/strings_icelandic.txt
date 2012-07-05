@@ -1,37 +1,34 @@
 <?php
-/** Mantis - a php based bugtracking system
+/** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
- * Mantis is free software: you can redistribute it and/or modify
+ * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * Mantis is distributed in the hope that it will be useful,
+ * MantisBT is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Revision$
- * $Author$
- * $Date$
- * $Id$
+ * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/** Icelandic (Íslenska)
+/** Icelandic (íslenska)
+ * 
+ * See the qqq 'language' for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
  *
  * @ingroup Language
  * @file
  *
  * @author Gretar Einarsson, gretar@vedur.is
+ * @author Snævar
  */
 
-$s_charset = 'utf-8';
 $s_actiongroup_menu_move = 'Færa';
 $s_actiongroup_menu_copy = 'Afrita';
 $s_actiongroup_menu_assign = 'Úthlutað';
@@ -43,7 +40,7 @@ $s_actiongroup_menu_update_status = 'Staða uppfærslu';
 $s_actiongroup_menu_update_view_status = 'Skoða uppfærða stöðu';
 $s_actiongroup_menu_update_category = 'Uppfæra verkþætti';
 $s_actiongroup_menu_set_sticky = 'Líming af/á';
-$s_actiongroup_menu_update_field = 'Uppfæra %s';
+$s_actiongroup_menu_update_field = 'Uppfæra %1$s';
 $s_actiongroup_bugs = 'Sérvalin beiðni';
 $s_all_projects = 'Öll verkefni';
 $s_move_bugs = 'Færa beiðni';
@@ -57,7 +54,7 @@ $s_jump_to_bugnotes = 'Fara í athugasemd';
 $s_public_project_msg = 'ALMENNT verkefni. Allir notendur hafa aðgang.';
 $s_private_project_msg = 'LÆST verkefni, sem aðeins stjórnendur og sérstaklega valdir notendur hafa aðgang.';
 $s_access_level_project = 'Aðgangsstig verkefnis';
-$s_view_submitted_bug_link = 'Skoða tilkynningar';
+$s_view_submitted_bug_link = 'Skoða tilkynningar %1$s';
 $s_assigned_projects = 'Úthlutuð verkefni';
 $s_unassigned_projects = 'Óúthlutuð verkefni';
 $s_print = 'Prenta';
@@ -129,34 +126,6 @@ $s_status_group_bugs_button = 'Uppfæra stöðu';
 $s_category_group_bugs_button = 'Uppfæra verkþátt';
 $s_view_status_group_bugs_button = 'Uppfæra stöðu á beiðni';
 $s_set_sticky_group_bugs_button = 'Setja límingu af/á';
-$s_graph_imp_status_title = 'Samþætt graf eftir stöðu';
-$s_graph_imp_priority_title = 'Samþætt graf eftir forgangi';
-$s_graph_imp_severity_title = 'Samþætt graf eftir alvöru';
-$s_graph_imp_category_title = 'Samþætt graf eftir verkþætti';
-$s_graph_imp_resolution_title = 'Samþætt graf eftir úrlausn';
-$s_by_status_pct = 'eftir prósentu stöðu';
-$s_by_priority_pct = 'eftir forgangs prósentu';
-$s_by_severity_pct = 'eftir mikilvægis prósentu';
-$s_by_category_pct = 'eftir verkþátts prósentu';
-$s_by_resolution_pct = 'eftir úrlausnar prósentu';
-$s_by_severity_mix = 'eftir mikilvægi og stöðu';
-$s_by_priority_mix = 'eftir forgangi og stöðu';
-$s_by_resolution_mix = 'eftir úrlausn og stöðu';
-$s_synthesis_link = 'Samþætting';
-$s_status_link = 'Eftir stöðu';
-$s_priority_link = 'Eftir forgangi';
-$s_severity_link = 'Eftir mikilvægi';
-$s_category_link = 'Eftir verkþætti';
-$s_resolution_link = 'Eftir úrlausn';
-$s_legend_still_open = 'Enn opið';
-$s_legend_resolved = 'Leyst';
-$s_legend_assigned = 'Úthlutað';
-$s_legend_total = 'Alls';
-$s_legend_opened = 'Opnað';
-$s_legend_closed = 'Lokað';
-$s_legend_reported = 'Tilkynnt';
-$s_cumulative = 'Uppsöfnun';
-$s_not_enough_data = 'Ekki eru næg gögn til að búa til graf';
 $s_hide_button = 'Sýna eingöngu valið';
 $s_printing_preferences_title = 'Veldu svæði til að prenta';
 $s_printing_options_link = 'Prent valkostir';
@@ -165,40 +134,38 @@ $s_bugnote_date = 'Dagsetning athugasemdar';
 $s_bugnote_description = 'Lýsing athugasemdar';
 $s_error_no_proceed = 'Notaðu "Bakk" hnappinn á vafranum til að komast á fyrri síðu. Þar getur þú leiðrétt þau vandamál sem komu upp við þessa villu eða valið aðra aðgerð. Þú getur einnig valið möguleika frá valrönd til að fara beint yfir í nýja verkbeiðni.';
 $MANTIS_ERROR[ERROR_GENERIC] = 'Villa hefur orðið við þessa aðgerð. Þú ættir að tilkynna það til verkefnisstjóra.';
-$MANTIS_ERROR[ERROR_SQL] = 'SQL villa hefur orðið. Tilkynntu það til';
+$MANTIS_ERROR[ERROR_SQL] = 'SQL villa hefur orðið.';
 $MANTIS_ERROR[ERROR_REPORT] = 'Það var villa í tilkynningunni.';
 $MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED] = 'Engin skrá valin';
 $MANTIS_ERROR[ERROR_FILE_DISALLOWED] = 'Þessi tegund skráar er ekki leyfð';
 $MANTIS_ERROR[ERROR_NO_DIRECTORY] = 'Þessi mappa er ekki til. Athugaðu verkefna stillinguna.';
-$MANTIS_ERROR[ERROR_DUPLICATE_FILE] = 'Þetta er afrit. Eyddu skránni fyrst.';
 $MANTIS_ERROR[ERROR_DUPLICATE_PROJECT] = 'Verkefni með sama nafni er til.';
-$MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'Nauðsynlegt svæði \'%s\' var autt. Athugaðu betur ílagsgögnin.';
+$MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'Nauðsynlegt svæði \'%1$s\' var autt. Athugaðu betur ílagsgögnin.';
 $MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT] = 'Þessi aðgangur er lokaður. Þú hefur ekki aðgang þar til læsingu hefur verið aflétt.';
 $MANTIS_ERROR[ERROR_ACCESS_DENIED] = 'Aðgangur óheimill.';
-$MANTIS_ERROR[ERROR_UPLOAD_FAILURE] = 'Upphlaðning skráar mistókst. Skráin er ekki samrýmanleg við Mantis. Athugaði stillingar verksins.';
+$MANTIS_ERROR[ERROR_UPLOAD_FAILURE] = 'Upphlaðning skráar mistókst. Skráin er ekki samrýmanleg við MantisBT. Athugaði stillingar verksins.';
 $MANTIS_ERROR[ERROR_FILE_TOO_BIG] = 'Upphlaðning skráar mistókst. Líklega vegna þess að stærð skrár var meira enn heimilt er með þessari PHP uppsetningu.';
-$MANTIS_ERROR[ERROR_GPC_VAR_NOT_FOUND] = 'Tilskilin breyta á þessari síðu (%s) fannst ekki.';
+$MANTIS_ERROR[ERROR_GPC_VAR_NOT_FOUND] = 'Tilskilin breyta á þessari síðu (%1$s) fannst ekki.';
 $MANTIS_ERROR[ERROR_USER_NAME_NOT_UNIQUE] = 'Þetta notendanafn er þegar í notkun. Farðu til baka og veldu annað.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_NOT_FOUND] = 'Stillingar möguleiki \'%s\' fannst ekki.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_CANT_BE_SET_IN_DB] = 'Ekki er hægt að breyta stillingar möguleikanum \'%s\' í gagnagrunninum. Það verður að breyta honum í config_inc.php.';
-$MANTIS_ERROR[ERROR_LANG_STRING_NOT_FOUND] = 'Strengur \'%s\' fannst ekki.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_NOT_FOUND] = 'Stillingar möguleiki \'%1$s\' fannst ekki.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_CANT_BE_SET_IN_DB] = 'Ekki er hægt að breyta stillingar möguleikanum \'%1$s\' í gagnagrunninum. Það verður að breyta honum í config_inc.php.';
+$MANTIS_ERROR[ERROR_LANG_STRING_NOT_FOUND] = 'Strengur \'%1$s\' fannst ekki.';
 $MANTIS_ERROR[ERROR_BUGNOTE_NOT_FOUND] = 'Athugasemd fannst ekki.';
-$MANTIS_ERROR[ERROR_PROJECT_NOT_FOUND] = 'Verkefni fannst ekki.';
-$MANTIS_ERROR[ERROR_DB_FIELD_NOT_FOUND] = 'Gagnagrunns svæðið \'%s\' fannst ekki.';
+$MANTIS_ERROR[ERROR_PROJECT_NOT_FOUND] = 'Verkefniið "%1$d" fannst ekki.';
+$MANTIS_ERROR[ERROR_DB_FIELD_NOT_FOUND] = 'Gagnagrunns svæðið \'%1$s\' fannst ekki.';
 $MANTIS_ERROR[ERROR_FTP_CONNECT_ERROR] = 'Get ekki tengst FTP þjóni.';
 $MANTIS_ERROR[ERROR_HANDLER_ACCESS_TOO_LOW] = 'Sá sem fer með verkbeiðnina hefur ekki nægilegan aðgang til þess að meðhöndla það á þessu stigi.';
 $MANTIS_ERROR[ERROR_PROJECT_NAME_NOT_UNIQUE] = 'Verkefni með sama nafni er þegar til staðar. Farðu til baka og settu inn nýtt nafn.';
 $MANTIS_ERROR[ERROR_PROJECT_NAME_INVALID] = 'Ógilt verkefnisnafn uppgefið. Verkefnisnöfn geta ekki verið auð.';
-$MANTIS_ERROR[ERROR_USER_NOT_FOUND] = 'Notandi finnst ekki.';
 $MANTIS_ERROR[ERROR_AUTH_INVALID_COOKIE] = 'Upplýsingar um innskráningu geymdar á vafranum eru ógildar. Hugsanlega var aðgangi þínum eytt?';
 $MANTIS_ERROR[ERROR_USER_PREFS_NOT_FOUND] = 'Stillingar fyrir þennan notanda fundust ekki.';
 $MANTIS_ERROR[ERROR_NEWS_NOT_FOUND] = 'Fréttaefni fannst ekki.';
 $MANTIS_ERROR[ERROR_USER_CREATE_PASSWORD_MISMATCH] = 'Lykilorð stenst ekki staðfestingu.';
-$MANTIS_ERROR[ERROR_GPC_ARRAY_EXPECTED] = 'Búist var við fylki en í staðin kom strengur fyrir %s.';
-$MANTIS_ERROR[ERROR_GPC_ARRAY_UNEXPECTED] = 'Búist var við streng en fylki kom í staðin fyrir %s.';
-$MANTIS_ERROR[ERROR_GPC_NOT_NUMBER] = 'Búist var við tölu fyrir %s.';
-$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Verkbeiðni %d finnst ekki.';
-$MANTIS_ERROR[ERROR_FILTER_NOT_FOUND] = 'Sía %d finnst ekki.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_EXPECTED] = 'Búist var við fylki en í staðin kom strengur fyrir %1$s.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_UNEXPECTED] = 'Búist var við streng en fylki kom í staðin fyrir %1$s.';
+$MANTIS_ERROR[ERROR_GPC_NOT_NUMBER] = 'Búist var við tölu fyrir %1$s.';
+$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Verkbeiðni %1$d finnst ekki.';
+$MANTIS_ERROR[ERROR_FILTER_NOT_FOUND] = 'Sía %1$s finnst ekki.';
 $MANTIS_ERROR[ERROR_FILTER_TOO_OLD] = 'Sían sem þú ert að reyna að nota er of gömul til að vera uppfærð, endurskapaðu hana';
 $MANTIS_ERROR[ERROR_EMAIL_INVALID] = 'Ógilt tölvupóstfang.';
 $MANTIS_ERROR[ERROR_USER_PROFILE_NOT_FOUND] = 'Sniðið finnst ekki.';
@@ -211,29 +178,29 @@ $MANTIS_ERROR[ERROR_BUG_DUPLICATE_SELF] = 'Þú getur ekki sett inn beiðni sem 
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NOT_FOUND] = 'Sérsniðið svæði finnst ekki';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Þetta er nafn afrits.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Að minnsta kosti eitt verkefni notar þetta svæði.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Óleyfileg gildi fyrir þetta svæði';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Óleyfileg gildi fyrir þetta svæðið "%1$s".';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Sérsniðin svæðisskilgreining er ógilt';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'LDAP staðfesting mistókst.';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'LDAP tenging þjóns mistókst.';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Uppfærsla gagna á LDAP mistókst.';
 $MANTIS_ERROR[ERROR_LDAP_USER_NOT_FOUND] = 'Upplýsingar um LDAP notenda fundust ekki.';
-$MANTIS_ERROR[ERROR_DB_CONNECT_FAILED] = 'Tenging við gagnagrunn mistókst. Villa móttekin frá gagnagrunni var #%d: %s';
-$MANTIS_ERROR[ERROR_DB_QUERY_FAILED] = 'Fyrirspurn á gagnagrunni mistókst. Villa móttekin frá gagnagrunni vegna fyrirspurnar um #%d: %s var %s';
-$MANTIS_ERROR[ERROR_DB_SELECT_FAILED] = 'Gagnagrunnsval mistókst. Villa móttekinn frá gagnagrunni var #%d: %s';
+$MANTIS_ERROR[ERROR_DB_CONNECT_FAILED] = 'Tenging við gagnagrunn mistókst. Villa móttekin frá gagnagrunni var #%1$d: %2$s';
+$MANTIS_ERROR[ERROR_DB_QUERY_FAILED] = 'Fyrirspurn á gagnagrunni mistókst. Villa móttekin frá gagnagrunni vegna fyrirspurnar um #%1$d: %2$s var %3$s';
+$MANTIS_ERROR[ERROR_DB_SELECT_FAILED] = 'Gagnagrunnsval mistókst. Villa móttekinn frá gagnagrunni var #%1$d: %2$s';
 $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Verkþáttur með þessu nafni er til staðar.';
 $MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Enginn afritun var tilgreind.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Verkþáttur fannst ekki.';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Útgáfa með þessu nafni er til staðar.';
-$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Útgáfa \'%s\' fannst ekki.';
+$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Útgáfa \'%1$s\' fannst ekki.';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'Notendanafnið er ógilt. Þau mega aðeins innihalda bókstafi, tölur, bil, bandstrik og undirstrik.';
 $MANTIS_ERROR[ERROR_USER_DOES_NOT_HAVE_REQ_ACCESS] = 'Notandi hefur ekki viðeigandi aðgangsstig.';
 $MANTIS_ERROR[ERROR_USER_REAL_MATCH_USER] = 'Nafnið sem valið var er það sama og notendanafn annars notanda. Veldu annað nafn.';
 $MANTIS_ERROR[ERROR_SPONSORSHIP_SPONSOR_NO_EMAIL] = 'Sponsor has not provided an email address. Please update your profile.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_INVALID] = 'Stillimöguleiki \'%s\'hefur ógilt gildi \'%s\'';
-$MANTIS_ERROR[ERROR_BUG_READ_ONLY_ACTION_DENIED] = 'Ekki er hægt að framkvæma aðgerðina þar sem beiðnin \'%d\' er aðeins lesanlegt.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_INVALID] = 'Stillimöguleiki \'%1$s\'hefur ógilt gildi \'%2$s\'';
+$MANTIS_ERROR[ERROR_BUG_READ_ONLY_ACTION_DENIED] = 'Ekki er hægt að framkvæma aðgerðina þar sem beiðnin \'%1$d\' er aðeins lesanlegt.';
 $MANTIS_ERROR[ERROR_RELATIONSHIP_ALREADY_EXISTS] = 'Það eru þegar tengsl milli þessara beiðna.';
 $MANTIS_ERROR[ERROR_RELATIONSHIP_NOT_FOUND] = 'Engin tengsl fundust.';
-$MANTIS_ERROR[ERROR_RELATIONSHIP_ACCESS_LEVEL_TO_DEST_BUG_TOO_LOW] = 'Aðgangi hafnað: Beiðni %d krefst hærri aðgangs heimildar.';
+$MANTIS_ERROR[ERROR_RELATIONSHIP_ACCESS_LEVEL_TO_DEST_BUG_TOO_LOW] = 'Aðgangi hafnað: Beiðni %1$d krefst hærri aðgangs heimildar.';
 $MANTIS_ERROR[ERROR_RELATIONSHIP_SAME_BUG] = 'Beiðnin getur ekki tengst sjálfu sér.';
 $MANTIS_ERROR[ERROR_SIGNUP_NOT_MATCHING_CAPTCHA] = 'Staðfestingin hefur ekki gildi. Reyndu aftur.';
 $MANTIS_ERROR[ERROR_LOST_PASSWORD_NOT_ENABLED] = 'Möguleikinn  \'týnt lykilorð\' er ekki tiltækur.';
@@ -244,7 +211,7 @@ $MANTIS_ERROR[ERROR_LOST_PASSWORD_MAX_IN_PROGRESS_ATTEMPTS_REACHED] = 'Hámarksf
 $s_login_error = 'Aðgangi þínum hefur hugsanlega verið lokað eða hindraður eða notendanafn/lykilorð sem þú notar er rangt.';
 $s_login_cookies_disabled = 'Vafrarinn þinn veit hugsanlega ekki hvernig á að höndla kökur (cookies), eða neitar að taka við þeim.';
 $s_go_back = 'Farðu til baka';
-$s_proceed = 'Smelltu hér til að halda áfram';
+$s_proceed = 'Halda áfram';
 $s_switch = 'Skipta';
 $s_logged_in_as = 'Skráður inn sem';
 $s_prefix_for_deleted_users = 'notandi';
@@ -264,15 +231,16 @@ $s_resolution_enum_string = '10:opið,20:leyst,30:enduropnað,40:ekki hægt að 
 $s_projection_enum_string = '10:enginn,30:fínstilling,50:lítið verk,70:mikið verk,90:endurhönnun';
 $s_eta_enum_string = '10:enginn,20:< 1 dagur,30:2-3 dagar,40:< 1 vika,50:< 1 mánuður,60:> 1 mánuður';
 $s_new_account_subject = 'Aðgangs skráning';
-$s_new_account_greeting = 'Þakka þér fyrir skráninguna. Þú hefur aðgang með notendanafninu \'';
-$s_new_account_greeting2 = '\'. Til þess að ljúka skráningu, farðu á eftirfarandi veffang (skráðu það í einni línu) og settu upp þitt eigið notendanafn:';
+$s_new_account_greeting = 'Þakka þér fyrir skráninguna. Þú hefur aðgang með notendanafninu \'%1$s\'. Til þess að ljúka skráningu, farðu á eftirfarandi veffang (skráðu það í einni línu) og settu upp þitt eigið notendanafn:';
 $s_new_account_username = 'Notendanafn:';
-$s_new_account_message = 'Ef þú hefur ekki beðið um skráningu, hunsaðu þessi boð og ekkert mun gerast.\n\n';
+$s_new_account_message = 'Ef þú hefur ekki beðið um skráningu, hunsaðu þessi boð og ekkert mun gerast.';
 $s_new_account_do_not_reply = 'EKKI SVARA ÞESSUM SKILABOÐUM';
 $s_new_account_email = 'Tölvupóstfang:';
 $s_new_account_IP = 'Fjartengd IP tala:';
 $s_new_account_signup_msg = 'Eftirfarandi aðgangur hefur verið leyfður:';
-$s_reset_request_msg = 'Einhver (líklega þú) óskaðir eftir að breyta lykilorði með staðfestum tölvupósti. Ef þetta var ekki þú, hunsaðu þessi boð og ekkert mun gerast.\n\nEf þú óskaðir eftir þessari staðfestingu, heimsóttu eftirfarandi veffang til þess að breyta lykilorðinu:';
+$s_reset_request_msg = 'Einhver (líklega þú) óskaðir eftir að breyta lykilorði með staðfestum tölvupósti. Ef þetta var ekki þú, hunsaðu þessi boð og ekkert mun gerast.
+
+Ef þú óskaðir eftir þessari staðfestingu, heimsóttu eftirfarandi veffang til þess að breyta lykilorðinu:';
 $s_reset_request_in_progress_msg = 'Ef þú hefur gefið upp rétt lykilorð og tölvupóstfang fyrir aðgang þinn, munum við nú hafa sent staðfest boð til uppgefins tölvupóstfangs. Þegar þessi boð hafa verið móttekinn, fylgdu eftir leiðbeiningunum til þess að breyta lykilorði fyrir þinn aðgang.';
 $s_email_notification_title_for_status_bug_new = 'Eftirfarandi beiðni er (aftur) í stöðu NÝTT';
 $s_email_notification_title_for_status_bug_feedback = 'Eftirfarandi beiðni krefst VIÐBRAGÐA frá þér.';
@@ -287,18 +255,18 @@ $s_email_notification_title_for_action_bug_reopened = 'Eftirfarandi beiðni hefu
 $s_email_notification_title_for_action_bug_deleted = 'Eftirfarandi beiðni hefur verið EYTT.';
 $s_email_notification_title_for_action_bug_updated = 'Eftirfarandi beiðni hefur verið UPPFÆRT.';
 $s_email_notification_title_for_action_bugnote_submitted = 'Athugasemd hefur verið bætt við þessa beiðni.';
-$s_email_notification_title_for_action_duplicate_of_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem AFRIT AF beiðni %s.';
-$s_email_notification_title_for_action_has_duplicate_relationship_added = 'Atriðið %s hefur verið sett sem AFRIT AF eftirfarandi beiðni.';
-$s_email_notification_title_for_action_related_to_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem TENGT VIÐ beiðni %s.';
-$s_email_notification_title_for_action_dependant_on_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem HÁÐ AF beiðni %s.';
-$s_email_notification_title_for_action_blocks_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem TÁLMUÐ AF beiðni %s.';
-$s_email_notification_title_for_action_duplicate_of_relationship_deleted = 'Eftirfarandi beiðni hefur verið tekið af sem AFRIT af beiðni %s.';
-$s_email_notification_title_for_action_has_duplicate_relationship_deleted = 'Verkbeiðnin %s hefur verið fjarlægð sem AFRIT af eftirfarandi verkbeiðni.';
-$s_email_notification_title_for_action_related_to_relationship_deleted = 'Eftirfarandi beiðni hafa verið merkt sem ÓTENGD beiðni %s.';
-$s_email_notification_title_for_action_dependant_on_relationship_deleted = 'Eftirfarandi beiðni hefur verið fjarlægð sem TENGSL VIÐ beiðni %s.';
-$s_email_notification_title_for_action_blocks_relationship_deleted = 'Eftirfarandi beiðni hefur verið fjarlægð sem TÁLMUÐ AF beiðni %s.';
-$s_email_notification_title_for_action_relationship_child_resolved = 'Beiðni TENGD %s hefur verið LEYST.';
-$s_email_notification_title_for_action_relationship_child_closed = 'Beiðni TENGd %s hefur verið LOKAÐ.';
+$s_email_notification_title_for_action_duplicate_of_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem AFRIT AF beiðni %1$s.';
+$s_email_notification_title_for_action_has_duplicate_relationship_added = 'Atriðið %1$s hefur verið sett sem AFRIT AF eftirfarandi beiðni.';
+$s_email_notification_title_for_action_related_to_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem TENGT VIÐ beiðni %1$s.';
+$s_email_notification_title_for_action_dependant_on_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem HÁÐ AF beiðni %1$s.';
+$s_email_notification_title_for_action_blocks_relationship_added = 'Eftirfarandi beiðni hefur verið sett sem TÁLMUÐ AF beiðni %1$s.';
+$s_email_notification_title_for_action_duplicate_of_relationship_deleted = 'Eftirfarandi beiðni hefur verið tekið af sem AFRIT af beiðni %1$s.';
+$s_email_notification_title_for_action_has_duplicate_relationship_deleted = 'Verkbeiðnin %1$s hefur verið fjarlægð sem AFRIT af eftirfarandi verkbeiðni.';
+$s_email_notification_title_for_action_related_to_relationship_deleted = 'Eftirfarandi beiðni hafa verið merkt sem ÓTENGD beiðni %1$s.';
+$s_email_notification_title_for_action_dependant_on_relationship_deleted = 'Eftirfarandi beiðni hefur verið fjarlægð sem TENGSL VIÐ beiðni %1$s.';
+$s_email_notification_title_for_action_blocks_relationship_deleted = 'Eftirfarandi beiðni hefur verið fjarlægð sem TÁLMUÐ AF beiðni %1$s.';
+$s_email_notification_title_for_action_relationship_child_resolved = 'Beiðni TENGD %1$s hefur verið LEYST.';
+$s_email_notification_title_for_action_relationship_child_closed = 'Beiðni TENGd %1$s hefur verið LOKAÐ.';
 $s_email_reporter = 'Tilkynnt af';
 $s_email_handler = 'Úthlutað til';
 $s_email_project = 'Verkefni';
@@ -334,9 +302,6 @@ $s_verify_warning = 'Upplýsingar þínar um aðgang hafa verið staðfestar. St
 $s_verify_change_password = 'Þú verður að setja lykilorðið hér til þess að geta skráð þig inn aftur.';
 $s_default_account_preferences_title = 'Aðgangsstillingar';
 $s_default_project = 'Sjálfgefið verkefni';
-$s_advanced_report = 'Ítarleg skýrsla';
-$s_advanced_view = 'Ítarleg skoðun';
-$s_advanced_update = 'Ítarleg uppfærsla';
 $s_refresh_delay = 'Endurglæða bið';
 $s_redirect_delay = 'Framsenda bið';
 $s_with_minimum_severity = 'Með lágmarks mikilvægi';
@@ -398,7 +363,7 @@ $s_closed_bug_title = 'Loka beiðni';
 $s_bug_deleted_msg = 'Verkbeiðninni hefur verið eytt...';
 $s_delete_bug_sure_msg = 'Ertu viss um að þú viljir eyða þessari beiðni?';
 $s_delete_bug_button = 'Eyða beiðni';
-$s_monitor_bug_button = 'Vakta beiðni';
+$s_monitor_bug_button = 'Vakta';
 $s_unmonitor_bug_button = 'Hætta vöktun';
 $s_file_upload_msg = 'Upphal skráar tókst';
 $s_upload_file = 'Upphala skrá';
@@ -415,10 +380,9 @@ $s_resolve_add_bugnote_title = 'Settu athugasemd um að beiðnin var leyst';
 $s_bugnote_add_resolve_button = 'Bæta við athugasemd';
 $s_from = 'Frá';
 $s_to = 'Til';
-$s_on = 'Á';
 $s_sent_you_this_reminder_about = 'sendi þetta minnisatriði um';
 $s_bug_reminder = 'Senda minnisatriði';
-$s_reminder_sent_to = 'Minnisatriði sent til';
+$s_reminder_sent_to = 'Áminning sent til:';
 $s_bug_send_button = 'Senda';
 $s_reminder = 'Minnisatriði';
 $s_reminder_explain = 'Þessi athugasemd mun verða send til allra sem hafa óskað eftir viðbrögðum við þessari beiðni.';
@@ -452,7 +416,6 @@ $s_steps_to_reproduce = 'Skref til endursköpunar';
 $s_update_information_button = 'Uppfæra upplýsingar';
 $s_sticky_issue = 'Límd verkbeiðni';
 $s_profile = 'Snið';
-$s_update_advanced_link = 'Hærri uppfærsla';
 $s_updating_bug_simple_title = 'Uppfæri upplýsingar um beiðni';
 $s_vote_added_msg = 'Atkvæði hefur bæst við...';
 $s_bugnote_added_msg = 'Bætt við athugasemd...';
@@ -468,7 +431,7 @@ $s_closed_bug_button = 'Loka verkbeiðni';
 $s_bugnote_updated_msg = 'Athugasemdin hefur verið uppfærð...';
 $s_edited_on = 'leiðrétting á:';
 $s_show_content = 'Sýna innihald';
-$s_click_to_login = 'Ýtið hér til innskráningar';
+$s_click_to_login = 'Innskrá';
 $s_login_page_info = 'Velkomin í verkbeiðnakerfið.';
 $s_login_title = 'Innskráning';
 $s_save_login = 'Vista innskráningu';
@@ -477,9 +440,6 @@ $s_login_button = 'Innskráning';
 $s_signup_link = 'Skráning fyrir nýjan aðgang';
 $s_lost_password_link = 'Týnt lykilorð?';
 $s_select_project_button = 'Velja verkefni';
-$s_logged_out_title = 'Útskráning...';
-$s_redirecting = '...framsending';
-$s_here = 'Hér';
 $s_lost_password_title = 'Lykilorð endurstillt';
 $s_lost_password_done_title = 'Skilaboð um lykilorð sent';
 $s_lost_password_subject = 'Lykilorð endurstillt';
@@ -521,7 +481,7 @@ $s_date_created = 'Stofndagur';
 $s_last_visit = 'Síðast heimsótt';
 $s_edit_user_link = 'Skrifa notenda';
 $s_config_all_projects = 'Athugið: Þessar stillingar gilda fyrir ÖLL VERKEFNI.';
-$s_config_project = 'Athugið: Þessi stilling gildir aðeins fyrir %s verkefni.';
+$s_config_project = 'Athugið: Þessi stilling gildir aðeins fyrir %1$s verkefni.';
 $s_colour_coding = 'Í töflunni fyrir neðan, gilda eftirfarandi litakóðar:';
 $s_colour_project = 'Verkefnastillingin skrifar yfir aðra.';
 $s_colour_global = 'Allar verkefnastillingarnar skrifa yfir sjálfgefna stillingu.';
@@ -533,7 +493,7 @@ $s_message = 'Skilaboð';
 $s_default_notify = 'Stilla sjálfgefin merki um athugasemdir í';
 $s_action_notify = 'Stilla merki um aðgerð við athugasemd í';
 $s_notify_defaults_change_access = 'Hver getur breytt sjálfgefnum athugasemdum';
-$s_notify_actions_change_access = 'Hver getur breytt athugasemdum';
+$s_notify_actions_change_access = 'Hver getur breytt athugasemdum:';
 $s_revert_to_system = 'Eyða öllum verkefna stillingum';
 $s_revert_to_all_project = 'Eyða sérstökum verkefna stillingum';
 $s_non_existent = 'er ekki til';
@@ -556,7 +516,7 @@ $s_desc_bug_reopen_status = 'Staða sem enduropnaðar beiðnir fá';
 $s_desc_bug_resolved_status_threshold = 'Staða þar sem beiðnin er álitin leyst';
 $s_workflow_change_access = 'Hver getur breytt verkefnaflæði';
 $s_access_change_access = 'Hver getur breytt aðgangsstigi';
-$s_default_not_in_flow = 'Sjálfgefin staða %s er ekki valinn fyrir næstu stöðu %s. Því verður hafnað';
+$s_default_not_in_flow = 'Sjálfgefin staða %1$s er ekki valinn fyrir næstu stöðu %2$s. Því verður hafnað';
 $s_assign_issue = 'Úthluta verkbeiðni';
 $s_allow_close_immediate = 'Heimila að Leystri beiðni sé lokað';
 $s_allow_reporter_close = 'Heimila tilkynnanda að loka beiðni';
@@ -570,7 +530,7 @@ $s_resolved_status = 'Staða þar sem beiðni er álitin leyst';
 $s_readonly_status = 'Staða þar sem beiðni verður aðeins lesanlegt';
 $s_reopen_status = 'Staða sem enduropnuð beiðni fær';
 $s_reopen_resolution = 'Úrlausn sem enduropnaðar beiðnir fá';
-$s_config_delete_sure = 'Ertu viss um að vilja eyða stillingum fyrir';
+$s_config_delete_sure = 'Ertu viss um að vilja eyða stillingum fyrir:';
 $s_in_project = 'í framkvæmd';
 $s_delete_config_button = 'Eyða stillingum';
 $s_configuration_report = 'Skýrsla um stillingar';
@@ -584,7 +544,7 @@ $s_delete_config_sure_msg = 'Ertu viss um að vilja eyða þessum stillingar mö
 $s_project_added_msg = 'Verkefninu hefur verið bætt við...';
 $s_category_added_msg = 'Verkþættinum hefur verið bætt við...';
 $s_category_deleted_msg = 'Verkþættinum hefur verið eytt...';
-$s_category_delete_sure_msg = 'Ertu viss um að þú viljir eyða þessum verkþætti?';
+$s_category_delete_sure_msg = 'Ertu viss um að þú viljir eyða þessum verkþætti?<br />Verkþátturinn "%1$s" inniheldur %2$d villur.';
 $s_delete_category_button = 'Eyða verkþætti';
 $s_edit_project_category_title = 'Skrifa verkþátt';
 $s_update_category_button = 'Uppfæra verkþátt';
@@ -699,7 +659,6 @@ $s_project_document_updated = 'Verkið uppfært';
 $s_project_user_added_msg = 'Notanda bætt við verkefnið';
 $s_project_removed_user_msg = 'Notandi fjarlægður frá verkefni';
 $s_remove_user_sure_msg = 'Ertu viss um að vilja fjarlægja þennan notenda?';
-$s_remove_user_button = 'Fjarlægja notenda';
 $s_remove_all_users_sure_msg = 'Ertu viss um að vilja fjarlægja alla notendur þessa verkefnis?';
 $s_remove_all_users_button = 'Fjarlægja alla notendur';
 $s_add_user_title = 'Bæti við notenda við verkefnið';
@@ -726,7 +685,6 @@ $s_assign_to = 'Úthlutað til';
 $s_additional_information = 'Viðbótar upplýsingar';
 $s_submit_report_button = 'Senda skýrslu';
 $s_check_report_more_bugs = 'fara yfir til að tilkynna fleiri atriði';
-$s_advanced_report_link = 'Ítarleg skýrsla';
 $s_report_stay = 'Uppsetning skýrslu';
 $s_selected_project = 'Veldu verkefni';
 $s_valid_project_msg = 'Þú verður að velja gilt verkefni';
@@ -745,7 +703,7 @@ $s_system_info_link = 'Kerfis upplýsingar';
 $s_site_settings_link = 'Stillingar vefseturs';
 $s_site_settings_updated_msg = 'Stillingar vefseturs hafa verið uppfærðar';
 $s_summary_title = 'Yfirlit';
-$s_summary_jpgraph_link = 'Ítarlegt yfirlit';
+$s_summary_advanced_link = 'Ítarlegt yfirlit';
 $s_by_project = 'Eftir verkefni';
 $s_by_status = 'Eftir stöðu';
 $s_by_date = 'Eftir dagsetningu (dögum)';
@@ -803,26 +761,23 @@ $s_query_deleted = 'Síu eytt';
 $s_save_query = 'Vista núverandi síu';
 $s_reset_query = 'Endurstilla síu';
 $s_query_name = 'Nafn síu';
-$s_query_exists = 'Þessi tiltekna fyrirspurn er þegar til staðar.';
-$s_query_dupe_name = 'Önnur fyrirspurn hefur nú þegar þetta nafn. Veldu annað nafn fyrir þessa fyrirspurn.';
+$s_query_exists = 'Þessi tiltekna sía er þegar til staðar.';
+$s_query_dupe_name = 'Önnur sía hefur nú þegar þetta nafn. Veldu annað nafn fyrir þessa síu.';
 $s_query_blank_name = 'Þú getur ekki vistað síu án nafns. Gefðu síunni nafn áður en þú vistar hana.';
-$s_query_store_error = 'Upp kom villa við að vista þessa fyrirspurn.';
+$s_query_store_error = 'Upp kom villa við að vista þessa síu.';
 $s_open_queries = 'Stjórna síum';
-$s_query_delete_msg = 'Ertu viss um að þú viljir eyða þessari fyrirspurn?';
+$s_query_delete_msg = 'Ertu viss um að þú viljir eyða þessari síu?';
 $s_view_simple_link = 'Einföld skoðun';
-$s_viewing_bug_advanced_details_title = 'Ítarleg yfirsýn yfir verkbeiðnir í þessu verkefni';
 $s_product_build = 'Útgáfa verkefnis';
 $s_system_profile = 'Lýsing kerfis';
-$s_update_bug_button = 'Uppfæra beiðni';
+$s_update_bug_button = 'Uppfæra';
 $s_bug_assign_to_button = 'Úthluta til';
 $s_bug_status_to_button = 'Breyta stöðu í';
-$s_reopen_bug_button = 'Enduropna verkbeiðni';
-$s_move_bug_button = 'Færa beiðni';
+$s_reopen_bug_button = 'Enduropna';
+$s_move_bug_button = 'Færa';
 $s_attached_files = 'Viðhengdar skrár';
 $s_publish = 'Útgefið';
 $s_cached = 'Falið';
-$s_view_advanced_link = 'Ítarleg skoðun';
-$s_viewing_bug_simple_details_title = 'Einföld skoðun yfir verkbeiðnir í þessu verkefni';
 $s_no_users_monitoring_bug = 'Það er enginn notandi að vakta þessa beiðni.';
 $s_users_monitoring_bug = 'Notendur sem vakta þessa beiðni';
 $s_monitoring_user_list = 'Notenda listi';
@@ -844,7 +799,6 @@ $s_custom_field_access_level_r = 'Lesaðgangur';
 $s_custom_field_access_level_rw = 'Skrifaðgangur';
 $s_custom_field_length_min = 'Lágmarks lengd';
 $s_custom_field_length_max = 'Hámarks lengd';
-$s_custom_field_advanced = 'Sýna aðeins á hærra stigi';
 $s_custom_field_display_report = 'Sýna þegar beiðni er tilkynnt';
 $s_custom_field_display_update = 'Sýna þegar beiðni er uppfærð';
 $s_custom_field_display_resolved = 'Sýna þegar beiðni er leyst';
@@ -870,9 +824,8 @@ $s_advanced_filters = 'Aukin sía';
 $s_simple_filters = 'Einföld sía';
 $s_monitored_by = 'Vaktað af';
 $s_attachments = 'Viðhengi';
-$s_attachment_alt = 'V';
 $s_changelog = 'Breyta dagbók';
-$s_http_auth_realm = 'Mantis innskráning';
+$s_http_auth_realm = 'MantisBT innskráning';
 $s_bug = 'verkbeiðni';
 $s_add_new_relationship = 'Ný tengsl';
 $s_add_new_relationship_button = 'Viðbót';
@@ -954,3 +907,17 @@ $s_email_on_relationship_changed = 'Tölvupóstur um að tengsl hafi breyst';
 $s_loading = 'Hleðsla...';
 $s_from_date = 'Frá';
 $s_to_date = 'Til';
+$s_on_date = 'Á';
+$s_on = 'Á';
+$s_month_january = 'Janúar';
+$s_month_february = 'Febrúar';
+$s_month_march = 'Mars';
+$s_month_april = 'Apríl';
+$s_month_may = 'Maí';
+$s_month_june = 'Júní';
+$s_month_july = 'Júlí';
+$s_month_august = 'Ágúst';
+$s_month_september = 'September';
+$s_month_october = 'Október';
+$s_month_november = 'Nóvember';
+$s_month_december = 'Desember';

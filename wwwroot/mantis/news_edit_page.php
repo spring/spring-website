@@ -1,42 +1,56 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: news_edit_page.php,v 1.41.2.1 2007-10-13 22:34:03 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'news_api.php' );
+	require_once( 'string_api.php' );
 
-	require_once( $t_core_path.'news_api.php' );
-	require_once( $t_core_path.'string_api.php' );
-?>
-<?php
+	news_ensure_enabled();
+	
 	$f_news_id = gpc_get_int( 'news_id' );
 	$f_action = gpc_get_string( 'action', '' );
 
 	# If deleting item redirect to delete script
 	if ( 'delete' == $f_action ) {
-		require_once( 'news_delete.php' );
-		exit;
+		form_security_validate( 'news_delete' );
+
+		$row = news_get_row( $f_news_id );
+
+		# This check is to allow deleting of news items that were left orphan due to bug #3723
+		if ( project_exists( $row['project_id'] ) ) {
+			access_ensure_project_level( config_get( 'manage_news_threshold' ), $row['project_id'] );
+		}
+
+		helper_ensure_confirmed( lang_get( 'delete_news_sure_msg' ), lang_get( 'delete_news_item_button' ) );
+
+		news_delete( $f_news_id );
+
+		form_security_purge( 'news_delete' );
+
+		print_header_redirect( 'news_menu_page.php', true );
 	}
 
 	# Retrieve news item data and prefix with v_
@@ -49,11 +63,11 @@
 
    	$v_headline = string_attribute( $v_headline );
    	$v_body 	= string_textarea( $v_body );
-?>
-<?php html_page_top1( lang_get( 'edit_news_title' ) ) ?>
-<?php html_page_top2() ?>
 
-<?php # Edit News Form BEGIN ?>
+	html_page_top( lang_get( 'edit_news_title' ) );
+
+	# Edit News Form BEGIN
+?>
 <br />
 <div align="center">
 <form method="post" action="news_update.php">
@@ -92,7 +106,7 @@
 		<select name="project_id">
 		<?php
 			$t_sitewide = false;
-			if ( access_has_project_level( ADMINISTRATOR ) ) {
+			if ( current_user_is_administrator() ) {
 				$t_sitewide = true;
 			}
 			print_project_option_list( $v_project_id, $t_sitewide );
@@ -130,6 +144,7 @@
 </table>
 </form>
 </div>
-<?php # Edit News Form END ?>
+<?php
+	# Edit News Form END
 
-<?php html_page_bottom1( __FILE__ ) ?>
+	html_page_bottom();

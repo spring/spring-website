@@ -1,51 +1,51 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
-?>
-<?php
-	require_once( 'core.php' );
-	$t_core_path = config_get( 'core_path' );
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	require_once( $t_core_path.'compress_api.php' );
-	require_once( $t_core_path.'filter_api.php' );
-	require_once( $t_core_path.'current_user_api.php' );
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'string_api.php' );
-	require_once( $t_core_path.'date_api.php' );
-	require_once( $t_core_path.'rss_api.php' );
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
+	require_once( 'core.php' );
+
+	require_once( 'compress_api.php' );
+	require_once( 'filter_api.php' );
+	require_once( 'current_user_api.php' );
+	require_once( 'bug_api.php' );
+	require_once( 'string_api.php' );
+	require_once( 'date_api.php' );
+	require_once( 'rss_api.php' );
 
 	auth_ensure_user_authenticated();
 
 	$t_query_arr = filter_db_get_available_queries();
 
 	# Special case: if we've deleted our last query, we have nothing to show here.
-	if ( sizeof( $t_query_arr ) < 1 ) {
+	if ( count( $t_query_arr ) < 1 ) {
 		print_header_redirect( 'view_all_bug_page.php' );
 	}
 
 	compress_enable();
 
-	html_page_top1();
-	html_page_top2();
+	html_page_top();
 
-	$t_use_query_url = 'view_all_set.php?type=3&amp;source_query_id=';
-	$t_delete_query_url = 'query_delete_page.php?source_query_id=';
-	
 	$t_rss_enabled = config_get( 'rss_enabled' );
 ?>
 <br />
@@ -68,11 +68,12 @@
 			echo ' ';
 		}
 
-		print '<a href="' . $t_use_query_url . db_prepare_int( $t_id ) . '">' . string_display( $t_name ) . '</a>';
+		$t_query_id = db_prepare_int( $t_id );
+		print_link( "view_all_set.php?type=3&source_query_id=$t_query_id", $t_name );
 
 		if ( filter_db_can_delete_filter( $t_id ) ) {
 			echo ' ';
-			print_button( $t_delete_query_url . db_prepare_int( $t_id ), lang_get( 'delete_query' ) );
+			print_button( "query_delete_page.php?source_query_id=$t_query_id", lang_get( 'delete_query' ) );
 		}
 
 		print '</td>';
@@ -87,11 +88,12 @@
 	# Tidy up this row
 	if ( ( $t_column_count > 0 ) && ( $t_column_count < $t_max_column_count ) ) {
 		for ( $i = $t_column_count; $i < $t_max_column_count; $i++ ) {
-			print '<td>&nbsp;</td>';
+			print '<td>&#160;</td>';
 		}
 		print '</tr>';
 	}
 ?>
 </table>
 </div>
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

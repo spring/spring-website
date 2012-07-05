@@ -1,51 +1,52 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_proj_edit_page.php,v 1.104.2.2 2007-10-19 07:25:59 vboctor Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'category_api.php' );
-	require_once( $t_core_path . 'version_api.php' );
-	require_once( $t_core_path . 'custom_field_api.php' );
-	require_once( $t_core_path . 'icon_api.php' );
+	require_once( 'category_api.php' );
+	require_once( 'version_api.php' );
+	require_once( 'custom_field_api.php' );
+	require_once( 'icon_api.php' );
 
 	auth_reauthenticate();
 
 	$f_project_id = gpc_get_int( 'project_id' );
+	$f_show_global_users = gpc_get_bool( 'show_global_users' );
 
+	project_ensure_exists( $f_project_id );
 	access_ensure_project_level( config_get( 'manage_project_threshold' ), $f_project_id );
 
 	$row = project_get_row( $f_project_id );
-	
-	html_page_top1( project_get_field( $f_project_id, 'name' ) );
-	html_page_top2();
+
+	$t_can_manage_users = access_has_project_level( config_get( 'project_user_threshold' ), $f_project_id );
+
+	html_page_top( project_get_field( $f_project_id, 'name' ) );
 
 	print_manage_menu( 'manage_proj_edit_page.php' );
 ?>
 <br />
-
-
 <!-- PROJECT PROPERTIES -->
 <div align="center">
 <form method="post" action="manage_proj_update.php">
@@ -92,6 +93,16 @@
 	</td>
 </tr>
 
+<!-- Category Inheritance -->
+<tr <?php echo helper_alternate_class() ?>>
+	<td class="category">
+		<?php echo lang_get( 'inherit_global' ) ?>
+	</td>
+	<td>
+		<input type="checkbox" name="inherit_global" <?php check_checked( $row['inherit_global'], ON ); ?> />
+	</td>
+</tr>
+
 <!-- View Status (public/private) -->
 <tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
@@ -110,8 +121,15 @@
 	<td class="category">
 		<?php echo lang_get( 'upload_file_path' ) ?>
 	</td>
+<?php
+	$t_file_path = $row['file_path'];
+	# Don't reveal the absolute path to non-administrators for security reasons
+	if ( is_blank( $t_file_path ) && current_user_is_administrator() ) {
+		$t_file_path = config_get( 'absolute_path_default_upload_folder' );
+	}
+?>
 	<td>
-		<input type="text" name="file_path" size="50" maxlength="250" value="<?php echo string_attribute( $row['file_path'] ) ?>" />
+		<input type="text" name="file_path" size="50" maxlength="250" value="<?php echo string_attribute( $t_file_path ) ?>" />
 	</td>
 </tr>
 <?php } ?>
@@ -126,9 +144,11 @@
 	</td>
 </tr>
 
+<?php event_signal( 'EVENT_MANAGE_PROJECT_UPDATE_FORM', array( $f_project_id ) ); ?>
+
 <!-- Submit Button -->
 <tr>
-	<td>&nbsp;</td>
+	<td>&#160;</td>
 	<td>
 		<input type="submit" class="button" value="<?php echo lang_get( 'update_project_button' ) ?>" />
 	</td>
@@ -143,7 +163,7 @@
 <?php
 # You must have global permissions to delete projects
 if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
-<div class="border-center">
+<div class="border center">
 	<form method="post" action="manage_proj_delete.php">
 		<?php echo form_security_field( 'manage_proj_delete' ) ?>
 		<input type="hidden" name="project_id" value="<?php echo $f_project_id ?>" />
@@ -166,17 +186,21 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 <!-- Title -->
 <tr>
 	<td class="form-title" colspan="6">
-		<?php echo lang_get( 'subprojects' ) ?>
-                <?php
-	                # Check the user's global access level before allowing project creation
-	                if ( access_has_global_level ( config_get( 'create_project_threshold' ) ) ) {
-	                        print_button( 'manage_proj_create_page.php?parent_id=' . $f_project_id, lang_get( 'create_new_subproject_link' ) );
-	                }
-                ?>
+		<?php
+			echo lang_get( 'subprojects' );
+
+			# Check the user's global access level before allowing project creation
+			if ( access_has_global_level ( config_get( 'create_project_threshold' ) ) ) {
+				print_button( 'manage_proj_create_page.php?parent_id=' . $f_project_id, lang_get( 'create_new_subproject_link' ) );
+			}
+		?>
 	</td>
 </tr>
 
 <!-- Subprojects -->
+<form name="update_children_form" action="manage_proj_update_children.php" method="post">
+<?php echo form_security_field( 'manage_proj_update_children' ) ?>
+<input type="hidden" name="project_id" value="<?php echo $f_project_id ?>" />
 <?php
 	$t_subproject_ids = current_user_get_accessible_subprojects( $f_project_id, /* show_disabled */ true );
 
@@ -193,9 +217,12 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 		<?php echo lang_get( 'enabled' ) ?>
 	</td>
 	<td width="10%">
+		<?php echo lang_get( 'inherit' ) ?>
+	</td>
+	<td width="10%">
 		<?php echo lang_get( 'view_status' ) ?>
 	</td>
-	<td width="30%">
+	<td width="20%">
 		<?php echo lang_get( 'description' ) ?>
 	</td>
 	<td width="20%">
@@ -206,18 +233,22 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 <?php
 		foreach ( $t_subproject_ids as $t_subproject_id ) {
 			$t_subproject = project_get_row( $t_subproject_id );
+			$t_inherit_parent = project_hierarchy_inherit_parent( $t_subproject_id, $f_project_id, true );
 ?>
 <tr <?php echo helper_alternate_class() ?>>
 	<td>
 		<a href="manage_proj_edit_page.php?project_id=<?php echo $t_subproject['id'] ?>"><?php echo string_display( $t_subproject['name'] ) ?></a>
 	</td>
-	<td>
+	<td class="center">
 		<?php echo get_enum_element( 'project_status', $t_subproject['status'] ) ?>
 	</td>
-	<td>
+	<td class="center">
 		<?php echo trans_bool( $t_subproject['enabled'] ) ?>
 	</td>
-	<td>
+	<td class="center">
+		<input type="checkbox" name="inherit_child_<?php echo $t_subproject_id ?>" <?php echo ( $t_inherit_parent ? 'checked="checked"' : '' ) ?> />
+	</td>
+	<td class="center">
 		<?php echo get_enum_element( 'project_view_state', $t_subproject['view_state'] ) ?>
 	</td>
 	<td>
@@ -225,9 +256,8 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	</td>
 	<td class="center">
 		<?php
-				print_button( 'manage_proj_edit_page.php?project_id=' . $t_subproject['id'], lang_get( 'edit_link' ) );
-				echo '&nbsp;';
-				print_button( 'manage_proj_subproj_delete.php?project_id=' . $f_project_id . '&amp;subproject_id=' . $t_subproject['id'] . form_security_param( 'manage_proj_subproj_delete' ), lang_get( 'unlink_link' ) );
+				print_bracket_link( 'manage_proj_edit_page.php?project_id=' . $t_subproject['id'], lang_get( 'edit_link' ) );
+				print_bracket_link( "manage_proj_subproj_delete.php?project_id=$f_project_id&subproject_id=" . $t_subproject['id'] . form_security_param( 'manage_proj_subproj_delete' ), lang_get( 'unlink_link' ) );
 		?>
 	</td>
 </tr>
@@ -236,9 +266,16 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	} # End of hiding subproject listing if there are no subprojects
 ?>
 
+<tr>
+	<td colspan="6">
+	<input type="submit" value="<?php echo lang_get( 'update_subproject_inheritance' ) ?>" />
+		</form>
+	</td>
+</tr>
+
 <!-- Add subproject -->
 <tr>
-	<td class="left" colspan="2">
+	<td colspan="7">
 		<form method="post" action="manage_proj_subproj_add.php">
 			<?php echo form_security_field( 'manage_proj_subproj_add' ) ?>
 			<input type="hidden" name="project_id" value="<?php echo $f_project_id ?>" />
@@ -255,7 +292,7 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	foreach ( $t_projects as $t_project ) {
 		if ( in_array( $t_project['id'], $t_all_subprojects ) ||
             in_array( $f_project_id, project_hierarchy_get_all_subprojects( $t_project['id'] ) ) ||
-            ! access_has_project_level( $t_manage_access, $t_project['id'] ) ) {
+            !access_has_project_level( $t_manage_access, $t_project['id'] ) ) {
                 continue;
 		}
 ?>
@@ -305,30 +342,27 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	}
 
 	foreach ( $t_categories as $t_category ) {
-		$t_name = $t_category['category'];
+		$t_id = $t_category['id'];
 
-		if ( NO_USER != $t_category['user_id'] && user_exists( $t_category['user_id'] )) {
-			$t_user_name = user_get_name( $t_category['user_id'] );
-		} else {
-			$t_user_name = '';
-		}
+		$t_inherited = ( $t_category['project_id'] != $f_project_id );
 ?>
 <!-- Repeated Info Row -->
 		<tr <?php echo helper_alternate_class() ?>>
 			<td>
-				<?php echo string_display( $t_name ) ?>
+				<?php echo string_display( category_full_name( $t_id , /* showProject */ $t_inherited, $f_project_id ) ) ?>
 			</td>
 			<td>
-				<?php echo $t_user_name ?>
+				<?php echo prepare_user_name( $t_category['user_id'] ) ?>
 			</td>
 			<td class="center">
-				<?php
-					$t_name = urlencode( $t_name );
+				<?php if ( !$t_inherited ) {
+					$t_id = urlencode( $t_id );
+					$t_project_id = urlencode( $f_project_id );
 
-					print_button( 'manage_proj_cat_edit_page.php?project_id=' . $f_project_id . '&amp;category=' . $t_name, lang_get( 'edit_link' ) );
-					echo '&nbsp;';
-					print_button( 'manage_proj_cat_delete.php?project_id=' . $f_project_id . '&amp;category=' . $t_name . form_security_param( 'manage_proj_cat_delete' ), lang_get( 'delete_link' ) );
-				?>
+					print_button( 'manage_proj_cat_edit_page.php?id=' . $t_id . '&project_id=' . $t_project_id, lang_get( 'edit_link' ) );
+					echo '&#160;';
+					print_button( 'manage_proj_cat_delete.php?id=' . $t_id . '&project_id=' . $t_project_id, lang_get( 'delete_link' ) );
+				} ?>
 			</td>
 		</tr>
 <?php
@@ -341,7 +375,7 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 		<form method="post" action="manage_proj_cat_add.php">
 			<?php echo form_security_field( 'manage_proj_cat_add' ) ?>
 			<input type="hidden" name="project_id" value="<?php echo $f_project_id ?>" />
-			<input type="text" name="category" size="32" maxlength="64" />
+			<input type="text" name="name" size="32" maxlength="128" />
 			<input type="submit" class="button" value="<?php echo lang_get( 'add_category_button' ) ?>" />
 		</form>
 	</td>
@@ -381,7 +415,7 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	</td>
 </tr>
 <?php
-	$t_versions = version_get_all_rows( $f_project_id );
+	$t_versions = version_get_all_rows( $f_project_id, /* released = */ null, /* obsolete = */ null );
 
 	if ( count( $t_versions ) > 0 ) {
 ?>
@@ -391,6 +425,9 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 			</td>
 			<td class="center">
 				<?php echo lang_get( 'released' ) ?>
+			</td>
+			<td class="center">
+				<?php echo lang_get( 'obsolete' ) ?>
 			</td>
 			<td class="center">
 				<?php echo lang_get( 'timestamp' ) ?>
@@ -403,10 +440,21 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	}
 
 	foreach ( $t_versions as $t_version ) {
-		$t_name = $t_version['version'];
+		if ( $t_version['project_id'] != $f_project_id ) {
+			$t_inherited = true;
+		} else {
+			$t_inherited = false;
+		}
+
+		$t_name = version_full_name( $t_version['id'], /* showProject */ $t_inherited, $f_project_id );
+
 		$t_released = $t_version['released'];
-		$t_date_order = $t_version['date_order'];
-		$t_date_formatted = string_format_complete_date( $t_version['date_order'] );
+		$t_obsolete = $t_version['obsolete'];
+		if( !date_is_null( $t_version['date_order'] ) ) {
+			$t_date_formatted = date( config_get( 'complete_date_format' ), $t_version['date_order'] );
+		} else {
+			$t_date_formatted = ' ';
+		}
 ?>
 <!-- Repeated Info Rows -->
 		<tr <?php echo helper_alternate_class() ?>>
@@ -417,15 +465,20 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 				<?php echo trans_bool( $t_released ) ?>
 			</td>
 			<td class="center">
+				<?php echo trans_bool( $t_obsolete ) ?>
+			</td>
+			<td class="center">
 				<?php echo $t_date_formatted ?>
 			</td>
 			<td class="center">
 				<?php
 					$t_version_id = version_get_id( $t_name, $f_project_id );
 
-					print_button( 'manage_proj_ver_edit_page.php?version_id=' . $t_version_id, lang_get( 'edit_link' ) );
-					echo '&nbsp;';
-					print_button( 'manage_proj_ver_delete.php?version_id=' . $t_version_id . form_security_param( 'manage_proj_ver_delete' ), lang_get( 'delete_link' ) );
+					if ( !$t_inherited ) {
+						print_button( 'manage_proj_ver_edit_page.php?version_id=' . $t_version_id, lang_get( 'edit_link' ) );
+						echo '&#160;';
+						print_button( 'manage_proj_ver_delete.php?version_id=' . $t_version_id, lang_get( 'delete_link' ) );
+					}
 				?>
 			</td>
 		</tr>
@@ -501,9 +554,7 @@ if ( access_has_project_level( config_get( 'custom_field_link_threshold' ), $f_p
 				</td>
 			</tr>
 	<?php
-		$t_index = 0;	
-
-		$t_custom_field_security = form_security_field( 'manage_proj_custom_field_update' );
+		$t_index = 0;
 
 		foreach( $t_custom_fields as $t_field_id ) {
 			$t_desc = custom_field_get_definition( $t_field_id );
@@ -514,21 +565,20 @@ if ( access_has_project_level( config_get( 'custom_field_link_threshold' ), $f_p
 				</td>
 				<td>
 <form method="post" action="manage_proj_custom_field_update.php">
-	<?php echo $t_custom_field_security ?>
+	<?php echo form_security_field( 'manage_proj_custom_field_update' ) ?>
 	<input type="hidden" name="project_id" value="<?php echo $f_project_id ?>" />
 	<input type="hidden" name="field_id" value="<?php echo $t_field_id ?>" />
 	<input type="text" name="sequence" value="<?php echo custom_field_get_sequence( $t_field_id, $f_project_id ) ?>" size="2" />
 	<input type="submit" class="button-small" value="<?php echo lang_get( 'update' ) ?>" />
 </form>
-	<?php 
-		$t_index++; 
+	<?php
+		$t_index++;
 	?>
 				</td>
 				<td class="center">
 				<?php
 					# You need global permissions to edit custom field defs
-					$t_remove_token = form_security_param( 'manage_proj_custom_field_remove' );
-					print_button( "manage_proj_custom_field_remove.php?field_id={$t_field_id}&amp;project_id={$f_project_id}$t_remove_token", lang_get( 'remove_link' ) );
+					print_button( "manage_proj_custom_field_remove.php?field_id=$t_field_id&project_id=$f_project_id", lang_get( 'remove_link' ) );
 				?>
 				</td>
 			</tr>
@@ -570,13 +620,14 @@ if ( access_has_project_level( config_get( 'custom_field_link_threshold' ), $f_p
 				<input type="submit" name="copy_to" class="button" value="<?php echo lang_get( 'copy_to' ) ?>" />
 			</form>
 		</td>
-	</tr>	
+	</tr>
 	</table>
 	</div>
 <?php
 }
-?>
 
+event_signal( 'EVENT_MANAGE_PROJECT_PAGE', array( $f_project_id ) );
+?>
 
 <!-- PROJECT VIEW STATUS -->
 <br />
@@ -601,8 +652,9 @@ if ( access_has_project_level( config_get( 'custom_field_link_threshold' ), $f_p
 <?php
 # We want to allow people with global permissions and people with high enough
 #  permissions on the project we are editing
-if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_project_id ) ) {
+if ( $t_can_manage_users ) {
 ?>
+<br />
 <br />
 <div align="center">
 	<table class="width75" cellspacing="1">
@@ -621,7 +673,7 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 				<td class="category">
 					<?php echo lang_get( 'access_level' ) ?>
 				</td>
-				<td class="category">&nbsp;  </td>
+				<td class="category">&#160;  </td>
 			</tr>
 			<tr class="row-1" valign="top">
 				<td>
@@ -631,8 +683,10 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 				</td>
 				<td>
 					<select name="access_level">
-						<?php # only access levels that are less than or equal current user access level for current project ?>
-						<?php print_project_access_levels_option_list( config_get( 'default_new_account_access_level' ), $f_project_id ) ?>
+						<?php
+							# only access levels that are less than or equal current user access level for current project
+							print_project_access_levels_option_list( config_get( 'default_new_account_access_level' ), $f_project_id );
+						?>
 					</select>
 				</td>
 				<td>
@@ -685,32 +739,34 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 			</td>
 		</tr>
 <?php
-	$t_users = project_get_all_user_rows( $f_project_id );
+	$t_users = project_get_all_user_rows( $f_project_id, ANYBODY, $f_show_global_users );
 	$t_display = array();
 	$t_sort = array();
 	foreach ( $t_users as $t_user ) {
 		$t_user_name = string_attribute( $t_user['username'] );
-		$t_sort_name = strtolower( $t_user_name );
+		$t_sort_name = utf8_strtolower( $t_user_name );
 		if ( ( isset( $t_user['realname'] ) ) && ( $t_user['realname'] > "" ) && ( ON == config_get( 'show_realname' ) ) ){
 			$t_user_name = string_attribute( $t_user['realname'] ) . " (" . $t_user_name . ")";
 			if ( ON == config_get( 'sort_by_last_name') ) {
-				$t_sort_name_bits = split( ' ', strtolower( $t_user_name ), 2 );
+				$t_sort_name_bits = explode( ' ', utf8_strtolower( $t_user_name ), 2 );
 				$t_sort_name = $t_sort_name_bits[1] . ', ' . $t_sort_name_bits[1];
 			} else {
-				$t_sort_name = strtolower( $t_user_name );
+				$t_sort_name = utf8_strtolower( $t_user_name );
 			}
 		}
 		$t_display[] = $t_user_name;
 		$t_sort[] = $t_sort_name;
 	}
+
 	array_multisort( $t_sort, SORT_ASC, SORT_STRING, $t_users, $t_display );
 
 	# reset the class counter
 	helper_alternate_class( 0 );
 
-	$t_user_remove_security = form_security_param( 'manage_proj_user_remove' );
+	$t_users_count = count( $t_sort );
+	$t_removable_users_exist = false;
 
-	for ($i = 0; $i < count( $t_sort ); $i++ ) {
+	for ( $i = 0; $i < $t_users_count; $i++ ) {
 		$t_user = $t_users[$i];
 ?>
 		<tr <?php echo helper_alternate_class() ?>>
@@ -730,9 +786,10 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 			<?php
 				# You need global or project-specific permissions to remove users
 				#  from this project
-				if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_project_id ) ) {
+				if ( $t_can_manage_users && access_has_project_level( $t_user['access_level'], $f_project_id ) ) {
 					if ( project_includes_user( $f_project_id, $t_user['id'] )  ) {
-						print_button( 'manage_proj_user_remove.php?project_id=' . $f_project_id . '&amp;user_id=' . $t_user['id'] . $t_user_remove_security, lang_get( 'remove_link' ) );
+						print_button( "manage_proj_user_remove.php?project_id=$f_project_id&user_id=" . $t_user['id'], lang_get( 'remove_link' ) );
+						$t_removable_users_exist = true;
 					}
 				}
 			?>
@@ -742,15 +799,22 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 	}  # end for
 ?>
 	<tr>
-	<td>&nbsp;  </td>
-	<td>&nbsp;  </td>
-	<td>&nbsp;  </td>
+	<td>&#160;  </td>
+	<td>&#160;  </td>
+	<td>&#160;  </td>
 	<td class="center">
 	<?php
 		# You need global or project-specific permissions to remove users
 		#  from this project
-		if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_project_id ) ) {
-			print_button( 'manage_proj_user_remove.php?project_id=' . $f_project_id . $t_user_remove_security, lang_get( 'remove_all_link' ) );
+		if ( !$f_show_global_users ) {
+			print_button( "manage_proj_edit_page.php?project_id=$f_project_id&show_global_users=true", lang_get( 'show_global_users' ) );
+		} else {
+			print_button( "manage_proj_edit_page.php?project_id=$f_project_id", lang_get( 'hide_global_users' ) );
+		}
+
+		if ( $t_removable_users_exist ) {
+			echo '&#160;';
+			print_button( "manage_proj_user_remove.php?project_id=$f_project_id", lang_get( 'remove_all_link' ) );
 		}
 	?>
 	</td>
@@ -758,4 +822,5 @@ if ( access_has_project_level( config_get( 'project_user_threshold' ), $f_projec
 	</table>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

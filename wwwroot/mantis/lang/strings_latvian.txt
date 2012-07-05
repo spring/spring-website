@@ -1,37 +1,34 @@
 <?php
-/** Mantis - a php based bugtracking system
+/** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
- * Mantis is free software: you can redistribute it and/or modify
+ * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * Mantis is distributed in the hope that it will be useful,
+ * MantisBT is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
- *
- * $Revision$
- * $Author$
- * $Date$
- * $Id$
+ * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/** Latvian (Latviešu)
+/** Latvian (latviešu)
+ * 
+ * See the qqq 'language' for message documentation incl. usage of parameters
+ * To improve a translation please visit http://translatewiki.net
  *
  * @ingroup Language
  * @file
  *
+ * @author Papuass
  * @author Sergis Kanters, "kanters at yahoo dot com"
  */
 
-$s_charset = 'utf-8';
 $s_actiongroup_menu_move = 'Pārvietot';
 $s_actiongroup_menu_assign = 'Piešķirt';
 $s_actiongroup_menu_close = 'Aizvērt';
@@ -50,7 +47,7 @@ $s_jump_to_bugnotes = 'Pārlekt uz komentāriem';
 $s_public_project_msg = 'Šis projekts ir PUBLISKI pieejams. Visi lietotāji piekļūst šim projektam.';
 $s_private_project_msg = 'Šis projekts publiski nav pieejams. Tikai administrātori un speciāli pieliktiem lietotājiem ir pieeja.';
 $s_access_level_project = 'Pieejas līmenis projektam';
-$s_view_submitted_bug_link = 'Skatīt reģistrētu ķļūdu';
+$s_view_submitted_bug_link = 'Skatīt reģistrētu ķļūdu %1$s';
 $s_assigned_projects = 'Piešķirtie projekti';
 $s_unassigned_projects = 'Nepiešķirtie projekti';
 $s_print = 'Drukāt';
@@ -116,12 +113,11 @@ $s_bugnote_title = 'Bugnote handler';
 $s_bugnote_date = 'Date of bugnote';
 $s_bugnote_description = 'Bugnote description';
 $MANTIS_ERROR[ERROR_GENERIC] = 'darbības izpildes rezultātā notikusi kļūda.  Iespējams, Jūs vēlaties par to ziņot savam lokālajam administrātoram.';
-$MANTIS_ERROR[ERROR_SQL] = 'Notikusi SQL kļūda. Lūdzu ziņojiet par to';
+$MANTIS_ERROR[ERROR_SQL] = 'Notikusi SQL kļūda.';
 $MANTIS_ERROR[ERROR_REPORT] = 'Jūsu ziņojumā konstatētas kļūdas.';
 $MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED] = 'Fails neeksistē';
 $MANTIS_ERROR[ERROR_FILE_DISALLOWED] = 'Šādi faili ir aizliegti';
 $MANTIS_ERROR[ERROR_NO_DIRECTORY] = 'Katalogs neeksistē. Pārbaudiet projekta opcijas.';
-$MANTIS_ERROR[ERROR_DUPLICATE_FILE] = 'Faila dublikāts. Vispirms izdzēsiet veco failu.';
 $MANTIS_ERROR[ERROR_DUPLICATE_PROJECT] = 'Projekts ar šādu nosaukumu jau eksistē.';
 $MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'Nav aizpildīti visi lauki.  Pārbaudiet ievades pareizību.';
 $MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT] = 'Šis lietotājs ir aizsargāts. Jūs nevarat labot opcijas.';
@@ -129,7 +125,7 @@ $MANTIS_ERROR[ERROR_ACCESS_DENIED] = 'Pieeja liegta.';
 $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Šāda kategorija jau eksistē.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Kategorija nav atrasta.';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Šāda versija jau eksistē.';
-$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Versija "%s" nav atrasta.';
+$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Versija "%1$s" nav atrasta.';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'The username is invalid.';
 $MANTIS_ERROR[ERROR_USER_DOES_NOT_HAVE_REQ_ACCESS] = 'Lieotājam nav nepieciešamā pieejas līmeņa';
 $s_login_error = 'Jūsu pieeja ir atslēgta vai ievadīts nepareizs lietotāja vārds, parole.';
@@ -161,10 +157,10 @@ $s_email_notification_title_for_action_bug_assigned = 'PIEŠĶIRTS buga pieteiku
 $s_email_notification_title_for_action_bug_reopened = 'ATKĀRTOTI ATVĒRTS buga pieteikums.';
 $s_email_notification_title_for_action_bug_deleted = 'DZĒSTS buga pieteikums.';
 $s_email_notification_title_for_action_bugnote_submitted = 'Buga pieteikumam pielikta piezīme.';
-$s_email_notification_title_for_action_has_duplicate_relationship_deleted = 'The issue %s has been UNset as DUPLICATE OF the following issue.';
-$s_email_notification_title_for_action_related_to_relationship_deleted = 'The following issue has been UNset as RELATED TO issue %s.';
-$s_email_notification_title_for_action_dependant_on_relationship_deleted = 'The following issue has been UNset PARENT OF issue %s.';
-$s_email_notification_title_for_action_blocks_relationship_deleted = 'The following issue has been UNset CHILD OF issue %s.';
+$s_email_notification_title_for_action_has_duplicate_relationship_deleted = 'The issue %1$s has been UNset as DUPLICATE OF the following issue.';
+$s_email_notification_title_for_action_related_to_relationship_deleted = 'The following issue has been UNset as RELATED TO issue %1$s.';
+$s_email_notification_title_for_action_dependant_on_relationship_deleted = 'The following issue has been UNset PARENT OF issue %1$s.';
+$s_email_notification_title_for_action_blocks_relationship_deleted = 'The following issue has been UNset CHILD OF issue %1$s.';
 $s_email_reporter = 'Lietotājs';
 $s_email_handler = 'Atbildīgais';
 $s_email_project = 'Projekts';
@@ -194,9 +190,6 @@ $s_access_level = 'Pieejas līmenis';
 $s_update_user_button = 'Saglabāt izmaiņas';
 $s_default_account_preferences_title = 'Lietotāja opcijas';
 $s_default_project = 'Noklusētais projekts';
-$s_advanced_report = 'Paplašināts ziņojums';
-$s_advanced_view = 'Paplašināta apskate';
-$s_advanced_update = 'Paplašināta labošana';
 $s_refresh_delay = 'Ekrāna atjaunināšnas aizture';
 $s_redirect_delay = 'Aizture veicot noteiktas darbības';
 $s_bugnote_order = 'Bugnotes Sort Order';
@@ -259,7 +252,7 @@ $s_from = 'No';
 $s_to = 'Kam';
 $s_sent_you_this_reminder_about = 'sūtīt šo atgādinājumu par';
 $s_bug_reminder = 'Atgādinājumu sūtīšana';
-$s_reminder_sent_to = 'Atgādinājums nosūtīts uz';
+$s_reminder_sent_to = 'Atgādinājums nosūtīts uz:';
 $s_bug_send_button = 'Sūtīt';
 $s_reminder = 'Atgādinājums';
 $s_bug_updated_msg = 'Informācija par kļūdu ir atjaunota...';
@@ -286,7 +279,6 @@ $s_summary = 'Īss apraksts';
 $s_description = 'Apraksts';
 $s_steps_to_reproduce = 'Darbības, kas jāveic, lai atkārtotu kļūdu';
 $s_update_information_button = 'Saglabāt';
-$s_update_advanced_link = 'Paplašinātā labošana';
 $s_updating_bug_simple_title = 'Kļūdas datu labošana';
 $s_vote_added_msg = 'Balsojums pievienots...';
 $s_bugnote_added_msg = 'Komentārs pievienots...';
@@ -309,9 +301,6 @@ $s_choose_project = 'Izvēlaties projektu';
 $s_login_button = 'Pieslēgties';
 $s_signup_link = 'Jums nav paroles? Reģistrēties sistēmā kā jaunam lietotājam.';
 $s_select_project_button = 'Izvēlaties projektu';
-$s_logged_out_title = 'Atslēgšanās...';
-$s_redirecting = '...pāradresācija';
-$s_here = 'šeit';
 $s_lost_password_info = 'To reinstate your lost password, please supply the name and email address for the account.<br /><br />If the data corresponds to a valid account, you will be sent a special URL via email that contains a validation code for your account. Please follow this link to change your password.';
 $s_open_and_assigned_to_me = 'man piešķirtās atvērtās(neatrisinātās) kļūdas/problēmas';
 $s_open_and_reported_to_me = 'manis reģistrētie, vēl atvērtie(neatrisinātie) ziņojumi';
@@ -468,7 +457,6 @@ $s_assign_to = 'Noteikt atbildīgo';
 $s_additional_information = 'Papildinformācija';
 $s_submit_report_button = 'Reģistrēt kļūdu';
 $s_check_report_more_bugs = 'atzīmējiet, ja vēlaties ievadīt vairākus ziņojumus';
-$s_advanced_report_link = 'Paplašinātā forma';
 $s_report_stay = 'Turpināt kļūdu ievadi';
 $s_selected_project = 'Izvēlētais projekts';
 $s_valid_project_msg = 'Jums jāizvēlās pareizs projekts';
@@ -481,7 +469,7 @@ $s_system_info_link = 'Sistēminformācija';
 $s_site_settings_link = 'Servera opcijas';
 $s_site_settings_updated_msg = 'Servera opcijas tika saglabātas';
 $s_summary_title = 'Statistika';
-$s_summary_jpgraph_link = 'Grafiskā statistika';
+$s_summary_advanced_link = 'Grafiskā statistika';
 $s_by_project = 'pēc projekta';
 $s_by_status = 'pēc statusa';
 $s_by_date = 'pēc datuma';
@@ -505,14 +493,14 @@ $s_average_time = 'vidējais laiks';
 $s_total_time = 'kopējais laiks';
 $s_developer_stats = 'izstrādātāja statistika';
 $s_reporter_stats = 'ziņotāja statistika';
-$s_orct = 'atvērti/atrisināti/slēgti/kopā)';
+$s_orct = '(atvērti/atrisināti/slēgti/kopā)';
 $s_any = 'visi';
 $s_show = 'Parādīt';
 $s_changed = 'Izmaiņas (pa stundu)';
 $s_viewing_bugs_title = 'Kļūdu apskate';
-$s_updated = 'Atjaunots';
+$s_updated = 'Atjaunināts';
 $s_none = 'nav';
-$s_search = 'meklēt';
+$s_search = 'Meklēt';
 $s_view_prev_link = 'iepriekšējos';
 $s_view_next_link = 'nākošos';
 $s_prev = 'iepr.';
@@ -520,7 +508,6 @@ $s_next = 'nākoš.';
 $s_first = 'pirmais';
 $s_last = 'pēdējais';
 $s_view_simple_link = 'Apskate';
-$s_viewing_bug_advanced_details_title = 'Paplašinātās informācijas apskate';
 $s_product_build = 'produkta apakšversija';
 $s_system_profile = 'Sistēmas (darba vides) apraksts';
 $s_update_bug_button = 'Labot kļūdas informāciju';
@@ -529,8 +516,6 @@ $s_reopen_bug_button = 'Atkārtoti atvērt';
 $s_attached_files = 'Failu pievienošana';
 $s_publish = 'Publicēt';
 $s_cached = 'Kešots';
-$s_view_advanced_link = 'Apskatīt paplašinātāto informāciju';
-$s_viewing_bug_simple_details_title = 'Apskatīt informācijau';
 $s_no_users_monitoring_bug = 'Neviens lietotājs neveic šī buga monitoringu.';
 $s_users_monitoring_bug = 'Lietotāji, kas veic monitoringu';
 $s_monitoring_user_list = 'Lietotāju saraksts';

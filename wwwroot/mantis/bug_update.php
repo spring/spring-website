@@ -1,35 +1,35 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_update.php,v 1.91.2.3 2007-10-26 08:52:18 giallu Exp $
-	# --------------------------------------------------------
-
-	# Update bug data then redirect to the appropriate viewing page
-
+	/**
+	 * Update bug data then redirect to the appropriate viewing page
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'bugnote_api.php' );
-	require_once( $t_core_path.'custom_field_api.php' );
+	require_once( 'bug_api.php' );
+	require_once( 'bugnote_api.php' );
+	require_once( 'custom_field_api.php' );
 
 	form_security_validate( 'bug_update' );
 
@@ -44,7 +44,7 @@
 		$g_project_override = $t_bug_data->project_id;
 	}
 
-	if ( ! (
+	if ( !(
 				( access_has_bug_level( access_get_status_threshold( $f_new_status, bug_get_field( $f_bug_id, 'project_id' ) ), $f_bug_id ) ) ||
 				( access_has_bug_level( config_get( 'update_bug_threshold' ) , $f_bug_id ) ) ||
 				( ( bug_get_field( $f_bug_id, 'reporter_id' ) == auth_get_current_user_id() ) &&
@@ -66,7 +66,7 @@
 	$t_bug_data->status				= gpc_get_int( 'status', $t_bug_data->status );
 	$t_bug_data->resolution			= gpc_get_int( 'resolution', $t_bug_data->resolution );
 	$t_bug_data->projection			= gpc_get_int( 'projection', $t_bug_data->projection );
-	$t_bug_data->category			= gpc_get_string( 'category', $t_bug_data->category );
+	$t_bug_data->category_id		= gpc_get_int( 'category_id', $t_bug_data->category_id );
 	$t_bug_data->eta				= gpc_get_int( 'eta', $t_bug_data->eta );
 	$t_bug_data->os					= gpc_get_string( 'os', $t_bug_data->os );
 	$t_bug_data->os_build			= gpc_get_string( 'os_build', $t_bug_data->os_build );
@@ -74,9 +74,21 @@
 	$t_bug_data->version			= gpc_get_string( 'version', $t_bug_data->version );
 	$t_bug_data->build				= gpc_get_string( 'build', $t_bug_data->build );
 	$t_bug_data->fixed_in_version		= gpc_get_string( 'fixed_in_version', $t_bug_data->fixed_in_version );
-	$t_bug_data->target_version		= gpc_get_string( 'target_version', $t_bug_data->target_version );
 	$t_bug_data->view_state			= gpc_get_int( 'view_state', $t_bug_data->view_state );
 	$t_bug_data->summary			= gpc_get_string( 'summary', $t_bug_data->summary );
+	$t_due_date = gpc_get_string( 'due_date', null );
+
+	if( access_has_project_level( config_get( 'roadmap_update_threshold' ), $t_bug_data->project_id ) ) {
+		$t_bug_data->target_version		= gpc_get_string( 'target_version', $t_bug_data->target_version );
+	}
+	
+	if( $t_due_date !== null) {
+		if ( is_blank ( $t_due_date ) ) {
+			$t_bug_data->due_date = 1;
+		} else {
+			$t_bug_data->due_date = strtotime( $t_due_date );
+		}		
+	}
 
 	$t_bug_data->description		= gpc_get_string( 'description', $t_bug_data->description );
 	$t_bug_data->steps_to_reproduce	= gpc_get_string( 'steps_to_reproduce', $t_bug_data->steps_to_reproduce );
@@ -88,7 +100,8 @@
 	$f_close_now					= gpc_get_string( 'close_now', false );
 
 	# Handle auto-assigning
-	if ( ( NEW_ == $t_bug_data->status )
+	if ( ( config_get( 'bug_submit_status' ) == $t_bug_data->status )
+	  && ( $t_bug_data->status == $t_old_bug_status )
 	  && ( 0 != $t_bug_data->handler_id )
 	  && ( ON == config_get( 'auto_set_status_to_assigned' ) ) ) {
 		$t_bug_data->status = config_get( 'bug_assigned_status' );
@@ -97,12 +110,13 @@
 	helper_call_custom_function( 'issue_update_validate', array( $f_bug_id, $t_bug_data, $f_bugnote_text ) );
 
 	$t_resolved = config_get( 'bug_resolved_status_threshold' );
+	$t_closed = config_get( 'bug_closed_status_threshold' );
 
 	$t_custom_status_label = "update"; # default info to check
 	if ( $t_bug_data->status == $t_resolved ) {
 		$t_custom_status_label = "resolved";
 	}
-	if ( $t_bug_data->status == CLOSED ) {
+	if ( $t_bug_data->status == $t_closed ) {
 		$t_custom_status_label = "closed";
 	}
 
@@ -111,8 +125,8 @@
 		$t_def = custom_field_get_definition( $t_id );
 
 		# Only update the field if it would have been display for editing
-		if( !( ( ! $f_update_mode && $t_def['require_' . $t_custom_status_label] ) ||
-						( ! $f_update_mode && $t_def['display_' . $t_custom_status_label] && in_array( $t_custom_status_label, array( "resolved", "closed" ) ) ) ||
+		if( !( ( !$f_update_mode && $t_def['require_' . $t_custom_status_label] ) ||
+						( !$f_update_mode && $t_def['display_' . $t_custom_status_label] && in_array( $t_custom_status_label, array( "resolved", "closed" ) ) ) ||
 						( $f_update_mode && $t_def['display_update'] ) ||
 						( $f_update_mode && $t_def['require_update'] ) ) ) {
 			continue;
@@ -123,17 +137,25 @@
 			continue;
 		}
 
-		if ( $t_def['require_' . $t_custom_status_label] && !gpc_isset( "custom_field_$t_id" ) ) {
+		# Produce an error if the field is required but wasn't posted
+		if ( !gpc_isset_custom_field( $t_id, $t_def['type'] ) &&
+			( $t_def['require_' . $t_custom_status_label] ) ) {
 			error_parameters( lang_get_defaulted( custom_field_get_field( $t_id, 'name' ) ) );
 			trigger_error( ERROR_EMPTY_FIELD, ERROR );
 		}
 
-		# Only update the field if it is posted 
-		if ( !gpc_isset( "custom_field_$t_id" ) ) {
+		$t_new_custom_field_value = gpc_get_custom_field( "custom_field_$t_id", $t_def['type'], '' );
+		$t_old_custom_field_value = custom_field_get_value( $t_id, $f_bug_id );
+
+		# Don't update the custom field if the new value both matches the old value and is valid
+		# This ensures that changes to custom field validation will force the update of old invalid custom field values
+		if( $t_new_custom_field_value === $t_old_custom_field_value &&
+			custom_field_validate( $t_id, $t_new_custom_field_value ) ) {
 			continue;
 		}
 
-		if ( !custom_field_set_value( $t_id, $f_bug_id, gpc_get_custom_field( "custom_field_$t_id", $t_def['type'], null ) ) ) {
+		# Attempt to set the new custom field value
+		if ( !custom_field_set_value( $t_id, $f_bug_id, $t_new_custom_field_value ) ) {
 			error_parameters( lang_get_defaulted( custom_field_get_field( $t_id, 'name' ) ) );
 			trigger_error( ERROR_CUSTOM_FIELD_INVALID_VALUE, ERROR );
 		}
@@ -144,60 +166,61 @@
 	if ( ( $t_old_bug_status != $t_bug_data->status ) && ( FALSE == $f_update_mode ) ) {
 		# handle status transitions that come from pages other than bug_*update_page.php
 		# this does the minimum to act on the bug and sends a specific message
-		switch ( $t_bug_data->status ) {
-			case $t_resolved:
-				# bug_resolve updates the status, fixed_in_version, resolution, handler_id and bugnote and sends message
-				bug_resolve( $f_bug_id, $t_bug_data->resolution, $t_bug_data->fixed_in_version,
-						$f_bugnote_text, $t_bug_data->duplicate_id, $t_bug_data->handler_id,
-						$f_private, $f_time_tracking );
-				$t_notify = false;
-				$t_bug_note_set = true;
+		if ( $t_bug_data->status >= $t_resolved
+			&& $t_bug_data->status < $t_closed
+			&& $t_old_bug_status < $t_resolved ) {
+			# bug_resolve updates the status, fixed_in_version, resolution, handler_id and bugnote and sends message
+			bug_resolve( $f_bug_id, $t_bug_data->resolution, $t_bug_data->fixed_in_version,
+				$f_bugnote_text, $t_bug_data->duplicate_id, $t_bug_data->handler_id,
+				$f_private, $f_time_tracking );
+			$t_notify = false;
+			$t_bug_note_set = true;
 
-				if ( $f_close_now ) {
-					bug_set_field( $f_bug_id, 'status', CLOSED );
-				}
+			if ( $f_close_now ) {
+				bug_set_field( $f_bug_id, 'status', $t_closed );
+			}
 
-				// update bug data with fields that may be updated inside bug_resolve(), otherwise changes will be overwritten
-				// in bug_update() call below.
-				$t_bug_data->handler_id = bug_get_field( $f_bug_id, 'handler_id' );
-				$t_bug_data->status = bug_get_field( $f_bug_id, 'status' );
-				break;
+			// update bug data with fields that may be updated inside bug_resolve(), otherwise changes will be overwritten
+			// in bug_update() call below.
+			$t_bug_data->handler_id = bug_get_field( $f_bug_id, 'handler_id' );
+			$t_bug_data->status = bug_get_field( $f_bug_id, 'status' );
+		} else if ( $t_bug_data->status >= $t_closed
+			&& $t_old_bug_status < $t_closed ) {
+			# bug_close updates the status and bugnote and sends message
+			bug_close( $f_bug_id, $f_bugnote_text, $f_private, $f_time_tracking );
+			$t_notify = false;
+			$t_bug_note_set = true;
+		} else if ( $t_bug_data->status == config_get( 'bug_reopen_status' )
+			&& $t_old_bug_status >= $t_resolved ) {
+			bug_set_field( $f_bug_id, 'handler_id', $t_bug_data->handler_id ); # fix: update handler_id before calling bug_reopen
+			# bug_reopen updates the status and bugnote and sends message
+			bug_reopen( $f_bug_id, $f_bugnote_text, $f_time_tracking, $f_private );
+			$t_notify = false;
+			$t_bug_note_set = true;
 
-			case CLOSED:
-				# bug_close updates the status and bugnote and sends message
-				bug_close( $f_bug_id, $f_bugnote_text, $f_private, $f_time_tracking );
-				$t_notify = false;
-				$t_bug_note_set = true;
-				break;
-
-			case config_get( 'bug_reopen_status' ):
-				if ( $t_old_bug_status >= $t_resolved ) {
-					bug_set_field( $f_bug_id, 'handler_id', $t_bug_data->handler_id ); # fix: update handler_id before calling bug_reopen
-					# bug_reopen updates the status and bugnote and sends message
-					bug_reopen( $f_bug_id, $f_bugnote_text, $f_time_tracking, $f_private );
-					$t_notify = false;
-					$t_bug_note_set = true;
-
-					// update bug data with fields that may be updated inside bug_resolve(), otherwise changes will be overwritten
-					// in bug_update() call below.
-					$t_bug_data->status = bug_get_field( $f_bug_id, 'status' );
-					$t_bug_data->resolution = bug_get_field( $f_bug_id, 'resolution' );
-					break;
-				} # else fall through to default
+			// update bug data with fields that may be updated inside bug_resolve(), otherwise changes will be overwritten
+			// in bug_update() call below.
+			$t_bug_data->status = bug_get_field( $f_bug_id, 'status' );
+			$t_bug_data->resolution = bug_get_field( $f_bug_id, 'resolution' );
 		}
 	}
 
+	# Plugin support
+	$t_new_bug_data = event_signal( 'EVENT_UPDATE_BUG', $t_bug_data, $f_bug_id );
+	if ( !is_null( $t_new_bug_data ) ) {
+		$t_bug_data = $t_new_bug_data;
+	}
+
 	# Add a bugnote if there is one
-	if ( !$t_bug_note_set ) {
+	if ( false == $t_bug_note_set ) {
 		bugnote_add( $f_bug_id, $f_bugnote_text, $f_time_tracking, $f_private, 0, '', NULL, FALSE );
 	}
 
 	# Update the bug entry, notify if we haven't done so already
-	bug_update( $f_bug_id, $t_bug_data, true, ( false == $t_notify ) );
+	$t_bug_data->update( true, ( false == $t_notify ) );
 
 	form_security_purge( 'bug_update' );
 
 	helper_call_custom_function( 'issue_update_notify', array( $f_bug_id ) );
 
 	print_successful_redirect_to_bug( $f_bug_id );
-?>

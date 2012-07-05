@@ -1,34 +1,31 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_sponsorship_list_view_inc.php,v 1.16.2.1 2007-10-13 22:32:55 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	# This include file prints out the list of users sponsoring the current
-	# bug.	$f_bug_id must be set to the bug id
+	/**
+	 * This include file prints out the list of users sponsoring the current
+	 * bug.	$f_bug_id must be set to the bug id
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path . 'sponsorship_api.php' );
-	require_once( $t_core_path . 'collapse_api.php' );
+	require_once( 'sponsorship_api.php' );
+	require_once( 'collapse_api.php' );
 
 	#
 	# Determine whether the sponsorship section should be shown.
@@ -64,13 +61,14 @@
 			<img src="images/dollars.gif" alt="<?php echo lang_get( 'sponsor_verb' ) ?>" border="0" />
 		</td>
 		<td class="form-title" colspan="2">
-			<?php collapse_icon( 'sponsorship' ); ?>
-		<?php
+		<?php 
+			collapse_icon( 'sponsorship' );
+
 			echo lang_get( 'users_sponsoring_bug' );
 
 			$t_details_url = lang_get( 'sponsorship_process_url' );
 			if ( !is_blank( $t_details_url ) ) {
-				echo '&nbsp;[<a href="' . $t_details_url . '" target="_blank">'
+				echo '&#160;[<a href="' . $t_details_url . '" target="_blank">'
 					. lang_get( 'sponsorship_more_info' ) . '</a>]';
 			}
 		?>
@@ -84,6 +82,7 @@
 		<td class="category" width="15%"><?php echo lang_get( 'sponsor_issue' ) ?></td>
 		<td>
 			<form method="post" action="bug_set_sponsorship.php">
+				<?php echo form_security_field( 'bug_set_sponsorship' ) ?>
 				<?php echo sponsorship_get_currency() ?>
 				<input type="hidden" name="bug_id" value="<?php echo $f_bug_id ?>" size="4" />
 				<input type="text" name="amount" value="<?php echo config_get( 'minimum_sponsorship_amount' )  ?>" size="4" />
@@ -145,12 +144,10 @@
 
 			$t_details_url = lang_get( 'sponsorship_process_url' );
 			if ( !is_blank( $t_details_url ) ) {
-				echo '&nbsp;[<a href="' . $t_details_url . '" target="_blank">'
+				echo '&#160;[<a href="' . $t_details_url . '" target="_blank">'
 					. lang_get( 'sponsorship_more_info' ) . '</a>]';
 			}
-?>
 
-<?php
 	$t_total_sponsorship = bug_get_field( $f_bug_id, 'sponsorship_total' );
 	if ( $t_total_sponsorship > 0 ) {
 		echo ' <span style="font-weight: normal;">(';
@@ -166,4 +163,3 @@
 <?php
 	collapse_end( 'sponsorship' );
 } # If sponsorship enabled
-?>

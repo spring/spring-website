@@ -1,48 +1,47 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: print_all_bug_page.php,v 1.89.2.1 2007-10-13 22:34:15 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	# Bugs to display / print / export can be selected with the checkboxes
-	# A printing Options link allows to choose the fields to export
-	# Export :
-	#	- the bugs displayed in print_all_bug_page.php are saved in a .doc or .xls file
-	#   - the IE icons allows to see or directly print the same result
-?>
-<?php
+	/**
+	 * Bugs to display / print / export can be selected with the checkboxes
+	 * A printing Options link allows to choose the fields to export
+	 * Export :
+	 *  - the bugs displayed in print_all_bug_page.php are saved in a .doc or .xls file
+	 *  - the IE icons allows to see or directly print the same result
+	 *
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'current_user_api.php' );
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'date_api.php' );
-	require_once( $t_core_path.'icon_api.php' );
-	require_once( $t_core_path.'string_api.php' );
-	require_once( $t_core_path.'columns_api.php' );
+	require_once( 'current_user_api.php' );
+	require_once( 'bug_api.php' );
+	require_once( 'date_api.php' );
+	require_once( 'icon_api.php' );
+	require_once( 'string_api.php' );
+	require_once( 'columns_api.php' );
+	require_once( 'config_filter_defaults_inc.php' );
 
 	auth_ensure_user_authenticated();
 
-	$f_search		= gpc_get_string( 'search', false ); # @@@ need a better default
+	$f_search		= gpc_get_string( FILTER_PROPERTY_FREE_TEXT, false ); /** @todo need a better default */
 	$f_offset		= gpc_get_int( 'offset', 0 );
 
 	$t_cookie_value_id = gpc_get_cookie( config_get( 'view_all_cookie' ), '' );
@@ -54,23 +53,23 @@
 	$t_project_id 			= 0;
 
 	$t_columns = helper_get_columns_to_view( COLUMNS_TARGET_PRINT_PAGE );
-	$t_num_of_columns = sizeof( $t_columns );
+	$t_num_of_columns = count( $t_columns );
 
 	# check to see if the cookie exists
-	if ( ! is_blank( $t_cookie_value ) ) {
+	if ( !is_blank( $t_cookie_value ) ) {
 
 		# check to see if new cookie is needed
-		if ( ! filter_is_cookie_valid() ) {
-			print_header_redirect( 'view_all_set.php?type=0&amp;print=1' );
+		if ( !filter_is_cookie_valid() ) {
+			print_header_redirect( 'view_all_set.php?type=0&print=1' );
 		}
 
 		$t_setting_arr = explode( '#', $t_cookie_value, 2 );
 		$t_filter_cookie_arr = unserialize( $t_setting_arr[1] );
 
-		$f_highlight_changed 	= $t_filter_cookie_arr['highlight_changed'];
-		$f_sort 				= $t_filter_cookie_arr['sort'];
-		$f_dir		 			= $t_filter_cookie_arr['dir'];
-		$t_project_id 			= helper_get_current_project( );
+		$f_highlight_changed 	= $t_filter_cookie_arr[ FILTER_PROPERTY_HIGHLIGHT_CHANGED ];
+		$f_sort 				= $t_filter_cookie_arr[ FILTER_PROPERTY_SORT_FIELD_NAME ];
+		$f_dir		 			= $t_filter_cookie_arr[ FILTER_PROPERTY_SORT_DIRECTION ];
+		$t_project_id 			= helper_get_current_project();
 	}
 
 	# This replaces the actual search that used to be here
@@ -79,15 +78,19 @@
 	$t_bug_count = null;
 	$t_page_count = null;
 
-	$result = filter_get_bug_rows( $t_page_number, $t_per_page, $t_page_count, $t_bug_count );
-	$row_count = sizeof( $result );
+	$result = filter_get_bug_rows( $f_page_number, $t_per_page, $t_page_count, $t_bug_count );
+	$row_count = count( $result );
+	
+	# pre-cache custom column data
+	columns_plugin_cache_issue_data( $result );
 
 	# for export
 	$t_show_flag = gpc_get_int( 'show_flag', 0 );
+
+	html_page_top1();
+	html_head_end();
+	html_body_begin();
 ?>
-<?php html_page_top1( ) ?>
-<?php html_head_end( ) ?>
-<?php html_body_begin( ) ?>
 
 <table class="width100"><tr><td class="form-title">
 	<div class="center">
@@ -98,11 +101,12 @@
 <br />
 
 <form method="post" action="view_all_set.php">
+<?php # CSRF protection not required here - form does not result in modifications ?>
 <input type="hidden" name="type" value="1" />
 <input type="hidden" name="print" value="1" />
 <input type="hidden" name="offset" value="0" />
-<input type="hidden" name="sort" value="<?php echo $f_sort ?>" />
-<input type="hidden" name="dir" value="<?php echo $f_dir ?>" />
+<input type="hidden" name="<?php echo FILTER_PROPERTY_SORT_FIELD_NAME; ?>" value="<?php echo $f_sort ?>" />
+<input type="hidden" name="<?php echo FILTER_PROPERTY_SORT_DIRECTION; ?>" value="<?php echo $f_dir ?>" />
 
 <table class="width100" cellpadding="2px">
 <?php
@@ -137,16 +141,14 @@
 		$t_search = urlencode( $f_search );
 
 		$t_icons = array(
-			array( 'print_all_bug_page_excel', 'excel', '', 'fileicons/xls.gif', 'Excel 2000' ),
-			array( 'print_all_bug_page_excel', 'html', 'target="_blank"', 'ie.gif', 'Excel View' ),
 			array( 'print_all_bug_page_word', 'word', '', 'fileicons/doc.gif', 'Word 2000' ),
 			array( 'print_all_bug_page_word', 'html', 'target="_blank"', 'ie.gif', 'Word View' ) );
 
 		foreach ( $t_icons as $t_icon ) {
 			echo '<a href="' . $t_icon[0] . '.php' .
-				"?search=$t_search" .
-				"&amp;sort=$f_sort" .
-				"&amp;dir=$t_new_dir" .
+				'?' . FILTER_PROPERTY_FREE_TEXT . "=$t_search" .
+				'&amp;' . FILTER_PROPERTY_SORT_FIELD_NAME . "=$f_sort" .
+				'&amp;' . FILTER_PROPERTY_SORT_DIRECTION . "=$t_new_dir" .
 				'&amp;type_page=' . $t_icon[1] .
 				"&amp;export=$f_export" .
 				"&amp;show_flag=$t_show_flag" .
@@ -164,11 +166,13 @@
 <br />
 
 <form method="post" action="print_all_bug_page.php">
+<?php # CSRF protection not required here - form does not result in modifications ?>
 <table class="width100" cellspacing="1" cellpadding="2px">
 <tr>
 	<td class="form-title" colspan="<?php echo $t_num_of_columns / 2 + $t_num_of_columns % 2; ?>">
-		<?php echo lang_get( 'viewing_bugs_title' ) ?>
-		<?php
+		<?php 
+			echo lang_get( 'viewing_bugs_title' );
+
 			if ( $row_count > 0 ) {
 				$v_start = $f_offset+1;
 				$v_end   = $f_offset+$row_count;
@@ -180,15 +184,17 @@
 		?>
 	</td>
 	<td class="right" colspan="<?php echo $t_num_of_columns / 2 ?>">
-		<?php # print_bracket_link( 'print_all_bug_options_page.php', lang_get( 'printing_options_link' ) ) ?>
-		<?php # print_bracket_link( 'view_all_bug_page.php', lang_get( 'view_bugs_link' ) ) ?>
-		<?php # print_bracket_link( 'summary_page.php', lang_get( 'summary' ) ) ?>
+		<?php 
+			# print_bracket_link( 'print_all_bug_options_page.php', lang_get( 'printing_options_link' ) );
+			# print_bracket_link( 'view_all_bug_page.php', lang_get( 'view_bugs_link' ) );
+			# print_bracket_link( 'summary_page.php', lang_get( 'summary' ) );
+		?>
 	</td>
 </tr>
 <tr class="row-category">
 	<?php
-		$t_sort = $f_sort;	// used within the custom function called in the loop (@@@ cleanup)
-		$t_dir = $f_dir;    // used within the custom function called in the loop (@@@ cleanup)
+		$t_sort = $f_sort;	// used within the custom function called in the loop (@todo cleanup)
+		$t_dir = $f_dir;    // used within the custom function called in the loop (@todo cleanup)
 
 		foreach( $t_columns as $t_column ) {
 			$t_title_function = 'print_column_title';
@@ -205,9 +211,9 @@
 
 		# alternate row colors
 		$status_color = helper_alternate_colors( $i, '#ffffff', '#dddddd' );
-		if ( isset( $t_bug_arr_sort[ $t_row['id'] ] ) || ( $t_show_flag==0 ) ) {
+		if ( isset( $t_bug_arr_sort[ $t_row->id ] ) || ( $t_show_flag==0 ) ) {
 ?>
-<tr bgcolor="<?php echo $status_color ?>" border="1">
+<tr bgcolor="<?php echo $status_color ?>" border="1" valign="top">
 <?php
 		foreach( $t_columns as $t_column ) {
 			$t_column_value_function = 'print_column_value';

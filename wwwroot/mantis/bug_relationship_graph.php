@@ -1,34 +1,34 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_relationship_graph.php,v 1.6.2.1 2007-10-13 22:32:47 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'bug_api.php' );
-	require_once( $t_core_path.'compress_api.php' );
-	require_once( $t_core_path.'current_user_api.php' );
-	require_once( $t_core_path.'relationship_graph_api.php' );
+	require_once( 'bug_api.php' );
+	require_once( 'compress_api.php' );
+	require_once( 'current_user_api.php' );
+	require_once( 'relationship_graph_api.php' );
 
 	# If relationship graphs were made disabled, we disallow any access to
 	# this script.
@@ -58,9 +58,7 @@
 		$t_graph_horizontal = false;
 	}
 
-	access_ensure_bug_level( VIEWER, $f_bug_id );
-
-	$t_bug = bug_prepare_display( bug_get( $f_bug_id, true ) );
+	$t_bug = bug_get( $f_bug_id, true );
 
 	if( $t_bug->project_id != helper_get_current_project() ) {
 		# in case the current project is not the same project of the bug we are viewing...
@@ -68,10 +66,11 @@
 		$g_project_override = $t_bug->project_id;
 	}
 
+	access_ensure_bug_level( VIEWER, $f_bug_id );
+
 	compress_enable();
 
-	html_page_top1( bug_format_summary( $f_bug_id, SUMMARY_CAPTION ) );
-	html_page_top2();
+	html_page_top( bug_format_summary( $f_bug_id, SUMMARY_CAPTION ) );
 ?>
 <br />
 
@@ -80,8 +79,8 @@
 <tr>
 	<!-- Title -->
 	<td class="form-title">
-		<?php 
-		if ( $t_graph_relation ) 
+		<?php
+		if ( $t_graph_relation )
 			echo lang_get( 'viewing_bug_relationship_graph_title' );
 		else
 			echo lang_get( 'viewing_bug_dependency_graph_title' );
@@ -96,9 +95,9 @@
 		<span class="small">
 <?php
 		if ( $t_graph_relation )
-			print_bracket_link( 'bug_relationship_graph.php?bug_id=' . $f_bug_id . '&amp;graph=dependency', lang_get( 'dependency_graph' ) );
+			print_bracket_link( "bug_relationship_graph.php?bug_id=$f_bug_id&graph=dependency", lang_get( 'dependency_graph' ) );
 		else
-			print_bracket_link( 'bug_relationship_graph.php?bug_id=' . $f_bug_id . '&amp;graph=relation', lang_get( 'relation_graph' ) );
+			print_bracket_link( "bug_relationship_graph.php?bug_id=$f_bug_id&graph=relation", lang_get( 'relation_graph' ) );
 ?>
 		</span>
 <?php
@@ -108,9 +107,9 @@
 		<span class="small">
 <?php
 			if ( $t_graph_horizontal )
-				print_bracket_link( 'bug_relationship_graph.php?bug_id=' . $f_bug_id . '&amp;graph=dependency&orientation=vertical', lang_get( 'vertical' ) );
+				print_bracket_link( "bug_relationship_graph.php?bug_id=$f_bug_id&graph=dependency&orientation=vertical", lang_get( 'vertical' ) );
 			else
-				print_bracket_link( 'bug_relationship_graph.php?bug_id=' . $f_bug_id . '&amp;graph=dependency&orientation=horizontal', lang_get( 'horizontal' ) );
+				print_bracket_link( "bug_relationship_graph.php?bug_id=$f_bug_id&graph=dependency&orientation=horizontal", lang_get( 'horizontal' ) );
 ?>
 		</span>
 <?php
@@ -164,6 +163,12 @@
 <br />
 
 <?php
+	define ( 'BUG_VIEW_INC_ALLOW', true );
+	$_GET['id'] = $f_bug_id;
+	$tpl_fields_config_option = 'bug_view_page_fields';
+	$tpl_show_page_header = false;
+	$tpl_force_readonly = true;
+	$tpl_mantis_dir = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
+	$tpl_file = __FILE__;
+	
 	include( 'bug_view_inc.php' );
-	html_page_bottom1( __FILE__ );
-?>

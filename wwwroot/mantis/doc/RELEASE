@@ -1,0 +1,264 @@
+MantisBT Release Notes
+
+1.2.11 Maintenance Release (2012-06-08)
+-------------------------------------------------
+
+MantisBT 1.2.11 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x or older version are
+advised to upgrade to this release.
+
+This release also contains numerous minor bug fixes to MantisBT,
+SOAP API fixes, enhancements to the admin guide and improved translations in many
+languages.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.10 Maintenance Release (2012-04-01)
+-------------------------------------------------
+
+MantisBT 1.2.10 is a maintenance release. All installations that are currently
+running any 1.2.x version are advised to upgrade to this release.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.9 Maintenance Release (2012-03-03)
+-------------------------------------------------
+
+MantisBT 1.2.9 release delivers 92 fixes and improvements including security
+fixes, new MantisBT logo, MantisTouch integration, MS SQL fixes, SOAP API
+improvements, and others.  We recommend that all instances be upgraded to this
+release.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.8 Security Release (2011-09-05)
+-------------------------------------------------
+
+MantisBT 1.2.8 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are advised to
+upgrade to this release.
+
+Paulino Calderon from Websec, High-Tech Bridge Security Research Lab and Paul
+Richards discovered 3 vulnerabilities:
+ - 1x local file inclusion (LFI)/directory traversal
+ - 2x cross site scriptin (XSS)
+
+These vulnerabilities could have very severe consequences for users of
+MantisBT, particularly as a result of the local file inclusion vulnerability.
+If an attacker can upload their own PHP script to the server as an attachment,
+they may be able to execute this script using the LFI vulnerability.
+
+Refer to issues #13191 and #13281 for detailed information.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.7 Security Release (2011-08-19)
+-------------------------------------------------
+
+MantisBT 1.2.7 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are advised to
+upgrade to this release.
+
+Net.Edit0r from BlACK Hat Group posted a vulnerability report for an XSS issue
+in search.php. All MantisBT users (including anonymous users that are not
+logged in to public bug trackers) could be impacted by this vulnerability.
+Refer to issue #13245 for full details.
+
+This release also contains numerous minor bug fixes to MantisBT and improved
+translations in many languages.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.6 Maintenance Release (2011-07-26)
+-------------------------------------------------
+
+MantisBT 1.2.6 is a maintenance update for the stable 1.2.x branch. It is
+recommended that all MantisBT users (including those still using 1.1.x or
+earlier versions) upgrade to this latest release.
+
+This release brings bug fixes and improvements across a range of MantisBT
+features, especially the SOAP API, authentication, time tracking, and
+billing areas. Documentation and translation updates are also included.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.5 Maintenance Release (2011-04-05)
+-------------------------------------------------
+
+MantisBT 1.2.5 is a maintenance update for the stable 1.2.x branch. It is
+recommended that all MantisBT users (including those still using 1.1.x or
+earlier versions) upgrade to this latest release.
+
+This release brings improved translations in many languages as well as
+numerous bug fixes across a range of MantisBT features.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.4 Security Release (2010-12-15)
+-------------------------------------------------
+
+MantisBT 1.2.4 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are advised to
+upgrade to this release.
+
+Gjoko Krstic of Zero Science Lab reported multiple vulnerabilities in the
+admin/upgrade_unattended.php script. Issue #12607 provides more detail on the
+vulnerabilities discovered. We thank Gjoko for his detailed assistance with
+testing, patching and answering questions. Please note that the /admin/
+directory should be removed from all MantisBT installations after the
+installation or upgrade has been completed. This is particularly true for
+MantisBT installations accessible over the Internet.
+
+Also included with 1.2.4 are some bug fixes relating to fonts in the
+MantisGraph plugin, SOAP API, CSV export, custom field values, relationship
+graphs, fields on the manage user page, built-in time tracking and the
+allow_reporter_close feature. This release includes updated translations for
+many languages and improved installation documentation in doc/INSTALL.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.3 Security Release (2010-09-14)
+-------------------------------------------------
+
+MantisBT 1.2.3 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are advised to
+upgrade to this release.
+
+Issue #12312 covers an XSS vulnerability in the upstream NuSOAP library.
+The fix has been applied to the library included in MantisBT releases, and a
+patch has been submitted upstream for future releases of NuSOAP. See
+http://www.mantisbt.org/bugs/view.php?id=12312 for further details.
+
+Also included with 1.2.3 are another round of XSS fixes to MantisBT, improved
+excel export, translation updates, and bug fixes to the SOAP API, installation,
+plugin system, and email notifications.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.2 Security Release (2010-07-29)
+-------------------------------------------------
+
+MantisBT 1.2.2 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are advised to
+upgrade to this release.
+
+Issue #11952 covers a security fix to the display of inline attachments, where
+"Arbitrary inline attachment rendering could lead to cross-domain scripting or
+other browser attacks".  See http://www.mantisbt.org/bugs/view.php?id=11952
+for further details and information.
+
+Also included with 1.2.2 are a range of translation updates, regression fixes,
+and bug fixes, including multiple SOAP API-related bugs and regressions.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.1 Maintenance Release (2010-04-23)
+-------------------------------------------------
+
+MantisBT 1.2.1 is a maintenance update for the stable 1.2.x branch. All
+installations that are currently running any 1.1.x or 1.2.0 version are
+advised to upgrade to this release.
+
+Included with 1.2.1 are a range of bug fixes, translation updates, and general
+improvements over the initial 1.2.0 release.  Highlights include an improved
+installation, a fixed upgrade path from 1.1.x, fixes to the URL and path
+detection, and updates to the plugin event system.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.0 Stable Release (2010-02-22)
+-------------------------------------------------
+
+This release marks the first official release in the 1.2.x series of MantisBT.
+1.2.0 is a major feature release for MantisBT, and includes many bugfixes and
+enhancements over the 1.1.x stable branch.  All users of 1.1.x are highly
+encouraged to upgrade as soon as possible.
+
+There are many new features added to 1.2.0, including:
+
+ - Converted the MantisBT Manual to Docbook format, and added a new Developer's
+   Guide manual, both of which are compiled and included in every release
+
+ - Implemented a plugin system with many plugins already released [2]
+
+ - Global categories available to all projects, as well as project categories
+   inheriting from parent projects to child projects;  both are optional
+
+ - Tracked change history for textarea fields (Description, etc) and bug notes
+
+ - Customizable sets of columns for View Issues page and export formats
+
+ - Combined simple and advanced views into a single, configurable view that
+   allows selecting exactly what fields to show or hide
+
+ - Improved roadmap and changelog pages, including version release dates, and
+   permalinks to individual versions
+
+ - Marking versions as obsolete to hide them from the roadmap and changelog
+
+ - More configuration options for rebranding MantisBT installations
+
+ - Improved support for PostgreSQL databases
+
+ - Improved support for UTF-8 localizations and content
+
+ - Implemented custom search providers for Firefox and Internet Explorer
+
+ - Implemented localized timestamps using according to user-preferred timezones
+
+
+There have also been many improvements to the codebase beyond adding features:
+
+ - Migrated to parameterised database queries throughout the codebase for both
+   performance and security improvements
+
+ - Added PHPDoc compatible documentation to all internal API's
+
+ - Removed many hardcoded references to access levels and other enumerations,
+   for improved customizability.
+
+ - Migrated away from DATETIME fields to integer timestamps for timezone usage
+
+ - All 3rd party code is now contained within the library/ path, including
+   documentation on library versions and any patches applied
+
+ - Initial support for MySQL 6 and PHP 5.3
+
+
+[1] The changelog is split between multiple releases:
+
+	1.2.11     http://www.mantisbt.org/bugs/changelog_page.php?version_id=148
+	1.2.10     http://www.mantisbt.org/bugs/changelog_page.php?version_id=146
+	1.2.9      http://www.mantisbt.org/bugs/changelog_page.php?version_id=140
+	1.2.8      http://www.mantisbt.org/bugs/changelog_page.php?version_id=139
+	1.2.7      http://www.mantisbt.org/bugs/changelog_page.php?version_id=138
+	1.2.6      http://www.mantisbt.org/bugs/changelog_page.php?version_id=114
+	1.2.5      http://www.mantisbt.org/bugs/changelog_page.php?version_id=113
+	1.2.4      http://www.mantisbt.org/bugs/changelog_page.php?version_id=112
+	1.2.3      http://www.mantisbt.org/bugs/changelog_page.php?version_id=111
+	1.2.2      http://www.mantisbt.org/bugs/changelog_page.php?version_id=110
+	1.2.1      http://www.mantisbt.org/bugs/changelog_page.php?version_id=109
+	1.2.0      http://www.mantisbt.org/bugs/changelog_page.php?version_id=108
+	1.2.0rc2   http://www.mantisbt.org/bugs/changelog_page.php?version_id=106
+	1.2.0rc1   http://www.mantisbt.org/bugs/changelog_page.php?version_id=98
+	1.2.0a3    http://www.mantisbt.org/bugs/changelog_page.php?version_id=104
+	1.2.0a2    http://www.mantisbt.org/bugs/changelog_page.php?version_id=96
+	1.2.0a1    http://www.mantisbt.org/bugs/changelog_page.php?version_id=89
+
+[2] GitHub is now the preferred code collaboration site for MantisBT,
+	including the official MantisBT repository and a MantisBT-plugins
+	organisation which is used to host repositories of community plugins.
+
+    https://github.com/mantisbt
+    https://github.com/mantisbt-plugins

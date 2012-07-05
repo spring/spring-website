@@ -1,34 +1,37 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: manage_user_create_page.php,v 1.20.2.1 2007-10-13 22:33:52 giallu Exp $
-	# --------------------------------------------------------
-
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
 	auth_reauthenticate();
 
 	access_ensure_global_level( config_get( 'manage_user_threshold' ) );
 
-	html_page_top1();
-	html_page_top2();
+	$t_ldap = ( LDAP == config_get( 'login_method' ) );
+
+	html_page_top();
 
 	print_manage_menu( 'manage_user_create_page.php' );
 ?>
@@ -47,17 +50,25 @@
 		<?php echo lang_get( 'username' ) ?>
 	</td>
 	<td width="75%">
-		<input type="text" name="username" size="32" maxlength="32" />
+		<input type="text" name="username" size="32" maxlength="<?php echo DB_FIELD_SIZE_USERNAME;?>" />
 	</td>
 </tr>
+<?php
+	if ( !$t_ldap || config_get( 'use_ldap_realname' ) == OFF ) {
+?>
 <tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'realname' ) ?>
 	</td>
 	<td>
-		<input type="text" name="realname" size="32" maxlength="32" />
+		<input type="text" name="realname" size="32" maxlength="<?php echo DB_FIELD_SIZE_REALNAME;?>" />
 	</td>
 </tr>
+<?php
+	}
+
+	if ( !$t_ldap || config_get( 'use_ldap_email' ) == OFF ) {
+?>
 <tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email' ) ?>
@@ -67,6 +78,8 @@
 	</td>
 </tr>
 <?php
+	}
+
 	if ( OFF == config_get( 'send_reset_password' ) )  {
 ?>
 <tr <?php echo helper_alternate_class() ?>>
@@ -74,7 +87,7 @@
 		<?php echo lang_get( 'password' ) ?>
 	</td>
 	<td>
-		<input type="password" name="password" size="32" maxlength="32" />
+		<input type="password" name="password" size="32" maxlength="<?php echo auth_get_password_max_size(); ?>" />
 	</td>
 </tr>
 <tr <?php echo helper_alternate_class() ?>>
@@ -82,7 +95,7 @@
 		<?php echo lang_get( 'verify_password' ) ?>
 	</td>
 	<td>
-		<input type="password" name="password_verify" size="32" maxlength="32" />
+		<input type="password" name="password_verify" size="32" maxlength="<?php echo auth_get_password_max_size(); ?>" />
 	</td>
 </tr>
 <?php
@@ -94,7 +107,7 @@
 	</td>
 	<td>
 		<select name="access_level">
-			<?php print_enum_string_option_list( 'access_levels', config_get( 'default_new_account_access_level' ) ) ?>
+			<?php print_project_access_levels_option_list( config_get( 'default_new_account_access_level' ) ) ?>
 		</select>
 	</td>
 </tr>
@@ -123,4 +136,5 @@
 </form>
 </div>
 
-<?php html_page_bottom1( __FILE__ ) ?>
+<?php
+	html_page_bottom();

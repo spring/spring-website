@@ -1,32 +1,28 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: print_all_bug_options_inc.php,v 1.25.2.1 2007-10-13 22:34:11 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
-	$t_core_path = config_get( 'core_path' );
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
 
-	require_once( $t_core_path.'current_user_api.php' );
-?>
-<?php
+	require_once( 'current_user_api.php' );
+
 # this function only gets the field names, by appending strings
 function get_field_names()
 {
@@ -76,7 +72,7 @@ function edit_printing_prefs( $p_user_id = null, $p_error_if_protected = true, $
 		user_ensure_unprotected( $p_user_id );
 	}
 
-	$t_user_print_pref_table = config_get( 'mantis_user_print_pref_table' );
+	$t_user_print_pref_table = db_get_table( 'mantis_user_print_pref_table' );
 
 	if ( is_blank( $p_redirect_url ) ) {
 		$p_redirect_url = 'print_all_bug_page.php';
@@ -89,8 +85,8 @@ function edit_printing_prefs( $p_user_id = null, $p_error_if_protected = true, $
 	# Grab the data
 	$query = "SELECT print_pref
 			FROM $t_user_print_pref_table
-			WHERE user_id='$c_user_id'";
-	$result = db_query( $query );
+			WHERE user_id=" . db_param();
+	$result = db_query_bound( $query, Array( $c_user_id ) );
 
 	## OOPS, No entry in the database yet.  Lets make one
 	if ( 0 == db_num_rows( $result ) ) {
@@ -106,28 +102,28 @@ function edit_printing_prefs( $p_user_id = null, $p_error_if_protected = true, $
 				INTO $t_user_print_pref_table
 				(user_id, print_pref)
 				VALUES
-				('$c_user_id','$t_default')";
+				(" . db_param() . "," . db_param() . ")";
 
-		$result = db_query( $query );
+		$result = db_query_bound( $query, Array( $c_user_id, $t_default ) );
 
 		# Rerun select query
 		$query = "SELECT print_pref
 				FROM $t_user_print_pref_table
-				WHERE user_id='$c_user_id'";
-		$result = db_query( $query );
+				WHERE user_id=" . db_param();
+		$result = db_query_bound( $query, Array( $c_user_id ) );
 	}
 
 	# putting the query result into an array with the same size as $t_fields_arr
 	$row = db_fetch_array( $result );
 	$t_prefs = $row['print_pref'];
 
+	# Account Preferences Form BEGIN
+	$t_index_count=0; 
 ?>
-
-<?php # Account Preferences Form BEGIN ?>
-<?php $t_index_count=0; ?>
 <br />
 <div align="center">
 <form method="post" action="print_all_bug_options_update.php">
+<?php echo form_security_field( 'print_all_bug_options_update' ) ?>
 <input type="hidden" name="user_id" value="<?php echo $p_user_id ?>" />
 <input type="hidden" name="redirect_url" value="<?php echo string_attribute( $p_redirect_url ) ?>" />
 <table class="width75" cellspacing="1">
@@ -159,7 +155,7 @@ for ($i=0 ; $i <$field_name_count ; $i++) {
 }
 ?>
 <tr>
-	<td>&nbsp;</td>
+	<td>&#160;</td>
 	<td>
 		<input type="submit" class="button" value="<?php echo lang_get( 'update_prefs_button' ) ?>" />
 	</td>
@@ -170,10 +166,12 @@ for ($i=0 ; $i <$field_name_count ; $i++) {
 
 <br />
 
-<div class="border-center">
+<div class="border center">
 	<form method="post" action="print_all_bug_options_reset.php">
+	<?php echo form_security_field( 'print_all_bug_options_reset' ) ?>
 	<input type="submit" class="button" value="<?php echo lang_get( 'reset_prefs_button' ) ?>" />
 	</form>
 </div>
 
-<?php } # end of edit_printing_prefs() ?>
+<?php
+}

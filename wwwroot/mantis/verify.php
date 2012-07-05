@@ -1,30 +1,33 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: verify.php,v 1.7.2.1 2007-10-13 22:34:47 giallu Exp $
-	# --------------------------------------------------------
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @author Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
+	 * @link http://www.mantisbt.org
+	 */
 
-	# ======================================================================
-	# Author: Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
-	# ======================================================================
+	# don't auto-login when trying to verify new user
+	$g_login_anonymous = false;
 
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
 	# check if at least one way to get here is enabled
@@ -41,10 +44,8 @@
 	if( auth_is_user_authenticated() ) {
 		auth_logout();
 
-		# (Re)initialize session
-		session_regenerate_id();
-		session_init();
-		$g_session_pass_id = ON;
+		# reload the page after logout
+		print_header_redirect( "verify.php?id=$f_user_id&confirm_hash=$f_confirm_hash" );
 	}
 
 	$t_calculated_confirm_hash = auth_generate_confirm_hash( $f_user_id );

@@ -1,29 +1,30 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: account_prefs_inc.php,v 1.34.14.1 2007-10-13 22:32:02 giallu Exp $
-	# --------------------------------------------------------
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 
-	$t_core_path = config_get( 'core_path' );
-
-	require_once( $t_core_path.'user_pref_api.php' );
+	require_once( 'user_pref_api.php' );
 
 	function edit_account_prefs($p_user_id = null, $p_error_if_protected = true, $p_accounts_menu = true, $p_redirect_url = '') {
 		if ( null === $p_user_id ) {
@@ -44,17 +45,15 @@
 			}
 		}
 
-	  if ( ! user_pref_exists( $p_user_id ) ) {
-			user_pref_set_default( $p_user_id );
-	  }
-
 	    # prefix data with u_
 		$t_pref = user_pref_get( $p_user_id );
+
+	# Account Preferences Form BEGIN
 ?>
-<?php # Account Preferences Form BEGIN ?>
 <br />
 <div align="center">
 <form method="post" action="account_prefs_update.php">
+<?php echo form_security_field( 'account_prefs_update' ) ?>
 <input type="hidden" name="user_id" value="<?php echo $p_user_id ?>" />
 <input type="hidden" name="redirect_url" value="<?php echo $t_redirect_url ?>" />
 <table class="width75" cellspacing="1">
@@ -70,7 +69,7 @@
 		?>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category" width="50%">
 		<?php echo lang_get( 'default_project' ) ?>
 	</td>
@@ -80,59 +79,35 @@
 		</select>
 	</td>
 </tr>
-<tr class="row-2">
-	<td class="category">
-		<?php echo lang_get( 'advanced_report' ) ?>
-	</td>
-	<td>
-		<input type="checkbox" name="advanced_report" <?php check_checked( $t_pref->advanced_report, ON ); ?> />
-	</td>
-</tr>
-<tr class="row-1">
-	<td class="category">
-		<?php echo lang_get( 'advanced_view' ) ?>
-	</td>
-	<td>
-		<input type="checkbox" name="advanced_view" <?php check_checked( $t_pref->advanced_view, ON ); ?> />
-	</td>
-</tr>
-<tr class="row-2">
-	<td class="category">
-		<?php echo lang_get( 'advanced_update' ) ?>
-	</td>
-	<td>
-		<input type="checkbox" name="advanced_update" <?php check_checked( $t_pref->advanced_update, ON ); ?> />
-	</td>
-</tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'refresh_delay' ) ?>
 	</td>
 	<td>
-		<input type="text" name="refresh_delay" size="4" maxlength="4" value="<?php echo $t_pref->refresh_delay ?>" />
+		<input type="text" name="refresh_delay" size="4" maxlength="4" value="<?php echo $t_pref->refresh_delay ?>" /> <?php echo lang_get( 'minutes' ) ?>
 	</td>
 </tr>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'redirect_delay' ) ?>
 	</td>
 	<td>
-		<input type="text" name="redirect_delay" size="1" maxlength="1" value="<?php echo $t_pref->redirect_delay ?>" />
+		<input type="text" name="redirect_delay" size="4" maxlength="3" value="<?php echo $t_pref->redirect_delay ?>" /> <?php echo lang_get( 'seconds' ) ?>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'bugnote_order' ) ?>
 	</td>
 	<td>
-		<input type="radio" name="bugnote_order" value="ASC" <?php check_checked( $t_pref->bugnote_order, 'ASC' ); ?> /><?php echo lang_get( 'bugnote_order_asc' ) ?>
-		<input type="radio" name="bugnote_order" value="DESC" <?php check_checked( $t_pref->bugnote_order, 'DESC' ); ?> /><?php echo lang_get( 'bugnote_order_desc' ) ?>
+		<label><input type="radio" name="bugnote_order" value="ASC" <?php check_checked( $t_pref->bugnote_order, 'ASC' ); ?> /><?php echo lang_get( 'bugnote_order_asc' ) ?></label>
+		<label><input type="radio" name="bugnote_order" value="DESC" <?php check_checked( $t_pref->bugnote_order, 'DESC' ); ?> /><?php echo lang_get( 'bugnote_order_desc' ) ?></label>
 	</td>
 </tr>
 <?php
 	if ( ON == config_get( 'enable_email_notification' ) ) {
 ?>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_new' ) ?>
 	</td>
@@ -141,12 +116,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_new_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_new_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_assigned' ) ?>
 	</td>
@@ -155,12 +130,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_assigned_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_assigned_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_feedback' ) ?>
 	</td>
@@ -169,12 +144,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_feedback_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_feedback_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_resolved' ) ?>
 	</td>
@@ -183,12 +158,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_resolved_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_resolved_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_closed' ) ?>
 	</td>
@@ -197,12 +172,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_closed_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_closed_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_reopened' ) ?>
 	</td>
@@ -211,12 +186,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_reopened_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_reopened_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_bugnote_added' ) ?>
 	</td>
@@ -225,12 +200,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_bugnote_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_bugnote_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_status_change' ) ?>
 	</td>
@@ -239,12 +214,12 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_status_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_status_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_on_priority_change' ) ?>
 	</td>
@@ -253,17 +228,17 @@
 		<?php echo lang_get( 'with_minimum_severity' ) ?>
 		<select name="email_on_priority_min_severity">
 			<option value="<?php echo OFF ?>"><?php echo lang_get( 'any' ) ?></option>
-			<option value="<?php echo OFF ?>"></option>
+			<option disabled="disabled">-----</option>
 			<?php print_enum_string_option_list( 'severity', $t_pref->email_on_priority_min_severity ) ?>
 		</select>
 	</td>
 </tr>
-<tr class="row-1">
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'email_bugnote_limit' ) ?>
 	</td>
 	<td>
-		<input type="text" name="email_bugnote_limit" maxlength="2" size="2" value="<?php echo $t_pref->email_bugnote_limit ?>">
+		<input type="text" name="email_bugnote_limit" maxlength="2" size="2" value="<?php echo $t_pref->email_bugnote_limit ?>" />
 	</td>
 </tr>
 <?php } else { ?>
@@ -287,7 +262,17 @@
 		<input type="hidden" name="email_on_priority_min_severity" value="<?php echo $t_pref->email_on_priority_min_severity ?>" />
 		<input type="hidden" name="email_bugnote_limit" value="<?php echo $t_pref->email_bugnote_limit ?>" />
 <?php } ?>
-<tr class="row-2">
+<tr <?php echo helper_alternate_class() ?>>
+	<td class="category">
+		<?php echo lang_get( 'timezone' ) ?>
+	</td>
+	<td>
+		<select name="timezone">
+			<?php print_timezone_option_list( $t_pref->timezone ?  $t_pref->timezone  : config_get_global( 'default_timezone' ) ) ?>
+		</select>
+	</td>
+</tr>
+<tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'language' ) ?>
 	</td>
@@ -297,6 +282,7 @@
 		</select>
 	</td>
 </tr>
+<?php event_signal( 'EVENT_ACCOUNT_PREF_UPDATE_FORM', array( $p_user_id ) ); ?>
 <tr>
 	<td colspan="2" class="center">
 		<input type="submit" class="button" value="<?php echo lang_get( 'update_prefs_button' ) ?>" />
@@ -308,8 +294,9 @@
 
 <br />
 
-<div class="border-center">
+<div class="border center">
 	<form method="post" action="account_prefs_reset.php">
+	<?php echo form_security_field( 'account_prefs_reset' ) ?>
 	<input type="hidden" name="user_id" value="<?php echo $p_user_id ?>" />
 	<input type="hidden" name="redirect_url" value="<?php echo $t_redirect_url ?>" />
 	<input type="submit" class="button" value="<?php echo lang_get( 'reset_prefs_button' ) ?>" />
@@ -318,4 +305,3 @@
 
 <?php
 	} # end of edit_account_prefs()
-?>

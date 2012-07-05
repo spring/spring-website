@@ -1,38 +1,35 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: make_captcha_img.php,v 1.8.20.1 2007-10-13 22:33:22 giallu Exp $
-	# --------------------------------------------------------
-
-	# ======================================================================
-	# Author: Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
-	# ======================================================================
-
-#	ob_start();
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @author Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
-#	ob_flush();
 
 	$f_public_key = gpc_get_int( 'public_key' );
 
-	$t_key = strtolower( substr( md5( config_get( 'password_confirm_hash_magic_string' ) . $f_public_key ), 1, 5) );
-	$t_system_font_folder = config_get( 'system_font_folder' );
+	$t_key = utf8_strtolower( utf8_substr( md5( config_get( 'password_confirm_hash_magic_string' ) . $f_public_key ), 1, 5) );
+	$t_system_font_folder = get_font_path();
 	$t_font_per_captcha = config_get( 'font_per_captcha' );
 
 	$t_captcha_init = array(
@@ -40,7 +37,7 @@
 		'TTF_RANGE'      => array( $t_font_per_captcha )
 	);
 
-	$captcha =& new masc_captcha( $t_captcha_init );
+	$captcha = new masc_captcha( $t_captcha_init );
 	$captcha->make_captcha( $t_key );
 
 #
@@ -169,7 +166,6 @@
 				if($this->debug) echo "\n<br />-Captcha-Debug: Generate ImageStream with: ($func1())";
 				if($this->debug) echo "\n<br />-Captcha-Debug: For colordefinitions we use: ($func2())";
 
-
 				// Set Backgroundcolor
 				$this->random_color(224, 255);
 				$back =  @imagecolorallocate($image, $this->r, $this->g, $this->b);
@@ -178,7 +174,6 @@
 
 				// allocates the 216 websafe color palette to the image
 				if($this->gd_version < 2 || $this->websafecolors) $this->makeWebsafeColors($image);
-
 
 				// fill with noise or grid
 				if($this->nb_noise > 0)
@@ -229,7 +224,7 @@
 				if($this->debug) echo "\n<br />-Captcha-Debug: Fill forground with chars and shadows: (".$this->chars.")";
 				for($i=0, $x = intval(rand($this->minsize,$this->maxsize)); $i < $this->chars; $i++)
 				{
-					$text	= strtoupper(substr($private_key, $i, 1));
+					$text	= utf8_strtoupper(substr($private_key, $i, 1));
 					srand((double)microtime()*1000000);
 					$angle	= intval(rand(($this->maxrotation * -1), $this->maxrotation));
 					srand((double)microtime()*1000000);
@@ -301,5 +296,3 @@
 			}
 
 	} // END CLASS masc_captcha
-
-?>

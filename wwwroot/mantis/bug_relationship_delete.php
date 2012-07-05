@@ -1,45 +1,49 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2008  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Id: bug_relationship_delete.php,v 1.10.14.1 2007-10-13 22:32:46 giallu Exp $
-	# --------------------------------------------------------
-
-	# ======================================================================
-	# Author: Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
-	# ======================================================================
-	# To delete a relationship we need to ensure that:
-	# - User not anomymous
-	# - Source bug exists and is not in read-only state (peer bug could not exist...)
-	# - User that update the source bug and at least view the destination bug
-	# - Relationship must exist
-	# ----------------------------------------------------------------------
-
+	/**
+	 * To delete a relationship we need to ensure that:
+	 * - User not anomymous
+	 * - Source bug exists and is not in read-only state (peer bug could not exist...)
+	 * - User that update the source bug and at least view the destination bug
+	 * - Relationship must exist
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @author Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
-	require_once( $t_core_path . 'relationship_api.php' );
+	require_once( 'relationship_api.php' );
 
-	# helper_ensure_post();
+	form_security_validate( 'bug_relationship_delete' );
 
 	$f_rel_id = gpc_get_int( 'rel_id' );
 	$f_bug_id = gpc_get_int( 'bug_id' );
+
+	$t_bug = bug_get( $f_bug_id, true );
+	if( $t_bug->project_id != helper_get_current_project() ) {
+		# in case the current project is not the same project of the bug we are viewing...
+		# ... override the current project. This to avoid problems with categories and handlers lists etc.
+		$g_project_override = $t_bug->project_id;
+	}
 
 	# user has access to update the bug...
 	access_ensure_bug_level( config_get( 'update_bug_threshold' ), $f_bug_id );
@@ -48,13 +52,6 @@
 	if ( bug_is_readonly( $f_bug_id ) ) {
 		error_parameters( $f_bug_id );
 		trigger_error( ERROR_BUG_READ_ONLY_ACTION_DENIED, ERROR );
-	}
-
-	$t_bug = bug_get( $f_bug_id, true );
-	if( $t_bug->project_id != helper_get_current_project() ) {
-		# in case the current project is not the same project of the bug we are viewing...
-		# ... override the current project. This to avoid problems with categories and handlers lists etc.
-		$g_project_override = $t_bug->project_id;
 	}
 
 	# retrieve the destination bug of the relationship
@@ -83,8 +80,7 @@
 	if ($f_bug_id == $t_bug_relationship_data->src_bug_id) {
 		$t_bug_rel_type = $t_rel_type;
 		$t_dest_bug_rel_type = relationship_get_complementary_type( $t_rel_type );
-	}
-	else {
+	} else {
 		$t_bug_rel_type = relationship_get_complementary_type( $t_rel_type );
 		$t_dest_bug_rel_type = $t_rel_type;
 	}
@@ -99,5 +95,6 @@
 		email_relationship_deleted( $t_dest_bug_id, $f_bug_id, $t_dest_bug_rel_type );
 	}
 
+	form_security_purge( 'bug_relationship_delete' );
+
 	print_header_redirect_view( $f_bug_id );
-?>

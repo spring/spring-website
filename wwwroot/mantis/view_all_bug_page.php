@@ -1,41 +1,36 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	# --------------------------------------------------------
-	# $Revision: 1.62.2.1 $
-	# $Author: giallu $
-	# $Date: 2007-10-13 22:34:48 $
-	#
-	# $Id: view_all_bug_page.php,v 1.62.2.1 2007-10-13 22:34:48 giallu Exp $
-	# --------------------------------------------------------
-?>
-<?php
+	/**
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+	 /**
+	  * MantisBT Core API's
+	  */
 	require_once( 'core.php' );
 
-	$t_core_path = config_get( 'core_path' );
+	require_once( 'compress_api.php' );
+	require_once( 'filter_api.php' );
+	require_once( 'last_visited_api.php' );
 
-	require_once( $t_core_path.'compress_api.php' );
-	require_once( $t_core_path.'filter_api.php' );
-	require_once( $t_core_path.'last_visited_api.php' );
-?>
-<?php auth_ensure_user_authenticated() ?>
-<?php
+	auth_ensure_user_authenticated();
+
 	$f_page_number		= gpc_get_int( 'page_number', 1 );
 
 	$t_per_page = null;
@@ -48,14 +43,25 @@
 	}
 
 	$t_bugslist = Array();
-	$t_row_count = sizeof( $rows );
+	$t_users_handlers = Array();
+	$t_project_ids  = Array();
+	$t_row_count = count( $rows );
 	for($i=0; $i < $t_row_count; $i++) {
-		array_push($t_bugslist, $rows[$i]["id"] );
+		array_push($t_bugslist, $rows[$i]->id );
+		$t_users_handlers[] = $rows[$i]->handler_id;
+		$t_project_ids[] = $rows[$i]->project_id;
 	}
+	$t_unique_users_handlers = array_unique( $t_users_handlers );
+	$t_unique_project_ids = array_unique( $t_project_ids );
+	user_cache_array_rows( $t_unique_users_handlers );
+	project_cache_array_rows( $t_unique_project_ids );
 
 	gpc_set_cookie( config_get( 'bug_list_cookie' ), implode( ',', $t_bugslist ) );
 
 	compress_enable();
+
+	# don't index view issues pages
+	html_robots_noindex();
 
 	html_page_top1( lang_get( 'view_bugs_link' ) );
 
@@ -69,5 +75,4 @@
 
 	include( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'view_all_inc.php' );
 
-	html_page_bottom1( __FILE__ );
-?>
+	html_page_bottom();

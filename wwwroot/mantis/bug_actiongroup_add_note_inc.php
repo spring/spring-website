@@ -1,41 +1,41 @@
 <?php
-# Mantis - a php based bugtracking system
+# MantisBT - a php based bugtracking system
 
-# Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2007  Mantis Team   - mantisbt-dev@lists.sourceforge.net
-
-# Mantis is free software: you can redistribute it and/or modify
+# MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# Mantis is distributed in the hope that it will be useful,
+# MantisBT is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Mantis.  If not, see <http://www.gnu.org/licenses/>.
-
-	# --------------------------------------------------------
-	# $Id: bug_actiongroup_add_note_inc.php,v 1.3.2.1 2007-10-13 22:32:31 giallu Exp $
-	# --------------------------------------------------------
+# along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
 	/**
-	 * Prints the title for the custom action page.	 
+	 * @package MantisBT
+	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @link http://www.mantisbt.org
+	 */
+
+	/**
+	 * Prints the title for the custom action page.
 	 */
 	function action_add_note_print_title() {
         echo '<tr class="form-title">';
         echo '<td colspan="2">';
         echo lang_get( 'add_bugnote_title' );
-        echo '</td></tr>';		
+        echo '</td></tr>';
 	}
 
 	/**
 	 * Prints the field within the custom action form.  This has an entry for
 	 * every field the user need to supply + the submit button.  The fields are
 	 * added as rows in a table that is already created by the calling code.
-	 * A row has two columns.         	 
+	 * A row has two columns.
 	 */
 	function action_add_note_print_fields() {
 		echo '<tr class="row-1" valign="top"><td class="category">', lang_get( 'add_bugnote_title' ), '</td><td><textarea name="bugnote_text" cols="80" rows="10"></textarea></td></tr>';
@@ -47,14 +47,15 @@
 	</td>
 	<td>
 <?php
-		if ( access_has_project_level( config_get( 'change_view_status_threshold' ) ) ) { ?>
+		$t_default_state = config_get( 'default_bugnote_view_status' );
+		if ( access_has_project_level( config_get( 'set_view_status_threshold' ) ) ) { ?>
 			<select name="view_state">
-				<?php print_enum_string_option_list( 'view_state', $t_bug->view_state) ?>
+				<?php print_enum_string_option_list( 'view_state', $t_default_state ) ?>
 			</select>
 <?php
 		} else {
-			echo get_enum_element( 'view_state', $t_bug->view_state );
-			echo '<input type="hidden" name="view_state" value="', $t_bug->view_state, '" />';
+			echo get_enum_element( 'view_state', $t_default_state );
+			echo '<input type="hidden" name="view_state" value="', $t_default_state, '" />';
 		}
 ?>
 	</td>
@@ -65,9 +66,8 @@
 
 	/**
 	 * Validates the action on the specified bug id.
-	 * 
-	 * @returns true    Action can be applied.
-	 * @returns array( bug_id => reason for failure )	 
+	 *
+	 * @returns true|array Action can be applied., ( bug_id => reason for failure )
 	 */
 	function action_add_note_validate( $p_bug_id ) {
 		$f_bugnote_text = gpc_get_string( 'bugnote_text' );
@@ -96,11 +96,9 @@
 
 	/**
 	 * Executes the custom action on the specified bug id.
-	 * 
+	 *
 	 * @param $p_bug_id  The bug id to execute the custom action on.
-	 * 
-	 * @returns true   Action executed successfully.
-	 * @returns array( bug_id => reason for failure )               	 
+	 * @returns true|array Action executed successfully., ( bug_id => reason for failure )
 	 */
 	function action_add_note_process( $p_bug_id ) {
 		$f_bugnote_text = gpc_get_string( 'bugnote_text' );
@@ -108,4 +106,3 @@
 		bugnote_add ( $p_bug_id, $f_bugnote_text, '0:00', /* $p_private = */ $f_view_state != VS_PUBLIC  );
         return true;
     }
-?>
