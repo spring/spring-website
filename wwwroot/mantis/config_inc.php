@@ -77,5 +77,7 @@
 	$g_view_issues_page_columns = array ( 'selection', 'edit', 'priority', 'id', 'sponsorship_total', 'bugnotes_count', 'attachment', 'category','version', 'severity', 'status', 'last_updated', 'summary' );
 	# disable profiles (platform selection) in reports
 	$g_enable_profiles = OFF;
+	# enable (deprecated) news
+	$g_news_enabled = ON;
 
 ?>
