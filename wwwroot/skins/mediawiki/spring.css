@@ -151,20 +151,26 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .editsection             {margin-right: 5px;}
 
 /* LEFT SHIFT AFTER H1 HEADERS */
-#mw-content-text > * + p         {margin-left: 15px;}
-#mw-content-text > *             {margin-left: 15px;}
+#mw-content-text > * + p,
+.wikiEditor-preview-contents > * + p         {margin-left: 15px;}
+#mw-content-text > *,
+.wikiEditor-preview-contents > *             {margin-left: 15px;}
 
 #mw-content-text > p:first-child,
 #mw-content-text > p:first-child + p,
 #mw-content-text > p:first-child + p + p,
 #mw-content-text > p:first-child + p + p + p,
-#mw-content-text > p:first-child + p + p + p + p {margin-left: 0px;}
+#mw-content-text > p:first-child + p + p + p + p,
+.wikiEditor-preview-contents > p:first-child,
+.wikiEditor-preview-contents > p:first-child + p,
+.wikiEditor-preview-contents > p:first-child + p + p,
+.wikiEditor-preview-contents > p:first-child + p + p + p,
+.wikiEditor-preview-contents > p:first-child + p + p + p + p {margin-left: 0px;}
 
 #mw-content-text ul,
 #mw-content-text ol              {margin-left: 5px;}
 #mw-content-text hr              {margin-left: 0px;}
 #mw-content-text table           {margin-left: 0px;}
-
 
 /* MEDIAWIKI SPECIALS */
 .TablePager th           {background-color: #444;}
@@ -181,15 +187,16 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 #pagehistory .autocomment,
 #pagehistory .comment    {color: #ccc;}
 
-table.diff               {background-color: #3A4A50; border: 1px #aaa solid;}
+/* many !importants because ResourceLoader loads WikiEditor CSS *after* skin CSS... */
+table.diff               {background-color: #3A4A50 !important; border: 1px #aaa solid;}
 td.diff-otitle,
-td.diff-ntitle           {background-color: #41545c; border: 1px #aaa solid;}
-td.diff-context          {background-color: #41545c;}
+td.diff-ntitle           {background-color: #41545c !important; border: 1px #aaa solid;}
+td.diff-context          {background-color: #41545c !important;}
 td.diff-marker,
 td.diff-lineno           {background-color: transparent;}
 col.diff-content         {border: 10px solid #000000;}
-td.diff-deletedline      {background-color: #a44;}
-td.diff-addedline        {background-color: #4a4;}
+td.diff-deletedline      {background-color: #a44 !important;}
+td.diff-addedline        {background-color: #4a4 !important;}
 ins.diffchange           {background-color: #32A032; color: #050;}
 del.diffchange           {color: #f33;}
 small                    {font-size: 75%;}
@@ -221,3 +228,13 @@ table.wikitable > * > tr > th {background-color: #38474E;}
 .mw-search-formheader    {background-color: inherit;} /* fix backgroundcolors in search */
 fieldset#mw-searchoptions{background-color: inherit;}
 #catlinks                {text-align: center;}
+
+/* FIXES FOR WikiEditor (since MEDIAWIKI 1.19) */
+/* many !importants because ResourceLoader loads WikiEditor CSS *after* skin CSS... */
+.wikiEditor-ui {background-color: inherit !important;}
+.wikiEditor-ui-toolbar .toolbar {background: inherit;}
+#mw-content-text .wikiEditor-ui-tabs a,
+#mw-content-text .wikiEditor-ui-toolbar a {color: #0645AD; text-shadow: none;}
+.wikiEditor-preview-loading {background-color: inherit !important;}
+.wikiEditor-preview-contents {background-color: inherit !important;}
+.wikiEditor-ui-text textarea {width: 100%;}
