@@ -228,6 +228,8 @@ table.wikitable > * > tr > th {background-color: #38474E;}
 .mw-search-formheader    {background-color: inherit;} /* fix backgroundcolors in search */
 fieldset#mw-searchoptions{background-color: inherit;}
 #catlinks                {text-align: center;}
+.mw-content-ltr ul, .mw-content-rtr ul,
+.mw-content-ltr ol, .mw-content-rtr ol {padding-left: 40px;}
 
 /* FIXES FOR WikiEditor (since MEDIAWIKI 1.19) */
 /* many !importants because ResourceLoader loads WikiEditor CSS *after* skin CSS... */
