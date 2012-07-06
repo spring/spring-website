@@ -234,7 +234,7 @@ fieldset#mw-searchoptions{background-color: inherit;}
 /* FIXES FOR WikiEditor (since MEDIAWIKI 1.19) */
 /* many !importants because ResourceLoader loads WikiEditor CSS *after* skin CSS... */
 .wikiEditor-ui {background-color: inherit !important;}
-.wikiEditor-ui-toolbar .toolbar {background: inherit;}
+.wikiEditor-ui-toolbar .toolbar {background: inherit; padding-left: 0px;}
 #mw-content-text .wikiEditor-ui-tabs a,
 #mw-content-text .wikiEditor-ui-toolbar a {color: #0645AD; text-shadow: none;}
 .wikiEditor-preview-loading {background-color: inherit !important;}
