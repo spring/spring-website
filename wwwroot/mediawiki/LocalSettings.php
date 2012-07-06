@@ -62,7 +62,7 @@ $wgEmailAuthentication = true;
 
 $wgDBtype           = "mysql";
 
-include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php');
+include( "$IP/../../springpw.php" );
 $wgDBserver         = $spring_dbhost;
 $wgDBuser           = $spring_dbuser;
 $wgDBpassword       = $spring_dbpass;
