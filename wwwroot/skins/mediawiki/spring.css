@@ -240,3 +240,5 @@ fieldset#mw-searchoptions{background-color: inherit;}
 .wikiEditor-preview-loading {background-color: inherit !important;}
 .wikiEditor-preview-contents {background-color: inherit !important;}
 .wikiEditor-ui-text textarea {width: 100%;}
+#mw-content-text .wikiEditor-ui-toolbar .page-table th {color: #999999;}
+#mw-content-text .wikiEditor-ui-toolbar .page-table td {color: black;}
