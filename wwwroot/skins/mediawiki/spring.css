@@ -242,3 +242,8 @@ fieldset#mw-searchoptions{background-color: inherit;}
 .wikiEditor-ui-text textarea {width: 100%;}
 #mw-content-text .wikiEditor-ui-toolbar .page-table th {color: #999999;}
 #mw-content-text .wikiEditor-ui-toolbar .page-table td {color: black;}
+#mw-content-text .wikiEditor-ui-toolbar .page-table h1,
+#mw-content-text .wikiEditor-ui-toolbar .page-table h2,
+#mw-content-text .wikiEditor-ui-toolbar .page-table h3,
+#mw-content-text .wikiEditor-ui-toolbar .page-table h4,
+#mw-content-text .wikiEditor-ui-toolbar .page-table h5 {color: black; margin: 3px;}
