@@ -189,7 +189,7 @@ $messages = array(
 'yourname'                => 'Hero',
 'yourpassword'            => 'Ne remiñemi',
 'yourpasswordagain'       => 'Repita ne remiñemi',
-'remembermypassword'      => "Aipota chemomandu'ajepi amba'apo jave.",
+'remembermypassword'      => "Aipota chemomandu'ajepi amba'apo jave (for a maximum of $1 {{PLURAL:$1|day|days}})",
 'login'                   => 'Terañemboguapy/Ke',
 'nav-login-createaccount' => 'Terañemboguapy/Ke',
 'userlogin'               => 'Terañemboguapy/Ke',
@@ -210,7 +210,6 @@ $messages = array(
 'link_tip'      => 'Joaju hyepyguávandi',
 'extlink_tip'   => 'Joaju okapeguávandi (recuerde añadir el prefijo http://)',
 'headline_tip'  => 'Teraete mokõiha',
-'math_tip'      => 'Matemátika kuaareko (LaTeX)',
 'nowiki_tip'    => "Viki jehaireko ñembo'yke",
 'image_tip'     => "Ta'ãnga moĩngepyréva",
 'media_tip'     => "Joaju jehai'aty multimediaguándi",
@@ -230,13 +229,11 @@ $messages = array(
 'newarticletext'        => "Rehapykuehókuri peteĩ joaju peteĩ kuatiarogue ndaipórivape.
 Nde remoheñoisérõ ko kuatiarogue, eñepyrũkatu ehai.
 Reikotevẽvérõ marandu, emoñe'ẽ kuatiarogue ñepytyvõ rehegua. Oiméramo reikereínte térã rejavyhaguére, upéicharõ terehojey [[{{MediaWiki:Helppage}}|kuatiarogue mboyveguápe]].",
-'userinvalidcssjstitle' => "'''Aviso:''' No existe la piel \"\$1\". Recuerda que las páginas personalizadas .css y .js tienen un título en minúsculas, p.e. Usuario:Foo/monobook.css en vez de  Usuario:Foo/Monobook.css.",
+'userinvalidcssjstitle' => "'''Aviso:''' No existe la piel \"\$1\". Recuerda que las páginas personalizadas .css y .js tienen un título en minúsculas, p.e. Usuario:Foo/vector.css en vez de  Usuario:Foo/Vector.css.",
 'editing'               => 'Ojehaihína $1',
 'editingsection'        => 'Ojehaihína $1 (vore)',
 'editingcomment'        => 'Ojehaihína $1 (comentario)',
 'yourtext'              => "Mba'ehaipyre",
-'longpagewarning'       => "'''Ejesarekóke: ko kuatiarogue, tuichakuépe, oguereko $1 kb; heta kundahára ikatu iñapañuãi jehaijeýpe kuatiarogue ohaságui 32 kb.
-Aipórõ, eñeha'ãna emboja'o ne rembiapo, vore michĩvévape.'''",
 
 # History pages
 'cur'         => "ko'ag̃agua",
@@ -245,7 +242,7 @@ Aipórõ, eñeha'ãna emboja'o ne rembiapo, vore michĩvévape.'''",
 
 # Revision deletion
 'rev-delundel'       => 'hechauka/toñemi',
-'logdelete-selected' => "'''Seleccionados $2 eventos de registro:'''",
+'logdelete-selected' => "'''Seleccionados $1 eventos de registro:'''",
 
 # Diffs
 'difference' => "(Mba'épe ojaovy oñemyatyrõva'ekue)",
@@ -305,7 +302,7 @@ Aipórõ, eñeha'ãna emboja'o ne rembiapo, vore michĩvévape.'''",
 # Upload
 'upload'     => "Tojehupi jehai'aty",
 'uploadtext' => "Eipuru pe tembipuru oĩva iguýpe ehupi hag̃ua jehai'aty, rehecha térã reheka hag̃ua ta'ãnga ojehupipyrémava eike jehai'aty jehupipyre rysýipe, umi ihupipyréva ha oñemboguémava avei oñemboguapy [[Special:Log/upload|jehai'aty jehupipyrépe]].
-Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju: 
+Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 '''<nowiki>[[</nowiki>Imagen<nowiki>:Archivo.jpg]]</nowiki>''', '''<nowiki>[[</nowiki>Imagen<nowiki>:Archivo.png|texto alternativo]]</nowiki>''' o
 '''<nowiki>[[</nowiki>Media<nowiki>:Archivo.ogg]]</nowiki>''' ojoaju hag̃ua hekopete pe jehai'atýre.",
 'filename'   => "Téra jehai'aty",
@@ -432,9 +429,8 @@ Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 'watch'       => 'Ñangareko',
 
 # Delete
-'deletedarticle' => 'oñembogue "[[$1]]"',
-'dellogpage'     => 'Ñemboguepyre ñonagatupy',
-'deletionlog'    => 'ñemboguepyre ñonagatupy',
+'dellogpage'  => 'Ñemboguepyre ñonagatupy',
+'deletionlog' => 'ñemboguepyre ñonagatupy',
 
 # Rollback
 'rollback_short' => 'Embojevy',
@@ -477,13 +473,12 @@ Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 'ipblocklist-submit' => 'Heka',
 'blocklink'          => 'ejoko',
 'contribslink'       => "mba'emoĩmbyre",
-'blocklogtext'       => 'Esto es un registro de bloqueos y desbloqueos de usuarios. Las direcciones bloqueadas automáticamente no aparecen aquí. Consulte la [[Special:IPBlockList|IP mbohape rysýi imbotypyréva]] para ver la lista de prohibiciones y bloqueos actualmente vigente.',
+'blocklogtext'       => 'Esto es un registro de bloqueos y desbloqueos de usuarios. Las direcciones bloqueadas automáticamente no aparecen aquí. Consulte la [[Special:BlockList|IP mbohape rysýi imbotypyréva]] para ver la lista de prohibiciones y bloqueos actualmente vigente.',
 
 # Move page
 'movearticle'     => 'Guerova kuatiarogue',
 'move-watch'      => 'Toñeñangareko ko tembiapóre',
 'movepagebtn'     => 'Guerova kuatiarogue',
-'1movedto2'       => '[[$1]] oñembohasa [[$2]]-pe',
 'revertmove'      => 'embojevy',
 'delete_and_move' => "Mboje'o ha guerova",
 
@@ -518,7 +513,7 @@ Reomĩsérõ ta'ãnga peteĩ kuatiaroguépe, eipuru peteĩ joaju:
 'spam_blanking'       => 'Todas las revisiones contienen enlaces a $1, blanqueando',
 
 # Media information
-'file-info' => "(tamaño de jehai'aty: $1; tipo MIME: $2)",
+'file-info' => "tamaño de jehai'aty: $1; tipo MIME: $2",
 
 # Special:NewFiles
 'newimages' => "Ta'ãnga pyahu renda",

@@ -1,5 +1,5 @@
 <?php
-/** Megleno-Romanian (Latin) (Vlăheşte (Latin))
+/** Megleno-Romanian (Latin script) (Vlăheşte)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Andrijko Z.
  * @author Кумулај Маркус
  * @author Макѕе
  * @author Приетен тев
@@ -133,8 +134,7 @@ $messages = array(
 'nstab-category' => 'kategoria',
 
 # General errors
-'viewsource'    => 'Baganaere',
-'viewsourcefor' => 'pentru $1',
+'viewsource' => 'Baganaere',
 
 # Login and logout pages
 'yourname'                => "Nom d'utilizatoru:",
@@ -154,8 +154,6 @@ $messages = array(
 'extlink_tip'     => 'Legătul ķsternul (vec prefiks http://)',
 'headline_sample' => "Eskrire s'titlus",
 'headline_tip'    => 'Titlu de nivel 2',
-'math_sample'     => 'Introduca formula isi',
-'math_tip'        => "Formula s'matematiks (LaTeX)",
 'nowiki_sample'   => 'Intorduca no-Wiki isi',
 'nowiki_tip'      => 'No-Wiki klaşu',
 'image_tip'       => 'Santigul inserat',
@@ -201,7 +199,7 @@ Te rog notari la din kontribuţi al {{SITENAME}} sunt konsideraere relesavat sup
 
 # Recent changes
 'recentchanges'   => 'şumbărae recentae',
-'rcnote'          => "Mai hos se flă {{PLURAL:$|ultima modifikare|ultimele '''$1''' modifikări}} din {{PLURAL:$2|ultima zi|ultimele '''$2''' zile}}, encepând cu $3.",
+'rcnote'          => "Mai hos se flă {{PLURAL:$|ultima modifikare|ultimele '''$1''' modifikări}} din {{PLURAL:$2|ultima zi|ultimele '''$2''' zile}}, encepând cu $5, $4.",
 'rcshowhideminor' => '$1 modifikările minore',
 'rcshowhidebots'  => '$1 roboti',
 'rcshowhideliu'   => '$1 utilizatori prilasnaeri',
@@ -233,8 +231,8 @@ $3',
 'filehist-user'       => 'Utilizatoru',
 'filehist-dimensions' => 'Dimencions',
 'filehist-comment'    => 'komentarul',
-'imagelinks'          => 'legătul',
-'linkstoimage'        => 'Ces paži legǎtent a ce fişirul:',
+'imagelinks'          => 'Legătul fişirul de media',
+'linkstoimage'        => 'Ces {{PLURAL:$1|paži legǎt|paži legǎtent}} a ce fişirul:',
 
 # Random page
 'randompage' => 'alaeţu',
@@ -254,18 +252,14 @@ $3',
 'allpagessubmit' => 'Treme',
 
 # Watchlist
-'watchlist'    => 'Maj klăaeru',
-'mywatchlist'  => 'Maj klăaere',
-'watchlistfor' => "(pentru '''$1''')",
-'watch'        => 'klăaere',
-'unwatch'      => 'Deklăaera',
+'watchlist'   => 'Maj klăaeru',
+'mywatchlist' => 'Maj klăaere',
+'watch'       => 'klăaere',
+'unwatch'     => 'Deklăaera',
 
 # Displayed when you click the "watch" button and it is in the process of watching
 'watching'   => 'O klăaere...',
 'unwatching' => 'O deklăaere...',
-
-# Delete
-'deletedarticle' => 'delǎraj "[[$1]]"',
 
 # Rollback
 'rollbacklink' => 'revenire',
@@ -335,7 +329,7 @@ $3',
 'tooltip-diff'              => 'Rată ce modifikări ai făcut tekstului.',
 
 # Media information
-'file-nohires'   => "<small>Ce-n-est n'resolucion mai mari.</small>",
+'file-nohires'   => "Ce-n-est n'resolucion mai mari.",
 'show-big-image' => 'Mareşte resolucion',
 
 # Bad image list

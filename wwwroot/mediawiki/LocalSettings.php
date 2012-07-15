@@ -62,7 +62,7 @@ $wgEmailAuthentication = true;
 
 $wgDBtype           = "mysql";
 
-include($_SERVER['DOCUMENT_ROOT'] . '/../springpw.php');
+include( "$IP/../../springpw.php" );
 $wgDBserver         = $spring_dbhost;
 $wgDBuser           = $spring_dbuser;
 $wgDBpassword       = $spring_dbpass;
@@ -83,7 +83,7 @@ $wgDBmwschema       = "mediawiki";
 $wgDBts2schema      = "public";
 
 ## Shared memory settings
-$wgMainCacheType = CACHE_ACCEL;
+$wgMainCacheType = CACHE_NONE; // FIXME: CACHE_ACCEL;
 $wgMemCachedServers = array();
 
 ## To enable image uploads, make sure the 'images' directory
@@ -138,13 +138,10 @@ $wgArticlePath = '/wiki/$1';  # Virtual path. This directory MUST be different f
 $wgUsePathInfo = true;
 
 // PHPBB User Database Plugin. (Requires MySQL Database)
-require_once './extensions/Auth_phpBB.php';
+require_once( "$IP/extensions/Auth_phpBB.php" );
 
 // CSS extension
-require_once './extensions/CSS/CSS.php';
-
-// BreadCrumb extension
-// require_once './extensions/BreadCrumbs/BreadCrumbs.php';
+require_once( "$IP/extensions/CSS/CSS.php" );
 
 $wgAuth_Config = array(); // Clean.
 
@@ -195,12 +192,12 @@ $wgDefaultSkin = 'springnew';
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
+require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 
-// Enable WYSIWYG editor
-require_once("$IP/extensions/WYSIWYG/WYSIWYG.php");
-// allow registered users to use it
-$wgGroupPermissions['registered_users']['wysiwyg']=true;
-// don't show it as default
-$wgDefaultUserOptions['riched_load_semantic_toolbar'] = 0;
+$wgDefaultUserOptions['usebetatoolbar'] = 1;
+$wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
+$wgDefaultUserOptions['wikieditor-preview'] = 1;
+
+require_once( "$IP/extensions/Cite/Cite.php" );
 
 ?>

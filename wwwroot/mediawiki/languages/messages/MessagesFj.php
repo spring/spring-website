@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Jose77 (on fj.wikipedia.org)
  */
 
 $messages = array(
@@ -102,7 +103,7 @@ $messages = array(
 'yourname'           => 'Yaca vakayagataki',
 'yourpassword'       => 'Yaca vuni',
 'yourpasswordagain'  => 'Vola tale na Yaca vuni',
-'remembermypassword' => 'Nanuma na yacaqu ena komipiuta oqo',
+'remembermypassword' => 'Nanuma na yacaqu ena komipiuta oqo (for a maximum of $1 {{PLURAL:$1|day|days}})',
 'login'              => 'Curu mai',
 'userlogin'          => 'Curu mai / Dolava nomu Akaude',
 'logout'             => 'Curu yani',
