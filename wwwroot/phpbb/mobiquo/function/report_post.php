@@ -89,13 +89,15 @@ function report_post_func($xmlrpc_params)
     $sql_ary = array(
         'reason_id'     => (int) $reason_id,
         'post_id'       => $post_id,
-        'pm_id'         => $pm_id,
         'user_id'       => (int) $user->data['user_id'],
         'user_notify'   => (int) $user_notify,
         'report_closed' => 0,
         'report_time'   => (int) time(),
         'report_text'   => (string) $report_text
     );
+    
+    if (version_compare($config['version'], '3.0.6', '>='))
+        $sql_ary['pm_id'] = $pm_id;
 
     $sql = 'INSERT INTO ' . REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
     $db->sql_query($sql);

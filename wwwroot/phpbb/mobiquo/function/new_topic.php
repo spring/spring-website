@@ -285,8 +285,11 @@ function new_topic_func($xmlrpc_params)
     $update_message = true;
     $cwd = getcwd();
     chdir('../');
+    $phpbb_root_path_tmp = $phpbb_root_path;
+    $phpbb_root_path = './';
     $redirect_url = submit_post('post', $post_data['post_subject'], $post_data['username'], $post_data['topic_type'], $poll, $data, $update_message);
     chdir($cwd);
+    $phpbb_root_path = $phpbb_root_path_tmp;
     
     // Check the permissions for post approval, as well as the queue trigger where users are put on approval with a post count lower than specified. Moderators are not affected.
     $approved = true;

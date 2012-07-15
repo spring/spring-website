@@ -1,5 +1,5 @@
 api_level = 3
-version = pb30_3.2.0
+version = pb30_3.3.1
 is_open = 1
 guest_okay = 1
 
@@ -16,6 +16,7 @@ disable_bbcode = 0
 
 report_post = 1
 report_pm = 1
+mark_read = 1
 mark_forum = 1
 goto_unread = 1
 goto_post = 1
@@ -31,7 +32,10 @@ soft_delete = 0
 delete_reason = 0
 
 emoji = 1
+user_id = 1
 multi_quote = 1
+pm_load = 1
 subscribe_load = 1
 participated_forum = 1
 anonymous = 1
+advanced_search = 1

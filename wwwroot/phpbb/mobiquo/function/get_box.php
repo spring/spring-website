@@ -19,15 +19,12 @@ function get_box_func($xmlrpc_params)
     if (!$config['allow_privmsg']) trigger_error('Module not accessible');
     if (!isset($params[0])) trigger_error('UNKNOWN_FOLDER');
     
-    $limit = 20;
-    $start = 0;
-    
     // get folder id from parameters
     $folder_id = intval($params[0]);
     if (PRIVMSGS_INBOX !== $folder_id)
         $folder_id = PRIVMSGS_SENTBOX;
     
-    process_page($params[1], $params[2]);
+    list($start, $limit, $page) = process_page($params[1], $params[2]);
     
     // Grab icons
     //$icons = $cache->obtain_icons();
@@ -90,7 +87,7 @@ function get_box_func($xmlrpc_params)
                         $row['name'] = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['name']] : $row['name'];
                     }
 
-                    $recipient_list[$ug_type][$row['id']] = array('name' => $row['name'], 'colour' => $row['colour']);
+                    $recipient_list[$ug_type][$row['id']] = array('id' => $row['id'], 'name' => $row['name'], 'colour' => $row['colour']);
                 }
                 $db->sql_freeresult($result);
             }
@@ -102,7 +99,7 @@ function get_box_func($xmlrpc_params)
             {
                 foreach ($id_ary as $ug_id => $_id)
                 {
-                    $address_list[$message_id][] = $recipient_list[$type][$ug_id]['name'];
+                    $address_list[$message_id][] = $recipient_list[$type][$ug_id];
                 }
             }
         }
@@ -165,14 +162,16 @@ function get_box_func($xmlrpc_params)
         }
         else
         {
-            $msg_to_list = array($user->data['username']);
+            $msg_to_list = array(array('id' => $user->data['user_id'], 'name' => $user->data['username']));
         }
 
         $msg_to = array();
         foreach ($msg_to_list as $address)
         {
-            $address = html_entity_decode($address);
-            $msg_to[] = new xmlrpcval(array('username' => new xmlrpcval($address, 'base64')), 'struct');
+            $msg_to[] = new xmlrpcval(array(
+                'user_id'  => new xmlrpcval($address['id'], 'string'),
+                'username' => new xmlrpcval(basic_clean($address['name']), 'base64'),
+            ), 'struct');
         }
 
         $sent_date  = mobiquo_iso8601_encode($row['message_time']);
@@ -206,8 +205,10 @@ function get_box_func($xmlrpc_params)
         $pm_list[] = new xmlrpcval(array(
             'msg_id'        => new xmlrpcval($row['msg_id']),
             'msg_state'     => new xmlrpcval($msg_state, 'int'),
-            'sent_date'     => new xmlrpcval($sent_date,'dateTime.iso8601'),
-            'msg_from'      => new xmlrpcval(html_entity_decode($row['username']), 'base64'),
+            'sent_date'     => new xmlrpcval($sent_date, 'dateTime.iso8601'),
+            'timestamp'     => new xmlrpcval($row['message_time'], 'string'),
+            'msg_from'      => new xmlrpcval(basic_clean($row['username']), 'base64'),
+            'msg_from_id'   => new xmlrpcval($row['user_id']),
             'icon_url'      => new xmlrpcval($icon_url),
             'msg_to'        => new xmlrpcval($msg_to, 'array'),
             'msg_subject'   => new xmlrpcval($msg_subject, 'base64'),

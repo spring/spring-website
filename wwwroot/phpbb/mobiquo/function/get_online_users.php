@@ -263,7 +263,7 @@ function get_online_users_func()
             break;
             
             case 'mobiquo/mobiquo':
-                $location = 'On Tapatalk';
+                $location = 'via Tapatalk';
             break;
     
             default:
@@ -275,6 +275,8 @@ function get_online_users_func()
         $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
         
         $user_list[] = new xmlrpcval(array(
+            'user_id'       => new xmlrpcval($row['user_id'], 'string'),
+            'username'      => new xmlrpcval($row['username'], 'base64'),
             'user_name'     => new xmlrpcval($row['username'], 'base64'),
             'icon_url'      => new xmlrpcval($user_avatar_url),
             'display_text'  => new xmlrpcval($location, 'base64')

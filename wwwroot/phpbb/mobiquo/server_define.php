@@ -38,7 +38,20 @@ $server_param = array(
         'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcInt, $xmlrpcBoolean),
                              array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcInt),
                              array($xmlrpcStruct, $xmlrpcString)),
-        'docstring' => 'parameter should be array(string,int,int)',
+    ),
+    
+    'get_thread_by_unread' => array(
+        'function'  => 'get_thread_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcBoolean),
+                             array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt),
+                             array($xmlrpcStruct, $xmlrpcString)),
+    ),
+    
+    'get_thread_by_post' => array(
+        'function'  => 'get_thread_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcBoolean),
+                             array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt),
+                             array($xmlrpcStruct, $xmlrpcString)),
     ),
     
     'get_raw_post' => array(
@@ -67,40 +80,46 @@ $server_param = array(
     ),
     
     'get_user_topic' => array(
-        'function'  => 'get_user_topic_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
-        'docstring' => 'parameter should be array(string)',
+        'function'  => 'search_func',
+        'signature' => array(array($xmlrpcStruct),
+                             array($xmlrpcStruct, $xmlrpcBase64),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString)),
     ),
     
     'get_user_reply_post' => array(
-        'function'  => 'get_user_reply_post_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcBase64)),
-        'docstring' => 'parameter should be array(int,int,int,string)',
-    ),
-    
-    'get_new_topic' => array(
-        'function'  => 'get_new_topic_func',
-        'signature' => array(array($xmlrpcArray),
-                             array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
-        'docstring' => '',
+        'function'  => 'search_func',
+        'signature' => array(array($xmlrpcStruct),
+                             array($xmlrpcStruct, $xmlrpcBase64),
+                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcString)),
     ),
     
     'get_latest_topic' => array(
-        'function'  => 'get_latest_topic_func',
+        'function' => 'search_func',
         'signature' => array(array($xmlrpcArray),
-                             array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
-        'docstring' => '',
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt, $xmlrpcString, $xmlrpcStruct)),
     ),
     
     'get_unread_topic' => array(
-        'function'  => 'get_unread_topic_func',
+        'function' => 'search_func',
         'signature' => array(array($xmlrpcArray),
-                             array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
-        'docstring' => '',
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
+                             array($xmlrpcArray, $xmlrpcInt, $xmlrpcInt, $xmlrpcString, $xmlrpcStruct)),
     ),
-        
+    
+    'get_participated_topic' => array(
+        'function' => 'search_func',
+        'signature' => array(array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString, $xmlrpcString),
+                             array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
+                             array($xmlrpcArray, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt),
+                             array($xmlrpcArray, $xmlrpcBase64),
+                             array($xmlrpcArray)),
+    ),
+    
     'get_subscribed_topic' => array(
-        'function'  => 'get_subscribed_topic_func',
+        'function'  => 'search_func',
         'signature' => array(array($xmlrpcArray),
                              array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt)),
         'docstring' => 'no need parameters for get_subscribed_topic',
@@ -234,8 +253,13 @@ $server_param = array(
         'docstring' => 'no need parameters for mark_all_as_read',
     ),
 
+    'search' => array(
+        'function' => 'search_func',
+        'signature' => array(array($xmlrpcStruct, $xmlrpcStruct)),
+    ),
+
     'search_topic' => array(
-        'function'  => 'search_topic_func',
+        'function'  => 'search_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
                              array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt),
                              array($xmlrpcStruct, $xmlrpcBase64)),
@@ -243,7 +267,7 @@ $server_param = array(
     ),
     
     'search_post' => array(
-        'function'  => 'search_post_func',
+        'function'  => 'search_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt, $xmlrpcString),
                              array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt),
                              array($xmlrpcStruct, $xmlrpcBase64)),
@@ -269,33 +293,9 @@ $server_param = array(
         'signature' => array(array($xmlrpcArray)),
     ),
 
-    'get_participated_topic' => array(
-        'function'  => 'get_participated_topic_func',
-        'signature' => array(array($xmlrpcArray),
-                             array($xmlrpcStruct, $xmlrpcBase64),
-                             array($xmlrpcStruct, $xmlrpcInt, $xmlrpcInt),
-                             array($xmlrpcStruct, $xmlrpcBase64, $xmlrpcInt, $xmlrpcInt)),
-    ),
-
     'login_forum' => array(
         'function'  => 'login_forum_func',
         'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcBase64)),
-        'docstring' => 'parameter should be)',
-    ),
-    
-    'get_thread_by_unread' => array(
-        'function'  => 'get_thread_by_unread_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcBoolean),
-                             array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt),
-                             array($xmlrpcStruct, $xmlrpcString)),
-        'docstring' => 'parameter should be)',
-    ),
-    
-    'get_thread_by_post' => array(
-        'function'  => 'get_thread_by_post_func',
-        'signature' => array(array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt, $xmlrpcBoolean),
-                             array($xmlrpcStruct, $xmlrpcString, $xmlrpcInt),
-                             array($xmlrpcStruct, $xmlrpcString)),
         'docstring' => 'parameter should be)',
     ),
     
@@ -325,7 +325,7 @@ $server_param = array(
     ),
     
     'thank_post' => array(
-        'function' => 'thank_post_func',
+        'function' => 'xmlresptrue',
         'signature' => array(array($xmlrpcStruct, $xmlrpcString)),
     ),
     

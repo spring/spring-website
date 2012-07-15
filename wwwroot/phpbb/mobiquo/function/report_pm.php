@@ -62,14 +62,14 @@ function report_pm_func($xmlrpc_params)
     }
 
     $sql_ary = array(
-        'reason_id'        => (int) $reason_id,
-        'post_id'        => $post_id,
-        'pm_id'            => $pm_id,
-        'user_id'        => (int) $user->data['user_id'],
-        'user_notify'    => (int) $user_notify,
-        'report_closed'    => 0,
-        'report_time'    => (int) time(),
-        'report_text'    => (string) $report_text
+        'reason_id' => (int) $reason_id,
+        'post_id'   => $post_id,
+        'pm_id'     => $pm_id,
+        'user_id'   => (int) $user->data['user_id'],
+        'user_notify'   => (int) $user_notify,
+        'report_closed' => 0,
+        'report_time'   => (int) time(),
+        'report_text'   => (string) $report_text
     );
 
     $sql = 'INSERT INTO ' . REPORTS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);

@@ -55,7 +55,10 @@ function get_message_func($xmlrpc_params)
     $msg_to = array();
     foreach ($template->_tpldata['to_recipient'] as $address_row)
     {
-        $msg_to[] = new xmlrpcval(array('username' => new xmlrpcval($address_row['NAME'], 'base64')), 'struct');
+        $msg_to[] = new xmlrpcval(array(
+            'user_id'  => new xmlrpcval($address_row['UG_ID'], 'string'),
+            'username' => new xmlrpcval($address_row['NAME'], 'base64'),
+        ), 'struct');
     }
 
     $sent_date  = mobiquo_iso8601_encode($message_row['message_time']);
@@ -79,9 +82,11 @@ function get_message_func($xmlrpc_params)
     
     $result = new xmlrpcval(array(
         'msg_from'      => new xmlrpcval($message_row['username'], 'base64'),
+        'msg_from_id'   => new xmlrpcval($message_row['user_id'], 'string'),
         'msg_to'        => new xmlrpcval($msg_to, 'array'),
         'icon_url'      => new xmlrpcval($icon_url),
-        'sent_date'     => new xmlrpcval($sent_date,'dateTime.iso8601'),
+        'sent_date'     => new xmlrpcval($sent_date, 'dateTime.iso8601'),
+        'timestamp'     => new xmlrpcval($message_row['message_time'], 'string'),
         'msg_subject'   => new xmlrpcval($msg_subject, 'base64'),
         'text_body'     => new xmlrpcval($msg_body, 'base64'),
         'is_online'     => new xmlrpcval($is_online, 'boolean'),

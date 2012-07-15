@@ -146,6 +146,9 @@ function get_topic_func($xmlrpc_params)
     $sql_sort_order = $sort_by_sql[$sort_key] . ' ' . (($sort_dir == 'd') ? 'DESC' : 'ASC');
     $sql_shadow_out = empty($shadow_topic_list) ? '' : 'AND ' . $db->sql_in_set('t.topic_moved_id', $shadow_topic_list, true);
     
+    // If the user is trying to reach late pages, start searching from the end
+    $store_reverse = false;
+    
     $unread_sticky_num = $unread_announce_count = 0;
     if (!empty($topic_type)) // get top 20 announce/sticky topics only if need
     {
@@ -163,37 +166,40 @@ function get_topic_func($xmlrpc_params)
     }
     else
     {
-        // get total number of unread sticky topics number
-        $sql = 'SELECT t.topic_id, t.topic_last_post_time
-                FROM ' . TOPICS_TABLE . ' t
-                WHERE t.forum_id = ' . $forum_id.'
-                AND t.topic_type = ' . POST_STICKY . ' ' .
-                $sql_shadow_out . ' ' .
-                $sql_approved;
-        $result = $db->sql_query($sql);
-        while ($row = $db->sql_fetchrow($result))
+        if ($user->data['user_id'] != ANONYMOUS)
         {
-            $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
-            if ($topic_tracking[$row['topic_id']] < $row['topic_last_post_time'])
-                $unread_sticky_num++;
+            // get total number of unread sticky topics number
+            $sql = 'SELECT t.topic_id, t.topic_last_post_time
+                    FROM ' . TOPICS_TABLE . ' t
+                    WHERE t.forum_id = ' . $forum_id.'
+                    AND t.topic_type = ' . POST_STICKY . ' ' .
+                    $sql_shadow_out . ' ' .
+                    $sql_approved;
+            $result = $db->sql_query($sql);
+            while ($row = $db->sql_fetchrow($result))
+            {
+                $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
+                if (isset($topic_tracking[$row['topic_id']]) && $topic_tracking[$row['topic_id']] < $row['topic_last_post_time'])
+                    $unread_sticky_num++;
+            }
+            $db->sql_freeresult($result);
+            
+            // get total number of unread announce topics number
+            $sql = 'SELECT t.topic_id, t.topic_last_post_time
+                    FROM ' . TOPICS_TABLE . ' t
+                    WHERE t.forum_id IN (' . $forum_id . ', 0)
+                    AND t.topic_type IN (' . POST_ANNOUNCE . ', ' . POST_GLOBAL . ') ' .
+                    $sql_shadow_out . ' ' .
+                    $sql_approved;
+            $result = $db->sql_query($sql);
+            while ($row = $db->sql_fetchrow($result))
+            {
+                $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
+                if (isset($topic_tracking[$row['topic_id']]) && $topic_tracking[$row['topic_id']] < $row['topic_last_post_time'])
+                    $unread_announce_count++;
+            }
+            $db->sql_freeresult($result);
         }
-        $db->sql_freeresult($result);
-        
-        // get total number of unread announce topics number
-        $sql = 'SELECT t.topic_id, t.topic_last_post_time
-                FROM ' . TOPICS_TABLE . ' t
-                WHERE t.forum_id IN (' . $forum_id . ', 0)
-                AND t.topic_type IN (' . POST_ANNOUNCE . ', ' . POST_GLOBAL . ') ' .
-                $sql_shadow_out . ' ' .
-                $sql_approved;
-        $result = $db->sql_query($sql);
-        while ($row = $db->sql_fetchrow($result))
-        {
-            $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
-            if ($topic_tracking[$row['topic_id']] < $row['topic_last_post_time'])
-                $unread_announce_count++;
-        }
-        $db->sql_freeresult($result);
         
         // get total number of normal topics
         $sql = 'SELECT count(t.topic_id) AS num_topics
@@ -205,10 +211,7 @@ function get_topic_func($xmlrpc_params)
         $result = $db->sql_query($sql);
         $topics_count = (int) $db->sql_fetchfield('num_topics');
         $db->sql_freeresult($result);
-                
-        // If the user is trying to reach late pages, start searching from the end
-        $store_reverse = false;
-
+        
         if ($start > $topics_count / 2)
         {
             $store_reverse = true;
@@ -256,8 +259,13 @@ function get_topic_func($xmlrpc_params)
         $replies = ($auth->acl_get('m_approve', $forum_id)) ? $row['topic_replies_real'] : $row['topic_replies'];
         $short_content = get_short_content($row['topic_first_post_id']);
         $user_avatar_url = get_user_avatar_url($row['user_avatar'], $row['user_avatar_type']);
-        $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
-        $new_post = $topic_tracking[$row['topic_id']] < $row['topic_last_post_time'] ? true : false;
+        
+        $new_post = false;
+        if ($user->data['user_id'] != ANONYMOUS)
+        {
+            $topic_tracking = get_complete_topic_tracking($forum_id, $row['topic_id']);
+            $new_post = $topic_tracking[$row['topic_id']] < $row['topic_last_post_time'] ? true : false;
+        }
         
         $allow_change_type = ($auth->acl_get('m_', $forum_id) || ($user->data['is_registered'] && $user->data['user_id'] == $row['topic_poster'])) ? true : false;
         
@@ -274,6 +282,7 @@ function get_topic_func($xmlrpc_params)
             'topic_author_id'   => new xmlrpcval($row['topic_first_post_id']),
             'topic_author_name' => new xmlrpcval(html_entity_decode($row['topic_first_poster_name']), 'base64'),
             'last_reply_time'   => new xmlrpcval(mobiquo_iso8601_encode($row['topic_last_post_time']),'dateTime.iso8601'),
+            'timestamp'         => new xmlrpcval($row['topic_last_post_time'], 'string'),
             'reply_number'      => new xmlrpcval($replies, 'int'),
             'view_number'       => new xmlrpcval($row['topic_views'], 'int'),
             'short_content'     => new xmlrpcval($short_content, 'base64'),
@@ -317,22 +326,19 @@ function get_topic_func($xmlrpc_params)
     $max_png_size = ($auth->acl_get('a_') || $auth->acl_get('m_', $forum_id)) ? 10485760 : ($allowed ? ($config['max_filesize'] === '0' ? 10485760 : $config['max_filesize']) : 0);
     $max_jpg_size = ($auth->acl_get('a_') || $auth->acl_get('m_', $forum_id)) ? 10485760 : ($allowed ? ($config['max_filesize'] === '0' ? 10485760 : $config['max_filesize']) : 0);
     
-    $response = new xmlrpcval(
-        array(
-            'total_topic_num' => new xmlrpcval($topic_num, 'int'),
-            'unread_sticky_count'   => new xmlrpcval($unread_sticky_num, 'int'),
-            'unread_announce_count' => new xmlrpcval($unread_announce_count, 'int'),
-            'forum_id'        => new xmlrpcval($forum_id, 'string'),
-            'forum_name'      => new xmlrpcval(html_entity_decode($forum_data['forum_name']), 'base64'),
-            'can_post'        => new xmlrpcval($auth->acl_get('f_post', $forum_id), 'boolean'),
-            'can_upload'      => new xmlrpcval($allowed, 'boolean'),
-            'max_attachment'  => new xmlrpcval($max_attachment, 'int'),
-            'max_png_size'    => new xmlrpcval($max_png_size, 'int'),
-            'max_jpg_size'    => new xmlrpcval($max_jpg_size, 'int'),
-            'topics'          => new xmlrpcval($topic_list, 'array'),
-        ),
-        'struct'
-    );
+    $response = new xmlrpcval(array(
+        'total_topic_num' => new xmlrpcval($topic_num, 'int'),
+        'unread_sticky_count'   => new xmlrpcval($unread_sticky_num, 'int'),
+        'unread_announce_count' => new xmlrpcval($unread_announce_count, 'int'),
+        'forum_id'        => new xmlrpcval($forum_id, 'string'),
+        'forum_name'      => new xmlrpcval(html_entity_decode($forum_data['forum_name']), 'base64'),
+        'can_post'        => new xmlrpcval($auth->acl_get('f_post', $forum_id), 'boolean'),
+        'can_upload'      => new xmlrpcval($allowed, 'boolean'),
+        'max_attachment'  => new xmlrpcval($max_attachment, 'int'),
+        'max_png_size'    => new xmlrpcval($max_png_size, 'int'),
+        'max_jpg_size'    => new xmlrpcval($max_jpg_size, 'int'),
+        'topics'          => new xmlrpcval($topic_list, 'array'),
+    ), 'struct');
 
     return new xmlrpcresp($response);
 }

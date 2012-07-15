@@ -99,6 +99,8 @@ function reply_post_func($xmlrpc_params)
         trigger_error(($post_data['forum_status'] == ITEM_LOCKED) ? 'FORUM_LOCKED' : 'TOPIC_LOCKED');
     }
     
+    $subject = ((strpos($subject, 'Re: ') !== 0) ? 'Re: ' : '') . ($subject ? $subject : censor_text($post_data['topic_title']));
+    
     $post_data['post_edit_locked']  = (isset($post_data['post_edit_locked'])) ? (int) $post_data['post_edit_locked'] : 0;
     $post_data['post_subject']      = (isset($post_data['topic_title'])) ? $post_data['topic_title'] : '';
     $post_data['topic_time_limit']  = (isset($post_data['topic_time_limit'])) ? (($post_data['topic_time_limit']) ? (int) $post_data['topic_time_limit'] / 86400 : (int) $post_data['topic_time_limit']) : 0;
@@ -326,8 +328,11 @@ function reply_post_func($xmlrpc_params)
     
     $cwd = getcwd();
     chdir('../');
+    $phpbb_root_path_tmp = $phpbb_root_path;
+    $phpbb_root_path = './';
     $redirect_url = submit_post('reply', $post_data['post_subject'], $post_data['username'], $post_data['topic_type'], $poll, $data, $update_message);
     chdir($cwd);
+    $phpbb_root_path = $phpbb_root_path_tmp;
     
     // Check the permissions for post approval, as well as the queue trigger where users are put on approval with a post count lower than specified. Moderators are not affected.
     $approved = true;

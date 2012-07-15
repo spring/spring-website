@@ -10,7 +10,7 @@ defined('IN_MOBIQUO') or exit;
 
 function process_page($start_num, $end)
 {
-    global $start, $limit;
+    global $start, $limit, $page;
     
     $start = intval($start_num);
     $end = intval($end);
@@ -20,53 +20,153 @@ function process_page($start_num, $end)
         $end = $start + 49;
     }
     $limit = $end - $start + 1;
+    $page = intval($start/$limit) + 1;
     
-    return array($start, $limit);
+    return array($start, $limit, $page);
+}
+
+function xmlrpc_shutdown()
+{
+    if (function_exists('error_get_last'))
+    {
+        $error = error_get_last();
+    
+        if(!empty($error)){
+            switch($error['type']){
+                case E_ERROR:
+                case E_CORE_ERROR:
+                case E_COMPILE_ERROR:
+                case E_USER_ERROR:
+                case E_PARSE:
+                    $xmlrpcresp = xmlresperror("Server error occurred: '{$error['message']} (".basename($error['file']).":{$error['line']})'");
+                    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" . $xmlrpcresp->serialize('UTF-8');
+                    break;
+            }
+        }
+    }
+}
+
+function xmlresperror($error_message)
+{
+    $result = new xmlrpcval(array(
+        'result'        => new xmlrpcval(false, 'boolean'),
+        'result_text'   => new xmlrpcval(basic_clean($error_message), 'base64')
+    ), 'struct');
+    
+    return new xmlrpcresp($result);
 }
 
 function xmlrpc_error_handler($errno, $msg_text, $errfile, $errline)
 {
-    global $db, $auth, $user, $msg_long_text;
+    global $auth, $user, $msg_long_text;
 
-    if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_NOTICE) return;
-    if (isset($msg_long_text) && $msg_long_text && !$msg_text) $msg_text = $msg_long_text;
-    
+    // Do not display notices if we suppress them via @
+    if (MOBIQUO_DEBUG == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
+    {
+        return;
+    }
+
+    // Message handler is stripping text. In case we need it, we are possible to define long text...
+    if (isset($msg_long_text) && $msg_long_text && !$msg_text)
+    {
+        $msg_text = $msg_long_text;
+    }
+
+    if (!defined('E_DEPRECATED'))
+    {
+        define('E_DEPRECATED', 8192);
+    }
+
     switch ($errno)
     {
+        case E_NOTICE:
+        case E_WARNING:
+
+            // Check the error reporting level and return if the error level does not match
+            // If DEBUG is defined the default level is E_ALL
+            if (MOBIQUO_DEBUG == 0)
+            {
+                return;
+            }
+
+            if (strpos($errfile, 'cache') === false && strpos($errfile, 'template.') === false)
+            {
+                $errfile = phpbb_filter_root_path($errfile);
+                $msg_text = phpbb_filter_root_path($msg_text);
+                $error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
+                echo '[phpBB Debug] ' . $error_name . ': in file ' . $errfile . ' on line ' . $errline . ': ' . $msg_text . "\n";
+            }
+
+            return;
+
+        break;
+
         case E_USER_ERROR:
+
             if (!empty($user) && !empty($user->lang))
             {
                 $msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
             }
+
+            garbage_collection();
         break;
 
+        case E_USER_WARNING:
         case E_USER_NOTICE:
-            if (empty($user->data)) $user->session_begin();
+
+            define('IN_ERROR_HANDLER', true);
+
+            if (empty($user->data))
+            {
+                $user->session_begin();
+            }
+
+            // We re-init the auth array to get correct results on login/logout
             $auth->acl($user->data);
-            if (empty($user->lang)) $user->setup();
+
+            if (empty($user->lang))
+            {
+                $user->setup();
+            }
+
+            if ($msg_text == 'ERROR_NO_ATTACHMENT' || $msg_text == 'NO_FORUM' || $msg_text == 'NO_TOPIC' || $msg_text == 'NO_USER')
+            {
+                send_status_line(404, 'Not Found');
+            }
+
             $msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
+        break;
+
+        // PHP4 compatibility
+        case E_DEPRECATED:
+            return true;
         break;
     }
     
-    garbage_collection();
+    if (in_array($errno, array(E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE)))
+    {
+        $result = check_error_status($msg_text);
+        if (MOBIQUO_DEBUG == -1) $msg_text .= " > $errfile, $errline";
+        
+        $response = new xmlrpcresp(
+            new xmlrpcval(array(
+                'result'        => new xmlrpcval($result, 'boolean'),
+                'result_text'   => new xmlrpcval(basic_clean($msg_text), 'base64'),
+            ),'struct')
+        );
+        
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
+        exit;
+    }
     
-    $result = check_error_status($msg_text);
-    if (MOBIQUO_DEBUG == -1) $msg_text .= " > $errfile, $errline";
-    
-    $response = new xmlrpcresp(
-        new xmlrpcval(array(
-            'result'        => new xmlrpcval($result, 'boolean'),
-            'result_text'   => new xmlrpcval(basic_clean($msg_text), 'base64'),
-        ),'struct')
-    );
-    
-    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$response->serialize('UTF-8');
-    exit;
+    // If we notice an error not handled here we pass this back to PHP by returning false
+    // This may not work for all php versions
+    return false;
 }
-
 
 function basic_clean($str)
 {
+    $str = preg_replace('/<br\s*\/?>/si', "\n", $str);
     $str = strip_tags($str);
     $str = trim($str);
     return html_entity_decode($str, ENT_QUOTES, 'UTF-8');
@@ -124,6 +224,9 @@ function get_short_content($post_id, $length = 200)
 {
     global $db;
     
+    $post_id = intval($post_id);
+    if (empty($post_id)) return '';
+    
     $sql = 'SELECT post_text
             FROM ' . POSTS_TABLE . '
             WHERE post_id = ' . $post_id;
@@ -143,7 +246,7 @@ function process_short_content($post_text, $length = 200)
     strip_bbcode($post_text);
     $post_text = html_entity_decode($post_text, ENT_QUOTES, 'UTF-8');
     $post_text = function_exists('mb_substr') ? mb_substr($post_text, 0, $length) : substr($post_text, 0, $length);
-    return $post_text;
+    return strip_tags($post_text);
 }
 
 function post_html_clean($str)
@@ -151,22 +254,27 @@ function post_html_clean($str)
     global $phpbb_root_path, $phpbb_home, $mobiquo_config;
     
     $search = array(
-        "/<a .*?href=\"(.*?)\".*?>(.*?)<\/a>/si",
+        "/<strong>(.*?)<\/strong>/si",
+        "/<a .*?href=\"(.*?)\".*?>(.*?)<\/a>/sei",
         "/<img .*?src=\"(.*?)\".*?\/?>/si",
-        "/<br\s*\/?>|<\/cite>|<\/dt>/si",
+        "/<br\s*\/?>|<\/cite>|<\/dt>|<\/dd>/si",
         "/<object .*?data=\"(http:\/\/www\.youtube\.com\/.*?)\" .*?>.*?<\/object>/si",
         "/<object .*?data=\"(http:\/\/video\.google\.com\/.*?)\" .*?>.*?<\/object>/si",
+        "/<iframe .*?src=\"(http.*?)\" .*?>.*?<\/iframe>/si",
     );
     
     $replace = array(
-        '[url=$1]$2[/url]',
+        '[b]$1[/b]',
+        "'[url='.url_encode('$1').']$2[/url]'",
         '[img]$1[/img]',
         "\n",
         '[url=$1]YouTube Video[/url]',
-        '[url=$1]Google Video[/url]'
+        '[url=$1]Google Video[/url]',
+        '[url=$1]$1[/url]',
     );
     
     $str = preg_replace('/\n|\r/si', '', $str);
+    $str = preg_replace('/>\s+</si', '><', $str);
     // remove smile
     $str = preg_replace('/<img [^>]*?src=\"[^"]*?images\/smilies\/[^"]*?\"[^>]*?alt=\"([^"]*?)\"[^>]*?\/?>/', '$1', $str);
     $str = preg_replace('/<img [^>]*?alt=\"([^"]*?)\"[^>]*?src=\"[^"]*?images\/smilies\/[^"]*?\"[^>]*?\/?>/', '$1', $str);
@@ -176,14 +284,23 @@ function post_html_clean($str)
     $str = strip_tags($str);
     $str = html_entity_decode($str, ENT_QUOTES, 'UTF-8');
     
+    // remove attach icon image
+    $str = preg_replace('/\[img\][^\[\]]+icon_topic_attach\.gif\[\/img\]/si', '', $str);
+    
     // change relative path to absolute URL and encode url
     $str = preg_replace('/\[img\](.*?)\[\/img\]/sei', "'[img]'.url_encode('$1').'[/img]'", $str);
+    $str = preg_replace('/\[\/img\]\s*/si', "[/img]\n", $str);
+    $str = preg_replace('/\[\/img\]\s+\[img\]/si', '[/img][img]', $str);
     
     // remove link on img
     $str = preg_replace('/\[url=[^\]]*?\]\s*(\[img\].*?\[\/img\])\s*\[\/url\]/si', '$1', $str);
     
+    // change url to image resource to img bbcode
+    $str = preg_replace('/\[url\](http[^\[\]]+\.(jpg|png|bmp|gif))\[\/url\]/si', '[img]$1[/img]', $str);
+    $str = preg_replace('/\[url=(http[^\]]+\.(jpg|png|bmp|gif))\]([^\[\]]+)\[\/url\]/si', '[img]$1[/img]', $str);
+    
     // cut quote content to 100 charactors
-    if ($mobiquo_config['shorten_quote'])
+    if (isset($mobiquo_config['shorten_quote']) && $mobiquo_config['shorten_quote'])
     {
         $str = cut_quote($str, 100);
     }
@@ -197,24 +314,83 @@ function parse_bbcode($str)
         '#\[(b)\](.*?)\[/b\]#si',
         '#\[(u)\](.*?)\[/u\]#si',
         '#\[(i)\](.*?)\[/i\]#si',
-        '#\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\](.*?)\[/color\]#si',
+        '#\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\))\](.*?)\[/color\]#sie',
     );
     
     if ($GLOBALS['return_html']) {
-        $str = htmlspecialchars($str);
+        $str = htmlspecialchars($str, ENT_NOQUOTES);
         $replace = array(
             '<$1>$2</$1>',
             '<$1>$2</$1>',
             '<$1>$2</$1>',
-            '<font color="$1">$2</font>',
+            "mobi_color_convert('$1', '$2')",
         );
         $str = str_replace("\n", '<br />', $str);
     } else {
-        $replace = '$2';
+        $replace = array('$2', '$2', '$2', "'$2'");
     }
     
     return preg_replace($search, $replace, $str);
 }
+
+function mobi_color_convert($color, $str)
+{
+    static $colorlist;
+    
+    if (preg_match('/#[\da-fA-F]{6}/is', $color))
+    {
+        if (!$colorlist)
+        {
+            $colorlist = array(
+                '#000000' => 'Black',             '#708090' => 'SlateGray',       '#C71585' => 'MediumVioletRed', '#FF4500' => 'OrangeRed',
+                '#000080' => 'Navy',              '#778899' => 'LightSlateGrey',  '#CD5C5C' => 'IndianRed',       '#FF6347' => 'Tomato',
+                '#00008B' => 'DarkBlue',          '#778899' => 'LightSlateGray',  '#CD853F' => 'Peru',            '#FF69B4' => 'HotPink',
+                '#0000CD' => 'MediumBlue',        '#7B68EE' => 'MediumSlateBlue', '#D2691E' => 'Chocolate',       '#FF7F50' => 'Coral',
+                '#0000FF' => 'Blue',              '#7CFC00' => 'LawnGreen',       '#D2B48C' => 'Tan',             '#FF8C00' => 'Darkorange',
+                '#006400' => 'DarkGreen',         '#7FFF00' => 'Chartreuse',      '#D3D3D3' => 'LightGrey',       '#FFA07A' => 'LightSalmon',
+                '#008000' => 'Green',             '#7FFFD4' => 'Aquamarine',      '#D3D3D3' => 'LightGray',       '#FFA500' => 'Orange',
+                '#008080' => 'Teal',              '#800000' => 'Maroon',          '#D87093' => 'PaleVioletRed',   '#FFB6C1' => 'LightPink',
+                '#008B8B' => 'DarkCyan',          '#800080' => 'Purple',          '#D8BFD8' => 'Thistle',         '#FFC0CB' => 'Pink',
+                '#00BFFF' => 'DeepSkyBlue',       '#808000' => 'Olive',           '#DA70D6' => 'Orchid',          '#FFD700' => 'Gold',
+                '#00CED1' => 'DarkTurquoise',     '#808080' => 'Grey',            '#DAA520' => 'GoldenRod',       '#FFDAB9' => 'PeachPuff',
+                '#00FA9A' => 'MediumSpringGreen', '#808080' => 'Gray',            '#DC143C' => 'Crimson',         '#FFDEAD' => 'NavajoWhite',
+                '#00FF00' => 'Lime',              '#87CEEB' => 'SkyBlue',         '#DCDCDC' => 'Gainsboro',       '#FFE4B5' => 'Moccasin',
+                '#00FF7F' => 'SpringGreen',       '#87CEFA' => 'LightSkyBlue',    '#DDA0DD' => 'Plum',            '#FFE4C4' => 'Bisque',
+                '#00FFFF' => 'Aqua',              '#8A2BE2' => 'BlueViolet',      '#DEB887' => 'BurlyWood',       '#FFE4E1' => 'MistyRose',
+                '#00FFFF' => 'Cyan',              '#8B0000' => 'DarkRed',         '#E0FFFF' => 'LightCyan',       '#FFEBCD' => 'BlanchedAlmond',
+                '#191970' => 'MidnightBlue',      '#8B008B' => 'DarkMagenta',     '#E6E6FA' => 'Lavender',        '#FFEFD5' => 'PapayaWhip',
+                '#1E90FF' => 'DodgerBlue',        '#8B4513' => 'SaddleBrown',     '#E9967A' => 'DarkSalmon',      '#FFF0F5' => 'LavenderBlush',
+                '#20B2AA' => 'LightSeaGreen',     '#8FBC8F' => 'DarkSeaGreen',    '#EE82EE' => 'Violet',          '#FFF5EE' => 'SeaShell',
+                '#228B22' => 'ForestGreen',       '#90EE90' => 'LightGreen',      '#EEE8AA' => 'PaleGoldenRod',   '#FFF8DC' => 'Cornsilk',
+                '#2E8B57' => 'SeaGreen',          '#9370D8' => 'MediumPurple',    '#F08080' => 'LightCoral',      '#FFFACD' => 'LemonChiffon',
+                '#2F4F4F' => 'DarkSlateGrey',     '#9400D3' => 'DarkViolet',      '#F0E68C' => 'Khaki',           '#FFFAF0' => 'FloralWhite',
+                '#2F4F4F' => 'DarkSlateGray',     '#98FB98' => 'PaleGreen',       '#F0F8FF' => 'AliceBlue',       '#FFFAFA' => 'Snow',
+                '#32CD32' => 'LimeGreen',         '#9932CC' => 'DarkOrchid',      '#F0FFF0' => 'HoneyDew',        '#FFFF00' => 'Yellow',
+                '#3CB371' => 'MediumSeaGreen',    '#9ACD32' => 'YellowGreen',     '#F0FFFF' => 'Azure',           '#FFFFE0' => 'LightYellow',
+                '#40E0D0' => 'Turquoise',         '#A0522D' => 'Sienna',          '#F4A460' => 'SandyBrown',      '#FFFFF0' => 'Ivory',
+                '#4169E1' => 'RoyalBlue',         '#A52A2A' => 'Brown',           '#F5DEB3' => 'Wheat',           '#FFFFFF' => 'White',
+                '#4682B4' => 'SteelBlue',         '#A9A9A9' => 'DarkGrey',        '#F5F5DC' => 'Beige',
+                '#483D8B' => 'DarkSlateBlue',     '#A9A9A9' => 'DarkGray',        '#F5F5F5' => 'WhiteSmoke',
+                '#48D1CC' => 'MediumTurquoise',   '#ADD8E6' => 'LightBlue',       '#F5FFFA' => 'MintCream',
+                '#4B0082' => 'Indigo',            '#ADFF2F' => 'GreenYellow',     '#F8F8FF' => 'GhostWhite',
+                '#556B2F' => 'DarkOliveGreen',    '#AFEEEE' => 'PaleTurquoise',   '#FA8072' => 'Salmon',
+                '#5F9EA0' => 'CadetBlue',         '#B0C4DE' => 'LightSteelBlue',  '#FAEBD7' => 'AntiqueWhite',
+                '#6495ED' => 'CornflowerBlue',    '#B0E0E6' => 'PowderBlue',      '#FAF0E6' => 'Linen',
+                '#66CDAA' => 'MediumAquaMarine',  '#B22222' => 'FireBrick',       '#FAFAD2' => 'LightGoldenRodYellow',
+                '#696969' => 'DimGrey',           '#B8860B' => 'DarkGoldenRod',   '#FDF5E6' => 'OldLace',
+                '#696969' => 'DimGray',           '#BA55D3' => 'MediumOrchid',    '#FF0000' => 'Red',
+                '#6A5ACD' => 'SlateBlue',         '#BC8F8F' => 'RosyBrown',       '#FF00FF' => 'Fuchsia',
+                '#6B8E23' => 'OliveDrab',         '#BDB76B' => 'DarkKhaki',       '#FF00FF' => 'Magenta',
+                '#708090' => 'SlateGrey',         '#C0C0C0' => 'Silver',          '#FF1493' => 'DeepPink',
+            );
+        }
+        
+        if (isset($colorlist[strtoupper($color)])) $color = $colorlist[strtoupper($color)];
+    }
+    
+    return "<font color=\"$color\">$str</font>";
+}
+
 
 function parse_quote($str)
 {
@@ -242,6 +418,93 @@ function parse_quote($str)
     return $message;
 }
 
+function process_bbcode($message, $uid)
+{
+    global $user;
+    
+    // process bbcode: code
+    $message = str_replace('[code:'.$uid.']', '[quote]', $message);
+    $message = str_replace('[/code:'.$uid.']', '[/quote]', $message);
+    
+    // process bbcode: quote
+    $quote_wrote_string = $user->lang['WROTE'];
+    $message = str_replace('[/quote:'.$uid.']', '[/quote]', $message);
+    $message = preg_replace('/\[quote(?:=&quot;(.*?)&quot;)?:'.$uid.'\]/ise', "'[quote]' . ('$1' ? '$1' . ' $quote_wrote_string:\n' : '\n')", $message);
+    $blocks = preg_split('/(\[\/?quote\])/i', $message, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+    $quote_level = 0;
+    $message = '';
+
+    foreach($blocks as $block)
+    {
+        if ($block == '[quote]') {
+            if ($quote_level == 0) $message .= $block;
+            $quote_level++;
+        } else if ($block == '[/quote]') {
+            if ($quote_level <= 1) $message .= $block;
+            if ($quote_level >= 1) $quote_level--;
+        } else {
+            if ($quote_level <= 1) $message .= $block;
+        }
+    }
+    
+    // prcess bbcode: list
+    $message = preg_replace('/\[\*:'.$uid.'\]/si', '[*]', $message);
+    $message = preg_replace('/\[\/\*:(m:)?'.$uid.'\]/si', '', $message);
+    $blocks = preg_split('/(\[list=[^\]]*?:'.$uid.'\]|\[list:'.$uid.'\]|\[\/list:o:'.$uid.'\]|\[\/list:u:'.$uid.'\])/siU', $message, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+    
+    $result = '';
+    $status = 'out';
+    foreach($blocks as $block)
+    {
+        if ($status == 'out')
+        {
+            if (strpos($block, '[list:') !== false)
+            {
+                $status = 'inlist';
+            } elseif (strpos($block, '[list=') !== false)
+            {
+                $status = 'inorder';
+            } else {
+                $result .= $block;
+            }
+        } elseif ($status == 'inlist')
+        {
+            if (strpos($block, '[/list') !== false)
+            {
+                $status = 'out';
+            } else
+            {
+                $result .= str_replace('[*]', '  * ', ltrim($block));
+            }
+        } elseif ($status == 'inorder')
+        {
+            if (strpos($block, '[/list') !== false)
+            {
+                $status = 'out';
+            } else
+            {
+                $index = 1;
+                $result .= preg_replace('/\[\*\]/sie', "'  '.\$index++.'. '", ltrim($block));
+            }
+        }
+    }
+    
+    $message = $result;
+    
+    // process video bbcode\
+    $message = preg_replace('/\[(youtube|yt|video|googlevideo|gvideo):'.$uid.'\](.*?)\[\/\1:'.$uid.'\]/sie', "video_bbcode_format('$1', '$2')", $message);
+    $message = preg_replace('/\[(BBvideo)[\d, ]+:'.$uid.'\](.*?)\[\/\1:'.$uid.'\]/si', "[url=$2]YouTube Video[/url]", $message);
+    $message = preg_replace('/\[(spoil|spoiler):'.$uid.'\](.*?)\[\/\1:'.$uid.'\]/si', "[spoiler]$2[/spoiler]", $message);
+    $message = preg_replace('/\[b:'.$uid.'\](.*?)\[\/b:'.$uid.'\]/si', '[b]$1[/b]', $message);
+    $message = preg_replace('/\[i:'.$uid.'\](.*?)\[\/i:'.$uid.'\]/si', '[i]$1[/i]', $message);
+    $message = preg_replace('/\[u:'.$uid.'\](.*?)\[\/u:'.$uid.'\]/si', '[u]$1[/u]', $message);
+    $message = preg_replace('/\[color=(\#[\da-fA-F]{3}|\#[\da-fA-F]{6}|[A-Za-z]{1,20}|rgb\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\)):'.$uid.'\](.*?)\[\/color:'.$uid.'\]/si', '[color=$1]$2[/color]', $message);
+    $message = preg_replace('/\[mp3preview:'.$uid.'\](.*?)\[\/mp3preview:'.$uid.'\]/si', '[url=$1]MP3 Preview[/url]', $message);
+    
+    return $message;
+}
+
 function url_encode($url)
 {
     global $phpbb_home, $phpbb_root_path;
@@ -252,7 +515,7 @@ function url_encode($url)
     $to   = array(':',     '/',     '?',     ',',     '=',     '&',     '%',     '#',     '+',     ';',     '\\');
     $url = preg_replace($from, $to, $url);
     $root_path = preg_replace('/^\//', '', $phpbb_root_path);
-    $url = preg_replace('#^\.\./|'.addslashes($root_path).'#si', '', $url);
+    $url = preg_replace('#^\.\./|^/|'.addslashes($root_path).'#si', '', $url);
     
     if (strpos($url, 'http') !== 0)
     {
@@ -398,18 +661,13 @@ function video_bbcode_format($type, $url)
     $url = trim($url);
     
     switch (strtolower($type)) {
+        case 'yt':
         case 'youtube':
             if (preg_match('#^(http://)?((www|m)\.)?(youtube\.com/(watch\?.*?v=|v/)|youtu\.be/)([-\w]+)#', $url, $matches)) {
-                $key = $matches['6'];
-                $image = '[img]http://i1.ytimg.com/vi/'.$key.'/hqdefault.jpg[/img]';
-                $url_code = '[url='.$url.']YouTube Video[/url]';
-                $message = $image.$url_code;
+                $message = '[url='.$url.']YouTube Video[/url]';
             } else if (preg_match('/^[-\w]+$/', $url)) {
-                $key = $url;
-                $url = 'http://www.youtube.com/watch?v='.$key;
-                $image = '[img]http://i1.ytimg.com/vi/'.$key.'/hqdefault.jpg[/img]';
-                $url_code = '[url='.$url.']YouTube Video[/url]';
-                $message = $image.$url_code;
+                $url = 'http://www.youtube.com/watch?v='.$url;
+                $message = '[url='.$url.']YouTube Video[/url]';
             } else {
                 $message = '';
             }
@@ -435,14 +693,6 @@ function video_bbcode_format($type, $url)
     }
     
     return $message;
-}
-
-if (!function_exists('itemstats_parse')) 
-{
-    function itemstats_parse($message)
-    {
-        return $message;
-    }
 }
 
 function check_forum_password($forum_id)
@@ -524,23 +774,13 @@ function get_user_avatars($users, $is_username = false)
     return $user_avatar;
 }
 
-function xmlresptrue()
-{
-    $result = new xmlrpcval(array(
-        'result'        => new xmlrpcval(true, 'boolean'),
-        'result_text'   => new xmlrpcval('', 'base64')
-    ), 'struct');
-    
-    return new xmlrpcresp($result);
-}
-
 function check_error_status(&$str)
 {
     global $user, $request_method;
     
     switch ($request_method) {
         case 'thank_post':
-            if (strpos($str, $user->lang['THANKS_INFO_GIVE']) !== false) {
+            if (strpos($str, $user->lang['THANKS_INFO_GIVE']) !== false || $str == "Insert thanks") {
                 $str = '';
                 return true;
             } elseif (strpos($str, $user->lang['GLOBAL_INCORRECT_THANKS']) !== false) {
@@ -635,4 +875,121 @@ function check_error_status(&$str)
     }
     
     return false;
+}
+
+function tt_get_unread_topics($user_id = false, $sql_extra = '', $sql_sort = '', $sql_limit = 1001, $sql_limit_offset = 0)
+{
+    global $config, $db, $user;
+
+    $user_id = ($user_id === false) ? (int) $user->data['user_id'] : (int) $user_id;
+
+    // Data array we're going to return
+    $unread_topics = array();
+
+    if (empty($sql_sort))
+    {
+        $sql_sort = 'ORDER BY t.topic_last_post_time DESC';
+    }
+
+    if ($config['load_db_lastread'] && $user->data['is_registered'])
+    {
+        // Get list of the unread topics
+        $last_mark = (int) $user->data['user_lastmark'];
+
+        $sql_array = array(
+            'SELECT'        => 't.topic_id, t.topic_last_post_time, tt.mark_time as topic_mark_time, ft.mark_time as forum_mark_time',
+
+            'FROM'            => array(TOPICS_TABLE => 't'),
+
+            'LEFT_JOIN'        => array(
+                array(
+                    'FROM'    => array(TOPICS_TRACK_TABLE => 'tt'),
+                    'ON'    => "tt.user_id = $user_id AND t.topic_id = tt.topic_id",
+                ),
+                array(
+                    'FROM'    => array(FORUMS_TRACK_TABLE => 'ft'),
+                    'ON'    => "ft.user_id = $user_id AND t.forum_id = ft.forum_id",
+                ),
+            ),
+
+            'WHERE'            => "
+                 t.topic_last_post_time > $last_mark AND
+                (
+                (tt.mark_time IS NOT NULL AND t.topic_last_post_time > tt.mark_time) OR
+                (tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.topic_last_post_time > ft.mark_time) OR
+                (tt.mark_time IS NULL AND ft.mark_time IS NULL)
+                )
+                $sql_extra
+                $sql_sort",
+        );
+
+        $sql = $db->sql_build_query('SELECT', $sql_array);
+        $result = $db->sql_query_limit($sql, $sql_limit, $sql_limit_offset);
+
+        while ($row = $db->sql_fetchrow($result))
+        {
+            $topic_id = (int) $row['topic_id'];
+            $unread_topics[$topic_id] = ($row['topic_mark_time']) ? (int) $row['topic_mark_time'] : (($row['forum_mark_time']) ? (int) $row['forum_mark_time'] : $last_mark);
+        }
+        $db->sql_freeresult($result);
+    }
+    else if ($config['load_anon_lastread'] || $user->data['is_registered'])
+    {
+        global $tracking_topics;
+
+        if (empty($tracking_topics))
+        {
+            $tracking_topics = request_var($config['cookie_name'] . '_track', '', false, true);
+            $tracking_topics = ($tracking_topics) ? tracking_unserialize($tracking_topics) : array();
+        }
+
+        if (!$user->data['is_registered'])
+        {
+            $user_lastmark = (isset($tracking_topics['l'])) ? base_convert($tracking_topics['l'], 36, 10) + $config['board_startdate'] : 0;
+        }
+        else
+        {
+            $user_lastmark = (int) $user->data['user_lastmark'];
+        }
+
+        $sql = 'SELECT t.topic_id, t.forum_id, t.topic_last_post_time
+            FROM ' . TOPICS_TABLE . ' t
+            WHERE t.topic_last_post_time > ' . $user_lastmark . "
+            $sql_extra
+            $sql_sort";
+        $result = $db->sql_query_limit($sql, $sql_limit, $sql_limit_offset);
+
+        while ($row = $db->sql_fetchrow($result))
+        {
+            $forum_id = (int) $row['forum_id'];
+            $topic_id = (int) $row['topic_id'];
+            $topic_id36 = base_convert($topic_id, 10, 36);
+
+            if (isset($tracking_topics['t'][$topic_id36]))
+            {
+                $last_read = base_convert($tracking_topics['t'][$topic_id36], 36, 10) + $config['board_startdate'];
+
+                if ($row['topic_last_post_time'] > $last_read)
+                {
+                    $unread_topics[$topic_id] = $last_read;
+                }
+            }
+            else if (isset($tracking_topics['f'][$forum_id]))
+            {
+                $mark_time = base_convert($tracking_topics['f'][$forum_id], 36, 10) + $config['board_startdate'];
+
+                if ($row['topic_last_post_time'] > $mark_time)
+                {
+                    $unread_topics[$topic_id] = $mark_time;
+                }
+            }
+            else
+            {
+                $unread_topics[$topic_id] = $user_lastmark;
+            }
+        }
+        $db->sql_freeresult($result);
+    }
+
+    return $unread_topics;
 }

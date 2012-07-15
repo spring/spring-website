@@ -8,6 +8,8 @@
 
 defined('IN_MOBIQUO') or exit;
 
+include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+
 function get_user_info_func($xmlrpc_params)
 {
     global $db, $user, $auth, $template, $config, $phpbb_root_path, $phpEx;
@@ -299,6 +301,14 @@ function get_user_info_func($xmlrpc_params)
     }
     
     $custom_fields_list = get_custom_fields();
+    
+    if (!empty($member['user_sig']))
+        $custom_fields_list[] = new xmlrpcval(array(
+            'name'  => new xmlrpcval($user->lang['SIGNATURE'], 'base64'),
+            'value' => new xmlrpcval(basic_clean($member['user_sig']), 'base64')
+        ), 'struct');
+    
+    
     $user_avatar_url = get_user_avatar_url($member['user_avatar'], $member['user_avatar_type']);
     
     // Forum info
@@ -446,7 +456,9 @@ function get_user_info_func($xmlrpc_params)
         'username'           => new xmlrpcval($member['username'], 'base64'),
         'post_count'         => new xmlrpcval($member['user_posts'], 'int'),
         'reg_time'           => new xmlrpcval(mobiquo_iso8601_encode($member['user_regdate']), 'dateTime.iso8601'),
+        'timestamp_reg'      => new xmlrpcval($member['user_regdate'], 'string'),
         'last_activity_time' => new xmlrpcval(mobiquo_iso8601_encode($template->_rootref['VISITED']), 'dateTime.iso8601'),
+        'timestamp'          => new xmlrpcval($template->_rootref['VISITED'], 'string'),
         'is_online'          => new xmlrpcval($template->_rootref['S_ONLINE'], 'boolean'),
         'accept_pm'          => new xmlrpcval($template->_rootref['U_PM'] ? true : false, 'boolean'),
         'display_text'       => new xmlrpcval('', 'base64'),
@@ -586,7 +598,7 @@ function get_custom_fields()
     if ($template->_rootref['RANK_TITLE']) {
         $custom_fields[] = new xmlrpcval(array(
             'name'  => new xmlrpcval($user->lang['RANK'], 'base64'),
-            'value' => new xmlrpcval($template->_rootref['RANK_TITLE'], 'base64')
+            'value' => new xmlrpcval(basic_clean($template->_rootref['RANK_TITLE']), 'base64')
         ), 'struct');
     }
     

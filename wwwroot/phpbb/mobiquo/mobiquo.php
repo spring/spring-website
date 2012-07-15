@@ -11,30 +11,31 @@ define('IN_MOBIQUO', true);
 define('MOBIQUO_DEBUG', 0);
 
 include('./config/config.php');
+include('./mobiquo_common.php');
+
+define('PHPBB_MSG_HANDLER', 'xmlrpc_error_handler');
+register_shutdown_function('xmlrpc_shutdown');
+
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+//include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 error_reporting(MOBIQUO_DEBUG);
-@ob_start();
+if (MOBIQUO_DEBUG == 0) ob_start();
 
 include('./include/xmlrpc.inc');
 include('./include/xmlrpcs.inc');
 
-require('./mobiquo_common.php');
 require('./server_define.php');
 require('./env_setting.php');
+require('./xmlrpcresp.php');
 
-set_error_handler('xmlrpc_error_handler');
-
-if ($request_method && isset($server_param[$request_method]))
+if ($request_file && isset($server_param[$request_method]))
 {
-    if (strpos($request_method, 'm_') === 0)
+    if (strpos($request_file, 'm_') === 0)
         require('./function/moderation.php');
     else
-        require('./function/'.$request_method.'.php');
+        require('./function/'.$request_file.'.php');
 }
-
-@ob_get_clean();
 
 $rpcServer = new xmlrpc_server($server_param, false);
 $rpcServer->setDebug(1);

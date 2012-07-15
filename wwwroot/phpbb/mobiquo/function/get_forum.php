@@ -145,7 +145,11 @@ function get_forum_func($xmlrpc_params)
                     $logo_url = $phpbb_home.$forum['forum_image'];
                 }
                 
-                $unread_count = count(get_unread_topics(false, "AND t.forum_id = $forum_id"));
+                if (function_exists('get_unread_topics'))
+                    $unread_count = count(get_unread_topics(false, "AND t.forum_id = $forum_id"));
+                else
+                    $unread_count = count(tt_get_unread_topics(false, "AND t.forum_id = $forum_id"));
+                
                 $forum['unread_count'] += $unread_count;
                 if ($forum['unread_count'])
                 {
@@ -189,122 +193,3 @@ function get_forum_func($xmlrpc_params)
     
     return new xmlrpcresp($response);
 } // End of get_forum_func
-
-if (!function_exists('get_unread_topics'))
-{
-    function get_unread_topics($user_id = false, $sql_extra = '', $sql_sort = '', $sql_limit = 1001)
-    {
-        global $config, $db, $user;
-    
-        $user_id = ($user_id === false) ? (int) $user->data['user_id'] : (int) $user_id;
-    
-        // Data array we're going to return
-        $unread_topics = array();
-    
-        if (empty($sql_sort))
-        {
-            $sql_sort = 'ORDER BY t.topic_last_post_time DESC';
-        }
-    
-        if ($config['load_db_lastread'] && $user->data['is_registered'])
-        {
-            // Get list of the unread topics
-            $last_mark = $user->data['user_lastmark'];
-    
-            $sql_array = array(
-                'SELECT'        => 't.topic_id, t.topic_last_post_time, tt.mark_time as topic_mark_time, ft.mark_time as forum_mark_time',
-    
-                'FROM'            => array(TOPICS_TABLE => 't'),
-    
-                'LEFT_JOIN'        => array(
-                    array(
-                        'FROM'    => array(TOPICS_TRACK_TABLE => 'tt'),
-                        'ON'    => "tt.user_id = $user_id AND t.topic_id = tt.topic_id",
-                    ),
-                    array(
-                        'FROM'    => array(FORUMS_TRACK_TABLE => 'ft'),
-                        'ON'    => "ft.user_id = $user_id AND t.forum_id = ft.forum_id",
-                    ),
-                ),
-    
-                'WHERE'            => "
-                    (
-                    (tt.mark_time IS NOT NULL AND t.topic_last_post_time > tt.mark_time) OR
-                    (tt.mark_time IS NULL AND ft.mark_time IS NOT NULL AND t.topic_last_post_time > ft.mark_time) OR
-                    (tt.mark_time IS NULL AND ft.mark_time IS NULL AND t.topic_last_post_time > $last_mark)
-                    )
-                    $sql_extra
-                    $sql_sort",
-            );
-    
-            $sql = $db->sql_build_query('SELECT', $sql_array);
-            $result = $db->sql_query_limit($sql, $sql_limit);
-    
-            while ($row = $db->sql_fetchrow($result))
-            {
-                $topic_id = (int) $row['topic_id'];
-                $unread_topics[$topic_id] = ($row['topic_mark_time']) ? (int) $row['topic_mark_time'] : (($row['forum_mark_time']) ? (int) $row['forum_mark_time'] : $last_mark);
-            }
-            $db->sql_freeresult($result);
-        }
-        else if ($config['load_anon_lastread'] || $user->data['is_registered'])
-        {
-            global $tracking_topics;
-    
-            if (empty($tracking_topics))
-            {
-                $tracking_topics = request_var($config['cookie_name'] . '_track', '', false, true);
-                $tracking_topics = ($tracking_topics) ? tracking_unserialize($tracking_topics) : array();
-            }
-    
-            if (!$user->data['is_registered'])
-            {
-                $user_lastmark = (isset($tracking_topics['l'])) ? base_convert($tracking_topics['l'], 36, 10) + $config['board_startdate'] : 0;
-            }
-            else
-            {
-                $user_lastmark = (int) $user->data['user_lastmark'];
-            }
-    
-            $sql = 'SELECT t.topic_id, t.forum_id, t.topic_last_post_time
-                FROM ' . TOPICS_TABLE . ' t
-                WHERE t.topic_last_post_time > ' . $user_lastmark . "
-                $sql_extra
-                $sql_sort";
-            $result = $db->sql_query_limit($sql, $sql_limit);
-    
-            while ($row = $db->sql_fetchrow($result))
-            {
-                $forum_id = (int) $row['forum_id'];
-                $topic_id = (int) $row['topic_id'];
-                $topic_id36 = base_convert($topic_id, 10, 36);
-    
-                if (isset($tracking_topics['t'][$topic_id36]))
-                {
-                    $last_read = base_convert($tracking_topics['t'][$topic_id36], 36, 10) + $config['board_startdate'];
-    
-                    if ($row['topic_last_post_time'] > $last_read)
-                    {
-                        $unread_topics[$topic_id] = $last_read;
-                    }
-                }
-                else if (isset($tracking_topics['f'][$forum_id]))
-                {
-                    $mark_time = base_convert($tracking_topics['f'][$forum_id], 36, 10) + $config['board_startdate'];
-    
-                    if ($row['topic_last_post_time'] > $mark_time)
-                    {
-                        $unread_topics[$topic_id] = $mark_time;
-                    }
-                }
-                else
-                {
-                    $unread_topics[$topic_id] = $user_lastmark;
-                }
-            }
-            $db->sql_freeresult($result);
-        }
-    
-        return $unread_topics;
-    }
-}

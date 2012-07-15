@@ -153,6 +153,15 @@ function create_message_func($xmlrpc_params)
 
         unset($list);
     }
+    
+    // Handle User/Group adding/removing
+    handle_message_list_actions($address_list, $error, $remove_u, $remove_g, $add_to, $add_bcc);
+    
+    if ($error)
+    {
+        $error_msg = trim(strip_tags(implode("\n", $error)));
+        trigger_error($error_msg);
+    }
 
     // Check mass pm to group permission
     if ((!$config['allow_mass_pm'] || !$auth->acl_get('u_masspm_group')) && !empty($address_list['g']))
@@ -175,12 +184,12 @@ function create_message_func($xmlrpc_params)
         trigger_error('TOO_MANY_RECIPIENTS');
     }
     
-    $enable_bbcode    = ($config['allow_bbcode'] && $config['auth_bbcode_pm'] && $auth->acl_get('u_pm_bbcode')) ? true : false;
-    $enable_smilies    = ($config['allow_smilies'] && $config['auth_smilies_pm'] && $auth->acl_get('u_pm_smilies')) ? true : false;
-    $img_status        = ($config['auth_img_pm'] && $auth->acl_get('u_pm_img')) ? true : false;
-    $flash_status    = ($config['auth_flash_pm'] && $auth->acl_get('u_pm_flash')) ? true : false;
-    $enable_urls         = true;
-    $enable_sig            = false;
+    $enable_bbcode  = ($config['allow_bbcode'] && $config['auth_bbcode_pm'] && $auth->acl_get('u_pm_bbcode')) ? true : false;
+    $enable_smilies = ($config['allow_smilies'] && $config['auth_smilies_pm'] && $auth->acl_get('u_pm_smilies')) ? true : false;
+    $img_status     = ($config['auth_img_pm'] && $auth->acl_get('u_pm_img')) ? true : false;
+    $flash_status   = ($config['auth_flash_pm'] && $auth->acl_get('u_pm_flash')) ? true : false;
+    $enable_urls    = true;
+    $enable_sig     = false;
 
     $message_parser->message = $text_body;
 
@@ -189,27 +198,30 @@ function create_message_func($xmlrpc_params)
 
     $pm_data = array(
         'msg_id'                => (int) $msg_id,
-        'from_user_id'            => $user->data['user_id'],
-        'from_user_ip'            => $user->ip,
-        'from_username'            => $user->data['username'],
-        'reply_from_root_level'    => (isset($post['root_level'])) ? (int) $post['root_level'] : 0,
-        'reply_from_msg_id'        => (int) $msg_id,
-        'icon_id'                => 0,
+        'from_user_id'          => $user->data['user_id'],
+        'from_user_ip'          => $user->ip,
+        'from_username'         => $user->data['username'],
+        'reply_from_root_level' => (isset($post['root_level'])) ? (int) $post['root_level'] : 0,
+        'reply_from_msg_id'     => (int) $msg_id,
+        'icon_id'               => 0,
         'enable_sig'            => (bool) $enable_sig,
-        'enable_bbcode'            => (bool) $enable_bbcode,
+        'enable_bbcode'         => (bool) $enable_bbcode,
         'enable_smilies'        => (bool) $enable_smilies,
-        'enable_urls'            => (bool) $enable_urls,
-        'bbcode_bitfield'        => $message_parser->bbcode_bitfield,
+        'enable_urls'           => (bool) $enable_urls,
+        'bbcode_bitfield'       => $message_parser->bbcode_bitfield,
         'bbcode_uid'            => $message_parser->bbcode_uid,
-        'message'                => $message_parser->message,
-        'attachment_data'        => $message_parser->attachment_data,
-        'filename_data'            => $message_parser->filename_data,
-        'address_list'            => $address_list
+        'message'               => $message_parser->message,
+        'attachment_data'       => $message_parser->attachment_data,
+        'filename_data'         => $message_parser->filename_data,
+        'address_list'          => $address_list
     );
     
     $msg_id = submit_pm($action, $subject, $pm_data);
 
-    $result = new xmlrpcval(array('result' => new xmlrpcval($msg_id ? true : false, 'boolean')), 'struct');
+    $result = new xmlrpcval(array(
+        'result' => new xmlrpcval($msg_id ? true : false, 'boolean'),
+        'msg_id' => new xmlrpcval($msg_id, 'string'),
+    ), 'struct');
     
     return new xmlrpcresp($result);
 }

@@ -630,7 +630,7 @@ function get_pm_data($pm_ids)
 
 function mcp_sorting($mode, &$sort_days, &$sort_key, &$sort_dir, &$sort_by_sql, &$sort_order_sql, &$total, $forum_id = 0, $topic_id = 0, $where_sql = 'WHERE')
 {
-    global $db, $user, $auth, $template;
+    global $db, $user, $auth, $template, $config;
 
     $sort_days = request_var('st', 0);
     $min_time = ($sort_days) ? time() - ($sort_days * 86400) : 0;
@@ -750,7 +750,7 @@ function mcp_sorting($mode, &$sort_days, &$sort_key, &$sort_dir, &$sort_by_sql, 
             {
                 $sql = 'SELECT COUNT(r.report_id) AS total
                     FROM ' . REPORTS_TABLE . ' r, ' . POSTS_TABLE . " p
-                    $where_sql r.pm_id = 0
+                    $where_sql " . (version_compare($config['version'], '3.0.6', '<') ? '1' : " r.pm_id = 0") . "
                         AND p.post_id = r.post_id
                         $limit_time_sql";
             }

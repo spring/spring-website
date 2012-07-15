@@ -1,2 +1,2 @@
-3.2.0
-http://tapatalk.com/files/plugin/mobiquo_pb30_3_2_0.zip
+3.3.1
+http://www.tapatalk.com/files/plugin/mobiquo_pb30_3_3_1.zip
