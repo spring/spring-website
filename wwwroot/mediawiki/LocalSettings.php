@@ -138,10 +138,10 @@ $wgArticlePath = '/wiki/$1';  # Virtual path. This directory MUST be different f
 $wgUsePathInfo = true;
 
 // PHPBB User Database Plugin. (Requires MySQL Database)
-require_once './extensions/Auth_phpBB.php';
+require_once( "$IP/extensions/Auth_phpBB.php" );
 
 // CSS extension
-require_once './extensions/CSS/CSS.php';
+require_once( "$IP/extensions/CSS/CSS.php" );
 
 $wgAuth_Config = array(); // Clean.
 
@@ -192,10 +192,12 @@ $wgDefaultSkin = 'springnew';
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
 
-require_once './extensions/WikiEditor/WikiEditor.php';
+require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 
 $wgDefaultUserOptions['usebetatoolbar'] = 1;
 $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
 $wgDefaultUserOptions['wikieditor-preview'] = 1;
+
+require_once( "$IP/extensions/Cite/Cite.php" );
 
 ?>
