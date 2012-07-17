@@ -93,7 +93,7 @@ class SpringNewTemplate extends LegacyTemplate {
 
 			// Mediawiki 1.19 adds the ul and li tags, which mediawiki 1.16 did not have.
 			$catstr = str_replace('<ul>', '', str_replace('</ul>', '', $catstr));
-			$catstr = str_replace('<li>', '', str_replace('</li>', '', $catstr));
+			$catstr = str_replace('<li>', '', str_replace('</li>', ' ', $catstr));
 			$s .= $catstr;
 
 			$s .= '</td></tr></table>';
