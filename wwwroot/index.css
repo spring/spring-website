@@ -94,23 +94,28 @@ a:hover {
 .gamesbar:hover     {background-position:right -290px;}
 
 
+.mmleft,
+.mmmid,
+.mmright {background-color: #323f47;}
 
+.mmleft  {border-top-left-radius: 5px;}
+.mmright {border-top-right-radius: 5px;}
 
-.mmleft {
-	background-image: url(/images/notselected_media_left.png);
-	background-position: top left;
-}
-.mmmid {
-	background-image: url(/images/notselected_button_background.gif);
-}
-.mmright {
-	background-image: url(/images/notselected_media_right.png);
-	background-position: top right;
-}
-
+/* for less capable browsers */
 .mmleft:hover  { background-image: url(/images/selected_media_left.png); }
 .mmmid:hover   { background-image: url(/images/selected_button_background.gif); }
 .mmright:hover { background-image: url(/images/selected_media_right.png); }
+
+.mmleft:hover,
+.mmmid:hover,
+.mmright:hover {
+	/* replicates the above images */
+	background-image: linear-gradient(top, #323f47, #526977 100%);
+	background-image: -o-linear-gradient(top, #323f47, #526977 100%);
+	background-image: -moz-linear-gradient(top, #323f47, #526977 100%);
+	background-image: -webkit-linear-gradient(top, #323f47, #526977 100%);
+	background-image: -ms-linear-gradient(top, #323f47, #526977 100%);
+}
 
 .mmhide {
 	display: none;
