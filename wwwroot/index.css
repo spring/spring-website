@@ -53,14 +53,9 @@ a:hover {
 	color: #EEE;
 }
 
-.bigbar td {
-	text-align: right;
-	vertical-align: middle;
-}
-
 .learnmorebar,
 .downloadbar {
-	padding-bottom: 16px;
+	margin-bottom: 16px;
 }
 
 .bigbar a {
@@ -84,21 +79,19 @@ a:hover {
 .learnmorebar,
 .downloadbar,
 .gamesbar {
+	background-image: url(/images/learn_download_games.jpg);
 	background-repeat: no-repeat;
-	background-position: top right;
-	-o-transition:background-image 0.5s ease-in-out;
-	-ms-transition:background-image 0.5s ease-in-out;
-	-moz-transition:background-image 0.5s ease-in-out;
-	-webkit-transition:background-image 0.5s ease-in-out;
+	text-align: right;
+	vertical-align: middle;
 }
 
-.learnmorebar { background-image: url(/images/notselected_learn.jpg); }
-.downloadbar  { background-image: url(/images/notselected_download.jpg); }
-.gamesbar     { background-image: url(/images/notselected_games.jpg); }
+.learnmorebar {background-position:right 0px;}
+.downloadbar  {background-position:right -116px;}
+.gamesbar     {background-position:right -232px;}
 
-.learnmorebar:hover { background-image: url(/images/selected_learn.jpg); }
-.downloadbar:hover  { background-image: url(/images/selected_download.jpg); }
-.gamesbar:hover     { background-image: url(/images/selected_games.jpg); }
+.learnmorebar:hover {background-position:right -58px;}
+.downloadbar:hover  {background-position:right -174px;}
+.gamesbar:hover     {background-position:right -290px;}
 
 
 
