@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Provider.php 5138 2011-09-07 15:25:57Z EZdesign $
+ * @version $Id: Provider.php 7298 2012-10-24 08:06:38Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Provider
@@ -43,6 +43,9 @@ class Piwik_Provider extends Piwik_Plugin
 		return $hooks;
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getReportMetadata($notification)
 	{
 		$reports = &$notification->getNotificationObject();
@@ -57,12 +60,15 @@ class Piwik_Provider extends Piwik_Plugin
 		);
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getSegmentsMetadata($notification)
 	{
 		$segments =& $notification->getNotificationObject();
 		$segments[] = array(
 		        'type' => 'dimension',
-		        'category' => 'Visit',
+		        'category' => 'Visit Location',
 		        'name' => Piwik_Translate('Provider_ColumnProvider'),
 		        'segment' => 'provider',
 				'acceptedValues' => 'comcast.net, proxad.net, etc.',
@@ -108,13 +114,16 @@ class Piwik_Provider extends Piwik_Plugin
 	
 	function postLoad()
 	{
-		Piwik_AddAction('template_headerUserCountry', array('Piwik_Provider','headerUserCountry'));
 		Piwik_AddAction('template_footerUserCountry', array('Piwik_Provider','footerUserCountry'));
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 * @return mixed
+	 */
 	function archivePeriod( $notification )
 	{
-		$maximumRowsInDataTable = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_standard;
+		$maximumRowsInDataTable = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 		$archiveProcessing = $notification->getNotificationObject();
 		
 		if(!$archiveProcessing->shouldProcessReportsForPlugin($this->getPluginName())) return;
@@ -125,6 +134,8 @@ class Piwik_Provider extends Piwik_Plugin
 
 	/**
 	 * Daily archive: processes the report Visits by Provider
+	 *
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	function archiveDay($notification)
 	{
@@ -137,19 +148,30 @@ class Piwik_Provider extends Piwik_Plugin
 		$interestByProvider = $archiveProcessing->getArrayInterestForLabel($labelSQL);
 		$tableProvider = $archiveProcessing->getDataTableFromArray($interestByProvider);
 		$columnToSortByBeforeTruncation = Piwik_Archive::INDEX_NB_VISITS;
-		$maximumRowsInDataTable = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_standard;
+		$maximumRowsInDataTable = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 		$archiveProcessing->insertBlobRecord($recordName, $tableProvider->getSerialized($maximumRowsInDataTable, null, $columnToSortByBeforeTruncation));
 		destroy($tableProvider);
 	}
 	
 	/**
 	 * Logs the provider in the log_visit table
+	 *
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	public function logProviderInfo($notification)
 	{
 		$visitorInfo =& $notification->getNotificationObject();
 		
-		$hostname = $this->getHost($visitorInfo['location_ip']);
+		$ip = Piwik_IP::N2P($visitorInfo['location_ip']);
+		
+		// In case the IP was anonymized, we should not continue since the DNS reverse lookup will fail and this will slow down tracking
+		if(substr($ip, -2, 2) == '.0') 
+		{
+			printDebug("IP Was anonymized so we skip the Provider DNS reverse lookup...");
+			return;
+		}
+		
+		$hostname = $this->getHost($ip);
 		$hostnameExtension = $this->getCleanHostname($hostname);
 
 		// add the provider value in the table log_visit
@@ -214,28 +236,23 @@ class Piwik_Provider extends Piwik_Plugin
 	}
 	
 	/**
-	 * Returns the hostname given the internal representation of the
-	 * IP address
+	 * Returns the hostname given the IP address string
 	 *
-	 * @param string $ip Internal representation of IP address in binary-safe string
+	 * @param string $ip IP Address
 	 * @return string hostname (or human-readable IP address)
 	 */
 	private function getHost($ip)
 	{
-		return trim(strtolower(@Piwik_IP::getHostByAddr(Piwik_IP::N2P($ip))));
+		return trim(strtolower(@Piwik_IP::getHostByAddr($ip)));
 	}
 
-	static public function headerUserCountry($notification)
-	{
-		$out =& $notification->getNotificationObject();
-		$out = '<div id="leftcolumn">';
-	}
-	
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	static public function footerUserCountry($notification)
 	{
 		$out =& $notification->getNotificationObject();
-		$out = '</div>
-			<div id="rightcolumn">
+		$out = '<div>
 			<h2>'.Piwik_Translate('Provider_WidgetProviders').'</h2>';
 		$out .= Piwik_FrontController::getInstance()->fetchDispatch('Provider','getProvider');
 		$out .= '</div>';

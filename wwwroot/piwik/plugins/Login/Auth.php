@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Auth.php 3565 2011-01-03 05:49:45Z matt $
+ * @version $Id: Auth.php 5951 2012-03-04 22:04:41Z vipsoft $
  *
  * @category Piwik_Plugins
  * @package Piwik_Login
@@ -36,8 +36,8 @@ class Piwik_Login_Auth implements Piwik_Auth
 	 */
 	public function authenticate()
 	{
-		$rootLogin = Zend_Registry::get('config')->superuser->login;
-		$rootPassword = Zend_Registry::get('config')->superuser->password;
+		$rootLogin = Piwik_Config::getInstance()->superuser['login'];
+		$rootPassword = Piwik_Config::getInstance()->superuser['password'];
 		$rootToken = Piwik_UsersManager_API::getInstance()->getTokenAuth($rootLogin, $rootPassword);
 
 		if(is_null($this->login))

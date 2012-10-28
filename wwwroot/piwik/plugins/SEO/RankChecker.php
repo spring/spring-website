@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: RankChecker.php 5271 2011-10-08 15:17:18Z vipsoft $
+ * @version $Id: RankChecker.php 5683 2012-01-18 17:01:19Z vipsoft $
  *
  * @category Piwik_Plugins
  * @package Piwik_SEO
@@ -115,18 +115,13 @@ class Piwik_SEO_RankChecker
 		$url = $this->url;
 		$url = 'http://www.google.com/search?q=link%3A'.urlencode($url);
 		$data = $this->getPage($url);
-		preg_match('/of about \<b\>([0-9\,]+)\<\/b\>/si', $data, $p);
-		$value = isset($p[1]) ? $this->toInt($p[1]) : 0;
-		return $value;
-	}
-
-	public function getBacklinksYahoo()
-	{
-		$url = $this->url;
-		$url = 'http://siteexplorer.search.yahoo.com/search?p='.urlencode($url);
-		$data = $this->getPage($url);
-		preg_match('/Inlinks \(([0-9\,]+)\)/si', $data, $p);
-		$value = isset($p[1]) ? $this->toInt($p[1]) : 0;
+		$value = 0;
+		if (preg_match('/\>About ([0-9\,]+) results\</', $data, $p)) {
+			$value = $this->toInt($p[1]);
+		}
+		elseif (preg_match('/of about \<b\>([0-9\,]+)\<\/b\>/si', $data, $p)) {
+			$value = $this->toInt($p[1]);
+		}
 		return $value;
 	}
 
@@ -142,16 +137,6 @@ class Piwik_SEO_RankChecker
 		}
 		$value = time() - strtotime($p[1]);
 		$value = Piwik::getPrettyTimeFromSeconds($value);
-		return $value;
-	}
-
-	public function getIndexedYahoo()
-	{
-		$url = $this->url;
-		$url = 'http://siteexplorer.search.yahoo.com/search?p='.urlencode($url);
-		$data = $this->getPage($url);
-		preg_match('/Pages \(([0-9,]{1,})\)/im', $data, $p);
-		$value = isset($p[1]) ? $this->toInt($p[1]) : 0;
 		return $value;
 	}
 

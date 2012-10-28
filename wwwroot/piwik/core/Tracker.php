@@ -1,57 +1,90 @@
 <?php
 /**
  * Piwik - Open source web analytics
- * 
+ *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Tracker.php 5296 2011-10-14 02:52:44Z matt $
- * 
+ * @version $Id: Tracker.php 7286 2012-10-23 09:22:19Z matt $
+ *
  * @category Piwik
  * @package Piwik
  */
 
 /**
  * Class used by the logging script piwik.php called by the javascript tag.
- * Handles the visitor & his/her actions on the website, saves the data in the DB, 
+ * Handles the visitor & his/her actions on the website, saves the data in the DB,
  * saves information in the cookie, etc.
- * 
+ *
  * We try to include as little files as possible (no dependency on 3rd party modules).
- * 
+ *
  * @package Piwik
  * @subpackage Piwik_Tracker
  */
 class Piwik_Tracker
-{	
+{
 	protected $stateValid = self::STATE_NOTHING_TO_NOTICE;
 	/**
 	 * @var Piwik_Tracker_Db
 	 */
 	protected static $db = null;
-	
+
 	const STATE_NOTHING_TO_NOTICE = 1;
 	const STATE_LOGGING_DISABLE = 10;
 	const STATE_EMPTY_REQUEST = 11;
 	const STATE_NOSCRIPT_REQUEST = 13;
-		
-	// We use hex ID that are 16 chars in length, ie. 64 bits IDs 
+
+	// We use hex ID that are 16 chars in length, ie. 64 bits IDs
 	const LENGTH_HEX_ID_STRING = 16;
 	const LENGTH_BINARY_ID = 8;
-	
+
 	// These are also hardcoded in the Javascript
 	const MAX_CUSTOM_VARIABLES = 5;
 	const MAX_LENGTH_CUSTOM_VARIABLE = 200;
-	
+
 	protected $authenticated = false;
 	static protected $forcedDateTime = null;
 	static protected $forcedIpString = null;
 	static protected $forcedVisitorId = null;
-	
+
 	static protected $pluginsNotToLoad = array();
+
+	/**
+	 * The set of visits to track.
+	 *
+	 * @var array
+	 */
+	private $requests = array();
+
+	/**
+	 * The token auth supplied with a bulk visits POST.
+	 *
+	 * @var string
+	 */
+	private $tokenAuth = null;
 	
-	public function __construct($args = null)
+	/**
+	 * Whether we're currently using bulk tracking or not.
+	 * 
+	 * @var bool
+	 */
+	private $usingBulkTracking = false;
+	
+	/**
+	 * The number of requests that have been successfully logged.
+	 * 
+	 * @var int
+	 */
+	private $countOfLoggedRequests = 0;
+
+	public function clear()
 	{
-		$this->request = $args ? $args : $_GET + $_POST;
+		self::$forcedIpString = null;
+		self::$forcedDateTime = null;
+		self::$forcedVisitorId = null;
+		$this->stateValid = self::STATE_NOTHING_TO_NOTICE;
+		$this->authenticated = false;
 	}
+	
 	public static function setForceIp($ipString)
 	{
 		self::$forcedIpString = $ipString;
@@ -60,17 +93,17 @@ class Piwik_Tracker
 	{
 		self::$forcedDateTime = $dateTime;
 	}
-	
+
 	public static function setForceVisitorId($visitorId)
 	{
 		self::$forcedVisitorId = $visitorId;
 	}
-	
+
 	public function getCurrentTimestamp()
 	{
 		if(!is_null(self::$forcedDateTime))
 		{
-    		return strtotime(self::$forcedDateTime);
+			return strtotime(self::$forcedDateTime);
 		}
 		return time();
 	}
@@ -95,44 +128,190 @@ class Piwik_Tracker
 	}
 
 	/**
-	 * Main
+	 * Update Tracker config
+	 *
+	 * @param string $name  Setting name
+	 * @param mixed  $value Value
 	 */
-	public function main()
+	static private function updateTrackerConfig($name, $value)
 	{
-		$this->init();
-		
-		try {
-			if( $this->isVisitValid() )
+		$section = Piwik_Config::getInstance()->Tracker;
+		$section[$name] = $value;
+		Piwik_Config::getInstance()->Tracker = $section;
+	}
+
+	protected function initRequests($args)
+	{
+		$usingBulkTracking = false;
+		$rawData = file_get_contents("php://input");
+		if (!empty($rawData))
+		{
+			$this->usingBulkTracking = strpos($rawData, '"requests"') || strpos($rawData, "'requests'"); 
+			if($this->usingBulkTracking)
 			{
-				self::connectDatabase();
-				
-				$visit = $this->getNewVisitObject();
-				$visit->setRequest($this->request);
-				$visit->handle();
-				unset($visit);
+				return $this->initBulkTrackingRequests($rawData);
+			}
+		}
+		
+		// Not using bulk tracking
+		$this->requests = $args ? $args : (!empty($_GET) || !empty($_POST) ? array($_GET + $_POST) : array());
+	}
+
+	private function initBulkTrackingRequests($rawData)
+	{
+		// POST data can be array of string URLs or array of arrays w/ visit info
+		$jsonData = Piwik_Common::json_decode($rawData, $assoc = true);
+
+		if (isset($jsonData['requests']))
+		{
+			$this->requests = $jsonData['requests'];
+		}
+		$this->tokenAuth = Piwik_Common::getRequestVar('token_auth', false, null, $jsonData);
+		if(empty($this->tokenAuth))
+		{
+			throw new Exception(" token_auth must be specified when using Bulk Tracking Import. See <a href='http://piwik.org/docs/tracking-api/reference/'>Tracking Doc</a>");
+		}
+		if (!empty($this->requests))
+		{
+			$idSiteForAuthentication = 0;
+
+			foreach ($this->requests as &$request)
+			{
+				// if a string is sent, we assume its a URL and try to parse it
+				if (is_string($request))
+				{
+					$params = array();
+
+					$url = @parse_url($request);
+					if (!empty($url))
+					{
+						@parse_str($url['query'], $params);
+						$request = $params;
+						if(isset($request['idsite']) && !$idSiteForAuthentication)
+						{
+							$idSiteForAuthentication = $request['idsite'];
+						}
+					}
+				}
 			}
 
-			// don't run scheduled tasks in CLI mode from Tracker, this is the case 
+			if(!$this->authenticateSuperUserOrAdmin(array('idsite' => $idSiteForAuthentication)))
+			{
+				throw new Exception(" token_auth specified is not valid for site ". intval($idSiteForAuthentication));
+			}
+		}
+	}
+	/**
+	 * Main - tracks the visit/action
+	 *
+	 * @param array $args Optional Request Array
+	 */
+	public function main($args = null)
+	{
+		$displayedGIF = false;
+		$this->initRequests($args);
+		if (!empty($this->requests))
+		{
+			// handle all visits
+			foreach ($this->requests as $request)
+			{
+				$this->init($request);
+				
+				if(!$displayedGIF && !$this->authenticated)
+				{
+					$this->outputTransparentGif();
+					$displayedGIF = true;
+				}
+			
+				try
+				{
+					if ($this->isVisitValid())
+					{
+						self::connectDatabaseIfNotConnected();
+
+						$visit = $this->getNewVisitObject();
+						$visit->setRequest($request);
+						$visit->handle();
+						unset($visit);
+					}
+				} catch (Piwik_Tracker_Db_Exception $e) {
+					printDebug("<b>".$e->getMessage()."</b>");
+					$this->exitWithException($e, $this->authenticated);
+				} catch(Piwik_Tracker_Visit_Excluded $e) {
+				} catch(Exception $e) {
+					$this->exitWithException($e, $this->authenticated);
+				}
+				$this->clear();
+				
+				// increment successfully logged request count. make sure to do this after try-catch,
+				// since an excluded visit is considered 'successfully logged'
+				++$this->countOfLoggedRequests;
+			}
+			
+			if(!$displayedGIF)
+			{
+				$this->outputTransparentGif();
+				$displayedGIF = true;
+			}
+		}
+		else
+		{
+			$this->handleEmptyRequest($_GET + $_POST);
+		}
+
+		// run scheduled task
+		try
+		{
+			// don't run scheduled tasks in CLI mode from Tracker, this is the case
 			// where we bulk load logs & don't want to lose time with tasks
 			if(!Piwik_Common::isPhpCliMode()
 				&& !$this->authenticated)
 			{
 				Piwik_Common::runScheduledTasks($now = $this->getCurrentTimestamp());
 			}
-		} catch (Piwik_Tracker_Db_Exception $e) {
-			printDebug("<b>".$e->getMessage()."</b>");
-		} catch(Piwik_Tracker_Visit_Excluded $e) {
-		} catch(Exception $e) {
-			Piwik_Tracker_ExitWithException($e);
+		}
+		catch (Exception $e)
+		{
+			$this->exitWithException($e, $this->authenticated);
 		}
 
 		$this->end();
+	}
+	
+	/**
+	 * Echos an error message & other information, then exits.
+	 * 
+	 * @param Exception $e
+	 * @param bool $authenticated
+	 */
+	protected function exitWithException($e, $authenticated)
+	{
+		if ($this->usingBulkTracking)
+		{
+			// when doing bulk tracking we return JSON so the caller will know how many succeeded
+			$result = array('succeeded' => $this->countOfLoggedRequests);
+			
+			// send error when in debug mode or when authenticated (which happens when doing log importing,
+			// for example)
+			if ((isset($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG']) || $authenticated)
+			{
+				$result['error'] = Piwik_Tracker_GetErrorMessage($e);
+			}
+			
+			echo Piwik_Common::json_encode($result);
+			
+			exit;
+		}
+		else
+		{
+    		Piwik_Tracker_ExitWithException($e, $authenticated);
+		}
 	}
 
 	/**
 	 * Returns the date in the "Y-m-d H:i:s" PHP format
 	 *
-	 * @param int $timstamp
+	 * @param int $timestamp
 	 * @return string
 	 */
 	public static function getDatetimeFromTimestamp($timestamp)
@@ -143,13 +322,13 @@ class Piwik_Tracker
 	/**
 	 * Initialization
 	 */
-	protected function init()
+	protected function init( $request )
 	{
-		$this->handleTrackingApi();
-		$this->loadTrackerPlugins();
+		$this->handleTrackingApi($request);
+		$this->loadTrackerPlugins($request);
 		$this->handleDisabledTracker();
-		$this->handleEmptyRequest();
-		
+		$this->handleEmptyRequest($request);
+
 		printDebug("Current datetime: ".date("Y-m-d H:i:s", $this->getCurrentTimestamp()));
 	}
 
@@ -162,23 +341,21 @@ class Piwik_Tracker
 		{
 			case self::STATE_LOGGING_DISABLE:
 				printDebug("Logging disabled, display transparent logo");
-				$this->outputTransparentGif();
 			break;
-			
+
 			case self::STATE_EMPTY_REQUEST:
 				printDebug("Empty request => Piwik page");
-				echo "<a href='/'>Piwik</a> is a free open source <a href='http://piwik.org'>web analytics</a> alternative to Google analytics.";
+				echo "<a href='/'>Piwik</a> is a free open source web <a href='http://piwik.org'>analytics</a> that lets you keep control of your data.";
 			break;
-			
+
 			case self::STATE_NOSCRIPT_REQUEST:
 			case self::STATE_NOTHING_TO_NOTICE:
 			default:
 				printDebug("Nothing to notice => default behaviour");
-				$this->outputTransparentGif();
 			break;
 		}
 		printDebug("End of the page.");
-		
+
 		if($GLOBALS['PIWIK_TRACKER_DEBUG'] === true)
 		{
 			if(isset(self::$db)) {
@@ -186,7 +363,7 @@ class Piwik_Tracker
 				Piwik::printSqlProfilingReportTracker(self::$db);
 			}
 		}
-		
+
 		self::disconnectDatabase();
 	}
 
@@ -194,7 +371,8 @@ class Piwik_Tracker
 	 * Factory to create database objects
 	 *
 	 * @param array $configDb Database configuration
-	 * @return Piwik_Tracker_Db_*
+	 * @throws Exception
+	 * @return Piwik_Tracker_Db_Mysqli|Piwik_Tracker_Db_Pdo_Mysql
 	 */
 	public static function factory($configDb)
 	{
@@ -215,36 +393,42 @@ class Piwik_Tracker
 	public static function connectPiwikTrackerDb()
 	{
 		$db = null;
-		$configDb = Piwik_Tracker_Config::getInstance()->database;
-		
+		$configDb = Piwik_Config::getInstance()->database;
+
 		if(!isset($configDb['port']))
 		{
 			// before 0.2.4 there is no port specified in config file
-			$configDb['port'] = '3306';  
+			$configDb['port'] = '3306';
 		}
+
+		Piwik_PostEvent('Tracker.getDatabaseConfig', $configDb);
 
 		$db = self::factory( $configDb );
 		$db->connect();
-		
+
 		return $db;
 	}
-	
-	public static function connectDatabase()
+
+	public static function connectDatabaseIfNotConnected()
 	{
 		if( !is_null(self::$db))
 		{
 			return;
 		}
-		
-		$db = null;
-		Piwik_PostEvent('Tracker.createDatabase', $db);
-		if(is_null($db))
-		{
-			$db = self::connectPiwikTrackerDb();
+
+		try {
+			$db = null;
+			Piwik_PostEvent('Tracker.createDatabase', $db);
+			if(is_null($db))
+			{
+				$db = self::connectPiwikTrackerDb();
+			}
+			self::$db = $db;
+		} catch(Exception $e) {
+			throw new Piwik_Tracker_Db_Exception($e->getMessage(), $e->getCode());
 		}
-		self::$db = $db;
 	}
-	
+
 	/**
 	 * @return Piwik_Tracker_Db
 	 */
@@ -266,13 +450,14 @@ class Piwik_Tracker
 	 * Returns the Tracker_Visit object.
 	 * This method can be overwritten to use a different Tracker_Visit object
 	 *
+	 * @throws Exception
 	 * @return Piwik_Tracker_Visit
 	 */
 	protected function getNewVisitObject()
 	{
 		$visit = null;
 		Piwik_PostEvent('Tracker.getNewVisitObject', $visit);
-	
+
 		if(is_null($visit))
 		{
 			$visit = new Piwik_Tracker_Visit( self::$forcedIpString, self::$forcedDateTime );
@@ -284,66 +469,69 @@ class Piwik_Tracker
 		}
 		return $visit;
 	}
-	
+
 	protected function outputTransparentGif()
 	{
-		if( !isset($GLOBALS['PIWIK_TRACKER_DEBUG']) || !$GLOBALS['PIWIK_TRACKER_DEBUG'] ) 
+		if( !isset($GLOBALS['PIWIK_TRACKER_DEBUG']) || !$GLOBALS['PIWIK_TRACKER_DEBUG'] )
 		{
 			$trans_gif_64 = "R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-			header('Content-Type: image/gif');
-			header('Access-Control-Allow-Origin: *');
+			$this->sendHeader('Content-Type: image/gif');
+			$this->sendHeader('Access-Control-Allow-Origin: *');
 			print(base64_decode($trans_gif_64));
 		}
 	}
-	
+
 	protected function sendHeader($header)
 	{
-		header($header);
+		Piwik_Common::sendHeader($header);
 	}
-	
+
 	protected function isVisitValid()
 	{
 		return $this->stateValid !== self::STATE_LOGGING_DISABLE
 				&&  $this->stateValid !== self::STATE_EMPTY_REQUEST;
 	}
-	
+
 	protected function getState()
 	{
 		return $this->stateValid;
 	}
-	
+
 	protected function setState( $value )
 	{
 		$this->stateValid = $value;
 	}
 
-	protected function loadTrackerPlugins()
+	protected function loadTrackerPlugins( $request )
 	{
-		if(isset($this->request['dp'])
-			&& $this->authenticated) 
+		// Adding &dp=1 will disable the provider plugin, if token_auth is used (used to speed up bulk imports)
+		if(isset($request['dp'])
+			&& !empty($request['dp'])
+			&& $this->authenticated)
 		{
 			Piwik_Tracker::setPluginsNotToLoad(array('Provider'));
 		}
-		try{
-			$pluginsTracker = Piwik_Tracker_Config::getInstance()->Plugins_Tracker;
+
+		try {
+			$pluginsTracker = Piwik_Config::getInstance()->Plugins_Tracker;
 			if(is_array($pluginsTracker)
 				&& count($pluginsTracker) != 0)
 			{
 				$pluginsTracker['Plugins_Tracker'] = array_diff($pluginsTracker['Plugins_Tracker'], self::getPluginsNotToLoad());
 				Piwik_PluginsManager::getInstance()->doNotLoadAlwaysActivatedPlugins();
 				Piwik_PluginsManager::getInstance()->loadPlugins( $pluginsTracker['Plugins_Tracker'] );
-				
+
 				printDebug("Loading plugins: { ". implode(",", $pluginsTracker['Plugins_Tracker']) . " }");
 			}
 		} catch(Exception $e) {
 			printDebug("ERROR: ".$e->getMessage());
 		}
 	}
-	
-	protected function handleEmptyRequest()
+
+	protected function handleEmptyRequest( $request )
 	{
-		$countParameters = count($this->request);
-		if($countParameters == 0) 
+		$countParameters = count($request);
+		if($countParameters == 0)
 		{
 			$this->setState(self::STATE_EMPTY_REQUEST);
 		}
@@ -352,58 +540,70 @@ class Piwik_Tracker
 			$this->setState(self::STATE_NOSCRIPT_REQUEST);
 		}
 	}
-	
+
 	protected function handleDisabledTracker()
 	{
-		$saveStats = Piwik_Tracker_Config::getInstance()->Tracker['record_statistics'];
+		$saveStats = Piwik_Config::getInstance()->Tracker['record_statistics'];
 		if($saveStats == 0)
 		{
 			$this->setState(self::STATE_LOGGING_DISABLE);
 		}
 	}
 
-	protected function authenticateSuperUserOrAdmin()
+	protected function authenticateSuperUserOrAdmin( $request )
 	{
-		$tokenAuth = Piwik_Common::getRequestVar('token_auth', false);
+		$tokenAuth = $this->getTokenAuth();
 
-		if( $tokenAuth )
+		if( !$tokenAuth )
 		{
-			$superUserLogin =  Piwik_Tracker_Config::getInstance()->superuser['login'];
-			$superUserPassword = Piwik_Tracker_Config::getInstance()->superuser['password'];
-			if( md5($superUserLogin . $superUserPassword ) == $tokenAuth )
+			return false;
+		}
+		$superUserLogin =  Piwik_Config::getInstance()->superuser['login'];
+		$superUserPassword = Piwik_Config::getInstance()->superuser['password'];
+		if( md5($superUserLogin . $superUserPassword ) == $tokenAuth )
+		{
+			$this->authenticated = true;
+			return true;
+		}
+
+		// Now checking the list of admin token_auth cached in the Tracker config file
+		$idSite = Piwik_Common::getRequestVar('idsite', false, 'int', $request);
+		if(!empty($idSite)
+			&& $idSite > 0)
+		{
+			$website = Piwik_Common::getCacheWebsiteAttributes( $idSite );
+			$adminTokenAuth = $website['admin_token_auth'];
+			if(in_array($tokenAuth, $adminTokenAuth))
 			{
 				$this->authenticated = true;
 				return true;
 			}
-			
-			// Now checking the list of admin token_auth cached in the Tracker config file
-			$idSite = Piwik_Common::getRequestVar('idsite', false, 'int', $this->request);
-			if(!empty($idSite) 
-				&& $idSite > 0)
-			{
-				$website = Piwik_Common::getCacheWebsiteAttributes( $idSite );
-				$adminTokenAuth = $website['admin_token_auth'];
-				if(in_array($tokenAuth, $adminTokenAuth))
-				{
-					$this->authenticated = true;
-					return true;
-				}
-			}
-			printDebug("WARNING! token_auth = $tokenAuth is not valid, Super User / Admin was NOT authenticated");
 		}
+		printDebug("WARNING! token_auth = $tokenAuth is not valid, Super User / Admin was NOT authenticated");
+
 		return false;
+	}
+
+	protected function getTokenAuth()
+	{
+		if (!is_null($this->tokenAuth))
+		{
+			return $this->tokenAuth;
+		}
+
+		return Piwik_Common::getRequestVar('token_auth', false);
 	}
 
 	/**
 	 * This method allows to set custom IP + server time when using Tracking API.
 	 * These two attributes can be only set by the Super User (passing token_auth).
 	 */
-	protected function handleTrackingApi()
+	protected function handleTrackingApi( $request )
 	{
-		$shouldAuthenticate = Piwik_Tracker_Config::getInstance()->Tracker['tracking_requests_require_authentication'];
+		$shouldAuthenticate = Piwik_Config::getInstance()->Tracker['tracking_requests_require_authentication'];
 		if($shouldAuthenticate)
 		{
-			if(!$this->authenticateSuperUserOrAdmin())
+			if(!$this->authenticateSuperUserOrAdmin($request))
 			{
 				return;
 			}
@@ -415,46 +615,116 @@ class Piwik_Tracker
 		}
 
 		// Custom IP to use for this visitor
-		$customIp = Piwik_Common::getRequestVar('cip', false, 'string', $this->request);
+		$customIp = Piwik_Common::getRequestVar('cip', false, 'string', $request);
 		if(!empty($customIp))
 		{
 			$this->setForceIp($customIp);
 		}
-	
+
 		// Custom server date time to use
-		$customDatetime = Piwik_Common::getRequestVar('cdt', false, 'string', $this->request);
+		$customDatetime = Piwik_Common::getRequestVar('cdt', false, 'string', $request);
 		if(!empty($customDatetime))
 		{
 			$this->setForceDateTime($customDatetime);
 		}
-		
-		// Forced Visitor ID to record the visit / action 
-		$customVisitorId = Piwik_Common::getRequestVar('cid', false, 'string', $this->request);
+
+		// Forced Visitor ID to record the visit / action
+		$customVisitorId = Piwik_Common::getRequestVar('cid', false, 'string', $request);
 		if(!empty($customVisitorId))
 		{
 			$this->setForceVisitorId($customVisitorId);
 		}
 	}
+
+	public static function setTestEnvironment( $args = null, $requestMethod = null )
+	{
+		if (is_null($args))
+		{
+			$args = $_GET + $_POST;
+		}
+		if (is_null($requestMethod))
+		{
+			$requestMethod = $_SERVER['REQUEST_METHOD'];
+		}
+
+		// Do not run scheduled tasks during tests
+		self::updateTrackerConfig('scheduled_tasks_min_interval', 0);
+
+		// if nothing found in _GET/_POST and we're doing a POST, assume bulk request. in which case,
+		// we have to bypass authentication
+		if (empty($args) && $requestMethod == 'POST')
+		{
+			self::updateTrackerConfig('tracking_requests_require_authentication', 0);
+		}
+
+		// Tests can force the use of 3rd party cookie for ID visitor
+		if(Piwik_Common::getRequestVar('forceUseThirdPartyCookie', false, null, $args) == 1)
+		{
+			self::updateTrackerConfig('use_third_party_id_cookie', 1);
+		}
+
+		// Tests can force the enabling of IP anonymization
+		$forceIpAnonymization = false;
+		if (Piwik_Common::getRequestVar('forceIpAnonymization', false, null, $args) == 1)
+		{
+			self::updateTrackerConfig('ip_address_mask_length', 2);
+
+			$section = Piwik_Config::getInstance()->Plugins_Tracker;
+			$section['Plugins_Tracker'][] = "AnonymizeIP";
+			Piwik_Config::getInstance()->Plugins_Tracker = $section;
+
+			$forceIpAnonymization = true;
+		}
+
+		// Custom IP to use for this visitor
+		$customIp = Piwik_Common::getRequestVar('cip', false, null, $args);
+		if(!empty($customIp))
+		{
+			self::setForceIp($customIp);
+		}
+
+		// Custom server date time to use
+		$customDatetime = Piwik_Common::getRequestVar('cdt', false, null, $args);
+		if(!empty($customDatetime))
+		{
+			self::setForceDateTime($customDatetime);
+		}
+
+		// Custom server date time to use
+		$customVisitorId = Piwik_Common::getRequestVar('cid', false, null, $args);
+		if(!empty($customVisitorId))
+		{
+			self::setForceVisitorId($customVisitorId);
+		}
+		$pluginsDisabled = array('Provider');
+		if(!$forceIpAnonymization)
+		{
+			$pluginsDisabled[] = 'AnonymizeIP';
+		}
+
+		// Disable provider plugin, because it is so slow to do reverse ip lookup in dev environment somehow
+		self::setPluginsNotToLoad($pluginsDisabled);
+	}
 }
 
-if(!function_exists('printDebug')) 
+/**
+ * Gets the error message to output when a tracking request fails.
+ * 
+ * @param Exception $e
+ * @return string
+ */
+function Piwik_Tracker_GetErrorMessage( $e )
 {
-    function printDebug( $info = '' )
-    {
-    	if(isset($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'])
-    	{
-    		if(is_array($info))
-    		{
-    			print("<pre>");
-    			print(htmlspecialchars(var_export($info,true), ENT_QUOTES));
-    			print("</pre>");
-    		}
-    		else
-    		{
-    			print(htmlspecialchars($info, ENT_QUOTES) . "<br />\n");
-    		}
-    	}
-    }
+	// Note: duplicated from FormDatabaseSetup.isAccessDenied
+	// Avoid leaking the username/db name when access denied
+	if($e->getCode() == 1044 || $e->getCode() == 42000)
+	{
+		return "Error while connecting to the Piwik database - please check your credentials in config/config.ini.php file";
+	}
+	else
+	{
+		return $e->getMessage();
+	}
 }
 
 /**
@@ -462,24 +732,24 @@ if(!function_exists('printDebug'))
  *
  * @param Exception $e
  */
-function Piwik_Tracker_ExitWithException($e)
+function Piwik_Tracker_ExitWithException($e, $authenticated = false)
 {
-	header('Content-Type: text/html; charset=utf-8');
+	Piwik_Common::sendHeader('Content-Type: text/html; charset=utf-8');
+	
 	if(isset($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'])
 	{
 		$trailer = '<font color="#888888">Backtrace:<br /><pre>'.$e->getTraceAsString().'</pre></font>';
+		$headerPage = file_get_contents(PIWIK_INCLUDE_PATH . '/themes/default/simple_structure_header.tpl');
+		$footerPage = file_get_contents(PIWIK_INCLUDE_PATH . '/themes/default/simple_structure_footer.tpl');
+		$headerPage = str_replace('{$HTML_TITLE}', 'Piwik &rsaquo; Error', $headerPage);
+
+		echo $headerPage . '<p>' . Piwik_Tracker_GetErrorMessage($e) . '</p>' . $trailer . $footerPage;
 	}
-	else
+	// If not debug, but running authenticated (eg. during log import) then we display raw errors 
+	elseif($authenticated)
 	{
-		$trailer = '<p>Edit the following line in piwik.php to enable tracker debugging and display a backtrace:</p>
-					<blockquote><pre>$GLOBALS[\'PIWIK_TRACKER_DEBUG\'] = true;</pre></blockquote>';
+		echo Piwik_Tracker_GetErrorMessage($e);
 	}
-
-	$headerPage = file_get_contents(PIWIK_INCLUDE_PATH . '/themes/default/simple_structure_header.tpl');
-	$footerPage = file_get_contents(PIWIK_INCLUDE_PATH . '/themes/default/simple_structure_footer.tpl');
-	$headerPage = str_replace('{$HTML_TITLE}', 'Piwik &rsaquo; Error', $headerPage);
-	
-	echo $headerPage . '<p>' . $e->getMessage() . '</p>' . $trailer . $footerPage;
-
 	exit;
 }
+

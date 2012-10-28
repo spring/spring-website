@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 5189 2011-09-19 05:08:28Z matt $
+ * @version $Id: Controller.php 6984 2012-09-14 05:08:27Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Installation
@@ -74,13 +74,13 @@ class Piwik_Installation_Controller extends Piwik_Controller
 	{
 		// Delete merged js/css files to force regenerations based on updated activated plugin list
 		Piwik::deleteAllCacheOnUpdate();
-		
+
 		$view = new Piwik_Installation_View(
 						$this->pathView . 'welcome.tpl',
 						$this->getInstallationSteps(),
 						__FUNCTION__
 					);
-		$view->newInstall = !file_exists(Piwik_Config::getDefaultUserConfigPath());
+		$view->newInstall = !file_exists(Piwik_Config::getLocalConfigPath());
 		$view->errorMessage = $message;
 		$this->skipThisStep( __FUNCTION__ );
 		$view->showNextStep = $view->newInstall;
@@ -104,11 +104,12 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 		$view->infos = self::getSystemInformation();
 		$this->session->general_infos = $view->infos['general_infos'];
-
+		
 		$view->helpMessages = array(
 			'zlib'            => 'Installation_SystemCheckZlibHelp',
 			'SPL'             => 'Installation_SystemCheckSplHelp',
 			'iconv'           => 'Installation_SystemCheckIconvHelp',
+			'Reflection'	  => 'Required extension that is built in PHP, see http://www.php.net/manual/en/book.reflection.php',
 			'json'            => 'Installation_SystemCheckWarnJsonHelp',
 			'libxml'          => 'Installation_SystemCheckWarnLibXmlHelp',
 			'dom'             => 'Installation_SystemCheckWarnDomHelp',
@@ -133,6 +134,8 @@ class Piwik_Installation_Controller extends Piwik_Controller
 							&& !count($view->infos['missing_extensions'])
 							&& !count($view->infos['missing_functions'])
 						;
+		// On the system check page, if all is green, display Next link at the top
+		$view->showNextStepAtTop = $view->showNextStep;  
 
 		$this->session->currentStepDone = __FUNCTION__;
 
@@ -141,6 +144,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 	/**
 	 * Installation Step 3: Database Set-up
+	 * @throws Exception|Zend_Db_Adapter_Exception
 	 */
 	function databaseSetup()
 	{
@@ -165,61 +169,20 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 		if($form->validate())
 		{
-			$adapter = $form->getSubmitValue('adapter');
-			$port = Piwik_Db_Adapter::getDefaultPortForAdapter($adapter);
-
-			$dbInfos = array(
-				'host'          => $form->getSubmitValue('host'),
-				'username'      => $form->getSubmitValue('username'),
-				'password'      => $form->getSubmitValue('password'),
-				'dbname'        => $form->getSubmitValue('dbname'),
-				'tables_prefix' => $form->getSubmitValue('tables_prefix'),
-				'adapter'       => $adapter,
-				'port'          => $port,
-			);
-
-			if(($portIndex = strpos($dbInfos['host'], '/')) !== false)
+			try
 			{
-				// unix_socket=/path/sock.n
-				$dbInfos['port'] = substr($dbInfos['host'], $portIndex);
-				$dbInfos['host'] = '';
-			}
-			else if(($portIndex = strpos($dbInfos['host'], ':')) !== false)
-			{
-				// host:port
-				$dbInfos['port'] = substr($dbInfos['host'], $portIndex + 1 );
-				$dbInfos['host'] = substr($dbInfos['host'], 0, $portIndex);
-			}
-
-			try{
-				try {
-					@Piwik::createDatabaseObject($dbInfos);
-					$this->session->databaseCreated = true;
-				} catch (Zend_Db_Adapter_Exception $e) {
-					$db = Piwik_Db_Adapter::factory($adapter, $dbInfos, $connect = false);
-
-					// database not found, we try to create  it
-					if($db->isErrNo($e, '1049'))
-					{
-						$dbInfosConnectOnly = $dbInfos;
-						$dbInfosConnectOnly['dbname'] = null;
-						@Piwik::createDatabaseObject($dbInfosConnectOnly);
-						@Piwik::createDatabase($dbInfos['dbname']);
-						$this->session->databaseCreated = true;
-					}
-					else
-					{
-						throw $e;
-					}
-				}
-
+				$dbInfos = $form->createDatabaseObject();
+				$this->session->databaseCreated = true;
+				
 				Piwik::checkDatabaseVersion();
 				$this->session->databaseVersionOk = true;
 
 				$this->session->db_infos = $dbInfos;
 				$this->redirectToNextStep( __FUNCTION__ );
-			} catch(Exception $e) {
-				$view->errorMessage = $e->getMessage();
+			}
+			catch (Exception $e)
+			{
+				$view->errorMessage = Piwik_Common::sanitizeInputValue($e->getMessage());
 			}
 		}
 		$view->addForm($form);
@@ -388,7 +351,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 			$this->session->superuser_infos = $superUserInfos;
 
-			$url = Zend_Registry::get('config')->General->api_service_url;
+			$url = Piwik_Config::getInstance()->General['api_service_url'];
 			$url .= '/1.0/subscribeNewsletter/';
 			$params = array(
 				'email' => $form->getSubmitValue('email'),
@@ -487,6 +450,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 			$this->session->firstWebsiteSetupSuccessMessage = true;
 		}
 		$siteName = $this->session->site_name;
+		$siteName = Piwik_Common::sanitizeInputValue( urldecode($siteName) );
 		$idSite = $this->session->site_idSite;
 
 		// Load the Tracking code and help text from the SitesManager 
@@ -498,7 +462,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 		// Assign the html output to a smarty variable
 		$view->trackingHelp = $viewTrackingHelp->render();
-		$view->displaySiteName = urldecode($siteName);
+		$view->displaySiteName = $siteName;
 		
 		$view->showNextStep = true;
 
@@ -520,8 +484,9 @@ class Piwik_Installation_Controller extends Piwik_Controller
 					);
 		$this->skipThisStep( __FUNCTION__ );
 
-		if(!file_exists(Piwik_Config::getDefaultUserConfigPath()))
+		if(!file_exists(Piwik_Config::getLocalConfigPath()))
 		{
+//			$this->addTrustedHosts();
 			$this->writeConfigFileFromSession();
 		}
 
@@ -552,8 +517,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 	protected function createDbFromSessionInformation()
 	{
 		$dbInfos = $this->session->db_infos;
-		Zend_Registry::get('config')->disableSavingConfigurationFileUpdates();
-		Zend_Registry::get('config')->database = $dbInfos;
+		Piwik_Config::getInstance()->database = $dbInfos;
 		Piwik::createDatabaseObject($dbInfos);
 	}
 
@@ -567,14 +531,21 @@ class Piwik_Installation_Controller extends Piwik_Controller
 		{
 			return;
 		}
-		$config = Zend_Registry::get('config');
-		$config->superuser = $this->session->superuser_infos;
-		$dbInfos = $this->session->db_infos;
-		$config->database = $dbInfos;
 
-		if(!empty($this->session->general_infos))
-		{
-			$config->General = $this->session->general_infos;
+		$config = Piwik_Config::getInstance();
+		try {
+			// expect exception since config.ini.php doesn't exist yet
+			$config->init();
+		} catch(Exception $e) {
+			$config->superuser = $this->session->superuser_infos;
+			$config->database = $this->session->db_infos;
+
+			if(!empty($this->session->general_infos))
+			{
+				$config->General = $this->session->general_infos;
+			}
+
+			$config->forceSave();
 		}
 
 		unset($this->session->superuser_infos);
@@ -614,7 +585,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 		}
 		else
 		{
-			if(file_exists(Piwik_Config::getDefaultUserConfigPath()))
+			if(file_exists(Piwik_Config::getLocalConfigPath()))
 			{
 				$error = true;
 			}
@@ -675,12 +646,56 @@ class Piwik_Installation_Controller extends Piwik_Controller
 	}
 
 	/**
+	 * Extract host from URL
+	 *
+	 * @param string $url URL
+	 *
+	 * @return string|false
+	 */
+	protected function extractHost($url)
+	{
+		$urlParts = parse_url($url);
+		if (isset($urlParts['host']) && strlen($host = $urlParts['host']))
+		{
+			return $host;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Add trusted hosts
+	 */
+	protected function addTrustedHosts()
+	{
+		$trustedHosts = array();
+
+		// extract host from the request header
+		if (($host = $this->extractHost('http://'.Piwik_Url::getHost())) !== false)
+		{
+			$trustedHosts[] = $host;
+		}
+
+		// extract host from first web site
+		if (($host = $this->extractHost(urldecode($this->session->site_url))) !== false)
+		{
+			$trustedHosts[] = $host;
+		}
+
+		$trustedHosts = array_unique($trustedHosts);
+		if (count($trustedHosts))
+		{
+			$this->session->general_infos['trusted_hosts'] = $trustedHosts;
+		}
+	}
+
+	/**
 	 * Get system information
 	 */
 	public static function getSystemInformation()
 	{
 		global $piwik_minimumPHPVersion;
-		$minimumMemoryLimit = Zend_Registry::get('config')->General->minimum_memory_limit;
+		$minimumMemoryLimit = Piwik_Config::getInstance()->General['minimum_memory_limit'];
 
 		$infos = array();
 
@@ -781,17 +796,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 
 		$infos['openurl'] = Piwik_Http::getTransportMethod();
 
-		$infos['gd_ok'] = false;
-		if (in_array('gd', $extensions))
-		{
-			$gdInfo = gd_info();
-			$infos['gd_version'] = $gdInfo['GD Version'];
-			preg_match('/([0-9]{1})/', $gdInfo['GD Version'], $gdVersion);
-			if($gdVersion[0] >= 2)
-			{
-				$infos['gd_ok'] = true;
-			}
-		}
+		$infos['gd_ok'] = Piwik::isGdExtensionEnabled();
 
 		$infos['hasMbstring'] = false;
 		$infos['multibyte_ok'] = true;
@@ -844,7 +849,7 @@ class Piwik_Installation_Controller extends Piwik_Controller
 		$infos['protocol'] = Piwik_ProxyHeaders::getProtocolInformation();
 		if(!Piwik::isHttps() && $infos['protocol'] !== null)
 		{
-			$infos['general_infos']['secure_protocol'] = '1';
+			$infos['general_infos']['assume_secure_protocol'] = '1';
 		}
 		if(count($headers = Piwik_ProxyHeaders::getProxyClientHeaders()) > 0)
 		{

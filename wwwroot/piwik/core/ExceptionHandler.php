@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ExceptionHandler.php 5095 2011-08-11 04:32:54Z matt $
+ * @version $Id: ExceptionHandler.php 6325 2012-05-26 21:08:06Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -12,8 +12,9 @@
 
 /**
  * Exception handler used to display nicely exceptions in Piwik
- * 
- * @param Exception $exception
+ *
+ * @param Exception  $exception
+ * @throws Exception
  */
 function Piwik_ExceptionHandler(Exception $exception) 
 {

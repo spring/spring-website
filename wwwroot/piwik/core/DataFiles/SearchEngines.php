@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: SearchEngines.php 5215 2011-09-24 09:28:02Z SteveG $
+ * @version $Id: SearchEngines.php 7089 2012-10-03 06:52:28Z matt $
  *
  * @category Piwik
  * @package DataFiles
@@ -132,6 +132,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'www.aolimages.aol.fr'		=> array('AOL'),
 		'aim.search.aol.com'		=> array('AOL'),
 		'www.recherche.aol.fr'		=> array('AOL'),
+		'recherche.aol.fr'			=> array('AOL'),
 		'find.web.aol.com'			=> array('AOL'),
 		'recherche.aol.ca'			=> array('AOL'),
 		'aolsearch.aol.co.uk'		=> array('AOL'),
@@ -143,9 +144,6 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'aolbusqueda.aol.com.mx'	=> array('AOL'),
 		'alicesuche.aol.de'			=> array('AOL'),
 		'alicesuchet.aol.de'		=> array('AOL'),
-		'suche.aolsvc.de'			=> array('AOL'),
-		'suche.aol.de'				=> array('AOL'),
-		'alicesuche.aol.de'			=> array('AOL'),
 		'suchet2.aol.de'			=> array('AOL'),
 		'search.hp.my.aol.com.au'	=> array('AOL'),
 		'search.hp.my.aol.de'		=> array('AOL'),
@@ -180,6 +178,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'www.qbyrd.com'				=> array('Ask'),
 		'{}.qbyrd.com'				=> array('Ask'),
 		'www.search-results.com'	=> array('Ask'),
+		'int.search-results.com'	=> array('Ask'),
 		'{}.search-results.com'		=> array('Ask'),
 
 		// Atlas
@@ -191,17 +190,15 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 	
 		// Babylon (Enhanced by Google)
 		'search.babylon.com'		=> array('Babylon', array('q', '/\/web\/(.*)/'), '?q={k}'),
+		'searchassist.babylon.com'	=> array('Babylon'),
 
 		// Baidu
-		'www.baidu.com'				=> array('Baidu', array('wd', 'word', 'kw'), 's?wd={k}', 'gb2312'),
+		'www.baidu.com'				=> array('Baidu', array('wd', 'word', 'kw'), 's?wd={k}', array('UTF-8', 'gb2312')),
 		'www1.baidu.com'			=> array('Baidu'),
 		'zhidao.baidu.com'			=> array('Baidu'),
 		'tieba.baidu.com'			=> array('Baidu'),
 		'news.baidu.com'			=> array('Baidu'),
 		'web.gougou.com'			=> array('Baidu', 'search', 'search?search={k}'), // uses baidu search
-	
-		// Bellnet
-		'www.suchmaschine.com'		=> array('Bellnet', 'suchstr', 'cgi-bin/bellnet.cgi?suchstr={k}'),
 
 		// Biglobe
 		'cgi.search.biglobe.ne.jp'	=> array('Biglobe', 'q', 'cgi-bin/search-st?q={k}'),
@@ -210,6 +207,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'bing.com'					=> array('Bing', array('q', 'Q'), 'search?q={k}'),
 		'{}.bing.com'				=> array('Bing'),
 		'msnbc.msn.com'				=> array('Bing'),
+		'dizionario.it.msn.com'		=> array('Bing'),
 
 		// Bing Cache
 		'cc.bingj.com'				=> array('Bing'),
@@ -248,6 +246,9 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 
 		// Comcast
 		'search.comcast.net'		=> array('Comcast', 'q', '?q={k}'),
+
+		// Crawler
+		'www.crawler.com'			=> array('Crawler', 'q', 'search/results1.aspx?q={k}'),
 
 		// Compuserve
 		'websearch.cs.com'			=> array('Compuserve.com (Enhanced by Google)', 'query', 'cs/search?query={k}'),
@@ -378,6 +379,9 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		// Gnadenmeer
 		'www.gnadenmeer.de'			=> array('Gnadenmeer', 'keyword'),
 
+		// Gomeo
+		'www.gomeo.com'				=> array('Gomeo', array('Keywords', '/\/search\/([^\/]+)/'), '/search/{k}'),
+
 		// goo
 		'search.goo.ne.jp'			=> array('goo', 'MT', 'web.jsp?MT={k}'),
 		'ocnsearch.goo.ne.jp'		=> array('goo'),
@@ -401,6 +405,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 
 		// Powered by Google
 		'search.avg.com'			=> array('Google'),
+		'isearch.avg.com'			=> array('Google'),
 		'www.cnn.com'				=> array('Google', 'query'),
 		'darkoogle.com'				=> array('Google'),
 		'search.darkoogle.com'		=> array('Google'),
@@ -415,7 +420,10 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'search.sweetim.com'		=> array('Google'),
 		'www.fastweb.it'			=> array('Google'),
 		'search.juno.com'			=> array('Google', 'query'),
+		'find.tdc.dk'				=> array('Google'),
 		'searchresults.verizon.com'	=> array('Google'),
+		'search.walla.co.il'		=> array('Google'),
+		'search.alot.com'			=> array('Google'),
 
 		// Google Earth
 		// - 2010-09-13: are these redirects now?
@@ -497,15 +505,15 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'www.ilse.nl'				=> array('Ilse NL', 'search_for', '?search_for={k}'),
 
 		// InfoSpace (and related web properties)
-		'infospace.com'				=> array('InfoSpace', '/\/[^\/]+\/ws\/results\/[^\/]+\/([^\/]+)/', 'ispace/ws/results/Web/{k}/1/1/content-top-left/Relevance/'),
+		'infospace.com'				=> array('InfoSpace', 'q', '/search/web?q={k}'),
 		'dogpile.com'				=> array('InfoSpace'),
-		'nbci.dogpile.com'			=> array('InfoSpace'),
-		'search.nation.com'			=> array('InfoSpace'),
-		'search.go2net.com'			=> array('InfoSpace'),
 		'metacrawler.com'			=> array('InfoSpace'),
 		'webfetch.com'				=> array('InfoSpace'),
 		'webcrawler.com'			=> array('InfoSpace'),
-		'search.dogreatgood.com'	=> array('InfoSpace'),
+		'search.kiwee.com'			=> array('InfoSpace'),
+	
+		// old infospace system
+		'wsdsold.infospace.com'		=> array('InfoSpace', '/\/[^\/]+\/ws\/results\/[^\/]+\/([^\/]+)/', 'pemonitorhosted/ws/results/Web/{k}/1/417/TopNavigation/Source/'),
 	
 		// Powered by InfoSpace
 		'isearch.babylon.com'		=> array('InfoSpace', 'q'),
@@ -517,7 +525,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		 * Other InfoSpace powered metasearches are handled in Piwik_Common::extractSearchEngineInformationFromUrl()
 		 *
 		 * This includes sites such as:
-		 * - search.kiwee.com
+		 * - search.nation.com
 		 * - ws.copernic.com
 		 * - result.iminent.com
 		 */
@@ -580,7 +588,7 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'www.maailm.com'			=> array('maailm.com', 'tekst'),
 
 		// Mail.ru
-		'go.mail.ru'				=> array('Mailru', 'q', 'search?q={k}', 'windows-1251'),
+		'go.mail.ru'				=> array('Mailru', 'q', 'search?rch=e&q={k}', array('UTF-8', 'windows-1251')),
 
 		// Mamma
 		'www.mamma.com'				=> array('Mamma', 'query', 'result.php?q={k}'),
@@ -745,11 +753,17 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		// Sogou
 		'www.sogou.com'				=> array('Sogou', 'query', 'web?query={k}'),
 
+		// Softonic
+		'search.softonic.com'		=> array('Softonic', 'q', 'default/default?q={k}'),
+
 		// soso.com
 		'www.soso.com'				=> array('Soso', 'w', 'q?w={k}', 'gb2312'),
 
 		// Startpagina
 		'startgoogle.startpagina.nl'=> array('Startpagina (Google)', 'q', '?q={k}'),
+
+		// Startsiden
+		'www.startsiden.no'			=> array('Startsiden', 'q', 'sok/index.html?q={k}'),
 
 		// suche.info
 		'suche.info'				=> array('Suche.info', 'Keywords', 'suche.php?Keywords={k}'),
@@ -803,6 +817,9 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 
 		// Twingly
 		'www.twingly.com'			=> array('Twingly', 'q', 'search?q={k}'),
+
+		// uol.com.br
+		'busca.uol.com.br'			=> array('uol.com.br', 'q', '/web/?q={k}'),
 
 		// URL.ORGanzier
 		'www.url.org'				=> array('URL.ORGanzier', 'q', '?l=de&q={k}'),
@@ -901,11 +918,13 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'search.yam.com'			=> array('Yam', 'k', 'Search/Web/?SearchType=web&k={k}'),
 
 		// Yandex
-		'yandex.com'				=> array('Yandex', 'text', 'yandsearch?text={k}'),
+		'yandex.ru'				=> array('Yandex', 'text', 'yandsearch?text={k}'),
+		'yandex.com'				=> array('Yandex'),
 		'yandex.{}'					=> array('Yandex'),
 
 		// Yandex Images
-		'images.yandex.com'			=> array('Yandex Images', 'text', 'yandsearch?text={k}'),
+		'images.yandex.ru'			=> array('Yandex Images', 'text', 'yandsearch?text={k}'),
+		'images.yandex.com'			=> array('Yandex Images'),
 		'images.yandex.{}'			=> array('Yandex Images'),
 
 		// Yasni
@@ -914,6 +933,10 @@ if(!isset($GLOBALS['Piwik_SearchEngines'] ))
 		'www.yasni.co.uk'			=> array('Yasni'),
 		'www.yasni.ch'				=> array('Yasni'),
 		'www.yasni.at'				=> array('Yasni'),
+
+		// Yatedo
+		'www.yatedo.com'				=> array('Yatedo', 'q', 'search/profil?q={k}'),
+		'www.yatedo.fr'					=> array('Yatedo'),
 
 		// Yellowmap
 		'yellowmap.de'				=> array('Yellowmap', ' '),

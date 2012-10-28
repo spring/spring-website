@@ -1,7 +1,8 @@
-<div id="{$properties.uniqueId}">
-	{if !empty($reportDocumentation)}
-		<div class="reportDocumentation"><p>{$reportDocumentation}</p></div>
-	{/if}
+<div id="{$properties.uniqueId}" class="dataTable">
+	<div class="reportDocumentation">
+		{if !empty($reportDocumentation)}<p>{$reportDocumentation}</p>{/if}
+		{if isset($properties.metadata.archived_date)}<span class='helpDate'>{$properties.metadata.archived_date}</span>{/if}
+	</div>
 	<div class="dataTableActionsWrapper">
 	{if isset($arrayDataTable.result) and $arrayDataTable.result == 'error'}
 		{$arrayDataTable.message} 
@@ -23,14 +24,14 @@
 						</div>
 					{/if}
 					<div id="thDIV">{$columnTranslations[$column]|escape:'html'}</div>
-				</td>
+				</th>
 			{/foreach}
 			</tr>
 			</thead>
 			
 			<tbody>
 			{foreach from=$arrayDataTable item=row}
-			<tr {if $row.idsubdatatable}class="rowToProcess subActionsDataTable" id="{$row.idsubdatatable}"{else} class="actionsDataTable rowToProcess"{/if}>
+			<tr {if $row.idsubdatatable}class="rowToProcess subActionsDataTable" id="{$row.idsubdatatable}"{else}class="actionsDataTable rowToProcess"{/if}>
 			{foreach from=$dataTableColumns item=column}
 			<td>
 				{include file="CoreHome/templates/datatable_cell.tpl"}

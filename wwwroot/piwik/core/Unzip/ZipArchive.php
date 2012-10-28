@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ZipArchive.php 4297 2011-04-03 19:31:58Z vipsoft $
+ * @version $Id: ZipArchive.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -16,12 +16,24 @@
  * @package Piwik
  * @subpackage Piwik_Unzip
  */
-class Piwik_Unzip_ZipArchive  implements Piwik_Unzip_Interface
+class Piwik_Unzip_ZipArchive implements Piwik_Unzip_Interface
 {
+	/**
+	 * @var ZipArchive
+	 */
 	private $ziparchive;
+	/**
+	 * @var string
+	 */
 	public $filename;
 
-	function __construct($filename) {
+	/**
+	 * Constructor
+	 *
+	 * @param string  $filename  Name of the .zip archive
+	 * @throws Exception
+	 */
+	public function __construct($filename) {
 		$this->filename = $filename;
 		$this->ziparchive = new ZipArchive;
 		if($this->ziparchive->open($filename) !== true) {
@@ -29,6 +41,12 @@ class Piwik_Unzip_ZipArchive  implements Piwik_Unzip_Interface
 		}
 	}
 
+	/**
+	 * Extract files from archive to target directory
+	 *
+	 * @param string  $pathExtracted  Absolute path of target directory
+	 * @return mixed  Array of filenames if successful; or 0 if an error occurred
+	 */
 	public function extract($pathExtracted) {
 		if(substr_compare($pathExtracted, '/', -1))
 			$pathExtracted .= '/';
@@ -36,6 +54,11 @@ class Piwik_Unzip_ZipArchive  implements Piwik_Unzip_Interface
 		$fileselector = array();
 		$list = array();
 		$count = $this->ziparchive->numFiles;
+		if ($count === 0)
+		{
+			return 0;
+		}
+
 		for($i = 0; $i < $count; $i++) {
 			$entry = $this->ziparchive->statIndex($i);
 
@@ -66,6 +89,11 @@ class Piwik_Unzip_ZipArchive  implements Piwik_Unzip_Interface
 		return $list;
 	}
 
+	/**
+	 * Get error status string for the latest error
+	 *
+	 * @return string
+	 */
 	public function errorInfo() {
 		static $statusStrings = array(
 			ZIPARCHIVE::ER_OK => 'No error',

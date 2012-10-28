@@ -1,7 +1,7 @@
 <div id="UserCountryMap_content" style="position:relative; overflow:hidden;">
 	<div id="UserCountryMap_map">{'General_RequiresFlash'|translate}</div>
 	<div style="height:3px"></div>
-	<select id="userCountryMapSelectMetrics" style="position:absolute; left: 5px; bottom: 0px;">
+	<select id="userCountryMapSelectMetrics" style="position:absolute; left: 5px; bottom: 0;">
 		{foreach from=$metrics item=metric}
 			<option value="{$metric[0]}" {if $metric[0] == $defaultMetric}selected="selected"{/if}>{$metric[1]}</option>
 		{/foreach}
@@ -25,10 +25,10 @@
 {/literal}
 
 	{* this hacks helps jquery to distingish between safari and chrome. *}
-	var isSafari = (navigator.userAgent.toLowerCase().indexOf("safari") != -1 && 
-		navigator.userAgent.toLowerCase().indexOf("chrome") == -1 ? true : false); 
+	var isSafari = (navigator.userAgent.toLowerCase().indexOf("safari") != -1 &&
+            navigator.userAgent.toLowerCase().indexOf("chrome") == -1);
 	
-	fv.dataUrl = encodeURIComponent("{$dataUrl}");
+	fv.dataUrl = encodeURIComponent("{$dataUrl|escape:'javascript'}");
 	fv.hueMin = {$hueMin};
 	fv.hueMax = {$hueMax};
 	fv.satMin = {$satMin};

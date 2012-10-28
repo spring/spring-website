@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: functions.php 4181 2011-03-25 20:02:40Z vipsoft $
+ * @version $Id: functions.php 6362 2012-05-29 05:17:56Z capedfuzz $
  * 
  * @category Piwik_Plugins
  * @package Piwik_UserSettings
@@ -46,6 +46,50 @@ function Piwik_getOSShortLabel($osId)
 		return Piwik_Translate('General_Unknown');
 	}
 	return $osId;
+}
+
+
+function Piwik_UserSettings_getOSFamily($osLabel)
+{
+	$osId = UserAgentParser::getOperatingSystemIdFromName($osLabel);
+	$osFamily = UserAgentParser::getOperatingSystemFamilyFromId($osId);
+	
+	if ($osFamily == 'unknown')
+	{
+		$osFamily = Piwik_Translate('General_Unknown');
+	}
+	else if ($osFamily == 'Gaming Console')
+	{
+		$osFamily = Piwik_Translate('UserSettings_GamingConsole');
+	}
+	
+	return $osFamily;
+}
+
+function Piwik_UserSettings_getDeviceTypeFromOS($osLabel)
+{
+	$osId = UserAgentParser::getOperatingSystemIdFromName($osLabel);
+	$osFamily = UserAgentParser::getOperatingSystemFamilyFromId($osId);
+	
+	// NOTE: translations done in another filter
+	switch ($osFamily)
+	{
+		case 'Windows':
+		case 'Linux':
+		case 'Mac':
+		case 'Unix':
+		case 'Other':
+		case 'Gaming Console':
+			return 'General_Desktop';
+		case 'iOS':
+		case 'Android':
+		case 'Windows Mobile':
+		case 'Other Mobile':
+		case 'Mobile Gaming Console':
+			return 'General_Mobile';
+		default:
+			return 'General_Unknown';
+	}
 }
 
 function Piwik_getBrowserTypeLabel($oldLabel)
@@ -148,6 +192,20 @@ function Piwik_getScreensLogo($label)
 	return 'plugins/UserSettings/images/screens/' . $label . '.gif';
 }
 
+function Piwik_UserSettings_getDeviceTypeImg( $oldOSImage, $osFamilyLabel )
+{
+	switch ($osFamilyLabel)
+	{
+		case 'General_Desktop':
+			return 'plugins/UserSettings/images/screens/normal.gif';
+		case 'General_Mobile':
+			return 'plugins/UserSettings/images/screens/mobile.gif';
+		case 'General_Unknown':
+		default:
+			return 'plugins/UserSettings/images/os/UNK.gif';
+	}
+}
+
 function Piwik_UserSettings_keepStrlenGreater($value)
 {
 	return strlen($value) > 5;
@@ -155,6 +213,11 @@ function Piwik_UserSettings_keepStrlenGreater($value)
 
 function Piwik_getScreenTypeFromResolution($resolution)
 {
+	if($resolution === 'unknown')
+	{
+		return $resolution;
+	}
+
 	$width = intval(substr($resolution, 0, strpos($resolution, 'x')));
 	$height= intval(substr($resolution, strpos($resolution, 'x') + 1));
 	$ratio = Piwik::secureDiv($width, $height);
@@ -183,3 +246,17 @@ function Piwik_getBrowserFamily($browserLabel)
 	$familyNameToUse = UserAgentParser::getBrowserFamilyFromId(substr($browserLabel, 0, 2));
 	return $familyNameToUse;	
 }
+
+/**
+ * Extracts the browser name from a string with the browser name and version.
+ */
+function Piwik_UserSettings_getBrowserFromBrowserVersion( $browserWithVersion )
+{
+	if (preg_match("/(.+) [0-9]+(?:\.[0-9]+)?$/", $browserWithVersion, $matches) === 0)
+	{
+		return $browserWithVersion;
+	}
+	
+	return $matches[1];
+}
+

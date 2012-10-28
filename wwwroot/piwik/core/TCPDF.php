@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: TCPDF.php 4679 2011-05-12 04:06:00Z vipsoft $
+ * @version $Id: TCPDF.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -41,6 +41,17 @@ class Piwik_TCPDF extends TCPDF
 		}
 	}
 
+	/**
+	 * @see TCPDF::Error()
+	 * @param $msg
+	 * @throws Exception
+	 */
+	function Error($msg) 
+	{
+		$this->_destroy(true);
+		throw new Exception($msg);
+	}
+	
 	/**
 	 * Set current page number
 	 */

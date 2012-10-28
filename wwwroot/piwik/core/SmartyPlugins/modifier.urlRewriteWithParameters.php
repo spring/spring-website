@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: modifier.urlRewriteWithParameters.php 3565 2011-01-03 05:49:45Z matt $
+ * @version $Id: modifier.urlRewriteWithParameters.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -13,7 +13,8 @@
 /**
  * Rewrites the given URL and modify the given parameters.
  * @see Piwik_Url::getCurrentQueryStringWithParametersModified()
- * 
+ *
+ * @param $parameters
  * @return string
  */
 function smarty_modifier_urlRewriteWithParameters($parameters)

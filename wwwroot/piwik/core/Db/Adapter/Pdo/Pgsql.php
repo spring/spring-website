@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Pgsql.php 4698 2011-05-16 04:44:59Z vipsoft $
+ * @version $Id: Pgsql.php 6325 2012-05-26 21:08:06Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -36,11 +36,13 @@ class Piwik_Db_Adapter_Pdo_Pgsql extends Zend_Db_Adapter_Pdo_Pgsql implements Pi
 
 	/**
 	 * Check PostgreSQL version
+	 *
+	 * @throws Exception
 	 */
 	public function checkServerVersion()
 	{
 		$databaseVersion = $this->getServerVersion();
-		$requiredVersion = Zend_Registry::get('config')->General->minimum_pgsql_version;
+		$requiredVersion = Piwik_Config::getInstance()->General['minimum_pgsql_version'];
 		if(version_compare($databaseVersion, $requiredVersion) === -1)
 		{
 			throw new Exception(Piwik_TranslateException('General_ExceptionDatabaseVersion', array('PostgreSQL', $databaseVersion, $requiredVersion)));
@@ -97,8 +99,8 @@ class Piwik_Db_Adapter_Pdo_Pgsql extends Zend_Db_Adapter_Pdo_Pgsql implements Pi
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string $errno
+	 * @param Exception  $e
+	 * @param string     $errno
 	 * @return bool
 	 */
 	public function isErrNo($e, $errno)

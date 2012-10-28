@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 4448 2011-04-14 08:20:49Z matt $
+ * @version $Id: API.php 5800 2012-02-11 07:49:48Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Referers
@@ -51,12 +51,20 @@ class Piwik_Referers_API
 			$dataTable->filter('Pattern', array('label', $typeReferer));
 		}
 		$dataTable->queueFilter('ColumnCallbackReplace', array('label', 'Piwik_getRefererTypeLabel'));
+		
 		return $dataTable;
 	}
 	
 	public function getKeywords($idSite, $period, $date, $segment = false, $expanded = false)
 	{
 		$dataTable = $this->getDataTable('Referers_searchEngineByKeyword', $idSite, $period, $date, $segment, $expanded);
+		$dataTable = $this->handleKeywordNotDefined($dataTable);
+		return $dataTable;
+	}
+	
+	protected function handleKeywordNotDefined($dataTable)
+	{
+		$dataTable->queueFilter('ColumnCallbackReplace', array('label', array('Piwik_Referers', 'getCleanKeyword')));
 		return $dataTable;
 	}
 	
@@ -65,6 +73,7 @@ class Piwik_Referers_API
 		// Fetch the Top keywords for this page
 		$segment = 'entryPageUrl=='.$url;
 		$table = $this->getKeywords($idSite, $period, $date, $segment);
+		$this->filterOutKeywordNotDefined($table);
 		return $this->getLabelsFromTable($table);
 
 	}
@@ -73,7 +82,23 @@ class Piwik_Referers_API
 	{
 		$segment = 'entryPageTitle=='.$title;
 		$table = $this->getKeywords($idSite, $period, $date, $segment);
+		$this->filterOutKeywordNotDefined($table);
 		return $this->getLabelsFromTable($table);
+	}
+	
+	/**
+	 * @param Piwik_Datatable $table
+	 */
+	private function filterOutKeywordNotDefined($table)
+	{
+		if($table instanceof Piwik_Datatable)
+		{
+			$row = $table->getRowIdFromLabel('');
+			if($row)
+			{
+				$table->deleteRow($row);	
+			}
+		} 
 	}
 	
 	protected function getLabelsFromTable($table)
@@ -134,6 +159,7 @@ class Piwik_Referers_API
     		$searchEngineUrl = $subTable->getMetadata('url');
     		$dataTable->queueFilter('ColumnCallbackAddMetadata', array( 'label', 'url', 'Piwik_getSearchEngineUrlFromKeywordAndUrl', array($searchEngineUrl)));
 		}
+		$dataTable = $this->handleKeywordNotDefined($dataTable);
 		return $dataTable;
 	}
 

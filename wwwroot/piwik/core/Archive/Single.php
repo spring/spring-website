@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Single.php 5138 2011-09-07 15:25:57Z EZdesign $
+ * @version $Id: Single.php 7095 2012-10-03 15:23:44Z capedfuzz $
  * 
  * 
  * @category Piwik
@@ -98,6 +98,16 @@ class Piwik_Archive_Single extends Piwik_Archive
 	}
 	
 	/**
+	 * Returns the blob cache. For testing.
+	 * 
+	 * @return array
+	 */
+	public function getBlobCache()
+	{
+		return $this->blobCached;
+	}
+	
+	/**
 	 * Returns the pretty date of this Archive, eg. 'Thursday 20th March 2008'
 	 *
 	 * @return string
@@ -106,10 +116,11 @@ class Piwik_Archive_Single extends Piwik_Archive
 	{
 		return $this->period->getPrettyString();
 	}
-	
+
 	/**
 	 * Returns the idarchive of this Archive used to index this archive in the DB
 	 *
+	 * @throws Exception
 	 * @return int
 	 */
 	public function getIdArchive()
@@ -159,6 +170,7 @@ class Piwik_Archive_Single extends Piwik_Archive
 	 * Prepares the archive. Gets the idarchive from the ArchiveProcessing.
 	 * 
 	 * This will possibly launch the archiving process if the archive was not available.
+	 * @return bool
 	 */
 	public function prepareArchive()
 	{
@@ -229,7 +241,7 @@ class Piwik_Archive_Single extends Piwik_Archive
 			}
 			else
 			{
-				$logMessage = "* ALREADY PROCESSED, Fetching [idArchive = $idArchive], for $logMessage";
+				$logMessage = "* ALREADY PROCESSED, Fetching idArchive = $idArchive (idSite=".$this->site->getId()."), for $logMessage";
 			}
 			Piwik::log("$logMessage, Visits = ". $this->archiveProcessing->getNumberOfVisits());
 			$this->isThereSomeVisits = !$archivingDisabledArchiveNotProcessed
@@ -238,16 +250,17 @@ class Piwik_Archive_Single extends Piwik_Archive
 		}
 		return $archiveJustProcessed;
 	}
-	
+
 	/**
-	 * Returns a value from the current archive with the name = $name 
+	 * Returns a value from the current archive with the name = $name
 	 * Method used by getNumeric or getBlob
 	 *
-	 * @param string $name
-	 * @param string $typeValue numeric|blob
-	 * @return mixed|false if no result
+	 * @param string        $name
+	 * @param string        $typeValue     numeric|blob
+	 * @param string|bool   $archivedDate  Value to store date of archive info in. If false, not stored.
+	 * @return mixed|bool  false if no result
 	 */
-	protected function get( $name, $typeValue = 'numeric' )
+	protected function get( $name, $typeValue = 'numeric', &$archivedDate = false )
 	{
 	   	$this->setRequestedReport($name);
 	   	$this->prepareArchive();
@@ -293,12 +306,23 @@ class Piwik_Archive_Single extends Piwik_Archive
 		}
 
 		$db = Zend_Registry::get('db');
-		$value = $db->fetchOne("SELECT value 
+		$row = $db->fetchRow("SELECT value, ts_archived
 								FROM $table
-								WHERE idarchive = ?
-									AND name = ?",	
+								WHERE idarchive = ? AND name = ?",
 								array( $this->idArchive , $name) 
 							);
+
+		$value = $tsArchived = false;
+		if (is_array($row))
+		{
+			$value = $row['value'];
+			$tsArchived = $row['ts_archived'];
+		}
+
+		if ($archivedDate !== false)
+		{
+			$archivedDate = $tsArchived;
+		}
 
 		if($value === false)
 		{
@@ -332,9 +356,9 @@ class Piwik_Archive_Single extends Piwik_Archive
 	 * If $addMetadataSubtableId set to true, it will add for each row a 'metadata' called 'databaseSubtableId' 
 	 *  containing the child ID of the subtable  associated to this row.
 	 *
-	 * @param string $name
-	 * @param Piwik_DataTable $dataTableToLoad
-	 * @param bool $addMetadataSubtableId
+	 * @param string           $name
+	 * @param Piwik_DataTable  $dataTableToLoad
+	 * @param bool             $addMetadataSubtableId
 	 */
 	public function loadSubDataTables($name, Piwik_DataTable $dataTableToLoad, $addMetadataSubtableId = false)
 	{
@@ -348,8 +372,10 @@ class Piwik_Archive_Single extends Piwik_Archive
 			{
 				$subDataTableLoaded = $this->getDataTable($name, $subTableID);
 				
+				$row->setSubtable( $subDataTableLoaded );
+				
 				$this->loadSubDataTables($name, $subDataTableLoaded, $addMetadataSubtableId);
-
+			
 				// we edit the subtable ID so that it matches the newly table created in memory
 				// NB: we dont overwrite the datatableid in the case we are displaying the table expanded.
 				if($addMetadataSubtableId)
@@ -357,30 +383,31 @@ class Piwik_Archive_Single extends Piwik_Archive
 					// this will be written back to the column 'idsubdatatable' just before rendering, see Renderer/Php.php
 					$row->addMetadata('idsubdatatable_in_db', $row->getIdSubDataTable());
 				}
-				$row->setSubtable( $subDataTableLoaded );
 			}
 		}
 	}
 
-	
+
 	/**
 	 * Free the blob cache memory array
+	 * @param $name
 	 */
 	public function freeBlob( $name )
 	{
-		$this->blobCached[$name] = null; 
 		unset($this->blobCached[$name]);
+		$this->blobCached[$name] = null; 
 	}
 	
 	protected function uncompress($data)
 	{
 		return @gzuncompress($data);
 	}
-	
+
 	/**
 	 * Fetches all blob fields name_* at once for the current archive for performance reasons.
-	 * 
-	 * @return false if no visits
+	 *
+	 * @param $name
+	 * @return
 	 */
 	public function preFetchBlob( $name )
 	{
@@ -392,11 +419,16 @@ class Piwik_Archive_Single extends Piwik_Archive
 
 		$db = Zend_Registry::get('db');
 		$hasBlobs = $db->hasBlobDataType();
+		
+		// select blobs w/ name like "$name_[0-9]+" w/o using RLIKE
+		$nameEnd = strlen($name) + 2;
 		$query = $db->query("SELECT value, name
 								FROM $tableBlob
 								WHERE idarchive = ?
-									AND name LIKE '$name%'",	
-								array( $this->idArchive ) 
+									AND (name = ? OR
+											(name LIKE ? AND SUBSTRING(name, $nameEnd, 1) >= '0'
+														 AND SUBSTRING(name, $nameEnd, 1) <= '9') )",
+								array( $this->idArchive, $name, $name.'%' ) 
 							);
 
 		while($row = $query->fetch())
@@ -427,8 +459,7 @@ class Piwik_Archive_Single extends Piwik_Archive
 	 */
 	public function getNumeric( $name )
 	{
-		// we cast the result as float because returns false when no visitors
-		return round((float)$this->get($name, 'numeric'), 2);
+		return $this->formatNumericValue( $this->get($name, 'numeric') );
 	}
 
 	
@@ -483,8 +514,8 @@ class Piwik_Archive_Single extends Piwik_Archive
 	 * Returns a DataTable that has the name '$name' from the current Archive.
 	 * If $idSubTable is specified, returns the subDataTable called '$name_$idSubTable'
 	 *
-	 * @param string $name
-	 * @param int $idSubTable optional id SubDataTable
+	 * @param string  $name
+	 * @param int     $idSubTable  optional id SubDataTable
 	 * @return Piwik_DataTable
 	 */
 	public function getDataTable( $name, $idSubTable = null )
@@ -496,20 +527,21 @@ class Piwik_Archive_Single extends Piwik_Archive
 		
 		$this->setRequestedReport($name);
 		
-		$data = $this->get($name, 'blob');
+		$data = $this->get($name, 'blob', $tsArchived);
 		
 		$table = new Piwik_DataTable();
 	
 		if($data !== false)
 		{
 			$table->addRowsFromSerializedArray($data);
+			$table->setMetadata(Piwik_DataTable::ARCHIVED_DATE_METADATA_NAME, $tsArchived);
 		}
 		if($data === false 
 			&& $idSubTable !== null)
 		{
 			// This is not expected, but somehow happens in some unknown cases and very rarely.
 			// Do not throw error in this case
-			// throw new Exception("not expected");
+			//throw new Exception("not expected");
 			return new Piwik_DataTable();
 		}
 	
@@ -521,27 +553,47 @@ class Piwik_Archive_Single extends Piwik_Archive
 		$this->requestedReport = $requestedReport;
 	}
 	
+	/**
+	 * Returns the report (the named collection of metrics) this Archive instance is
+	 * currently going to query/process.
+	 * 
+	 * @return string
+	 */
 	protected function getRequestedReport()
 	{
+		return self::getRequestedReportFor($this->requestedReport);
+	}
+
+	/**
+	 * Returns the name of the report (the named collection of metrics) that contains the
+	 * specified metric.
+	 * 
+	 * @param string $metric The metric whose report is being requested. If this does
+	 *                       not belong to a known report, its assumed to be the report
+	 *                       itself.
+	 * @return string
+	 */	
+	public static function getRequestedReportFor($metric)
+	{
 		// Core metrics are always processed in Core, for the requested date/period/segment
-		if(in_array($this->requestedReport, Piwik_ArchiveProcessing::getCoreMetrics())
-			|| $this->requestedReport == 'max_actions')
+		if(in_array($metric, Piwik_ArchiveProcessing::getCoreMetrics())
+			|| $metric == 'max_actions')
 		{
 			return 'VisitsSummary_CoreMetrics';
 		}
 		// VisitFrequency metrics don't follow the same naming convention (HACK) 
-		if(strpos($this->requestedReport, '_returning') > 0
+		if(strpos($metric, '_returning') > 0
 			// ignore Goal_visitor_returning_1_1_nb_conversions 
-			&& strpos($this->requestedReport, 'Goal_') === false)
+			&& strpos($metric, 'Goal_') === false)
 		{
 			return 'VisitFrequency_Metrics';
 		}
 		// Goal_* metrics are processed by the Goals plugin (HACK)
-		if(strpos($this->requestedReport, 'Goal_') === 0)
+		if(strpos($metric, 'Goal_') === 0)
 		{
 			return 'Goals_Metrics';
 		}
-   		return $this->requestedReport;
+   		return $metric;
 	}
 	
 	/**
@@ -556,8 +608,8 @@ class Piwik_Archive_Single extends Piwik_Archive
 	 * 		$idSubTable = $row->getIdSubDataTable();
 	 * 		$subTable = Piwik_DataTable_Manager::getInstance()->getTable($idSubTable);
 	 *  
-	 * @param string $name
-	 * @param int $idSubTable Optional subDataTable to load instead of loading the parent DataTable
+	 * @param string  $name
+	 * @param int     $idSubTable  Optional subDataTable to load instead of loading the parent DataTable
 	 * @return Piwik_DataTable
 	 */
 	public function getDataTableExpanded($name, $idSubTable = null)
@@ -568,5 +620,16 @@ class Piwik_Archive_Single extends Piwik_Archive
 		$dataTableToLoad->enableRecursiveFilters();
 		$this->freeBlob($name);
 		return $dataTableToLoad;		
+	}
+	
+	/**
+	 * Returns true if Piwik can launch the archiving process for this archive,
+	 * false if otherwise.
+	 * 
+	 * @return bool
+	 */
+	public function isArchivingDisabled()
+	{
+		return Piwik_ArchiveProcessing::isArchivingDisabledFor($this->segment, $this->period);
 	}
 }

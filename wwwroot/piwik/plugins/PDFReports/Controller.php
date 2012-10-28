@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4512 2011-04-19 21:11:33Z JulienM $
+ * @version $Id: Controller.php 6727 2012-08-13 20:26:46Z JulienM $
  * 
  * @category Piwik_Plugins
  * @package Piwik_PDFReports
@@ -15,40 +15,71 @@
  * @package Piwik_PDFReports
  */
 class Piwik_PDFReports_Controller extends Piwik_Controller
-{	
-    public function index()
+{
+	const DEFAULT_REPORT_TYPE = Piwik_PDFReports::EMAIL_TYPE;
+
+	public function index()
 	{
 		$view = Piwik_View::factory('index');
-        $this->setGeneralVariablesView($view);
-		$view->currentUserEmail = Piwik::getCurrentUserEmail();
+		$this->setGeneralVariablesView($view);
 
-		$availableReports = Piwik_API_API::getInstance()->getReportMetadata($this->idSite);
-		$reportsByCategory = array();
-		foreach($availableReports as $report)
+		$view->countWebsites = count(Piwik_SitesManager_API::getInstance()->getSitesIdWithAtLeastViewAccess());
+
+		// get report types
+		$reportTypes = Piwik_PDFReports_API::getReportTypes();
+		$view->reportTypes = $reportTypes;
+		$view->defaultReportType = self::DEFAULT_REPORT_TYPE;
+		$view->defaultReportFormat = Piwik_PDFReports::DEFAULT_REPORT_FORMAT;
+
+		$reportsByCategoryByType = array();
+		$reportFormatsByReportType = array();
+		$allowMultipleReportsByReportType = array();
+		foreach($reportTypes as $reportType => $reportTypeIcon)
 		{
-			$reportsByCategory[$report['category']][] = $report;
-		}
+			// get report formats
+			$reportFormatsByReportType[$reportType] = Piwik_PDFReports_API::getReportFormats($reportType);
+			$allowMultipleReportsByReportType[$reportType] = Piwik_PDFReports_API::allowMultipleReports($reportType);
 
-		$reports = Piwik_PDFReports_API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
+			// get report metadata
+			$reportsByCategory = array();
+			$availableReportMetadata = Piwik_PDFReports_API::getReportMetadata($this->idSite, $reportType);
+			foreach($availableReportMetadata as $reportMetadata)
+			{
+				$reportsByCategory[$reportMetadata['category']][] = $reportMetadata;
+			}
+			$reportsByCategoryByType[$reportType] = $reportsByCategory;
+		}
+		$view->reportsByCategoryByReportType = $reportsByCategoryByType;
+		$view->reportFormatsByReportType = $reportFormatsByReportType;
+		$view->allowMultipleReportsByReportType = $allowMultipleReportsByReportType;
+
+		$reports = array();
 		$reportsById = array();
-		foreach($reports as &$report)
+		if(!Piwik::isUserIsAnonymous())
 		{
-			$report['additional_emails'] = str_replace(',',"\n", $report['additional_emails']);
-			$report['reports'] = explode(',', str_replace('.','_',$report['reports']));
-			$reportsById[$report['idreport']] = $report;
+			$reports = Piwik_PDFReports_API::getInstance()->getReports($this->idSite, $period = false, $idReport = false, $ifSuperUserReturnOnlySuperUserReports = true);
+			foreach($reports as &$report)
+			{
+				$report['recipients'] = Piwik_PDFReports_API::getReportRecipients($report);
+				$reportsById[$report['idreport']] = $report;
+			}
 		}
-
-		$view->downloadOutputType = Piwik_PDFReports_API::OUTPUT_DOWNLOAD;
-		$columnsCount = 2;
-		$view->newColumnAfter = round(count($availableReports) / $columnsCount);
-		$view->reportsByCategory = $reportsByCategory;
-		$view->reportsJSON = json_encode($reportsById);
-		$view->periods = array_merge(array('never' => Piwik_Translate('General_Never')),
-							Piwik_PDFReports_API::getPeriodToFrequency());
-		$view->defaultFormat = Piwik_PDFReports::DEFAULT_FORMAT;
-		$view->formats = Piwik_ReportRenderer::$availableReportRenderers;
 		$view->reports = $reports;
+		$view->reportsJSON = Piwik_Common::json_encode($reportsById);
+
+		$view->downloadOutputType = Piwik_PDFReports_API::OUTPUT_INLINE;
+
+		$periods = array_merge(
+			array('never' => Piwik_Translate('General_Never')),
+			Piwik_PDFReports::getPeriodToFrequency()
+		);
+		// Do not display date range in selector
+		unset($periods['range']);
+		$view->periods = $periods;
+		$view->defaultPeriod = Piwik_PDFReports::DEFAULT_PERIOD;
+
 		$view->language = Piwik_LanguagesManager::getLanguageCodeForCurrentUser();
+
 		echo $view->render();
 	}
 }

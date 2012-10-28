@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 5151 2011-09-11 05:18:39Z matt $
+ * @version $Id: Controller.php 5951 2012-03-04 22:04:41Z vipsoft $
  * 
  * @category Piwik_Plugins
  * @package Piwik_API
@@ -21,7 +21,7 @@ class Piwik_API_Controller extends Piwik_Controller
 		// when calling the API through http, we limit the number of returned results
 		if(!isset($_GET['filter_limit']))
 		{
-			$_GET['filter_limit'] = Zend_Registry::get('config')->General->API_datatable_default_limit;
+			$_GET['filter_limit'] = Piwik_Config::getInstance()->General['API_datatable_default_limit'];
 		}
 		$request = new Piwik_API_Request('token_auth='.Piwik_Common::getRequestVar('token_auth', 'anonymous', 'string'));
 		echo $request->process();

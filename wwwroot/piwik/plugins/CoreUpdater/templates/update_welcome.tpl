@@ -15,7 +15,7 @@
 	<ul><li>{$helpMessage}</li></ul></p>
 {else}
 	{if $coreToUpdate || count($pluginNamesToUpdate) > 0}
-		<p style='font-size:110%;padding-top:1em;'><b>{'CoreUpdater_DatabaseUpgradeRequired'|translate}</b></p>
+		<p style='font-size:110%;padding-top:1em;'><b id='titleUpdate'>{'CoreUpdater_DatabaseUpgradeRequired'|translate}</b></p>
 		<p>{'CoreUpdater_YourDatabaseIsOutOfDate'|translate}</p>
 
 		{if $coreToUpdate}
@@ -27,7 +27,13 @@
 			<p>{'CoreUpdater_TheFollowingPluginsWillBeUpgradedX'|translate:$listOfPlugins}</p>
 		{/if}
 
-		<h4>{'CoreUpdater_NoteForLargePiwikInstances'|translate}</h4>
+		<h3 id='titleUpdate'>{'CoreUpdater_NoteForLargePiwikInstances'|translate}</h3>
+		{if $isMajor}
+			<p class="warning normalFontSize">
+				{'CoreUpdater_MajorUpdateWarning1'|translate}<br />
+				{'CoreUpdater_MajorUpdateWarning2'|translate}
+			</p>
+		{/if}
 		<ul>
 		<li>{'CoreUpdater_TheUpgradeProcessMayFailExecuteCommand'|translate:$commandUpgradePiwik}</li>
 		<li>It is also recommended for high traffic Piwik servers to <a target='_blank' href='?module=Proxy&action=redirect&url={"http://piwik.org/faq/how-to/#faq_111"|escape:"url"}'>momentarily disable visitor Tracking and put the Piwik User Interface in maintenance mode</a>.</li>
@@ -44,7 +50,7 @@
 		</li>
 		</ul>
 		<br /><br />
-		<h4>{'CoreUpdater_ReadyToGo'|translate}</h4>
+		<h4 id='titleUpdate'>{'CoreUpdater_ReadyToGo'|translate}</h4>
 		<p>{'CoreUpdater_TheUpgradeProcessMayTakeAWhilePleaseBePatient'|translate}</p>
 	{/if}
 
@@ -82,12 +88,10 @@
 
 {literal}
 <style type="text/css">
-submit 
 code {
 	background-color:#F0F7FF;
-	border-color:#00008B;
-	border-style:dashed dashed dashed solid;
-	border-width:1px 1px 1px 5px;
+	border: 1px dashed #00008B;
+	border-left: 5px solid;
 	direction:ltr;
 	display:block;
 	margin:2px 2px 20px;
@@ -105,7 +109,7 @@ $(document).ready(function() {
  		$('#sqlQueries').toggle(); 
  	});
  	$('#upgradeCorePluginsForm').submit(function(){
- 	    $('input[type=submit]', this).attr('disabled', 'disabled');
+ 	    $('input[type=submit]', this).prop('disabled', 'disabled');
  	});
 });
 </script>

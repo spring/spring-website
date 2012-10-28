@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Pgsql.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Pgsql.php 6486 2012-06-20 21:01:20Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -20,6 +20,9 @@ class Piwik_Tracker_Db_Pdo_Pgsql extends Piwik_Tracker_Db_Pdo_Mysql
 {
 	/**
 	 * Builds the DB object
+	 *
+	 * @param array   $dbInfo
+	 * @param string  $driverName
 	 */
 	public function __construct( $dbInfo, $driverName = 'pgsql') 
 	{
@@ -61,8 +64,8 @@ class Piwik_Tracker_Db_Pdo_Pgsql extends Piwik_Tracker_Db_Pdo_Mysql
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string $errno
+	 * @param Exception  $e
+	 * @param string     $errno
 	 * @return bool
 	 */
 	public function isErrNo($e, $errno)
@@ -108,7 +111,7 @@ class Piwik_Tracker_Db_Pdo_Pgsql extends Piwik_Tracker_Db_Pdo_Mysql
 	/**
 	 * Return number of affected rows in last query
 	 *
-	 * @param mixed $queryResult Result from query()
+	 * @param mixed  $queryResult  Result from query()
 	 * @return int
 	 */
 	public function rowCount($queryResult)

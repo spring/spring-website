@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Controller.php 6243 2012-05-02 22:08:23Z SteveG $
  * 
  * @category Piwik_Plugins
  * @package Piwik_Provider
@@ -15,9 +15,11 @@
  * @package Piwik_Provider
  */
 class Piwik_Provider_Controller extends Piwik_Controller 
-{	
+{
 	/**
 	 * Provider
+	 * @param bool $fetch
+	 * @return string|void
 	 */
 	function getProvider($fetch = false)
 	{
@@ -34,6 +36,7 @@ class Piwik_Provider_Controller extends Piwik_Controller
 		$view->setColumnTranslation('label', Piwik_Translate('Provider_ColumnProvider'));
 		$view->setSortedColumn( $column	 );
 		$view->setLimit( 5 );
+		$this->setMetricsVariablesView($view);
 		return $this->renderView($view, $fetch);
 	}
 	

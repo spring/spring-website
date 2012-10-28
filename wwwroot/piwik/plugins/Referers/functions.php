@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: functions.php 4183 2011-03-25 22:14:56Z vipsoft $
+ * @version $Id: functions.php 6243 2012-05-02 22:08:23Z SteveG $
  * 
  * @category Piwik_Plugins
  * @package Piwik_Referers
@@ -106,6 +106,10 @@ function Piwik_getSearchEngineHostPathFromUrl($url)
  */
 function Piwik_getSearchEngineUrlFromUrlAndKeyword($url, $keyword)
 {
+	if($keyword === Piwik_Referers::LABEL_KEYWORD_NOT_DEFINED)
+	{
+		return 'http://piwik.org/faq/general/#faq_144';
+	}
 	$searchEngineUrls = Piwik_Common::getSearchEngineUrls();
 	$keyword = urlencode($keyword);
 	$keyword = str_replace(urlencode('+'), urlencode(' '), $keyword);
@@ -165,7 +169,9 @@ function Piwik_getRefererTypeLabel($label)
 
 /**
  * Works in both directions
- * @param mixed 
+ * @param string $name
+ * @throws Exception
+ * @return string
  */
 function Piwik_getRefererTypeFromShortName($name)
 {

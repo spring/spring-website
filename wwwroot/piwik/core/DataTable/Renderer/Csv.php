@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Csv.php 5297 2011-10-14 04:11:34Z matt $
+ * @version $Id: Csv.php 6412 2012-05-31 03:24:39Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -18,8 +18,6 @@
  * All rows have the same number of columns.
  * The default field delimiter string is a comma (,).
  * Formatting and layout are ignored.
- * 
- * Note that CSV output doesn't handle recursive dataTable. It will output only the first parent level of the tables.
  * 
  * @package Piwik
  * @subpackage Piwik_DataTable
@@ -60,7 +58,12 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 	 * @var bool
 	 */
 	public $exportIdSubtable = true;
-	
+
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	public function render()
 	{
 		$str = $this->renderTable($this->table);
@@ -69,7 +72,7 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 			return 'No data available';
 		}
 
-		self::renderHeader();
+		$this->renderHeader();
 
 		if($this->convertToUnicode 
 			&& function_exists('mb_convert_encoding'))
@@ -78,63 +81,105 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 		}
 		return $str;
 	}
-	
+
+	/**
+	 * Computes the exception output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function renderException()
 	{
+		@header('Content-Type: text/html; charset=utf-8');
 		$exceptionMessage = self::renderHtmlEntities($this->exception->getMessage());
 		return 'Error: '.$exceptionMessage;
 	}
-	
+
+	/**
+	 * Enables / Disables unicode converting
+	 *
+	 * @param $bool
+	 */
 	public function setConvertToUnicode($bool)
 	{
 		$this->convertToUnicode = $bool;
 	}
-	
+
+	/**
+	 * Sets the column separator
+	 *
+	 * @param $separator
+	 */
 	public function setSeparator($separator)
 	{
 		$this->separator = $separator;
 	}
-	
-	protected function renderTable($table)
+
+	/**
+	 * Computes the output of the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @param array            $allColumns
+	 * @return string
+	 */
+	protected function renderTable($table, &$allColumns = array() )
 	{
 		if($table instanceof Piwik_DataTable_Array)
 		{
-			$str = $header = '';
-			$prefixColumns = $table->getKeyName() . $this->separator;
-			foreach($table->getArray() as $currentLinePrefix => $dataTable)
-			{
-				$returned = explode("\n",$this->renderTable($dataTable));
-				// get the columns names
-				if(empty($header))
-				{
-					$header = $returned[0];
-				}
-				$returned = array_slice($returned,1);
-				
-				// case empty datatable we dont print anything in the CSV export
-				// when in xml we would output <result date="2008-01-15" />
-				if(!empty($returned))
-				{
-					foreach($returned as &$row)
-					{
-						$row = $currentLinePrefix . $this->separator . $row;
-					}
-					$str .= "\n" .  implode("\n", $returned);
-				}
-			}
-			if(!empty($header))
-			{
-				$str = $prefixColumns . $header . $str;
-			}
+			$str = $this->renderDataTableArray($table, $allColumns);
 		}
 		else
 		{
-			$str = $this->renderDataTable($table);
+			$str = $this->renderDataTable($table, $allColumns);
 		}
 		return $str;
 	}
-	
-	protected function renderDataTable( $table )
+
+	/**
+	 * Computes the output of the given data table array
+	 *
+	 * @param Piwik_DataTable_Array  $table
+	 * @param array                  $allColumns
+	 * @return string
+	 */
+	protected function renderDataTableArray($table, &$allColumns = array())
+	{
+		$str = '';
+		foreach($table->getArray() as $currentLinePrefix => $dataTable)
+		{
+			$returned = explode("\n",$this->renderTable($dataTable, $allColumns));
+			
+			// get rid of the columns names
+			$returned = array_slice($returned,1);
+			
+			// case empty datatable we dont print anything in the CSV export
+			// when in xml we would output <result date="2008-01-15" />
+			if(!empty($returned))
+			{
+				foreach($returned as &$row)
+				{
+					$row = $currentLinePrefix . $this->separator . $row;
+				}
+				$str .= "\n" .  implode("\n", $returned);
+			}
+		}
+		
+		// prepend table key to column list
+		$allColumns = array_merge(array($table->getKeyName() => true), $allColumns);
+		
+		// add header to output string
+		$str = $this->getHeaderLine(array_keys($allColumns)).$str;
+		
+		return $str;
+	}
+
+	/**
+	 * Converts the output of the given simple data table
+	 *
+	 * @param Piwik_DataTable_Simple  $table
+	 * @param array                   $allColumns
+	 * @return string
+	 */
+	protected function renderDataTable( $table, &$allColumns = array() )
 	{	
 		if($table instanceof Piwik_DataTable_Simple)
 		{
@@ -144,13 +189,16 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 				$columnNameToValue = $row->getColumns();
 				if(count($columnNameToValue) == 1)
 				{
+					// simple tables should only have one column, the value
+					$allColumns['value'] = true;
+					
 					$value = array_values($columnNameToValue);
 					$str = 'value' . $this->lineEnd . $this->formatValue($value[0]);
 					return $str;
 				}
 			}
 		}
-		$csv = $allColumns = array();
+		$csv = array();
 		foreach($table->getRows() as $row)
 		{
 			$csvRow = array();
@@ -167,8 +215,18 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 						{
 							foreach($subValues as $subKey => $subValue)
 							{
-								// goals_idgoal=1
-								$columnName = $name . "_" . $key . "_" . $subKey;
+								if ($this->translateColumnNames)
+								{
+									$subName = $name != 'goals' ? $name . ' ' . $key
+											: Piwik_Translate('Goals_GoalX', $key);
+									$columnName = $this->translateColumnName($subKey)
+											.' ('. $subName . ')';
+								}
+								else
+								{
+									// goals_idgoal=1
+									$columnName = $name . "_" . $key . "_" . $subKey;
+								}
 								$allColumns[$columnName] = true;
 								$csvRow[$columnName] = $subValue;
 							}
@@ -187,8 +245,18 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 				$metadata = $row->getMetadata();
 				foreach($metadata as $name => $value)
 				{
+					if($name == 'idsubdatatable_in_db') {
+						continue;
+					}
 					//if a metadata and a column have the same name make sure they dont overwrite
-					$name = 'metadata_'.$name;
+					if($this->translateColumnNames)
+					{
+						$name = Piwik_Translate('General_Metadata').': '.$name;
+					}
+					else
+					{
+						$name = 'metadata_'.$name;
+					}
 					
 					$allColumns[$name] = true;
 					$csvRow[$name] = $value;
@@ -219,6 +287,7 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 				}
 			}
 		}
+		
 		$str = '';		
 		
 		// specific case, we have only one column and this column wasn't named properly (indexed by a number)
@@ -231,9 +300,8 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 		}
 		else
 		{
-			$keys = array_keys($allColumns);
-			$str .= implode($this->separator, $keys);
-			$str .= $this->lineEnd;
+			// render row names
+			$str .= $this->getHeaderLine(array_keys($allColumns)).$this->lineEnd;
 		}
 		
 		// we render the CSV
@@ -251,7 +319,28 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 		$str = substr($str, 0, -strlen($this->lineEnd));
 		return $str;
 	}
+	
+	/**
+	 * Returns the CSV header line for a set of metrics. Will translate columns if desired.
+	 * 
+	 * @param array  $columnMetrics
+	 * @return array
+	 */
+	private function getHeaderLine( $columnMetrics )
+	{
+		if ($this->translateColumnNames)
+		{
+			$columnMetrics = $this->translateColumnNames($columnMetrics);
+		}
+		return implode($this->separator, $columnMetrics);
+	}
 
+	/**
+	 * Formats/Escapes the given value
+	 *
+	 * @param mixed  $value
+	 * @return string
+	 */
 	protected function formatValue($value)
 	{
 		if(is_string($value)
@@ -270,14 +359,53 @@ class Piwik_DataTable_Renderer_Csv extends Piwik_DataTable_Renderer
 		{
 			$value = '"'. str_replace('"', '""', $value). '"';
 		}
+		
+		// in some number formats (e.g. German), the decimal separator is a comma
+		// we need to catch and replace this
+		if (is_numeric($value))
+		{
+			$value = (string) $value;
+			$value = str_replace(',', '.', $value);
+		}
+		
 		return $value;
 	}
-	
-	protected static function renderHeader()
+
+	/**
+	 * Sends the http headers for csv file
+	 */
+	protected function renderHeader()
 	{
+		$fileName = 'Piwik '.Piwik_Translate('General_Export');
+		
+		$period = Piwik_Common::getRequestVar('period', false);
+		$date = Piwik_Common::getRequestVar('date', false);
+		if ($period || $date) // in test cases, there are no request params set
+		{
+			if ($period == 'range')
+			{
+				$period = new Piwik_Period_Range($period, $date);
+			}
+			else if (strpos($date, ',') !== false)
+			{
+				$period = new Piwik_Period_Range('range', $date);
+			}
+			else
+			{
+				$period = Piwik_Period::factory($period, Piwik_Date::factory($date));
+			}
+			
+			$prettyDate = $period->getLocalizedLongString();
+			
+			$meta = $this->getApiMetaData();
+			
+			$fileName .= ' _ '.$meta['name']
+					.' _ '.$prettyDate.'.csv';
+		}
+
 		// silent fail otherwise unit tests fail
 		@header('Content-Type: application/vnd.ms-excel');
-		@header('Content-Disposition: attachment; filename=piwik-report-export.csv');
+		@header('Content-Disposition: attachment; filename="'.$fileName.'"');
 		Piwik::overrideCacheControlHeaders();
 	}
 }

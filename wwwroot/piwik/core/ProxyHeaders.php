@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ProxyHeaders.php 3457 2010-12-18 02:10:25Z vipsoft $
+ * @version $Id: ProxyHeaders.php 6300 2012-05-23 21:19:25Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -55,6 +55,7 @@ class Piwik_ProxyHeaders
 	/**
 	 * Get headers present in the HTTP request
 	 *
+	 * @param array $recognizedHeaders
 	 * @return array HTTP headers
 	 */
 	private static function getHeaders($recognizedHeaders)

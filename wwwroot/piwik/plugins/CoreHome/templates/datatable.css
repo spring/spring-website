@@ -66,7 +66,9 @@ table.subDataTable img,
 table.dataTableActions img {
 	vertical-align: middle;
 }
-
+#UserCountrygetCountry table.dataTable img {
+	vertical-align: baseline;
+}
 table.dataTable img {
 	border: 0;
 	margin-right: 1em;
@@ -106,7 +108,6 @@ table.dataTable th.columnSorted {
 }
 
 table.dataTable td {
-	border-left: 0;
 	padding: 5px 5px 5px 12px;
 	background: #fff;
 	border-left:1px solid #e7e7e7;
@@ -121,17 +122,22 @@ table.dataTable td,table.dataTable td a {
 
 
 
-table.dataTable tr:hover>td{
+table.dataTable tr:hover>td,
+table.dataTable tr:hover>td .dataTableRowActions{
 	background-color:#FFFFF7;
 }
-table.dataTable tr.subDataTable:hover>td{
+table.dataTable tr.subDataTable:hover>td,
+table.dataTable tr.subDataTable:hover>td .dataTableRowActions{
 	background-color:#ffffcb;
 }
-table.dataTable tr:hover>td.cellSubDataTable{
+table.dataTable tr:hover>td.cellSubDataTable
+table.dataTable tr:hover>td.cellSubDataTable .dataTableRowActions{
 	background-color:#fff;
 }
 
-td.clean{ background-color:#fff!important;}
+td.clean{
+    background-color:#fff!important;
+}
 
 
 table.dataTable td.columneven {
@@ -142,24 +148,29 @@ table.dataTable td.columnodd {
 }
 
 table.dataTable td.labeleven {
-	background: #F9FAFA;
-	background-image: url(images/bullet2.gif);
-	background-repeat: no-repeat;
+	background: #F9FAFA url(images/bullet2.gif) no-repeat;
 }
 
 table.dataTable td.labelodd {
 	background: #fff url(images/bullet1.gif) no-repeat;
 }
 
+.dataTable tr.highlight td {
+	background-color: #ECF9DD;
+	font-weight: bold;
+}
 
-table.dataTable td.label,table.subActionsDataTable td.label,table.actionsDataTable td.label
-{
+table.dataTable td.label,table.subActionsDataTable td.label,table.actionsDataTable td.label {
 	border-top: 0;
 	border-left: 0;
 }
 
 table.dataTable th.label {
 	border-left: 0;
+}
+
+table.dataTable span.label.highlighted {
+	font-style: italic;
 }
 
 /* the cell containing the subdatatable */
@@ -221,7 +232,7 @@ table.subDataTable td.label {
 }
 
 table.subDataTable td.labelodd,table.subDataTable td.labelodd a {
-	background: #ffffff;
+	background: #fff;
 }
 table.subDataTable td.label {
 	padding: 5px;
@@ -240,12 +251,12 @@ table thead div {
 }
 
 #sortIcon {
-	margin: 0px;
+	margin: 0;
 	position: absolute;
 }
 
 .datatableFooterMessage {
-	color: #888888;
+	color: #888;
 	text-align:left;
 	margin: 10px;
 }
@@ -290,34 +301,35 @@ table thead div {
 	overflow:visible; 
 	padding:2px 6px;
 	opacity:1;
-	filter:Alpha(opacity:100); 
-	cursor:text; 
-	
+    cursor:text;
+	filter:Alpha(opacity:100);
 }
 
-.dataTableExcludeLowPopulation,.dataTableNext,.dataTablePrevious {
+.dataTableNext,.dataTablePrevious {
 	font-size: 12px;
 	color: #184A83;
 	cursor: pointer;
 }
 
+.datatableRelatedReports {
+	color: #888;
+    font-size: 11px;    
+    padding-bottom: 5px;
+}
+
+.datatableRelatedReports span {
+	cursor: pointer;
+	font-weight:bold;
+}
+
 /* are the following two supposed to be together? */
 .subDataTable.dataTableFeatures {
-	padding-top: 0px;
+	padding-top: 0;
 	padding-bottom: 5px;
 }
 .dataTableFeatures {
 	padding-top: 10px;
 	text-align: center;
-}
-
-.dataTableExcludeLowPopulation {
-	display:inline-block; 
-	float: right;
-	padding:2px 0 0 6px;
-	font-size:10px;
-	color: #255792;
-	text-align: right;
 }
 
 .dataTableNext,.dataTablePrevious,.dataTableSearchPattern 
@@ -328,7 +340,7 @@ table thead div {
 	font-size:0.9em;
 }
 .subDataTable .dataTableFooterIcons {
-	height: 0px;
+	height: 0;
 }
 
 
@@ -338,10 +350,18 @@ table thead div {
 	white-space:nowrap; 
 	font-size:10px;
 	padding:6px 5px;
-	border-top:1px solid #948c7d;
+	border-top:1px solid #B6B0A6;
 }
 
-.dataTableFooterWrap{ position:relative;  width:800px;}
+.dataTableFooterWrap{ 
+    position:relative;
+    float: left;
+}
+
+.dataTableFooterWrap select {
+	float: left;
+	margin: 1px 0 1px 10px;
+}
 
 .tableIcon{
 	background:#f2f1ed;
@@ -361,7 +381,11 @@ table thead div {
 	background:#e9e8e1;
 }
 
-.dataTableFooterActiveItem{ position:absolute; top:-6px; left:0px;}
+.dataTableFooterActiveItem{
+    position:absolute;
+    top:-6px;
+    left:0;
+}
 
 .exportToFormatItems{
 	background:#dcdacf;
@@ -384,7 +408,7 @@ table thead div {
 	padding-right:4px;
 }
 .tableIconsGroup .tableIcon span {
-	margin-right:5px;	
+	margin-right:5px;
 	margin-left:5px;
 }
 .tableIconsGroup img{
@@ -439,23 +463,23 @@ tr.subActionsDataTable{
 }
 
 tr.level0 td.label {
-	padding-left: +1.5em;
+	padding-left: 1.5em;
 }
 
 tr.level1 td.label {
-	padding-left: +2.5em;
+	padding-left: 2.5em;
 }
 
 tr.level2 td.label {
-	padding-left: +3.5em;
+	padding-left: 3.5em;
 }
 
 tr.level3 td.label {
-	padding-left: +4.5em;
+	padding-left: 4.5em;
 }
 
 tr.level4 td.label {
-	padding-left: +5em;
+	padding-left: 5em;
 }
 
 /* less right margins for the link image in the Pa*/
@@ -508,7 +532,6 @@ table.dataTable th .columnDocumentationTitle {
 
 .reportDocumentation {
 	display: none;
-	margin: 10px 0;
 	background: #f7f7f7;
 	font-size: 12px;
 	font-weight: normal; 
@@ -517,7 +540,8 @@ table.dataTable th .columnDocumentationTitle {
 	padding: 0;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px; 
+	-webkit-border-radius: 4px;
+	max-width: 500px; 
 }
 
 .reportDocumentation p {
@@ -544,4 +568,215 @@ h2 .reportDocumentationIcon {
 
 h2 .reportDocumentationIcon.hidden {
 	background: none;
+}
+
+.helpDate {
+	color: #777777;
+    font-size: 11px;
+	font-style:italic;    
+    padding: 4px;
+    text-align: right;
+    display:block;
+}
+
+table.dataTable .dataTableRowActions {
+	position: absolute;
+	display: none;
+	overflow: hidden;
+	margin-top: -5px;
+}
+*+html table.dataTable .dataTableRowActions {
+	margin-top: -7px;
+}
+
+table.dataTable .dataTableRowActions a {
+	display: block;
+	float: left;
+	padding: 6px 6px 6px 0;
+	margin: 0;
+}
+
+table.dataTable .dataTableRowActions a.leftmost {
+	padding-left: 6px;
+}
+
+table.dataTable .dataTableRowActions a.rightmost {
+	padding-right: 10px;
+}
+
+table.dataTable .dataTableRowActions a img {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 20px;
+	height: 17px;
+}
+
+body .piwik-tooltip.rowActionTooltip {
+	font-size: 11px;
+	padding: 3px 5px 3px 6px;
+}
+
+
+.limitSelection {
+    float: right;
+    position: relative;
+    margin-left: 5px;
+    min-height: 20px;
+}
+
+.limitSelection.hidden {
+    display: none;
+}
+
+.limitSelection div {
+    border: 1px solid #DFDFDF;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    background: url(../../../themes/default/images/sort_subtable_desc_light.png) no-repeat right 2px;
+    padding: 0 14px 0 4px;
+    display: block;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.limitSelection.disabled div {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter:Alpha(opacity:50);
+}
+
+.limitSelection.visible div {
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+    background-image: url(../../../themes/default/images/sort_subtable_asc_light.png)
+}
+
+.limitSelection ul {
+    margin-top: 1px;
+    overflow: visible;
+    background-color: #fff;
+}
+
+.limitSelection ul li {
+    cursor: pointer;
+    width: 28px;
+    padding: 0 10px 0 4px;
+    font-size: 1.1em;
+    font-weight: bold;
+    height: 20px;
+    margin-top: -40px;
+    background-color: #fff;
+    border-left: 1px solid #DFDFDF;
+    border-right: 1px solid #DFDFDF;
+    vertical-align: middle;
+    text-align: right;
+}
+
+.limitSelection ul li.last {
+    border-top: 1px solid #DFDFDF;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+}
+
+.limitSelection ul li:hover {
+    background-color: #EBEAE6;
+}
+
+.limitSelection span {
+    padding-top: 3px;
+    display: inline-block;
+}
+
+
+.tableConfiguration {
+    float: right;
+    position: relative;
+    margin-left: 5px;
+    min-height: 20px;
+	min-width: 25px;
+}
+
+a.tableConfigurationIcon {
+	display: block;
+	width: 30px;
+	height: 22px;
+	background: url(../../../themes/default/images/configure.png) no-repeat center 2px;
+	position: absolute;
+	z-index: 9;
+	right: 0;
+}
+
+a.tableConfigurationIcon.highlighted {
+	display: block;
+	width: 30px;
+	height: 22px;
+	background-image: url(../../../themes/default/images/configure-highlight.png);
+	position: absolute;
+	z-index: 9;
+	right: 0;
+}
+
+.tableConfiguration ul {
+    overflow: visible;
+    background-color: #fff;
+	display: none;
+	position: relative;
+	z-index: 8;
+	text-align: left;
+}
+
+.tableConfiguration ul.open {
+	display: block;
+}
+
+.tableConfiguration ul li {
+    padding: 0;
+    font-size: 1.1em;
+    height: 40px;
+    margin-top: -80px;
+    background-color: #fff;
+    border-left: 1px solid #DFDFDF;
+    border-right: 1px solid #DFDFDF;
+    vertical-align: middle;
+}
+
+.tableConfiguration ul li.firstDummy {
+    border-bottom: 1px solid #DFDFDF;
+    border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+	height: 25px;
+	cursor: default;
+	margin-top: -4px;
+}
+
+.tableConfiguration ul li.first {
+	margin-top: -65px;
+}
+
+.tableConfiguration ul li.last {
+    border-top: 1px solid #DFDFDF;
+    border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+}
+
+.tableConfiguration div.configItem {
+    cursor: pointer;
+    padding: 5px 10px;
+	line-height: 15px;
+	color: #444;
+}
+
+.tableConfiguration div.configItem:hover {
+    background-color: #EBEAE6;
+}
+
+.tableConfiguration div.configItem span.action {
+	color: #255792;
 }

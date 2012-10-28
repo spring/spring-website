@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Html.php 4879 2011-06-05 22:59:00Z JulienM $
+ * @version $Id: Html.php 6918 2012-09-04 21:44:26Z JulienM $
  *
  * @category Piwik
  * @package Piwik_ReportRenderer
@@ -17,10 +17,18 @@
  */
 class Piwik_ReportRenderer_Html extends Piwik_ReportRenderer
 {
+	const IMAGE_GRAPH_WIDTH = 700;
+	const IMAGE_GRAPH_HEIGHT = 200;
+
 	const REPORT_TITLE_TEXT_SIZE = 11;
 	const REPORT_TABLE_HEADER_TEXT_SIZE = 11;
 	const REPORT_TABLE_ROW_TEXT_SIZE = 11;
 	const REPORT_BACK_TO_TOP_TEXT_SIZE = 9;
+
+	const HTML_CONTENT_TYPE = 'text/html';
+	const HTML_FILE_EXTENSION = 'html';
+
+	protected $renderImageInline = false;
 
 	private $rendering = "";
 
@@ -29,37 +37,44 @@ class Piwik_ReportRenderer_Html extends Piwik_ReportRenderer
 		//Nothing to do
 	}
 
+	/**
+	 * Currently only used for HTML reports.
+	 * When sent by mail, images are attached to the mail: renderImageInline = false
+	 * When downloaded, images are included base64 encoded in the report body: renderImageInline = true
+	 *
+	 * @param boolean $renderImageInline
+	 */
+	public function setRenderImageInline($renderImageInline)
+	{
+		$this->renderImageInline = $renderImageInline;
+	}
+
 	public function sendToDisk($filename)
 	{
 		$this->epilogue();
 
-		$filename = Piwik_ReportRenderer::appendExtension($filename, "html");
-		$outputFilename = Piwik_ReportRenderer::getOutputPath($filename);
-
-		$emailReport = @fopen($outputFilename, "w");
-
-		if (!$emailReport) {
-			throw new Exception ("The file : " . $outputFilename . " can not be opened in write mode.");
-		}
-
-		fwrite($emailReport, $this->rendering);
-		fclose($emailReport);
-
-		return $outputFilename;
+		return Piwik_ReportRenderer::writeFile($filename, self::HTML_FILE_EXTENSION, $this->rendering);
 	}
 
 	public function sendToBrowserDownload($filename)
 	{
 		$this->epilogue();
 
-		$filename = Piwik_ReportRenderer::appendExtension($filename, "html");
+		Piwik_ReportRenderer::sendToBrowser($filename, self::HTML_FILE_EXTENSION, self::HTML_CONTENT_TYPE, $this->rendering);
+	}
 
-		Piwik::overrideCacheControlHeaders();
-		header('Content-Description: File Transfer');
-		header('Content-Type: text/html');
-		header('Content-Disposition: attachment; filename="'.basename($filename).'";');
-		header('Content-Length: '.strlen($this->rendering));
-		echo $this->rendering;
+	public function sendToBrowserInline($filename)
+	{
+		$this->epilogue();
+
+		Piwik_ReportRenderer::inlineToBrowser(self::HTML_CONTENT_TYPE, $this->rendering);
+	}
+
+	public function getRenderedReport()
+	{
+		$this->epilogue();
+
+		return $this->rendering;
 	}
 
 	private function epilogue()
@@ -103,16 +118,34 @@ class Piwik_ReportRenderer_Html extends Piwik_ReportRenderer
 		$this->assignCommonParameters($smarty);
 
 		$reportMetadata = $processedReport['metadata'];
-		$smarty->assign("reportName", $reportMetadata['name']);
-		$smarty->assign("reportId", $reportMetadata['uniqueId']);
-
 		$reportData = $processedReport['reportData'];
 		$columns = $processedReport['columns'];
 		list($reportData, $columns) = self::processTableFormat($reportMetadata, $reportData, $columns);
 
+		$smarty->assign("reportName", $reportMetadata['name']);
+		$smarty->assign("reportId", $reportMetadata['uniqueId']);
 		$smarty->assign("reportColumns", $columns);
 		$smarty->assign("reportRows", $reportData->getRows());
 		$smarty->assign("reportRowsMetadata", $processedReport['reportMetadata']->getRows());
+		$smarty->assign("displayTable", $processedReport['displayTable']);
+
+		$displayGraph = $processedReport['displayGraph'];
+		$evolutionGraph = $processedReport['evolutionGraph'];
+		$smarty->assign("displayGraph", $displayGraph);
+
+		if($displayGraph)
+		{
+			$smarty->assign("graphWidth", self::IMAGE_GRAPH_WIDTH);
+			$smarty->assign("graphHeight", self::IMAGE_GRAPH_HEIGHT);
+			$smarty->assign("renderImageInline", $this->renderImageInline);
+
+			if($this->renderImageInline)
+			{
+				$staticGraph = parent::getStaticGraph($reportMetadata, self::IMAGE_GRAPH_WIDTH, self::IMAGE_GRAPH_HEIGHT, $evolutionGraph);
+				$smarty->assign("generatedImageGraph", base64_encode($staticGraph));
+				unset($generatedImageGraph);
+			}
+		}
 
 		$this->rendering .= $smarty->fetch(self::prefixTemplatePath("html_report_body.tpl"));
 	}

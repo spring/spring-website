@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Monthly.php 3370 2010-11-26 07:17:07Z matt $
+ * @version $Id: Monthly.php 6510 2012-07-13 20:05:39Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,8 +19,10 @@
  */
 class Piwik_ScheduledTime_Monthly extends Piwik_ScheduledTime
 {
-	
-	public function getRescheduledTime()
+    /**
+     * @return int
+     */
+    public function getRescheduledTime()
 	{
 		$currentTime = $this->getTime();
 
@@ -36,13 +38,11 @@ class Piwik_ScheduledTime_Monthly extends Piwik_ScheduledTime
 		$nextMonthLength = date('t', $rescheduledTime);
 
 		// Sets scheduled day
+        $scheduledDay = date('j', $currentTime);
+
 		if ( $this->day !== null )
 		{
 			$scheduledDay = $this->day;
-		}
-		else
-		{
-			$scheduledDay = date('j', $currentTime);
 		}
 
 		// Caps scheduled day
@@ -60,8 +60,8 @@ class Piwik_ScheduledTime_Monthly extends Piwik_ScheduledTime
 		return $rescheduledTime;
 	}
 
-	/*
-	 * @param  _day the day to set, has to be >= 1 and < 32
+	/**
+	 * @param int $_day the day to set, has to be >= 1 and < 32
 	 * @throws Exception if parameter _day is invalid
 	 */
 	public function setDay($_day)

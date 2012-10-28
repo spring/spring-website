@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: GenerateGraphData.php 4815 2011-05-26 21:24:33Z matt $
+ * @version $Id: GenerateGraphData.php 6596 2012-07-30 20:01:36Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik
@@ -38,6 +38,9 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 	 */
 	protected $graphLimit = null;
 	protected $yAxisUnit = '';
+	
+	// used for the series picker
+	protected $selectableColumns = array();
 	
 	public function setAxisYUnit($unit)
 	{
@@ -79,6 +82,86 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 		$this->displayPercentageInTooltip = false;
 	}
 	
+	/**
+	 * Sets the columns that can be added/removed by the user
+	 * This is done on data level (not html level) because the columns might change after reloading via sparklines
+	 * @param array $columnsNames Array of column names eg. array('nb_visits','nb_hits')
+	 */
+	public function setSelectableColumns($columnsNames)
+	{
+		// the array contains values if enableShowGoals() has been used
+		// add $columnsNames to the beginning of the array
+		$this->selectableColumns = array_merge($columnsNames, $this->selectableColumns);
+	}
+	
+	/**
+	 * The implementation of this method in Piwik_ViewDataTable passes to the graph whether the
+	 * goals icon should be displayed or not. Here, we use it to implicitly add the goal metrics
+	 * to the metrics picker.
+	 */
+	public function enableShowGoals()
+	{
+		parent::enableShowGoals();
+		
+		$goalMetrics = array('nb_conversions', 'revenue');
+		$this->selectableColumns = array_merge($this->selectableColumns, $goalMetrics);
+		
+		$this->setColumnTranslation('nb_conversions', Piwik_Translate('Goals_ColumnConversions'));
+		$this->setColumnTranslation('revenue', Piwik_Translate('General_TotalRevenue'));
+	}
+
+	/**
+	 * Used in initChartObjectData to add the series picker config to the view object
+	 * @param bool $multiSelect
+	 */
+	protected function addSeriesPickerToView($multiSelect=true)
+	{
+		if (count($this->selectableColumns))
+		{
+			// build the final configuration for the series picker
+			$columnsToDisplay = $this->getColumnsToDisplay();
+			$selectableColumns = array();
+			
+			foreach ($this->selectableColumns as $column)
+			{
+				$selectableColumns[] = array(
+					'column' => $column,
+					'translation' => $this->getColumnTranslation($column),
+					'displayed' => in_array($column, $columnsToDisplay)
+				);
+			}
+			$this->view->setSelectableColumns($selectableColumns, $multiSelect);
+		}
+	}
+	
+	protected function getUnitsForColumnsToDisplay()
+	{
+		// derive units from column names
+		$idSite = Piwik_Common::getRequestVar('idSite', null, 'int');
+		$units = $this->deriveUnitsFromRequestedColumnNames($this->getColumnsToDisplay(), $idSite);
+		if(!empty($this->yAxisUnit))
+		{
+			// force unit to the value set via $this->setAxisYUnit()
+			foreach ($units as &$unit)
+			{
+				$unit = $this->yAxisUnit;
+			}
+		}
+		
+		return $units;
+	}
+	
+	protected function deriveUnitsFromRequestedColumnNames($requestedColumnNames, $idSite)
+	{
+		$units = array();
+		foreach($requestedColumnNames as $columnName)
+		{
+			$derivedUnit = Piwik_API_API::getUnit($columnName, $idSite);
+			$units[$columnName] = empty($derivedUnit) ? false : $derivedUnit;
+		}
+		return $units;
+	}
+	
 	public function main()
 	{
 		if($this->mainAlreadyExecuted)
@@ -97,6 +180,7 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 		// throws exception if no view access
 		$this->loadDataTableFromAPI();
 		$this->checkStandardDataTable();
+		$this->postDataTableLoadedFromAPI();
 		
 		$graphLimit = $this->getGraphLimit();
 		if(!empty($graphLimit))
@@ -105,7 +189,11 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 			$this->dataTable->filter('AddSummaryRow',
 										array($offsetStartSummary,
 										Piwik_Translate('General_Others'),
-										Piwik_Archive::INDEX_NB_VISITS
+										
+										// Column to sort by, before truncation
+										$this->dataTable->getSortedByColumnName() 
+											? $this->dataTable->getSortedByColumnName()
+											: Piwik_Archive::INDEX_NB_VISITS
 										)
 									);
 		}
@@ -124,7 +212,7 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 
 		// We apply a filter to the DataTable, decoding the label column (useful for keywords for example)
 		$this->dataTable->filter('ColumnCallbackReplace', array('label','urldecode'));
-
+		
 		$xLabels = $this->dataTable->getColumn('label');
 		$columnNames = parent::getColumnsToDisplay();
 		if(($labelColumnFound = array_search('label',$columnNames)) !== false)
@@ -143,5 +231,16 @@ abstract class Piwik_ViewDataTable_GenerateGraphData extends Piwik_ViewDataTable
 		$this->view->setAxisYLabels($columnNameToTranslation);
 		$this->view->setAxisYUnit($this->yAxisUnit);
 		$this->view->setDisplayPercentageInTooltip($this->displayPercentageInTooltip);
+		
+		// show_all_ticks is not real query param, it is set by GenerateGraphHTML.
+		if (Piwik_Common::getRequestVar('show_all_ticks', 0) == 1)
+		{
+			$this->view->showAllTicks();
+		}
+		
+		$units = $this->getUnitsForColumnsToDisplay();
+		$this->view->setAxisYUnits($units);
+		
+		$this->addSeriesPickerToView();
 	}
 }

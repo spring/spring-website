@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Visitor.php 4773 2011-05-22 23:24:22Z matt $
+ * @version $Id: Visitor.php 7237 2012-10-19 16:07:08Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_Live
@@ -74,6 +74,7 @@ class Piwik_Live_Visitor
 			'country' => $this->getCountryName(),
 			'countryFlag' => $this->getCountryFlag(),
 			'continent' => $this->getContinent(),
+			'location' => $this->getPrettyLocation(),
 			'provider' => $this->getProvider(),
 			'providerUrl' => $this->getProviderUrl(),
 			'referrerType' => $this->getRefererType(),
@@ -214,7 +215,30 @@ class Piwik_Live_Visitor
 
 	function getContinent()
 	{
-		return Piwik_ContinentTranslate($this->details['location_continent']);
+		return Piwik_ContinentTranslate(Piwik_Common::getContinent($this->details['location_country']));
+	}
+	
+	function getPrettyLocation()
+	{
+		$parts = array();
+		
+		// add city if it's known
+		if ($this->details['location_city'] != '')
+		{
+			$parts[] = $this->details['location_city'];
+		}
+		
+		// add region if it's known
+		$region = $this->details['location_region'];
+		if ($region != '' && $region != Piwik_Tracker_Visit::UNKNOWN_CODE)
+		{
+			$parts[] = Piwik_UserCountry_LocationProvider_GeoIp::getRegionNameFromCodes(
+				$this->details['location_country'], $region);
+		}
+		
+		// add country & return concatenated result
+		$parts[] = $this->getCountryName();
+		return implode(', ', $parts);
 	}
 
 	function getCustomVariables()
@@ -246,12 +270,42 @@ class Piwik_Live_Visitor
 
 	function getKeyword()
 	{
-		return urldecode($this->details['referer_keyword']);
+		$keyword = $this->details['referer_keyword'];
+		if(Piwik_PluginsManager::getInstance()->isPluginActivated('Referers')
+			&& $this->getRefererType() == 'search')
+		{
+			$keyword = Piwik_Referers::getCleanKeyword($keyword);
+		}
+		return urldecode($keyword);
 	}
 
 	function getRefererUrl()
 	{
-		return $this->details['referer_url'];
+		if($this->getRefererType() == 'search')
+		{
+			if(Piwik_PluginsManager::getInstance()->isPluginActivated('Referers') 
+				&& $this->details['referer_keyword'] == Piwik_Referers::LABEL_KEYWORD_NOT_DEFINED)
+			{
+				return 'http://piwik.org/faq/general/#faq_144';
+			}
+			// Case URL is google.XX/url.... then we rewrite to the search result page url
+			elseif($this->getRefererName() == 'Google'
+				&& strpos($this->details['referer_url'], '/url'))
+			{
+				$refUrl = @parse_url($this->details['referer_url']);
+				if(isset($refUrl['host']))
+				{
+					$url = Piwik_getSearchEngineUrlFromUrlAndKeyword('http://google.com', $this->getKeyword());
+					$url = str_replace('google.com', $refUrl['host'], $url);
+					return $url;
+				}
+			}
+		}
+		if(Piwik_Common::isLookLikeUrl($this->details['referer_url']))
+		{
+			return $this->details['referer_url'];
+		}
+		return null;
 	}
 	
 	function getKeywordPosition()
@@ -259,8 +313,7 @@ class Piwik_Live_Visitor
 		if($this->getRefererType() == 'search'
 			&& strpos($this->getRefererName(), 'Google') !== false)
 		{
-			$url = $this->getRefererUrl();
-			$url = @parse_url($url);
+			$url = @parse_url($this->details['referer_url']);
 			if(empty($url['query']))
 			{
 				return null;
@@ -392,12 +445,12 @@ class Piwik_Live_Visitor
 
 	function getProvider()
 	{
-		return Piwik_getHostnameName($this->details['location_provider']);
+		return Piwik_getHostnameName( @$this->details['location_provider']);
 	}
 
 	function getProviderUrl()
 	{
-		return Piwik_getHostnameUrl($this->details['location_provider']);
+		return Piwik_getHostnameUrl( @$this->details['location_provider']);
 	}
 
 	function getDateTimeLastAction()

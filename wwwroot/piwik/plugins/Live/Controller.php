@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4935 2011-06-19 04:01:00Z matt $
+ * @version $Id: Controller.php 7036 2012-09-21 20:37:53Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_Live
@@ -22,11 +22,10 @@ class Piwik_Live_Controller extends Piwik_Controller
 
 	public function widget($fetch = false)
 	{
-		Piwik_API_Request::reloadAuthUsingTokenAuth(); 
 		$view = Piwik_View::factory('index');
 		$view->idSite = $this->idSite;
 		$view = $this->setCounters($view);
-		$view->liveRefreshAfterMs = (int)Zend_Registry::get('config')->General->live_widget_refresh_after_seconds * 1000;
+		$view->liveRefreshAfterMs = (int)Piwik_Config::getInstance()->General['live_widget_refresh_after_seconds'] * 1000;
 		$view->visitors = $this->getLastVisitsStart($fetchPlease = true);
 		$view->liveTokenAuth = Piwik::getCurrentUserTokenAuth();
 		return $this->render($view, $fetch);
@@ -34,7 +33,6 @@ class Piwik_Live_Controller extends Piwik_Controller
 
 	public function ajaxTotalVisitors($fetch = false)
 	{
-		Piwik_API_Request::reloadAuthUsingTokenAuth(); 
 		$view = Piwik_View::factory('totalVisits');
 		$view = $this->setCounters($view);
 		$view->idSite = $this->idSite;
@@ -52,7 +50,6 @@ class Piwik_Live_Controller extends Piwik_Controller
 	
 	public function getVisitorLog($fetch = false)
 	{
-		Piwik_API_Request::reloadAuthUsingTokenAuth(); 
 		// If previous=1 is set, user clicked previous
 		// we can't deal with previous so we force display of the first page
 		if(Piwik_Common::getRequestVar('previous', 0, 'int') == 1) {
@@ -80,6 +77,12 @@ class Piwik_Live_Controller extends Piwik_Controller
 		// disable the RSS feed
 		$view->disableShowExportAsRssFeed();
 		
+		// disable all row actions
+		if ($view instanceof Piwik_ViewDataTable_HtmlTable)
+		{
+			$view->disableRowActions();
+		}
+		
 		$view->setReportDocumentation(Piwik_Translate('Live_VisitorLogDocumentation', array('<br />', '<br />')));
 		$view->setCustomParameter('dataTablePreviousIsFirst', 1);
 		$view->setCustomParameter('filterEcommerce', Piwik_Common::getRequestVar('filterEcommerce', 0, 'int'));
@@ -89,7 +92,6 @@ class Piwik_Live_Controller extends Piwik_Controller
 
 	public function getLastVisitsStart($fetch = false)
 	{
-		Piwik_API_Request::reloadAuthUsingTokenAuth(); 
 		// hack, ensure we load today's visits by default
 		$_GET['date'] = 'today';
 		$_GET['period'] = 'day';
@@ -105,9 +107,10 @@ class Piwik_Live_Controller extends Piwik_Controller
 	
 	private function setCounters($view)
 	{
-		$last30min = Piwik_Live_API::getInstance()->getCounters($this->idSite, $lastMinutes = 30);
+		$segment = Piwik_Common::getRequestVar('segment', false, 'string');
+		$last30min = Piwik_Live_API::getInstance()->getCounters($this->idSite, $lastMinutes = 30, $segment);
 		$last30min = $last30min[0];
-		$today = Piwik_Live_API::getInstance()->getCounters($this->idSite, $lastMinutes = 24*60);
+		$today = Piwik_Live_API::getInstance()->getCounters($this->idSite, $lastMinutes = 24*60, $segment);
 		$today = $today[0];
 		$view->visitorsCountHalfHour = $last30min['visits'];
 		$view->visitorsCountToday = $today['visits'];

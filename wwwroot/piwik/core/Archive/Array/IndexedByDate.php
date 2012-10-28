@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: IndexedByDate.php 5238 2011-09-27 08:23:57Z matt $
+ * @version $Id: IndexedByDate.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,11 +19,12 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 	/**
 	 * Builds an array of Piwik_Archive of a given date range
 	 *
-	 * @param Piwik_Site $oSite 
-	 * @param string $strPeriod eg. 'day' 'week' etc.
-	 * @param string $strDate A date range, eg. 'last10', 'previous5' or 'YYYY-MM-DD,YYYY-MM-DD'
+	 * @param Piwik_Site     $oSite
+	 * @param string         $strPeriod eg. 'day' 'week' etc.
+	 * @param string         $strDate A date range, eg. 'last10', 'previous5' or 'YYYY-MM-DD,YYYY-MM-DD'
+	 * @param Piwik_Segment  $segment
 	 */
-	function __construct(Piwik_Site $oSite, $strPeriod, $strDate, Piwik_Segment $segment)
+	public function __construct(Piwik_Site $oSite, $strPeriod, $strDate, Piwik_Segment $segment)
 	{
 		$rangePeriod = new Piwik_Period_Range($strPeriod, $strDate, $oSite->getTimezone());
 		foreach($rangePeriod->getSubperiods() as $subPeriod)
@@ -33,8 +34,12 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 			$archive->setSegment($segment);
 			$this->archives[] = $archive;
 		}
+		$this->setSite($oSite);
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	protected function getIndexName()
 	{
 		return 'date';
@@ -44,8 +49,8 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 	 * Adds metadata information to the Piwik_DataTable_Array 
 	 * using the information given by the Archive
 	 *
-	 * @param Piwik_DataTable_Array $table
-	 * @param Piwik_Archive $archive
+	 * @param Piwik_DataTable_Array  $table
+	 * @param Piwik_Archive          $archive
 	 */
 	protected function loadMetadata(Piwik_DataTable_Array $table, $archive)
 	{
@@ -55,7 +60,11 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 				'period' => $archive->getPeriod(),
 			);
 	}
-	
+
+	/**
+	 * @param Piwik_Archive  $archive
+	 * @return mixed
+	 */
 	protected function getDataTableLabelValue( $archive )
 	{
 		return $archive->getPrettyDate();
@@ -65,7 +74,7 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 	 * Given a list of fields defining numeric values, it will return a Piwik_DataTable_Array
 	 * which is an array of Piwik_DataTable_Simple, ordered by chronological order
 	 *
-	 * @param array|string $fields array( fieldName1, fieldName2, ...)  Names of the mysql table fields to load
+	 * @param array|string  $fields  array( fieldName1, fieldName2, ...)  Names of the mysql table fields to load
 	 * @return Piwik_DataTable_Array
 	 */
 	public function getDataTableFromNumeric( $fields )
@@ -114,7 +123,7 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 			foreach($values as $value)
 			{
 				$timestamp = Piwik_Date::factory($value['startDate'])->getTimestamp();
-				$arrayValues[$timestamp][$value['name']] = round((float)$value['value'],2);
+				$arrayValues[$timestamp][$value['name']] = $this->formatNumericValue($value['value']);
 			}			
 		}
 		
@@ -138,8 +147,7 @@ class Piwik_Archive_Array_IndexedByDate extends Piwik_Archive_Array
 				$contentArray[$timestamp]['table']->addRowsFromArray($aNameValues);
 			}
 		}
-		$contentArray;
-				
+
 		$tableArray = $this->getNewDataTableArray();
 		foreach($contentArray as $timestamp => $aData)
 		{

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Rss.php 3565 2011-01-03 05:49:45Z matt $
+ * @version $Id: Rss.php 6452 2012-06-03 00:19:51Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -20,25 +20,43 @@
  */
 class Piwik_DataTable_Renderer_Rss extends Piwik_DataTable_Renderer
 {
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function render()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		return $this->renderTable($this->table);
 	}
-	
+
+	/**
+	 * Computes the exception output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function renderException()
 	{
-		self::renderHeader();
+		header('Content-type: text/plain');
 		$exceptionMessage = self::renderHtmlEntities($this->exception->getMessage());
 		return 'Error: '.$exceptionMessage;
 	}
-	
+
+	/**
+	 * Computes the output for the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @return string
+	 * @throws Exception
+	 */
 	protected function renderTable($table)
 	{
 		if(!($table instanceof Piwik_DataTable_Array)
 			|| $table->getKeyName() != 'date')
 		{
-			throw new Exception("RSS Feed only used on Piwik_DataTable_Array with keyName = 'date'");
+			throw new Exception("RSS feeds can be generated for one specific website &idSite=X.". 
+			"\nPlease specify only one idSite or consider using &format=XML instead.");
 		}
 		
 		$idSite = Piwik_Common::getRequestVar('idSite', 1, 'int');
@@ -78,16 +96,29 @@ class Piwik_DataTable_Renderer_Rss extends Piwik_DataTable_Renderer
 		return $header . $out . $footer;
 	}
 
-	protected static function renderHeader()
+	/**
+	 * Sends the xml file http header
+	 */
+	protected function renderHeader()
 	{
 		@header('Content-Type: text/xml; charset=utf-8');
 	}
 
+	/**
+	 * Returns the RSS file footer
+	 *
+	 * @return string
+	 */
 	protected function getRssFooter()
 	{
 		return "\t</channel>\n</rss>";
 	}
 
+	/**
+	 * Returns the RSS file header
+	 *
+	 * @return string
+	 */
 	protected function getRssHeader()
 	{
 		$generationDate = date('r');
@@ -143,6 +174,10 @@ class Piwik_DataTable_Renderer_Rss extends Piwik_DataTable_Renderer
 		{
 			if($toDisplay !== false)
 			{
+				if($this->translateColumnNames)
+				{
+					$name = $this->translateColumnName($name);
+				}
 				$html .= "\n\t<td><b>$name</b></td>";
 			}
 		}

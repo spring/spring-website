@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Mysqli.php 4155 2011-03-20 21:21:51Z vipsoft $
+ * @version $Id: Mysqli.php 7056 2012-09-25 07:14:03Z EZdesign $
  *
  * @category Piwik
  * @package Piwik
@@ -19,16 +19,19 @@
 class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 {
 	protected $connection = null;
-	private $host;
-	private $port;
-	private $socket;
-	private $dbname;
-	private $username;
-	private $password;
-	private $charset;
-	
+	protected $host;
+	protected $port;
+	protected $socket;
+	protected $dbname;
+	protected $username;
+	protected $password;
+	protected $charset;
+
 	/**
 	 * Builds the DB object
+	 *
+	 * @param array   $dbInfo
+	 * @param string  $driverName
 	 */
 	public function __construct( $dbInfo, $driverName = 'mysql') 
 	{
@@ -56,6 +59,9 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 		$this->charset = isset($dbInfo['charset']) ? $dbInfo['charset'] : null;
 	}
 
+	/**
+	 * Destructor
+	 */
 	public function __destruct() 
 	{
 		$this->connection = null;
@@ -64,7 +70,7 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	/**
 	 * Connects to the DB
 	 * 
-	 * @throws Exception if there was an error connecting the DB
+	 * @throws Exception|Piwik_Tracker_Db_Exception  if there was an error connecting the DB
 	 */
 	public function connect() 
 	{
@@ -103,11 +109,13 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	
 	/**
 	 * Returns an array containing all the rows of a query result, using optional bound parameters.
-	 * 
-	 * @param string Query 
-	 * @param array Parameters to bind
-	 * @see also query()
-	 * @throws Exception if an exception occured
+	 *
+	 * @see query()
+	 *
+	 * @param string  $query       Query
+	 * @param array   $parameters  Parameters to bind
+	 * @return array
+	 * @throws Exception|Piwik_Tracker_Db_Exception if an exception occured
 	 */
 	public function fetchAll( $query, $parameters = array() )
 	{
@@ -143,12 +151,12 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	
 	/**
 	 * Returns the first row of a query result, using optional bound parameters.
-	 * 
-	 * @param string Query 
-	 * @param array Parameters to bind
-	 * @see also query()
-	 * 
-	 * @throws Exception if an exception occured
+	 *
+	 * @see query()
+	 *
+	 * @param string  $query       Query
+	 * @param array   $parameters  Parameters to bind
+	 * @throws Piwik_Tracker_Db_Exception if an exception occurred
 	 */
 	public function fetch( $query, $parameters = array() )
 	{
@@ -181,11 +189,11 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	/**
 	 * Executes a query, using optional bound parameters.
 	 * 
-	 * @param string Query 
-	 * @param array|string Parameters to bind array('idsite'=> 1)
+	 * @param string        $query       Query
+	 * @param array|string  $parameters  Parameters to bind array('idsite'=> 1)
 	 * 
-	 * @return bool|resource false if failed
-	 * @throws Exception if an exception occured
+	 * @return bool|resource  false if failed
+	 * @throws Piwik_Tracker_Db_Exception  if an exception occurred
 	 */
 	public function query($query, $parameters = array()) 
 	{
@@ -233,8 +241,8 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	 * Input is a prepared SQL statement and parameters
 	 * Returns the SQL statement
 	 *
-	 * @param string $query
-	 * @param array $parameters 
+	 * @param string  $query
+	 * @param array   $parameters
 	 * @return string
 	 */
 	private function prepare($query, $parameters) {
@@ -247,21 +255,29 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 			$parameters = array( $parameters );
 		}
 
-		foreach($parameters as $i=>$p) 
-		{
-			$parameters[$i] = addslashes($p);
-		}
-		$query = str_replace('?', "'%s'", $query);
-		array_unshift($parameters, $query);
-		$query = call_user_func_array('sprintf', $parameters);
+		$this->paramNb = 0;
+		$this->params = &$parameters;
+		$query = preg_replace_callback('/\?/', array($this, 'replaceParam'), $query);
+		
 		return $query;
+	}
+	
+	public function replaceParam($match) {
+		$param = &$this->params[$this->paramNb];
+		$this->paramNb++;
+		
+		if ($param === null) {
+			return 'NULL';
+		} else {
+			return "'".addslashes($param)."'";
+		}
 	}
 
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string $errno
+	 * @param Exception  $e
+	 * @param string     $errno
 	 * @return bool
 	 */
 	public function isErrNo($e, $errno)
@@ -272,7 +288,7 @@ class Piwik_Tracker_Db_Mysqli extends Piwik_Tracker_Db
 	/**
 	 * Return number of affected rows in last query
 	 *
-	 * @param mixed $queryResult Result from query()
+	 * @param mixed  $queryResult  Result from query()
 	 * @return int
 	 */
 	public function rowCount($queryResult)

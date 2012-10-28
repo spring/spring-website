@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ChartPie.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: ChartPie.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -29,4 +29,16 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartPie extends Piwik_ViewDataTable
 	{
 		$this->view = new Piwik_Visualization_Chart_Pie();
 	}
+
+	/**
+	 * Manipulate the configuration of the series picker since only one metric is selectable
+	 * for pie charts
+	 * @param bool $multiSelect
+	 */
+	protected function addSeriesPickerToView($multiSelect=false)
+	{
+		// force $multiSelect=false
+		parent::addSeriesPickerToView(false);
+	}
+	
 }

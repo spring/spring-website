@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4856 2011-06-03 15:19:10Z peterb $
+ * @version $Id: Controller.php 7296 2012-10-24 05:12:01Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_CorePluginsAdmin
@@ -22,7 +22,11 @@ class Piwik_CorePluginsAdmin_Controller extends Piwik_Controller_Admin
 
 		$plugins = array();
 
-		$listPlugins = Piwik_PluginsManager::getInstance()->readPluginsDirectory();
+		$listPlugins = array_merge(
+			Piwik_PluginsManager::getInstance()->readPluginsDirectory(),
+			Piwik_Config::getInstance()->Plugins['Plugins']
+		);
+		$listPlugins = array_unique($listPlugins);
 		foreach($listPlugins as $pluginName)
 		{
 			$oPlugin = Piwik_PluginsManager::getInstance()->loadPlugin($pluginName);
@@ -39,12 +43,24 @@ class Piwik_CorePluginsAdmin_Controller extends Piwik_Controller_Admin
 			$pluginName = $oPlugin->getPluginName();
 			$plugins[$pluginName]['info'] = $oPlugin->getInformation();
 		}
+		
+		foreach($plugins as $pluginName => &$plugin)
+		{
+			if (!isset($plugin['info']))
+			{
+				$plugin['info'] = array(
+					'description' => '<strong><em>'.Piwik_Translate('CorePluginsAdmin_PluginCannotBeFound')
+						.'</strong></em>',
+					'version' => Piwik_Translate('General_Unknown')
+				);
+			}
+		}
 
 		$view = Piwik_View::factory('manage');
 		$view->pluginsName = $plugins;
 		$this->setBasicVariablesView($view);
 		$view->menu = Piwik_GetAdminMenu();
-		if(!Zend_Registry::get('config')->isFileWritable())
+		if(!Piwik_Config::getInstance()->isFileWritable())
 		{
 			$view->configFileNotWritable = true;
 		}

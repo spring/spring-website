@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: AddConstantMetadata.php 4169 2011-03-23 01:59:57Z matt $
+ * @version $Id: AddConstantMetadata.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -21,17 +21,25 @@
  */
 class Piwik_DataTable_Filter_AddConstantMetadata extends Piwik_DataTable_Filter
 {
-	private $metadataToRead;
-	private $functionToApply;
-	private $metadataToAdd;
-	
+	/**
+	 * Creates a new filter and sets all required parameters
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @param string           $metadataName
+	 * @param mixed            $metadataValue
+	 */
 	public function __construct( $table, $metadataName, $metadataValue )
 	{
 		parent::__construct($table);
 		$this->name = $metadataName;
 		$this->value = $metadataValue;
 	}
-	
+
+	/**
+	 * Filters the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 */
 	public function filter($table)
 	{
 		foreach($table->getRows() as $row)

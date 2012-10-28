@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Year.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Year.php 6385 2012-05-29 21:36:24Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -18,23 +18,42 @@ class Piwik_Period_Year extends Piwik_Period
 {	
 	protected $label = 'year';
 
+	/**
+	 * Returns the current period as a localized short string
+	 *
+	 * @return string
+	 */
 	public function getLocalizedShortString()
 	{
 		return $this->getLocalizedLongString();
 	}
 
+	/**
+	 * Returns the current period as a localized long string
+	 *
+	 * @return string
+	 */
 	public function getLocalizedLongString()
 	{
 		//"2009"
 		$out = $this->getDateStart()->getLocalized("%longYear%");
 		return $out;
 	}
+
+	/**
+	 * Returns the current period as a string
+	 *
+	 * @return string
+	 */
 	public function getPrettyString()
 	{
 		$out = $this->getDateStart()->toString('Y');
 		return $out;
 	}
-	
+
+	/**
+	 * Generates the subperiods (one for each month of the year)
+	 */
 	protected function generate()
 	{
 		if($this->subperiodsProcessed)
@@ -52,8 +71,14 @@ class Piwik_Period_Year extends Piwik_Period
 							);
 		}
 	}
-	
-	function toString()
+
+	/**
+	 * Returns the current period as a string
+	 *
+	 * @param string  $format
+	 * @return array
+	 */
+	function toString($format = 'ignored')
 	{
 		if(!$this->subperiodsProcessed)
 		{

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 4643 2011-05-05 21:26:21Z matt $
+ * @version $Id: API.php 6974 2012-09-12 04:57:40Z matt $
  * 
  * @category Piwik_Plugins
  * @package Piwik_UsersManager
@@ -26,14 +26,15 @@
 class Piwik_UsersManager_API 
 {
 	static private $instance = null;
-	
+
 	/**
-	 * You can create your own Users Plugin to override this class. 
+	 * You can create your own Users Plugin to override this class.
 	 * Example of how you would overwrite the UsersManager_API with your own class:
 	 * Call the following in your plugin __construct() for example:
-	 * 
+	 *
 	 * Zend_Registry::set('UsersManager_API',Piwik_MyCustomUsersManager_API::getInstance());
-	 * 
+	 *
+	 * @throws Exception
 	 * @return Piwik_UsersManager_API
 	 */
 	static public function getInstance()
@@ -67,13 +68,12 @@ class Piwik_UsersManager_API
 		Piwik::checkUserIsSuperUserOrTheUser($userLogin);
 		Piwik_SetOption($this->getPreferenceId($userLogin, $preferenceName), $preferenceValue);
 	}
-	
+
 	/**
 	 * Gets a user preference
 	 * @param string $userLogin
 	 * @param string $preferenceName
-	 * @param string $preferenceValue
-	 * @return void
+	 * @return bool|string
 	 */
 	public function getUserPreference($userLogin, $preferenceName)
 	{
@@ -89,7 +89,7 @@ class Piwik_UsersManager_API
 	/**
 	 * Returns the list of all the users
 	 * 
-	 * @param string Comma separated list of users to select. If not specified, will return all users
+	 * @param string $userLogins  Comma separated list of users to select. If not specified, will return all users
 	 * @return array the list of all the users
 	 */
 	public function getUsers( $userLogins = '' )
@@ -315,16 +315,6 @@ class Piwik_UsersManager_API
 		Piwik::checkValidLoginString($userLogin);
 	}
 	
-	private function checkPassword($password)
-	{
-		if(!$this->isValidPasswordString($password))
-		{
-			throw new Exception(Piwik_TranslateException('UsersManager_ExceptionInvalidPassword', array(self::PASSWORD_MIN_LENGTH, self::PASSWORD_MAX_LENGTH)));
-		}
-	}
-	const PASSWORD_MIN_LENGTH = 6;
-	const PASSWORD_MAX_LENGTH = 26;
-	
 	private function checkEmail($email)
 	{
 		if($this->userEmailExists($email))
@@ -347,13 +337,6 @@ class Piwik_UsersManager_API
 		return $alias;
 	}
 	
-	private function getCleanPassword($password)
-	{
-		// if change here, should also edit the installation process 
-		// to change how the root pwd is saved in the config file
-		return md5($password);
-	}
-		
 	/**
 	 * Add a user in the database.
 	 * A user is defined by 
@@ -378,10 +361,10 @@ class Piwik_UsersManager_API
 		$this->checkEmail($email);
 
 		$password = Piwik_Common::unsanitizeInputValue($password);
-		$this->checkPassword($password);
+		Piwik_UsersManager::checkPassword($password);
 
 		$alias = $this->getCleanAlias($alias,$userLogin);
-		$passwordTransformed = $this->getCleanPassword($password);
+		$passwordTransformed = Piwik_UsersManager::getPasswordHash($password);
 		
 		$token_auth = $this->getTokenAuth($userLogin, $passwordTransformed);
 		
@@ -400,6 +383,8 @@ class Piwik_UsersManager_API
 		// we reload the access list which doesn't yet take in consideration this new user
 		Zend_Registry::get('access')->reloadAccess();
 		Piwik_Common::deleteTrackerCache();
+
+		Piwik_PostEvent('UsersManager.addUser', $userLogin);
 	}
 	
 	/**
@@ -410,13 +395,14 @@ class Piwik_UsersManager_API
 	 * 
 	 * @see addUser() for all the parameters
 	 */
-	public function updateUser(  $userLogin, $password = false, $email = false, $alias = false )
+	public function updateUser( $userLogin, $password = false, $email = false, $alias = false,
+								  $_isPasswordHashed = false )
 	{
 		Piwik::checkUserIsSuperUserOrTheUser($userLogin);
 		$this->checkUserIsNotAnonymous( $userLogin );
 		$this->checkUserIsNotSuperUser($userLogin);
 		$userInfo = $this->getUser($userLogin);
-				
+
 		if(empty($password))
 		{
 			$password = $userInfo['password'];
@@ -424,8 +410,11 @@ class Piwik_UsersManager_API
 		else
 		{
 			$password = Piwik_Common::unsanitizeInputValue($password);
-			$this->checkPassword($password);
-			$password = $this->getCleanPassword($password);
+			if (!$_isPasswordHashed)
+			{
+				Piwik_UsersManager::checkPassword($password);
+				$password = Piwik_UsersManager::getPasswordHash($password);
+			}
 		}
 
 		if(empty($alias))
@@ -458,14 +447,16 @@ class Piwik_UsersManager_API
 					"login = '$userLogin'"
 			);		
 		Piwik_Common::deleteTrackerCache();
+
+		Piwik_PostEvent('UsersManager.updateUser', $userLogin);
 	}
 	
 	/**
 	 * Delete a user and all its access, given its login.
 	 * 
-	 * @param string the user login.
+	 * @param string $userLogin the user login.
 	 * 
-	 * @exception if the user doesn't exist
+	 * @throws Exception if the user doesn't exist
 	 * 
 	 * @return bool true on success
 	 */
@@ -498,17 +489,18 @@ class Piwik_UsersManager_API
 	}
 	
 	/**
-	 * Returns true if user with given email (userEmail) is known in the database
+	 * Returns true if user with given email (userEmail) is known in the database, or the super user
 	 *
 	 * @return bool true if the user is known
 	 */
 	public function userEmailExists( $userEmail )
 	{
-		Piwik::checkUserHasSomeAdminAccess();
+		Piwik::checkUserIsNotAnonymous();
 		$count = Piwik_FetchOne("SELECT count(*) 
-													FROM ".Piwik_Common::prefixTable("user"). " 
-													WHERE email = ?", $userEmail);
-		return $count != 0;	
+								FROM ".Piwik_Common::prefixTable("user"). " 
+								WHERE email = ?", $userEmail);
+		return $count != 0
+				||  Piwik_Config::getInstance()->superuser['email'] == $userEmail;
 	}
 	
 	/**
@@ -516,15 +508,15 @@ class Piwik_UsersManager_API
 	 * 
 	 * If access = 'noaccess' the current access (if any) will be deleted.
 	 * If access = 'view' or 'admin' the current access level is deleted and updated with the new value.
-	 *  
-	 * @param string Access to grant. Must have one of the following value : noaccess, view, admin
-	 * @param string The user login 
-	 * @param int|array The array of idSites on which to apply the access level for the user. 
+	 *
+	 * @param string $userLogin The user login
+	 * @param string $access Access to grant. Must have one of the following value : noaccess, view, admin
+	 * @param int|array $idSites The array of idSites on which to apply the access level for the user.
 	 *       If the value is "all" then we apply the access level to all the websites ID for which the current authentificated user has an 'admin' access.
 	 * 
-	 * @exception if the user doesn't exist
-	 * @exception if the access parameter doesn't have a correct value
-	 * @exception if any of the given website ID doesn't exist
+	 * @throws Exception if the user doesn't exist
+	 * @throws Exception if the access parameter doesn't have a correct value
+	 * @throws Exception if any of the given website ID doesn't exist
 	 * 
 	 * @return bool true on success
 	 */
@@ -547,11 +539,15 @@ class Piwik_UsersManager_API
 			$idSites = Piwik_SitesManager_API::getInstance()->getSitesIdWithAdminAccess();
 		}
 		// in case the idSites is an integer we build an array		
-		elseif(!is_array($idSites))
+		else
 		{
 			$idSites = Piwik_Site::getIdSitesFromIdSitesString($idSites);
 		}
-		
+
+		if(empty($idSites))
+		{
+			throw new Exception('Specify at least one website ID in &idSites=');
+		}
 		// it is possible to set user access on websites only for the websites admin
 		// basically an admin can give the view or the admin access to any user for the websites he manages
 		Piwik::checkUserHasAdminAccess( $idSites );
@@ -583,8 +579,8 @@ class Piwik_UsersManager_API
 	/**
 	 * Throws an exception is the user login doesn't exist
 	 * 
-	 * @param string user login
-	 * @exception if the user doesn't exist
+	 * @param string $userLogin user login
+	 * @throws Exception if the user doesn't exist
 	 */
 	private function checkUserExists( $userLogin )
 	{
@@ -597,8 +593,8 @@ class Piwik_UsersManager_API
 	/**
 	 * Throws an exception is the user email cannot be found
 	 * 
-	 * @param string user email
-	 * @exception if the user doesn't exist
+	 * @param string $userEmail user email
+	 * @throws Exception if the user doesn't exist
 	 */
 	private function checkUserEmailExists( $userEmail )
 	{
@@ -618,7 +614,7 @@ class Piwik_UsersManager_API
 	
 	private function checkUserIsNotSuperUser( $userLogin )
 	{
-		if($userLogin == Zend_Registry::get('config')->superuser->login)
+		if($userLogin == Piwik_Config::getInstance()->superuser['login'])
 		{
 			throw new Exception(Piwik_TranslateException("UsersManager_ExceptionSuperUser"));
 		}
@@ -683,12 +679,14 @@ class Piwik_UsersManager_API
 			}
 		}
 	}
-	
+
 	/**
 	 * Generates a unique MD5 for the given login & password
-	 * 
-	 * @param string Login
-	 * @param string MD5ied string of the password
+	 *
+	 * @param string $userLogin Login
+	 * @param string $md5Password MD5ied string of the password
+	 * @throws Exception
+	 * @return string
 	 */
 	public function getTokenAuth($userLogin, $md5Password)
 	{
@@ -697,22 +695,5 @@ class Piwik_UsersManager_API
 			throw new Exception(Piwik_TranslateException('UsersManager_ExceptionPasswordMD5HashExpected'));
 		}
 		return md5($userLogin . $md5Password );
-	}
-	
-	/**
-	 * Returns true if the password is complex enough (at least 6 characters and max 26 characters)
-	 * 
-	 * @param string email
-	 * @return bool
-	 */
-	private function isValidPasswordString( $input )
-	{
-		if(!Piwik::isChecksEnabled()
-			&& !empty($input))
-		{
-			return true;
-		}
-		$l = strlen($input);
-		return $l >= self::PASSWORD_MIN_LENGTH && $l <= self::PASSWORD_MAX_LENGTH;
 	}
 }

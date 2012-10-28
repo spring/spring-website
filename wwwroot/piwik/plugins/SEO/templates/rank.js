@@ -11,7 +11,7 @@ $(document).ready(function() {
 		piwikHelper.showAjaxLoading('ajaxLoadingSEO');
 		var ajaxRequest = 
 		{
-			type: 'GET',
+			type: 'POST',
 			url: 'index.php',
 			dataType: 'html',
 			error: piwikHelper.ajaxHandleError,		
@@ -30,7 +30,7 @@ $(document).ready(function() {
 	}  
 	
 	// click on Rank button
-	$('#rankbutton').bind('click', function() {
+	$('#rankbutton').on('click', function() {
 		getRank();
 		return false ;
 	});

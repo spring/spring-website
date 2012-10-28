@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Error.php 4147 2011-03-20 04:05:32Z matt $
+ * @version $Id: Error.php 7060 2012-09-25 21:17:06Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,6 +19,10 @@
 class Piwik_Log_Error extends Piwik_Log
 {
 	const ID = 'logger_error';
+
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		$logToFileFilename = self::ID;
@@ -33,7 +37,10 @@ class Piwik_Log_Error extends Piwik_Log
 							$logToDatabaseTableName, 
 							$logToDatabaseColumnMapping );
 	}
-	
+
+	/**
+	 * Adds the writer
+	 */
 	function addWriteToScreen()
 	{
 		parent::addWriteToScreen();
@@ -41,7 +48,16 @@ class Piwik_Log_Error extends Piwik_Log
 		$writerScreen->setFormatter( $this->screenFormatter );
 		$this->addWriter($writerScreen);
 	}
-	
+
+	/**
+	 * Logs the given error event
+	 *
+	 * @param int     $errno
+	 * @param string  $errstr
+	 * @param string  $errfile
+	 * @param int     $errline
+	 * @param string  $backtrace
+	 */
 	public function logEvent($errno, $errstr, $errfile, $errline, $backtrace)
 	{
 		$event = array();
@@ -67,7 +83,7 @@ class Piwik_Log_Error_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Scre
      * Formats data into a single line to be written by the writer.
      *
      * @param  array    $event    event data
-     * @return string             formatted line to write to the log
+     * @return string  formatted line to write to the log
      */
     public function format($event)
     {
@@ -87,7 +103,8 @@ class Piwik_Log_Error_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Scre
 	    // is there any other case where the errno is zero at this point?
 	    if($errno == 0) return '';
 	    $strReturned .= "\n<div style='word-wrap: break-word; border: 3px solid red; padding:4px; width:70%; background-color:#FFFF96;'>
-	    <strong>There is an error. Please report the message and full backtrace in the <a href='?module=Proxy&action=redirect&url=http://forum.piwik.org' target='_blank'>Piwik forums</a> (please do a Search first as it might have been reported already!).<br /><br/>
+	    <strong>There is an error. Please report the message (Piwik ". (class_exists('Piwik_Version') ? Piwik_Version::VERSION : '' ) .") 
+	    and full backtrace in the <a href='?module=Proxy&action=redirect&url=http://forum.piwik.org' target='_blank'>Piwik forums</a> (please do a Search first as it might have been reported already!).<br /><br/>
 	    ";
 	    switch($errno)
 	    {
@@ -110,7 +127,7 @@ class Piwik_Log_Error_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Scre
 	    }
 	    $strReturned .= ":</strong> <i>$errstr</i> in <b>$errfile</b> on line <b>$errline</b>\n";
 	    $strReturned .= "<br /><br />Backtrace --&gt;<div style=\"font-family:Courier;font-size:10pt\">";
-	    $strReturned .= str_replace("\n", "<br />\n", $backtrace);
+	    $strReturned .= str_replace(array("\n",'#'), array("<br />\n","<br />\n#"), $backtrace);
 	    $strReturned .= "</div><br />";
 	    $strReturned .= "\n </pre></div><br />";
 	    

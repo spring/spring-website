@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 5259 2011-09-29 05:19:59Z matt $
+ * @version $Id: Controller.php 7046 2012-09-24 07:57:39Z EZdesign $
  * 
  * @category Piwik_Plugins
  * @package Piwik_Proxy
@@ -57,9 +57,8 @@ class Piwik_Proxy_Controller extends Piwik_Controller
 		$data = base64_decode($rawData);
 		if($data !== false)
 		{
-			$substr = function_exists('mb_orig_substr') ? 'mb_orig_substr' : 'substr';
 			// check for PNG header
-			if($substr($data, 0, 8) === "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a")
+			if(Piwik_Common::substr($data, 0, 8) === "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a")
 			{
 				header('Content-Type: image/png');
 
@@ -132,17 +131,16 @@ class Piwik_Proxy_Controller extends Piwik_Controller
 		if(!empty($referrer) && !Piwik_Url::isLocalUrl($referrer))
 		{
 			die('Invalid Referer detected - check that your browser sends the Referer header. <br/>The link you would have been redirected to is: '.$url);
-			exit;
 		}
 
 		// mask visits to *.piwik.org
-		if(self::isPiwikUrl($url))
+		if (!self::isPiwikUrl($url))
 		{
-			echo
-'<html><head>
-<meta http-equiv="refresh" content="0;url=' . $url . '" />
-</head></html>';
+			Piwik::checkUserHasSomeViewAccess();
 		}
+		
+		echo '<html><head><meta http-equiv="refresh" content="0;url=' . $url . '" /></head></html>';
+		
 		exit;
 	}
 
@@ -161,6 +159,12 @@ class Piwik_Proxy_Controller extends Piwik_Controller
 			return false;
 		}
 		if(preg_match('~^http://(qa\.|demo\.|dev\.|forum\.)?piwik.org([#?/]|$)~', $url))
+		{
+			return true;
+		}
+		
+		// Allow clockworksms domain
+		if(strpos($url, 'http://www.clockworksms.com/') === 0)
 		{
 			return true;
 		}

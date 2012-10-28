@@ -14,25 +14,11 @@
 <!--[if IE]>
 <link rel="stylesheet" type="text/css" href="themes/default/ieonly.css" />
 <![endif]-->
-{if isset($enableFrames) && !$enableFrames}
-{literal}
-	<style type="text/css">body { display : none; }</style>
-{/literal}
-{/if}
+{include file="CoreHome/templates/iframe_buster_header.tpl"}
 </head>
 <body>
-{if isset($enableFrames) && !$enableFrames}
-{literal}
-	<script type="text/javascript">
-		if(self == top) {
-			var theBody = document.getElementsByTagName('body')[0];
-			theBody.style.display = 'block';
-		} else {
-			top.location = self.location;
-		}
-	</script>
-{/literal}
-{/if}
+
+{include file="CoreHome/templates/iframe_buster_body.tpl"}
 <div id="root">
 {if !isset($showTopMenu) || $showTopMenu}
 {include file="CoreHome/templates/top_bar.tpl"}
@@ -44,11 +30,11 @@
 {include file="CoreHome/templates/js_disabled_notice.tpl"}
 </div>
 
-{ajaxRequestErrorDiv}
 {if !isset($showMenu) || $showMenu}
 	{include file="CoreAdminHome/templates/menu.tpl"}
 {/if}
 
+{ajaxRequestErrorDiv}
 
 <div id="content" class="admin">
 
@@ -66,5 +52,27 @@
 
 <div class="ui-confirm" id="alert">
     <h2></h2>
-    <input id="yes" type="button" value="{'General_Ok'|translate}" />
+    <input role="no" type="button" value="{'General_Ok'|translate}" />
 </div>
+
+{* untrusted host warning *}
+{if isset($isValidHost) && isset($invalidHostMessage) && !$isValidHost}
+<div class="ajaxSuccess">
+	<a style="float:right" href="http://piwik.org/faq/troubleshooting/#faq_171" target="_blank"><img src="themes/default/images/help_grey.png" /></a>
+	<strong>{'General_Warning'|translate}:&nbsp;</strong>{$invalidHostMessage}
+</div>
+{/if}
+
+{* missing plugins warning *}
+{if $isSuperUser && !empty($missingPluginsWarning)}
+<div class="ajaxSuccess">
+	<strong>{'General_Warning'|translate}:&nbsp;</strong>{$missingPluginsWarning}
+</div>
+{/if}
+
+{* old GeoIP plugin warning *}
+{if $isSuperUser && !empty($usingOldGeoIPPlugin)}
+<div class="ajaxSuccess">
+	<strong>{'General_Warning'|translate}:&nbsp;</strong>{'UserCountry_OldGeoIPWarning'|translate:'<a href="index.php?module=CorePluginsAdmin&action=index&idSite=1&period=day&date=yesterday">':'</a>':'<a href="index.php?module=UserCountry&action=adminIndex&idSite=1&period=day&date=yesterday#location-providers">':'</a>':'<a href="http://piwik.org/faq/how-to/#faq_167">':'</a>':'<a href="http://piwik.org/faq/how-to/#faq_59">':'</a>'}
+</div>
+{/if}

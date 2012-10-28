@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 5188 2011-09-19 01:41:27Z matt $
+ * @version $Id: Controller.php 7190 2012-10-15 07:41:12Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_SitesManager
@@ -22,13 +22,19 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 	function index()
 	{
 		$view = Piwik_View::factory('SitesManager');
-		$sites = Piwik_SitesManager_API::getInstance()->getSitesWithAdminAccess();
-		$sitesIndexedById = array();
-		foreach($sites as $site)
+
+		if (Piwik::isUserIsSuperUser())
 		{
-			$sitesIndexedById[$site['idsite']] = $site;
+			$sites = Piwik_SitesManager_API::getInstance()->getAllSites();
+			Piwik_Site::setSites($sites);
+			$sites = array_values($sites);
 		}
-		Piwik_Site::setSites($sitesIndexedById);
+		else
+		{
+			$sites = Piwik_SitesManager_API::getInstance()->getSitesWithAdminAccess();
+			Piwik_Site::setSitesFromArray($sites);
+		}
+
 		foreach($sites as &$site)
 		{
 			$site['alias_urls'] = Piwik_SitesManager_API::getInstance()->getSiteUrlsFromId($site['idsite']);
@@ -40,10 +46,10 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 
 		$timezones = Piwik_SitesManager_API::getInstance()->getTimezonesList();
 		$view->timezoneSupported = Piwik::isTimezoneSupportEnabled();
-		$view->timezones = json_encode($timezones);
+		$view->timezones = Piwik_Common::json_encode($timezones);
 		$view->defaultTimezone = Piwik_SitesManager_API::getInstance()->getDefaultTimezone();
 
-		$view->currencies = json_encode(Piwik_SitesManager_API::getInstance()->getCurrencyList());
+		$view->currencies = Piwik_Common::json_encode(Piwik_SitesManager_API::getInstance()->getCurrencyList());
 		$view->defaultCurrency = Piwik_SitesManager_API::getInstance()->getDefaultCurrency();
 
 		$view->utcTime = Piwik_Date::now()->getDatetime();
@@ -51,6 +57,11 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 		$view->globalExcludedIps = str_replace(',',"\n", $excludedIpsGlobal);
 		$excludedQueryParametersGlobal = Piwik_SitesManager_API::getInstance()->getExcludedQueryParametersGlobal();
 		$view->globalExcludedQueryParameters = str_replace(',',"\n", $excludedQueryParametersGlobal);
+
+		$view->globalSearchKeywordParameters = Piwik_SitesManager_API::getInstance()->getSearchKeywordParametersGlobal();
+		$view->globalSearchCategoryParameters = Piwik_SitesManager_API::getInstance()->getSearchCategoryParametersGlobal();
+		$view->isSearchCategoryTrackingEnabled = Piwik_PluginsManager::getInstance()->isPluginActivated('CustomVariables');
+
 		$view->currentIpAddress = Piwik_IP::getIpFromHeader();
 
 		$view->showAddSite = (boolean) Piwik_Common::getRequestVar('showaddsite', false);
@@ -73,10 +84,13 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 			$excludedIps = Piwik_Common::getRequestVar('excludedIps', false);
 			$excludedQueryParameters = Piwik_Common::getRequestVar('excludedQueryParameters', false);
 			$currency = Piwik_Common::getRequestVar('currency', false);
+			$searchKeywordParameters = Piwik_Common::getRequestVar('searchKeywordParameters', $default = "");
+			$searchCategoryParameters = Piwik_Common::getRequestVar('searchCategoryParameters', $default = "");
 			Piwik_SitesManager_API::getInstance()->setDefaultTimezone($timezone);
 			Piwik_SitesManager_API::getInstance()->setDefaultCurrency($currency);
 			Piwik_SitesManager_API::getInstance()->setGlobalExcludedQueryParameters($excludedQueryParameters);
 			Piwik_SitesManager_API::getInstance()->setGlobalExcludedIps($excludedIps);
+			Piwik_SitesManager_API::getInstance()->setGlobalSearchParameters($searchKeywordParameters, $searchCategoryParameters);
 			$toReturn = $response->getResponse();
 		} catch(Exception $e ) {
 			$toReturn = $response->getResponseException( $e );
@@ -122,7 +136,13 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 	{
 		$view = Piwik_View::factory('DisplayAlternativeTags');
 		$view->idSite = Piwik_Common::getRequestVar('idSite');
-		$view->piwikUrlRequest = Piwik_Common::getRequestVar('piwikUrl', $view->piwikUrl, 'string');
+		$url = Piwik_Common::getRequestVar('piwikUrl', '', 'string');
+		if(empty($url) 
+			|| !Piwik_Common::isLookLikeUrl($url) )
+		{
+			$url = $view->piwikUrl;
+		}
+		$view->piwikUrlRequest = $url;
 		$view->calledExternally = true;
 		echo $view->render();
 	}
@@ -161,6 +181,6 @@ class Piwik_SitesManager_Controller extends Piwik_Controller_Admin
 			}
 		}
 
-		print json_encode($results);
+		print Piwik_Common::json_encode($results);
 	}
 }

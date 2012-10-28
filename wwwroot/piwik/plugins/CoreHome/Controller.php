@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4904 2011-06-12 14:16:39Z SteveG $
+ * @version $Id: Controller.php 7068 2012-09-27 04:45:55Z capedfuzz $
  * 
  * @category Piwik_Plugins
  * @package Piwik_CoreHome
@@ -115,5 +115,68 @@ class Piwik_CoreHome_Controller extends Piwik_Controller
 	{
 		$jsMergedFile = Piwik_AssetManager::getMergedJsFileLocation();
 		Piwik::serveStaticFile($jsMergedFile, "application/javascript; charset=UTF-8");
+	}
+	
+	
+	//  --------------------------------------------------------
+	//  ROW EVOLUTION
+	//  The following methods render the popover that shows the
+	//  evolution of a singe or multiple rows in a data table
+	//  --------------------------------------------------------
+	
+	/**
+	 * This static cache is necessary because the signature cannot be modified
+	 * if the method renders a ViewDataTable. So we use it to pass information
+	 * to getRowEvolutionGraph()
+	 * @var Piwik_CoreHome_DataTableAction_Evolution
+	 */
+	private static $rowEvolutionCache = null;
+	
+	/** Render the entire row evolution popover for a single row */
+	public function getRowEvolutionPopover()
+	{
+		$rowEvolution = $this->makeRowEvolution($isMulti = false);
+		self::$rowEvolutionCache = $rowEvolution;
+		$view = Piwik_View::factory('popover_rowevolution');
+		echo $rowEvolution->renderPopover($this, $view);
+	}
+	
+	/** Render the entire row evolution popover for multiple rows */
+	public function getMultiRowEvolutionPopover()
+	{
+		$rowEvolution = $this->makeRowEvolution($isMulti = true);
+		self::$rowEvolutionCache = $rowEvolution;
+		$view = Piwik_View::factory('popover_multirowevolution');
+		echo $rowEvolution->renderPopover($this, $view);
+	}
+	
+	/** Generic method to get an evolution graph or a sparkline for the row evolution popover */
+	public function getRowEvolutionGraph($fetch = false)
+	{
+		$rowEvolution = self::$rowEvolutionCache;
+		if ($rowEvolution === null)
+		{
+			$paramName = Piwik_CoreHome_DataTableRowAction_MultiRowEvolution::IS_MULTI_EVOLUTION_PARAM;
+			$isMultiRowEvolution = Piwik_Common::getRequestVar($paramName, false, 'int');
+			
+			$rowEvolution = $this->makeRowEvolution($isMultiRowEvolution, $graphType = 'graphEvolution');
+			self::$rowEvolutionCache = $rowEvolution;
+		}
+		
+		$view = $rowEvolution->getRowEvolutionGraph();
+		return $this->renderView($view, $fetch);
+	}
+	
+	/** Utility function. Creates a RowEvolution instance. */
+	private function makeRowEvolution( $isMultiRowEvolution, $graphType = null )
+	{
+		if ($isMultiRowEvolution)
+		{
+			return new Piwik_CoreHome_DataTableRowAction_MultiRowEvolution($this->idSite, $this->date, $graphType);
+		}
+		else
+		{
+			return new Piwik_CoreHome_DataTableRowAction_RowEvolution($this->idSite, $this->date, $graphType);
+		}
 	}
 }

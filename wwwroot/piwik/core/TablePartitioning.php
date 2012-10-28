@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: TablePartitioning.php 4968 2011-07-02 22:29:01Z vipsoft $
+ * @version $Id: TablePartitioning.php 5951 2012-03-04 22:04:41Z vipsoft $
  * 
  * @category Piwik
  * @package Piwik
@@ -23,8 +23,7 @@ abstract class Piwik_TablePartitioning
 	protected $tableName = null;
 	protected $generatedTableName = null;
 	protected $timestamp = null;
-	protected $idSite = null;
-	
+
 	static public $tablesAlreadyInstalled = null;
 	
 	public function __construct( $tableName )
@@ -39,11 +38,6 @@ abstract class Piwik_TablePartitioning
 		$this->timestamp = $timestamp;
 		$this->generatedTableName = null;
 		$this->getTableName();
-	}
-	
-	public function setIdSite($idSite)
-	{
-		$this->idSite = $idSite;
 	}
 		
 	public function getTableName()
@@ -78,8 +72,8 @@ abstract class Piwik_TablePartitioning
 			$db = Zend_Registry::get('db');
 			$sql = Piwik::getTableCreateSql($this->tableName);
 			
-			$config = Zend_Registry::get('config');
-			$prefixTables = $config->database->tables_prefix;
+			$config = Piwik_Config::getInstance();
+			$prefixTables = $config->database['tables_prefix'];
 			$sql = str_replace( $prefixTables . $this->tableName, $this->generatedTableName, $sql);
 			try {
 				$db->query( $sql );
@@ -115,8 +109,8 @@ class Piwik_TablePartitioning_Monthly extends Piwik_TablePartitioning
 	}
 	protected function generateTableName()
 	{
-		$config = Zend_Registry::get('config');
-		return $config->database->tables_prefix . $this->tableName . "_" . date("Y_m", $this->timestamp);
+		$config = Piwik_Config::getInstance();
+		return $config->database['tables_prefix'] . $this->tableName . "_" . date("Y_m", $this->timestamp);
 	}
 		
 }
@@ -134,7 +128,7 @@ class Piwik_TablePartitioning_Daily extends Piwik_TablePartitioning
 	}
 	protected function generateTableName()
 	{
-		$config = Zend_Registry::get('config');
-		return $config->database->tables_prefix . $this->tableName . "_" . date("Y_m_d", $this->timestamp);
+		$config = Piwik_Config::getInstance();
+		return $config->database['tables_prefix'] . $this->tableName . "_" . date("Y_m_d", $this->timestamp);
 	}		
 }

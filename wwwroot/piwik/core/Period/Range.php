@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Range.php 5126 2011-09-05 03:05:51Z vipsoft $
+ * @version $Id: Range.php 7068 2012-09-27 04:45:55Z capedfuzz $
  * 
  * @category Piwik
  * @package Piwik
@@ -32,23 +32,40 @@ class Piwik_Period_Range extends Piwik_Period
 		}
 		$this->today = $today;
 	}
+
+	/**
+	 * Returns the current period as a localized short string
+	 *
+	 * @return string
+	 */
 	public function getLocalizedShortString()
 	{
 		//"30 Dec 08 - 26 Feb 09"
 		$dateStart = $this->getDateStart();
 		$dateEnd = $this->getDateEnd();
-		$template = "%day% %shortMonth% %shortYear%";
+		$template = Piwik_Translate('CoreHome_ShortDateFormatWithYear');
 		$shortDateStart = $dateStart->getLocalized($template);
 		$shortDateEnd = $dateEnd->getLocalized($template);
 		$out = "$shortDateStart - $shortDateEnd";
 		return $out;
 	}
 
+	/**
+	 * Returns the current period as a localized long string
+	 *
+	 * @return string
+	 */
 	public function getLocalizedLongString()
 	{
 		return $this->getLocalizedShortString();
 	}
-	
+
+	/**
+	 * Returns the start date of the period
+	 *
+	 * @return Piwik_Date
+	 * @throws Exception
+	 */
 	public function getDateStart()
 	{
 		$dateStart = parent::getDateStart();
@@ -58,7 +75,12 @@ class Piwik_Period_Range extends Piwik_Period
 		}
 		return $dateStart;
 	}
-	
+
+	/**
+	 * Returns the current period as a string
+	 *
+	 * @return string
+	 */
 	public function getPrettyString()
 	{
 		$out = Piwik_Translate('General_DateRangeFromTo', array($this->getDateStart()->toString(), $this->getDateEnd()->toString()));
@@ -67,8 +89,10 @@ class Piwik_Period_Range extends Piwik_Period
 
 	/**
 	 *
+	 * @param string $period
 	 * @param Piwik_Date $date
 	 * @param int $n
+	 * @throws Exception
 	 * @return Piwik_Date
 	 */
 	static public function removePeriod( $period, Piwik_Date $date, $n )
@@ -80,15 +104,15 @@ class Piwik_Period_Range extends Piwik_Period
 			break;
 			
 			case 'week':
-				$startDate = $date->subDay( $n * 7 );					
+				$startDate = $date->subDay( $n * 7 );
 			break;
 			
 			case 'month':
-				$startDate = $date->subMonth( $n );					
+				$startDate = $date->subMonth( $n );
 			break;
 			
 			case 'year':
-				$startDate = $date->subMonth( 12 * $n );					
+				$startDate = $date->subMonth( 12 * $n );
 			break;
 			default:
 				throw new Exception('The period parameter is invalid');
@@ -106,25 +130,35 @@ class Piwik_Period_Range extends Piwik_Period
 			break;
 			
 			case 'week':
-				$lastN = min( $lastN, 5*52 );				
+				$lastN = min( $lastN, 10*52 );
 			break;
 			
 			case 'month':
-				$lastN = min( $lastN, 5*12 );			
+				$lastN = min( $lastN, 10*12 );
 			break;
 			
 			case 'year':
-				$lastN = min( $lastN, 10 );					
+				$lastN = min( $lastN, 10 );
 			break;
 		}
 		return $lastN;
 	}
-	
+
+	/**
+	 * Sets the default end date of the period
+	 *
+	 * @param Piwik_Date $oDate
+	 */
 	public function setDefaultEndDate( Piwik_Date $oDate)
 	{
 		$this->defaultEndDate = $oDate;
 	}
-	
+
+	/**
+	 * Generates the subperiods
+	 *
+	 * @throws Exception
+	 */
 	protected function generate()
 	{
 		if($this->subperiodsProcessed)
@@ -161,11 +195,11 @@ class Piwik_Period_Range extends Piwik_Period
 				$endDate = self::removePeriod($period, $defaultEndDate, 1);
 			}		
 			
+			$lastN = $this->getMaxN($lastN);
+			
 			// last1 means only one result ; last2 means 2 results so we remove only 1 to the days/weeks/etc
 			$lastN--;
 			$lastN = abs($lastN);
-			
-			$lastN = $this->getMaxN($lastN);
 			
 			$startDate = self::removePeriod($period, $endDate, $lastN);
 		}
@@ -210,8 +244,8 @@ class Piwik_Period_Range extends Piwik_Period
 	 * Given a date string, returns false if not a date range,
 	 * or returns the array containing date start, date end
 	 * 
-	 * @param string $dateString
-	 * @return mixed array(1 => dateStartString, 2 => dateEndString ) or false if the input was not a date range
+	 * @param string  $dateString
+	 * @return mixed  array(1 => dateStartString, 2 => dateEndString ) or false if the input was not a date range
 	 */
 	static public function parseDateRange($dateString)
 	{
@@ -224,7 +258,12 @@ class Piwik_Period_Range extends Piwik_Period
 	}
 	
 	protected $endDate = null;
-	
+
+	/**
+	 * Returns the end date of the period
+	 *
+	 * @return null|Piwik_Date
+	 */
 	public function getDateEnd()
 	{
 		if(!is_null($this->endDate))
@@ -233,8 +272,14 @@ class Piwik_Period_Range extends Piwik_Period
 		}
 		return parent::getDateEnd();
 	}
-	
-	// See Range.test.php 
+
+	/**
+	 * Determine which kind of period is best to use
+	 * See Range.test.php
+	 *
+	 * @param $startDate
+	 * @param $endDate
+	 */
 	protected function processOptimalSubperiods($startDate, $endDate)
 	{
 		while($startDate->isEarlier($endDate)
@@ -253,6 +298,7 @@ class Piwik_Period_Range extends Piwik_Period
 				// We don't use the month if 
 				// the end day is in this month, is before today, and month not finished
 				&& !($endDate->isEarlier($this->today)
+					&& $this->today->toString('Y') == $endOfMonth->toString('Y')
 					&& $this->today->compareMonth($endOfMonth) == 0)
 			)
 			{
@@ -298,12 +344,22 @@ class Piwik_Period_Range extends Piwik_Period
 			$startDate = $endOfPeriod->addDay(1);
 		}
 	}
-	
-	function fillArraySubPeriods($startDate, $endDate, $period)
+
+	/**
+	 * Adds new subperiods
+	 *
+	 * @param Piwik_Date  $startDate
+	 * @param Piwik_Date  $endDate
+	 * @param string      $period
+	 */
+	protected function fillArraySubPeriods($startDate, $endDate, $period)
 	{
 		$arrayPeriods= array();
 		$endSubperiod = Piwik_Period::factory($period, $endDate);
 		$arrayPeriods[] = $endSubperiod;
+		
+		// set end date to start of end period since we're comparing against start date.
+		$endDate = $endSubperiod->getDateStart();
 		while($endDate->isLater($startDate) )
 		{
 			$endDate = self::removePeriod($period, $endDate, 1);
@@ -315,19 +371,5 @@ class Piwik_Period_Range extends Piwik_Period
 		{
 			$this->addSubperiod($period);
 		}
-	}
-	
-	function toString($format = "Y-m-d")
-	{
-		if(!$this->subperiodsProcessed)
-		{
-			$this->generate();
-		}
-		$range = array();
-		foreach($this->subperiods as $element)
-		{
-			$range[] = $element->toString($format);
-		}
-		return $range;
 	}
 }

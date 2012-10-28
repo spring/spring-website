@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ColumnCallbackAddColumnPercentage.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: ColumnCallbackAddColumnPercentage.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -27,6 +27,13 @@
  */
 class Piwik_DataTable_Filter_ColumnCallbackAddColumnPercentage extends Piwik_DataTable_Filter_ColumnCallbackAddColumnQuotient
 {
+	/**
+	 * Formats the given value
+	 *
+	 * @param number  $value
+	 * @param number  $divisor
+	 * @return string
+	 */
 	protected function formatValue($value, $divisor)
 	{
 		return Piwik::getPercentageSafe($value, $divisor, $this->quotientPrecision) . '%';

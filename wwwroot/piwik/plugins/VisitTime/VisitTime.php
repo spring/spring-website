@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: VisitTime.php 5296 2011-10-14 02:52:44Z matt $
+ * @version $Id: VisitTime.php 6679 2012-08-05 22:13:23Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_VisitTime
@@ -41,6 +41,9 @@ class Piwik_VisitTime extends Piwik_Plugin
 		return $hooks;
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getReportMetadata($notification)
 	{
 		$reports = &$notification->getNotificationObject();
@@ -65,12 +68,24 @@ class Piwik_VisitTime extends Piwik_Plugin
 			'constantRowsCount' => true,
 			'order' => 15,
 		);
+		
+		$reports[] = array(
+			'category' => Piwik_Translate('VisitsSummary_VisitsSummary'),
+			'name' => Piwik_Translate('VisitTime_VisitsByDayOfWeek'),
+			'module' => 'VisitTime',
+			'action' => 'getByDayOfWeek',
+			'dimension' => Piwik_Translate('VisitTime_DayOfWeek'),
+			'documentation' => Piwik_Translate('VisitTime_WidgetByDayOfWeekDocumentation'),
+			'constantRowsCount' => true,
+			'order' => 25,
+		);
 	}
 	
 	function addWidgets()
 	{
 		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitTime_WidgetLocalTime', 'VisitTime', 'getVisitInformationPerLocalTime');
 		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitTime_WidgetServerTime', 'VisitTime', 'getVisitInformationPerServerTime');
+		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitTime_VisitsByDayOfWeek', 'VisitTime', 'getByDayOfWeek');
 	}
 	
 	function addMenu()
@@ -78,6 +93,9 @@ class Piwik_VisitTime extends Piwik_Plugin
 		Piwik_AddMenu('General_Visitors', 'VisitTime_SubmenuTimes', array('module' => 'VisitTime', 'action' => 'index'));
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getReportsWithGoalMetrics( $notification )
 	{
 		$dimensions =& $notification->getNotificationObject();
@@ -87,7 +105,10 @@ class Piwik_VisitTime extends Piwik_Plugin
                 			'action' => 'getVisitInformationPerServerTime',
     	);
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getSegmentsMetadata($notification)
 	{
 		$segments =& $notification->getNotificationObject();
@@ -109,7 +130,11 @@ class Piwik_VisitTime extends Piwik_Plugin
        			'acceptedValues' => $acceptedValues
        );
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 * @return mixed
+	 */
 	function archivePeriod( $notification )
 	{
 		$archiveProcessing = $notification->getNotificationObject();
@@ -122,7 +147,11 @@ class Piwik_VisitTime extends Piwik_Plugin
 		);
 		$archiveProcessing->archiveDataTable($dataTableToSum);
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 * @return mixed
+	 */
 	public function archiveDay( $notification )
 	{
 		$archiveProcessing = $notification->getNotificationObject();
@@ -141,7 +170,6 @@ class Piwik_VisitTime extends Piwik_Plugin
 		
 		$labelSQL = "HOUR(log_visit.visit_last_action_time)";
 		$this->interestByServerTime = $archiveProcessing->getArrayInterestForLabel($labelSQL);
-		$this->interestByServerTime = $this->convertServerTimeToLocalTimezone($this->interestByServerTime, $archiveProcessing);
 	}
 	
 	protected function convertServerTimeToLocalTimezone($interestByServerTime, $archiveProcessing)
@@ -160,7 +188,7 @@ class Piwik_VisitTime extends Piwik_Plugin
 	
 	protected function archiveDayAggregateGoals($archiveProcessing)
 	{
-		$query = $archiveProcessing->queryConversionsByDimension("HOUR(server_time)");
+		$query = $archiveProcessing->queryConversionsByDimension("HOUR(log_conversion.server_time)");
 		
 		if($query === false) return;
 		
@@ -181,6 +209,7 @@ class Piwik_VisitTime extends Piwik_Plugin
 		$archiveProcessing->insertBlobRecord('VisitTime_localTime', $tableLocalTime->getSerialized());
 		destroy($tableLocalTime);
 		
+		$this->interestByServerTime = $this->convertServerTimeToLocalTimezone($this->interestByServerTime, $archiveProcessing);
 		$tableServerTime = $archiveProcessing->getDataTableFromArray($this->interestByServerTime);
 		$this->makeSureAllHoursAreSet($tableServerTime, $archiveProcessing);
 		$archiveProcessing->insertBlobRecord('VisitTime_serverTime', $tableServerTime->getSerialized());

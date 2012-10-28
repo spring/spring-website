@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: GoalManager.php 5266 2011-10-04 10:38:36Z matt $
+ * @version $Id: GoalManager.php 7190 2012-10-15 07:41:12Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -54,7 +54,7 @@ class Piwik_Tracker_GoalManager
 		$this->requestIsEcommerce = ($this->idGoal == 0);
 	}
 
-	function getBuyerType($existingType = self::TYPE_BUYER_NONE)
+	function getBuyerType($existingType = Piwik_Tracker_GoalManager::TYPE_BUYER_NONE)
 	{
 		// Was there a Cart for this visit prior to the order?
 		$this->isThereExistingCartInVisit = in_array($existingType, 
@@ -114,9 +114,10 @@ class Piwik_Tracker_GoalManager
 
 	/**
 	 * Look at the URL or Page Title and sees if it matches any existing Goal definition
-	 * 
+	 *
 	 * @param int $idSite
 	 * @param Piwik_Tracker_Action $action
+	 * @throws Exception
 	 * @return int Number of goals matched
 	 */
 	function detectGoalsMatchingUrl($idSite, $action)
@@ -224,19 +225,24 @@ class Piwik_Tracker_GoalManager
 
 	/**
 	 * Records one or several goals matched in this request.
+	 * @param int $idSite
+	 * @param array $visitorInformation
+	 * @param array $visitCustomVariables
+	 * @param string $action
+	 * @param $referrerTimestamp
+	 * @param string $referrerUrl
+	 * @param string $referrerCampaignName
+	 * @param string $referrerCampaignKeyword
 	 */
-	public function recordGoals($idSite, $visitorInformation, $visitCustomVariables, $action, $referrerTimestamp, $referrerUrl, $referrerCampaignName, $referrerCampaignKeyword)
+	public function recordGoals($idSite, $visitorInformation, $visitCustomVariables, $action, $referrerTimestamp, $referrerUrl, $referrerCampaignName, $referrerCampaignKeyword, $browserLanguage)
 	{
 		$location_country = isset($visitorInformation['location_country']) 
 							? $visitorInformation['location_country'] 
 							: Piwik_Common::getCountry( 
-										Piwik_Common::getBrowserLanguage(), 
-										$enableLanguageToCountryGuess = Piwik_Tracker_Config::getInstance()->Tracker['enable_language_to_country_guess'], $visitorInformation['location_ip'] 
+									$browserLanguage, 
+									$enableLanguageToCountryGuess = Piwik_Config::getInstance()->Tracker['enable_language_to_country_guess'],
+									$visitorInformation['location_ip'] 
 							);
-							
-		$location_continent = isset($visitorInformation['location_continent']) 
-								? $visitorInformation['location_continent'] 
-								: Piwik_Common::getContinent($location_country);
 
 		$goal = array(
 			'idvisit' 			=> $visitorInformation['idvisit'],
@@ -244,21 +250,31 @@ class Piwik_Tracker_GoalManager
 			'idvisitor' 		=> $visitorInformation['idvisitor'],
 			'server_time' 		=> Piwik_Tracker::getDatetimeFromTimestamp($visitorInformation['visit_last_action_time']),
 			'location_country'  => $location_country,
-			'location_continent'=> $location_continent,
 			'visitor_returning' => $visitorInformation['visitor_returning'],
 			'visitor_days_since_first' => $visitorInformation['visitor_days_since_first'],
 			'visitor_days_since_order' => $visitorInformation['visitor_days_since_order'],
 			'visitor_count_visits' => $visitorInformation['visitor_count_visits'],
 		);
-
+		
+		$extraLocationCols = array('location_region', 'location_city', 'location_latitude', 'location_longitude');
+		foreach ($extraLocationCols as $col)
+		{
+			if (isset($visitorInformation[$col]))
+			{
+				$goal[$col] = $visitorInformation[$col];
+			}
+		}
+		
 		// Copy Custom Variables from Visit row to the Goal conversion
 		for($i=1; $i<=Piwik_Tracker::MAX_CUSTOM_VARIABLES; $i++) 
 		{
-			if(!empty($visitorInformation['custom_var_k'.$i]))
+			if(isset($visitorInformation['custom_var_k'.$i])
+			    && strlen($visitorInformation['custom_var_k'.$i]))
 			{
 				$goal['custom_var_k'.$i] = $visitorInformation['custom_var_k'.$i];
 			}
-			if(!empty($visitorInformation['custom_var_v'.$i]))
+			if(isset($visitorInformation['custom_var_v'.$i])
+			    && strlen($visitorInformation['custom_var_v'.$i]))
 			{
 				$goal['custom_var_v'.$i] = $visitorInformation['custom_var_v'.$i];
 			}
@@ -268,6 +284,7 @@ class Piwik_Tracker_GoalManager
 			
 		// Attributing the correct Referrer to this conversion. 
 		// Priority order is as follows:
+		// 0) In some cases, the campaign is not passed from the JS so we look it up from the current visit
 		// 1) Campaign name/kwd parsed in the JS
 		// 2) Referrer URL stored in the _ref cookie
 		// 3) If no info from the cookie, attribute to the current visit referrer
@@ -278,8 +295,17 @@ class Piwik_Tracker_GoalManager
         $keyword = $visitorInformation['referer_keyword'];
         $time = $visitorInformation['visit_first_action_time'];
         
+        // 0) In some (unknown!?) cases the campaign is not found in the attribution cookie, but the URL ref was found.
+		//    In this case we look up if the current visit is credited to a campaign and will credit this campaign rather than the URL ref (since campaigns have higher priority)
+		if(empty($refererCampaignName)
+			&& $type == Piwik_Common::REFERER_TYPE_CAMPAIGN
+			&& !empty($name)
+		)
+		{
+			// Use default values per above
+		}
         // 1) Campaigns from 1st party cookie
-		if(!empty($referrerCampaignName))
+		elseif(!empty($referrerCampaignName))
 		{
 			$type = Piwik_Common::REFERER_TYPE_CAMPAIGN;
 			$name = $referrerCampaignName;
@@ -416,7 +442,7 @@ class Piwik_Tracker_GoalManager
 			// we still record an Ecommerce order without any item in it
 			return array();
 		}
-		$items = json_decode($items, $assoc = true);
+		$items = Piwik_Common::json_decode($items, $assoc = true);
 		if(!is_array($items))
 		{
 			printDebug("Error while json_decode the Ecommerce items = ".var_export($items, true));
@@ -426,12 +452,14 @@ class Piwik_Tracker_GoalManager
 		$cleanedItems = $this->getCleanedEcommerceItems($items);
 		return $cleanedItems;
 	}
-	
+
 	/**
 	 * Loads the Ecommerce items from the request and records them in the DB
-	 * 
+	 *
 	 * @param array $goal
-	 * @return int $items Number of items in the cart
+	 * @param array $items
+	 * @throws Exception
+	 * @return int Number of items in the cart
 	 */
 	protected function recordEcommerceItems($goal, $items)
 	{
@@ -566,7 +594,7 @@ class Piwik_Tracker_GoalManager
 				$category = $item[self::INDEX_ITEM_CATEGORY];
 			} 	
 			
-			if(!empty($item[self::INDEX_ITEM_PRICE]) 
+			if(isset($item[self::INDEX_ITEM_PRICE]) 
 				&& is_numeric($item[self::INDEX_ITEM_PRICE])) { 
 					$price = $this->getRevenue($item[self::INDEX_ITEM_PRICE]); 
 			}
@@ -652,10 +680,13 @@ class Piwik_Tracker_GoalManager
 		}
 		return $cleanedItems;
 	}
-	
+
 	/**
-	 * Updates the cart items in the DB 
+	 * Updates the cart items in the DB
 	 * that have been modified since the last cart update
+	 * @param $goal
+	 * @param array $itemsToUpdate
+	 * @return
 	 */
 	protected function updateEcommerceItems($goal, $itemsToUpdate)
 	{
@@ -687,10 +718,13 @@ class Piwik_Tracker_GoalManager
 			Piwik_Tracker::getDatabase()->query($sql, $sqlBind);
 		}
 	}
-	
+
 	/**
-	 * Inserts in the cart in the DB the new items 
+	 * Inserts in the cart in the DB the new items
 	 * that were not previously in the cart
+	 * @param $goal
+	 * @param array $itemsToInsert
+	 * @return
 	 */
 	protected function insertEcommerceItems($goal, $itemsToInsert)
 	{
@@ -740,9 +774,13 @@ class Piwik_Tracker_GoalManager
 		);
 		return $newRow;
 	}
+
 	/**
-	 * Records a standard non-Ecommerce goal in the DB (URL/Title matching), 
+	 * Records a standard non-Ecommerce goal in the DB (URL/Title matching),
 	 * linking the conversion to the action that triggered it
+	 * @param $goal
+	 * @param Piwik_Tracker_Action $action
+	 * @param $visitorInformation
 	 */
 	protected function recordStandardGoals($goal, $action, $visitorInformation)
 	{
@@ -756,7 +794,7 @@ class Piwik_Tracker_GoalManager
 			
 			if(!is_null($action))
 			{
-				$newGoal['idaction_url'] = (int)$action->getIdActionUrl();
+				$newGoal['idaction_url'] = $action->getIdActionUrl();
 				$newGoal['idlink_va'] = $action->getIdLinkVisitAction();
 			}
 
@@ -774,6 +812,7 @@ class Piwik_Tracker_GoalManager
 	 * @param array $newGoal
 	 * @param bool $mustUpdateNotInsert If set to true, the previous conversion will be UPDATEd. This is used for the Cart Update conversion (only one cart per visit)
 	 * @param array $updateWhere
+	 * @return bool
 	 */
 	protected function recordGoal($newGoal, $mustUpdateNotInsert = false, $updateWhere = array())
 	{
@@ -814,9 +853,11 @@ class Piwik_Tracker_GoalManager
 			return Piwik_Tracker::getDatabase()->rowCount($result) > 0;
 		}
 	}
-	
+
 	/**
 	 * Casts the item array so that array comparisons work nicely
+	 * @param array $row
+	 * @return array
 	 */
 	protected function getItemRowCast($row)
 	{			

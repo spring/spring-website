@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Goals.php 5236 2011-09-27 08:09:10Z matt $
+ * @version $Id: Goals.php 6398 2012-05-30 09:03:12Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -24,7 +24,7 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 	public function main()
 	{
 		$this->idSite = Piwik_Common::getRequestVar('idSite', null, 'int');
-		$this->processOnlyIdGoal = Piwik_Common::getRequestVar('filter_only_display_idgoal', 0, 'string');
+		$this->processOnlyIdGoal = Piwik_Common::getRequestVar('idGoal', 0, 'string');
 		$this->isEcommerce = $this->processOnlyIdGoal == Piwik_Archive::LABEL_ECOMMERCE_ORDER;
 		$this->viewProperties['show_exclude_low_population'] = true;
 		$this->viewProperties['show_goals'] = true;
@@ -36,7 +36,6 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 		
 		
 		$this->setMetricDocumentation('nb_visits', Piwik_Translate('Goals_ColumnVisits'));
-		
 		if($this->isEcommerce)
 		{
 			$this->setMetricDocumentation('revenue_per_visit', Piwik_Translate('Goals_ColumnRevenuePerVisitDocumentation', Piwik_Translate('General_EcommerceOrders') ));
@@ -58,6 +57,9 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 				'goal_%s_items',
 				'goal_%s_revenue_per_visit',
 			));
+			
+			// Default sort column
+			$this->setSortedColumn('goal_ecommerceOrder_revenue', 'desc');
 		}
 		else
 		{
@@ -65,6 +67,7 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 			$this->setColumnsTranslations( array(
 				'goal_%s_conversion_rate' => Piwik_Translate('Goals_ConversionRate'),
 				'goal_%s_nb_conversions' => Piwik_Translate('Goals_Conversions'),
+				'goal_%s_revenue' => '%s ' . Piwik_Translate('Goals_ColumnRevenue'),
 				'goal_%s_revenue_per_visit' => '%s ' . Piwik_Translate('General_ColumnValuePerVisit'),
 			
 				'nb_conversions' => Piwik_Translate('Goals_ColumnConversions'),
@@ -77,26 +80,21 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 				'nb_visits',
 				'goal_%s_nb_conversions',
 				'goal_%s_conversion_rate',
+				'goal_%s_revenue',
 				'goal_%s_revenue_per_visit',
 				'revenue_per_visit',
 			));
+			
+			// Default sort column
+			$columnsToDisplay = $this->getColumnsToDisplay();
+			$columnNbConversionsCurrentGoal = $columnsToDisplay[2];
+			if($this->processOnlyIdGoal > 0
+				&& strpos($columnNbConversionsCurrentGoal, '_nb_conversions') !== false)
+			{
+				$this->setSortedColumn($columnNbConversionsCurrentGoal, 'desc');
+			}
 		}
 		
-		// We ensure that the 'Sort by' column is actually displayed in the table
-		// eg. most daily reports sort by nb_uniq_visitors but this column is not displayed in the Goals table
-		$columnsToDisplay = $this->getColumnsToDisplay();
-		$columnToSortBy = $this->getSortedColumn();
-		if(!in_array($columnToSortBy, $columnsToDisplay))
-		{
-			$this->setSortedColumn('nb_visits', 'desc');
-		}
-		
-		$columnNbConversionsCurrentGoal = $columnsToDisplay[2];
-		if($this->processOnlyIdGoal > 0
-			&& strpos($columnNbConversionsCurrentGoal, '_nb_conversions') !== false)
-		{
-			$this->setSortedColumn($columnNbConversionsCurrentGoal, 'desc');
-		}
 		parent::main();
 	}
 	
@@ -114,10 +112,11 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 		{
 			$goals = Piwik_Goals_API::getInstance()->getGoals( $idSite );
 			
-			$ecommerceGoal = 	array(	
-							'idgoal' => Piwik_Archive::LABEL_ECOMMERCE_ORDER, 
-							'name' => Piwik_Translate('Goals_EcommerceOrder')
-					);
+			$ecommerceGoal = array(	
+				'idgoal' => Piwik_Archive::LABEL_ECOMMERCE_ORDER, 
+				'name' => Piwik_Translate('Goals_EcommerceOrder')
+			);
+			
 			$site = new Piwik_Site($idSite);
 			//Case Ecommerce report table 
 			if($this->isEcommerce)
@@ -183,8 +182,14 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 		}
 		parent::setColumnsToDisplay($newColumnsNames);
 	}
-	
-	/** Find the appropriate metric documentation for a goal column */
+
+	/**
+	 * Find the appropriate metric documentation for a goal column
+	 * @param string $genericMetricName
+	 * @param string $metricName
+	 * @param string $goalName
+	 * @param int $idGoal
+	 */
 	private function setDynamicMetricDocumentation($genericMetricName, $metricName, $goalName, $idGoal)
 	{
 		if($idGoal == Piwik_Archive::LABEL_ECOMMERCE_ORDER)
@@ -233,7 +238,7 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 			|| $this->isEcommerce
 			)
 		{
-			$requestString .= "&filter_only_display_idgoal=".$this->processOnlyIdGoal;
+			$requestString .= "&idGoal=".$this->processOnlyIdGoal;
 		}
 		return $requestString . '&filter_update_columns_when_show_all_goals=1';
 	}
@@ -271,5 +276,6 @@ class Piwik_ViewDataTable_HtmlTable_Goals extends Piwik_ViewDataTable_HtmlTable
 			// this ensures that the value is set to zero for all rows where the value was not set (no conversion)
     		$this->dataTable->filter('ColumnCallbackReplace', array($columnName, create_function('$value', 'return $value;')));
 		}
+		return true;
 	}
 }

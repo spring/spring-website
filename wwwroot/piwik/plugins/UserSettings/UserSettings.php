@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: UserSettings.php 5138 2011-09-07 15:25:57Z EZdesign $
+ * @version $Id: UserSettings.php 6848 2012-08-20 23:18:38Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_UserSettings
@@ -33,7 +33,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 		'ie'     => 'Trident (IE)',
 		'gecko'  => 'Gecko (Firefox)',
 		'khtml'  => 'KHTML (Konqueror)',
-		'webkit' => 'WebKit (Safari)',
+		'webkit' => 'WebKit (Safari, Chrome)',
 		'opera'  => 'Presto (Opera)',
 	);
 
@@ -53,7 +53,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 				'resolution',
 				'log_visit.config_resolution',
 				'1280x1024, 800x600, etc.',
-				),
+				null,),
 		
 		array( 	'UserSettings_VisitorSettings',
 				'UserSettings_WidgetBrowsers',
@@ -62,36 +62,49 @@ class Piwik_UserSettings extends Piwik_Plugin
 				'UserSettings_ColumnBrowser',
 				'browserName',
 				'log_visit.config_browser_name',
-				'FF, IE, CH, SF, OP, etc.',),
+				'FF, IE, CH, SF, OP, etc.',
+				null,),
 		
-		// Only used as a Segment, not as a widget
-		array( 	false,
-				false,
+		// browser version
+		array( 	'UserSettings_VisitorSettings',
+				'UserSettings_WidgetBrowserVersion',
 				'UserSettings',
-				'getBrowser',
+				'getBrowserVersion',
 				'UserSettings_ColumnBrowserVersion',
 				'browserVersion',
 				'log_visit.config_browser_version',
-				'1.0, 8.0, etc.',),
+				'1.0, 8.0, etc.',
+				null,),
 		
 		array( 'UserSettings_VisitorSettings',
 				'UserSettings_WidgetBrowserFamilies',
 				'UserSettings',
 				'getBrowserType',
-				'UserSettings_ColumnBrowserFamily'),
+				'UserSettings_ColumnBrowserFamily',
+				null,
+				null,
+				null,
+				null,),
 
 		array( 	'UserSettings_VisitorSettings',
     			'UserSettings_WidgetPlugins',
     			'UserSettings',
     			'getPlugin',
     			'UserSettings_ColumnPlugin',
-		),
+    			null,
+    			null,
+    			null,
+    			null,),
 		
 		array( 	'UserSettings_VisitorSettings',
 				'UserSettings_WidgetWidescreen',
 				'UserSettings',
 				'getWideScreen',
-				'UserSettings_ColumnTypeOfScreen'),
+				'UserSettings_ColumnTypeOfScreen',
+				null,
+				null,
+				null,
+				null,),
 		
 		array( 'UserSettings_VisitorSettings',
 				'UserSettings_WidgetOperatingSystems',
@@ -100,13 +113,40 @@ class Piwik_UserSettings extends Piwik_Plugin
 				'UserSettings_ColumnOperatingSystem',
 				'operatingSystem',
 				'log_visit.config_os',
-				'WXP, WI7, MAC, LIN, AND, IPD, etc.'),
+				'WXP, WI7, MAC, LIN, AND, IPD, etc.',
+				null,),
 		
 		array( 	'UserSettings_VisitorSettings',
 				'UserSettings_WidgetGlobalVisitors',
 				'UserSettings',
 				'getConfiguration',
-				'UserSettings_ColumnConfiguration'),
+				'UserSettings_ColumnConfiguration',
+				null,
+				null,
+				null,
+				null),
+		
+		// operating system family
+		array(	'UserSettings_VisitorSettings',
+				'UserSettings_WidgetOperatingSystemFamily',
+				'UserSettings',
+				'getOSFamily',
+				'UserSettings_OperatingSystemFamily',
+				null,
+				null,
+				null,
+				null),
+		
+		// device type
+		array(	'UserSettings_VisitorSettings',
+				'UserSettings_MobileVsDesktop',
+				'UserSettings',
+				'getMobileVsDesktop',
+				'UserSettings_MobileVsDesktop',
+				null,
+				null,
+				null,
+				null),
 	);
 	
 	/*
@@ -128,7 +168,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 	/*
 	 * Registers reports metadata
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	public function getReportMetadata($notification)
 	{
@@ -174,7 +214,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 	/**
 	 * Get segments meta data
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	public function getSegmentsMetadata($notification)
 	{
@@ -222,13 +262,13 @@ class Piwik_UserSettings extends Piwik_Plugin
 	 * by Browser, Browser family, etc. Some reports are built from the logs, some reports
 	 * are superset of an existing report (eg. Browser family is built from the Browser report)
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	function archiveDay( $notification )
 	{
 		require_once PIWIK_INCLUDE_PATH . '/plugins/UserSettings/functions.php';
-		$maximumRowsInDataTable = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_standard;
+		$maximumRowsInDataTable = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 		$columnToSortByBeforeTruncation = Piwik_Archive::INDEX_NB_VISITS;
 		
 		$archiveProcessing = $notification->getNotificationObject();
@@ -286,7 +326,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 	/**
 	 * Period archiving: simply sums up daily archives
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	function archivePeriod( $notification )
@@ -295,7 +335,7 @@ class Piwik_UserSettings extends Piwik_Plugin
 		
 		if(!$archiveProcessing->shouldProcessReportsForPlugin($this->getPluginName())) return;
 		
-		$maximumRowsInDataTable = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_standard;
+		$maximumRowsInDataTable = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_standard'];
 		
 		$dataTableToSum = array(
 				'UserSettings_configuration',

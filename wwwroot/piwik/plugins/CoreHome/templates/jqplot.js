@@ -8,24 +8,25 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-var jqPlotTooltip = false;
 
 /**
  * Constructor function
  * @param the data that would be passed to open flash chart
  */
-function JQPlot(data) {
-	this.init(data);
+function JQPlot(data, dataTableId) {
+	this.init(data, dataTableId);
 }
 
 JQPlot.prototype = {
 
 	/** Generic init function */
-	init: function(data) {
+	init: function(data, dataTableId) {
+		this.dataTableId = dataTableId;
 		this.originalData = data;
 		this.params = data.params;
 		this.data = data.data;
 		this.tooltip = data.tooltip;
+		this.seriesPicker = data.seriesPicker;
 		
 		this.params.grid = {
 			drawGridLines: false,
@@ -64,13 +65,13 @@ JQPlot.prototype = {
 		// preapare the appropriate chart type
 		switch (type) {
 			case 'evolution':
-				this.prepareEvolutionChart(targetDivId);
+				this.prepareEvolutionChart(targetDivId, lang);
 				break;
 			case 'bar':
-				this.prepareBarChart();
+				this.prepareBarChart(targetDivId, lang);
 				break;
 			case 'pie':
-				this.preparePieChart();
+				this.preparePieChart(targetDivId, lang);
 				break;
 			default:
 				return;
@@ -80,8 +81,9 @@ JQPlot.prototype = {
 		// this has be bound before the check for an empty graph.
 		// otherwise clicking on sparklines won't work anymore after an empty
 		// report has been displayed.
+		var self = this;
 		var target = $('#' + targetDivId)
-		.bind('replot', function(e, data) {
+		.on('replot', function(e, data) {
 			target.trigger('piwikDestroyPlot');
 			if (target.data('oldHeight') > 0) {
 				// handle replot after empty report
@@ -89,8 +91,47 @@ JQPlot.prototype = {
 				target.data('oldHeight', 0);
 				this.innerHTML = '';
 			}
-			
-			(new JQPlot(data)).render(type, targetDivId, lang);
+
+			(new JQPlot(data, self.dataTableId)).render(type, targetDivId, lang);
+		});
+		
+		// show loading
+		target.bind('showLoading', function() {
+			var loading = $(document.createElement('div')).addClass('jqplot-loading');
+			loading.css({
+				width: target.innerWidth()+'px',
+				height: target.innerHeight()+'px',
+				opacity: 0
+			});
+			target.prepend(loading);
+			loading.css({opacity: .7});
+		});
+		
+		// change series
+		target.bind('changeColumns', function(e, columns) {
+			target.trigger('changeSeries', [columns, []]);
+		});
+		target.bind('changeSeries', function(e, columns, rows) {
+			target.trigger('showLoading');
+			if (typeof columns == 'string') {
+				columns = columns.split(',');
+			}
+			if (typeof rows == 'undefined') {
+				rows = [];
+			}
+			else if (typeof rows == 'string') {
+				rows = rows.split(',');
+			}
+			var dataTable = dataTables[self.dataTableId];
+			dataTable.param.columns = columns.join(',');
+			dataTable.param.rows = rows.join(',');
+			delete dataTable.param.filter_limit;
+			delete dataTable.param.totalRows;
+			if( dataTable.param.filter_sort_column != 'label' ) {
+				dataTable.param.filter_sort_column = columns[0];
+			}
+			dataTable.param.disable_generic_filters = '0';
+			dataTable.reloadAjaxDataTable(false);
 		});
 		
 		// this case happens when there is no data for a line chart
@@ -113,14 +154,14 @@ JQPlot.prototype = {
 		
 		// bind tooltip
 		var self = this;
-		target.bind('jqplotDataHighlight', function(e, s, i, d) {
+		target.on('jqplotDataHighlight', function(e, s, i, d) {
 			if (type == 'bar') {
-				self.showBarChartTooltip(i);
+				self.showBarChartTooltip(s, i);
 			} else if (type == 'pie') {
 				self.showPieChartTooltip(i);
 			}
 		})
-		.bind('jqplotDataUnhighlight', function(e, s, i, d){
+		.on('jqplotDataUnhighlight', function(e, s, i, d){
 			if (type != 'evolution') {
 				self.hideTooltip();
 			}
@@ -129,43 +170,45 @@ JQPlot.prototype = {
 		// handle window resize
 		var plotWidth = target.innerWidth();
 		var timeout = false;
-		var resize = function() {
+		target.on('resizeGraph', function() {
 			var width = target.innerWidth();
 			if (width > 0 && Math.abs(plotWidth - width) >= 5) {
 				plotWidth = width;
 				target.trigger('piwikDestroyPlot');
-				(new JQPlot(self.originalData))
+				(new JQPlot(self.originalData, self.dataTableId))
 						.render(type, targetDivId, lang);
 			}
-		};
+		});
 		var resizeListener = function() {
 			if (timeout) {
 				window.clearTimeout(timeout);
 			}
-			timeout = window.setTimeout(resize, 300);
+			timeout = window.setTimeout(function() {
+				target.trigger('resizeGraph');
+			}, 300);
 		};
-		$(window).bind('resize', resizeListener);
+		$(window).on('resize', resizeListener);
 		
 		// export as image
-		target.bind('piwikExportAsImage', function(e) {
+		target.on('piwikExportAsImage', function(e) {
 			self.exportAsImage(target, lang);
 		});
 		
 		// manage resources
-		target.bind('piwikDestroyPlot', function() {
-			$(window).unbind('resize', resizeListener);
+		target.on('piwikDestroyPlot', function() {
+			$(window).off('resize', resizeListener);
 			plot.destroy();
 			for (var i = 0; i < $.jqplot.visiblePlots.length; i++) {
 				if ($.jqplot.visiblePlots[i] == plot) {
 					$.jqplot.visiblePlots[i] = null;
 				}
 			}
-			$(this).unbind();
+			$(this).off();
 		});
 		
 		if (typeof $.jqplot.visiblePlots == 'undefined') {
 			$.jqplot.visiblePlots = [];
-			$('ul.nav').bind('piwikSwitchPage', function() {
+			$('ul.nav').on('piwikSwitchPage', function() {
 				for (var i = 0; i < $.jqplot.visiblePlots.length; i++) {
 					if ($.jqplot.visiblePlots[i] == null) {
 						continue;
@@ -235,7 +278,10 @@ JQPlot.prototype = {
 	//  EVOLTION CHART
 	// ------------------------------------------------------------
 	
-	prepareEvolutionChart: function(targetDivId) {
+	prepareEvolutionChart: function(targetDivId, lang) {
+		this.setYTicks();
+		this.addSeriesPicker(targetDivId, lang);
+
 		this.params.axes.xaxis.pad = 1.0;
 		this.params.axes.xaxis.renderer = $.jqplot.CategoryAxisRenderer;
 		this.params.axes.xaxis.tickOptions = {
@@ -261,18 +307,18 @@ JQPlot.prototype = {
 		var lastTick = false;
 		
 		$('#' + targetDivId)
-		.bind('jqplotMouseLeave', function(e, s, i, d){
+		.on('jqplotMouseLeave', function(e, s, i, d){
 			self.hideTooltip();
 			$(this).css('cursor', 'default');
 		})
-		.bind('jqplotClick', function(e, s, i, d){
+		.on('jqplotClick', function(e, s, i, d){
 			if (lastTick !== false && typeof self.params.axes.xaxis.onclick != 'undefined'
 					&& typeof self.params.axes.xaxis.onclick[lastTick] == 'string') {
 				var url = self.params.axes.xaxis.onclick[lastTick];
 				piwikHelper.redirectToUrl(url);
 			}
 		})
-		.bind('jqplotPiwikTickOver', function(e, tick){
+		.on('jqplotPiwikTickOver', function(e, tick){
 			lastTick = tick;
 			self.showEvolutionChartTooltip(tick);
 			if (typeof self.params.axes.xaxis.onclick != 'undefined'
@@ -299,7 +345,7 @@ JQPlot.prototype = {
 		
 		var text = [];
 		for (var d = 0; d < this.data.length; d++) {
-			var value = this.formatY(this.data[d][i]);
+			var value = this.formatY(this.data[d][i], d);
 			var series = this.params.series[d].label;
 			text.push('<b>' + value + '</b> ' + series);
 		}
@@ -312,7 +358,9 @@ JQPlot.prototype = {
 	//  PIE CHART
 	// ------------------------------------------------------------
 	
-	preparePieChart: function() {
+	preparePieChart: function(targetDivId, lang) {
+		this.addSeriesPicker(targetDivId, lang);
+		
 		this.params.seriesDefaults = {
 			renderer: $.jqplot.PieRenderer,
 			rendererOptions: {
@@ -335,19 +383,26 @@ JQPlot.prototype = {
 		this.params.pieLegend = {
 			show: true
 		};
+		this.params.canvasLegend = {
+			show: true,
+			singleMetric: true
+		};
 		
 		// pie charts have a different data format
-		for (var i = 0; i < this.data[0].length; i++) {
-			this.data[0][i] = [this.params.axes.xaxis.ticks[i], this.data[0][i]];
+		if (!(this.data[0][0] instanceof Array)) { // check if already in different format
+			for (var i = 0; i < this.data[0].length; i++) {
+				this.data[0][i] = [this.params.axes.xaxis.ticks[i], this.data[0][i]];
+			}
 		}
 	},
 	
 	showPieChartTooltip: function(i) {
-		var value = this.formatY(this.data[0][i][1]);
+		var value = this.formatY(this.data[0][i][1], 1); // series index 1 because 0 is the label
 		var series = this.params.series[0].label;
 		var percentage = this.tooltip.percentages[0][i];
 		
 		var label = this.data[0][i][0];
+		
 		var text = '<b>' + percentage + '%</b> (' + value + ' ' + series + ')';
 		this.showTooltip(label, text);
 	},
@@ -357,7 +412,10 @@ JQPlot.prototype = {
 	//  BAR CHART
 	// ------------------------------------------------------------
 	
-	prepareBarChart: function() {
+	prepareBarChart: function(targetDivId, lang) {
+		this.setYTicks();
+		this.addSeriesPicker(targetDivId, lang);
+				
 		this.params.seriesDefaults = {
 			renderer: $.jqplot.BarRenderer,
 			rendererOptions: {
@@ -385,13 +443,13 @@ JQPlot.prototype = {
 		};
 	},
 	
-	showBarChartTooltip: function(i) {
-		var value = this.formatY(this.data[0][i]);
-		var series = this.params.series[0].label;
+	showBarChartTooltip: function(s, i) {
+		var value = this.formatY(this.data[s][i], s);
+		var series = this.params.series[s].label;
 		
 		var percentage = '';
 		if (typeof this.tooltip.percentages != 'undefined') {
-			var percentage = this.tooltip.percentages[0][i];
+			var percentage = this.tooltip.percentages[s][i];
 			percentage = ' (' + percentage + '%)'; 
 		}
 		
@@ -405,8 +463,58 @@ JQPlot.prototype = {
 	//  HELPER METHODS
 	// ------------------------------------------------------------
 	
+	/** Generate ticks in y direction */
+	setYTicks: function() {
+		// default axis
+		this.setYTicksForAxis('yaxis', this.params.axes.yaxis);
+		// other axes: y2axis, y3axis...
+		for (var i = 2; typeof this.params.axes['y'+i+'axis'] != 'undefined'; i++) {
+			this.setYTicksForAxis('y'+i+'axis', this.params.axes['y'+i+'axis']);
+		}
+	},
+	
+	setYTicksForAxis: function(axisName, axis) {
+		// calculate maximum x value of all data sets
+		var maxCrossDataSets = 0;
+		for (var i = 0; i < this.data.length; i++) {
+			if (this.params.series[i].yaxis == axisName) {
+				maxValue = Math.max.apply(Math, this.data[i]);
+				if (maxValue > maxCrossDataSets) {
+					maxCrossDataSets = maxValue;
+				}
+				maxCrossDataSets = parseFloat(maxCrossDataSets);
+			}
+		}
+		
+		// add little padding on top
+		maxCrossDataSets += Math.max(1, Math.round(maxCrossDataSets * .03));
+
+		// round to the nearest multiple of ten
+		if (maxCrossDataSets > 15) {
+			maxCrossDataSets = maxCrossDataSets + 10 - maxCrossDataSets % 10;
+		}
+
+		if (maxCrossDataSets == 0) {
+			maxCrossDataSets = 1;
+		}
+		
+		// make sure percent axes don't go above 100%
+		if (axis.tickOptions.formatString.substring(2, 3) == '%' && maxCrossDataSets > 100) {
+			maxCrossDataSets = 100;
+		}
+
+		// calculate y-values for ticks
+		ticks = [];
+		numberOfTicks = 2;
+		tickDistance = Math.ceil(maxCrossDataSets / numberOfTicks);
+		for (var i = 0; i <= numberOfTicks; i++) {
+			ticks.push(i * tickDistance);
+		}
+		axis.ticks = ticks;
+	},
+	
 	/** Get a formatted y values (with unit) */
-	formatY: function(value) {
+	formatY: function(value, seriesIndex) {
 		var floatVal = parseFloat(value);
 		var intVal = parseInt(value, 10);
 		if (Math.abs(floatVal - intVal) >= 0.005) {
@@ -416,9 +524,8 @@ JQPlot.prototype = {
 		} else {
 			value = floatVal;
 		}
-
-		if (typeof this.tooltip.yUnit != 'undefined') {
-			value += this.tooltip.yUnit;
+		if (typeof this.tooltip.yUnits[seriesIndex] != 'undefined') {
+			value += this.tooltip.yUnits[seriesIndex];
 		}
 		
 		return value;
@@ -426,46 +533,205 @@ JQPlot.prototype = {
 	
 	/** Show the tppltip. The DOM element is created on the fly. */
 	showTooltip: function(head, text) {
-		if (jqPlotTooltip === false) {
-			this.initTooltip();
-		}
-		jqPlotTooltip.html('<span class="tip-title">' + head + '</span><br />' + text);
-		jqPlotTooltip.show();
+		Piwik_Tooltip.showWithTitle(head, text);
 	},
 	
 	/** Hide the tooltip */
 	hideTooltip: function() {
-		if (jqPlotTooltip !== false) {
-			jqPlotTooltip.hide();
-		}
+		Piwik_Tooltip.hide();
 	},
 	
-	/** Create and initialize the tooltip */
-	initTooltip: function() {
-		jqPlotTooltip = $(document.createElement('div'));
-		jqPlotTooltip.addClass('jqplot-tooltip');
-		$('body').prepend(jqPlotTooltip);
+	addSeriesPicker: function(targetDivId, lang) {
+		this.params.seriesPicker = {
+			show: typeof this.seriesPicker.selectableColumns == 'object'
+					|| typeof this.seriesPicker.selectableRows == 'object',
+			selectableColumns: this.seriesPicker.selectableColumns,
+			selectableRows: this.seriesPicker.selectableRows,
+			multiSelect: this.seriesPicker.multiSelect,
+			targetDivId: targetDivId,
+			dataTableId: this.dataTableId,
+			lang: lang
+		};
+	},
+
+	/**
+	 * Add an external series toggle.
+	 * As opposed to addSeriesPicker, the external series toggle can only show/hide
+	 * series that are already loaded.
+	 * @param seriesPickerClass a subclass of JQPlotExternalSeriesToggle
+	 */
+	addExternalSeriesToggle: function(seriesPickerClass, targetDivId, initiallyShowAll) {
+		new seriesPickerClass(targetDivId, this.originalData, initiallyShowAll);
 		
-		$(document).mousemove(function(e) {
-			var tipWidth = jqPlotTooltip.outerWidth();
-			var maxX = $('body').innerWidth() - tipWidth - 25;
-			if (e.pageX < maxX) {
-				// tooltip right of mouse
-				jqPlotTooltip.css({
-					top: (e.pageY - 15) + "px",
-					left: (e.pageX + 15) + "px"
-				});
-			}
-			else {
-				// tooltip left of mouse
-				jqPlotTooltip.css({
-					top: (e.pageY - 15) + "px",
-					left: (e.pageX - 15 - tipWidth) + "px"
-				});
-			}
-		});
+		if (!initiallyShowAll) {
+			// initially, show only the first series
+			this.data = [this.data[0]];
+			this.params.series = [this.params.series[0]];
+		}
 	}
 	
+};
+
+
+
+
+// ----------------------------------------------------------------
+//  EXTERNAL SERIES TOGGLE
+//  Use external dom elements and their events to show/hide series
+// ----------------------------------------------------------------
+
+function JQPlotExternalSeriesToggle(targetDivId, originalConfig, initiallyShowAll) {
+	this.init(targetDivId, originalConfig, initiallyShowAll);
+}
+
+JQPlotExternalSeriesToggle.prototype = {
+	
+	init: function(targetDivId, originalConfig, initiallyShowAll) {
+		this.targetDivId = targetDivId;
+		this.originalConfig = originalConfig;
+		this.originalData = originalConfig.data;
+		this.originalSeries = originalConfig.params.series;
+		this.originalAxes = originalConfig.params.axes;
+		this.originalTooltipUnits = originalConfig.tooltip.yUnits;
+		this.originalSeriesColors = originalConfig.params.seriesColors;
+		this.initiallyShowAll = initiallyShowAll;
+		
+		this.activated = [];
+		this.target = $('#'+targetDivId);
+		
+		this.attachEvents();
+	},
+	
+	// can be overridden
+	attachEvents: function() {},
+	
+	// show a single series
+	showSeries: function(i) {
+		for (var j = 0; j < this.activated.length; j++) {
+			this.activated[j] = (i == j);
+		}
+		this.replot();
+	},
+	
+	// toggle a series (make plotting multiple series possible)
+	toggleSeries: function(i) {
+		var activatedCount = 0;
+		for (var k = 0; k < this.activated.length; k++) {
+			if (this.activated[k]) {
+				activatedCount++;
+			}
+		}
+		if (activatedCount == 1 && this.activated[i]) {
+			// prevent removing the only visible metric
+			return;
+		}
+		
+		this.activated[i] = !this.activated[i];
+		this.replot();
+	},
+	
+	replot: function() {
+		this.beforeReplot();
+		
+		// build new config and replot
+		var usedAxes = [];
+		var config = this.originalConfig;
+		config.data = [];
+		config.params.series = [];
+		config.params.axes = {xaxis: this.originalAxes.xaxis};
+		config.tooltip.yUnits = [];
+		config.params.seriesColors = [];
+		for (var j = 0; j < this.activated.length; j++) {
+			if (!this.activated[j]) {
+				continue;
+			}
+			config.data.push(this.originalData[j]);
+			config.tooltip.yUnits.push(this.originalTooltipUnits[j]);
+			config.params.seriesColors.push(this.originalSeriesColors[j]);
+			config.params.series.push($.extend(true, {}, this.originalSeries[j]));
+			// build array of used axes
+			var axis = this.originalSeries[j].yaxis;
+			if ($.inArray(axis, usedAxes) == -1) {
+				usedAxes.push(axis);
+			}
+		}
+		
+		// build new axes config
+		var replaceAxes = {};
+		for (j = 0; j < usedAxes.length; j++) {
+			var originalAxisName = usedAxes[j];
+			var newAxisName = (j == 0 ? 'yaxis' : 'y' + (j+1) + 'axis');
+			replaceAxes[originalAxisName] = newAxisName;
+			config.params.axes[newAxisName] = this.originalAxes[originalAxisName];
+		}
+		
+		// replace axis names in series config
+		for (j = 0; j < config.params.series.length; j++) {
+			var series = config.params.series[j];
+			series.yaxis = replaceAxes[series.yaxis];
+		}
+		
+		this.target.trigger('replot', config);
+	},
+	
+	// can be overridden
+	beforeReplot: function() {}
+
+};
+
+
+// ROW EVOLUTION SERIES TOGGLE
+
+function RowEvolutionSeriesToggle(targetDivId, originalConfig, initiallyShowAll) {
+	this.init(targetDivId, originalConfig, initiallyShowAll);
+}
+
+RowEvolutionSeriesToggle.prototype = JQPlotExternalSeriesToggle.prototype;
+
+RowEvolutionSeriesToggle.prototype.attachEvents = function() {
+	var self = this;
+	this.seriesPickers = this.target.closest('.rowevolution').find('table.metrics tr');
+	
+	this.seriesPickers.each(function(i) {
+		var el = $(this);
+		el.click(function(e) {
+			if (e.shiftKey) {
+				self.toggleSeries(i);
+			} else {
+				self.showSeries(i);
+			}
+			return false;
+		});
+		
+		if (i == 0 || self.initiallyShowAll) {
+			// show the active series
+			// if initiallyShowAll, all are active; otherwise only the first one
+			self.activated.push(true);
+		} else {
+			// fade out the others
+			el.find('td').css('opacity', .5);
+			self.activated.push(false);
+		}
+		
+		// prevent selecting in ie & opera (they don't support doing this via css)
+		if ($.browser.msie) {
+			this.ondrag = function() { return false; };
+			this.onselectstart = function() { return false; };
+		} else if ($.browser.opera) {
+			$(this).attr('unselectable', 'on');
+		}
+	});
+};
+
+RowEvolutionSeriesToggle.prototype.beforeReplot = function() {
+	// fade out if not activated
+	for (var i = 0; i < this.activated.length; i++) {
+		if (this.activated[i]) {
+			this.seriesPickers.eq(i).find('td').css('opacity', 1);
+		} else {
+			this.seriesPickers.eq(i).find('td').css('opacity', .5);
+		}
+	}
 };
 
 
@@ -622,8 +888,11 @@ JQPlot.prototype = {
 	}
 	
 	function unHighlight(plot) {
-		var ctx = plot.plugins.piwikTicks.piwikHighlightCanvas._ctx;
-		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		var canvas = plot.plugins.piwikTicks.piwikHighlightCanvas;
+		if (canvas !== null) {
+			var ctx = canvas._ctx;
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		}
 	}
 	
 })(jQuery);
@@ -640,6 +909,8 @@ JQPlot.prototype = {
 	$.jqplot.CanvasLegendRenderer = function(options) {
 		// canvas for the legend
 		this.legendCanvas = null;
+		// is it a legend for a single metric only (pie chart)?
+		this.singleMetric = false;
 		// render the legend?
 		this.show = false;
 		
@@ -671,8 +942,9 @@ JQPlot.prototype = {
 		}
 		
 		// initialize legend canvas
-		var padding = {top: 0, right: 0, bottom: 0, left: this._gridPadding.left};
+		var padding = {top: 0, right: this._gridPadding.right, bottom: 0, left: this._gridPadding.left};
 		var dimensions = {width: this._plotDimensions.width, height: this._gridPadding.top};
+		var width = this._plotDimensions.width - this._gridPadding.left - this._gridPadding.right;
 		
 		legend.legendCanvas = new $.jqplot.GenericCanvas();
 		this.eventCanvas._elem.before(legend.legendCanvas.createElement(
@@ -696,19 +968,276 @@ JQPlot.prototype = {
 			} 
 			
 			ctx.fillStyle = s.color;
+			if (legend.singleMetric)
+			{
+				ctx.fillStyle = '#666666';
+			}
 			
 			ctx.fillRect(x, 10, 10, 2);
 			x += 15;
 			
+			var nextX = x + ctx.measureText(label).width + 20;
+			
+			if (nextX + 70 > width) {
+				ctx.fillText("[...]", x, 15);
+				x += ctx.measureText("[...]").width + 20;
+				break;
+			}
+			
 			ctx.fillText(label, x, 15);
-			x += ctx.measureText(label).width + 20;
+			x = nextX;
 		}
+		
+		legend.width = x;
 		
 		ctx.restore();
 	};
 	
 	$.jqplot.preInitHooks.push($.jqplot.CanvasLegendRenderer.init);
 	$.jqplot.postDrawHooks.push($.jqplot.CanvasLegendRenderer.postDraw);
+	
+})(jQuery);
+
+
+
+// ------------------------------------------------------------
+//  SERIES PICKER
+//  For line charts
+// ------------------------------------------------------------
+
+(function($) {
+	
+	$.jqplot.SeriesPicker = function(options) {
+		// dom element
+		this.domElem = null;
+		// render the picker?
+		this.show = false;
+		// the columns that can be selected
+		this.selectableColumns = null;
+		// the rows that can be selected
+		this.selectableRows = null;
+		// can multiple rows we selected?
+		this.multiSelect = true;
+		// css id of the target div dom element
+		this.targetDivId = "";
+		// the id of the current data table (index for global dataTables)
+		this.dataTableId = "";
+		// language strings
+		this.lang = {};
+		
+		$.extend(true, this, options);
+	};
+	
+	$.jqplot.SeriesPicker.init = function(target, data, opts) {
+		// add plugin as an attribute to the plot
+		var options = opts || {};
+		this.plugins.seriesPicker = new $.jqplot.SeriesPicker(options.seriesPicker);
+	};
+	
+	// render the link to add series
+	$.jqplot.SeriesPicker.postDraw = function() {
+		var plot = this;
+		var picker = plot.plugins.seriesPicker;
+		
+		if (!picker.show) {
+			return;
+		}
+		
+		// initialize dom element
+		picker.domElem = $(document.createElement('a'))
+			.addClass('jqplot-seriespicker')
+			.attr('href', '#').html('+')
+			.css('marginLeft', (plot._gridPadding.left + plot.plugins.canvasLegend.width - 1) + 'px');
+		
+		picker.domElem.on('hide', function() {
+			$(this).css('opacity', .55);	
+		}).trigger('hide');
+		
+		plot.baseCanvas._elem.before(picker.domElem);
+		
+		// show picker on hover
+		picker.domElem.hover(function() {
+			picker.domElem.css('opacity', 1);
+			if (!picker.domElem.hasClass('open')) {
+				picker.domElem.addClass('open');
+				showPicker(picker, plot._width);
+			}
+		}, function() {
+			// do nothing on mouseout because using this event doesn't work properly.
+			// instead, the timeout check beneath is used (checkPickerLeave()).
+		}).click(function() {
+			return false;	
+		});
+	};
+	
+	// show the series picker
+	function showPicker(picker, plotWidth) {
+		var pickerLink = picker.domElem;
+		var pickerPopover = $(document.createElement('div'))
+			.addClass('jqplock-seriespicker-popover');
+		
+		var pickerState = {manipulated: false};
+		
+		// headline
+		var title = picker.multiSelect ? picker.lang.metricsToPlot : picker.lang.metricToPlot;
+		pickerPopover.append($(document.createElement('p'))
+			.addClass('headline').html(title));
+		
+		if (picker.selectableColumns !== null) {
+			// render the selectable columns
+			for (var i = 0; i < picker.selectableColumns.length; i++) {
+				var column = picker.selectableColumns[i];
+				pickerPopover.append(createPickerPopupItem(picker, column, 'column', pickerState, pickerPopover, pickerLink));
+			}
+		}
+		
+		if (picker.selectableRows !== null) {
+			// "records to plot" subheadline
+			pickerPopover.append($(document.createElement('p'))
+				.addClass('headline').addClass('recordsToPlot')
+				.html(picker.lang.recordsToPlot));
+			
+			// render the selectable rows
+			for (var i = 0; i < picker.selectableRows.length; i++) {
+				var row = picker.selectableRows[i];
+				pickerPopover.append(createPickerPopupItem(picker, row, 'row', pickerState, pickerPopover, pickerLink));
+			}
+		}
+		
+		$('body').prepend(pickerPopover.hide());
+		var neededSpace = pickerPopover.outerWidth() + 10;
+		
+		// try to display popover to the right
+		var linkOffset = pickerLink.offset();
+		if (navigator.appVersion.indexOf("MSIE 7.") != -1) {
+			linkOffset.left -= 10;
+		}
+		var margin = (parseInt(pickerLink.css('marginLeft'), 10) - 4);
+		if (margin + neededSpace < plotWidth
+				// make sure it's not too far to the left
+				|| margin - neededSpace + 60 < 0) {
+			pickerPopover.css('marginLeft', (linkOffset.left - 4) + 'px').show();
+		} else {
+			// display to the left
+			pickerPopover.addClass('alignright')
+				.css('marginLeft', (linkOffset.left  - neededSpace + 38) + 'px')
+				.css('backgroundPosition', (pickerPopover.outerWidth() - 25) + 'px 4px')
+				.show();
+		}
+		pickerPopover.css('marginTop', (linkOffset.top - 5) + 'px').show();
+		
+		// hide and replot on mouse leave
+		checkPickerLeave(pickerPopover, function() {
+			var replot = pickerState.manipulated;
+			hidePicker(picker, pickerPopover, pickerLink, replot);
+		});
+	}
+	
+	function createPickerPopupItem(picker, config, type, pickerState, pickerPopover, pickerLink) {
+		var checkbox = $(document.createElement('input')).addClass('select')
+				.attr('type', picker.multiSelect ? 'checkbox' : 'radio');
+
+		if (config.displayed && !(!picker.multiSelect && pickerState.oneChecked)) {
+			checkbox.prop('checked', true);
+			pickerState.oneChecked = true;
+		}
+		
+		// if we are rendering a column, remember the column name
+		// if it's a row, remember the string that can be used to match the row
+		checkbox.data('name', type == 'column' ? config.column : config.matcher);
+		
+		var el = $(document.createElement('p'))
+			.append(checkbox)
+			.append(type == 'column' ? config.translation : config.label)
+			.addClass(type == 'column' ? 'pickColumn' : 'pickRow');
+		
+		var replot = function() {
+			unbindPickerLeaveCheck();
+			hidePicker(picker, pickerPopover, pickerLink, true);
+		};
+		
+		var checkBox = function(box) {
+			if (!picker.multiSelect) {
+				pickerPopover.find('input.select:not(.current)').prop('checked', false);
+			}
+			box.prop('checked', true);
+			replot();
+		};
+		
+		el.click(function(e) {
+			pickerState.manipulated = true;
+			var box = $(this).find('input.select');
+			if (!$(e.target).is('input.select')) {
+				if (box.is(':checked')) {
+					box.prop('checked', false);
+				} else {
+					checkBox(box);
+				}
+			} else {
+				if (box.is(':checked')) {
+					checkBox(box);
+				}
+			}
+		});
+		
+		return el;
+	}
+	
+	// check whether the mouse has left the picker
+	var onMouseMove;
+	function checkPickerLeave(pickerPopover, onLeaveCallback) {
+		var offset = pickerPopover.offset();
+		var minX = offset.left;
+		var minY = offset.top;
+		var maxX = minX + pickerPopover.outerWidth();
+		var maxY = minY + pickerPopover.outerHeight();
+		var currentX, currentY;
+		onMouseMove = function(e) {
+			currentX = e.pageX;
+			currentY = e.pageY;
+			if (currentX < minX || currentX > maxX
+					|| currentY < minY || currentY > maxY) {
+				unbindPickerLeaveCheck();
+				onLeaveCallback();
+			}
+		};
+		$(document).mousemove(onMouseMove);
+	}
+	function unbindPickerLeaveCheck() {
+		$(document).unbind('mousemove', onMouseMove);
+	}
+	
+	function hidePicker(picker, pickerPopover, pickerLink, replot) {
+		// hide picker
+		pickerPopover.hide();
+		pickerLink.trigger('hide').removeClass('open');
+		
+		// replot
+		if (replot) {
+			var columns = [];
+			var rows = [];
+			pickerPopover.find('input:checked').each(function() {
+				if ($(this).closest('p').hasClass('pickRow')) {
+					rows.push($(this).data('name'));
+				} else {
+					columns.push($(this).data('name'));
+				}
+			});
+			var noRowSelected = pickerPopover.find('.pickRow').size() > 0
+					&& pickerPopover.find('.pickRow input:checked').size() == 0;
+			if (columns.length > 0 && !noRowSelected) {
+
+				$('#'+picker.targetDivId).trigger('changeSeries', [columns, rows]);
+				// inform dashboard widget about changed parameters (to be restored on reload)
+				$('#'+picker.targetDivId).parents('[widgetId]').trigger('setParameters', {columns: columns, rows: rows});
+			}
+		}
+		
+		pickerPopover.remove();
+	}
+	
+	$.jqplot.preInitHooks.push($.jqplot.SeriesPicker.init);
+	$.jqplot.postDrawHooks.push($.jqplot.SeriesPicker.postDraw);
 	
 })(jQuery);
 
@@ -852,4 +1381,3 @@ JQPlot.prototype = {
 	$.jqplot.postDrawHooks.push($.jqplot.PieLegend.postDraw);
 	
 })(jQuery);
-

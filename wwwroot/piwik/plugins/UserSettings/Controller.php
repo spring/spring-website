@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Controller.php 6362 2012-05-29 05:17:56Z capedfuzz $
  * 
  * @category Piwik_Plugins
  * @package Piwik_UserSettings
@@ -16,6 +16,18 @@
  */
 class Piwik_UserSettings_Controller extends Piwik_Controller 
 {
+	/** The set of related reports displayed under the 'Operating Systems' header. */
+	private $osRelatedReports = null;
+	
+	public function __construct()
+	{
+		parent::__construct();
+		$this->osRelatedReports = array(
+			'UserSettings.getOSFamily' => Piwik_Translate('UserSettings_OperatingSystemFamily'),
+			'UserSettings.getOS' => Piwik_Translate('UserSettings_OperatingSystems')
+		);
+	}
+	
 	function index()
 	{
 		$view = Piwik_View::factory('index');
@@ -26,7 +38,7 @@ class Piwik_UserSettings_Controller extends Piwik_Controller
 		$view->dataTableOS = $this->getOS( true );
 		$view->dataTableBrowser = $this->getBrowser( true );
 		$view->dataTableBrowserType = $this->getBrowserType ( true );
-		$view->dataTableWideScreen = $this->getWideScreen( true );
+		$view->dataTableMobileVsDesktop = $this->getMobileVsDesktop( true );
 		
 		echo $view->render();
 	}
@@ -59,17 +71,47 @@ class Piwik_UserSettings_Controller extends Piwik_Controller
 										'UserSettings.getOS'
 									);
 		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_ColumnOperatingSystem'));
+		$view->addRelatedReports(Piwik_Translate('UserSettings_OperatingSystems'), $this->osRelatedReports);
 		return $this->renderView($view, $fetch);
 	}
 	
-	function getBrowser( $fetch = false)
+	/**
+	 * Returns or echos a report displaying the number of visits by operating system family.
+	 */
+	public function getOSFamily( $fetch = false )
+	{
+		$view = $this->getStandardDataTableUserSettings(__FUNCTION__, 'UserSettings.getOSFamily');
+		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_OperatingSystemFamily'));
+		$view->addRelatedReports(Piwik_Translate('UserSettings_OperatingSystemFamily'), $this->osRelatedReports);
+		return $this->renderView($view, $fetch);
+	}
+	
+	function getBrowserVersion( $fetch = false)
 	{
 		$view =  $this->getStandardDataTableUserSettings(
 										__FUNCTION__, 
-										'UserSettings.getBrowser'
+										'UserSettings.getBrowserVersion'
 									);
+		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_ColumnBrowserVersion'));
+		$view->setGraphLimit(7);
+		$view->addRelatedReports(Piwik_Translate('UserSettings_ColumnBrowserVersion'), array(
+			'UserSettings.getBrowser' => Piwik_Translate('UserSettings_Browsers')
+		));
+		return $this->renderView($view, $fetch);
+	}
+	
+	/**
+	 * Returns or echos a report displaying the number of visits by browser type. The browser
+	 * version is not included in this report.
+	 */
+	public function getBrowser( $fetch = false )
+	{
+		$view = $this->getStandardDataTableUserSettings(__FUNCTION__, 'UserSettings.getBrowser');
 		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_ColumnBrowser'));
 		$view->setGraphLimit(7);
+		$view->addRelatedReports(Piwik_Translate('UserSettings_Browsers'), array(
+			'UserSettings.getBrowserVersion' => Piwik_Translate('UserSettings_ColumnBrowserVersion')
+		));
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -93,6 +135,22 @@ class Piwik_UserSettings_Controller extends Piwik_Controller
 									);
 		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_ColumnTypeOfScreen'));
 		$view->disableOffsetInformationAndPaginationControls();
+		$view->addRelatedReports(Piwik_Translate('UserSettings_ColumnTypeOfScreen'), array(
+			'UserSettings.getMobileVsDesktop' => Piwik_Translate('UserSettings_MobileVsDesktop')
+		));
+		return $this->renderView($view, $fetch);
+	}
+	
+	/**
+	 * Returns or echos a report displaying the number of visits by device type (Mobile or Desktop).
+	 */
+	public function getMobileVsDesktop( $fetch = false )
+	{
+		$view = $this->getStandardDataTableUserSettings(__FUNCTION__, 'UserSettings.getMobileVsDesktop');
+		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_MobileVsDesktop'));
+		$view->addRelatedReports(Piwik_Translate('UserSettings_MobileVsDesktop'), array(
+			'UserSettings.getWideScreen' => Piwik_Translate('UserSettings_ColumnTypeOfScreen')
+		));
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -104,6 +162,7 @@ class Piwik_UserSettings_Controller extends Piwik_Controller
 									);
 		$view->disableShowAllViewsIcons();
 		$view->disableShowAllColumns();
+		$view->disableOffsetInformationAndPaginationControls();
 		$view->setColumnsToDisplay( array('label','nb_visits_percentage','nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('UserSettings_ColumnPlugin'));
 		$view->setColumnTranslation('nb_visits_percentage', str_replace(' ', '&nbsp;', Piwik_Translate('General_ColumnPercentageVisits')));
@@ -125,13 +184,8 @@ class Piwik_UserSettings_Controller extends Piwik_Controller
 		$view->setGraphLimit(5);
 		
 		$this->setPeriodVariablesView($view);
-		$column = 'nb_visits';
-		if($view->period == 'day')
-		{
-			$column = 'nb_uniq_visitors';
-		}
-		$view->setSortedColumn( $column );
-		$view->setColumnsToDisplay( array('label', $column) );
+		$this->setMetricsVariablesView($view);
+		
 		return $view;
 	}
 }

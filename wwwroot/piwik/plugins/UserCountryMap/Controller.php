@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4336 2011-04-06 01:52:11Z matt $
+ * @version $Id: Controller.php 6972 2012-09-11 09:08:36Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_UserCountryMap
@@ -18,6 +18,10 @@ class Piwik_UserCountryMap_Controller extends Piwik_Controller
 {
 	function worldMap()
 	{
+		if(!Piwik_PluginsManager::getInstance()->isPluginActivated('UserCountry'))
+		{
+			return '';
+		}
 		$idSite = Piwik_Common::getRequestVar('idSite', 1, 'int');
 		Piwik::checkUserHasViewAccess($idSite);
 		
@@ -26,6 +30,8 @@ class Piwik_UserCountryMap_Controller extends Piwik_Controller
 		$token_auth = Piwik::getCurrentUserTokenAuth();
 		
 		$view = Piwik_View::factory('worldmap');
+
+		// will be escaped in the template
 		$view->dataUrl = "?module=API"
 			. "&method=API.getProcessedReport&format=XML"
 			. "&apiModule=UserCountry&apiAction=getCountry"
@@ -33,6 +39,7 @@ class Piwik_UserCountryMap_Controller extends Piwik_Controller
 			. "&period=" . $period
 			. "&date=" . $date
 			. "&token_auth=" . $token_auth
+			. "&segment=" . Piwik_Common::unsanitizeInputValue(Piwik_Common::getRequestVar('segment', ''))
 			. "&filter_limit=-1";
 		
 		// definition of the color scale
@@ -53,19 +60,25 @@ class Piwik_UserCountryMap_Controller extends Piwik_Controller
 			. '&filter_limit=-1'
 		);
 		$metaData = $request->process();
-		
+
 		$metrics = array();
-		foreach ($metaData[0]['metrics'] as $id => $val)
+		if(!is_array($metaData))
 		{
-			if (Piwik_Common::getRequestVar('period') == 'day' || $id != 'nb_uniq_visitors') {
+			throw new Exception("Error while requesting Map reports for website " . (int)$idSite);
+		}
+		else
+		{
+			foreach ($metaData[0]['metrics'] as $id => $val)
+			{
+				if (Piwik_Common::getRequestVar('period') == 'day' || $id != 'nb_uniq_visitors') {
+					$metrics[] = array($id, $val);
+				}
+			}
+			foreach ($metaData[0]['processedMetrics'] as $id => $val)
+			{
 				$metrics[] = array($id, $val);
 			}
-		} 
-		foreach ($metaData[0]['processedMetrics'] as $id => $val) 
-		{
-			$metrics[] = array($id, $val);
 		}
-		
 		$view->metrics = $metrics;
 		$view->defaultMetric = 'nb_visits';
 		echo $view->render();

@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4813 2011-05-26 09:28:38Z EZdesign $
+ * @version $Id: Controller.php 6095 2012-03-22 17:27:26Z EZdesign $
  *
  * @category Piwik_Plugins
  * @package Piwik_ExampleUI
@@ -26,6 +26,7 @@ class Piwik_ExampleUI_Controller extends Piwik_Controller
 		$view->setLimit( 24 );
 		$view->disableExcludeLowPopulation();
 		$view->disableShowAllColumns();
+		$view->disableRowEvolution();
 		$view->setAxisYUnit('°C'); // useful if the user requests the bar graph
 		return $this->renderView($view);
 	}
@@ -114,7 +115,7 @@ class Piwik_ExampleUI_Controller extends Piwik_Controller
 	
 	function generateSparkline()
 	{
-		$serverRequested = Piwik_Common::getRequestVar('server');
+		$serverRequested = Piwik_Common::getRequestVar('server', '');
 		$view = Piwik_ViewDataTable::factory('sparkline');
 		$view->init( $this->pluginName,  __FUNCTION__, 'ExampleUI.getTemperaturesEvolution' );
 		$view->setColumnsToDisplay($serverRequested);

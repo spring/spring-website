@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 5271 2011-10-08 15:17:18Z vipsoft $
+ * @version $Id: Controller.php 5680 2012-01-17 22:18:58Z SteveG $
  * 
  * @category Piwik_Plugins
  * @package Piwik_SEO
@@ -21,6 +21,11 @@ class Piwik_SEO_Controller extends Piwik_Controller
 		$site = new Piwik_Site($idSite);
 
 		$url = urldecode(Piwik_Common::getRequestVar('url', '', 'string'));
+		
+		if(!empty($url) && strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0) {
+			$url = 'http://'.$url;
+		}
+		
 		if(empty($url) || !Piwik_Common::isLookLikeUrl($url))
 		{
 			$url = $site->getMainUrl();

@@ -1,10 +1,14 @@
+{* some users view thousands of pages which can crash the browser viewing Live! *}
+{assign var=maxPagesDisplayedByVisitor value=100}
+
+<ul id='visitsLive'>
 {foreach from=$visitors item=visitor}
-	<div id="{$visitor.idVisit}" class="visit{if $visitor.idVisit % 2} alt{/if}">
+	<li id="{$visitor.idVisit}" class="visit">
 		<div style="display:none" class="idvisit">{$visitor.idVisit}</div>
-			<div class="datetime">
+			<div title="{$visitor.actionDetails|@count} {'Live_Actions'|translate}" class="datetime">
 				<span style='display:none' class='serverTimestamp'>{$visitor.serverTimestamp}</span>
-				{$visitor.serverDatePretty} - {$visitor.serverTimePretty} ({$visitor.visitDurationPretty})
-				&nbsp;<img src="{$visitor.countryFlag}" title="{$visitor.country}, {'Provider_ColumnProvider'|translate} {$visitor.provider}" />
+				{$visitor.serverDatePretty} - {$visitor.serverTimePretty} {if $visitor.visitDuration > 0}<i>({$visitor.visitDurationPretty})</i>{/if}
+				&nbsp;<img src="{$visitor.countryFlag}" title="{$visitor.location}, {'Provider_ColumnProvider'|translate} {$visitor.provider}" />
 				&nbsp;<img src="{$visitor.browserIcon}" title="{$visitor.browserName}, {'UserSettings_Plugins'|translate}: {$visitor.plugins}" />
 				&nbsp;<img src="{$visitor.operatingSystemIcon}" title="{$visitor.operatingSystem}, {$visitor.resolution}" />
 				&nbsp;
@@ -30,9 +34,10 @@
 				{else}{'Referers_DirectEntry'|translate}{/if}
 			</div>
 		<div id="{$visitor.idVisit}_actions" class="settings">
-			<span class="pagesTitle">{'Actions_SubmenuPages'|translate}:</span>&nbsp;
+			<span class="pagesTitle" title="{$visitor.actionDetails|@count} {'Live_Actions'|translate}" >{'Actions_SubmenuPages'|translate}:</span>&nbsp;
 			{php} $col = 0;	{/php}
-			{foreach from=$visitor.actionDetails item=action}
+			{foreach from=$visitor.actionDetails item=action name=visitorPages}
+				{if $smarty.foreach.visitorPages.iteration <= $maxPagesDisplayedByVisitor}
 				{if $action.type == 'ecommerceOrder' || $action.type == 'ecommerceAbandonedCart'}
 					<span title="
 						{if $action.type == 'ecommerceOrder'}{'Goals_EcommerceOrder'|translate}{else}{'Goals_AbandonedCart'|translate}{/if} 
@@ -48,15 +53,22 @@
 				    {php}$col++; if ($col>=9) { $col=0; }{/php}
 					<a href="{$action.url|escape:'html'}" target="_blank">
 					{if $action.type == 'action'}
-						<img src="plugins/Live/templates/images/file{php} echo $col; {/php}.png" title="{if !empty($action.pageTitle)}{$action.pageTitle}{/if} - {$action.serverTimePretty|escape:'html'}" />
+						<img src="plugins/Live/templates/images/file{php} echo $col; {/php}.png" title="{if !empty($action.pageTitle)}{$action.pageTitle}{/if} - {$action.serverTimePretty|escape:'html'}{if isset($action.timeSpentPretty)} - {'General_TimeOnPage'|translate}: {$action.timeSpentPretty}{/if}" />
 					{elseif $action.type == 'outlink' || $action.type == 'download'}
 						<img class='iconPadding' src="{$action.icon}" title="{$action.url|escape:'html'} - {$action.serverTimePretty|escape:'html'}" />
+					{elseif $action.type == 'search'}
+						<img class='iconPadding' src="{$action.icon}" title="{'Actions_SubmenuSitesearch'|translate|escape:'html'}: {$action.pageTitle|escape:'html'} - {$action.serverTimePretty|escape:'html'}" />
 					{else}
 						<img class='iconPadding' src="{$action.icon}" title="{$action.goalName|escape:'html'} - {if $action.revenue > 0}{'Live_GoalRevenue'|translate}: {$action.revenue|money:$idSite} - {/if} {$action.serverTimePretty|escape:'html'}" />
 					{/if}
 					</a>
 				{/if}
+				{/if}
 			{/foreach}
+			{if $smarty.foreach.visitorPages.iteration > $maxPagesDisplayedByVisitor}
+				<i>({'Live_MorePagesNotDisplayed'|translate})</i>
+			{/if}
 		</div>
-	</div>
+	</li>
 {/foreach}
+</ul>

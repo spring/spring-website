@@ -194,10 +194,7 @@ $translations = array(
 	'CoreHome_JavascriptDisabled' => 'JavaScript-ek gaituta egon behar du Piwik ikuspegi estandarrean erabiltzeko.<br />Badirudi ordea JavaScript desgaituta dagoela edo zure nabigatzaileak ez duela onartzen.<br />Ikuspegi estandarra erabiltzeako, gaitu JavaScript zure nabigatzailearen aukeretan eta ondoren %1$ssaiatu berriro%2$s.<br />',
 	'CoreHome_CategoryNoData' => 'Daturik ez kategoria honetan. Saiatu "Sartu populazio guztia" aukerarekin.',
 	'CoreHome_ShowJSCode' => 'Erakutsi txertatu beharreko JavaScript kodea',
-	'CoreHome_IncludeAllPopulation_js' => 'Sartu populazio guztia',
-	'CoreHome_ExcludeLowPopulation_js' => 'Baztertu populazio txikia',
 	'CoreHome_PageOf_js' => '%1$s / %2$s',
-	'CoreHome_DayFormat' => '%longDay%, %longYear%(e)ko %longMonth%ren %day%a',
 	'CoreHome_PeriodDay' => 'Eguna',
 	'CoreHome_PeriodWeek' => 'Astea',
 	'CoreHome_PeriodMonth' => 'Hilabetea',
@@ -306,7 +303,6 @@ $translations = array(
 	'CoreUpdater_ExceptionArchiveEmpty' => 'Artxibo hutsa.',
 	'CoreUpdater_ExceptionArchiveIncomplete' => 'Artxiboa osatu gabe dago: fitxategi batzuk falta dira (adib. %s).',
 	'Dashboard_Dashboard' => 'Arbela',
-	'Dashboard_AddWidget' => 'Gehitu widget-a...',
 	'Dashboard_DeleteWidgetConfirm' => 'Ziur zaude widget hau arbeletik ezabatu nahi duzula?',
 	'Dashboard_SelectWidget' => 'Hautatu arbelean gehitzeko widget-a',
 	'Dashboard_AddPreviewedWidget_js' => 'Gehitu arbelean aurrebistako widget-a',
@@ -431,44 +427,9 @@ $translations = array(
 	'Login_LogIn' => 'Hasi saioa',
 	'Login_Logout' => 'Amaitu saioa',
 	'Login_LostYourPassword' => 'Pasahitza galdu duzu?',
-	'Login_RemindPassword' => 'Bidali pasahitz berrezartzea',
-	'Login_PasswordResetToken' => 'Pasahitza berrezartzeko tokena',
-	'Login_PasswordReminder' => 'Idatzi zure erabiltzaile-izen edo e-posta. Mezu elektroniko bat jasoko duzu zure pasahitza berrezartzeko informazioarekin.',
 	'Login_PasswordsDoNotMatch' => 'Pasahitzak ez datoz bat.',
-	'Login_PasswordSuccessfullyChanged' => 'Pasahitza ondo aldatu da!',
 	'Login_InvalidUsernameEmail' => 'Erabiltzaile-izen edo helbide elektroniko baliogabea',
 	'Login_InvalidOrExpiredToken' => 'Tokena baliogabea da edo iraungi egin da',
-	'Login_MailTopicPasswordRecovery' => 'Pasahitza berreskuratzea',
-	'Login_MailPasswordRecoveryBody' => 'Kaixo %1$s,
-
-
-
-Pasahitza berrezartzeko eskaria jaso da %2$s helbidetik.
-
-
-
-Zure pasahitza berrezartzeko:
-
-
-
-1) Zoaz pasahitza berrezartzeko inprimakira:
-
-	%3$s
-
-
-
-2) Idatz ezazu ondorengo tokena:
-
-	%4$s
-
-
-
-3) Bete eta bidal ezazu inprimakia (zure pasahitz berria birritan sartuz) inprimakia.
-
-
-
-Oharra: tokena 24 ordutan iraungiko da.',
-	'Login_PasswordSent' => 'Zure pasahitza berrezartzeko informazioa bidali da. Begira ezazu zure posta elektronikoa.',
 	'Login_ContactAdmin' => 'Arrazoi posiblea: zure ostalariak mail() funtzioa ezgaituta izan dezake.<br />Jar zaitez harremanetan zure Piwik kudeatzailearekin.',
 	'Provider_WidgetProviders' => 'Hornitzaileak',
 	'Provider_ColumnProvider' => 'Hornitzailea',
@@ -479,7 +440,6 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'Referers_DirectEntry' => 'Sarrera zuzena',
 	'Referers_Websites' => 'Webguneak',
 	'Referers_Campaigns' => 'Kanpainak',
-	'Referers_MetricsFromRefererTypeGraphLegend' => '%1$s (%2$s)',
 	'Referers_Evolution' => 'Bilakaera periodoan zehar',
 	'Referers_Type' => 'Erreferente mota',
 	'Referers_ColumnRefererType' => 'Erreferente mota',
@@ -543,8 +503,6 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'UserCountry_Continent' => 'Kontinentea',
 	'UserCountry_DistinctCountries' => '%s herrialde desberdin',
 	'UserCountry_SubmenuLocations' => 'Kokalekuak',
-	'UserCountry_WidgetContinents' => 'Bisitarien kontinenteak',
-	'UserCountry_WidgetCountries' => 'Bisitarien herrialdeak',
 	'UserCountry_country_ac' => 'Ascension uharteak',
 	'UserCountry_country_ad' => 'Andorra',
 	'UserCountry_country_ae' => 'Arabiar Emirerri Batuak',
@@ -743,8 +701,8 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'UserCountry_country_qa' => 'Qatar',
 	'UserCountry_country_re' => 'Reunion',
 	'UserCountry_country_ro' => 'Errumania',
-	'UserCountry_country_ru' => 'Errusia',
 	'UserCountry_country_rs' => 'Serbia',
+	'UserCountry_country_ru' => 'Errusia',
 	'UserCountry_country_rw' => 'Ruanda',
 	'UserCountry_country_sa' => 'Saudi Arabia',
 	'UserCountry_country_sb' => 'Solomon Uharteak',
@@ -851,7 +809,6 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'UsersManager_ChangeAllConfirm' => 'Ziur zaude \'%s\'(r)en baimenak aldatu nahi dituzula webgune guztietan?',
 	'UsersManager_Password' => 'Pasahitza',
 	'UsersManager_Email' => 'E-posta',
-	'UsersManager_Alias' => 'Alias',
 	'UsersManager_Edit' => 'Editatu',
 	'UsersManager_AddUser' => 'Gehitu erabiltzaile berria',
 	'UsersManager_MenuUsers' => 'Erabiltzaileak',
@@ -882,16 +839,13 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'VisitorInterest_ColumnPagesPerVisit' => 'Orriak bisitako',
 	'VisitorInterest_WidgetLengths' => 'Bisiten iraupena',
 	'VisitorInterest_WidgetPages' => 'Orriak bisitako',
-	'VisitorInterest_PlusXMin' => '%s min',
 	'VisitorInterest_OnePage' => 'orri bat',
 	'VisitorInterest_NPages' => '%s orri',
 	'VisitsSummary_VisitsSummary' => 'Bisiten laburpena',
 	'VisitsSummary_NbVisits' => '%s bisita',
 	'VisitsSummary_NbUniqueVisitors' => '%s bisitari desberdin',
-	'VisitsSummary_NbActions' => '%s ekintza (ikusitako orriak)',
 	'VisitsSummary_MaxNbActions' => '%s ekintza gehienez bisita batean',
 	'VisitsSummary_NbVisitsBounced' => '%s bisita errebotatu dira (webgunea utzi dute orri bat ikusi ondoren)',
-	'VisitsSummary_EvolutionOverLastPeriods' => 'Bilakaera azken %san zehar',
 	'VisitsSummary_GenerateTime' => '%s segundo orria sortzeko',
 	'VisitsSummary_GenerateQueries' => '%s galdera exekutatuta',
 	'VisitsSummary_WidgetLastVisits' => 'Azken bisiten grafikoa',
@@ -906,5 +860,4 @@ Oharra: tokena 24 ordutan iraungiko da.',
 	'VisitTime_WidgetLocalTime' => 'Ordu lokaleko bisitak',
 	'VisitTime_WidgetServerTime' => 'Zerbitzariaren orduko bisitak',
 	'VisitTime_SubmenuTimes' => 'Orduak',
-	'VisitTime_NHour' => '%sh',
 );

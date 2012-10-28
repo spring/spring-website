@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Log.php 4478 2011-04-15 21:36:32Z matt $
+ * @version $Id: Log.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -36,7 +36,7 @@ abstract class Piwik_Log extends Zend_Log
 		
 		$this->currentRequestKey = substr( Piwik_Common::generateUniqId(), 0, 8);
 
-		$log_dir = Zend_Registry::get('config')->log->logger_file_path;
+		$log_dir = Piwik_Config::getInstance()->log['logger_file_path'];
 		if($log_dir[0] != '/' && $log_dir[0] != DIRECTORY_SEPARATOR)
 		{
 			$log_dir = PIWIK_USER_PATH . '/' . $log_dir;
@@ -86,6 +86,11 @@ abstract class Piwik_Log extends Zend_Log
 
 	/**
 	 * Log an event
+	 * @param string $event
+	 * @param int $priority
+	 * @param null $extras
+	 * @throws Zend_Log_Exception
+	 * @return void
 	 */
 	public function log($event, $priority, $extras = null)
 	{

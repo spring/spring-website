@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: function.ajaxLoadingDiv.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: function.ajaxLoadingDiv.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -12,9 +12,10 @@
 
 /**
  * Outputs the generic Ajax Loading div (displayed when ajax requests are triggered)
- * 
- * @param id=$ID_NAME ID of the HTML div, defaults to ajaxLoading
- * @return	string Html of the Loading... div
+ *
+ * @param array $params array([id] => ID of the HTML div, defaults to ajaxLoading)
+ * @param $smarty
+ * @return string Html of the Loading... div
  */
 function smarty_function_ajaxLoadingDiv($params, &$smarty)
 {
@@ -31,5 +32,4 @@ function smarty_function_ajaxLoadingDiv($params, &$smarty)
 					Piwik_Translate('General_LoadingData') .
 				' </div>'.
 			'</div>';
-	;
 }

@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 5145 2011-09-11 00:37:09Z matt $
+ * @version $Id: API.php 7264 2012-10-20 08:32:09Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Live
@@ -88,12 +88,16 @@ class Piwik_Live_API
 		empty($data[0]['visitsConverted']) ? $data[0]['visitsConverted'] = 0 : '';
 		return $data;
 	}
-	
+
 	/**
 	 * The same functionnality can be obtained using segment=visitorId==$visitorId with getLastVisitsDetails
-	 * 
+	 *
 	 * @deprecated
 	 * @ignore
+	 * @param int $visitorId
+	 * @param int $idSite
+	 * @param int $filter_limit
+	 * @return Piwik_DataTable
 	 */
 	public function getLastVisitsForVisitor( $visitorId, $idSite, $filter_limit = 10 )
 	{
@@ -106,17 +110,18 @@ class Piwik_Live_API
 	/**
 	 * Returns the last visits tracked in the specified website
 	 * You can define any number of filters: none, one, many or all parameters can be defined
-	 * 
-	 * @param int Site ID
-	 * @param string (optional) Period to restrict to when looking at the logs
-	 * @param string (optional) Date to restrict to
-	 * @param int (optional) Number of visits rows to return
-	 * @param int (optional) Maximum idvisit to restrict the query to (useful when paginating)
-	 * @param int (optional) Minimum timestamp to restrict the query to (useful when paginating or refreshing visits)
-	 * 
+	 *
+	 * @param int $idSite Site ID
+	 * @param bool|string $period Period to restrict to when looking at the logs
+	 * @param bool|string $date Date to restrict to
+	 * @param bool|int $segment (optional) Number of visits rows to return
+	 * @param bool|int $filter_limit (optional)
+	 * @param bool|int $maxIdVisit (optional) Maximum idvisit to restrict the query to (useful when paginating)
+	 * @param bool|int $minTimestamp (optional) Minimum timestamp to restrict the query to (useful when paginating or refreshing visits)
+	 *
 	 * @return Piwik_DataTable
 	 */
-	public function getLastVisitsDetails( $idSite, $period = false, $date = false, $segment = false, $filter_limit = false, $maxIdVisit = false, $minTimestamp = false )
+	public function getLastVisitsDetails( $idSite, $period, $date, $segment = false, $filter_limit = false, $maxIdVisit = false, $minTimestamp = false )
 	{
 		if(empty($filter_limit)) 
 		{
@@ -131,14 +136,18 @@ class Piwik_Live_API
 	/**
 	 * @deprecated
 	 */
+	
 	public function getLastVisits( $idSite, $filter_limit = 10, $minTimestamp = false )
 	{
-		return $this->getLastVisitsDetails($idSite, $period = false, $date = false, $filter_limit, $maxIdVisit = false, $minTimestamp );
+		return $this->getLastVisitsDetails($idSite, $period = false, $date = false, $segment = false, $filter_limit, $maxIdVisit = false, $minTimestamp );
 	}
 
 	/**
-	 * For an array of visits, query the list of pages for this visit 
+	 * For an array of visits, query the list of pages for this visit
 	 * as well as make the data human readable
+	 * @param array $visitorDetails
+	 * @param int $idSite
+	 * @return Piwik_DataTable
 	 */
 	private function getCleanedVisitorsFromDetails($visitorDetails, $idSite)
 	{
@@ -158,10 +167,10 @@ class Piwik_Live_API
 			$visitorDetailsArray['serverTimestamp'] = $visitorDetailsArray['lastActionTimestamp'];
 			$dateTimeVisit = Piwik_Date::factory($visitorDetailsArray['lastActionTimestamp'], $timezone);
 			$visitorDetailsArray['serverTimePretty'] = $dateTimeVisit->getLocalized('%time%');
-			$visitorDetailsArray['serverDatePretty'] = $dateTimeVisit->getLocalized('%shortDay% %day% %shortMonth%');
+			$visitorDetailsArray['serverDatePretty'] = $dateTimeVisit->getLocalized(Piwik_Translate('CoreHome_ShortDateFormat'));
 			
 			$dateTimeVisitFirstAction = Piwik_Date::factory($visitorDetailsArray['firstActionTimestamp'], $timezone);
-			$visitorDetailsArray['serverDatePrettyFirstAction'] = $dateTimeVisitFirstAction->getLocalized('%shortDay% %day% %shortMonth%');
+			$visitorDetailsArray['serverDatePrettyFirstAction'] = $dateTimeVisitFirstAction->getLocalized(Piwik_Translate('CoreHome_ShortDateFormat'));
 			$visitorDetailsArray['serverTimePrettyFirstAction'] = $dateTimeVisitFirstAction->getLocalized('%time%');
 			
 			$idvisit = $visitorDetailsArray['idVisit'];
@@ -175,15 +184,17 @@ class Piwik_Live_API
 			// eg. Downloads, Outlinks. For these, idaction_name is set to 0
 			$sql = "
 				SELECT
-					log_action.type as type,
+					COALESCE(log_action.type,log_action_title.type) AS type,
 					log_action.name AS url,
+					log_action.url_prefix,
 					log_action_title.name AS pageTitle,
 					log_action.idaction AS pageIdAction,
 					log_link_visit_action.idlink_va AS pageId,
-					log_link_visit_action.server_time as serverTimePretty
+					log_link_visit_action.server_time as serverTimePretty,
+					log_link_visit_action.time_spent_ref_action as timeSpentRef
 					$sqlCustomVariables
 				FROM " .Piwik_Common::prefixTable('log_link_visit_action')." AS log_link_visit_action
-					INNER JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action
+					LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action
 					ON  log_link_visit_action.idaction_url = log_action.idaction
 					LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_title
 					ON  log_link_visit_action.idaction_name = log_action_title.idaction
@@ -191,16 +202,19 @@ class Piwik_Live_API
 				 ";
 			$actionDetails = Piwik_FetchAll($sql, array($idvisit));
 			
-			foreach($actionDetails as &$actionDetail)
+			foreach($actionDetails as $actionIdx => &$actionDetail)
 			{
+				$actionDetail =& $actionDetails[$actionIdx];
 				$customVariablesPage = array();
 				for($i = 1; $i <= Piwik_Tracker::MAX_CUSTOM_VARIABLES; $i++)
 				{
 					if(!empty($actionDetail['custom_var_k'.$i])
 						&& !empty($actionDetail['custom_var_v'.$i]))
 					{
+						$cvarKey = $actionDetail['custom_var_k'.$i];
+						$cvarKey = $this->getCustomVariablePrettyKey($cvarKey);
 						$customVariablesPage[$i] = array(
-							'customVariableName'.$i => $actionDetail['custom_var_k'.$i],
+							'customVariableName'.$i => $cvarKey,
 							'customVariableValue'.$i => $actionDetail['custom_var_v'.$i],
 						);
 					}
@@ -211,6 +225,17 @@ class Piwik_Live_API
 				{
 					$actionDetail['customVariables'] = $customVariablesPage;
 				}
+				// reconstruct url from prefix
+				$actionDetail['url'] = Piwik_Tracker_Action::reconstructNormalizedUrl($actionDetail['url'], $actionDetail['url_prefix']);
+				unset($actionDetail['url_prefix']);
+				// set the time spent for this action (which is the timeSpentRef of the next action)
+				if (isset($actionDetails[$actionIdx + 1]))
+				{
+					$actionDetail['timeSpent'] = $actionDetails[$actionIdx + 1]['timeSpentRef'];
+					$actionDetail['timeSpentPretty'] = Piwik::getPrettyTimeFromSeconds($actionDetail['timeSpent']);
+					
+				}
+				unset($actionDetails[$actionIdx]['timeSpentRef']); // not needed after timeSpent is added
 			}
 			
 			// If the visitor converted a goal, we shall select all Goals
@@ -273,6 +298,43 @@ class Piwik_Live_API
 				}
 			}
 			
+			// Enrich ecommerce carts/orders with the list of products 
+			usort($ecommerceDetails, array($this, 'sortByServerTime'));
+			foreach($ecommerceDetails as $key => &$ecommerceConversion)
+			{
+				$sql = "SELECT 
+							log_action_sku.name as itemSKU,
+							log_action_name.name as itemName,
+							log_action_category.name as itemCategory,
+							".Piwik_ArchiveProcessing_Day::getSqlRevenue('price')." as price,
+							quantity as quantity
+						FROM ".Piwik_Common::prefixTable('log_conversion_item')."
+							INNER JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_sku
+							ON  idaction_sku = log_action_sku.idaction
+							LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_name
+							ON  idaction_name = log_action_name.idaction
+							LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_category
+							ON idaction_category = log_action_category.idaction
+						WHERE idvisit = ? 
+							AND idorder = ?
+							AND deleted = 0
+				";
+				$bind = array($idvisit, isset($ecommerceConversion['orderId']) 
+											? $ecommerceConversion['orderId'] 
+											: Piwik_Tracker_GoalManager::ITEM_IDORDER_ABANDONED_CART
+				);
+				
+				$itemsDetails = Piwik_FetchAll($sql, $bind);
+				foreach($itemsDetails as &$detail)
+				{
+					if($detail['price'] == round($detail['price']))
+					{
+						$detail['price'] = round($detail['price']);
+					}
+				}
+				$ecommerceConversion['itemDetails'] = $itemsDetails;
+			}
+			
 			$actions = array_merge($actionDetails, $goalDetails, $ecommerceDetails);
 			
 			usort($actions, array($this, 'sortByServerTime'));
@@ -298,54 +360,35 @@ class Piwik_Live_API
 						$details['type'] = 'outlink';
 						$details['icon'] = 'themes/default/images/link.gif';
 					break;
+					case Piwik_Tracker_Action::TYPE_SITE_SEARCH:
+						$details['type'] = 'search';
+						$details['icon'] = 'themes/default/images/search_ico.png';
+					break;
 					default:
 						$details['type'] = 'action';
 						$details['icon'] = null;
 					break;
 				}
 				$dateTimeVisit = Piwik_Date::factory($details['serverTimePretty'], $timezone);
-				$details['serverTimePretty'] = $dateTimeVisit->getLocalized('%shortDay% %day% %shortMonth% %time%'); 
+				$details['serverTimePretty'] = $dateTimeVisit->getLocalized(Piwik_Translate('CoreHome_ShortDateFormat') .' %time%'); 
 			}
 			$visitorDetailsArray['goalConversions'] = count($goalDetails);
-			
-			// Enrich ecommerce carts/orders with the list of products 
-			usort($ecommerceDetails, array($this, 'sortByServerTime'));
-			foreach($ecommerceDetails as $key => &$ecommerceConversion)
-			{
-				$sql = "SELECT 
-							log_action_sku.name as itemSKU,
-							log_action_name.name as itemName,
-							log_action_category.name as itemCategory,
-							".Piwik_ArchiveProcessing_Day::getSqlRevenue('price')." as price,
-							quantity as quantity
-						FROM ".Piwik_Common::prefixTable('log_conversion_item')."
-							INNER JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_sku
-							ON  idaction_sku = log_action_sku.idaction
-							LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_name
-							ON  idaction_name = log_action_name.idaction
-							LEFT JOIN " .Piwik_Common::prefixTable('log_action')." AS log_action_category
-							ON idaction_category = log_action_category.idaction
-						WHERE idvisit = ? 
-							AND idorder = ?
-							AND deleted = 0
-				";
-				$bind = array($idvisit, isset($ecommerceConversion['orderId']) ? $ecommerceConversion['orderId'] : Piwik_Tracker_GoalManager::ITEM_IDORDER_ABANDONED_CART);
-				
-				$itemsDetails = Piwik_FetchAll($sql, $bind);
-			
-				foreach($itemsDetails as &$detail)
-				{
-					if($detail['price'] == round($detail['price']))
-					{
-						$detail['price'] = round($detail['price']);
-					}
-				}
-				$ecommerceConversion['itemDetails'] = $itemsDetails;
-			}
 			
 			$table->addRowFromArray( array(Piwik_DataTable_Row::COLUMNS => $visitorDetailsArray));
 		}
 		return $table;
+	}
+
+	private function getCustomVariablePrettyKey($key)
+	{
+		$rename = array(
+			Piwik_Tracker_Action::CVAR_KEY_SEARCH_CATEGORY => Piwik_Translate('Actions_ColumnSearchCategory'),
+			Piwik_Tracker_Action::CVAR_KEY_SEARCH_COUNT => Piwik_Translate('Actions_ColumnSearchResultsCount'),
+		);
+		if(isset($rename[$key])) {
+			return $rename[$key];
+		}
+		return $key;
 	}
 
 	private function sortByServerTime($a, $b)
@@ -375,7 +418,7 @@ class Piwik_Live_API
 		if(!empty($visitorId))
 		{
 			$where[] = "log_visit.idvisitor = ? ";
-			$whereBind[] = Piwik_Common::hex2bin($visitorId);
+			$whereBind[] = @Piwik_Common::hex2bin($visitorId);
 		}
 
 		if(!empty($maxIdVisit))
@@ -461,12 +504,14 @@ class Piwik_Live_API
 		$from = "log_visit";
 		$subQuery = $segment->getSelectQuery($select, $from, $where, $whereBind, $orderBy);
 		
+		$sqlLimit = $filter_limit >= 1 ? " LIMIT ".(int)$filter_limit : "";
+		
 		// Group by idvisit so that a visitor converting 2 goals only appears once
 		$sql = "
 			SELECT sub.* 
 			FROM ( 
-				".$subQuery['sql']."	
-				LIMIT ".(int)$filter_limit."
+				".$subQuery['sql']."
+				$sqlLimit
 			) AS sub
 			GROUP BY sub.idvisit
 			ORDER BY $orderByParent

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: QuickForm2.php 3984 2011-02-28 05:43:22Z vipsoft $
+ * @version $Id: QuickForm2.php 6900 2012-09-02 11:14:40Z capedfuzz $
  * 
  * @category Piwik
  * @package Piwik
@@ -107,5 +107,30 @@ abstract class Piwik_QuickForm2 extends HTML_QuickForm2
 	{
 		$value = $this->getValue();
 		return isset($value[$elementName]) ? $value[$elementName] : null;
+	}
+	
+	/**
+	 * Returns the rendered form as an array.
+	 * 
+	 * @param bool $groupErrors Whether to group errors together or not.
+	 * @return array
+	 */
+	public function getFormData( $groupErrors = true )
+	{
+		static $registered = false;
+		if(!$registered)
+		{
+			HTML_QuickForm2_Renderer::register('smarty', 'HTML_QuickForm2_Renderer_Smarty');
+			$registered = true;
+		}
+		
+		// Create the renderer object
+		$renderer = HTML_QuickForm2_Renderer::factory('smarty');
+		$renderer->setOption('group_errors', $groupErrors);
+
+		// build the HTML for the form
+		$this->render($renderer);
+		
+		return $renderer->toArray();
 	}
 }

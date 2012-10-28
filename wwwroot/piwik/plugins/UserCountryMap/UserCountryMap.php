@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: UserCountryMap.php 3349 2010-11-25 06:14:21Z vipsoft $
+ * @version $Id: UserCountryMap.php 6848 2012-08-20 23:18:38Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_UserCountryMap
@@ -29,6 +29,6 @@ class Piwik_UserCountryMap extends Piwik_Plugin
 
 	function postLoad()
 	{
-		Piwik_AddWidget('General_Visitors', Piwik_Translate('UserCountry_WidgetCountries').' ('.Piwik_Translate('UserCountryMap_worldMap').')', 'UserCountryMap', 'worldMap');
+		Piwik_AddWidget('General_Visitors', Piwik_Translate('UserCountry_WidgetLocation').' ('.Piwik_Translate('UserCountryMap_worldMap').')', 'UserCountryMap', 'worldMap');
 	}
 }

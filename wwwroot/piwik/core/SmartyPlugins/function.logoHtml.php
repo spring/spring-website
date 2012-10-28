@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: function.logoHtml.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: function.logoHtml.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -20,6 +20,7 @@
  * </pre>
  *
  * @param array $params attributes to be set
+ * @param $smarty
  * @return string HTML IMG tag
  */
 function smarty_function_logoHtml($params, &$smarty)

@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: GenerateGraphHTML.php 4814 2011-05-26 21:21:22Z matt $
+ * @version $Id: GenerateGraphHTML.php 6596 2012-07-30 20:01:36Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik
@@ -25,7 +25,19 @@ abstract class Piwik_ViewDataTable_GenerateGraphHTML extends Piwik_ViewDataTable
 	protected $graphType = 'unknown';
 	
 	/**
+	 * Parameters to send to GenerateGraphData instance. Parameters are passed
+	 * via the $_GET array.
+	 * 
+	 * @var array
+	 */
+	protected $generateGraphDataParams = array();
+
+	/**
 	 * @see Piwik_ViewDataTable::init()
+	 * @param string $currentControllerName
+	 * @param string $currentControllerAction
+	 * @param string $apiMethodToRequestDataTable
+	 * @param null $controllerActionCalledWhenRequestSubTable
 	 */
 	function init($currentControllerName,
 						$currentControllerAction,
@@ -59,6 +71,11 @@ abstract class Piwik_ViewDataTable_GenerateGraphHTML extends Piwik_ViewDataTable
 		$this->viewProperties['show_export_as_image_icon'] = true;
 	}
 	
+	public function addRowEvolutionSeriesToggle($initiallyShowAllMetrics) {
+		$this->viewProperties['externalSeriesToggle'] = 'RowEvolutionSeriesToggle';
+		$this->viewProperties['externalSeriesToggleShowAll'] = $initiallyShowAllMetrics;
+	}
+	
 	/**
 	 * Sets parameters to modify in the future generated URL
 	 * @param array $array array('nameParameter' => $newValue, ...)
@@ -69,17 +86,33 @@ abstract class Piwik_ViewDataTable_GenerateGraphHTML extends Piwik_ViewDataTable
 	}
 	
 	/**
+	 * Show every x-axis tick instead of just every other one.
+	 */
+	public function showAllTicks()
+	{
+		$this->generateGraphDataParams['show_all_ticks'] = 1;
+	}
+	
+	/**
 	 * We persist the parametersToModify values in the javascript footer.
 	 * This is used by the "export links" that use the "date" attribute
 	 * from the json properties array in the datatable footer.
+	 * @return array
 	 */
 	protected function getJavascriptVariablesToSet()
 	{
-		return $this->parametersToModify + parent::getJavascriptVariablesToSet();
+		$original = parent::getJavascriptVariablesToSet();
+		$originalViewDataTable = $original['viewDataTable'];
+		
+		$result = $this->parametersToModify + $original;;
+		$result['viewDataTable'] = $originalViewDataTable;
+		
+		return $result;
 	}
 	
 	/**
 	 * @see Piwik_ViewDataTable::main()
+	 * @return null
 	 */
 	public function main()
 	{
@@ -123,14 +156,20 @@ abstract class Piwik_ViewDataTable_GenerateGraphHTML extends Piwik_ViewDataTable
 		
 		$view->reportDocumentation = $this->getReportDocumentation();
 		
+		// if it's likely that the report data for this data table has been purged,
+		// set whether we should display a message to that effect.
+		$view->showReportDataWasPurgedMessage = $this->hasReportBeenPurged();
+		$view->deleteReportsOlderThan = Piwik_GetOption('delete_reports_older_than');
+		
 		return $view;
 	}
 
 	protected function getGraphData()
 	{
 		$saveGet = $_GET;
-
-		foreach($this->parametersToModify as $key => $val)
+		
+		$params = array_merge($this->generateGraphDataParams, $this->parametersToModify);
+		foreach($params as $key => $val)
 		{
 			// We do not forward filter data to the graph controller.
 			// This would cause the graph to have filter_limit=5 set by default,
@@ -149,6 +188,6 @@ abstract class Piwik_ViewDataTable_GenerateGraphHTML extends Piwik_ViewDataTable
 
 		$_GET = $saveGet;
 
-		return str_replace(array("\r", "\n", "'", '\"'), array('', '', "\\'", '\\\"'), $content);
+		return str_replace(array("\r", "\n"), '', $content);
 	}
 }

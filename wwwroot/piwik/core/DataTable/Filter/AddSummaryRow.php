@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: AddSummaryRow.php 4169 2011-03-23 01:59:57Z matt $
+ * @version $Id: AddSummaryRow.php 7190 2012-10-15 07:41:12Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -28,17 +28,33 @@
  */
 class Piwik_DataTable_Filter_AddSummaryRow extends Piwik_DataTable_Filter
 {
-	public function __construct(	$table, 
-									$startRowToSummarize, 
-									$labelSummaryRow = Piwik_DataTable::LABEL_SUMMARY_ROW, 
-									$columnToSortByBeforeTruncating = null )
+	/**
+	 * Creates a new filter and set all required parameters
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @param int              $startRowToSummarize
+	 * @param int              $labelSummaryRow
+	 * @param null             $columnToSortByBeforeTruncating
+	 * @param bool             $deleteRows
+	 */
+	public function __construct($table,
+								$startRowToSummarize,
+								$labelSummaryRow = Piwik_DataTable::LABEL_SUMMARY_ROW,
+								$columnToSortByBeforeTruncating = null,
+								$deleteRows = true )
 	{
 		parent::__construct($table);
 		$this->startRowToSummarize = $startRowToSummarize;
 		$this->labelSummaryRow = $labelSummaryRow;
 		$this->columnToSortByBeforeTruncating = $columnToSortByBeforeTruncating;
+		$this->deleteRows = $deleteRows;
 	}
 
+	/**
+	 * Adds a summary row to the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 */
 	public function filter($table)
 	{
 		if($table->getRowsCount() <= $this->startRowToSummarize + 1)
@@ -57,16 +73,24 @@ class Piwik_DataTable_Filter_AddSummaryRow extends Piwik_DataTable_Filter
 			{
 				// case when the last row is a summary row, it is not indexed by $cout but by Piwik_DataTable::ID_SUMMARY_ROW
 				$summaryRow = $table->getRowFromId(Piwik_DataTable::ID_SUMMARY_ROW);
-				$newRow->sumRow($summaryRow);
+				
+				//FIXME: I'm not sure why it could return false, but it was reported in: http://forum.piwik.org/read.php?2,89324,page=1#msg-89442
+				if($summaryRow)
+				{
+					$newRow->sumRow($summaryRow, $enableCopyMetadata = false);
+				}
 			}
 			else
 			{
-				$newRow->sumRow($rows[$i]);
+				$newRow->sumRow($rows[$i], $enableCopyMetadata = false);
 			}
 		}
 		
 		$newRow->setColumns(array('label' => $this->labelSummaryRow) + $newRow->getColumns());
-		$table->filter('Limit', array(0, $this->startRowToSummarize));
+		if ($this->deleteRows)
+		{
+			$table->filter('Limit', array(0, $this->startRowToSummarize));
+		}
 		$table->addSummaryRow($newRow);
 		unset($rows);
 	}

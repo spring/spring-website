@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: HtmlTable.php 5252 2011-09-28 11:11:19Z matt $
+ * @version $Id: HtmlTable.php 7036 2012-09-21 20:37:53Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik
@@ -34,9 +34,13 @@ class Piwik_ViewDataTable_HtmlTable extends Piwik_ViewDataTable
 	 * @var array
 	 */
 	public $arrayDataTable; // phpArray
-	
+
 	/**
 	 * @see Piwik_ViewDataTable::init()
+	 * @param string $currentControllerName
+	 * @param string $currentControllerAction
+	 * @param string $apiMethodToRequestDataTable
+	 * @param null|string $controllerActionCalledWhenRequestSubTable
 	 */
 	function init($currentControllerName,
 						$currentControllerAction,
@@ -50,7 +54,7 @@ class Piwik_ViewDataTable_HtmlTable extends Piwik_ViewDataTable
 		$this->dataTableTemplate = 'CoreHome/templates/datatable.tpl';
 		$this->variablesDefault['enable_sort'] = '1';
 		$this->setSortedColumn('nb_visits', 'desc');
-		$this->setLimit(Zend_Registry::get('config')->General->datatable_default_limit);
+		$this->setLimit(Piwik_Config::getInstance()->General['datatable_default_limit']);
 		$this->handleLowPopulation();
 	}
 
@@ -58,9 +62,11 @@ class Piwik_ViewDataTable_HtmlTable extends Piwik_ViewDataTable
 	{
 		return 'table';
 	}
-	
+
 	/**
 	 * @see Piwik_ViewDataTable::main()
+	 * @throws Exception|Piwik_Access_NoAccessException
+	 * @return null
 	 */
 	public function main()
 	{
@@ -117,6 +123,11 @@ class Piwik_ViewDataTable_HtmlTable extends Piwik_ViewDataTable
 			$view->columnDocumentation = $columnDocumentation;
 			$view->nbColumns = $nbColumns;
 			$view->defaultWhenColumnValueNotDefined = '-';
+			
+			// if it's likely that the report data for this data table has been purged,
+			// set whether we should display a message to that effect.
+			$view->showReportDataWasPurgedMessage = $this->hasReportBeenPurged();
+			$view->deleteReportsOlderThan = Piwik_GetOption('delete_reports_older_than');
 		}
 		$view->javascriptVariablesToSet = $this->getJavascriptVariablesToSet();
 		$view->properties = $this->getViewProperties();
@@ -205,5 +216,21 @@ class Piwik_ViewDataTable_HtmlTable extends Piwik_ViewDataTable
 			$this->recursiveDataTableLoad = false;
 			return false;
 		}
+	}
+	
+	/**
+	 * Disable the row evolution feature which is enabled by default
+	 */
+	public function disableRowEvolution()
+	{
+		$this->variablesDefault['disable_row_evolution'] = true;
+	}
+	
+	/**
+	 * Disables row actions.
+	 */
+	public function disableRowActions()
+	{
+		$this->variablesDefault['disable_row_actions'] = true;
 	}
 }

@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4786 2011-05-23 10:38:42Z matt $
+ * @version $Id: Controller.php 6612 2012-07-31 09:10:14Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Referers
@@ -71,8 +71,10 @@ class Piwik_Referers_Controller extends Piwik_Controller
 		$view->disableOffsetInformationAndPaginationControls();
 		$view->disableExcludeLowPopulation();
 		$view->enableShowGoals();
+		$view->setLimit(10);
 		$view->setColumnsToDisplay( array('label', 'nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnRefererType'));
+		$this->setMetricsVariablesView($view);
 		return $this->renderView($view, $fetch);
 	}
 
@@ -84,10 +86,13 @@ class Piwik_Referers_Controller extends Piwik_Controller
 											'getSearchEnginesFromKeywordId'
 								);
 		$view->disableExcludeLowPopulation();
-		$view->setColumnsToDisplay( array('label','nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnKeyword'));
 		$view->enableShowGoals();
+		$view->setLimit(25);
 		$view->disableSubTableWhenShowGoals();
+		
+		$this->setMetricsVariablesView($view);
+		
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -115,9 +120,12 @@ class Piwik_Referers_Controller extends Piwik_Controller
 		$view->disableSearchBox();
 		$view->disableExcludeLowPopulation();
 		$view->enableShowGoals();
+		$view->setLimit(25);
 		$view->disableSubTableWhenShowGoals();
-		$view->setColumnsToDisplay( array('label','nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnSearchEngine'));
+		
+		$this->setMetricsVariablesView($view);
+		
 		return $this->renderView($view, $fetch);
 	}
 
@@ -149,11 +157,13 @@ class Piwik_Referers_Controller extends Piwik_Controller
 											'getUrlsFromWebsiteId'
 								);
 		$view->disableExcludeLowPopulation();
-		$view->setColumnsToDisplay( array('label','nb_visits') );
-		$view->setLimit(10);
 		$view->enableShowGoals();
+		$view->setLimit(25);
 		$view->disableSubTableWhenShowGoals();
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnWebsite'));
+		
+		$this->setMetricsVariablesView($view);
+		
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -173,10 +183,11 @@ class Piwik_Referers_Controller extends Piwik_Controller
 								);
 		$view->disableExcludeLowPopulation();
 		$view->enableShowGoals();
-		$view->setLimit( 10 );
+		$view->setLimit(25);
 		$view->setColumnsToDisplay( array('label','nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnCampaign'));
 		$view->setFooterMessage( 'Help: <a target="_blank" href="http://piwik.org/docs/tracking-campaigns/">Tracking Campaigns in Piwik</a> - <a target="_blank" href="http://piwik.org/docs/tracking-campaigns/url-builder/">URL Builder tool</a>');
+		$this->setMetricsVariablesView($view);
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -205,6 +216,7 @@ class Piwik_Referers_Controller extends Piwik_Controller
 		$view->disableExcludeLowPopulation();
 		$view->setColumnsToDisplay( array('label','nb_visits') );
 		$view->setColumnTranslation('label', Piwik_Translate('Referers_ColumnWebsitePage'));
+		$view->setTooltipMetadataName('url');
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -249,34 +261,49 @@ class Piwik_Referers_Controller extends Piwik_Controller
 	public function getEvolutionGraph( $fetch = false, $typeReferer = false, $columns = false)
 	{
 		$view = $this->getLastUnitGraph($this->pluginName, __FUNCTION__, 'Referers.getRefererType');
-		if(empty($typeReferer))
-		{
-			$typeReferer = Piwik_Common::getRequestVar('typeReferer');
-		}
+		
+		// configure displayed columns
 		if(empty($columns))
 		{
 			$columns = Piwik_Common::getRequestVar('columns');
+			$columns = Piwik::getArrayFromApiParameter($columns);
 		}
-		
 		$columns = !is_array($columns) ? array($columns) : $columns;
 		$view->setColumnsToDisplay($columns);
-		$view->setParametersToModify(array('typeReferer' => $typeReferer));
-		foreach($columns as $columnName)
-		{
-			$columnTranslation = $view->getColumnTranslation($columnName);
-			$referrerTypeTranslation = $this->referrerTypeToLabel[$typeReferer];
-			$view->setColumnTranslation(
-				$columnName,
-				Piwik_Translate('Referers_MetricsFromRefererTypeGraphLegend',
-					array(	Piwik_Translate($columnTranslation),
-							Piwik_Translate($referrerTypeTranslation)
-						)
-					)
-				);
+		
+		// configure selectable columns
+		if (Piwik_Common::getRequestVar('period', false) == 'day') {
+			$selectable = array('nb_visits', 'nb_uniq_visitors', 'nb_actions');
+		} else {
+			$selectable = array('nb_visits', 'nb_actions');
 		}
+		$view->setSelectableColumns($selectable);
+		
+		// configure displayed rows
+		$visibleRows = Piwik_Common::getRequestVar('rows', false);
+		if ($visibleRows !== false)
+		{
+			// this happens when the row picker has been used
+			$visibleRows = Piwik::getArrayFromApiParameter($visibleRows);
+		}
+		else
+		{
+			// use $typeReferer as default
+			if($typeReferer === false)
+			{
+				$typeReferer = Piwik_Common::getRequestVar('typeReferer', false);
+			}
+			$label = Piwik_getRefererTypeLabel($typeReferer);
+			$label = Piwik_Translate($label);
+			$visibleRows = array($label);
+			$view->setParametersToModify(array('rows' => $label));
+		}
+		$view->addRowPicker($visibleRows);
+		
 		$view->setReportDocumentation(Piwik_Translate('Referers_EvolutionDocumentation').'<br />'
 				.Piwik_Translate('General_BrokenDownReportDocumentation').'<br />'
 				.Piwik_Translate('Referers_EvolutionDocumentationMoreInfo', '&quot;'.Piwik_Translate('Referers_DetailsByRefererType').'&quot;'));
+		
 		return $this->renderView($view, $fetch);
 	}
 	
@@ -346,10 +373,16 @@ class Piwik_Referers_Controller extends Piwik_Controller
 		$request = new Piwik_API_Request($topPageUrlRequest);
 		$request = $request->process();
 		$tables = $request->getArray();
-		$topPageUrls = $tables[key($tables)];
-		$topPageUrls = $topPageUrls->getRowsMetadata('url');
-		$topPageUrl = current(array_values($topPageUrls));
 		
+		$topPageUrl = false;
+		$first = key($tables);
+		if(!empty($first))
+		{
+			$topPageUrls = $tables[$first];
+			$topPageUrls = $topPageUrls->getRowsMetadata('url');
+			$tmpTopPageUrls = array_values($topPageUrls);
+			$topPageUrl = current($tmpTopPageUrls);
+		}
 		if(empty($topPageUrl))
 		{
 			$topPageUrl = $this->site->getMainUrl();

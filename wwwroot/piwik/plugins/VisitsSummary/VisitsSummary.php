@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: VisitsSummary.php 4634 2011-05-05 08:56:37Z EZdesign $
+ * @version $Id: VisitsSummary.php 6243 2012-05-02 22:08:23Z SteveG $
  *
  * @category Piwik_Plugins
  * @package Piwik_VisitsSummary
@@ -39,7 +39,10 @@ class Piwik_VisitsSummary extends Piwik_Plugin
 			'Menu.add' => 'addMenu',
 		);
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getReportMetadata($notification)
 	{
 		$reports = &$notification->getNotificationObject();
@@ -67,7 +70,7 @@ class Piwik_VisitsSummary extends Piwik_Plugin
 	
 	function addWidgets()
 	{
-		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitsSummary_WidgetLastVisits', 'VisitsSummary', 'getEvolutionGraph', array('columns' => array('nb_visits')));
+		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitsSummary_WidgetLastVisits', 'VisitsSummary', 'getEvolutionGraph', array('columns' => array('nb_visits')));		
 		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitsSummary_WidgetVisits', 'VisitsSummary', 'getSparklines');
 		Piwik_AddWidget( 'VisitsSummary_VisitsSummary', 'VisitsSummary_WidgetOverviewGraph', 'VisitsSummary', 'index');
 	}

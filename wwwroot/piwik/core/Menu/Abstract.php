@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Abstract.php 5018 2011-07-13 23:11:02Z matt $
+ * @version $Id: Abstract.php 6828 2012-08-18 22:48:37Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik_Menu
@@ -43,8 +43,15 @@ abstract class Piwik_Menu_Abstract
 
 	/**
 	 * Adds a new entry to the menu.
+	 *
+	 * @param string  $menuName
+	 * @param string  $subMenuName
+	 * @param string  $url
+	 * @param bool    $displayedForCurrentUser
+	 * @param int     $order
+	 * @param string  $tooltip Tooltip to display.
 	 */
-	public function add($menuName, $subMenuName, $url, $displayedForCurrentUser, $order = 50)
+	public function add($menuName, $subMenuName, $url, $displayedForCurrentUser, $order = 50, $tooltip = false)
 	{
 		if($displayedForCurrentUser)
 		{
@@ -52,15 +59,22 @@ abstract class Piwik_Menu_Abstract
 				$menuName,
 				$subMenuName,
 				$url,
-				$order
+				$order,
+				$tooltip
 			);
 		}
 	}
 
 	/**
 	 * Builds a single menu item
+	 *
+	 * @param string  $menuName
+	 * @param string  $subMenuName
+	 * @param string  $url
+	 * @param int     $order
+	 * @param string  $tooltip Tooltip to display.
 	 */
-	private function buildMenuItem($menuName, $subMenuName, $url, $order = 50)
+	private function buildMenuItem($menuName, $subMenuName, $url, $order = 50, $tooltip = false)
 	{
 		if (!isset($this->menu[$menuName]) || empty($subMenuName))
 		{
@@ -68,6 +82,7 @@ abstract class Piwik_Menu_Abstract
 			$this->menu[$menuName]['_order'] = $order;
 			$this->menu[$menuName]['_name'] = $menuName;
 			$this->menu[$menuName]['_hasSubmenu'] = false;
+			$this->menu[$menuName]['_tooltip'] = $tooltip;
 		}
 		if (!empty($subMenuName))
 		{
@@ -75,24 +90,28 @@ abstract class Piwik_Menu_Abstract
 			$this->menu[$menuName][$subMenuName]['_order'] = $order;
 			$this->menu[$menuName][$subMenuName]['_name'] = $subMenuName;
 			$this->menu[$menuName]['_hasSubmenu'] = true;
+			$this->menu[$menuName]['_tooltip'] = $tooltip;
 		}
 	}
 
 	/**
 	 * Builds the menu from the $this->menuEntries variable.
-	 *
 	 */
 	private function buildMenu()
 	{
 		foreach ($this->menuEntries as $menuEntry)
 		{
-			$this->buildMenuItem($menuEntry[0], $menuEntry[1], $menuEntry[2], $menuEntry[3]);
+			$this->buildMenuItem($menuEntry[0], $menuEntry[1], $menuEntry[2], $menuEntry[3], $menuEntry[4]);
 		}
 	}
 
 	/**
 	 * Renames a single menu entry.
 	 *
+	 * @param $mainMenuOriginal
+	 * @param $subMenuOriginal
+	 * @param $mainMenuRenamed
+	 * @param $subMenuRenamed
 	 */
 	public function rename($mainMenuOriginal, $subMenuOriginal, $mainMenuRenamed, $subMenuRenamed)
 	{
@@ -103,6 +122,9 @@ abstract class Piwik_Menu_Abstract
 	/**
 	 * Edits a URL of an existing menu entry.
 	 *
+	 * @param $mainMenuToEdit
+	 * @param $subMenuToEdit
+	 * @param $newUrl
 	 */
 	public function editUrl($mainMenuToEdit, $subMenuToEdit, $newUrl)
 	{
@@ -111,7 +133,6 @@ abstract class Piwik_Menu_Abstract
 
 	/**
 	 * Applies all edits to the menu.
-	 *
 	 */
 	private function applyEdits()
 	{
@@ -133,7 +154,6 @@ abstract class Piwik_Menu_Abstract
 
 	/**
 	 * Applies renames to the menu.
-	 *
 	 */
 	private function applyRenames()
 	{
@@ -167,7 +187,6 @@ abstract class Piwik_Menu_Abstract
 
 	/**
 	 * Orders the menu according to their order.
-	 *
 	 */
 	private function applyOrdering()
 	{
@@ -192,9 +211,9 @@ abstract class Piwik_Menu_Abstract
 	/**
 	 * Compares two menu entries. Used for ordering.
 	 *
-	 * @param <array> $itemOne
-	 * @param <array> $itemTwo
-	 * @return <boolean>
+	 * @param array  $itemOne
+	 * @param array  $itemTwo
+	 * @return boolean
 	 */
 	protected function menuCompare($itemOne, $itemTwo)
 	{

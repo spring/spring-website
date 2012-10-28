@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Common.php 5223 2011-09-25 01:17:39Z vipsoft $
+ * @version $Id: Common.php 7286 2012-10-23 09:22:19Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -41,8 +41,8 @@ class Piwik_Common
 
 	/**
 	 * Hashes a string into an integer which should be very low collision risks
-	 * @param string $string String to hash
-	 * @return int Resulting int hash
+	 * @param string  $string  String to hash
+	 * @return int  Resulting int hash
 	 */
 	static public function hashStringToInt($string)
 	{
@@ -50,47 +50,73 @@ class Piwik_Common
 		return base_convert($stringHash, 16, 10);
 	}
 	
+	static public $cachedTablePrefix = null;
+	
 	/**
 	 * Returns the table name prefixed by the table prefix.
 	 * Works in both Tracker and UI mode.
 	 *
-	 * @param string The table name to prefix, ie "log_visit"
-	 * @return string The table name prefixed, ie "piwik-production_log_visit"
+	 * @param string  $table  The table name to prefix, ie "log_visit"
+	 * @return string  The table name prefixed, ie "piwik-production_log_visit"
 	 */
 	static public function prefixTable($table)
+	{
+		if(is_null(self::$cachedTablePrefix))
+		{
+			self::$cachedTablePrefix = Piwik_Config::getInstance()->database['tables_prefix'];
+		}
+		return self::$cachedTablePrefix . $table;
+	}
+	
+	/**
+	 * Returns an array containing the prefixed table names of every passed argument.
+	 * 
+	 * @param string ... The table names to prefix, ie "log_visit"
+	 * @return array The prefixed names in an array.
+	 */
+	static public function prefixTables()
+	{
+		$result = array();
+		foreach (func_get_args() as $table)
+		{
+			$result[] = self::prefixTable($table);
+		}
+		return $result;
+	}
+
+	/**
+	 * Returns the table name, after removing the table prefix
+	 *
+	 * @param string  $table
+	 * @return string
+	 */
+	static public function unprefixTable($table)
 	{
 		static $prefixTable = null;
 		if(is_null($prefixTable))
 		{
-			if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-			{
-				$prefixTable = Piwik_Tracker_Config::getInstance()->database['tables_prefix'];
-			}
-			else
-			{
-				$config = Zend_Registry::get('config');
-				if($config !== false)
-				{
-					$prefixTable = $config->database->tables_prefix;
-				}
-			}
+			$prefixTable = Piwik_Config::getInstance()->database['tables_prefix'];
 		}
-		return $prefixTable . $table;
+		if(empty($prefixTable)
+			|| strpos($table, $prefixTable) !== 0)
+		{
+			return $table;
+		}
+		return str_replace($prefixTable, '', $table, $count = 1);
 	}
 
 /*
  * Tracker
  */
 
+	static public $initTrackerMode = false;
 	static protected function initCorePiwikInTrackerMode()
 	{
-		static $init = false;
 		if(!empty($GLOBALS['PIWIK_TRACKER_MODE'])
-			&& $init === false)
+			&& self::$initTrackerMode === false)
 		{
-			$init = true;
+			self::$initTrackerMode = true;
 			require_once PIWIK_INCLUDE_PATH . '/core/Loader.php';
-			require_once PIWIK_INCLUDE_PATH . '/core/Translate.php';
 			require_once PIWIK_INCLUDE_PATH . '/core/Option.php';
 			try {
 				$access = Zend_Registry::get('access');
@@ -98,7 +124,7 @@ class Piwik_Common
 				Piwik::createAccessObject();
 			}
 			try {
-				$config = Zend_Registry::get('config');
+				$config = Piwik_Config::getInstance();
 			} catch (Exception $e) {
 				Piwik::createConfigObject();
 			}
@@ -109,7 +135,7 @@ class Piwik_Common
 			}
 
 			$pluginsManager = Piwik_PluginsManager::getInstance();
-			$pluginsToLoad = Zend_Registry::get('config')->Plugins->Plugins->toArray();
+			$pluginsToLoad = Piwik_Config::getInstance()->Plugins['Plugins'];
 			$pluginsForcedNotToLoad = Piwik_Tracker::getPluginsNotToLoad();
 			$pluginsToLoad = array_diff($pluginsToLoad, $pluginsForcedNotToLoad);
 			$pluginsManager->loadPlugins( $pluginsToLoad );
@@ -141,11 +167,13 @@ class Piwik_Common
 	/**
 	 * Returns array containing data about the website: goals, URLs, etc.
 	 *
-	 * @param int $idSite
+	 * @param int  $idSite
 	 * @return array
 	 */
 	static function getCacheWebsiteAttributes( $idSite )
 	{
+		$idSite = (int)$idSite;
+		
 		$cache = self::getTrackerCache();
 		if(($cacheContent = $cache->get($idSite)) !== false)
 		{
@@ -183,13 +211,14 @@ class Piwik_Common
 
 	/**
 	 * Returns contents of general (global) cache
+	 *
 	 * @return array
 	 */
 	static protected function getCacheGeneral()
 	{
 		$cache = self::getTrackerCache();
 		$cacheId = 'general';
-		$expectedRows = 2;
+		$expectedRows = 3;
 		if(($cacheContent = $cache->get($cacheId)) !== false
 			&& count($cacheContent) == $expectedRows)
 		{
@@ -198,7 +227,8 @@ class Piwik_Common
 		self::initCorePiwikInTrackerMode();
 		$cacheContent = array (
 			'isBrowserTriggerArchivingEnabled' => Piwik_ArchiveProcessing::isBrowserTriggerArchivingEnabled(),
-			'lastTrackerCronRun' => Piwik_GetOption('lastTrackerCronRun')
+			'lastTrackerCronRun' => Piwik_GetOption('lastTrackerCronRun'),
+			'currentLocationProviderId' => Piwik_UserCountry_LocationProvider::getCurrentProviderId(),
 		);
 		return $cacheContent;
 	}
@@ -206,7 +236,8 @@ class Piwik_Common
 	/**
 	 * Store data in general (global cache)
 	 *
-	 * @param mixed $value
+	 * @param mixed  $value
+	 * @return bool
 	 */
 	static protected function setCacheGeneral($value)
 	{
@@ -215,11 +246,21 @@ class Piwik_Common
 		$cache->set($cacheId, $value);
 		return true;
 	}
+	
+	/**
+	 * Delete and regenerate the 'general' tracker cache.
+	 */
+	static public function regenerateCacheGeneral()
+	{
+		self::clearCacheGeneral();
+		$cache = self::getCacheGeneral();
+		Piwik_Common::setCacheGeneral( $cache );
+	}
 
 	/**
 	 * Regenerate Tracker cache files
 	 *
-	 * @param array $idSites Array of idSites to clear cache for
+	 * @param array  $idSites  Array of idSites to clear cache for
 	 */
 	static public function regenerateCacheWebsiteAttributes($idSites = array())
 	{
@@ -236,10 +277,11 @@ class Piwik_Common
 	/**
 	 * Delete existing Tracker cache
 	 *
-	 * @param string $idSite (website ID of the site to clear cache for
+	 * @param string  $idSite  (website ID of the site to clear cache for
 	 */
 	static public function deleteCacheWebsiteAttributes( $idSite )
 	{
+		$idSite = (int)$idSite;
 		$cache = new Piwik_CacheFile('tracker');
 		$cache->delete($idSite);
 	}
@@ -260,13 +302,13 @@ class Piwik_Common
 	 *
 	 * This is similar to calling the API CoreAdminHome.runScheduledTasks (see misc/cron/archive.sh)
 	 *
-	 * @param int $now Current timestamp
+	 * @param int  $now  Current timestamp
 	 */
 	public static function runScheduledTasks($now)
 	{
 		// Currently, there is no hourly tasks. When there are some,
 		// this could be too agressive minimum interval (some hours would be skipped in case of low traffic)
-		$minimumInterval = Piwik_Tracker_Config::getInstance()->Tracker['scheduled_tasks_min_interval'];
+		$minimumInterval = Piwik_Config::getInstance()->Tracker['scheduled_tasks_min_interval'];
 
 		// If the user disabled browser archiving, he has already setup a cron
 		// To avoid parallel requests triggering the Scheduled Tasks,
@@ -322,10 +364,10 @@ class Piwik_Common
 	 * Returns the path and query part from a URL.
 	 * Eg. http://piwik.org/test/index.php?module=CoreHome will return /test/index.php?module=CoreHome
 	 *
-	 * @param string $url either http://piwik.org/test or /
+	 * @param string  $url  either http://piwik.org/test or /
 	 * @return string
 	 */
-	static function getPathAndQueryFromUrl($url)
+	static public function getPathAndQueryFromUrl($url)
 	{
 		$parsedUrl = parse_url( $url );
 		$result = '';
@@ -343,9 +385,9 @@ class Piwik_Common
 	/**
 	 * Returns the value of a GET parameter $parameter in an URL query $urlQuery
 	 *
-	 * @param string $urlQuery result of parse_url()['query'] and htmlentitied (& is &amp;) eg. module=test&amp;action=toto or ?page=test
-	 * @param string $parameter
-	 * @return string|bool Parameter value if found (can be the empty string!), null if not found
+	 * @param string  $urlQuery  result of parse_url()['query'] and htmlentitied (& is &amp;) eg. module=test&amp;action=toto or ?page=test
+	 * @param string  $parameter
+	 * @return string|bool  Parameter value if found (can be the empty string!), null if not found
 	 */
 	static public function getParameterFromQueryString( $urlQuery, $parameter)
 	{
@@ -360,8 +402,8 @@ class Piwik_Common
 	/**
 	 * Returns an URL query string in an array format
 	 *
-	 * @param string urlQuery
-	 * @return array array( param1=> value1, param2=>value2)
+	 * @param string  $urlQuery
+	 * @return array  array( param1=> value1, param2=>value2)
 	 */
 	static public function getArrayFromQueryString( $urlQuery )
 	{
@@ -373,7 +415,6 @@ class Piwik_Common
 		{
 			$urlQuery = substr($urlQuery, 1);
 		}
-
 		$separator = '&';
 
 		$urlQuery = $separator . $urlQuery;
@@ -386,16 +427,28 @@ class Piwik_Common
 
 		foreach($values as $value)
 		{
-			if( false !== strpos($value, '='))
+			$pos = strpos($value, '=');
+			if($pos !== false)
 			{
-				$exploded = explode('=',$value);
-				$name = $exploded[0];
-				$value = $exploded[1];
+				$name = substr($value, 0, $pos);
+				$value = substr($value, $pos+1);
+				if ($value === false)
+				{
+					$value = '';
+				}
 			}
 			else
 			{
 				$name = $value;
 				$value = false;
+			}
+			if(!empty($name))
+			{
+				$name = Piwik_Common::sanitizeInputValue($name);
+			}
+			if(!empty($value))
+			{
+				$value = Piwik_Common::sanitizeInputValue($value);
 			}
 
 			// if array without indexes
@@ -421,7 +474,8 @@ class Piwik_Common
 	/**
 	 * Builds a URL from the result of parse_url function
 	 * Copied from the PHP comments at http://php.net/parse_url
-	 * @param array
+	 * @param array  $parsed
+	 * @return bool|string
 	 */
 	static public function getParseUrlReverse($parsed)
 	{
@@ -452,10 +506,10 @@ class Piwik_Common
 	 * We don't need a precise test here because the value comes from the website
 	 * tracked source code and the URLs may look very strange.
 	 *
-	 * @param string $url
+	 * @param string  $url
 	 * @return bool
 	 */
-	static function isLookLikeUrl( $url )
+	static public function isLookLikeUrl( $url )
 	{
 		return preg_match('~^(ftp|news|http|https)?://(.*)$~D', $url, $matches) !== 0
 				&& strlen($matches[2]) > 0;
@@ -467,6 +521,7 @@ class Piwik_Common
 
 	/**
 	 * ending WITHOUT slash
+	 *
 	 * @return string
 	 */
 	static public function getPathToPiwikRoot()
@@ -477,8 +532,8 @@ class Piwik_Common
 	/**
 	 * Create directory if permitted
 	 *
-	 * @param string $path
-	 * @param bool $denyAccess
+	 * @param string  $path
+	 * @param bool    $denyAccess
 	 */
 	static public function mkdir( $path, $denyAccess = true )
 	{
@@ -502,7 +557,7 @@ class Piwik_Common
 
 		if($denyAccess)
 		{
-			self::createHtAccess($path);
+			self::createHtAccess($path, $overwrite = false);
 		}
 	}
 
@@ -511,14 +566,19 @@ class Piwik_Common
 	 *
 	 * Apache-specific; for IIS @see web.config
 	 *
-	 * @param string $path without trailing slash
-	 * @param string $content
+	 * @param string  $path     without trailing slash
+	 * @param bool    $overwrite whether to overwrite an existing file or not
+	 * @param string  $content
 	 */
-	static public function createHtAccess( $path, $content = "<Files \"*\">\nDeny from all\n</Files>\n" )
+	static public function createHtAccess( $path, $overwrite = true, $content = "<Files \"*\">\n<IfModule mod_access.c>\nDeny from all\n</IfModule>\n<IfModule !mod_access_compat>\n<IfModule mod_authz_host.c>\nDeny from all\n</IfModule>\n</IfModule>\n<IfModule mod_access_compat>\nDeny from all\n</IfModule>\n</Files>\n" )
 	{
 		if(self::isApache())
 		{
-			@file_put_contents($path . '/.htaccess', $content);
+			$file = $path . '/.htaccess';
+			if ($overwrite || !file_exists($file))
+			{
+				@file_put_contents($file, $content);
+			}
 		}
 	}
 
@@ -526,8 +586,8 @@ class Piwik_Common
 	 * Get canonicalized absolute path
 	 * See http://php.net/realpath
 	 *
-	 * @param string $path
-	 * @return string canonicalized absolute path
+	 * @param string  $path
+	 * @return string  canonicalized absolute path
 	 */
 	static public function realpath($path)
 	{
@@ -544,13 +604,104 @@ class Piwik_Common
 	 * File names beginning with anything but a-Z or 0-9 will be rejected (including .htaccess for example).
 	 * File names containing anything other than above mentioned will also be rejected (file names with spaces won't be accepted).
 	 *
-	 * @param string filename
+	 * @param string  $filename
 	 * @return bool
 	 *
 	 */
 	static public function isValidFilename($filename)
 	{
 		return (0 !== preg_match('/(^[a-zA-Z0-9]+([a-zA-Z_0-9.-]*))$/D', $filename));
+	}
+
+/*
+ * String operations
+ */
+
+	/**
+	 * byte-oriented substr() - ASCII
+	 *
+	 * @param string  $string
+	 * @param int     $start
+	 * @param int     ...      optional length
+	 * @return string
+	 */
+	static public function substr($string, $start)
+	{
+		// in case mbstring overloads substr function
+		$substr = function_exists('mb_orig_substr') ? 'mb_orig_substr' : 'substr';
+
+		$length = func_num_args() > 2
+			? func_get_arg(2)
+			: self::strlen($string);
+
+		return $substr($string, $start, $length);
+	}
+
+	/**
+	 * byte-oriented strlen() - ASCII
+	 *
+	 * @param string  $string
+	 * @return int
+	 */
+	static public function strlen($string)
+	{
+		// in case mbstring overloads strlen function
+		$strlen = function_exists('mb_orig_strlen') ? 'mb_orig_strlen' : 'strlen';
+		return $strlen($string);
+	}
+
+	/**
+	 * multi-byte substr() - UTF-8
+	 *
+	 * @param string  $string
+	 * @param int     $start
+	 * @param int     ...      optional length
+	 * @return string
+	 */
+	static public function mb_substr($string, $start)
+	{
+		$length = func_num_args() > 2
+			? func_get_arg(2)
+			: self::mb_strlen($string);
+
+		if (function_exists('mb_substr'))
+		{
+			return mb_substr($string, $start, $length, 'UTF-8');
+		}
+
+		return substr($string, $start, $length);
+	}
+
+	/**
+	 * multi-byte strlen() - UTF-8
+	 *
+	 * @param string  $string
+	 * @return int
+	 */
+	static public function mb_strlen($string)
+	{
+		if (function_exists('mb_strlen'))
+		{
+			return mb_strlen($string, 'UTF-8');
+		}
+
+		return strlen($string);
+	}
+
+	/**
+	 * multi-byte strtolower() - UTF-8
+	 *
+	 * @param string  $string
+	 * @return string
+	 */
+	static public function mb_strtolower($string)
+	{
+		if (function_exists('mb_strtolower'))
+		{
+			return mb_strtolower($string, 'UTF-8');
+		}
+
+		return strtolower($string);
 	}
 
 /*
@@ -569,17 +720,19 @@ class Piwik_Common
 	 * - The single quotes are not protected so "Piwik's amazing" will still be "Piwik's amazing".
 	 *
 	 * - Transformations are:
-	 * 		- '&' (ampersand) becomes '&amp;'
-	 *  	- '"'(double quote) becomes '&quot;'
-	 * 		- '<' (less than) becomes '&lt;'
-	 * 		- '>' (greater than) becomes '&gt;'
+	 *         - '&' (ampersand) becomes '&amp;'
+	 *         - '"'(double quote) becomes '&quot;'
+	 *         - '<' (less than) becomes '&lt;'
+	 *         - '>' (greater than) becomes '&gt;'
 	 * - It handles the magic_quotes setting.
 	 * - A non string value is returned without modification
 	 *
-	 * @param mixed The variable to be cleaned
-	 * @return mixed The variable after cleaning
+	 * @param mixed  $value The variable to be cleaned
+	 * @param bool   $alreadyStripslashed
+	 * @throws Exception
+	 * @return mixed  The variable after cleaning
 	 */
-	static public function sanitizeInputValues($value)
+	static public function sanitizeInputValues($value, $alreadyStripslashed = false)
 	{
 		if(is_numeric($value))
 		{
@@ -589,11 +742,9 @@ class Piwik_Common
 		{
 			$value = self::sanitizeInputValue($value);
 
-			// Undo the damage caused by magic_quotes; deprecated in php 5.3 but not removed until php 6
-			if ( version_compare(PHP_VERSION, '6') === -1
-				&& get_magic_quotes_gpc())
+			if(!$alreadyStripslashed) // a JSON array was already stripslashed, don't do it again for each value
 			{
-				$value = stripslashes($value);
+				$value = self::undoMagicQuotes($value);
 			}
 		}
 		elseif (is_array($value))
@@ -601,14 +752,14 @@ class Piwik_Common
 			foreach (array_keys($value) as $key)
 			{
 				$newKey = $key;
-				$newKey = self::sanitizeInputValues($newKey);
+				$newKey = self::sanitizeInputValues($newKey, $alreadyStripslashed);
 				if ($key != $newKey)
 				{
 					$value[$newKey] = $value[$key];
 					unset($value[$key]);
 				}
 
-				$value[$newKey] = self::sanitizeInputValues($value[$newKey]);
+				$value[$newKey] = self::sanitizeInputValues($value[$newKey], $alreadyStripslashed);
 			}
 		}
 		elseif( !is_null($value)
@@ -622,8 +773,8 @@ class Piwik_Common
 	/**
 	 * Sanitize a single input value
 	 *
-	 * @param string $value
-	 * @return string sanitized input
+	 * @param string  $value
+	 * @return string  sanitized input
 	 */
 	static public function sanitizeInputValue($value)
 	{
@@ -652,14 +803,51 @@ class Piwik_Common
 	/**
 	 * Unsanitize a single input value
 	 *
-	 * @param string $value
-	 * @return string unsanitized input
+	 * @param string  $value
+	 * @return string  unsanitized input
 	 */
 	static public function unsanitizeInputValue($value)
 	{
 		return htmlspecialchars_decode($value, self::HTML_ENCODING_QUOTE_STYLE);
 	}
-
+	
+	/**
+	 * Unsanitize one or more values.
+	 * 
+	 * @param string|array  $value
+	 * @return string|array  unsanitized input
+	 */
+	static public function unsanitizeInputValues($value)
+	{
+		if (is_array($value))
+		{
+			$result = array();
+			foreach ($value as $key => $arrayValue)
+			{
+				$result[$key] = self::unsanitizeInputValues($arrayValue);
+			}
+			return $result;
+		}
+		else
+		{
+			return self::unsanitizeInputValue($value);
+		}
+	}
+	
+	/**
+	 * Undo the damage caused by magic_quotes; deprecated in php 5.3 but not removed until php 5.4
+	 * 
+	 * @param string
+	 * @return string  modified or not
+	 */
+	static public function undoMagicQuotes($value)
+	{
+		return version_compare(PHP_VERSION, '5.4', '<')
+				&& get_magic_quotes_gpc()
+				? stripslashes($value)
+				: $value;
+	}
+	
 	/**
 	 * Returns a sanitized variable value from the $_GET and $_POST superglobal.
 	 * If the variable doesn't have a value or an empty value, returns the defaultValue if specified.
@@ -667,13 +855,13 @@ class Piwik_Common
 	 *
 	 * @see sanitizeInputValues() for the applied sanitization
 	 *
-	 * @param string $varName name of the variable
-	 * @param string $varDefault default value. If '', and if the type doesn't match, exit() !
-	 * @param string $varType Expected type, the value must be one of the following: array, int, integer, string
-	 * @param array $requestArrayToUse
+	 * @param string  $varName            name of the variable
+	 * @param string  $varDefault         default value. If '', and if the type doesn't match, exit() !
+	 * @param string  $varType            Expected type, the value must be one of the following: array, int, integer, string, json
+	 * @param array   $requestArrayToUse
 	 *
-	 * @exception if the variable type is not known
-	 * @exception if the variable we want to read doesn't have neither a value nor a default value specified
+	 * @throws Exception  if the variable type is not known
+	 *                    or if the variable we want to read doesn't have neither a value nor a default value specified
 	 *
 	 * @return mixed The variable after cleaning
 	 */
@@ -701,7 +889,7 @@ class Piwik_Common
 		{
 			if( is_null($varDefault))
 			{
-				throw new Exception("The parameter '$varName' isn't set in the Request, and a default value wasn't provided.");
+				throw new Exception("The parameter '$varName' isn't set in the Request, and a default value wasn't provided." );
 			}
 			else
 			{
@@ -715,7 +903,16 @@ class Piwik_Common
 			}
 		}
 
-		// Normal case, there is a value available in REQUEST for the requested varName
+		// Normal case, there is a value available in REQUEST for the requested varName:
+		
+		// we deal w/ json differently
+		if ($varType == 'json')
+		{
+			$value = self::undoMagicQuotes($requestArrayToUse[$varName]);
+			$value = Piwik_Common::json_decode($value, $assoc = true);
+			return self::sanitizeInputValues($value, $alreadyStripslashed = true);
+		}
+		
 		$value = self::sanitizeInputValues( $requestArrayToUse[$varName] );
 		if( !is_null($varType))
 		{
@@ -785,18 +982,7 @@ class Piwik_Common
 		static $salt = null;
 		if(is_null($salt))
 		{
-			if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-			{
-				$salt = @Piwik_Tracker_Config::getInstance()->superuser['salt'];
-			}
-			else
-			{
-				$config = Zend_Registry::get('config');
-				if($config !== false)
-				{
-					$salt = @$config->superuser->salt;
-				}
-			}
+			$salt = @Piwik_Config::getInstance()->superuser['salt'];
 		}
 		return $salt;
 	}
@@ -813,18 +999,7 @@ class Piwik_Common
 		static $hashAlgorithm = null;
 		if(is_null($hashAlgorithm))
 		{
-			if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-			{
-				$hashAlgorithm = @Piwik_Tracker_Config::getInstance()->General['hash_algorithm'];
-			}
-			else
-			{
-				$config = Zend_Registry::get('config');
-				if($config !== false)
-				{
-					$hashAlgorithm = @$config->General->hash_algorithm;
-				}
-			}
+			$hashAlgorithm = @Piwik_Config::getInstance()->General['hash_algorithm'];
 		}
 
 		if($hashAlgorithm)
@@ -838,51 +1013,11 @@ class Piwik_Common
 	}
 
 	/**
-	 * Returns the list of Campaign parameter names that will be read to classify 
-	 * a visit as coming from a Campaign
-	 * 
-	 * @return array array( 
-	 * 			0 => array( ... ) // campaign names parameters
-	 * 			1 => array( ... ) // campaign keyword parameters
-	 * ); 
-	 */
-	static public function getCampaignParameters()
-	{
-		if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-		{
-			$return = array(
-				Piwik_Tracker_Config::getInstance()->Tracker['campaign_var_name'],
-				Piwik_Tracker_Config::getInstance()->Tracker['campaign_keyword_var_name'],
-			);
-		}
-		else
-		{
-			$return = array(
-				Zend_Registry::get('config')->Tracker->campaign_var_name,
-				Zend_Registry::get('config')->Tracker->campaign_keyword_var_name,
-			);
-		}
-		foreach($return as &$list) 
-		{
-			if(strpos($list, ',') !== false)
-			{
-				$list = explode(',', $list);
-			}
-			else
-			{
-				$list = array($list);
-			}
-		}
-		array_walk_recursive($return, 'trim');
-		return $return;
-	}
-	
-	/**
 	 * Generate random string
 	 *
-	 * @param string $length string length
-	 * @param string $alphabet characters allowed in random string
-	 * @return string random string with given length
+	 * @param int     $length string length
+	 * @param string  $alphabet characters allowed in random string
+	 * @return string  random string with given length
 	 */
 	public static function getRandomString($length = 16, $alphabet = "abcdefghijklmnoprstuvwxyz0123456789")
 	{
@@ -907,10 +1042,11 @@ class Piwik_Common
 
 	/**
 	 * Convert hexadecimal representation into binary data.
+	 * !! Will emit warning if input string is not hex!!
 	 *
 	 * @see http://php.net/bin2hex
 	 *
-	 * @param string $str Hexadecimal representation
+	 * @param string  $str  Hexadecimal representation
 	 * @return string
 	 */
 	static public function hex2bin($str)
@@ -921,14 +1057,15 @@ class Piwik_Common
 	/**
 	 * This function will convert the input string to the binary representation of the ID
 	 * but it will throw an Exception if the specified input ID is not correct
-	 * 
+	 *
 	 * This is used when building segments containing visitorId which could be an invalid string
 	 * therefore throwing Unexpected PHP error [pack(): Type H: illegal hex digit i] severity [E_WARNING]
-	 * 
-	 * It would be simply to silent fail the pack() call above but in all other cases, we don't expect an error, 
+	 *
+	 * It would be simply to silent fail the pack() call above but in all other cases, we don't expect an error,
 	 * so better be safe and get the php error when something unexpected is happening
-	 * @param string $id
-	 * @return binary string
+	 * @param string  $id
+	 * @throws Exception
+	 * @return string  binary string
 	 */
 	static public function convertVisitorIdToBin($id)
 	{
@@ -952,7 +1089,7 @@ class Piwik_Common
 	 *
 	 * @deprecated 1.4
 	 *
-	 * @param string $ip IP address in network address format
+	 * @param string  $ip  IP address in network address format
 	 * @return string
 	 */
 	static public function long2ip($ip)
@@ -960,16 +1097,85 @@ class Piwik_Common
 		return Piwik_IP::long2ip($ip);
 	}
 
+	/**
+	 * Should we use the replacement json_encode/json_decode functions?
+	 *
+	 * @return bool  True if broken; false otherwise
+	 */
+	static private function useJsonLibrary()
+	{
+		static $useLib;
+
+		if (!isset($useLib))
+		{
+			/*
+			 * 5.1.x - doesn't have json extension; we use lib/upgradephp instead
+			 * 5.2 to 5.2.4 - broken in various ways, including:
+			 *
+			 * @see https://bugs.php.net/bug.php?id=38680 'json_decode cannot decode basic types'
+			 * @see https://bugs.php.net/bug.php?id=41403 'json_decode cannot decode floats'
+			 * @see https://bugs.php.net/bug.php?id=42785 'json_encode outputs numbers according to locale'
+			 */
+			$useLib = false;
+			if (version_compare(PHP_VERSION, '5.2.1') < 0)
+			{
+				$useLib = true;
+			}
+			else if (version_compare(PHP_VERSION, '5.2.5') < 0)
+			{
+				$info = localeconv();
+				$useLib = $info['decimal_point'] != '.';
+			}
+		}
+
+		return $useLib;
+	}
+
+	/**
+	 * JSON encode wrapper
+	 * - missing or broken in some php 5.x versions
+	 *
+	 * @param mixed  $value
+	 * @return string
+	 */
+	static public function json_encode($value)
+	{
+		if (self::useJsonLibrary())
+		{
+			return _json_encode($value);
+		}
+
+		return @json_encode($value);
+	}
+
+	/**
+	 * JSON decode wrapper
+	 * - missing or broken in some php 5.x versions
+	 *
+	 * @param string  $json
+	 * @param bool    $assoc
+	 * @return mixed
+	 */
+	static public function json_decode($json, $assoc = false)
+	{
+		if (self::useJsonLibrary())
+		{
+			return _json_decode($json, $assoc);
+		}
+
+		return json_decode($json, $assoc);
+	}
+
 /*
  * DataFiles
  */
 
 	/**
-	 * Returns list of valid country codes
+	 * Returns list of continent codes
 	 *
 	 * @see core/DataFiles/Countries.php
 	 *
-	 * @return array Array of 2 letter ISO codes
+	 * @return array  Array of 3 letter continent codes
 	 */
 	static public function getContinentsList()
 	{
@@ -984,8 +1190,8 @@ class Piwik_Common
 	 *
 	 * @see core/DataFiles/Countries.php
 	 *
-	 * @param bool $includeInternalCodes
-	 * @return array Array of (2 letter ISO codes => 3 letter continent code)
+	 * @param bool  $includeInternalCodes
+	 * @return array  Array of (2 letter ISO codes => 3 letter continent code)
 	 */
 	static public function getCountriesList($includeInternalCodes = false)
 	{
@@ -1006,7 +1212,7 @@ class Piwik_Common
 	 *
 	 * @see core/DataFiles/Languages.php
 	 *
-	 * @return array Array of 2 letter ISO codes => Language name (in English)
+	 * @return array  Array of 2 letter ISO codes => Language name (in English)
 	 */
 	static public function getLanguagesList()
 	{
@@ -1021,7 +1227,7 @@ class Piwik_Common
 	 *
 	 * @see core/DataFiles/LanguageToCountry.php
 	 *
-	 * @return array Array of ( 2 letter ISO language codes => 2 letter ISO country codes )
+	 * @return array  Array of ( 2 letter ISO language codes => 2 letter ISO country codes )
 	 */
 	static public function getLanguageToCountryList()
 	{
@@ -1036,7 +1242,7 @@ class Piwik_Common
 	 *
 	 * @see core/DataFiles/SearchEngines.php
 	 *
-	 * @return array Array of ( URL => array( searchEngineName, keywordParameter, path, charset ) )
+	 * @return array  Array of ( URL => array( searchEngineName, keywordParameter, path, charset ) )
 	 */
 	static public function getSearchEngineUrls()
 	{
@@ -1051,7 +1257,7 @@ class Piwik_Common
 	 *
 	 * @see core/DataFiles/SearchEngines.php
 	 *
-	 * @return array Array of ( searchEngineName => URL )
+	 * @return array  Array of ( searchEngineName => URL )
 	 */
 	static public function getSearchEngineNames()
 	{
@@ -1068,7 +1274,7 @@ class Piwik_Common
 	/**
 	 * Returns the browser language code, eg. "en-gb,en;q=0.5"
 	 *
-	 * @param string $browserLang Optional browser language, otherwise taken from the request header
+	 * @param string  $browserLang  Optional browser language, otherwise taken from the request header
 	 * @return string
 	 */
 	static public function getBrowserLanguage($browserLang = NULL)
@@ -1122,10 +1328,10 @@ class Piwik_Common
 	 * Returns the visitor country based on the Browser 'accepted language'
 	 * information, but provides a hook for geolocation via IP address.
 	 *
-	 * @param string $lang browser lang
-	 * @param bool $enableLanguageToCountryGuess If set to true, some assumption will be made and detection guessed more often, but accuracy could be affected
-	 * @param string $ip
-	 * @return string 2 letter ISO code
+	 * @param string  $lang                          browser lang
+	 * @param bool    $enableLanguageToCountryGuess  If set to true, some assumption will be made and detection guessed more often, but accuracy could be affected
+	 * @param string  $ip
+	 * @return string  2 letter ISO code
 	 */
 	static public function getCountry( $lang, $enableLanguageToCountryGuess, $ip )
 	{
@@ -1148,9 +1354,9 @@ class Piwik_Common
 	/**
 	 * Returns list of valid country codes
 	 *
-	 * @param string $browserLanguage
-	 * @param array $validCountries Arrayof valid countries
-	 * @param bool $enableLanguageToCountryGuess (if true, will guess country based on language that lacks region information)
+	 * @param string  $browserLanguage
+	 * @param array   $validCountries                 Array of valid countries
+	 * @param bool    $enableLanguageToCountryGuess  (if true, will guess country based on language that lacks region information)
 	 * @return array Array of 2 letter ISO codes
 	 */
 	static public function extractCountryCodeFromBrowserLanguage($browserLanguage, $validCountries, $enableLanguageToCountryGuess)
@@ -1186,9 +1392,9 @@ class Piwik_Common
 	/**
 	 * Returns the visitor language based only on the Browser 'accepted language' information
 	 *
-	 * @param string $browserLang Browser's accepted langauge header
-	 * @param array Array of valid language codes
-	 * @return string 2 letter ISO 639 code
+	 * @param $browserLanguage  Browser's accepted langauge header
+	 * @param $validLanguages   array of valid language codes
+	 * @return string  2 letter ISO 639 code
 	 */
 	static public function extractLanguageCodeFromBrowserLanguage($browserLanguage, $validLanguages)
 	{
@@ -1219,9 +1425,9 @@ class Piwik_Common
 	/**
 	 * Returns the continent of a given country
 	 *
-	 * @param string Country 2 letters isocode
+	 * @param string  $country  2 letters isocode
 	 *
-	 * @return string Continent (3 letters code : afr, asi, eur, amn, ams, oce)
+	 * @return string  Continent (3 letters code : afr, asi, eur, amn, ams, oce)
 	 */
 	static public function getContinent($country)
 	{
@@ -1233,6 +1439,42 @@ class Piwik_Common
 		return 'unk';
 	}
 
+/*
+ * Campaign
+ */
+
+	/**
+	 * Returns the list of Campaign parameter names that will be read to classify 
+	 * a visit as coming from a Campaign
+	 * 
+	 * @return array array( 
+	 * 			0 => array( ... ) // campaign names parameters
+	 * 			1 => array( ... ) // campaign keyword parameters
+	 * ); 
+	 */
+	static public function getCampaignParameters()
+	{
+		$return = array(
+			Piwik_Config::getInstance()->Tracker['campaign_var_name'],
+			Piwik_Config::getInstance()->Tracker['campaign_keyword_var_name'],
+		);
+
+		foreach($return as &$list) 
+		{
+			if(strpos($list, ',') !== false)
+			{
+				$list = explode(',', $list);
+			}
+			else
+			{
+				$list = array($list);
+			}
+		}
+
+		array_walk_recursive($return, 'trim');
+		return $return;
+	}
+	
 /*
  * Referrer
  */
@@ -1249,7 +1491,7 @@ class Piwik_Common
 	 *   example.de -> example.{}
 	 *   example.co.uk -> example.{}
 	 *
-	 * @param string $url
+	 * @param string  $url
 	 * @return string
 	 */
 	static public function getLossyUrl($url)
@@ -1290,7 +1532,7 @@ class Piwik_Common
 	 *       as the google keyword parameter couldn't be found.
 	 *
 	 * @see unit tests in /tests/core/Common.test.php
-	 * @param string URL referer URL, eg. $_SERVER['HTTP_REFERER']
+	 * @param string  $referrerUrl  URL referer URL, eg. $_SERVER['HTTP_REFERER']
 	 * @return array|false false if a keyword couldn't be extracted,
 	 * 						or array(
 	 * 							'name' => 'Google',
@@ -1322,7 +1564,13 @@ class Piwik_Common
 			$refererParsed['query'] = '';
 		}
 		$query = $refererParsed['query'];
-
+		
+		// Google Referrers URLs sometimes have the fragment which contains the keyword
+		if(!empty($refererParsed['fragment']))
+		{
+			$query .= '&' . $refererParsed['fragment'];
+		}
+		
 		$searchEngines = self::getSearchEngineUrls();
 
 		$hostPattern = self::getLossyUrl($refererHost);
@@ -1348,7 +1596,7 @@ class Piwik_Common
 			elseif(!strncmp($refererPath, '/pemonitorhosted/ws/results/', 28))
 			{
 				// private-label search powered by InfoSpace Metasearch
-				$refererHost = 'infospace.com';
+				$refererHost = 'wsdsold.infospace.com';
 			}
 			elseif(strpos($refererHost, '.images.search.yahoo.com') != false)
 			{
@@ -1382,6 +1630,7 @@ class Piwik_Common
 			$variableNames = array($variableNames);
 		}
 
+		$key = null;
 		if($searchEngineName === 'Google Images'
 			|| ($searchEngineName === 'Google' && strpos($referrerUrl, '/imgres') !== false) )
 		{
@@ -1392,7 +1641,8 @@ class Piwik_Common
 			}
 			$searchEngineName = 'Google Images';
 		}
-		else if($searchEngineName === 'Google' && (strpos($query, '&as_') !== false || strpos($query, 'as_') === 0))
+		else if($searchEngineName === 'Google' 
+				&& (strpos($query, '&as_') !== false || strpos($query, 'as_') === 0))
 		{
 			$keys = array();
 			$key = self::getParameterFromQueryString($query, 'as_q');
@@ -1451,33 +1701,79 @@ class Piwik_Common
 					// search for keywords now &vname=keyword
 					$key = self::getParameterFromQueryString($query, $variableName);
 					$key = trim(urldecode($key));
-					if(!empty($key))
+					
+					// Special case: Google & empty q parameter
+					if(empty($key)
+						&& $variableName == 'q'
+						
+						&& (
+							// Google search with no keyword
+							($searchEngineName == 'Google'
+							&& (	// First, they started putting an empty q= parameter
+									strpos($query, '&q=') !== false 
+								|| 	strpos($query, '?q=') !== false
+									// then they started sending the full host only (no path/query string)
+								||  (empty($query) && (empty($refererPath) || $refererPath == '/') && empty($refererParsed['fragment']))
+								)
+						) 
+							// search engines with no keyword
+							|| $searchEngineName == 'Google Images'
+							|| $searchEngineName == 'DuckDuckGo')
+					)
+					{
+						$key = false;
+					}
+					if(!empty($key)
+						|| $key === false)
 					{
 						break;
 					}
 				}
 			}
 		}
-		if(empty($key))
+		
+		// $key === false is the special case "No keyword provided" which is a Search engine match
+		if($key === null
+			|| $key === '')
 		{
 			return false;
 		}
 
-		if(function_exists('iconv')
-			&& isset($searchEngines[$refererHost][3]))
+		if(!empty($key))
 		{
-			$charset = trim($searchEngines[$refererHost][3]);
-			if(!empty($charset))
+			if(function_exists('iconv')
+				&& isset($searchEngines[$refererHost][3]))
 			{
-				$newkey = @iconv($charset, 'UTF-8//IGNORE', $key);
-				if(!empty($newkey))
+				// accepts string, array, or comma-separated list string in preferred order
+				$charsets = $searchEngines[$refererHost][3];
+				if (!is_array($charsets))
 				{
-					$key = $newkey;
+					$charsets = explode(',', $charsets);
+				}
+
+				if(!empty($charsets))
+				{
+					$charset = $charsets[0];
+					if (count($charsets) > 1
+						&& function_exists('mb_detect_encoding'))
+					{
+						$charset = mb_detect_encoding($key, $charsets);
+						if ($charset === false)
+						{
+							$charset = $charsets[0];
+						}
+					}
+
+					$newkey = @iconv($charset, 'UTF-8//IGNORE', $key);
+					if(!empty($newkey))
+					{
+						$key = $newkey;
+					}
 				}
 			}
-		}
 
-		$key = mb_strtolower($key, 'UTF-8');
+			$key = self::mb_strtolower($key);
+		}
 
 		return array(
 			'name' => $searchEngineName,
@@ -1506,6 +1802,7 @@ class Piwik_Common
 	 * Is the current script execution triggered by misc/cron/archive.php ?
 	 * 
 	 * Helpful for error handling: directly throw error without HTML (eg. when DB is down)
+	 * @return bool
 	 */
 	static public function isArchivePhpTriggered()
 	{
@@ -1539,7 +1836,17 @@ class Piwik_Common
 	 */
 	static public function isWindows()
 	{
-		return DIRECTORY_SEPARATOR == '\\';
+		return DIRECTORY_SEPARATOR === '\\';
+	}
+
+	/** 
+	 * Returns true if running on MacOS 
+	 * 
+	 * @return bool true if PHP detects it is running on MacOS; else false 
+	 */ 
+	static public function isMacOS() 
+	{ 
+		return PHP_OS === 'Darwin'; 
 	}
 
 	/**
@@ -1573,7 +1880,7 @@ class Piwik_Common
 	 * Takes a list of fields defining numeric values and returns the corresponding
 	 * unnamed parameters to be bound to the field names in the where clause of a SQL query
 	 *
-	 * @param array|string $fields array( fieldName1, fieldName2, fieldName3)  Names of the mysql table fields to load
+	 * @param array|string  $fields  array( fieldName1, fieldName2, fieldName3)  Names of the mysql table fields to load
 	 * @return string "?, ?, ?"
 	 */
 	public static function getSqlStringFieldsArray( $fields )
@@ -1589,12 +1896,43 @@ class Piwik_Common
 		}
 		return '?'.str_repeat(',?', $count-1);
 	}
+	
+	/**
+	 * Sets outgoing header.
+	 * 
+	 * @param string $header The header.
+	 * @param bool $replace Whether to replace existing or not.
+	 */
+	public static function sendHeader( $header, $replace = true )
+	{
+		if (isset($GLOBALS['PIWIK_TRACKER_LOCAL_TRACKING']) && $GLOBALS['PIWIK_TRACKER_LOCAL_TRACKING'])
+		{
+			@header($header, $replace);
+		}
+		else
+		{
+			header($header, $replace);
+		}
+	}
+	
+	/**
+	 * Returns the ID of the current LocationProvider (see UserCountry plugin code) from
+	 * the Tracker cache.
+	 */
+	public static function getCurrentLocationProviderId()
+	{
+		$cache = self::getCacheGeneral();
+		return empty($cache['currentLocationProviderId'])
+			  ? Piwik_UserCountry_LocationProvider_Default::ID
+			  : $cache['currentLocationProviderId'];
+	}
 }
 
 /**
  * Mark orphaned object for garbage collection
  *
  * For more information: @link http://dev.piwik.org/trac/ticket/374
+ * @param $var
  */
 function destroy(&$var)
 {
@@ -1603,10 +1941,22 @@ function destroy(&$var)
 	$var = null;
 }
 
-
-// http://bugs.php.net/bug.php?id=53632
-if (strpos(str_replace('.','',serialize($_REQUEST)), '22250738585072011') !== false)
+if(!function_exists('printDebug'))
 {
-  header('Status: 422 Unprocessable Entity');
-  die('Exit');
+	function printDebug( $info = '' )
+	{
+		if(isset($GLOBALS['PIWIK_TRACKER_DEBUG']) && $GLOBALS['PIWIK_TRACKER_DEBUG'])
+		{
+			if(is_array($info))
+			{
+				print("<pre>");
+				print(htmlspecialchars(var_export($info,true), ENT_QUOTES));
+				print("</pre>");
+			}
+			else
+			{
+				print(htmlspecialchars($info, ENT_QUOTES) . "<br />\n");
+			}
+		}
+	}
 }

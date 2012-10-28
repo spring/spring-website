@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: DataTableSummary.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: DataTableSummary.php 7160 2012-10-12 00:36:14Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -23,12 +23,42 @@
  */
 class Piwik_DataTable_Row_DataTableSummary extends Piwik_DataTable_Row
 {
-	function __construct($subTable)
+	/**
+	 * @param Piwik_DataTable  $subTable
+	 */
+	function __construct($subTable = null)
 	{
 		parent::__construct();
-		foreach($subTable->getRows() as $row)
+		
+		if ($subTable !== null)
 		{
-			$this->sumRow($row);
+			$this->sumTable($subTable);
+		}
+	}
+	
+	/**
+	 * Reset this row to an empty one and sum the associated subtable again.
+	 */
+	public function recalculate()
+	{
+		$id = $this->getIdSubDataTable();
+		if ($id !== null)
+		{
+			$subtable = Piwik_DataTable_Manager::getInstance()->getTable($id);
+			$this->sumTable($subtable);
+		}
+	}
+	
+	/**
+	 * Sums a tables row with this one.
+	 * 
+	 * @param Piwik_DataTable $table
+	 */
+	private function sumTable( $table )
+	{
+		foreach($table->getRows() as $row)
+		{
+			$this->sumRow($row, $enableCopyMetadata = false);
 		}
 	}
 }

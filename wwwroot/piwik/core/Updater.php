@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Updater.php 4629 2011-05-03 15:32:11Z vipsoft $
+ * @version $Id: Updater.php 6814 2012-08-17 14:53:21Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -20,7 +20,6 @@ require_once PIWIK_INCLUDE_PATH . '/core/Option.php';
  *
  * @package Piwik
  * @subpackage Piwik_Updater
- * @see Piwik_iUpdate
  */
 class Piwik_Updater
 {
@@ -29,8 +28,8 @@ class Piwik_Updater
 	
 	public $pathUpdateFileCore;
 	public $pathUpdateFilePlugins;
-
 	private $componentsToCheck = array();
+	private $hasMajorDbUpdate = false;
 	
 	public function __construct()
 	{
@@ -99,6 +98,17 @@ class Piwik_Updater
 	}
 
 	/**
+	 * Does one of the new versions involve a major database update?
+	 * Note: getSqlQueriesToExecute() must be called before this method!
+	 * 
+	 * @return bool
+	 */
+	public function hasMajorDbUpdate()
+	{
+		return $this->hasMajorDbUpdate;
+	}
+
+	/**
 	 * Returns the list of SQL queries that would be executed during the update
 	 * 
 	 * @return array of SQL queries 
@@ -119,6 +129,8 @@ class Piwik_Updater
 					foreach($queriesForComponent as $query => $error) {
 						$queries[] = $query.';';
 					}
+					
+					$this->hasMajorDbUpdate = $this->hasMajorDbUpdate || call_user_func( array($className, 'isMajorUpdate'));
 				}
 			}
 			// unfortunately had to extract this query from the Piwik_Option class
@@ -138,11 +150,12 @@ class Piwik_Updater
 		}
 		return 'Piwik_'. $componentName .'_Updates_' . $suffix;
 	}
-	
+
 	/**
 	 * Update the named component
 	 *
 	 * @param string $componentName 'core', or plugin name
+	 * @throws Exception|Piwik_Updater_UpdateErrorException
 	 * @return array of warning strings if applicable
 	 */
 	public function update($componentName)
@@ -225,10 +238,11 @@ class Piwik_Updater
 		}
 		return $componentsWithUpdateFile;
 	}
-	
+
 	/**
 	 * Construct list of outdated components
 	 *
+	 * @throws Exception
 	 * @return array array( componentName => array( oldVersion, newVersion), [...])
 	 */
 	public function getComponentsWithNewVersion()
@@ -264,7 +278,8 @@ class Piwik_Updater
 			{
 				if($name === 'core')
 				{
-					$currentVersion = '0.2.9';
+					// This should not happen
+					$currentVersion = Piwik_Version::VERSION;
 				}
 				else
 				{
@@ -294,6 +309,7 @@ class Piwik_Updater
 	 *
 	 * @param string $file Update script filename
 	 * @param array $sqlarray An array of SQL queries to be executed
+	 * @throws Piwik_Updater_UpdateErrorException
 	 */
 	static function updateDatabase($file, $sqlarray)
 	{

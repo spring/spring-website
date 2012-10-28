@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: CoreHome.php 5209 2011-09-22 19:53:11Z SteveG $
+ * @version $Id: CoreHome.php 7035 2012-09-21 13:30:18Z EZdesign $
  *
  * @category Piwik_Plugins
  * @package Piwik_CoreHome
@@ -34,6 +34,9 @@ class Piwik_CoreHome extends Piwik_Plugin
 		);
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getCssFiles( $notification )
 	{
 		$cssFiles = &$notification->getNotificationObject();
@@ -48,6 +51,9 @@ class Piwik_CoreHome extends Piwik_Plugin
 		$cssFiles[] = "plugins/CoreHome/templates/jqplot.css";
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getJsFiles( $notification )
 	{
 		$jsFiles = &$notification->getNotificationObject();
@@ -61,7 +67,10 @@ class Piwik_CoreHome extends Piwik_Plugin
 		$jsFiles[] = "libs/swfobject/swfobject.js";
 		$jsFiles[] = "libs/javascript/sprintf.js";
 		$jsFiles[] = "themes/default/common.js";
+		$jsFiles[] = "plugins/CoreHome/templates/tooltip.js";
 		$jsFiles[] = "plugins/CoreHome/templates/datatable.js";
+		$jsFiles[] = "plugins/CoreHome/templates/datatable_rowactions.js";
+		$jsFiles[] = "plugins/CoreHome/templates/popover.js";
 		$jsFiles[] = "plugins/CoreHome/templates/broadcast.js";
 		$jsFiles[] = "plugins/CoreHome/templates/menu.js";
 		$jsFiles[] = "plugins/CoreHome/templates/calendar.js";
@@ -69,26 +78,8 @@ class Piwik_CoreHome extends Piwik_Plugin
 		$jsFiles[] = "plugins/CoreHome/templates/autocomplete.js";
 		$jsFiles[] = "plugins/CoreHome/templates/sparkline.js";
 		
-		$jqplot = 'libs/jqplot/';
 		$jsFiles[] = "plugins/CoreHome/templates/jqplot.js";
-		$jsFiles[] = $jqplot."jqplot.core.js";
-		$jsFiles[] = $jqplot."jqplot.linearAxisRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.axisTickRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.axisLabelRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.tableLegendRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.lineRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.markerRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.divTitleRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.canvasGridRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.shadowRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.shapeRenderer.js";
-		$jsFiles[] = $jqplot."jqplot.sprintf.js";
-		$jsFiles[] = $jqplot."jqplot.themeEngine.js";
-		$jsFiles[] = $jqplot."plugins/jqplot.pieRenderer.js";
-		$jsFiles[] = $jqplot."plugins/jqplot.barRenderer.js";
-		$jsFiles[] = $jqplot."plugins/jqplot.categoryAxisRenderer.js";
-		$jsFiles[] = $jqplot."plugins/jqplot.canvasTextRenderer.js";
-		$jsFiles[] = $jqplot."plugins/jqplot.canvasAxisTickRenderer.js";
+		$jsFiles[] = "libs/jqplot/jqplot-custom.min.js";
 	}
 	
 }

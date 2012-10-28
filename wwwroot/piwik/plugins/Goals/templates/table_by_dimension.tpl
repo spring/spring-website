@@ -23,18 +23,20 @@
 		</ul>
 	</div>
 	{/if}
-	{foreach from=$goalDimensions key=dimensionFamilyName item=dimensions}
-		<div class='dimensionCategory'>
-			{'Goals_ViewGoalsBy'|translate:$dimensionFamilyName}
-			<ul class='listCircle'>
-			{foreach from=$dimensions item=dimension}
-				<li title='{'Goals_ViewGoalsBy'|translate:$dimension.name}' class='goalDimension' module='{$dimension.module}' action='{$dimension.action}'>
-					<span class='dimension'>{$dimension.name}</span>
-				</li>
-			{/foreach}
-			</ul>
-		</div>
-	{/foreach}
+	{if $nb_conversions > 0 }
+		{foreach from=$goalDimensions key=dimensionFamilyName item=dimensions}
+			<div class='dimensionCategory'>
+				{'Goals_ViewGoalsBy'|translate:$dimensionFamilyName}
+				<ul class='listCircle'>
+				{foreach from=$dimensions item=dimension}
+					<li title='{'Goals_ViewGoalsBy'|translate:$dimension.name}' class='goalDimension' module='{$dimension.module}' action='{$dimension.action}'>
+						<span class='dimension'>{$dimension.name}</span>
+					</li>
+				{/foreach}
+				</ul>
+			</div>
+		{/foreach}
+	{/if}
 </div>
 
 <div style='float: left;'>
@@ -43,8 +45,9 @@
 	<div id='tableGoalsByDimension'></div>
 </div>
 <div class="clear"></div>
-{literal}
 <script type="text/javascript">
+var preloadAbandonedCart = {if !empty($cart_nb_conversions) && $nb_conversions == 0}1{else}0{/if};
+{literal}
 $(document).ready( function() {
 	var countLoaded = 0;
 	/* 
@@ -60,17 +63,23 @@ $(document).ready( function() {
 		widgetUniqueId = module+action;
 		self.expectedWidgetUniqueId = widgetUniqueId;
 		
-		var idGoal = broadcast.getValueFromHash('idGoal');
 		var widgetParameters = {
 			'module': module,
-			'action': action,
+			'action': action
 		};
+		var idGoal = broadcast.getValueFromHash('idGoal');
+		widgetParameters['idGoal'] = idGoal.length ? idGoal : 0; //Piwik_DataTable_Filter_AddColumnsProcessedMetricsGoal::GOALS_FULL_TABLE;
+		
 		// Loading segment table means loading Goals view for Top Countries/etc.
 		if(module != 'Goals') {
 			widgetParameters['viewDataTable'] = 'tableGoals';
 			// 0 is Piwik_DataTable_Filter_AddColumnsProcessedMetricsGoal::GOALS_FULL_TABLE
-			widgetParameters['filter_only_display_idgoal'] = idGoal.length ? idGoal : 0;
 			widgetParameters['documentationForGoalsPage'] = 1;
+		}
+		
+		if(preloadAbandonedCart) {
+			widgetParameters['viewDataTable'] = 'ecommerceAbandonedCart';
+			widgetParameters['filterEcommerce'] = 2;
 		}
 		var onWidgetLoadedCallback = function (response) {
 			if(widgetUniqueId != self.expectedWidgetUniqueId) {

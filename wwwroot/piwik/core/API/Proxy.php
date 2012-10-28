@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Proxy.php 5287 2011-10-12 07:16:25Z EZdesign $
+ * @version $Id: Proxy.php 6885 2012-08-29 21:50:07Z capedfuzz $
  * 
  * @category Piwik
  * @package Piwik
@@ -35,12 +35,20 @@ class Piwik_API_Proxy
 	protected $alreadyRegistered = array();
 	
 	private $metadataArray = array();
-	public $hideIgnoredFunctions = true;
+	private $hideIgnoredFunctions = true;
 	
 	// when a parameter doesn't have a default value we use this
 	private $noDefaultValue;
 
+	/**
+	 * Singleton instance
+	 * @var self|null
+	 */
 	static private $instance = null;
+
+	/**
+	 * protected constructor
+	 */
 	protected function __construct()
 	{
 		$this->noDefaultValue = new Piwik_API_Proxy_NoDefaultValue();
@@ -82,7 +90,7 @@ class Piwik_API_Proxy
 	 * 
 	 * The method will introspect the methods, their parameters, etc. 
 	 * 
-	 * @param string ModuleName eg. "Piwik_UserSettings_API"
+	 * @param string  $className  ModuleName eg. "Piwik_UserSettings_API"
 	 */
 	public function registerClass( $className )
 	{
@@ -102,10 +110,12 @@ class Piwik_API_Proxy
 		$this->setDocumentation($rClass, $className);
 		$this->alreadyRegistered[$className] = true;
 	}
-	
+
 	/**
 	 * Will be displayed in the API page
-	 * 
+	 *
+	 * @param ReflectionClass  $rClass     Instance of ReflectionClass
+	 * @param string           $className  Name of the class
 	 */
 	private function setDocumentation($rClass, $className)
 	{
@@ -141,11 +151,12 @@ class Piwik_API_Proxy
 	 * It also logs the API calls, with the parameters values, the returned value, the performance, etc.
 	 * You can enable logging in config/global.ini.php (log_api_call)
 	 * 
-	 * @param string The class name (eg. Piwik_Referers_API)
-	 * @param string The method name
-	 * @param array The parameters pairs (name=>value)
-	 * 
-	 * @throws Piwik_Access_NoAccessException 
+	 * @param string  $className          The class name (eg. Piwik_Referers_API)
+	 * @param string  $methodName         The method name
+	 * @param array   $parametersRequest  The parameters pairs (name=>value)
+	 *
+	 * @return mixed|null
+	 * @throws Exception|Piwik_Access_NoAccessException
 	 */
 	public function call($className, $methodName, $parametersRequest )
 	{
@@ -218,13 +229,13 @@ class Piwik_API_Proxy
 	 * Returns the parameters names and default values for the method $name 
 	 * of the class $class
 	 * 
-	 * @param string The class name
-	 * @param string The method name
-	 * @return array Format array(
-	 * 					'testParameter'		=> null, // no default value
-	 * 					'life'				=> 42, // default value = 42
-	 * 					'date'				=> 'yesterday',
-	 * 				);
+	 * @param string  $class  The class name
+	 * @param string  $name   The method name
+	 * @return array  Format array(
+	 *                            'testParameter' => null, // no default value
+	 *                            'life'          => 42, // default value = 42
+	 *                            'date'          => 'yesterday',
+	 *                       );
 	 */
 	public function getParametersList($class, $name)
 	{
@@ -232,8 +243,9 @@ class Piwik_API_Proxy
 	}
 	
 	/**
-	 * Returns the 'moduleName' part of 'Piwik_moduleName_API' classname 
-	 * @param string "Piwik_Referers_API"
+	 * Returns the 'moduleName' part of 'Piwik_moduleName_API' classname
+	 *
+	 * @param string  $className  "Piwik_Referers_API"
 	 * @return string "Referers"
 	 */ 
 	public function getModuleNameFromClassName( $className )
@@ -242,11 +254,26 @@ class Piwik_API_Proxy
 	}
 	
 	/**
+	 * Sets whether to hide '@ignore'd functions from method metadata or not.
+	 * 
+	 * @param bool $hideIgnoredFunctions
+	 */
+	public function setHideIgnoredFunctions( $hideIgnoredFunctions )
+	{
+		$this->hideIgnoredFunctions = $hideIgnoredFunctions;
+		
+		// make sure metadata gets reloaded
+		$this->alreadyRegistered = array();
+		$this->metadataArray = array();
+	}
+
+	/**
 	 * Returns an array containing the values of the parameters to pass to the method to call
 	 *
-	 * @param array array of (parameter name, default value)
+	 * @param array  $requiredParameters  array of (parameter name, default value)
+	 * @param array  $parametersRequest
+	 * @throws Exception
 	 * @return array values to pass to the function call
-	 * @throws exception If there is a parameter missing from the required function parameters
 	 */
 	private function getRequestParametersArray( $requiredParameters, $parametersRequest )
 	{
@@ -282,11 +309,12 @@ class Piwik_API_Proxy
 		}
 		return $finalParameters;
 	}
-	
+
 	/**
 	 * Includes the class Piwik_UserSettings_API by looking up plugins/UserSettings/API.php
 	 *
-	 * @param string api class name eg. "Piwik_UserSettings_API"
+	 * @param string  $fileName  api class name eg. "Piwik_UserSettings_API"
+	 * @throws Exception
 	 */
 	private function includeApiFile($fileName)
 	{
@@ -303,6 +331,10 @@ class Piwik_API_Proxy
 		}
 	}
 
+	/**
+	 * @param string            $class   name of a class
+	 * @param ReflectionMethod  $method  instance of ReflectionMethod
+	 */
 	private function loadMethodMetadata($class, $method)
 	{
 		if($method->isPublic() 
@@ -336,9 +368,9 @@ class Piwik_API_Proxy
 	/**
 	 * Checks that the method exists in the class 
 	 * 
-	 * @param string The class name
-	 * @param string The method name
-	 * @throws exception If the method is not found
+	 * @param string  $className   The class name
+	 * @param string  $methodName  The method name
+	 * @throws Exception If the method is not found
 	 */	
 	private function checkMethodExists($className, $methodName)
 	{
@@ -351,8 +383,8 @@ class Piwik_API_Proxy
 	/**
 	 * Returns the number of required parameters (parameters without default values).
 	 * 
-	 * @param string The class name
-	 * @param string The method name
+	 * @param string  $class  The class name
+	 * @param string  $name   The method name
 	 * @return int The number of required parameters
 	 */
 	private function getNumberOfRequiredParameters($class, $name)
@@ -363,8 +395,8 @@ class Piwik_API_Proxy
 	/**
 	 * Returns true if the method is found in the API of the given class name. 
 	 * 
-	 * @param string The class name
-	 * @param string The method name
+	 * @param string  $className   The class name
+	 * @param string  $methodName  The method name
 	 * @return bool 
 	 */
 	private function isMethodAvailable( $className, $methodName)
@@ -375,8 +407,8 @@ class Piwik_API_Proxy
 	/**
 	 * Checks that the class is a Singleton (presence of the getInstance() method)
 	 * 
-	 * @param string The class name
-	 * @throws exception If the class is not a Singleton
+	 * @param string  $className  The class name
+	 * @throws Exception If the class is not a Singleton
 	 */
 	private function checkClassIsSingleton($className)
 	{

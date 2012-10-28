@@ -5,7 +5,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Widgetize.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Widgetize.php 6828 2012-08-18 22:48:37Z capedfuzz $
  * 
  * @category Piwik_Plugins
  * @package Piwik_Widgetize
@@ -39,9 +39,15 @@ class Piwik_Widgetize extends Piwik_Plugin
 	
 	public function addTopMenu() 
 	{
-		Piwik_AddTopMenu('General_Widgets', array('module' => 'Widgetize', 'action' => 'index'), true, 5);
+		$tooltip = Piwik_Translate('Widgetize_TopLinkTooltip');
+		$urlParams = array('module' => 'Widgetize', 'action' => 'index');
+		
+		Piwik_AddTopMenu('General_Widgets', $urlParams, true, 5, $isHTML = false, $tooltip);
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getJsFiles($notification) 
 	{
 		$jsFiles = &$notification->getNotificationObject();
@@ -55,7 +61,10 @@ class Piwik_Widgetize extends Piwik_Plugin
 		$jsFiles[] = "plugins/Dashboard/templates/widgetMenu.js";
 		$jsFiles[] = "plugins/Widgetize/templates/widgetize.js";
 	}	
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getCssFiles($notification) 
 	{
 		$cssFiles = &$notification->getNotificationObject();

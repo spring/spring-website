@@ -34,7 +34,7 @@ var aliasUrlsHelp = '{'SitesManager_AliasUrlHelp'|translate|inlineHelp|escape:ja
 {capture assign=excludedQueryParametersHelp}
 	{'SitesManager_ListOfQueryParametersToExclude'|translate}
 	<br /><br />
-	{'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters'|translate:"phpsessid, sessionid, etc."}
+	{'SitesManager_PiwikWillAutomaticallyExcludeCommonSessionParameters'|translate:"phpsessid, sessionid, ..."}
 {/capture}
 {assign var=excludedQueryParametersHelp value=$excludedQueryParametersHelp|inlineHelp}
 var excludedQueryParametersHelp = '{$excludedQueryParametersHelp|escape:javascript}';
@@ -43,10 +43,25 @@ var currencyHelp = '{$currencyHelpPlain|escape:javascript}';
 var ecommerceHelp = '{$ecommerceHelpPlain|inlineHelp|escape:javascript}';
 var ecommerceEnabled = '{'SitesManager_EnableEcommerce'|translate|escape:javascript}';
 var ecommerceDisabled = '{'SitesManager_NotAnEcommerceSite'|translate|escape:javascript}';
-{assign var=defaultTimezoneHelp value=$defaultTimezoneHelpPlain|inlineHelp};
+{assign var=defaultTimezoneHelp value=$defaultTimezoneHelpPlain|inlineHelp}
+{assign var=searchKeywordHelp value='SitesManager_SearchKeywordParametersDesc'|translate|inlineHelp}
+{capture assign=searchCategoryHelpText}{'Goals_Optional'|translate} {'SitesManager_SearchCategoryParametersDesc'|translate}{/capture}
+{assign var=searchCategoryHelp value=$searchCategoryHelpText|inlineHelp}
+var sitesearchEnabled = '{'SitesManager_EnableSiteSearch'|translate|escape:javascript}';
+var sitesearchDisabled = '{'SitesManager_DisableSiteSearch'|translate|escape:javascript}';
+var searchKeywordHelp = '{$searchKeywordHelp|escape:javascript}';
+var searchCategoryHelp = '{$searchCategoryHelp|escape:javascript}';
+var sitesearchDesc = '{'SitesManager_TrackingSiteSearch'|translate|escape:javascript}';
 
 var sitesManager = new SitesManager ( {$timezones}, {$currencies}, '{$defaultTimezone}', '{$defaultCurrency}');
-
+{assign var=searchKeywordLabel value='SitesManager_SearchKeywordLabel'|translate}
+{assign var=searchCategoryLabel value='SitesManager_SearchCategoryLabel'|translate}
+var searchKeywordLabel = '{$searchKeywordLabel|escape:javascript}';
+var searchCategoryLabel = '{$searchCategoryLabel|escape:javascript}';
+{assign var=sitesearchIntro value='SitesManager_SiteSearchUse'|translate}
+var sitesearchIntro = '{$sitesearchIntro|inlineHelp|escape:javascript}';
+var sitesearchUseDefault = '{if $isSuperUser}{'SitesManager_SearchUseDefault'|translate:'<a href="#globalSiteSearch">':'</a>'|escape:'javascript'}{else}{'SitesManager_SearchUseDefault'|translate:'':''|escape:'javascript'}{/if}';
+var strDefault = '{'General_Default'|translate:escape:'javascript'}';
 {literal}
 $(document).ready( function() {
 	sitesManager.init();
@@ -67,12 +82,10 @@ $(document).ready( function() {
 }
 .addRowSite {
 	padding:1em;
-	font-color:#3A477B;
-	padding:1em;
 	font-weight:bold;
 }
 #editSites {
-	valign: top;
+	vertical-align: top;
 }
 option, select {
 	font-size:11px;
@@ -83,8 +96,11 @@ font-size:9pt;
 .admin thead th {
 vertical-align:middle;
 }
-.ecommerceInactive {
+.ecommerceInactive,.sitesearchInactive {
  color: #666666;
+}
+#searchSiteParameters {
+	display:none;
 }
 </style>
 {/literal}
@@ -108,8 +124,8 @@ vertical-align:middle;
 {else}
     <div class="ui-confirm" id="confirm">
         <h2></h2>
-        <input id="yes" type="button" value="{'General_Yes'|translate}" />
-        <input id="no" type="button" value="{'General_No'|translate}" />
+        <input role="yes" type="button" value="{'General_Yes'|translate}" />
+        <input role="no" type="button" value="{'General_No'|translate}" />
     </div>
 
 	<div class="entityContainer">
@@ -124,6 +140,7 @@ vertical-align:middle;
 			<th>{'SitesManager_Urls'|translate}</th>
 			<th>{'SitesManager_ExcludedIps'|translate}</th>
 			<th>{'SitesManager_ExcludedParameters'|translate|replace:" ":"<br />"}</th>
+			<th>{'Actions_SubmenuSitesearch'|translate}</th>
 			<th>{'SitesManager_Timezone'|translate}</th>
 			<th>{'SitesManager_Currency'|translate}</th>
 			<th>{'Goals_Ecommerce'|translate}</th>
@@ -140,6 +157,7 @@ vertical-align:middle;
 				<td id="urls" class="editableSite">{foreach from=$site.alias_urls item=url}{$url|replace:"http://":""}<br />{/foreach}</td>       
 				<td id="excludedIps" class="editableSite">{foreach from=$site.excluded_ips item=ip}{$ip}<br />{/foreach}</td>       
 				<td id="excludedQueryParameters" class="editableSite">{foreach from=$site.excluded_parameters item=parameter}{$parameter}<br />{/foreach}</td>       
+				<td id="sitesearch" class="editableSite">{if $site.sitesearch}<span class='sitesearchActive'>{'General_Yes'|translate}</span>{else}<span class='sitesearchInactive'>-</span>{/if}<span class='sskp' sitesearch_keyword_parameters="{$site.sitesearch_keyword_parameters|escape:'html'}" sitesearch_category_parameters="{$site.sitesearch_category_parameters|escape:'html'}" id="sitesearch_parameters"></span></td>
 				<td id="timezone" class="editableSite">{$site.timezone}</td>
 				<td id="currency" class="editableSite">{$site.currency}</td>
 				<td id="ecommerce" class="editableSite">{if $site.ecommerce}<span class='ecommerceActive'>{'General_Yes'|translate}</span>{else}<span class='ecommerceInactive'>-</span>{/if}</td>
@@ -156,7 +174,14 @@ vertical-align:middle;
 	</div>
 {/if}
 
-{if $isSuperUser}	
+
+{* Admin users use these values for Site Search column, when editing websites *}
+{if !$isSuperUser}
+<input type="hidden" size="15" id="globalSearchKeywordParameters" value="{$globalSearchKeywordParameters|escape:'html'}"></input>
+<input type="hidden" size="15"  id="globalSearchCategoryParameters" value="{$globalSearchCategoryParameters|escape:'html'}"></input>
+{/if}
+
+{if $isSuperUser}
 <br />
 	<a name='globalSettings'></a>
 	<h2>{'SitesManager_GlobalWebsitesSettings'|translate}</h2>
@@ -171,20 +196,43 @@ vertical-align:middle;
 			<textarea cols="30" rows="3" id="globalExcludedIps">{$globalExcludedIps}
 </textarea>
 			</td><td>
-				{$excludedIpHelp}
+				<label for="globalExcludedIps">{$excludedIpHelp}</label>
 		</td></tr>
-		
+
 		<tr><td colspan="2">
-				<b>{'SitesManager_GlobalListExcludedQueryParameters'|translate}</b>
-				<p>{'SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites'|translate} </p>
-			</td></tr>
-			<tr><td>
+			<b>{'SitesManager_GlobalListExcludedQueryParameters'|translate}</b>
+			<p>{'SitesManager_ListOfQueryParametersToBeExcludedOnAllWebsites'|translate} </p>
+		</td></tr>
+
+		<tr><td>
 			<textarea cols="30" rows="3" id="globalExcludedQueryParameters">{$globalExcludedQueryParameters}
 </textarea>
-			</td><td>
-				{$excludedQueryParametersHelp}
+		</td><td><label for="globalExcludedQueryParameters">{$excludedQueryParametersHelp}</label>
 		</td></tr>
-		
+
+		<tr><td colspan="2">
+		<a name='globalSiteSearch'></a><b>{'SitesManager_TrackingSiteSearch'|translate}</b>
+		<p>{$sitesearchIntro}</p>
+			<span class="form-description" style='font-size:8pt'>{'SitesManager_SearchParametersNote'|translate} {'SitesManager_SearchParametersNote2'|translate}</span>
+		</td></tr>
+		<tr><td colspan="2">
+		<label>{$searchKeywordLabel} &nbsp;<input type="text" size="15" id="globalSearchKeywordParameters" value="{$globalSearchKeywordParameters|escape:'html'}"></input>
+				<div style='width: 200px;float:right;'>{$searchKeywordHelp}</div></label>
+		</td></tr>
+
+		<tr><td colspan="2">
+		{if !$isSearchCategoryTrackingEnabled}
+			<input value='globalSearchCategoryParametersIsDisabled'  id="globalSearchCategoryParameters" type='hidden'></input>
+			<span class='form-description'>Note: you could also track your Internal Search Engine Categories, but the plugin Custom Variables is required. Please enable the plugin CustomVariables (or ask your Piwik admin).</span>
+		{else}
+		{'Goals_Optional'|translate} {'SitesManager_SearchCategoryDesc'|translate} <br/>
+		</td></tr>
+		<tr><td colspan="2">
+		<label>{$searchCategoryLabel}  &nbsp;<input type="text" size="15"  id="globalSearchCategoryParameters" value="{$globalSearchCategoryParameters|escape:'html'}"></input>
+				<div style='width: 200px;float:right;'>{$searchCategoryHelp}</div></label>
+		{/if}
+		</td></tr>
+
 		<tr><td colspan="2">
 				<b>{'SitesManager_DefaultTimezoneForNewWebsites'|translate}</b>
 				<p>{'SitesManager_SelectDefaultTimezone'|translate} </p>

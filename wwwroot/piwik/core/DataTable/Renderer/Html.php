@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Html.php 4829 2011-05-29 22:08:33Z matt $
+ * @version $Id: Html.php 6410 2012-05-31 00:16:14Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -24,28 +24,57 @@ class Piwik_DataTable_Renderer_Html extends Piwik_DataTable_Renderer
 	protected $tableStructure;
 	protected $i;
 
+	/**
+	 * Sets the table id
+	 *
+	 * @param string  $id
+	 */
 	function setTableId($id)
 	{
 		$this->tableId = str_replace('.', '_', $id);
 	}
 
+	/**
+	 * Output HTTP Content-Type header
+	 */
+	protected function renderHeader()
+	{
+		@header('Content-Type: text/html; charset=utf-8');
+	}
+	
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function render()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		$this->tableStructure = array();
 		$this->allColumns = array();
 		$this->i = 0;
 
 		return $this->renderTable($this->table);
 	}
-	
+
+	/**
+	 * Computes the exception output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function renderException()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		$exceptionMessage = self::renderHtmlEntities($this->exception->getMessage());
 		return nl2br($exceptionMessage);
 	}
-	
+
+	/**
+	 * Computes the output for the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @return string
+	 */
 	protected function renderTable($table)
 	{
 		if($table instanceof Piwik_DataTable_Array)
@@ -69,6 +98,14 @@ class Piwik_DataTable_Renderer_Html extends Piwik_DataTable_Renderer
 		return $out;
 	}	
 
+	/**
+	 * Adds the given data table to the table structure array
+	 *
+	 * @param Piwik_DataTable_Simple  $table
+	 * @param null|string             $columnToAdd
+	 * @param null|string             $valueToAdd
+	 * @throws Exception
+	 */
 	protected function buildTableStructure($table, $columnToAdd = null, $valueToAdd = null)
 	{
 		$i = $this->i;
@@ -127,6 +164,11 @@ class Piwik_DataTable_Renderer_Html extends Piwik_DataTable_Renderer
 		$this->allColumns['_idSubtable'] = $someIdSubTable;
 	}
 
+	/**
+	 * Computes the output for the table structure array
+	 *
+	 * @return string
+	 */
 	protected function renderDataTable()
 	{
 		$html = "<table ". ($this->tableId ? "id=\"{$this->tableId}\" " : "") ."border=\"1\">\n<thead>\n\t<tr>\n";
@@ -138,6 +180,10 @@ class Piwik_DataTable_Renderer_Html extends Piwik_DataTable_Renderer
 				if($name === 0)
 				{
 					$name = 'value';
+				}
+				if($this->translateColumnNames)
+				{
+					$name = $this->translateColumnName($name);
 				}
 				$html .= "\t\t<th>$name</th>\n";
 			}

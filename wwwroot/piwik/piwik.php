@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: piwik.php 4599 2011-04-29 17:08:49Z vipsoft $
+ * @version $Id: piwik.php 7286 2012-10-23 09:22:19Z matt $
  *
  * @package Piwik
  */
@@ -42,8 +42,10 @@ require_once PIWIK_INCLUDE_PATH .'/core/Plugin.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Common.php';
 require_once PIWIK_INCLUDE_PATH .'/core/IP.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Tracker.php';
-require_once PIWIK_INCLUDE_PATH .'/core/Tracker/Config.php';
+require_once PIWIK_INCLUDE_PATH .'/core/Config.php';
+require_once PIWIK_INCLUDE_PATH .'/core/Translate.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Tracker/Db.php';
+require_once PIWIK_INCLUDE_PATH .'/core/Tracker/Db/Exception.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Tracker/IgnoreCookie.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Tracker/Visit.php';
 require_once PIWIK_INCLUDE_PATH .'/core/Tracker/GoalManager.php';
@@ -68,19 +70,18 @@ if($GLOBALS['PIWIK_TRACKER_DEBUG'] === true)
 	set_exception_handler('Piwik_ExceptionHandler');
 	printDebug("Debug enabled - Input parameters: <br/>" . var_export($_GET, true));
 	Piwik_Tracker_Db::enableProfiling();
-	// Config might have been created by proxy-piwik.php
-	try {
-		$config = Zend_Registry::get('config');
-	} catch (Exception $e) {
-		Piwik::createConfigObject();
-	}
+	Piwik::createConfigObject();
 	Piwik::createLogObject();
 }
 
 if(!defined('PIWIK_ENABLE_TRACKING') || PIWIK_ENABLE_TRACKING)
 {
 	$process = new Piwik_Tracker();
-	$process->main();
+	try {
+		$process->main();
+	} catch(Exception $e) {
+		echo "Error:" . $e->getMessage();
+	}
 	ob_end_flush();
 	if($GLOBALS['PIWIK_TRACKER_DEBUG'] === true)
 	{	
@@ -88,4 +89,3 @@ if(!defined('PIWIK_ENABLE_TRACKING') || PIWIK_ENABLE_TRACKING)
 		printDebug($timer);
 	}
 }
-

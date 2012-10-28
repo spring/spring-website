@@ -6,8 +6,8 @@
 }
 
 #content.admin {
-	margin:0px 15px;
-	padding:0px 0 0 0;
+	margin:0 15px;
+	padding:0 0 0 0;
 	font:13px Arial, Helvetica, sans-serif
 }
 
@@ -53,7 +53,6 @@ table.admin tbody td, table.admin tbody th {
 	text-decoration: none;
 	font-weight: normal;
 	padding: 10px;
-	padding:10px;
 }
 
 table.admin  tbody td:hover, table.admin  tbody th:hover {
@@ -78,13 +77,13 @@ table.admin  tbody td:hover, table.admin  tbody th:hover {
 
 .admin h2 {
 	border-bottom:1px solid #DADADA;
-	margin:15px -15px 20px 0px;
-	padding:0pt 0px 5px 0pt;
+	margin:15px -15px 20px 0;
+	padding:0 0 5px 0;
 	font-size:24px;
 }
 
-.admin p {
-	smargin-top:10px;
+.admin p,.admin section {
+	margin-top:10px;
 	line-height:140%;
 	padding-bottom:20px;
 }
@@ -102,8 +101,7 @@ table.admin  tbody td:hover, table.admin  tbody th:hover {
 }
 .adminTable td {
 	font-size: 13px;
-	vertical-align: text-top;
-	vertical-align:top;
+	vertical-align: top;
 	padding: 7px 15px 9px 10px;
 	vertical-align: top;
 }
@@ -140,3 +138,27 @@ table.admin  tbody td:hover, table.admin  tbody th:hover {
 #logoSettings, #smtpSettings {
 	margin-left:50px;
 }
+
+/* to override .admin a */
+.admin .sites_autocomplete a {
+	color: #255792;
+}
+
+/* trusted host styles */
+#trustedHostSettings .adminTable {
+	width:300px;
+}
+#trustedHostSettings .adminTable td {
+	vertical-align: middle;
+	padding-bottom: 0;
+}
+#trustedHostSettings .adminTable tr td:last-child {
+	padding: 0 0 0 0;
+}
+#trustedHostSettings input {
+	width:238px;
+}
+#trustedHostSettings .add-trusted-host-container {
+	padding: 12px 24px;
+}
+

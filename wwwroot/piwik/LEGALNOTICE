@@ -4,7 +4,7 @@ COPYRIGHT
 
 	The software package is:
 
-		Copyright (C) 2011  Matthieu Aubry
+		Copyright (C) 2012  Matthieu Aubry
 
 	Individual contributions, components, and libraries are copyright
 	their respective authors.
@@ -105,16 +105,12 @@ THIRD-PARTY COMPONENTS AND LIBRARIES
 	- GPL version not explicitly stated in source but GPL v2 is in git
 
 	Name:  jquery.history
-	Link:  http://www.mikage.to/jquery/jquery_history.html
+	Link:  http://tkyk.github.com/jquery-history-plugin/
 	License:  MIT
 
 	Name:  jquery.scrollTo
 	Link:  http://plugins.jquery.com/project/ScrollTo
 	License:  Dual licensed: MIT or GPL
-
-	Name:  jquery.spy
-	Link:  http://leftlogic.com/lounge/articles/jquery_spy2
-	License:  MIT
 
 	Name:  Tooltip
 	Link:  http://bassistance.de/jquery-plugins/jquery-plugin-tooltip/
@@ -196,9 +192,9 @@ THIRD-PARTY COMPONENTS AND LIBRARIES
 	Link:  http://www.zendframework.com/
 	License:  New BSD
 	
-	Name: pChart 1.27d 
-	Link: http://pchart.sourceforge.net/
-	License: GPL
+	Name: pChart 2.1.3
+	Link: http://www.pchart.net
+	License: GPL v3
 
 THIRD-PARTY CONTENT
 
@@ -207,10 +203,16 @@ THIRD-PARTY CONTENT
 	License:  CC BY 3.0
 
 	Name:  Solar System icons - Dan Wiersema
-       	Link:  http://www.iconspedia.com/icon/neptune-4672.html
+	Link:  http://www.iconspedia.com/icon/neptune-4672.html
 	License:  Free for non-commercial use
 	Notes:
 	- used in Piwik's ExampleUI plugin
+
+	Name: Wine project - tahoma.ttf font
+	Link: http://source.winehq.org/git/wine.git/blob_plain/HEAD:/fonts/tahoma.ttf
+	License: LGPL v2.1
+	Notes:
+	- used in ImageGraph plugin
 
 Notes:
 - the "New BSD" license refers to either the "Modified BSD" and "Simplified BSD"

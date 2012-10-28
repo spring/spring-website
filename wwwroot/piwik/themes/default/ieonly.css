@@ -31,6 +31,17 @@ input[type=checkbox], input[type=radio] {
     background: transparent none;
 }
 
+.jqplot-seriespicker {
+	background: url(images/chart_line_edit_bg.png) no-repeat center center;
+}
+
+.jqplock-seriespicker-popover p input {
+	width: 15px;
+	margin: 0;
+	padding: 0;
+}
+
+
 /**
  * IE7 fixes
  */
@@ -44,7 +55,7 @@ input[type=checkbox], input[type=radio] {
 }
 
 *+html .ui-confirm.ui-widget-content {
-    padding-top: 0px;
+    padding-top: 0;
 }
 
 * html .ui-autocomplete {

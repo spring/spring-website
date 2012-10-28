@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Weekly.php 3364 2010-11-25 22:38:40Z JulienM $
+ * @version $Id: Weekly.php 6510 2012-07-13 20:05:39Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -52,8 +52,8 @@ class Piwik_ScheduledTime_Weekly extends Piwik_ScheduledTime
 		return $rescheduledTime;
 	}
 	
-	/*
-	 * @param  _day the day to set, has to be >= 1 and < 8
+	/**
+	 * @param int $_day the day to set, has to be >= 1 and < 8
 	 * @throws Exception if parameter _day is invalid
 	 */
 	public function setDay($_day)

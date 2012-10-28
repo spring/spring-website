@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: CacheFile.php 4302 2011-04-04 00:24:06Z vipsoft $
+ * @version $Id: CacheFile.php 7169 2012-10-13 00:31:02Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -22,9 +22,18 @@
  */
 class Piwik_CacheFile
 {
+	/**
+	 * @var string
+	 */
 	protected $cachePath;
+	/**
+	 * @var
+	 */
 	protected $cachePrefix;
 
+	/**
+	 * @param string  $directory  directory to use
+	 */
 	function __construct($directory)
 	{
 		$this->cachePath = PIWIK_USER_PATH . '/tmp/cache/' . $directory . '/';
@@ -33,11 +42,14 @@ class Piwik_CacheFile
 	/**
 	 * Function to fetch a cache entry
 	 *
-	 * @param string $id The cache entry ID
-	 * @return mixed False on error, or array the cache content
+	 * @param string  $id  The cache entry ID
+	 * @return array|bool  False on error, or array the cache content
 	 */
 	function get($id)
 	{
+		if(empty($id)) {
+			return false;
+		}
 		$cache_complete = false;
 		$content = '';
 
@@ -54,12 +66,15 @@ class Piwik_CacheFile
 	/**
 	 * A function to store content a cache entry.
 	 *
-	 * @param string $id The cache entry ID
-	 * @param array $content  The cache content
-	 * @return bool True if the entry was succesfully stored
+	 * @param string  $id       The cache entry ID
+	 * @param array   $content  The cache content
+	 * @return bool  True if the entry was succesfully stored
 	 */
 	function set($id, $content)
 	{
+		if(empty($id)) {
+			return false;
+		}
 		if( !is_dir($this->cachePath))
 		{
 			Piwik_Common::mkdir($this->cachePath);
@@ -67,7 +82,7 @@ class Piwik_CacheFile
 		if (!is_writable($this->cachePath)) {
 			return false;
 		}
-
+	
 		$id = $this->cachePath . $id . '.php';
 
 		$cache_literal  = "<"."?php\n\n";
@@ -75,14 +90,14 @@ class Piwik_CacheFile
 		$cache_literal .= "$"."cache_complete   = true;\n\n";
 		$cache_literal .= "?".">";
 
-		// Write cache to a temp file, then rename it, overwritng the old cache
+		// Write cache to a temp file, then rename it, overwriting the old cache
 		// On *nix systems this should guarantee atomicity
 		$tmp_filename = tempnam($this->cachePath, 'tmp_');
-		@chmod($tmp_filename, 0600);
+		@chmod($tmp_filename, 0640);
 		if ($fp = @fopen($tmp_filename, 'wb')) {
 			@fwrite ($fp, $cache_literal, strlen($cache_literal));
 			@fclose ($fp);
-
+			
 			if (!@rename($tmp_filename, $id)) {
 				// On some systems rename() doesn't overwrite destination
 				@unlink($id);
@@ -100,11 +115,14 @@ class Piwik_CacheFile
 	/**
 	 * A function to delete a single cache entry
 	 *
-	 * @param string $id The cache entry ID
-	 * @return bool True if the entres were succesfully deleted
+	 * @param string  $id  The cache entry ID
+	 * @return bool  True if the entry was succesfully deleted
 	 */
 	function delete($id)
 	{
+		if(empty($id)) {
+			return false;
+		}
 		$filename = $this->cachePath . $id . '.php';
 		if (file_exists($filename)) {
 			@unlink ($filename);

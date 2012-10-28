@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Auth.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Auth.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -54,10 +54,10 @@ class Piwik_Auth_Result extends Zend_Auth_Result
 	/**
 	 * Constructor for Piwik_Auth_Result
 	 *
-	 * @param int $code
-	 * @param string $login identity
-	 * @param string $token_auth
-	 * @param array $messages
+	 * @param int     $code
+	 * @param string  $login identity
+	 * @param string  $token_auth
+	 * @param array   $messages
 	 */
 	public function __construct($code, $login, $token_auth, array $messages = array())
 	{

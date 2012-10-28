@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: AssetManager.php 4838 2011-05-30 19:00:07Z matt $
+ * @version $Id: AssetManager.php 7054 2012-09-24 23:55:44Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -296,6 +296,7 @@ class Piwik_AssetManager
 			'libs/',
 			'themes/default/common.js',
 			'themes/default/',
+			'plugins/CoreHome/templates/broadcast.js',
 			'plugins/',
 		);
 
@@ -324,7 +325,7 @@ class Piwik_AssetManager
 	 */
 	private static function getDisableMergedAssets()
 	{
-		return Zend_Registry::get('config')->Debug->disable_merged_assets;
+		return Piwik_Config::getInstance()->Debug['disable_merged_assets'];
 	}
 
 	/**

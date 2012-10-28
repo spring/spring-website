@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ReplaceColumnNames.php 4691 2011-05-15 22:14:48Z matt $
+ * @version $Id: ReplaceColumnNames.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -30,11 +30,11 @@ class Piwik_DataTable_Filter_ReplaceColumnNames extends Piwik_DataTable_Filter
 	protected $mappingToApply;
 	
 	/**
-	 * @param DataTable Table
-	 * @param array Mapping to apply. Must have the format 	
-	 * 				array( 	OLD_COLUMN_NAME => NEW_COLUMN NAME,
-	 * 						OLD_COLUMN_NAME2 => NEW_COLUMN NAME2,
-	 * 					)
+	 * @param Piwik_DataTable  $table  Table
+	 * @param array            $mappingToApply   Mapping to apply. Must have the format
+	 *                                           array( OLD_COLUMN_NAME => NEW_COLUMN NAME,
+	 *                                                  OLD_COLUMN_NAME2 => NEW_COLUMN NAME2,
+	 *                                                 )
 	 */
 	public function __construct( $table, $mappingToApply = null )
 	{
@@ -45,7 +45,12 @@ class Piwik_DataTable_Filter_ReplaceColumnNames extends Piwik_DataTable_Filter
 			$this->mappingToApply = $mappingToApply;
 		}
 	}
-	
+
+	/**
+	 * Executes the filter and renames the defined columns
+	 *
+	 * @param Piwik_DataTable  $table
+	 */
 	public function filter($table)
 	{
 		foreach($table->getRows() as $key => $row)
@@ -56,7 +61,13 @@ class Piwik_DataTable_Filter_ReplaceColumnNames extends Piwik_DataTable_Filter
 			$this->filterSubTable($row);
 		}
 	}
-	
+
+	/**
+	 * Checks the given columns and renames them if required
+	 *
+	 * @param array  $columns
+	 * @return array
+	 */
 	protected function getRenamedColumns($columns) 
 	{
 		$newColumns = array();

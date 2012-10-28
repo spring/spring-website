@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ChartEvolution.php 5296 2011-10-14 02:52:44Z matt $
+ * @version $Id: ChartEvolution.php 7075 2012-09-28 03:07:18Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -18,6 +18,13 @@
  */
 class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDataTable_GenerateGraphData
 {
+	
+	// used for the row picker
+	// (the series picker configuration resides in the parent class) 
+	protected $rowPicker = false;
+	protected $visibleRows = array();
+	protected $rowPickerConfig = array();
+	
 	protected function checkStandardDataTable()
 	{
 		// DataTable_Array and DataTable allowed for the evolution chart
@@ -38,29 +45,60 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 		$this->view = new Piwik_Visualization_Chart_Evolution();
 	}
 	
-	protected function guessUnitFromRequestedColumnNames($requestedColumnNames, $idSite)
+	/**
+	 * Adds the same series picker as parent::setSelectableColumns but the selectable series are not
+	 * columns of a single row but the same column across multiple rows, e.g. the number of visits
+	 * for each referrer type.
+	 * @param array $visibleRows the rows that are initially visible
+	 * @param string $matchBy the way the items in $visibleRows are matched with the data. possible values:
+	 * 							- label: matches the label of the row
+	 */
+	public function addRowPicker($visibleRows, $matchBy='label')
 	{
-		$nameToUnit = array(
-			'_rate' => '%',
-			'_revenue' => Piwik::getCurrency($idSite),
-		);
-		foreach($requestedColumnNames as $columnName)
+		$this->rowPicker = $matchBy;
+		
+		if (!is_array($visibleRows))
 		{
-			foreach($nameToUnit as $pattern => $type)
-			{
-				if(strpos($columnName, $pattern) !== false)
-				{
-					return $type;
-				}
-			}
+			$visibleRows = array($visibleRows);
 		}
-		return false;
+		$this->visibleRows = $visibleRows;
+	}
+
+	/**
+	 * This method is called for every row of every table in the DataTable_Array.
+	 * It incrementally builds the row picker configuration and determines whether
+	 * the row is initially visible or not.
+	 * @param string $rowLabel
+	 * @return bool
+	 */
+	protected function handleRowForRowPicker(&$rowLabel)
+	{
+		// determine whether row is visible
+		$isVisible = true;
+		switch ($this->rowPicker)
+		{
+			case 'label':
+				$isVisible = in_array($rowLabel, $this->visibleRows);
+				break;
+		}
+		
+		// build config
+		if (!isset($this->rowPickerConfig[$rowLabel]))
+		{
+			$this->rowPickerConfig[$rowLabel] = array(
+				'label' => $rowLabel,
+				'matcher' => $rowLabel,
+				'displayed' => $isVisible
+			);
+		}
+		
+		return $isVisible;
 	}
 	
 	protected function loadDataTableFromAPI()
 	{
 		$period = Piwik_Common::getRequestVar('period');
-		// period will be overriden when 'range' is requested in the UI
+		// period will be overridden when 'range' is requested in the UI
 		// but the graph will display for each day of the range. 
 		// Default 'range' behavior is to return the 'sum' for the range
 		if($period == 'range')
@@ -100,29 +138,38 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 			$uniqueIdsDataTable[] = $idDataTable;
 		}
 		
+		$idSite = Piwik_Common::getRequestVar('idSite', null, 'int');
 		$requestedColumnNames = $this->getColumnsToDisplay();
+		$units = $this->getUnitsForColumnsToDisplay();
+		
+		$yAxisLabelToUnit = array();
 		$yAxisLabelToValue = array();
 		foreach($this->dataTable->getArray() as $idDataTable => $dataTable)
 		{
 			foreach($dataTable->getRows() as $row)
 			{
 				$rowLabel = $row->getColumn('label');
+				
+				// put together configuration for row picker.
+				// do this for every data table in the array because rows do not
+				// have to present for each date.
+				if ($this->rowPicker !== false)
+				{
+					$rowVisible = $this->handleRowForRowPicker($rowLabel);
+					if (!$rowVisible)
+					{
+						continue;
+					}
+				}
+				
+				// build data for request columns
 				foreach($requestedColumnNames as $requestedColumnName)
 				{
-					$metricLabel = $this->getColumnTranslation($requestedColumnName);
-					if($rowLabel !== false)
-					{
-						// eg. "Yahoo! (Visits)"
-						$yAxisLabel = "$rowLabel ($metricLabel)";
-					}
-					else
-					{
-						// eg. "Visits"
-						$yAxisLabel = $metricLabel;
-					}
+					$yAxisLabel = $this->getSeriesLabel($rowLabel, $requestedColumnName);
 					if(($columnValue = $row->getColumn($requestedColumnName)) !== false)
 					{
 						$yAxisLabelToValue[$yAxisLabel][$idDataTable] = $columnValue;
+						$yAxisLabelToUnit[$yAxisLabel] = $units[$requestedColumnName];
 					} 
 				}
 			}
@@ -130,12 +177,10 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 		
 		// make sure all column values are set to at least zero (no gap in the graph) 
 		$yAxisLabelToValueCleaned = array();
-		$yAxisLabels = array();
 		foreach($uniqueIdsDataTable as $uniqueIdDataTable)
 		{
 			foreach($yAxisLabelToValue as $yAxisLabel => $idDataTableToColumnValue)
 			{
-				$yAxisLabels[$yAxisLabel] = $yAxisLabel;
 				if(isset($idDataTableToColumnValue[$uniqueIdDataTable]))
 				{
 					$columnValue = $idDataTableToColumnValue[$uniqueIdDataTable];
@@ -147,36 +192,17 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 				$yAxisLabelToValueCleaned[$yAxisLabel][] = $columnValue;
 			}
 		}
-		$idSite = Piwik_Common::getRequestVar('idSite', null, 'int');
-		
-		$unit = $this->yAxisUnit;
-		if(empty($unit))
-		{
-			$unit = $this->guessUnitFromRequestedColumnNames($requestedColumnNames, $idSite);
-		}
 		
 		$this->view->setAxisXLabels($xLabels);
 		$this->view->setAxisYValues($yAxisLabelToValueCleaned);
-		$this->view->setAxisYLabels($yAxisLabels);
-		$this->view->setAxisYUnit($unit);
+		$this->view->setAxisYUnits($yAxisLabelToUnit);		
 		
 		$countGraphElements = $this->dataTable->getRowsCount();
 		$firstDatatable = reset($this->dataTable->metadata);
 		$period = $firstDatatable['period'];
-		switch($period->getLabel()) {
-			case 'day': $steps = 7; break;
-			case 'week': $steps = 10; break;
-			case 'month': $steps = 6; break;
-			case 'year': $steps = 2; break;
-			default: $steps = 10; break;
-		}
-		// For Custom Date Range, when the number of elements plotted can be small, make sure the X legend is useful
-		if($countGraphElements <= 20 ) 
-		{
-			$steps = 2;
-		}
 		
-		$this->view->setXSteps($steps);
+		$stepSize = $this->getXAxisStepSize($period->getLabel(), $countGraphElements);
+		$this->view->setXSteps($stepSize);
 		
 		if($this->isLinkEnabled())
 		{
@@ -189,7 +215,8 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 				$parameters = array(
 							'idSite' => $idSite,
 							'period' => $period->getLabel(),
-							'date' => $dateInUrl->toString()
+							'date' => $dateInUrl->toString(),
+							'segment' => Piwik_Common::unsanitizeInputValue(Piwik_Common::getRequestVar('segment', false))
 				);
 				$hash = '';
 				if(!empty($queryStringAsHash))
@@ -206,6 +233,38 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 			}
 			$this->view->setAxisXOnClick($axisXOnClick);
 		}
+		
+		$this->addSeriesPickerToView();
+		if ($this->rowPicker !== false)
+		{
+			// configure the row picker
+			$this->view->setSelectableRows(array_values($this->rowPickerConfig));
+		}
+	}
+
+	/**
+	 * Derive the series label from the row label and the column name.
+	 * If the row label is set, both the label and the column name are displayed.
+	 * @param string $rowLabel
+	 * @param string $columnName
+	 * @return string
+	 */
+	private function getSeriesLabel($rowLabel, $columnName)
+	{
+		$metricLabel = $this->getColumnTranslation($columnName);
+	
+		if($rowLabel !== false)
+		{
+			// eg. "Yahoo! (Visits)"
+			$label = "$rowLabel ($metricLabel)";
+		}
+		else
+		{
+			// eg. "Visits"
+			$label = $metricLabel;
+		}
+		
+		return $label;
 	}
 	
 	/**
@@ -250,5 +309,36 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartEvolution extends Piwik_ViewDat
 							&& Piwik_Common::getRequestVar('period', 'day') != 'range';
 		}
 		return $linkEnabled;
+	}
+
+	private function getXAxisStepSize( $periodLabel, $countGraphElements )
+	{
+		// when the number of elements plotted can be small, make sure the X legend is useful
+		if ($countGraphElements <= 7)
+		{
+			return 1;
+		}
+		
+		switch ($periodLabel)
+		{
+			case 'day':
+					$steps = 5;
+				break;
+			case 'week':
+					$steps = 4;
+				break;
+			case 'month':
+					$steps = 5;
+				break;
+			case 'year':
+					$steps = 5;
+				break;
+			default:
+				$steps = 5;
+				break;
+		}
+		
+		$paddedCount = $countGraphElements + 2; // pad count so last label won't be cut off
+		return ceil($paddedCount / $steps);
 	}
 }

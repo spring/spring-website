@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Null.php 4169 2011-03-23 01:59:57Z matt $
+ * @version $Id: Null.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,12 +19,17 @@
  */
 class Piwik_DataTable_Filter_Null extends Piwik_DataTable_Filter
 {
-	
+	/**
+	 * @param Piwik_DataTable  $table
+	 */
 	public function __construct( $table )
 	{
 		parent::__construct($table);
 	}
-	
+
+	/**
+	 * @param Piwik_DataTable  $table
+	 */
 	public function filter($table)
 	{
 		foreach($table->getRows() as $key => $row)

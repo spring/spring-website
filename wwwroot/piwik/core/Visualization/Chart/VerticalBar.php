@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: VerticalBar.php 4814 2011-05-26 21:21:22Z matt $
+ * @version $Id: VerticalBar.php 5451 2011-11-18 12:38:15Z EZdesign $
  *
  * @category Piwik
  * @package Piwik
@@ -19,7 +19,8 @@
 class Piwik_Visualization_Chart_VerticalBar extends Piwik_Visualization_Chart
 {
 	
-	protected $seriesColors = array('#5872B5');
+	protected $seriesColors = array('#5170AE','#F3A010', '#CC3399', '#9933CC', '#80a033', 
+			'#246AD2', '#FD16EA', '#49C100');
 	
 	public function customizeChartProperties()
 	{

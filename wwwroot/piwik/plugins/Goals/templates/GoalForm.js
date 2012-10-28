@@ -43,21 +43,21 @@ function initGoalForm(goalMethodAPI, submitText, goalName, matchAttribute, patte
 {
 	$('#goal_name').val(goalName);
 	if(matchAttribute == 'manually') {
-		$('select[name=trigger_type] option[value=manually]').attr('selected', true);
-		$('input[name=match_attribute]').attr('disabled', true);
+		$('select[name=trigger_type] option[value=manually]').prop('selected', true);
+		$('input[name=match_attribute]').prop('disabled', true);
 		$('#match_attribute_section').hide();
 		$('#manual_trigger_section').show();
 		matchAttribute = 'url';
 	} else {
-		$('select[name=trigger_type] option[value=visitors]').attr('selected', true);
+		$('select[name=trigger_type] option[value=visitors]').prop('selected', true);
 	}
-	$('input[name=match_attribute][value='+matchAttribute+']').attr('checked', true);
-	$('input[name=allow_multiple][value='+allowMultiple+']').attr('checked', true);
+	$('input[name=match_attribute][value='+matchAttribute+']').prop('checked', true);
+	$('input[name=allow_multiple][value='+allowMultiple+']').prop('checked', true);
 	$('#match_attribute_name').html(mappingMatchTypeName[matchAttribute]);
 	$('#examples_pattern').html(mappingMatchTypeExamples[matchAttribute]);
-	$('select[name=pattern_type] option[value='+patternType+']').attr('selected', true);
+	$('select[name=pattern_type] option[value='+patternType+']').prop('selected', true);
 	$('input[name=pattern]').val(pattern);
-	$('#case_sensitive').attr('checked', caseSensitive);
+	$('#case_sensitive').prop('checked', caseSensitive);
 	$('input[name=revenue]').val(revenue);
 	$('input[name=methodGoalAPI]').val(goalMethodAPI);
 	$('#goal_submit').val(submitText);
@@ -70,20 +70,20 @@ function initGoalForm(goalMethodAPI, submitText, goalName, matchAttribute, patte
 function bindGoalForm()
 {
 	$('select[name=trigger_type]').click( function() {
-		var triggerTypeId = $(this).attr('value');
+		var triggerTypeId = $(this).val();
 		if(triggerTypeId == "manually") {
-			$('input[name=match_attribute]').attr('disabled', true);
+			$('input[name=match_attribute]').prop('disabled', true);
 			$('#match_attribute_section').hide();
 			$('#manual_trigger_section').show();
 		} else {
-			$('input[name=match_attribute]').removeAttr('disabled');
+			$('input[name=match_attribute]').removeProp('disabled');
 			$('#match_attribute_section').show();
 			$('#manual_trigger_section').hide();
 		}
 	});
 
 	$('input[name=match_attribute]').click( function() {
-		var matchTypeId = $(this).attr('value');
+		var matchTypeId = $(this).val();
 		$('#match_attribute_name').html(mappingMatchTypeName[matchTypeId]);
 		$('#examples_pattern').html(mappingMatchTypeExamples[matchTypeId]);
 	});
@@ -135,7 +135,7 @@ function getAjaxAddGoal()
 		parameters.matchAttribute = $('input[name=match_attribute]:checked').val();
 		parameters.patternType = $('[name=pattern_type]').val();
 		parameters.pattern = encodeURIComponent( $('input[name=pattern]').val() );
-		parameters.caseSensitive = $('#case_sensitive').attr('checked') == true ? 1: 0;
+		parameters.caseSensitive = $('#case_sensitive').prop('checked') == true ? 1: 0;
 	}
 	parameters.revenue = $('input[name=revenue]').val();
 	parameters.allowMultipleConversionsPerVisit = $('input[name=allow_multiple]:checked').val() == true ? 1: 0;
@@ -155,7 +155,7 @@ function bindListGoalEdit()
 	$('a[name=linkEditGoal]').click( function() {
 		var goalId = $(this).attr('id');
 		var goal = piwik.goals[goalId];
-		initGoalForm("Goals.updateGoal", _pk_translate('Goals_UpdateGoal_js'), goal.name, goal.match_attribute, goal.pattern, goal.pattern_type, (goal.case_sensitive=='0' ? false : true), goal.revenue, goal.allow_multiple, goalId);
+		initGoalForm("Goals.updateGoal", _pk_translate('Goals_UpdateGoal_js'), goal.name, goal.match_attribute, goal.pattern, goal.pattern_type, (goal.case_sensitive != '0'), goal.revenue, goal.allow_multiple, goalId);
 		showAddNewGoal();
 		return false;
 	});
@@ -165,9 +165,9 @@ function bindListGoalEdit()
 		var goal = piwik.goals[goalId];
 		
 		$('#confirm h2').text(sprintf(_pk_translate('Goals_DeleteGoalConfirm_js'), '"'+goal.name+'"'));
-		piwikHelper.windowModal('#confirm', function(){
+		piwikHelper.modalConfirm('#confirm', {yes: function(){
 		    $.ajax( getAjaxDeleteGoal( goalId ) );
-		});
+		}});
 		return false;
 	});
 

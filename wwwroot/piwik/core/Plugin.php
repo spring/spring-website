@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Plugin.php 3862 2011-02-07 16:59:31Z vipsoft $
+ * @version $Id: Plugin.php 6427 2012-05-31 23:26:11Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -29,14 +29,17 @@ abstract class Piwik_Plugin
 	 * - 'version' => string            // plugin version number; examples and 3rd party plugins must not use Piwik_Version::VERSION; 3rd party plugins must increment the version number with each plugin release
 	 * - 'translationAvailable' => bool // is there a translation file in plugins/your-plugin/lang/* ?
 	 * - 'TrackerPlugin' => bool        // should we load this plugin during the stats logging process?
+	 *
+	 * @return array
 	 */
-	abstract function getInformation();
+	abstract public function getInformation();
 
 	/**
 	 * Returns the list of hooks registered with the methods names
-	 * @var array
+	 *
+	 * @return array
 	 */
-	function getListHooksRegistered()
+	public function getListHooksRegistered()
 	{
 		return array();
 	}
@@ -65,6 +68,22 @@ abstract class Piwik_Plugin
 	 * Remove the created resources during the install
 	 */
 	public function uninstall()
+	{
+		return;
+	}
+	
+	/**
+	 * Executed every time the plugin is enabled
+	 */
+	public function activate()
+	{
+		return;
+	}
+	
+	/**
+	 * Executed every time the plugin is disabled
+	 */
+	public function deactivate()
 	{
 		return;
 	}

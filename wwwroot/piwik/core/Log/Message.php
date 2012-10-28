@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Message.php 5087 2011-08-09 07:25:23Z matt $
+ * @version $Id: Message.php 6385 2012-05-29 21:36:24Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,6 +19,10 @@
 class Piwik_Log_Message extends Piwik_Log
 {
 	const ID = 'logger_message.htm';
+
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		$logToFileFilename = self::ID;
@@ -33,7 +37,12 @@ class Piwik_Log_Message extends Piwik_Log
 							$logToDatabaseTableName, 
 							$logToDatabaseColumnMapping );
 	}
-	
+
+	/**
+	 * Logs the given message
+	 *
+	 * @param string  $message
+	 */
 	public function logEvent($message)
 	{
 		$event = array();
@@ -55,7 +64,7 @@ class Piwik_Log_Message_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Sc
      * Formats data into a single line to be written by the writer.
      *
      * @param  array    $event    event data
-     * @return string             formatted line to write to the log
+     * @return string  formatted line to write to the log
      */
     public function format($event)
     {
@@ -73,7 +82,13 @@ class Piwik_Log_Message_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Sc
     	}
     	$message .= "\n";
     	
-    	$message = '['. $event['timestamp'] . '] ['.$event['requestKey'].'] ['.Piwik::getMemoryUsage(). '] ' .$message;
+    	$memory = '';
+    	// Hacky: let's hide the memory usage in CLI to hide from the archive.php output
+    	if(!Piwik_Common::isPhpCliMode())
+    	{
+    		$memory = '['.Piwik::getMemoryUsage(). '] ';
+    	}
+    	$message = '['. $event['timestamp'] . '] ['.$event['requestKey'].'] ' .$memory.$message;
     	return parent::format($message);
     }
 }

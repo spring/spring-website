@@ -1,62 +1,62 @@
+{* The following parameters can be used to customize this widget when 'include'-ing:
+ * 
+ * - $showAllSitesItem true if the 'All Websites' option should be shown, false if otherwise. Default = true.
+ * - $allSitesItemText The text to use for the 'All Websites' option. Default = 'All Websites'.
+ * - $allWebsitesLinkLocation The location of the 'All Websites' option. Can be 'top' or 'bottom'. Default = 'bottom'.
+ * - $showSelectedSite false if the currently selected site should be excluded from the list of sites. Default = false.
+ * - $sites The list of sites to use. By default, the first N sites are used. They are retrieved in Piwik_View.
+ * - $show_autocompleter Whether to show the autocompleter or not. Default true.
+ * - $switchSiteOnSelect Whether to change the page w/ a new idSite value when a site is selected, or not.
+ *                       Default = true.
+ * - $inputName If set, a hidden <input> w/ name == $inputName is created which will hold the selected site's ID. For
+ *              use with <form> elements.
+ * - $siteName The currently selected site name. Defaults to the first name in $sites set by Piwik_View.
+ * - $idSite The currently selected idSite. Defaults to the first id in $sites set by Piwik_View.
+ *}
+{capture name=sitesSelector_allWebsitesLink assign=sitesSelector_allWebsitesLink}
+<div class="custom_select_all" style="clear: both">
+	<a href="#" {if isset($showAllSitesItem) && $showAllSitesItem eq false}style="display:none;"{/if}>
+		{if isset($allSitesItemText)}{$allSitesItemText}{else}{'General_MultiSitesSummary'|translate}{/if}
+	</a>
+</div>
+{/capture}
 <div class="sites_autocomplete">
-    <label>{'General_Website'|translate}</label>
     <div id="sitesSelectionSearch" class="custom_select">
     
-        <a href="index.php?module=CoreHome&amp;action=index&amp;idSite={$idSite}&amp;period={$period}&amp;date={$rawDate}" onclick="return false" class="custom_select_main_link">{$siteName}</a>
+        <a href="#" onclick="return false" class="custom_select_main_link" siteid="{if isset($idSite)}{$idSite}{else}{$sites[0].idsite}{/if}">{if isset($siteName)}{$siteName}{else}{$sites[0].name}{/if}</a>
         
         <div class="custom_select_block">
+            {if isset($allWebsitesLinkLocation) && $allWebsitesLinkLocation eq 'top'}
+            {$sitesSelector_allWebsitesLink}
+            {/if}
             <div id="custom_select_container">
             <ul class="custom_select_ul_list" >
                 {foreach from=$sites item=info}
-                    <li {if $idSite==$info.idsite} style="display: none"{/if}><a href="index.php?module=CoreHome&amp;action=index&amp;idSite={$info.idsite}&amp;period={$period}&amp;date={$rawDate}" siteid="{$info.idsite}" onclick="broadcast.propagateNewPage( 'idSite={$info.idsite}');">{$info.name}</a></li>
+                    <li {if (!isset($showSelectedSite) || $showSelectedSite eq false) && $idSite==$info.idsite} style="display: none"{/if}><a href="#" siteid="{$info.idsite}">{$info.name}</a></li>
 				{/foreach}
             </ul>
             </div>
-            <div class="custom_select_all" style="clear: both">
-				<br />
-				<a href="index.php?module=MultiSites&amp;action=index&amp;period={$period}&amp;date={$rawDate}&amp;idSite={$idSite}">{'General_MultiSitesSummary'|translate}</a>
-			</div>
-            
-            <div class="custom_select_search">
-                <input type="text" length="15" id="websiteSearch" class="inp">
+            {if !isset($allWebsitesLinkLocation) || $allWebsitesLinkLocation eq 'bottom'}
+            {$sitesSelector_allWebsitesLink}
+            {/if}
+            <div class="custom_select_search" {if !$show_autocompleter}style="display:none;"{/if}>
+                <input type="text" length="15" id="websiteSearch" class="inp"/>
                 <input type="hidden" class="max_sitename_width" id="max_sitename_width" value="130" />
-                <input type="submit" value="Search" class="but">
+                <input type="submit" value="Search" class="but"/>
 				<img title="Clear" id="reset" style="position: relative; top: 4px; left: -44px; cursor: pointer; display: none;" src="plugins/CoreHome/templates/images/reset_search.png"/>
             </div>
         </div>
 	</div>
-    
+	{if isset($inputName)}<input type="hidden" name="{$inputName}" value="{if isset($idSite)}{$idSite}{else}{$sites[0].idsite}{/if}"/>{/if}
+	{if isset($switchSiteOnSelect) && $switchSiteOnSelect eq false}
 	<script type="text/javascript">
-    {if !$show_autocompleter}{literal}
-    $('.custom_select_search').hide();
-    $('.custom_select_all').hide();
-    {/literal}{/if}
 	{literal}
-    if($('.custom_select_ul_list li').length > 1) {
-        $("#sitesSelectionSearch .custom_select_main_link").click(function(){
-    		$("#sitesSelectionSearch .custom_select_block").toggleClass("custom_select_block_show");
-    		$('#websiteSearch').focus();
-    		return false;
-    	});
-        $('#sitesSelectionSearch .custom_select_block').bind('mouseenter', function(){
-            $('.custom_select_ul_list li a').each(function(){
-                var hash = jQuery.historyCurrentHash;
-                if(hash.charAt(0) != '#') {
-                    hash = '#'+hash;
-                }
-                $(this).attr('href', piwikHelper.getCurrentQueryStringWithParametersModified('idSite='+$(this).attr('siteid'))+hash.replace(/idSite=[0-9]+/, 'idSite='+$(this).attr('siteid')))
-            });
-        });
-        var inlinePaddingWidth=22;
-        var staticPaddingWidth=34;
-        if($(".custom_select_block ul")[0]){
-            var widthSitesSelection = Math.max($(".custom_select_block ul").width()+inlinePaddingWidth, $(".custom_select_main_link").width()+staticPaddingWidth);
-            $(".custom_select_block").css('width', widthSitesSelection);
-        }
-    } else {
-        $('.custom_select_main_link').addClass('noselect');
-    }
-    {/literal}
-    </script>
+		// make sure site is not switched an item is selected
+		window.autocompleteOnNewSiteSelect = function(id) {
+			$('.sites_autocomplete input').val(id);
+		};
+	{/literal}
+	</script>
+	{/if}
 </div>
 

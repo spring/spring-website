@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 5271 2011-10-08 15:17:18Z vipsoft $
+ * @version $Id: API.php 5683 2012-01-18 17:01:19Z vipsoft $
  *
  * @category Piwik_Plugins
  * @package Piwik_SEO
@@ -53,16 +53,6 @@ class Piwik_SEO_API
 				'logo' => Piwik_getSearchEngineLogoFromUrl('http://google.com'),
 				'id' => 'pagerank'
 			),
-			Piwik_Translate('SEO_YahooBacklinks')	=> array(
-				'rank' => $rank->getBacklinksYahoo(),
-				'logo' => Piwik_getSearchEngineLogoFromUrl('http://search.yahoo.com'),
-				'id' => 'yahoo-bls'
-			),
-			Piwik_Translate('SEO_YahooIndexedPages') => array(
-				'rank' => $rank->getIndexedYahoo(),
-				'logo' => Piwik_getSearchEngineLogoFromUrl('http://search.yahoo.com'),
-				'id' => 'yahoo-pages'
-			),
 			Piwik_Translate('SEO_AlexaRank') => array(
 				'rank' => $rank->getAlexaRank(),
 				'logo' => Piwik_getSearchEngineLogoFromUrl('http://alexa.com'),
@@ -78,5 +68,4 @@ class Piwik_SEO_API
 		$dataTable->addRowsFromArrayWithIndexLabel($data);
 		return $dataTable;
 	}
-	
 }

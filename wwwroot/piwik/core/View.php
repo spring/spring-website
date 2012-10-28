@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: View.php 5188 2011-09-19 01:41:27Z matt $
+ * @version $Id: View.php 6900 2012-09-02 11:14:40Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik
@@ -23,19 +23,20 @@ if(!defined('PIWIK_USER_PATH'))
  *
  * @package Piwik
  */
-class Piwik_View implements Piwik_iView
+class Piwik_View implements Piwik_View_Interface
 {
 	// view types
 	const STANDARD = 0; // REGULAR, FULL, CLASSIC
 	const MOBILE = 1;
 	const CLI = 2;
 
+	const COREUPDATER_ONE_CLICK_DONE = 'update_one_click_done';
+
 	private $template = '';
 	private $smarty = false;
 	private $variables = array();
 	private $contentType = 'text/html; charset=utf-8';
 	private $xFrameOptions = null;
-	protected $piwikUrl = false;
 	
 	public function __construct( $templateFile, $smConf = array(), $filter = true )
 	{
@@ -43,9 +44,9 @@ class Piwik_View implements Piwik_iView
 		$this->smarty = new Piwik_Smarty($smConf, $filter);
 
 		// global value accessible to all templates: the piwik base URL for the current request
-		$this->piwikUrl = Piwik_Common::sanitizeInputValue(Piwik_Url::getCurrentUrlWithoutFileName());
 		$this->piwik_version = Piwik_Version::VERSION;
 		$this->cacheBuster = md5(Piwik_Common::getSalt() . PHP_VERSION . Piwik_Version::VERSION);
+		$this->piwikUrl = Piwik_Common::sanitizeInputValue(Piwik_Url::getCurrentUrlWithoutFileName());
 	}
 	
 	/**
@@ -85,8 +86,7 @@ class Piwik_View implements Piwik_iView
 			$userLogin = Piwik::getCurrentUserLogin();
 			$this->userLogin = $userLogin;
 			
-			// workaround for #1331
-			$count = method_exists('Piwik', 'getWebsitesCountToDisplay') ? Piwik::getWebsitesCountToDisplay() : 1;
+			$count = Piwik::getWebsitesCountToDisplay();
 
 			$sites = Piwik_SitesManager_API::getInstance()->getSitesWithAtLeastViewAccess($count);
 			usort($sites, create_function('$site1, $site2', 'return strcasecmp($site1["name"], $site2["name"]);'));
@@ -98,7 +98,7 @@ class Piwik_View implements Piwik_iView
 			$this->latest_version_available = Piwik_UpdateCheck::isNewestVersionAvailable();
 			$this->disableLink = Piwik_Common::getRequestVar('disableLink', 0, 'int');
 			$this->isWidget = Piwik_Common::getRequestVar('widget', 0, 'int');
-			if(Zend_Registry::get('config')->General->autocomplete_min_sites <= count($sites))
+			if(Piwik_Config::getInstance()->General['autocomplete_min_sites'] <= count($sites))
 			{
 				$this->show_autocompleter = true;
 			}
@@ -107,8 +107,7 @@ class Piwik_View implements Piwik_iView
 				$this->show_autocompleter = false;
 			}
 
-			// workaround for #1331
-			$this->loginModule = method_exists('Piwik', 'getLoginPluginName') ? Piwik::getLoginPluginName() : 'Login';
+			$this->loginModule = Piwik::getLoginPluginName();
 			
 			$user = Piwik_UsersManager_API::getInstance()->getUser($userLogin);
 			$this->userAlias = $user['alias'];
@@ -125,16 +124,11 @@ class Piwik_View implements Piwik_iView
 			$this->totalNumberOfQueries = 0;
 		}
  
-		// workaround for #1331
-		if(method_exists('Piwik', 'overrideCacheControlHeaders'))
-		{
-			Piwik::overrideCacheControlHeaders('no-store');
-		}
+		Piwik::overrideCacheControlHeaders('no-store');
+
 		@header('Content-Type: '.$this->contentType);
-		if($this->xFrameOptions)
-		{
-			@header('X-Frame-Options: '.$this->xFrameOptions);
-		}
+		// always sending this header, sometimes empty, to ensure that Dashboard embed loads (which could call this header() multiple times, the last one will prevail)
+		@header('X-Frame-Options: '. (string)$this->xFrameOptions);
 		
 		return $this->smarty->fetch($this->template);
 	}
@@ -161,6 +155,10 @@ class Piwik_View implements Piwik_iView
 		{
 			$this->xFrameOptions = $option;
 		}
+		if($option == 'allow')
+		{
+			$this->xFrameOptions = null;
+		}
 	}
 
 	/**
@@ -172,22 +170,8 @@ class Piwik_View implements Piwik_iView
 	{
 		if($form instanceof Piwik_QuickForm2)
 		{
-			static $registered = false;
-			if(!$registered)
-			{
-				HTML_QuickForm2_Renderer::register('smarty', 'HTML_QuickForm2_Renderer_Smarty');
-				$registered = true;
-			}
-
-			// Create the renderer object
-			$renderer = HTML_QuickForm2_Renderer::factory('smarty');
-			$renderer->setOption('group_errors', true);
-
-			// build the HTML for the form
-			$form->render($renderer);
-
 			// assign array with form data
-			$this->smarty->assign('form_data', $renderer->toArray());
+			$this->smarty->assign('form_data', $form->getFormData());
 			$this->smarty->assign('element_list', $form->getElementList());
 		}
 	}
@@ -263,9 +247,16 @@ class Piwik_View implements Piwik_iView
 	 *
 	 * @param string $templateName Template name (e.g., 'index')
 	 * @param int $viewType     View type (e.g., Piwik_View::CLI)
+	 * @throws Exception
+	 * @return Piwik_View|Piwik_View_OneClickDone
 	 */
 	static public function factory( $templateName = null, $viewType = null)
 	{
+		if ($templateName == self::COREUPDATER_ONE_CLICK_DONE)
+		{
+			return new Piwik_View_OneClickDone(Piwik::getCurrentUserTokenAuth());
+		}
+
 		Piwik_PostEvent('View.getViewType', $viewType);
 
 		// get caller

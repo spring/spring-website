@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Feedback.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Feedback.php 6828 2012-08-18 22:48:37Z capedfuzz $
  *
  * @category Piwik_Plugins
  * @package Piwik_Feedback
@@ -37,9 +37,19 @@ class Piwik_Feedback extends Piwik_Plugin
 
 	public function addTopMenu()
 	{
-		Piwik_AddTopMenu('General_GiveUsYourFeedback', array('module' => 'Feedback', 'action' => 'index'), true, $order = 20);
+		Piwik_AddTopMenu(
+			'General_GiveUsYourFeedback',
+			array('module' => 'Feedback', 'action' => 'index'),
+			true,
+			$order = 20,
+			$isHTML = false,
+			$tooltip = Piwik_Translate('Feedback_TopLinkTooltip')
+		);
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getCssFiles( $notification )
 	{
 		$cssFiles = &$notification->getNotificationObject();
@@ -47,6 +57,9 @@ class Piwik_Feedback extends Piwik_Plugin
 		$cssFiles[] = "plugins/Feedback/templates/styles.css";
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getJsFiles( $notification )
 	{
 		$jsFiles = &$notification->getNotificationObject();

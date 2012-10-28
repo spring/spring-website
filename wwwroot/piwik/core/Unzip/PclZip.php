@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: PclZip.php 4297 2011-04-03 19:31:58Z vipsoft $
+ * @version $Id: PclZip.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -23,17 +23,39 @@ require_once PIWIK_INCLUDE_PATH . '/libs/PclZip/pclzip.lib.php';
  */
 class Piwik_Unzip_PclZip implements Piwik_Unzip_Interface
 {
+	/**
+	 * @var PclZip
+	 */
 	private $pclzip;
+	/**
+	 * @var string
+	 */
 	public $filename;
 
-	function __construct($filename) {
+	/**
+	 * Constructor
+	 *
+	 * @param string  $filename  Name of the .zip archive
+	 */
+	public function __construct($filename) {
 		$this->pclzip = new PclZip($filename);
 		$this->filename = $filename;
 	}
 
+	/**
+	 * Extract files from archive to target directory
+	 *
+	 * @param string  $pathExtracted  Absolute path of target directory
+	 * @return mixed  Array of filenames if successful; or 0 if an error occurred
+	 */
 	public function extract($pathExtracted) {
 		$pathExtracted = str_replace('\\', '/', $pathExtracted);
 		$list = $this->pclzip->listContent();
+		if (empty($list))
+		{
+			return 0;
+		}
+
 		foreach($list as $entry) {
 			$filename = str_replace('\\', '/', $entry['stored_filename']);
 			$parts = explode('/', $filename);
@@ -50,6 +72,7 @@ class Piwik_Unzip_PclZip implements Piwik_Unzip_Interface
 		return $this->pclzip->extract(
 				PCLZIP_OPT_PATH, $pathExtracted,
 				PCLZIP_OPT_STOP_ON_ERROR,
+				PCLZIP_OPT_REPLACE_NEWER,
 				PCLZIP_CB_PRE_EXTRACT, create_function(
 					'$p_event, &$p_header',
 					"return strncmp(\$p_header['filename'], '$pathExtracted', strlen('$pathExtracted')) ? 0 : 1;"
@@ -57,6 +80,11 @@ class Piwik_Unzip_PclZip implements Piwik_Unzip_Interface
 		);
 	}
 
+	/**
+	 * Get error status string for the latest error
+	 *
+	 * @return string
+	 */
 	public function errorInfo() {
 		return $this->pclzip->errorInfo(true);
 	}

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: IgnoreCookie.php 3816 2011-01-28 02:01:41Z vipsoft $
+ * @version $Id: IgnoreCookie.php 6486 2012-06-20 21:01:20Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -25,20 +25,8 @@ class Piwik_Tracker_IgnoreCookie
 	 */
 	static public function getTrackingCookie()
 	{
-		if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-		{
-			$cookie_name = @Piwik_Tracker_Config::getInstance()->Tracker['cookie_name'];
-			$cookie_path = @Piwik_Tracker_Config::getInstance()->Tracker['cookie_path'];
-		}
-		else
-		{
-			$config = Zend_Registry::get('config');
-			if($config !== false)
-			{
-				$cookie_name = @$config->Tracker->cookie_name;
-				$cookie_path = @$config->Tracker->cookie_path;
-			}
-		}
+		$cookie_name = @Piwik_Config::getInstance()->Tracker['cookie_name'];
+		$cookie_path = @Piwik_Config::getInstance()->Tracker['cookie_path'];
 
 		return new Piwik_Cookie($cookie_name, null, $cookie_path);
 	}
@@ -50,20 +38,8 @@ class Piwik_Tracker_IgnoreCookie
 	 */
 	static public function getIgnoreCookie()
 	{
-		if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-		{
-			$cookie_name = @Piwik_Tracker_Config::getInstance()->Tracker['ignore_visits_cookie_name'];
-			$cookie_path = @Piwik_Tracker_Config::getInstance()->Tracker['cookie_path'];
-		}
-		else
-		{
-			$config = Zend_Registry::get('config');
-			if($config !== false)
-			{
-				$cookie_name = @$config->Tracker->ignore_visits_cookie_name;
-				$cookie_path = @$config->Tracker->cookie_path;
-			}
-		}
+		$cookie_name = @Piwik_Config::getInstance()->Tracker['ignore_visits_cookie_name'];
+		$cookie_path = @Piwik_Config::getInstance()->Tracker['cookie_path'];
 
 		return new Piwik_Cookie($cookie_name, null, $cookie_path);
 	}
@@ -91,7 +67,7 @@ class Piwik_Tracker_IgnoreCookie
 	/**
 	 * Returns true if ignore (visit) cookie is present
 	 *
-	 * @return bool True if ignore cookie found; false otherwise
+	 * @return bool  True if ignore cookie found; false otherwise
 	 */
 	static public function isIgnoreCookieFound()
 	{

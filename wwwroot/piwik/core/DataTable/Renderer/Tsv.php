@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Tsv.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Tsv.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -21,12 +21,20 @@
  */
 class Piwik_DataTable_Renderer_Tsv extends Piwik_DataTable_Renderer_Csv
 {
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		parent::__construct();
 		$this->setSeparator("\t");
 	}
-	
+
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function render()
 	{
 		return parent::render();

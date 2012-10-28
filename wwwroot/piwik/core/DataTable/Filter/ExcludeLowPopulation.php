@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ExcludeLowPopulation.php 4169 2011-03-23 01:59:57Z matt $
+ * @version $Id: ExcludeLowPopulation.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -24,6 +24,15 @@ class Piwik_DataTable_Filter_ExcludeLowPopulation extends Piwik_DataTable_Filter
 {
 	static public $minimumValue;
 	const MINIMUM_SIGNIFICANT_PERCENTAGE_THRESHOLD = 0.02;
+
+	/**
+	 * Constructor
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @param string           $columnToFilter              column to filter
+	 * @param number           $minimumValue                minimum value
+	 * @param bool             $minimumPercentageThreshold
+	 */
 	public function __construct( $table, $columnToFilter, $minimumValue, $minimumPercentageThreshold = false )
 	{
 		parent::__construct($table);
@@ -41,7 +50,12 @@ class Piwik_DataTable_Filter_ExcludeLowPopulation extends Piwik_DataTable_Filter
 		}
 		self::$minimumValue = $minimumValue;
 	}
-	
+
+	/**
+	 * Executes filter and removes all rows below the defined minimum
+	 *
+	 * @param Piwik_DataTable  $table
+	 */
 	function filter($table)
 	{
 		$table->filter('ColumnCallbackDeleteRow',
@@ -50,7 +64,13 @@ class Piwik_DataTable_Filter_ExcludeLowPopulation extends Piwik_DataTable_Filter
 							)
 						);
 	}
-	
+
+	/**
+	 * Checks whether the given value is below the defined minimum
+	 *
+	 * @param number  $value  value to check
+	 * @return bool
+	 */
 	static public function excludeLowPopulation($value)
 	{
 		return $value >= self::$minimumValue;

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Period.php 5138 2011-09-07 15:25:57Z EZdesign $
+ * @version $Id: Period.php 6924 2012-09-06 01:58:40Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -23,19 +23,26 @@
  */
 class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 {
-	/*
+	/**
 	 * Array of (column name before => column name renamed) of the columns for which sum operation is invalid. 
 	 * The summed value is not accurate and these columns will be renamed accordingly.
+     * @var array
 	 */
 	static public $invalidSummedColumnNameToRenamedName = array(
 		Piwik_Archive::INDEX_NB_UNIQ_VISITORS => Piwik_Archive::INDEX_SUM_DAILY_NB_UNIQ_VISITORS 
 	);
+
+	/**
+	 * @var Piwik_Archive_Single[]
+	 */
+	public $archives = array();
 	
 	/**
 	 * Sums all values for the given field names $aNames over the period
 	 * See @archiveNumericValuesGeneral for more information
 	 * 
-	 * @param string|array 
+	 * @param string|array  $aNames
+	 * @return array
 	 */
 	public function archiveNumericValuesSum( $aNames )
 	{
@@ -46,21 +53,24 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 	 * Get the maximum value for all values for the given field names $aNames over the period
 	 * See @archiveNumericValuesGeneral for more information
 	 * 
-	 * @param string|array 
+	 * @param string|array  $aNames
+	 * @return array
 	 */
 	public function archiveNumericValuesMax( $aNames )
 	{
 		return $this->archiveNumericValuesGeneral($aNames, 'max');
 	}
-	
+
 	/**
 	 * Given a list of fields names, the method will fetch all their values over the period, and archive them using the given operation.
-	 * 
+	 *
 	 * For example if $operationToApply = 'sum' and $aNames = array('nb_visits', 'sum_time_visit')
 	 *  it will sum all values of nb_visits for the period (for example give the number of visits for the month by summing the visits of every day)
-	 * 
-	 * @param array|string $aNames Array of strings or string containg the field names to select
-	 * @param string $operationToApply Available operations = sum, max, min 
+	 *
+	 * @param array|string  $aNames            Array of strings or string containg the field names to select
+	 * @param string        $operationToApply  Available operations = sum, max, min
+	 * @throws Exception
+	 * @return array
 	 */
 	private function archiveNumericValuesGeneral($aNames, $operationToApply)
 	{
@@ -91,15 +101,15 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 							$results[$name] += $valueToSum;	
 							break;
 						case 'max':
-							$results[$name] = max($results[$name], $valueToSum);		
+							$results[$name] = max($results[$name], $valueToSum);
 							break;
 						case 'min':
-							$results[$name] = min($results[$name], $valueToSum);		
+							$results[$name] = min($results[$name], $valueToSum);
 							break;
 						default:
 							throw new Exception("Operation not applicable.");
 							break;
-					}								
+					}
 				}
 			}
 		}
@@ -143,11 +153,12 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 	 * It returns an array that gives information about the "final" DataTable. The array gives for every field name, the number of rows in the 
 	 *  final DataTable (ie. the number of distinct LABEL over the period) (eg. the number of distinct keywords over the last month)
 	 * 
-	 * @param string|array Field name(s) of DataTable to select so we can get the sum 
-	 * @param array (current_column_name => new_column_name) for columns that must change names when summed (eg. unique visitors go from nb_uniq_visitors to sum_daily_nb_uniq_visitors)
-	 * @param int Max row count of parent datatable to archive  
-	 * @param int Max row count of children datatable(s) to archive
-	 * @param string Column name to sort by, before truncating rows (ie. if there are more rows than the specified max row count) 
+	 * @param string|array  $aRecordName                           Field name(s) of DataTable to select so we can get the sum
+	 * @param array         $invalidSummedColumnNameToRenamedName  (current_column_name => new_column_name) for columns that must change names when summed
+	 *                                                             (eg. unique visitors go from nb_uniq_visitors to sum_daily_nb_uniq_visitors)
+	 * @param int           $maximumRowsInDataTableLevelZero       Max row count of parent datatable to archive
+	 * @param int           $maximumRowsInSubDataTable             Max row count of children datatable(s) to archive
+	 * @param string        $columnToSortByBeforeTruncation        Column name to sort by, before truncating rows (ie. if there are more rows than the specified max row count)
 	 * 
 	 * @return array  array (
 	 * 					nameTable1 => number of rows, 
@@ -160,6 +171,9 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 										$maximumRowsInSubDataTable = null,
 										$columnToSortByBeforeTruncation = null )
 	{
+		// We clean up below all tables created during this function call (and recursive calls) 
+		$latestUsedTableId = Piwik_DataTable_Manager::getInstance()->getMostRecentTableId();
+		
 		$this->loadSubPeriods();
 		if(!is_array($aRecordName))
 		{
@@ -178,7 +192,7 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 			destroy($table);
 			$this->insertBlobRecord($recordName, $blob);
 		}
-		Piwik_DataTable_Manager::getInstance()->deleteAll();
+		Piwik_DataTable_Manager::getInstance()->deleteAll( $latestUsedTableId );
 		
 		return $nameToCount;
 	}
@@ -188,8 +202,8 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 	 * It calls the appropriate methods that sum all these tables together.
 	 * The resulting DataTable is returned.
 	 *
-	 * @param string $name
-	 * @param array columns in the array (old name, new name) to be renamed as the sum operation is not valid on them (eg. nb_uniq_visitors->sum_daily_nb_uniq_visitors)
+	 * @param string  $name
+	 * @param array   $invalidSummedColumnNameToRenamedName  columns in the array (old name, new name) to be renamed as the sum operation is not valid on them (eg. nb_uniq_visitors->sum_daily_nb_uniq_visitors)
 	 * @return Piwik_DataTable
 	 */
 	protected function getRecordDataTableSum( $name, $invalidSummedColumnNameToRenamedName )
@@ -214,7 +228,7 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 		}
 		return $table;
 	}
-	
+
 	protected function initCompute()
 	{
 		parent::initCompute();
@@ -223,7 +237,7 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 	/**
 	 * Returns the ID of the archived subperiods.
 	 * 
-	 * @return array Array of the idArchive of the subperiods
+	 * @return array  Array of the idArchive of the subperiods
 	 */
 	protected function loadSubperiodsArchive()
 	{
@@ -256,7 +270,7 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 		{
 			return;
 		}
-		Piwik_PostEvent('ArchiveProcessing_Period.compute', $this);		
+		Piwik_PostEvent('ArchiveProcessing_Period.compute', $this);
 	}
 
 	protected function loadSubPeriods()
@@ -267,7 +281,11 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 		}
 	}
 	
-	// Similar logic to Piwik_ArchiveProcessing_Day::isThereSomeVisits()
+	/**
+	 *
+	 * @see Piwik_ArchiveProcessing_Day::isThereSomeVisits()
+	 * @return bool|null
+	 */
 	public function isThereSomeVisits()
 	{
 		if(!is_null($this->isThereSomeVisits))
@@ -339,34 +357,59 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 	{
 		parent::postCompute();
 		
-		$blobTable = $this->tableArchiveBlob->getTableName();
 		$numericTable = $this->tableArchiveNumeric->getTableName();
+		self::doPurgeOutdatedArchives($numericTable, $this->isArchiveTemporary());
 		
-		$key = 'lastPurge_' . $blobTable;
+		if(!isset($this->archives))
+		{
+			return;
+		}
+		foreach($this->archives as $archive)
+		{
+			destroy($archive);
+		}
+		$this->archives = array();
+	}
+	
+	const FLAG_TABLE_PURGED = 'lastPurge_';
+	
+	/**
+	 * Given a monthly archive table, will delete all reports that are now outdated, 
+	 * or reports that ended with an error
+	 */
+	static public function doPurgeOutdatedArchives($numericTable)
+	{
+		$blobTable = str_replace("numeric", "blob", $numericTable);
+		$key = self::FLAG_TABLE_PURGED . $blobTable;
 		$timestamp = Piwik_GetOption($key);
-
 		
-		// we shall purge temporary archives after their timeout is finished, plus an extra 2 hours 
-		// in case archiving is disabled and is late to run, we give it this extra time to run and re-process more recent records
+		// we shall purge temporary archives after their timeout is finished, plus an extra 6 hours 
+		// in case archiving is disabled or run once a day, we give it this extra time to run 
+		// and re-process more recent records... 
+		// TODO: Instead of hardcoding 6 we should put the actual number of hours between 2 archiving runs
 		$temporaryArchivingTimeout = self::getTodayArchiveTimeToLive();
-		$purgeEveryNSeconds = $temporaryArchivingTimeout + 2 * 3600;
+		$purgeEveryNSeconds = max($temporaryArchivingTimeout, 6 * 3600);
 
 		// we only delete archives if we are able to process them, otherwise, the browser might process reports
 		// when &segment= is specified (or custom date range) and would below, delete temporary archives that the 
 		// browser is not able to process until next cron run (which could be more than 1 hour away)
-		if($this->isRequestAuthorizedToArchive()
+		if(self::isRequestAuthorizedToArchive()
 			&& (!$timestamp 
 				|| $timestamp < time() - $purgeEveryNSeconds))
 		{
 			Piwik_SetOption($key, time());
 			
 			$purgeArchivesOlderThan = Piwik_Date::factory(time() - $purgeEveryNSeconds)->getDateTime();
+			
 			$result = Piwik_FetchAll("
-							SELECT idarchive
-							FROM $numericTable
-							WHERE name LIKE 'done%'
-								AND value = ". Piwik_ArchiveProcessing::DONE_OK_TEMPORARY ."
-								AND ts_archived < ?", array($purgeArchivesOlderThan));
+				SELECT idarchive
+				FROM $numericTable
+				WHERE name LIKE 'done%'
+					AND ((  value = ". Piwik_ArchiveProcessing::DONE_OK_TEMPORARY ."
+						    AND ts_archived < ?)
+						 OR value = ". Piwik_ArchiveProcessing::DONE_ERROR .")", 
+					array($purgeArchivesOlderThan)
+			);
 			
 			$idArchivesToDelete = array();
 			if(!empty($result))
@@ -379,8 +422,12 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
     						WHERE idarchive IN (".implode(',',$idArchivesToDelete).")
     						";
     			
-    			Piwik_Query(sprintf($query, $blobTable));
     			Piwik_Query(sprintf($query, $numericTable));
+
+    			// Individual blob tables could be missing
+	    		try {
+	    			Piwik_Query(sprintf($query, $blobTable));
+	    		} catch(Exception $e) { }
 			}
 			Piwik::log("Purging temporary archives: done [ purged archives older than $purgeArchivesOlderThan from $blobTable and $numericTable ] [Deleted IDs: ". implode(',',$idArchivesToDelete)."]");
 			
@@ -394,25 +441,18 @@ class Piwik_ArchiveProcessing_Period extends Piwik_ArchiveProcessing
 			$bind = array(Piwik::$idPeriods['range'], $yesterday);
 			Piwik::log("Purging Custom Range archives: done [ purged archives older than $yesterday from $blobTable and $numericTable ]");
 			
-    		Piwik_Query(sprintf($query, $blobTable), $bind);
     		Piwik_Query(sprintf($query, $numericTable), $bind);
+    		
+    		// Individual blob tables could be missing
+    		try {
+    			Piwik_Query(sprintf($query, $blobTable), $bind);
+    		} catch(Exception $e) { }
+    		
     		// these tables will be OPTIMIZEd daily in a scheduled task, to claim lost space
 		}
 		else
 		{
 			Piwik::log("Purging temporary archives: skipped.");
 		}
-		
-		
-		if(!isset($this->archives))
-		{
-			return;
-		}
-		foreach($this->archives as $archive)
-		{
-			destroy($archive);
-		}
-		$this->archives = array();
-		
-	}	
+	}
 }

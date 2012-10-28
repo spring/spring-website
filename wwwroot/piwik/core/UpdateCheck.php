@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: UpdateCheck.php 5278 2011-10-10 05:09:42Z vipsoft $
+ * @version $Id: UpdateCheck.php 6404 2012-05-30 11:46:29Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -25,7 +25,7 @@ class Piwik_UpdateCheck
 	/**
 	 * Check for a newer version
 	 *
-	 * @param bool $force Force check
+	 * @param bool  $force  Force check
 	 */
 	public static function check($force = false)
 	{
@@ -44,10 +44,16 @@ class Piwik_UpdateCheck
 				'timezone' => Piwik_SitesManager_API::getInstance()->getDefaultTimezone(),
 			);
 
-			$url = Zend_Registry::get('config')->General->api_service_url
+			$url = Piwik_Config::getInstance()->General['api_service_url']
 				. '/1.0/getLatestVersion/'
 				. '?' . http_build_query($parameters, '', '&');
 			$timeout = self::SOCKET_TIMEOUT;
+			
+			if(@Piwik_Config::getInstance()->Debug['allow_upgrades_to_beta'])
+			{
+				$url = 'http://builds.piwik.org/LATEST_BETA';
+			}
+			
 			try {
 				$latestVersion = Piwik_Http::sendHttpRequest($url, $timeout);
 				if (!preg_match('~^[0-9][0-9a-zA-Z_.-]*$~D', $latestVersion))
@@ -65,8 +71,8 @@ class Piwik_UpdateCheck
 	/**
 	 * Returns version number of a newer Piwik release.
 	 *
-	 * @return string|false false if current version is the latest available, 
-	 * 	 or the latest version number if a newest release is available
+	 * @return string|false  false if current version is the latest available,
+	 *                       or the latest version number if a newest release is available
 	 */
 	public static function isNewestVersionAvailable()
 	{

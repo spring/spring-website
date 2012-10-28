@@ -1,8 +1,9 @@
-<div id="{$properties.uniqueId}">
+<div id="{$properties.uniqueId}" class="dataTable">
 	
-	{if !empty($reportDocumentation)}
-		<div class="reportDocumentation"><p>{$reportDocumentation}</p></div>
-	{/if}
+	<div class="reportDocumentation">
+		{if !empty($reportDocumentation)}<p>{$reportDocumentation}</p>{/if}
+		{if isset($properties.metadata.archived_date)}<p>{$properties.metadata.archived_date}</p>{/if}
+	</div>
 	
 	<div class="{if $graphType=='evolution'}dataTableGraphEvolutionWrapper{else}dataTableGraphWrapper{/if}">
 
@@ -14,11 +15,18 @@
 		
 		<script type="text/javascript">
 			{literal}  window.setTimeout(function() {  {/literal}
-				var plot = new JQPlot({$data});
+				var plot = new JQPlot({$data}, '{$properties.uniqueId}');
+				{if isset($properties.externalSeriesToggle) && $properties.externalSeriesToggle}
+					plot.addExternalSeriesToggle({$properties.externalSeriesToggle}, '{$chartDivId}',
+						{if $properties.externalSeriesToggleShowAll}true{else}false{/if});
+				{/if}
 				plot.render('{$graphType}', '{$chartDivId}', {literal} { {/literal}
 					noData: '{'General_NoDataForGraph'|translate|escape:'javascript'}',
 					exportTitle: '{'General_ExportAsImage_js'|translate|escape:'javascript'}',
-					exportText: '{'General_SaveImageOnYourComputer_js'|translate|escape:'javascript'}'	
+					exportText: '{'General_SaveImageOnYourComputer_js'|translate|escape:'javascript'}',
+					metricsToPlot: '{'General_MetricsToPlot'|translate|escape:'javascript'}',
+					metricToPlot: '{'General_MetricToPlot'|translate|escape:'javascript'}',
+					recordsToPlot: '{'General_RecordsToPlot'|translate|escape:'javascript'}'
 				{literal} }); {/literal}
 			{literal}  }, 5);  {/literal}
 		</script>
@@ -26,7 +34,11 @@
 	{else}
 		
 		<div><div id="{$chartDivId}" class="pk-emptyGraph">
+			{if $showReportDataWasPurgedMessage}
+			{'General_DataForThisGraphHasBeenPurged'|translate:$deleteReportsOlderThan}
+			{else}
 			{'General_NoDataForGraph'|translate}
+			{/if}
 		</div></div>
 		
 	{/if}

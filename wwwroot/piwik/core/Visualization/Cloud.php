@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Cloud.php 5237 2011-09-27 08:15:16Z matt $
+ * @version $Id: Cloud.php 6510 2012-07-13 20:05:39Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -19,16 +19,20 @@
  * @package Piwik
  * @subpackage Piwik_Visualization
  */
-class Piwik_Visualization_Cloud
+class Piwik_Visualization_Cloud implements Piwik_View_Interface
 {
+	/** Used by integration tests to make sure output is consistent. */
+	public static $debugDisableShuffle = false;
+
 	protected $wordsArray = array();
 	public $truncatingLimit = 50;
-	
-	/*
-	 * Assign word to array
-	 * @param string $word
-	 * @return string
-	 */
+
+    /**
+     * Assign word to array
+     * @param string $word
+     * @param int $value
+     * @return string
+     */
 	function addWord($word, $value = 1)
 	{
 		if (isset($this->wordsArray[$word]))
@@ -52,9 +56,9 @@ class Piwik_Visualization_Cloud
 		foreach ($this->wordsArray as $word => $popularity)
 		{
 			$wordTruncated = $word;
-			if(strlen($word) > $this->truncatingLimit)
+			if(Piwik_Common::mb_strlen($word) > $this->truncatingLimit)
 			{
-				$wordTruncated = substr($word, 0, $this->truncatingLimit - 3).'...';
+				$wordTruncated = Piwik_Common::mb_substr($word, 0, $this->truncatingLimit - 3).'...';
 			}
 			
 			// case hideFutureHoursWhenToday=1 shows hours with no visits
@@ -80,11 +84,16 @@ class Piwik_Visualization_Cloud
 		return $return;
 	}
 	
-	/*
+	/**
 	 * Shuffle associated names in array
 	 */
 	protected function shuffleCloud()
 	{
+		if (self::$debugDisableShuffle)
+		{
+			return;
+		}
+
 		$keys = array_keys($this->wordsArray);
 		 
 		shuffle($keys);
@@ -98,7 +107,7 @@ class Piwik_Visualization_Cloud
 		}
 	}
 	 
-	/*
+	/**
 	 * Get the class range using a percentage
 	 *
 	 * @return int $class

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ResponseBuilder.php 4900 2011-06-09 22:28:36Z JulienM $
+ * @version $Id: ResponseBuilder.php 7064 2012-09-26 08:34:19Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -18,42 +18,52 @@ class Piwik_API_ResponseBuilder
 {
 	private $request = null;
 	private $outputFormat = null;
-	
+    
+    private $apiModule = false;
+    private $apiMethod = false;
+
+	/**
+	 * @param string  $outputFormat
+	 * @param array   $request
+	 */
 	public function __construct($outputFormat, $request = array())
 	{
 		$this->request = $request;
 		$this->outputFormat = $outputFormat;
 	}
-	
+
 	/**
 	 * This method processes the data resulting from the API call.
-	 * 
-	 * - If the data resulted from the API call is a Piwik_DataTable then 
-	 * 		- we apply the standard filters if the parameters have been found
-	 * 		  in the URL. For example to offset,limit the Table you can add the following parameters to any API
-	 *  	  call that returns a DataTable: filter_limit=10&filter_offset=20
-	 * 		- we apply the filters that have been previously queued on the DataTable
-	 *        @see Piwik_DataTable::queueFilter()
-	 * 		- we apply the renderer that generate the DataTable in a given format (XML, PHP, HTML, JSON, etc.) 
-	 * 		  the format can be changed using the 'format' parameter in the request.
+	 *
+	 * - If the data resulted from the API call is a Piwik_DataTable then
+	 *         - we apply the standard filters if the parameters have been found
+	 *           in the URL. For example to offset,limit the Table you can add the following parameters to any API
+	 *        call that returns a DataTable: filter_limit=10&filter_offset=20
+	 *         - we apply the filters that have been previously queued on the DataTable
+	 * @see Piwik_DataTable::queueFilter()
+	 *         - we apply the renderer that generate the DataTable in a given format (XML, PHP, HTML, JSON, etc.)
+	 *           the format can be changed using the 'format' parameter in the request.
 	 *        Example: format=xml
-	 * 
+	 *
 	 * - If there is nothing returned (void) we display a standard success message
-	 * 
-	 * - If there is a PHP array returned, we try to convert it to a dataTable 
+	 *
+	 * - If there is a PHP array returned, we try to convert it to a dataTable
 	 *   It is then possible to convert this datatable to any requested format (xml/etc)
-	 * 
+	 *
 	 * - If a bool is returned we convert to a string (true is displayed as 'true' false as 'false')
-	 * 
+	 *
 	 * - If an integer / float is returned, we simply return it
-	 * 
-	 * @throws Exception If an object/resource is returned, if any of conversion fails, etc. 
-	 * 
-	 * @param mixed The initial returned value, before post process. If set to null, success response is returned. 
-	 * @return mixed Usually a string, but can still be a PHP data structure if the format requested is 'original'
+	 *
+	 * @param mixed        $value      The initial returned value, before post process. If set to null, success response is returned.
+	 * @param bool|string  $apiModule  The API module that was called
+	 * @param bool|string  $apiMethod  The API method that was called
+	 * @return mixed  Usually a string, but can still be a PHP data structure if the format requested is 'original'
 	 */
-	public function getResponse($value = null)
-	{ 
+	public function getResponse($value = null, $apiModule = false, $apiMethod = false)
+	{
+        $this->apiModule = $apiModule;
+        $this->apiMethod = $apiMethod;
+        
 		// when null or void is returned from the api call, we handle it as a successful operation 
 		if(!isset($value))
 		{
@@ -94,12 +104,12 @@ class Piwik_API_ResponseBuilder
 		// bool // integer // float // serialized object 
 		return $this->handleScalar($value);
 	}
-	
+
 	/**
-	 * Returns an error $message in the requested $format 
+	 * Returns an error $message in the requested $format
 	 *
-	 * @param string $message
-	 * @param string $format xml/json/php/csv
+	 * @param Exception  $e
+	 * @throws Exception
 	 * @return string
 	 */
 	public function getResponseException(Exception $e)
@@ -133,7 +143,7 @@ class Piwik_API_ResponseBuilder
 	/**
 	 * Returns true if the user requested to serialize the output data (&serialize=1 in the request)
 	 *
-	 * @param mixed $defaultSerializeValue Default value in case the user hasn't specified a value
+	 * @param mixed  $defaultSerializeValue  Default value in case the user hasn't specified a value
 	 * @return bool
 	 */	
 	protected function caseRendererPHPSerialize($defaultSerializeValue = 1)
@@ -149,7 +159,7 @@ class Piwik_API_ResponseBuilder
 	/**
 	 * Apply the specified renderer to the DataTable
 	 * 
-	 * @param Piwik_DataTable
+	 * @param Piwik_DataTable  $dataTable
 	 * @return string
 	 */
 	protected function getRenderedDataTable($dataTable)
@@ -179,71 +189,91 @@ class Piwik_API_ResponseBuilder
 			return $dataTable;
 		}
 		
+		$method = Piwik_Common::getRequestVar('method', '', 'string', $this->request);
+		
 		$renderer = Piwik_DataTable_Renderer::factory($format);
 		$renderer->setTable($dataTable);
 		$renderer->setRenderSubTables(Piwik_Common::getRequestVar('expanded', false, 'int', $this->request));
 		$renderer->setHideIdSubDatableFromResponse(Piwik_Common::getRequestVar('hideIdSubDatable', false, 'int', $this->request));
+		
 		if($format == 'php')
 		{
-			$renderer->setSerialize( $this->caseRendererPHPSerialize());
+			$renderer->setSerialize($this->caseRendererPHPSerialize());
 			$renderer->setPrettyDisplay(Piwik_Common::getRequestVar('prettyDisplay', false, 'int', $this->request));
 		}
 		else if($format == 'html')
 		{
 			$renderer->setTableId($this->request['method']);
 		}
-		else if($format == 'csv')
+		else if($format == 'csv' || $format == 'tsv')
 		{
-			$renderer->setConvertToUnicode( Piwik_Common::getRequestVar('convertToUnicode', true, 'int') );
+			$renderer->setConvertToUnicode(Piwik_Common::getRequestVar('convertToUnicode', true, 'int', $this->request));
+		}
+		
+		// prepare translation of column names
+		if ($format == 'html' || $format == 'csv' || $format == 'tsv' || $format = 'rss')
+		{
+			$renderer->setApiMethod($method);
+			$renderer->setIdSite(Piwik_Common::getRequestVar('idSite', false, 'int', $this->request));
+			$renderer->setTranslateColumnNames(Piwik_Common::getRequestVar('translateColumnNames', false, 'int', $this->request));
 		}
 		
 		return $renderer->render();
 	}
-	
+
 	/**
-	 * Returns a success $message in the requested $format 
+	 * Returns a success $message in the requested $format
 	 *
-	 * @param string $format xml/json/php/csv
-	 * @param string $message
+	 * @param string  $message
 	 * @return string
 	 */
 	protected function handleSuccess( $message = 'ok' )
 	{
-		switch($this->outputFormat)
+		// return a success message only if no content has already been buffered, useful when APIs return raw text or html content to the browser
+		if(!ob_get_contents())
 		{
-			case 'xml':
-				@header("Content-Type: text/xml;charset=utf-8");
-				$return = 
-					"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
-					"<result>\n".
-					"\t<success message=\"".$message."\" />\n".
-					"</result>";
-			break;
-			case 'json':
-				@header( "Content-Type: application/json" );
-				$return = '{"result":"success", "message":"'.$message.'"}';
-			break;
-			case 'php':
-				$return = array('result' => 'success', 'message' => $message);
-				if($this->caseRendererPHPSerialize())
-				{
-					$return = serialize($return);
-				}
-			break;
-			
-			case 'csv':
-				@header("Content-Type: application/vnd.ms-excel");
-				@header("Content-Disposition: attachment; filename=piwik-report-export.csv");	
-				$return = "message\n".$message;
-			break;
-			
-			default:
-				$return = 'Success:'.$message;
-			break;
+			switch($this->outputFormat)
+			{
+				case 'xml':
+					@header("Content-Type: text/xml;charset=utf-8");
+					$return =
+						"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" .
+						"<result>\n".
+						"\t<success message=\"".$message."\" />\n".
+						"</result>";
+				break;
+				case 'json':
+					@header( "Content-Type: application/json" );
+					$return = '{"result":"success", "message":"'.$message.'"}';
+				break;
+				case 'php':
+					$return = array('result' => 'success', 'message' => $message);
+					if($this->caseRendererPHPSerialize())
+					{
+						$return = serialize($return);
+					}
+				break;
+
+				case 'csv':
+					@header("Content-Type: application/vnd.ms-excel");
+					@header("Content-Disposition: attachment; filename=piwik-report-export.csv");
+					$return = "message\n".$message;
+				break;
+
+				default:
+					$return = 'Success:'.$message;
+				break;
+			}
+			return $return;
 		}
-		return $return;
 	}
 
+	/**
+	 * Converts the given scalar to an data table
+	 *
+	 * @param mixed  $scalar
+	 * @return string
+	 */
 	protected function handleScalar($scalar)
 	{
 		$dataTable = new Piwik_DataTable_Simple();
@@ -251,26 +281,67 @@ class Piwik_API_ResponseBuilder
 		return $this->getRenderedDataTable($dataTable);
 	}
 
+	/**
+	 * Handles the given data table
+	 *
+	 * @param Piwik_DataTable  $datatable
+	 * @return string
+	 */
 	protected function handleDataTable($datatable)
 	{
 		// if the flag disable_generic_filters is defined we skip the generic filters
-		if('false' == Piwik_Common::getRequestVar('disable_generic_filters', 'false', 'string', $this->request))
+		if(0 == Piwik_Common::getRequestVar('disable_generic_filters', '0', 'string', $this->request))
 		{
 			$genericFilter = new Piwik_API_DataTableGenericFilter($this->request);
 			$genericFilter->filter($datatable);
 		}
-		
+        
 		// we automatically safe decode all datatable labels (against xss) 
 		$datatable->queueFilter('SafeDecodeLabel');
-		
+        
 		// if the flag disable_queued_filters is defined we skip the filters that were queued
 		if(Piwik_Common::getRequestVar('disable_queued_filters', 'false', 'string', $this->request) == 'false')
 		{
 			$datatable->applyQueuedFilters();
 		}
+		
+		// use the ColumnDelete filter if hideColumns/showColumns is provided (must be done
+		// after queued filters are run so processed metrics can be removed, too)
+		$hideColumns = Piwik_Common::getRequestVar('hideColumns', '', 'string', $this->request);
+		$showColumns = Piwik_Common::getRequestVar('showColumns', '', 'string', $this->request);
+		if ($hideColumns !== '' || $showColumns !== '')
+		{
+			$datatable->filter('ColumnDelete', array($hideColumns, $showColumns));
+		}
+		
+		// if requested, flatten nested tables
+		if (Piwik_Common::getRequestVar('flat', '0', 'string', $this->request) == '1')
+		{
+			$flattener = new Piwik_API_DataTableManipulator_Flattener($this->apiModule, $this->apiMethod, $this->request);
+			if (Piwik_Common::getRequestVar('include_aggregate_rows', '0', 'string', $this->request) == '1')
+			{
+				$flattener->includeAggregateRows();
+			}
+            $datatable = $flattener->flatten($datatable);
+		}
+	
+        // apply label filter: only return a single row matching the label parameter
+        $label = Piwik_Common::getRequestVar('label', '', 'string', $this->request);
+        if ($label !== '')
+        {
+	        $label = Piwik_Common::unsanitizeInputValue($label);
+            $filter = new Piwik_API_DataTableManipulator_LabelFilter($this->apiModule, $this->apiMethod, $this->request);
+            $datatable = $filter->filter($label, $datatable);
+        }
 		return $this->getRenderedDataTable($datatable);
 	}
-	
+
+	/**
+	 * Converts the given simple array to a data table
+	 *
+	 * @param array  $array
+	 * @return string
+	 */
 	protected function handleArray($array)
 	{
 		if($this->outputFormat == 'original')
@@ -295,26 +366,27 @@ class Piwik_API_ResponseBuilder
 		$dataTable->addRowsFromSimpleArray($array);
 		return $this->getRenderedDataTable($dataTable);
 	}
-	
+
 	/**
-	 * Is this a multi dimensional array? 
+	 * Is this a multi dimensional array?
 	 * Multi dim arrays are not supported by the Datatable renderer.
 	 * We manually render these.
-	 * 
+	 *
 	 * array(
-	 * 		array(
-	 * 			1,
-	 * 			2 => array( 1,
-	 * 						2
-	 * 			)
-	 *		), 
-	 *		array( 2,
-	 *			   3
-	 *		)
-	 *	);
-	 * 
-	 * @return String or false if it isn't a multidim array
-	 */ 
+	 *         array(
+	 *             1,
+	 *             2 => array( 1,
+	 *                         2
+	 *             )
+	 *        ),
+	 *        array( 2,
+	 *               3
+	 *        )
+	 *    );
+	 *
+	 * @param array  $array
+	 * @return string|bool  false if it isn't a multidim array
+	 */
 	protected function handleMultiDimensionalArray($array)
 	{
 		$first = reset($array);
@@ -362,9 +434,8 @@ class Piwik_API_ResponseBuilder
 	/**
 	 * Render a multidimensional array to XML
 	 *
-	 * @static
-	 * @param $array can contain scalar, arrays, Piwik_DataTable and Piwik_DataTable_Array
-	 * @param int $level
+	 * @param array  $array  can contain scalar, arrays, Piwik_DataTable and Piwik_DataTable_Array
+	 * @param int    $level
 	 * @return string
 	 */
 	public static function convertMultiDimensionalArrayToXml($array, $level = 0)
@@ -449,9 +520,7 @@ class Piwik_API_ResponseBuilder
 	 *		),
 	 *	);
 	 *
-	 * @static
-	 * @param $array can contain scalar, arrays, Piwik_DataTable and Piwik_DataTable_Array
-	 * @param int $level
+	 * @param array  $array  can contain scalar, arrays, Piwik_DataTable and Piwik_DataTable_Array
 	 * @return string
 	 */
 	public static function convertMultiDimensionalArrayToJson($array)
@@ -481,7 +550,7 @@ class Piwik_API_ResponseBuilder
 				// Case dimension is a PHP array
 				case (is_array($value)):
 
-					$json .= json_encode($value);
+					$json .= Piwik_Common::json_encode($value);
 					break;
 
 				// Case dimension is a Piwik_DataTable_Array or a Piwik_DataTable
@@ -496,7 +565,7 @@ class Piwik_API_ResponseBuilder
 				// Case scalar
 				default:
 
-					$json .= json_encode($value);
+					$json .= Piwik_Common::json_encode($value);
 					break;
 			}
 

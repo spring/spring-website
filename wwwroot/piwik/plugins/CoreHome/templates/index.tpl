@@ -12,7 +12,7 @@
         {include file="CoreHome/templates/header_message.tpl"}
 	    {ajaxRequestErrorDiv}
     </div>
-    
+
     {ajaxLoadingDiv}
     
     <div id="content" class="home">
@@ -22,7 +22,7 @@
 </div>
 </div>
 
-
+<br/><br/>
 {include file="CoreHome/templates/piwik_tag.tpl"}
 </div>
 </body>

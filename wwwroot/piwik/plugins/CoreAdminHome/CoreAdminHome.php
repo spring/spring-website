@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: CoreAdminHome.php 4660 2011-05-08 21:32:07Z SteveG $
+ * @version $Id: CoreAdminHome.php 6699 2012-08-07 05:40:05Z matt $
  * 
  * @category Piwik_Plugins
  * @package Piwik_CoreAdminHome
@@ -35,16 +35,34 @@ class Piwik_CoreAdminHome extends Piwik_Plugin
 			'TaskScheduler.getScheduledTasks' => 'getScheduledTasks',
 		);
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getScheduledTasks ( $notification )
 	{
 		$tasks = &$notification->getNotificationObject();
+		
+		// general data purge on older archive tables, executed daily
+		$priority = Piwik_ScheduledTask::NORMAL_PRIORITY;
+		$purgeArchiveTablesTask = new Piwik_ScheduledTask ( $this, 
+															'purgeOutdatedArchives',
+															new Piwik_ScheduledTime_Daily(),
+															$priority );
+		$tasks[] = $purgeArchiveTablesTask;
+							
+		// lowest priority since tables should be optimized after they are modified
+		$priority = Piwik_ScheduledTask::LOWEST_PRIORITY;
 		$optimizeArchiveTableTask = new Piwik_ScheduledTask ( $this, 
 															'optimizeArchiveTable',
-															new Piwik_ScheduledTime_Daily() );
+															new Piwik_ScheduledTime_Daily(),
+															$priority );
 		$tasks[] = $optimizeArchiveTableTask;
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getCssFiles( $notification )
 	{
 		$cssFiles = &$notification->getNotificationObject();
@@ -54,9 +72,12 @@ class Piwik_CoreAdminHome extends Piwik_Plugin
 		$cssFiles[] = "themes/default/common.css";
 		$cssFiles[] = "plugins/CoreAdminHome/templates/styles.css";
 	}
-	
-	function getJsFiles ( $notification ) {
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
+	function getJsFiles ( $notification ) 
+	{
 		$jsFiles = &$notification->getNotificationObject();
 		
 		$jsFiles[] = "libs/jquery/jquery.js";
@@ -76,20 +97,21 @@ class Piwik_CoreAdminHome extends Piwik_Plugin
 							$order = 6);
 	}
 	
-	function optimizeArchiveTable()
+	function purgeOutdatedArchives()
 	{
-		$tablesPiwik = Piwik::getTablesInstalled();
-		$archiveTables = array_filter ($tablesPiwik, array("Piwik_CoreAdminHome", "isArchiveTable"));
-		if(empty($archiveTables))
+		$archiveTables = Piwik::getTablesArchivesInstalled();
+		foreach($archiveTables as $table)
 		{
-			return;
+			if(strpos($table, 'numeric') !== false)
+			{
+				Piwik_ArchiveProcessing_Period::doPurgeOutdatedArchives($table);
+			}
 		}
-		$query = "OPTIMIZE TABLE " . implode(",", $archiveTables);
-		Piwik_Query( $query );
 	}
 	
-	private function isArchiveTable ( $tableName )
+	function optimizeArchiveTable()
 	{
-		return preg_match ( '/'.Piwik_Common::prefixTable('archive_').'/', $tableName ) > 0;
+		$archiveTables = Piwik::getTablesArchivesInstalled();
+		Piwik_OptimizeTables($archiveTables);
 	}
 }

@@ -2,7 +2,7 @@
  * Piwik - Open source web analytics
  * 
  * @license released under BSD License http://www.opensource.org/licenses/bsd-license.php
- * @version $Id: PiwikException.java 5079 2011-08-07 18:58:40Z vipsoft $
+ * @version $Id: PiwikException.java 6288 2012-05-22 15:31:02Z friesoft $
  * @link http://piwik.org/docs/tracking-api/
  *
  * @category Piwik
@@ -17,11 +17,11 @@ package org.piwik;
  */
 public class PiwikException extends Exception {
 
-    public PiwikException(final String message) {
-        super(message);
-    }
+	public PiwikException(final String message) {
+		super(message);
+	}
 
-    public PiwikException(final String message, final Throwable e) {
-        super(message,e);
-    }
+	public PiwikException(final String message, final Throwable e) {
+		super(message, e);
+	}
 }

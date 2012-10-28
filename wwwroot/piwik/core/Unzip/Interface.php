@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Interface.php 4297 2011-04-03 19:31:58Z vipsoft $
+ * @version $Id: Interface.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -21,15 +21,15 @@ interface Piwik_Unzip_Interface
 	/**
 	 * Constructor
 	 *
-	 * @param string $filename Name of the .zip archive
+	 * @param string  $filename  Name of the .zip archive
 	 */
-	function __construct($filename);
+	public function __construct($filename);
 
 	/**
 	 * Extract files from archive to target directory
 	 *
-	 * @param string $pathExtracted Absolute path of target directory
-	 * @return mixed Array of filenames if successful; or 0 if an error occurred
+	 * @param string  $pathExtracted  Absolute path of target directory
+	 * @return mixed  Array of filenames if successful; or 0 if an error occurred
 	 */
 	public function extract($pathExtracted);
 

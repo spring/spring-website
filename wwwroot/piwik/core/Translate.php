@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Translate.php 4311 2011-04-04 18:49:55Z vipsoft $
+ * @version $Id: Translate.php 7286 2012-10-23 09:22:19Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -16,6 +16,7 @@
 class Piwik_Translate
 {
 	static private $instance = null;
+	static private $languageToLoad = null;
 	private $loadedLanguage = false;
 	
 	/**
@@ -51,11 +52,11 @@ class Piwik_Translate
 		$this->loadCoreTranslation($language);
 		Piwik_PluginsManager::getInstance()->loadPluginTranslations($language);
 	}
-	
+
 	/**
 	 * Reads the specified code translation file in memory.
-	 * 
-	 * @param string $language 2 letter language code. If not specified, will detect current user translation, or load default translation.
+	 *
+	 * @param bool|string $language 2 letter language code. If not specified, will detect current user translation, or load default translation.
 	 * @return void
 	 */
 	public function loadCoreTranslation($language = false)
@@ -100,37 +101,38 @@ class Piwik_Translate
 	 */
 	public function getLanguageToLoad()
 	{
-		static $language = null;
-		if(!is_null($language))
+		if(is_null(self::$languageToLoad))
 		{
-			return $language;
+			$lang = Piwik_Common::getRequestVar('language', '', 'string');
+
+			Piwik_PostEvent('Translate.getLanguageToLoad', $lang);
+
+			self::$languageToLoad = $lang;
 		}
 
-		Piwik_PostEvent('Translate.getLanguageToLoad', $language);
-		
-		$language = Piwik_Common::getRequestVar('language', is_null($language) ? '' : $language, 'string');
-		if(empty($language))
-		{
-			$language = $this->getLanguageDefault();
-		}
-		if( Piwik_Common::isValidFilename($language))
-		{
-			return $language;
-		}
-		else
-		{
-			throw new Exception("The language selected ('$language') is not a valid language file ");
-		}
+		return self::$languageToLoad;
+	}
+	
+	/** Reset the cached language to load. Used in tests. */
+	static public function reset()
+	{
+		self::$languageToLoad = null;
+	}
+	
+	public function getLanguageLoaded()
+	{
+		return $this->loadedLanguage;
 	}
 	
 	public function getLanguageDefault()
 	{
-		return Zend_Registry::get('config')->General->default_language;
+		return Piwik_Config::getInstance()->General['default_language'];
 	}
-	
+
 	/**
 	 * Generate javascript translations array
-	 * 
+	 *
+	 * @param array $moduleList
 	 * @return string containing javascript code with translations array (including <script> tag)
 	 */
 	public function getJavascriptTranslations(array $moduleList)
@@ -165,12 +167,11 @@ class Piwik_Translate
 		}
 		$js = substr($js,0,-1);
 		$js .= '};';
-		$js .=	'if(typeof(piwik_translations) == \'undefined\') { var piwik_translations = new Object; }'.
+		$js .=	"\n".'if(typeof(piwik_translations) == \'undefined\') { var piwik_translations = new Object; }'.
 				'for(var i in translations) { piwik_translations[i] = translations[i];} ';
 		$js .= 'function _pk_translate(translationStringId) { '.
 			'if( typeof(piwik_translations[translationStringId]) != \'undefined\' ){  return piwik_translations[translationStringId]; }'.
-			'return "The string "+translationStringId+" was not loaded in javascript. Make sure it is suffixed with _js and that you called  {loadJavascriptTranslations plugins=\'\$YOUR_PLUGIN_NAME\'} before your javascript code.";}';
-		
+			'return "The string "+translationStringId+" was not loaded in javascript. Make sure it is suffixed with _js and that you called  %7BloadJavascriptTranslations plugins=\'\$YOUR_PLUGIN_NAME\'%7D before your javascript code.";}';
 		return $js;
 	}
 
@@ -191,7 +192,7 @@ class Piwik_Translate
 /**
  * Returns translated string or given message if translation is not found.
  *
- * @param string Translation string index
+ * @param string $string Translation string index
  * @param array $args sprintf arguments
  * @return string
  */
@@ -205,7 +206,7 @@ function Piwik_Translate($string, $args = array())
 	{
 		$string = $GLOBALS['Piwik_translations'][$string];
 	}
-	if(count($args) == 0) 
+	if(count($args) == 0)
 	{
 		return $string;
 	}
@@ -222,8 +223,7 @@ function Piwik_Translate($string, $args = array())
  */
 function Piwik_TranslateException($message, $args = array())
 {
-	try
-	{
+	try {
 		return Piwik_Translate($message, $args);		
 	} 
 	catch(Exception $e)

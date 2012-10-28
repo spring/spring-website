@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Simple.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Simple.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -28,18 +28,24 @@ class Piwik_DataTable_Simple extends Piwik_DataTable
 	/**
 	 * Loads (append) in the DataTable the array information
 	 *
-	 * @param array Array containing the rows information
-	 * 		array(
-	 * 			'Label row 1' => Value row 1,
-	 * 			'Label row 2' => Value row 2,
-	 * 	)
+	 * @param array  $array  Array containing the rows information
+	 *                       array(
+	 *                             'Label row 1' => Value row 1,
+	 *                             'Label row 2' => Value row 2,
+	 *                       )
 	 */
-	function addRowsFromArray($array)
+	public function addRowsFromArray($array)
 	{
 		$this->addRowsFromSimpleArray(array($array));
 	}
-	
-	function setColumn($columnName, $value)
+
+	/**
+	 * Updates the given column with the given value
+	 *
+	 * @param string  $columnName
+	 * @param mixed   $value
+	 */
+	public function setColumn($columnName, $value)
 	{
 		$this->getLastRow()->setColumn($columnName, $value);
 	}

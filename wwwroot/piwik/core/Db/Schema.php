@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Schema.php 4297 2011-04-03 19:31:58Z vipsoft $
+ * @version $Id: Schema.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -20,8 +20,18 @@
  */
 class Piwik_Db_Schema
 {
+	/**
+	 * Singleton instance
+	 *
+	 * @var Piwik_Db_Schema
+	 */
 	static private $instance = null;
 
+	/**
+	 * Type of database schema
+	 *
+	 * @var string
+	 */
 	private $schema = null;
 
 	/**
@@ -41,7 +51,7 @@ class Piwik_Db_Schema
 	/**
 	 * Get schema class name
 	 *
-	 * @param string $schemaName
+	 * @param string  $schemaName
 	 * @return string
 	 */
 	private static function getSchemaClassName($schemaName)
@@ -52,6 +62,7 @@ class Piwik_Db_Schema
 	/**
 	 * Get list of schemas
 	 *
+	 * @param string  $adapterName
 	 * @return array
 	 */
 	public static function getSchemas($adapterName)
@@ -104,7 +115,7 @@ class Piwik_Db_Schema
 
 		$schemas = array();
 
-		foreach($schemaNamess as $schemaName)
+		foreach($schemaNames as $schemaName)
 		{
 			$className = 'Piwik_Db_Schema_'.$schemaName;
 			if(call_user_func(array($className, 'isAvailable')))
@@ -125,8 +136,8 @@ class Piwik_Db_Schema
 		Piwik_PostEvent('Schema.loadSchema', $schema);
 		if($schema === null)
 		{
-			$config = Zend_Registry::get('config');
-			$dbInfos = $config->database->toArray();
+			$config = Piwik_Config::getInstance();
+			$dbInfos = $config->database;
 			if(isset($dbInfos['schema']))
 			{
 				$schemaName = $dbInfos['schema'];
@@ -158,7 +169,8 @@ class Piwik_Db_Schema
 	/**
 	 * Get the SQL to create a specific Piwik table
 	 *
-	 * @return string SQL
+	 * @param string  $tableName  name of the table to create
+	 * @return string  SQL
 	 */
 	public function getTableCreateSql( $tableName )
 	{
@@ -168,7 +180,7 @@ class Piwik_Db_Schema
 	/**
 	 * Get the SQL to create Piwik tables
 	 *
-	 * @return array of strings containing SQL
+	 * @return array   array of strings containing SQL
 	 */
 	public function getTablesCreateSql()
 	{
@@ -177,6 +189,8 @@ class Piwik_Db_Schema
 
 	/**
 	 * Create database
+	 *
+	 * @param null|string  $dbName  database name to create
 	 */
 	public function createDatabase( $dbName = null )
 	{
@@ -217,6 +231,8 @@ class Piwik_Db_Schema
 
 	/**
 	 * Drop specific tables
+	 *
+	 * @param array  $doNotDelete
 	 */
 	public function dropTables( $doNotDelete = array() )
 	{
@@ -237,9 +253,8 @@ class Piwik_Db_Schema
 	/**
 	 * Get list of tables installed
 	 *
-	 * @param bool $forceReload Invalidate cache
-	 * @param string $idSite
-	 * @return array Tables installed
+	 * @param bool  $forceReload  Invalidate cache
+	 * @return array  installed tables
 	 */
 	public function getTablesInstalled($forceReload = true)
 	{
@@ -249,36 +264,10 @@ class Piwik_Db_Schema
 	/**
 	 * Returns true if Piwik tables exist
 	 *
-	 * @return bool True if tables exist; false otherwise
+	 * @return bool  True if tables exist; false otherwise
 	 */
 	public function hasTables()
 	{
 		return $this->getSchema()->hasTables();
 	}
-}
-
-/**
- * Database schema interface
- *
- * @package Piwik
- * @subpackage Piwik_Db
- */
-interface Piwik_Db_Schema_Interface
-{
-	static public function isAvailable();
-
-	public function getTableCreateSql($tableName);
-	public function getTablesCreateSql();
-
-	public function createDatabase( $dbName = null );
-	public function dropDatabase();
-
-	public function createTables();
-	public function createAnonymousUser();
-	public function truncateAllTables();
-	public function dropTables( $doNotDelete = array() );
-
-	public function getTablesNames();
-	public function getTablesInstalled($forceReload = true);
-	public function hasTables();
 }

@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: function.includeAssets.php 3984 2011-02-28 05:43:22Z vipsoft $
+ * @version $Id: function.includeAssets.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -12,14 +12,16 @@
 
 /**
  * Sends AssetManager.getCssFiles or AssetManager.getJsFiles events, gathers assets and include them.
- * 
+ *
  * Examples:
  * <pre>
- * 		{includeAssets type="css"}
+ *         {includeAssets type="css"}
  * </pre>
- * 
- * @throws Exception if the type parameter is not present or invalid
- * @param string $type The type of the assets to include
+ *
+ * @param array $params array([type] => the type of the assets to include)
+ * @param $smarty
+ * @throws Exception
+ * @return
  */
 function smarty_function_includeAssets($params, &$smarty)
 {

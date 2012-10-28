@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: APICall.php 4533 2011-04-22 22:05:46Z vipsoft $
+ * @version $Id: APICall.php 6385 2012-05-29 21:36:24Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -20,6 +20,9 @@ class Piwik_Log_APICall extends Piwik_Log
 {
 	const ID = 'logger_api_call';
 
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		$logToFileFilename = self::ID;
@@ -37,6 +40,16 @@ class Piwik_Log_APICall extends Piwik_Log
 		$this->setEventItem('caller_ip', Piwik_IP::P2N(Piwik_IP::getIpFromHeader()) );
 	}
 
+	/**
+	 * Logs the given api call event with the parameters
+	 *
+	 * @param string  $className
+	 * @param string  $methodName
+	 * @param array   $parameterNames
+	 * @param array   $parameterValues
+	 * @param number  $executionTime
+	 * @param mixed   $returnedValue
+	 */
 	public function logEvent($className, $methodName, $parameterNames, $parameterValues, $executionTime, $returnedValue)
 	{
 		$event = array();
@@ -63,7 +76,7 @@ class Piwik_Log_APICall_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Sc
      * Formats data into a single line to be written by the writer.
      *
      * @param  array    $event    event data
-     * @return string             formatted line to write to the log
+     * @return string  formatted line to write to the log
      */
     public function format($event)
     {
@@ -96,7 +109,13 @@ class Piwik_Log_APICall_Formatter_ScreenFormatter extends Piwik_Log_Formatter_Sc
     	$str .=  "\n<br /> ";
     	return parent::format($str);
     }
-    
+
+	/**
+	 * Converts the given value to a string
+	 *
+	 * @param mixed  $value
+	 * @return string
+	 */
     private function formatValue( $value )
     {
     	if(is_string($value))

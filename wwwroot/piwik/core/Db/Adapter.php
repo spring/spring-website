@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Adapter.php 4690 2011-05-15 21:02:40Z vipsoft $
+ * @version $Id: Adapter.php 6325 2012-05-26 21:08:06Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -22,7 +22,7 @@ class Piwik_Db_Adapter
 	 * @param string $adapterName database adapter name
 	 * @param array $dbInfos database connection info
 	 * @param bool $connect
-	 * @return mixed (Piwik_Db_Adapter_Mysqli, Piwik_Db_Adapter_Pdo_Mysql, etc)
+	 * @return Piwik_Db_Adapter_Interface
 	 */
 	public static function factory($adapterName, & $dbInfos, $connect = true)
 	{
@@ -43,14 +43,25 @@ class Piwik_Db_Adapter
 
 		$className = self::getAdapterClassName($adapterName);
 		Piwik_Loader::loadClass($className);
-		$adapter = new $className($dbInfos);
+
+		/*
+		 * 5.2.1 fixes various bugs with references that caused PDO_MYSQL getConnection()
+		 * to clobber $dbInfos. (#33282, #35106, #39944)
+		 */
+		if (version_compare(PHP_VERSION, '5.2.1') < 0)
+		{
+			$adapter = new $className(array_map('trim', $dbInfos));
+		}
+		else
+		{
+			$adapter = new $className($dbInfos);
+		}
 
 		if($connect)
 		{
 			$adapter->getConnection();
 
 			Zend_Db_Table::setDefaultAdapter($adapter);
-
 			// we don't want the connection information to appear in the logs
 			$adapter->resetConfig();
 		}
@@ -61,7 +72,7 @@ class Piwik_Db_Adapter
 	/**
 	 * Get adapter class name
 	 *
-	 * @param string $adapterName
+	 * @param string  $adapterName
 	 * @return string
 	 */
 	private static function getAdapterClassName($adapterName)
@@ -72,7 +83,7 @@ class Piwik_Db_Adapter
 	/**
 	 * Get default port for named adapter
 	 *
-	 * @param string $adapterName
+	 * @param string  $adapterName
 	 * @return int
 	 */
 	public static function getDefaultPortForAdapter($adapterName)
@@ -116,67 +127,4 @@ class Piwik_Db_Adapter
 
 		return $adapters;
 	}
-}
-
-/**
- * @package Piwik
- * @subpackage Piwik_Db
- */
-interface Piwik_Db_Adapter_Interface
-{
-	/**
-	 * Reset the configuration variables in this adapter.
-	 */
-	public function resetConfig();
-
-	/**
-	 * Return default port.
-	 *
-	 * @return int
-	 */
-	public static function getDefaultPort();
-
-	/**
-	 * Check database server version
-	 *
-	 * @throws Exception if database version is less than required version
-	 */
-	public function checkServerVersion();
-
-	/**
-	 * Returns true if this adapter's required extensions are enabled
-	 *
-	 * @return bool
-	 */
-	public static function isEnabled();
-
-	/**
-	 * Returns true if this adapter supports blobs as fields
-	 *
-	 * @return bool
-	 */
-	public function hasBlobDataType();
-
-	/**
-	 * Returns true if this adapter supports bulk loading
-	 *
-	 * @return bool
-	 */
-	public function hasBulkLoader();
-
-	/**
-	 * Test error number
-	 *
-	 * @param Exception $e
-	 * @param string $errno
-	 * @return bool
-	 */
-	public function isErrNo($e, $errno);
-
-	/**
-	 * Is the connection character set equal to utf8?
-	 *
-	 * @return bool
-	 */
-	public function isConnectionUTF8();
 }

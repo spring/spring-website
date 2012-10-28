@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 4846 2011-05-31 08:09:01Z matt $
+ * @version $Id: API.php 5519 2011-12-03 04:19:43Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_VisitsSummary
@@ -35,47 +35,56 @@ class Piwik_VisitsSummary_API
 	{
 		Piwik::checkUserHasViewAccess( $idSite );
 		$archive = Piwik_Archive::build($idSite, $period, $date, $segment );
-	
+		
 		// array values are comma separated
 		$columns = Piwik::getArrayFromApiParameter($columns);
-		$countColumnsRequested = count($columns);
+		$tempColumns = array();
 		
 		$bounceRateRequested = $actionsPerVisitRequested = $averageVisitDurationRequested = false;
 		if(!empty($columns))
 		{
-			if(($bounceRateRequested = array_search('bounce_rate', $columns)) !== false)
+			// make sure base metrics are there for processed metrics
+			if(false !== ($bounceRateRequested = array_search('bounce_rate', $columns)))
 			{
-				$columns = array('nb_visits', 'bounce_count');
+				if (!in_array('nb_visits', $columns)) $tempColumns[] = 'nb_visits';
+				if (!in_array('bounce_count', $columns)) $tempColumns[] = 'bounce_count';
+				unset($columns[$bounceRateRequested]);
 			}
-			elseif(($actionsPerVisitRequested = array_search('nb_actions_per_visit', $columns)) !== false)
+			if(false !== ($actionsPerVisitRequested = array_search('nb_actions_per_visit', $columns)))
 			{
-				$columns = array('nb_actions', 'nb_visits');
+				if (!in_array('nb_visits', $columns)) $tempColumns[] = 'nb_visits';
+				if (!in_array('nb_actions', $columns)) $tempColumns[] = 'nb_actions';
+				unset($columns[$actionsPerVisitRequested]);
 			}
-			elseif(($averageVisitDurationRequested = array_search('avg_time_on_site', $columns)) !== false)
+			if(false !== ($averageVisitDurationRequested = array_search('avg_time_on_site', $columns)))
 			{
-				$columns = array('sum_visit_length', 'nb_visits');
+				if (!in_array('nb_visits', $columns)) $tempColumns[] = 'nb_visits';
+				if (!in_array('sum_visit_length', $columns)) $tempColumns[] = 'sum_visit_length';
+				unset($columns[$averageVisitDurationRequested]);
 			}
+			$tempColumns = array_unique($tempColumns);
+			rsort($tempColumns);
+			$columns = array_merge($columns, $tempColumns);
 		}
 		else
 		{
     		$bounceRateRequested = $actionsPerVisitRequested = $averageVisitDurationRequested = true;
 			$columns = array(
 								'nb_visits',
-								'nb_uniq_visitors',
 								'nb_actions',
 								'nb_visits_converted',
 								'bounce_count',
 								'sum_visit_length',
-								'max_actions',
+								'max_actions'
 							);
-			if(!Piwik::isUniqueVisitorsEnabled($period))
+			if(Piwik::isUniqueVisitorsEnabled($period))
 			{
-				unset($columns[array_search('nb_uniq_visitors', $columns)]);
+				$columns = array_merge(array('nb_uniq_visitors'), $columns);
 			}
 			// Force reindex from 0 to N otherwise the SQL bind will fail
 			$columns = array_values($columns);
 		}
-
+		
 		$dataTable = $archive->getDataTableFromNumeric($columns);
 		
 		// Process ratio metrics from base metrics, when requested
@@ -91,15 +100,10 @@ class Piwik_VisitsSummary_API
 		{
 			$dataTable->filter('ColumnCallbackAddColumnQuotient', array('avg_time_on_site', 'sum_visit_length', 'nb_visits', 0));
 		}
+
+		// remove temp metrics that were used to compute processed metrics
+		$dataTable->deleteColumns($tempColumns);
 		
-		// If only a computed metrics was requested, we delete other metrics
-		// that we selected only to process this one metric
-		if($countColumnsRequested == 1
-			&& ($bounceRateRequested || $actionsPerVisitRequested || $averageVisitDurationRequested)
-			)
-		{
-			$dataTable->deleteColumns($columns);
-		}
 		return $dataTable;
 	}
 	

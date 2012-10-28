@@ -7214,8 +7214,13 @@ class TCPDF {
 		// check if we are passing an image as file or string
 		if ($file{0} === '@') { // image from string
 			$imgdata = substr($file, 1);
-			$file = K_PATH_CACHE.'img_'.md5($imgdata);
+			$file = tempnam(K_PATH_IMAGES,'img_'.md5($imgdata));
 			$fp = fopen($file, 'w');
+			//var_dump($file);exit;
+			if(!$fp)  {
+				throw new Exception("Error creating the graph to include in the PDF report:
+					Please check that the webserver has write permission to write to the directory: " . dirname($file));
+			}
 			fwrite($fp, $imgdata);
 			fclose($fp);
 			unset($imgdata);
@@ -7872,7 +7877,7 @@ class TCPDF {
 			$img = new Imagick();
 			$img->readImage($file);
 			// clone image object
-			$imga = $img->clone();
+			$imga = @$img->clone();
 			// extract alpha channel
 			$img->separateImageChannel(8); // 8 = (imagick::CHANNEL_ALPHA | imagick::CHANNEL_OPACITY | imagick::CHANNEL_MATTE);
 			$img->negateImage(true);

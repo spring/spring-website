@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: 0.5.4.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: 0.5.4.php 6028 2012-03-10 03:47:35Z vipsoft $
  *
  * @category Piwik
  * @package Updates
@@ -25,19 +25,14 @@ class Piwik_Updates_0_5_4 extends Piwik_Updates
 
 	static function update()
 	{
-		$config = Zend_Registry::get('config');
 		$salt = Piwik_Common::generateUniqId();
-		if(!isset($config->superuser->salt))
+		if(!isset(Piwik_Config::getInstance()->superuser['salt']))
 		{
 			try {
-				if(is_writable( Piwik_Config::getDefaultUserConfigPath() ))
+				if(is_writable( Piwik_Config::getLocalConfigPath() ))
 				{
-					$superuser_info = $config->superuser->toArray();
-					$superuser_info['salt'] = $salt;
-					$config->superuser = $superuser_info;
-
-					$config->__destruct();
-					Piwik::createConfigObject();
+					Piwik_Config::getInstance()->setConfigOption('superuser', 'salt', $salt);
+					Piwik_Config::getInstance()->forceSave();
 				}
 				else
 				{
@@ -48,18 +43,15 @@ class Piwik_Updates_0_5_4 extends Piwik_Updates
 			}
 		}
 
-		$config = Zend_Registry::get('config');
-		$plugins = $config->Plugins->toArray();
+		$plugins = Piwik_Config::getInstance()->Plugins;
 		if(!in_array('MultiSites', $plugins))
 		{
 			try {
-				if(is_writable( Piwik_Config::getDefaultUserConfigPath() ))
+				if(is_writable( Piwik_Config::getLocalConfigPath() ))
 				{
 					$plugins[] = 'MultiSites';
-					$config->Plugins = $plugins;
-
-					$config->__destruct();
-					Piwik::createConfigObject();
+					Piwik_Config::getInstance()->setConfigSection('Plugins', $plugins);
+					Piwik_Config::getInstance()->forceSave();
 				}
 				else
 				{

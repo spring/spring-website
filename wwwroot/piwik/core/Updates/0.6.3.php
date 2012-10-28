@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: 0.6.3.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: 0.6.3.php 6028 2012-03-10 03:47:35Z vipsoft $
  *
  * @category Piwik
  * @package Updates
@@ -27,18 +27,14 @@ class Piwik_Updates_0_6_3 extends Piwik_Updates
 
 	static function update()
 	{
-		$config = Zend_Registry::get('config');
-		$dbInfos = $config->database->toArray();
+		$dbInfos = Piwik_Config::getInstance()->database;
 		if(!isset($dbInfos['schema']))
 		{
 			try {
-				if(is_writable( Piwik_Config::getDefaultUserConfigPath() ))
+				if(is_writable( Piwik_Config::getLocalConfigPath() ))
 				{
-					$dbInfos['schema'] = 'Myisam';
-					$config->database = $dbInfos;
-
-					$config->__destruct();
-					Piwik::createConfigObject();
+					Piwik_Config::getInstance()->setConfigOption('database', 'schema', 'Myisam');
+					Piwik_Config::getInstance()->forceSave();
 				}
 				else
 				{

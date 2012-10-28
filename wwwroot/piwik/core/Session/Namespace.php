@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Namespace.php 4297 2011-04-03 19:31:58Z vipsoft $
+ * @version $Id: Namespace.php 6325 2012-05-26 21:08:06Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -18,6 +18,10 @@
  */
 class Piwik_Session_Namespace extends Zend_Session_Namespace
 {
+	/**
+	 * @param string  $namespace
+	 * @param bool    $singleInstance
+	 */
 	public function __construct($namespace = 'Default', $singleInstance = false)
 	{
 		if(Piwik_Common::isPhpCliMode())

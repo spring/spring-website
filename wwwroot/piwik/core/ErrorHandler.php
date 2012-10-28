@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ErrorHandler.php 4949 2011-06-25 12:25:12Z vipsoft $
+ * @version $Id: ErrorHandler.php 6325 2012-05-26 21:08:06Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -12,11 +12,12 @@
 
 /**
  * Error handler used to display nicely errors in Piwik
- * 
- * @param int $errno Error number
- * @param string $errstring Error message
- * @param string $errfile File name
- * @param int $errline Line number
+ *
+ * @param int     $errno    Error number
+ * @param string  $errstr   Error message
+ * @param string  $errfile  File name
+ * @param int     $errline  Line number
+ * @return void
  */
 function Piwik_ErrorHandler($errno, $errstr, $errfile, $errline)
 {

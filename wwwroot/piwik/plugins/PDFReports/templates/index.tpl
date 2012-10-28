@@ -20,13 +20,18 @@
 
 <div class="ui-confirm" id="confirm">
 	<h2>{'PDFReports_AreYouSureDeleteReport'|translate}</h2>
-	<input id="yes" type="button" value="{'General_Yes'|translate}" />
-	<input id="no" type="button" value="{'General_No'|translate}" />
+	<input role="yes" type="button" value="{'General_Yes'|translate}" />
+	<input role="no" type="button" value="{'General_No'|translate}" />
 </div> 
 
 <script type="text/javascript">
-piwik.PDFReports = {$reportsJSON};
-piwik.updateReportString = "{'PDFReports_UpdateReport'|translate}";
+var ReportPlugin = new Object();
+ReportPlugin.defaultPeriod = '{$defaultPeriod}';
+ReportPlugin.defaultReportType = '{$defaultReportType}';
+ReportPlugin.defaultReportFormat = '{$defaultReportFormat}';
+ReportPlugin.reportList = {$reportsJSON};
+ReportPlugin.createReportString = "{'PDFReports_CreateReport'|translate}";
+ReportPlugin.updateReportString = "{'PDFReports_UpdateReport'|translate}";
 {literal}
 $(document).ready( function() {
 	initManagePdf();

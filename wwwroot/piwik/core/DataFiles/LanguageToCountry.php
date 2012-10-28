@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: LanguageToCountry.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: LanguageToCountry.php 5802 2012-02-11 08:39:46Z matt $
  * 
  * @category Piwik
  * @package DataFiles
@@ -60,6 +60,7 @@ if(!isset($GLOBALS['Piwik_LanguageToCountry']))
 			'sr' => 'rs',	// Serbian    => Serbia
 			'sv' => 'se',	// Swedish    => Sweden
 			'th' => 'th',	// Thai       => Thailand
+			'bo' => 'ti',	// Tibetan    => Tibet
 			'tr' => 'tr',	// Turkish    => Turkey
 			'uk' => 'ua',	// Ukrainian  => Ukraine
 		);

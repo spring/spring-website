@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: SitesManager.php 4533 2011-04-22 22:05:46Z vipsoft $
+ * @version $Id: SitesManager.php 7190 2012-10-15 07:41:12Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_SitesManager
@@ -48,7 +48,7 @@ class Piwik_SitesManager extends Piwik_Plugin
 	/**
 	 * Get CSS files
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	function getCssFiles( $notification )
 	{
@@ -60,7 +60,7 @@ class Piwik_SitesManager extends Piwik_Plugin
 	/**
 	 * Get JavaScript files
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 */
 	function getJsFiles( $notification )
 	{
@@ -73,7 +73,7 @@ class Piwik_SitesManager extends Piwik_Plugin
 	 * Hooks when a website tracker cache is flushed (website updated, cache deleted, or empty cache)
 	 * Will record in the tracker config file all data needed for this website in Tracker.
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	function recordWebsiteDataInCache($notification)
@@ -82,19 +82,40 @@ class Piwik_SitesManager extends Piwik_Plugin
 		// add the 'hosts' entry in the website array
 		$array =& $notification->getNotificationObject();
 		$array['hosts'] = $this->getTrackerHosts($idSite);
-		$array['excluded_ips'] = $this->getTrackerExcludedIps($idSite);
-		$array['excluded_parameters'] = $this->getTrackerExcludedQueryParameters($idSite);
+
+		$website = Piwik_SitesManager_API::getInstance()->getSiteFromId($idSite);
+		$array['excluded_ips'] = $this->getTrackerExcludedIps($website);
+		$array['excluded_parameters'] = $this->getTrackerExcludedQueryParameters($website);
+		$array['sitesearch'] = $website['sitesearch'];
+		$array['sitesearch_keyword_parameters'] = $this->getTrackerSearchKeywordParameters($website);
+		$array['sitesearch_category_parameters'] = $this->getTrackerSearchCategoryParameters($website);
+	}
+
+	private function getTrackerSearchKeywordParameters($website)
+	{
+		$searchParameters = $website['sitesearch_keyword_parameters'];
+		if(empty($searchParameters)) {
+			$searchParameters = Piwik_SitesManager_API::getInstance()->getSearchKeywordParametersGlobal();
+		}
+		return explode(",", $searchParameters);
+	}
+
+	private function getTrackerSearchCategoryParameters($website)
+	{
+		$searchParameters = $website['sitesearch_category_parameters'];
+		if(empty($searchParameters)) {
+			$searchParameters = Piwik_SitesManager_API::getInstance()->getSearchCategoryParametersGlobal();
+		}
+		return explode(",", $searchParameters);
 	}
 
 	/**
 	 * Returns the array of excluded IPs to save in the config file
 	 *
-	 * @param int $idSite
 	 * @return array
 	 */
-	private function getTrackerExcludedIps($idSite)
+	private function getTrackerExcludedIps($website)
 	{
-		$website = Piwik_SitesManager_API::getInstance()->getSiteFromId($idSite);
 		$excludedIps = $website['excluded_ips'];
 		$globalExcludedIps = Piwik_SitesManager_API::getInstance()->getExcludedIpsGlobal();
 
@@ -115,12 +136,10 @@ class Piwik_SitesManager extends Piwik_Plugin
 	/**
 	 * Returns the array of URL query parameters to exclude from URLs
 	 *
-	 * @param int $idSite
 	 * @return array
 	 */
-	private function getTrackerExcludedQueryParameters($idSite)
+	private function getTrackerExcludedQueryParameters($website)
 	{
-		$website = Piwik_SitesManager_API::getInstance()->getSiteFromId($idSite);
 		$excludedQueryParameters = $website['excluded_parameters'];
 		$globalExcludedQueryParameters = Piwik_SitesManager_API::getInstance()->getExcludedQueryParametersGlobal();
 

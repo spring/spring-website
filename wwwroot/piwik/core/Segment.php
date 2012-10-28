@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Segment.php 5148 2011-09-11 04:03:30Z matt $
+ * @version $Id: Segment.php 7091 2012-10-03 08:18:12Z EZdesign $
  *
  * @category Piwik
  * @package Piwik
@@ -119,7 +119,16 @@ class Piwik_Segment
             if(isset($segment['sqlFilter'])
             	&& !empty($segment['sqlFilter']))
             {
-                $value = call_user_func($segment['sqlFilter'], $value, $segment['sqlSegment']);
+                $value = call_user_func($segment['sqlFilter'], $value, $segment['sqlSegment'], $matchType);
+                
+                // sqlFilter-callbacks might return arrays for more complex cases
+                // e.g. see Piwik_Actions::getIdActionFromSegment()
+                if (is_array($value)
+                	&& isset($value['SQL'])) 
+                {
+                    // Special case: returned value is a sub sql expression!
+                    $matchType = Piwik_SegmentExpression::MATCH_ACTIONS_CONTAINS;
+                }
             }
             break;
         }
@@ -145,19 +154,19 @@ class Piwik_Segment
         }
         return md5($this->string);
     }
-    
-    
-    
-    /**
-     * Extend SQL query with segment expressions
-     * 
-     * @param string select clause
-     * @param array of table names (without prefix)
-     * @param string where clause
-     * @param string (optional) order by clause
-     * @param string (optional) group by clause
-     * @return string entire select query
-     */
+
+
+	/**
+	 * Extend SQL query with segment expressions
+	 *
+	 * @param string        $select   select clause
+	 * @param array         $from     array of table names (without prefix)
+	 * @param bool|string   $where    (optional )where clause
+	 * @param array|string  $bind     (optional) params to bind
+	 * @param bool|string   $orderBy  (optional) order by clause
+	 * @param bool|string   $groupBy  (optional) group by clause
+	 * @return string entire select query
+	 */
     public function getSelectQuery($select, $from, $where=false, $bind=array(), $orderBy=false, $groupBy=false)
     {
     	$joinWithSubSelect = false;
@@ -216,10 +225,13 @@ class Piwik_Segment
     	//var_dump($return);
     	return $return;
     }
-    
-    /**
-     * Generate the join sql based on the needed tables
-     */
+
+	/**
+	 * Generate the join sql based on the needed tables
+	 * @param array $tables  tables to join
+	 * @throws Exception if tables can't be joined
+	 * @return array
+	 */
     private function generateJoins($tables)
     {
     	$knownTables = array("log_visit", "log_link_visit_action", "log_conversion");
@@ -252,8 +264,9 @@ class Piwik_Segment
     		if (is_array($table))
     		{
     			// join condition provided
+				$alias = isset($table['tableAlias']) ? $table['tableAlias'] : $table['table'];
     			$sql .= "
-				LEFT JOIN ".Piwik_Common::prefixTable($table['table'])." AS ".$table['table']
+				LEFT JOIN ".Piwik_Common::prefixTable($table['table'])." AS ".$alias
     			." ON ".$table['joinOn'];
     			continue;
     		}
@@ -331,8 +344,16 @@ class Piwik_Segment
     		'joinWithSubSelect' => $joinWithSubSelect
     	);
     }
-    
-    /** Build select query the normal way */
+
+	/**
+	 * Build select query the normal way
+	 * @param string $select   fieldlist to be selected
+	 * @param string $from     tablelist to select from
+	 * @param string $where    where clause
+	 * @param string $orderBy  order by clause
+	 * @param string $groupBy  group by clause
+	 * @return string
+	 */
     private function buildSelectQuery($select, $from, $where, $orderBy, $groupBy)
     {
     	$sql = "
@@ -364,14 +385,21 @@ class Piwik_Segment
     	
     	return $sql;
     }
-    
-    /**
-     * Build a select query where actions have to be joined on visits (or conversions)
-     * In this case, the query gets wrapped in another query so that grouping by visit is possible
-     */
+
+	/**
+	 * Build a select query where actions have to be joined on visits (or conversions)
+	 * In this case, the query gets wrapped in another query so that grouping by visit is possible
+	 * @param string $select
+	 * @param string $from
+	 * @param string $where
+	 * @param string $orderBy
+	 * @param string $groupBy
+	 * @throws Exception
+	 * @return string
+	 */
     private function buildWrappedSelectQuery($select, $from, $where, $orderBy, $groupBy)
     { 
-    	preg_match_all("/(log_visit|log_conversion).[a-z0-9_\*]+/", $select, $matches);
+    	preg_match_all("/(log_visit|log_conversion|log_action).[a-z0-9_\*]+/", $select, $matches);
     	$neededFields = array_unique($matches[0]);
     	
     	if (count($neededFields) == 0)
@@ -380,9 +408,9 @@ class Piwik_Segment
     				."Please use a table prefix.");
     	}
     	
-    	$select = preg_replace('/(log_visit|log_conversion)\./', 'log_inner.', $select);
-    	$orderBy = preg_replace('/(log_visit|log_conversion)\./', 'log_inner.', $orderBy);
-    	$groupBy = preg_replace('/(log_visit|log_conversion)\./', 'log_inner.', $groupBy);
+    	$select = preg_replace('/(log_visit|log_conversion|log_action)\./', 'log_inner.', $select);
+    	$orderBy = preg_replace('/(log_visit|log_conversion|log_action)\./', 'log_inner.', $orderBy);
+    	$groupBy = preg_replace('/(log_visit|log_conversion|log_action)\./', 'log_inner.', $groupBy);
     	
     	$from = "(
 			SELECT

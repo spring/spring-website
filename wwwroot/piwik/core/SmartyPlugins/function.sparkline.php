@@ -4,20 +4,22 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: function.sparkline.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: function.sparkline.php 6520 2012-07-19 07:08:35Z capedfuzz $
  * 
  * @category Piwik
  * @package SmartyPlugins
  */
 
 /**
- * @param string $url
- * @return string IMG HTML tag 
+ * @param array $params  array([src] => src url of the image)
+ * @param bool $smarty
+ * @return string IMG HTML tag
  */
 function smarty_function_sparkline($params, &$smarty = false)
 {
 	$src = $params['src'];
-	$width = Piwik_Visualization_Sparkline::getWidth();
-	$height = Piwik_Visualization_Sparkline::getHeight();
+	$graph = new Piwik_Visualization_Sparkline();
+	$width = $graph->getWidth();
+	$height = $graph->getHeight();
 	return "<img class=\"sparkline\" alt=\"\" src=\"$src\" width=\"$width\" height=\"$height\" />";
 }

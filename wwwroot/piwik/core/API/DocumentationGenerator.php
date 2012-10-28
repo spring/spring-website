@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: DocumentationGenerator.php 4691 2011-05-15 22:14:48Z matt $
+ * @version $Id: DocumentationGenerator.php 6918 2012-09-04 21:44:26Z JulienM $
  * 
  * @category Piwik
  * @package Piwik
@@ -35,16 +35,21 @@ class Piwik_API_DocumentationGenerator
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns a HTML page containing help for all the successfully loaded APIs.
-	 *  For each module it will return a mini help with the method names, parameters to give, 
+	 *  For each module it will return a mini help with the method names, parameters to give,
 	 * links to get the result in Xml/Csv/etc
 	 *
+	 * @param bool    $outputExampleUrls
+	 * @param string  $prefixUrls
 	 * @return string
 	 */
 	public function getAllInterfaceString( $outputExampleUrls = true, $prefixUrls = '' )
 	{
+		if(!empty($prefixUrls)) {
+			$prefixUrls = 'http://demo.piwik.org/';
+		}
 		$str = $toc = '';
 		$token_auth = "&token_auth=" . Piwik::getCurrentUserTokenAuth();
 		$parametersToSet = array(
@@ -52,7 +57,6 @@ class Piwik_API_DocumentationGenerator
 								'period' 	=> Piwik_Common::getRequestVar('period', 'day', 'string'),
 								'date'		=> Piwik_Common::getRequestVar('date', 'today', 'string')
 							);
-		
 		
 		foreach(Piwik_API_Proxy::getInstance()->getMetadata() as $class => $info)
 		{
@@ -87,13 +91,13 @@ class Piwik_API_DocumentationGenerator
 						{
 							$exampleUrlRss1 = $prefixUrls . $this->getExampleUrl($class, $methodName, array('date' => 'last10', 'period' => 'day') + $parametersToSet) ;
 							$exampleUrlRss2 = $prefixUrls . $this->getExampleUrl($class, $methodName, array('date' => 'last5','period' => 'week',) + $parametersToSet );
-							$lastNUrls = ",	RSS of the last <a target=_blank href='$exampleUrlRss1&format=rss$token_auth'>10 days</a>";
+							$lastNUrls = ",	RSS of the last <a target=_blank href='$exampleUrlRss1&format=rss$token_auth&translateColumnNames=1'>10 days</a>";
 						}
 						$exampleUrl = $prefixUrls . $exampleUrl ;
 						$str .= " [ Example in  
 									<a target=_blank href='$exampleUrl&format=xml$token_auth'>XML</a>, 
 									<a target=_blank href='$exampleUrl&format=JSON$token_auth'>Json</a>, 
-									<a target=_blank href='$exampleUrl&format=Tsv$token_auth'>Tsv (Excel)</a> 
+									<a target=_blank href='$exampleUrl&format=Tsv$token_auth&translateColumnNames=1'>Tsv (Excel)</a> 
 									$lastNUrls
 									]";
 					}
@@ -106,21 +110,23 @@ class Piwik_API_DocumentationGenerator
 				$str .= '</small>';
 				$str .= "</div>\n";
 			}
+			$str .= '<div style="margin:15px;"><a href="#topApiRef" style="color:#95AECB">↑ Back to top</a></div>';
 		}
 		
-		$str = "<h2>Quick access to APIs</h2> 
+		$str = "<h2 id='topApiRef' name='topApiRef'>Quick access to APIs</h2> 
 				$toc 
 				$str";
 		return $str;
 	}
-	
+
 	/**
 	 * Returns a string containing links to examples on how to call a given method on a given API
 	 * It will export links to XML, CSV, HTML, JSON, PHP, etc.
-	 * It will not export links for methods such as deleteSite or deleteUser 
+	 * It will not export links for methods such as deleteSite or deleteUser
 	 *
-	 * @param string the class 
-	 * @param methodName the method
+	 * @param string  $class            the class
+	 * @param string  $methodName       the method
+	 * @param array   $parametersToSet  parameters to set
 	 * @return string|false when not possible
 	 */
 	public function getExampleUrl($class, $methodName, $parametersToSet = array())
@@ -174,19 +180,31 @@ class Piwik_API_DocumentationGenerator
 		// the parameter 'hideIdSubDatable' is used for integration tests only
 		// the parameter 'serialize' sets php outputs human readable, used in integration tests and debug
 		// the parameter 'language' sets the language for the response (eg. country names)
+		// the parameter 'flat' reduces a hierarchical table to a single level by concatenating labels
+		// the parameter 'include_aggregate_rows' can be set to include inner nodes in flat reports
+		// the parameter 'translateColumnNames' can be set to translate metric names in csv/tsv exports
 		$aParameters['format'] = false;
 		$aParameters['hideIdSubDatable'] = false;
 		$aParameters['serialize'] = false;
 		$aParameters['language'] = false;
-		
+		$aParameters['translateColumnNames'] = false;
+        $aParameters['label'] = false;
+		$aParameters['flat'] = false;
+		$aParameters['include_aggregate_rows'] = false;
+        $aParameters['filter_limit'] = false; //@review without adding this, I can not set filter_limit in $otherRequestParameters integration tests
+        $aParameters['filter_sort_column'] = false; //@review without adding this, I can not set filter_sort_column in $otherRequestParameters integration tests
+        $aParameters['filter_truncate'] = false;
+        $aParameters['hideColumns'] = false;
+        $aParameters['showColumns'] = false;
+        
 		$moduleName = Piwik_API_Proxy::getInstance()->getModuleNameFromClassName($class);
-		$urlExample = '?module=API&method='.$moduleName.'.'.$methodName.'&';
-		foreach($aParameters as $nameVariable=> $defaultValue)
+		$aParameters = array_merge(array('module' => 'API', 'method' => $moduleName.'.'.$methodName), $aParameters);
+		
+		foreach($aParameters as $nameVariable => &$defaultValue)
 		{
 			if(isset($knowExampleDefaultParametersValues[$nameVariable]))
 			{
-				$exampleValue = $knowExampleDefaultParametersValues[$nameVariable];
-				$urlExample .= $nameVariable . '=' . $exampleValue . '&';
+				$defaultValue = $knowExampleDefaultParametersValues[$nameVariable];
 			}
 			// if there isn't a default value for a given parameter, 
 			// we need a 'know default value' or we can't generate the link
@@ -195,16 +213,16 @@ class Piwik_API_DocumentationGenerator
 				return false;
 			}
 		}
-		return substr($urlExample,0,-1);
+		return '?'.Piwik_Url::getQueryStringFromParameters($aParameters);
 	}
 	
 	
 	/**
 	 * Returns the methods $class.$name parameters (and default value if provided) as a string.
 	 * 
-	 * @param string The class name
-	 * @param string The method name
-	 * @return string For example "(idSite, period, date = 'today')"
+	 * @param string  $class  The class name
+	 * @param string  $name   The method name
+	 * @return string  For example "(idSite, period, date = 'today')"
 	 */
 	public function getParametersString($class, $name)
 	{
@@ -221,7 +239,14 @@ class Piwik_API_DocumentationGenerator
 			$str = $nameVariable;
 			if(!($defaultValue instanceof Piwik_API_Proxy_NoDefaultValue))
 			{
-				$str .= " = '$defaultValue'";
+				if (is_array($defaultValue))
+				{
+					$str .= " = 'Array'";
+				}
+				else
+				{
+					$str .= " = '$defaultValue'";
+				}
 			}
 			$asParameters[] = $str;
 		}

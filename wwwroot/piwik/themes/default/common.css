@@ -12,11 +12,11 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 abbr {
 	border-bottom: 1px dotted;
 }
-form {margin: 0px; }
+form {margin: 0; }
 body {
 	line-height: 1.33;
 	background-color: white;
-	color: black;
+	color: #333;
 }
 ol,ul {
 	list-style: none;
@@ -48,7 +48,7 @@ br.clearAll {
 }
 br.clear, div.clear{ 
 	clear:both;  
-	height:0px; 
+	height:0;
 	overflow:hidden; 
 }
 
@@ -66,7 +66,7 @@ a {
 
 .loadingPiwik {
 	font-size: 1.1em;
-	color: #29251C;
+	color: #444;
 	padding: 0.5em;
 }
 .loadingPiwik img {
@@ -88,7 +88,7 @@ a {
 
 .top_controls{ 
 	position:relative; 
-	height:32px; 
+	height:32px;
 	.z-index:11;
 }
 
@@ -141,7 +141,7 @@ a {
 	display:none; 
 }
 
-#periodString .period-date{
+#periodString .period-date,#periodString .period-range{
 	float:left; 
 	padding:0 16px 0 0;
 }
@@ -150,15 +150,20 @@ a {
 	padding:0 20px 0 0;
 }	
 #periodString .period-type input{
-	
+
 }
 #periodString .period-type label{
 	font-size:12px;
 	display:inline-block; 
-	padding: 2px 0px 3px 0;
+	padding: 2px 0 3px 0;
 	vertical-align:top; 
-}	
-
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+#periodString label.selected-period-label {
+	text-decoration: underline;
+}
 
 /* About Piwik box top right */
 #header_message {
@@ -208,32 +213,41 @@ a {
 	border: 1px solid #CBD9EB ;	
 }
 .header_info , .header_info  a { 
-	color:#444444; 
+	color:#444;
 }
 
 #header{ padding:5px 0 0 0; min-height:60px; }
 
 #logo {
 	display: block;
-	font:42px Georgia, "Times New Roman", Times, serif;
 	height:40px;
 }
 
 /*sites_autocomplete*/
-.sites_autocomplete{ 
+.sites_autocomplete{
+	position: absolute;
+	font-size:12px;
+	display: inline-block;
+}
+.top_bar_sites_selector{ 
 	position:absolute; 
 	top:65px; 
 	right:0;
+	z-index:20;
+}
+.top_bar_sites_selector>label{
+	display:inline-block; 
+	padding:7px 0 6px 0;
+	float:left; 
 	font-size:12px;
 }
-.autocompleteMatched {
-	font-color:#5256BE;
-	font-weight:bold;
+.top_bar_sites_selector>.sites_autocomplete{
+	position:static;
+	padding-left: 12px;
 }
-.sites_autocomplete label{
-	display:inline-block; 
-	padding:7px 12px 6px 0px;
-	float:left; 
+.autocompleteMatched {
+	color:#5256BE;
+	font-weight:bold;
 }
 
 .sites_autocomplete .custom_select{
@@ -265,31 +279,29 @@ a {
 }
 
 .sites_autocomplete .custom_select_loading{
-	background: url(images/loading-blue.gif) no-repeat right 0;
+	background: url(images/loading-blue.gif) no-repeat right 3px;
 }
 
-.sites_autocomplete .custom_select_ul_list{
+.sites_autocomplete .custom_select_ul_list,.sites_autocomplete ul.ui-autocomplete{
 	position:relative;
-	padding-top:3px;
 	list-style:none;
 	line-height:18px;
+	padding: 0 0 15px 0;
 }
-.sites_autocomplete .custom_select_ul_list li a{
+.sites_autocomplete .custom_select_ul_list li a,.sites_autocomplete .custom_select_all a {
 	line-height:18px;
 	padding:0 20px 0 4px;
 	height:auto;
 	display:block;
 	text-decoration:none; 
 }
-.sites_autocomplete .custom_select_ul_list li a:hover{
+.sites_autocomplete .custom_select_ul_list li a:hover,.sites_autocomplete .custom_select_all a:hover{
 	background:#ebeae6;
 }
 
-.sites_autocomplete .custom_select_all {
-	padding:0px 0 0 4px;
-}
 .sites_autocomplete .custom_select_all a{
-	text-decoration:none; 
+	text-decoration:none;
+	margin: 0 0 5px 0;
 }
 
 .sites_autocomplete .custom_select_search {
@@ -321,11 +333,15 @@ a {
 	overflow:hidden; 
 	opacity:0;
 	filter:Alpha(opacity:0);
-	cursor:pointer; 
+	cursor:pointer;
+}
+
+.sites_selector_container>.sites_autocomplete{
+	padding-left: 12px;
 }
 
 .custom_select_block{ height:0; overflow:hidden; }
-.custom_select_block_show{ height:auto; overflow:visible;  }
+.custom_select_block_show{ height:auto; overflow:visible;padding-top:5px;  }
 
 
 #siteSelect a {
@@ -336,7 +352,7 @@ a {
 /*------------------------*/
 
 
-#javascriptDisable, #javascriptDisable a {
+#javascriptDisabled, #javascriptDisabled a {
 	font-weight: bold;
 	color: #F88D22;
 	padding:15px;
@@ -374,7 +390,8 @@ a {
 
 #tooltip h3 {
 	font-weight: normal;
-	font-size:1em;
+	font-size:.85em;
+	font-style: italic;
 	color:#162540;
 	margin:0;
 	padding:0;
@@ -382,8 +399,8 @@ a {
 #tooltip {
 	position: absolute;
 	z-index: 3000;
-	border: 1px solid #111;
-	padding:7px;
+	border: 1px solid #E4E2D7 /*#111*/;
+	padding:5px 7px 5px 7px;
 	background-color:#F5F7FF;
 	opacity:0.95;
 }
@@ -391,10 +408,9 @@ a {
 	border-spacing:0;
 }
 .tableForm td {
-	border-color:#FFF #C6CDD8 #C6CDD8 #C6CDD8;
-	border-style:solid;
+	border: 1px solid #C6CDD8;
+	border-top: 10px #FFF;
 	padding:0.5em 0.5em 0.5em 0.8em;
-	border-width:10px 1px 1px 1px;
 	color:#203276;
 }
 .tableForm input {
@@ -451,9 +467,9 @@ div.ui-state-highlight {
 
 .ui-datepicker{ 
 	border: 1px solid #fff!important;
-	border-radius:0px!important;
-	-moz-border-radius:0px!important;
-	-webkit-border-radius:0px!important;
+	border-radius:0!important;
+	-moz-border-radius:0!important;
+	-webkit-border-radius:0!important;
 	font-size:11px!important; 
 	padding:0!important;
 	width:160px!important;
@@ -462,9 +478,9 @@ div.ui-state-highlight {
 .ui-datepicker-header{ 
 	background:#847b6d url(images/dashboard_h_bg_hover.png) repeat-x 0 0!important;
 	color:#fff!important;
-	border-radius:0px!important;
-	-moz-border-radius:0px!important;
-	-webkit-border-radius:0px!important;
+	border-radius:0!important;
+	-moz-border-radius:0!important;
+	-webkit-border-radius:0!important;
 }
 .ui-datepicker select {
 	padding:0;	
@@ -506,10 +522,11 @@ div.ui-state-highlight {
 }
 .ui-datepicker td.ui-datepicker-week-end .ui-state-default{background:#f6f6f6!important;}
 
-.ui-datepicker td.ui-datepicker-current-period a.ui-state-default, td .ui-state-active, .ui-datepicker td.ui-datepicker-current-period a.ui-state-active, .ui-datepicker td.ui-datepicker-week-end .ui-state-active{
+.ui-datepicker td.ui-datepicker-current-period a.ui-state-default, td .ui-state-active, .ui-datepicker td.ui-datepicker-current-period a.ui-state-active, .ui-datepicker td.ui-datepicker-week-end .ui-state-active, .ui-datepicker td.ui-datepicker-other-month.ui-datepicker-current-period{
 	border-color:#887f71!important;
 	background:#887f71!important;
 	color:#fff!important;
+	opacity:1!important;
 }
 
 .ui-datepicker td .ui-state-hover, .ui-datepicker .ui-datepicker td.ui-datepicker-current-period a.ui-state-hover, .ui-datepicker td.ui-datepicker-week-end .ui-state-hover{ 
@@ -517,8 +534,27 @@ div.ui-state-highlight {
 	color:#000!important;
 }
 
-.ui-datepicker td.ui-datepicker-current-period .ui-state-default:hover, .ui-datepicker td.ui-datepicker-current-period .ui-state-hover:hover{ background:#978c7c!important;}
+.ui-datepicker td.ui-datepicker-current-period .ui-state-default.ui-state-hover, .ui-datepicker td.ui-datepicker-current-period .ui-state-hover:hover {
+	background:#978c7c!important;
+	border-color:#978c7c!important;
+}
 
+td.ui-datepicker-other-month.ui-state-hover {
+	background:#e5e3e0!important;
+	color:#000!important;
+	opacity:1!important;
+	border-style: none;
+	cursor:pointer!important;
+}
+
+td.ui-datepicker-other-month.ui-state-hover.ui-datepicker-current-period{
+	background:#978c7c!important;
+}
+
+.ui-datepicker-month:disabled {
+	border-color:#ccc!important;
+	background:#f5f3f0!important;
+}
 
 .centerLargeDiv { 
 	width:850px; 
@@ -551,9 +587,8 @@ input, select, textarea {
 	margin-bottom:3px;
 }
 input[disabled] {
-	background:none;
-	background-color:#E9E9E9;
-	font-style:italic;
+    background: #E9E9E9 none;
+    font-style:italic;
 }
 
 select {  
@@ -573,8 +608,7 @@ select {
 	border:0;
 	background:#847b6d url(images/dashboard_h_bg_hover.png) repeat-x 0 0;
 	float:right; 
-	margin:12px 0 0 0;
-	margin-bottom:10px;
+	margin:12px 0 10px 0;
 }
 /* on admin screen, Save button aligned on the left */
 .admin .submit {
@@ -641,7 +675,7 @@ select {
 table.entityTable tr td a {
 	text-decoration:underline;
 }
-.entityTable tr.highlight td {
+.entityTable tr.highlighted td {
 	background-color: #ECF9DD;
 }
 
@@ -676,4 +710,55 @@ table.entityTable tr td a {
 
 .entityList ul.listCircle li a { 
 	color:#000;
+}
+
+
+/* Piwik Tooltip (plugins/CoreHome/templates/tooltip.js) */
+
+.piwik-tooltip {
+	position: absolute;
+	z-index: 2000;
+	text-align: left;
+	background: #f7f7f7;
+	color: #444;
+	font-size: 12px;
+	font-weight: normal; 
+	border: 1px solid #e4e5e4;
+	padding: 5px 10px 6px 10px;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px; 
+	-moz-box-shadow: 1px 1px 2px #666;
+	-webkit-box-shadow: 1px 1px 2px #666;
+	box-shadow: 1px 1px 2px #666;
+	overflow: hidden;
+}
+
+.piwik-tooltip .tip-title {
+	font-weight: bold;
+	color: #7E7363;
+}
+
+
+
+/* Popover */
+
+.ui-dialog .ui-widget-header {
+	background: none; 
+	border: 0; 
+	font: bold 18px Arial, Helvetica, sans-serif; 
+	color: #7e7363;	
+	clear: both;
+}
+
+.ui-dialog-titlebar-help {
+	position: absolute;
+	right: 33px;
+	top: 50%;
+	width: 16px;
+	margin: -8px 0 0 0;
+	padding: 0;
+	height: 16px;
+	background: url(images/help.png);
+	overflow: hidden;
 }

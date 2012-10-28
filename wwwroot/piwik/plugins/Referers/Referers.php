@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Referers.php 5138 2011-09-07 15:25:57Z EZdesign $
+ * @version $Id: Referers.php 7024 2012-09-19 10:53:53Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Referers
@@ -51,6 +51,9 @@ class Piwik_Referers extends Piwik_Plugin
 		return $hooks;
 	}
 
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getReportMetadata($notification)
 	{
 		$reports = &$notification->getNotificationObject();
@@ -61,6 +64,7 @@ class Piwik_Referers extends Piwik_Plugin
         			'module' => 'Referers',
         			'action' => 'getRefererType',
         			'dimension' => Piwik_Translate('Referers_ColumnRefererType'),
+					'constantRowsCount' => true,
         			'documentation' => Piwik_Translate('Referers_TypeReportDocumentation').'<br />'
         					.'<b>'.Piwik_Translate('Referers_DirectEntry').':</b> '.Piwik_Translate('Referers_DirectEntryDocumentation').'<br />'
         					.'<b>'.Piwik_Translate('Referers_SearchEngines').':</b> '.Piwik_Translate('Referers_SearchEnginesDocumentation',
@@ -71,15 +75,29 @@ class Piwik_Referers extends Piwik_Plugin
         							array('<br />', '&quot;'.Piwik_Translate('Referers_SubmenuCampaigns').'&quot;')),
         			'order' => 1,
         		),
+        		
         		array(
         			'category' => Piwik_Translate('Referers_Referers'),
         			'name'   => Piwik_Translate('Referers_Keywords'),
         			'module' => 'Referers',
         			'action' => 'getKeywords',
+					'actionToLoadSubTables' => 'getSearchEnginesFromKeywordId',
         			'dimension' => Piwik_Translate('Referers_ColumnKeyword'),
         			'documentation' => Piwik_Translate('Referers_KeywordsReportDocumentation', '<br />'),
+        			'actionToLoadSubTables' => 'getSearchEnginesFromKeywordId',
         			'order' => 3,
         		),
+				array( // subtable report
+					'category' => Piwik_Translate('Referers_Referers'),
+					'name'   => Piwik_Translate('Referers_Keywords'),
+					'module' => 'Referers',
+					'action' => 'getSearchEnginesFromKeywordId',
+					'dimension' => Piwik_Translate('Referers_ColumnSearchEngine'),
+					'documentation' => Piwik_Translate('Referers_KeywordsReportDocumentation', '<br />'),
+					'isSubtableReport' => true,
+					'order' => 4
+				),
+				
         		array(
         			'category'  => Piwik_Translate('Referers_Referers'),
         			'name'   => Piwik_Translate('Referers_Websites'),
@@ -87,8 +105,20 @@ class Piwik_Referers extends Piwik_Plugin
         			'action' => 'getWebsites',
         			'dimension' => Piwik_Translate('Referers_ColumnWebsite'),
         			'documentation' => Piwik_Translate('Referers_WebsitesReportDocumentation', '<br />'),
+					'actionToLoadSubTables' => 'getUrlsFromWebsiteId',
         			'order' => 5
-        		),
+				),
+				array( // subtable report
+					'category' => Piwik_Translate('Referers_Referers'),
+					'name' => Piwik_Translate('Referers_Websites'),
+					'module' => 'Referers',
+					'action' => 'getUrlsFromWebsiteId',
+					'dimension' => Piwik_Translate('Referers_ColumnWebsitePage'),
+					'documentation' => Piwik_Translate('Referers_WebsitesReportDocumentation', '<br />'),
+					'isSubtableReport' => true,
+					'order' => 6,
+				),
+				
         		array(
         			'category'  => Piwik_Translate('Referers_Referers'),
         			'name'   => Piwik_Translate('Referers_SearchEngines'),
@@ -96,8 +126,20 @@ class Piwik_Referers extends Piwik_Plugin
         			'action' => 'getSearchEngines',
         			'dimension' => Piwik_Translate('Referers_ColumnSearchEngine'),
         			'documentation' => Piwik_Translate('Referers_SearchEnginesReportDocumentation', '<br />'),
+					'actionToLoadSubTables' => 'getKeywordsFromSearchEngineId',
         			'order' => 7,
         		),
+				array( // subtable report
+					'category'  => Piwik_Translate('Referers_Referers'),
+					'name'   => Piwik_Translate('Referers_SearchEngines'),
+					'module' => 'Referers',
+					'action' => 'getKeywordsFromSearchEngineId',
+					'dimension' => Piwik_Translate('Referers_ColumnKeyword'),
+					'documentation' => Piwik_Translate('Referers_SearchEnginesReportDocumentation', '<br />'),
+					'isSubtableReport' => true,
+					'order' => 8,
+				),
+				
         		array(
         			'category'  => Piwik_Translate('Referers_Referers'),
         			'name'   => Piwik_Translate('Referers_Campaigns'),
@@ -106,11 +148,26 @@ class Piwik_Referers extends Piwik_Plugin
         			'dimension' => Piwik_Translate('Referers_ColumnCampaign'),
         			'documentation' => Piwik_Translate('Referers_CampaignsReportDocumentation',
         					array('<br />', '<a href="http://piwik.org/docs/tracking-campaigns/" target="_blank">', '</a>')),
+					'actionToLoadSubTables' => 'getKeywordsFromCampaignId',
         			'order' => 9,
         		),
+				array( // subtable report
+					'category' => Piwik_Translate('Referers_Referers'),
+					'name' => Piwik_Translate('Referers_Campaigns'),
+					'module' => 'Referers',
+					'action' => 'getKeywordsFromCampaignId',
+					'dimension' => Piwik_Translate('Referers_ColumnKeyword'),
+					'documentation' => Piwik_Translate('Referers_CampaignsReportDocumentation',
+						array('<br />', '<a href="http://piwik.org/docs/tracking-campaigns/" target="_blank">', '</a>')),
+					'isSubtableReport' => true,
+					'order' => 10,
+				),
     	));
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	public function getSegmentsMetadata($notification)
 	{
 		$segments =& $notification->getNotificationObject();
@@ -155,13 +212,13 @@ class Piwik_Referers extends Piwik_Plugin
 	function addWidgets()
 	{
 		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetKeywords', 'Referers', 'getKeywords');
-		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetCampaigns', 'Referers', 'getCampaigns');
 		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetExternalWebsites', 'Referers', 'getWebsites');
 		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetSearchEngines', 'Referers', 'getSearchEngines');
+		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetCampaigns', 'Referers', 'getCampaigns');
 		Piwik_AddWidget( 'Referers_Referers', 'Referers_WidgetOverview', 'Referers', 'getRefererType');
 		if(Piwik_Archive::isSegmentationEnabled())
 		{
-    		Piwik_AddWidget( 'Referers_Referers', 'Top Keywords for Page URL', 'Referers', 'getKeywordsForPage');
+    		Piwik_AddWidget( 'SEO', 'Top Keywords for Page URL', 'Referers', 'getKeywordsForPage');
 		}
 	}
 	
@@ -180,7 +237,7 @@ class Piwik_Referers extends Piwik_Plugin
 	/**
 	 * Adds Goal dimensions, so that the dimensions are displayed in the UI Goal Overview page
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	function getReportsWithGoalMetrics( $notification )
@@ -218,15 +275,15 @@ class Piwik_Referers extends Piwik_Plugin
 	function __construct()
 	{
 		$this->columnToSortByBeforeTruncation = Piwik_Archive::INDEX_NB_VISITS;
-		$this->maximumRowsInDataTableLevelZero = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_referers;
-		$this->maximumRowsInSubDataTable = Zend_Registry::get('config')->General->datatable_archiving_maximum_rows_subtable_referers;
+		$this->maximumRowsInDataTableLevelZero = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_referers'];
+		$this->maximumRowsInSubDataTable = Piwik_Config::getInstance()->General['datatable_archiving_maximum_rows_subtable_referers'];
 	}
 	
 	/**
 	 * Period archiving: sums up daily stats and sums report tables,
 	 * making sure that tables are still truncated.
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	function archivePeriod( $notification )
@@ -286,10 +343,23 @@ class Piwik_Referers extends Piwik_Plugin
 		}
 	}
 	
+	const LABEL_KEYWORD_NOT_DEFINED = "";
+	
+	static public function getKeywordNotDefinedString()
+	{
+		return Piwik_Translate( 'General_NotDefined', Piwik_Translate('Referers_ColumnKeyword'));
+	}
+	static public function getCleanKeyword($label)
+	{
+		return $label == Piwik_Referers::LABEL_KEYWORD_NOT_DEFINED
+				? self::getKeywordNotDefinedString() 
+				: $label;
+	}
+	
 	/**
 	 * Hooks on daily archive to trigger various log processing
 	 *
-	 * @param Piwik_Event_Notification $notification
+	 * @param Piwik_Event_Notification $notification  notification object
 	 * @return void
 	 */
 	public function archiveDay( $notification )
@@ -320,15 +390,16 @@ class Piwik_Referers extends Piwik_Plugin
 		destroy($this->interestByType);
 		destroy($this->distinctUrls);
 	}
-	
+
 	/**
 	 * Daily archive: processes all Referers reports, eg. Visits by Keyword,
 	 * Visits by websites, etc.
 	 *
 	 * @param Piwik_ArchiveProcessing $archiveProcessing
+	 * @throws Exception
 	 * @return void
 	 */
-	protected function archiveDayAggregateVisits(Piwik_ArchiveProcessing $archiveProcessing)
+	protected function archiveDayAggregateVisits(Piwik_ArchiveProcessing_Day $archiveProcessing)
 	{
 	    $dimension = array("referer_type", "referer_name", "referer_keyword", "referer_url");
 	    $query = $archiveProcessing->queryVisitsByDimension($dimension);
@@ -354,7 +425,10 @@ class Piwik_Referers extends Piwik_Plugin
 				switch($row['referer_type'])
 				{
 					case Piwik_Common::REFERER_TYPE_SEARCH_ENGINE:
-					
+						if(empty($row['referer_keyword']))
+						{
+							$row['referer_keyword'] = self::LABEL_KEYWORD_NOT_DEFINED;
+						}
 						if(!isset($this->interestBySearchEngine[$row['referer_name']])) $this->interestBySearchEngine[$row['referer_name']]= $archiveProcessing->getNewInterestRow();
 						if(!isset($this->interestByKeyword[$row['referer_keyword']])) $this->interestByKeyword[$row['referer_keyword']]= $archiveProcessing->getNewInterestRow();
 						if(!isset($this->interestBySearchEngineAndKeyword[$row['referer_name']][$row['referer_keyword']])) $this->interestBySearchEngineAndKeyword[$row['referer_name']][$row['referer_keyword']]= $archiveProcessing->getNewInterestRow();
@@ -416,7 +490,6 @@ class Piwik_Referers extends Piwik_Plugin
 		$query = $archiveProcessing->queryConversionsByDimension(array("referer_type","referer_name","referer_keyword"));
 		
 		if($query === false) return;
-		
 		while($row = $query->fetch() )
 		{
 			if(empty($row['referer_type']))
@@ -428,6 +501,10 @@ class Piwik_Referers extends Piwik_Plugin
 				switch($row['referer_type'])
 				{
 					case Piwik_Common::REFERER_TYPE_SEARCH_ENGINE:
+						if(empty($row['referer_keyword']))
+						{
+							$row['referer_keyword'] = self::LABEL_KEYWORD_NOT_DEFINED;
+						}
 						if(!isset($this->interestBySearchEngine[$row['referer_name']][Piwik_Archive::INDEX_GOALS][$row['idgoal']])) $this->interestBySearchEngine[$row['referer_name']][Piwik_Archive::INDEX_GOALS][$row['idgoal']] = $archiveProcessing->getNewGoalRow($row['idgoal']);
 						if(!isset($this->interestByKeyword[$row['referer_keyword']][Piwik_Archive::INDEX_GOALS][$row['idgoal']])) $this->interestByKeyword[$row['referer_keyword']][Piwik_Archive::INDEX_GOALS][$row['idgoal']] = $archiveProcessing->getNewGoalRow($row['idgoal']);
 						
@@ -450,9 +527,14 @@ class Piwik_Referers extends Piwik_Plugin
 						$archiveProcessing->updateGoalStats( $row, $this->interestByCampaign[$row['referer_name']][Piwik_Archive::INDEX_GOALS][$row['idgoal']]);
 					break;
 
+					case Piwik_Common::REFERER_TYPE_DIRECT_ENTRY:
+						// Direct entry, no sub dimension
+					break;
+					
 					default:
 						// The referer type is user submitted for goal conversions, we ignore any malformed value
-						continue;
+						// Continue to the next while iteration
+						continue 2;
 					break;
 				}
 			}

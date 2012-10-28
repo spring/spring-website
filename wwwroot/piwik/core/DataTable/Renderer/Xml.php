@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Xml.php 4776 2011-05-22 23:34:58Z matt $
+ * @version $Id: Xml.php 6524 2012-07-20 04:50:33Z capedfuzz $
  * 
  * @category Piwik
  * @package Piwik
@@ -22,15 +22,25 @@
  */
 class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 {
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function render()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		return '<?xml version="1.0" encoding="utf-8" ?>' .  "\n" . $this->renderTable($this->table);
 	}
-	
+
+	/**
+	 * Computes the exception output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function renderException()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 
 		$exceptionMessage = self::renderHtmlEntities($this->exception->getMessage());
 		
@@ -41,7 +51,13 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 		
 		return $return;
 	}
-	
+
+	/**
+	 * Converts the given data table to an array
+	 *
+	 * @param Piwik_DataTable  $table  data table to convert
+	 * @return array
+	 */
 	protected function getArrayFromDataTable($table)
 	{
 		$renderer = new Piwik_DataTable_Renderer_Php();
@@ -51,7 +67,16 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 		$renderer->setHideIdSubDatableFromResponse($this->hideIdSubDatatable);
 		return $renderer->flatRender();
 	}
-	
+
+	/**
+	 * Computes the output for the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @param bool             $returnOnlyDataTableXml
+	 * @param string           $prefixLines
+	 * @return array|string
+	 * @throws Exception
+	 */
 	protected function renderTable($table, $returnOnlyDataTableXml = false, $prefixLines = '')
 	{
 		$array = $this->getArrayFromDataTable($table);
@@ -123,7 +148,15 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 			return $out;
 		}
 	}
-	
+
+	/**
+	 * Computes the output for the given data table array
+	 *
+	 * @param Piwik_DataTable_Array  $table
+	 * @param array                  $array
+	 * @param string                 $prefixLines
+	 * @return string
+	 */
 	protected function renderDataTableArray($table, $array, $prefixLines = "")
 	{
 		// CASE 1
@@ -251,7 +284,14 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 			return $xml;
 		}
 	}
-	
+
+	/**
+	 * Computes the output for the given data array
+	 *
+	 * @param array   $array
+	 * @param string  $prefixLine
+	 * @return string
+	 */
 	protected function renderDataTable( $array, $prefixLine = "" )
 	{
 		$out = '';
@@ -283,7 +323,7 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 			if(count($row) === 1
 				&& key($row) === 0)
 			{
-				$value = current($row);
+				$value = self::formatValueXml(current($row));
 				$out .= $prefixLine . $value;				
 			}
 			else
@@ -316,7 +356,14 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 		}
 		return $out;
 	}
-	
+
+	/**
+	 * Computes the output for the given data array (representing a simple data table)
+	 *
+	 * @param $array
+	 * @param string $prefixLine
+	 * @return string
+	 */
 	protected function renderDataTableSimple( $array, $prefixLine = "")
 	{
 		$out = '';
@@ -334,8 +381,11 @@ class Piwik_DataTable_Renderer_Xml extends Piwik_DataTable_Renderer
 		}
 		return $out;
 	}
-	
-	protected static function renderHeader()
+
+	/**
+	 * Sends the XML headers
+	 */
+	protected function renderHeader()
 	{
 		// silent fail because otherwise it throws an exception in the unit tests
 		@header('Content-Type: text/xml; charset=utf-8');

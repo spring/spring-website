@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Array.php 5172 2011-09-16 06:28:10Z EZdesign $
+ * @version $Id: Array.php 6628 2012-08-01 21:49:16Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -31,7 +31,7 @@ class Piwik_DataTable_Array
 	/**
 	 * Array containing the DataTable withing this Piwik_DataTable_Array
 	 *
-	 * @var array of Piwik_DataTable
+	 * @var Piwik_DataTable[]
 	 */
 	protected $array = array();
 	
@@ -60,7 +60,7 @@ class Piwik_DataTable_Array
 	/**
 	 * Set the keyName @see self::$keyName
 	 *
-	 * @param string $name
+	 * @param string  $name
 	 */
 	public function setKeyName($name)
 	{
@@ -80,8 +80,8 @@ class Piwik_DataTable_Array
 	/**
 	 * Queue a filter to the DataTable_Array will queue this filter to every DataTable of the DataTable_Array.
 	 *
-	 * @param string $className Filter name, eg. Piwik_DataTable_Filter_Limit
-	 * @param array $parameters Filter parameters, eg. array( 50, 10 )
+	 * @param string  $className   Filter name, eg. Piwik_DataTable_Filter_Limit
+	 * @param array   $parameters  Filter parameters, eg. array( 50, 10 )
 	 */
 	public function queueFilter( $className, $parameters = array() )
 	{
@@ -105,8 +105,8 @@ class Piwik_DataTable_Array
 	/**
 	 * Apply a filter to all tables in the array
 	 *
-	 * @param string $className Name of filter class
-	 * @param array $parameters Filter parameters
+	 * @param string  $className   Name of filter class
+	 * @param array   $parameters  Filter parameters
 	 */
 	public function filter($className, $parameters = array())
 	{
@@ -119,7 +119,7 @@ class Piwik_DataTable_Array
 	/**
 	 * Returns the array of DataTable
 	 *
-	 * @return array of Piwik_DataTable
+	 * @return Piwik_DataTable[]
 	 */
 	public function getArray()
 	{
@@ -127,10 +127,40 @@ class Piwik_DataTable_Array
 	}
 	
 	/**
+	 * Returns the table with the specified label.
+	 * 
+	 * @param string  $label
+	 * @return Piwik_DataTable
+	 */
+	public function getTable($label)
+	{
+		return $this->array[$label];
+    }
+    
+    /**
+	 * Returns the first row
+	 * This method can be used to treat DataTable and DataTable_Array in the same way
+	 *
+	 * @return Piwik_DataTable_Row
+	 */
+	public function getFirstRow()
+	{
+		foreach ($this->array as $table)
+		{
+			$row = $table->getFirstRow();
+			if ($row !== false)
+			{
+				return $row;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Adds a new DataTable to the DataTable_Array
 	 *
-	 * @param Piwik_DataTable $table
-	 * @param string $label Label used to index this table in the array
+	 * @param Piwik_DataTable  $table
+	 * @param string           $label  Label used to index this table in the array
 	 */
 	public function addTable( $table, $label )
 	{
@@ -160,7 +190,14 @@ class Piwik_DataTable_Array
 			$table->enableRecursiveSort();
 		}
 	}
-	
+
+	/**
+	 * Renames the given column
+	 *
+	 * @see Piwik_DataTable::renameColumn
+	 * @param string  $oldName
+	 * @param string  $newName
+	 */
 	public function renameColumn($oldName, $newName)
 	{
 		foreach($this->array as $table)
@@ -168,7 +205,13 @@ class Piwik_DataTable_Array
 			$table->renameColumn($oldName, $newName);
 		}
 	}
-	
+
+	/**
+	 * Deletes the given columns
+	 *
+	 * @see Piwik_DataTable::deleteColumns
+	 * @param array  $columns
+	 */
 	public function deleteColumns($columns)
 	{
 		foreach($this->array as $table)
@@ -178,15 +221,30 @@ class Piwik_DataTable_Array
 	}
 
 	/**
+	 * Deletes the given column
+	 *
+	 * @see Piwik_DataTable::deleteColumn
+	 * @param string  $column
+	 */
+	public function deleteColumn($column)
+	{
+		foreach($this->array as $table)
+		{
+			$table->deleteColumn($column);
+		}
+	}
+
+	/**
 	 * Returns a Piwik_DataTable_Array whose sub tables are filtered by $label
 	 * @see Piwik_DataTable::getFilteredTableFromLabel
 	 *
-	 * @param string $label Value of the column 'label' to search for
+	 * @param string  $label  Value of the column 'label' to search for
 	 * @return Piwik_DataTable_Array
 	 */
 	public function getFilteredTableFromLabel($label)
 	{
 		$newTableArray = new Piwik_DataTable_Array;
+		$newTableArray->setKeyName($this->getKeyName());
 		$newTableArray->metadata = $this->metadata;
 
 		foreach ($this->array as $subTableLabel => $subTable)
@@ -198,4 +256,130 @@ class Piwik_DataTable_Array
 		return $newTableArray;
 	}
 
+	/**
+	 * Merges the rows of every child DataTable into a new DataTable and
+	 * returns it. This function will also set the label of the merged rows
+	 * to the label of the DataTable they were originally from.
+	 * 
+	 * The result of this function is determined by the type of DataTable
+	 * this instance holds. If this DataTable_Array instance holds an array
+	 * of DataTables, this function will transform it from:
+	 * <code>
+	 * Label 0:
+	 *   DataTable(row1)
+	 * Label 1:
+	 *   DataTable(row2)
+	 * </code>
+	 * to:
+	 * <code>
+	 * DataTable(row1[label = 'Label 0'], row2[label = 'Label 1'])
+	 * </code>
+	 * 
+	 * If this instance holds an array of DataTable_Arrays, this function will
+	 * transform it from:
+	 * <code>
+	 * Outer Label 0:			// the outer DataTable_Array
+	 *   Inner Label 0:			// one of the inner DataTable_Arrays
+	 *     DataTable(row1)
+	 *   Inner Label 1:
+	 *     DataTable(row2)
+	 * Outer Label 1:
+	 *   Inner Label 0:
+	 *     DataTable(row3)
+	 *   Inner Label 1:
+	 *     DataTable(row4)
+	 * </code>
+	 * to:
+	 * <code>
+	 * Inner Label 0:
+	 *   DataTable(row1[label = 'Outer Label 0'], row3[label = 'Outer Label 1'])
+	 * Inner Label 1:
+	 *   DataTable(row2[label = 'Outer Label 0'], row4[label = 'Outer Label 1'])
+	 * </code>
+	 * 
+	 * In addition, if this instance holds an array of DataTable_Arrays, the
+	 * metadata of the first child is used as the metadata of the result.
+	 * 
+	 * This function can be used, for example, to smoosh IndexedBySite archive
+	 * query results into one DataTable w/ different rows differentiated by site ID.
+	 * 
+	 * @return Piwik_DataTable|Piwik_DataTable_Array
+	 */
+	public function mergeChildren()
+	{
+		$firstChild = reset($this->array);
+
+		if ($firstChild instanceof Piwik_DataTable_Array)
+		{
+			$result = new Piwik_DataTable_Array();
+			$result->setKeyName($firstChild->getKeyName());
+			$result->metadata = $firstChild->metadata;
+			
+			foreach ($this->array as $label => $subTableArray)
+			{
+				foreach ($subTableArray->array as $innerLabel => $subTable)
+				{
+					if (!isset($result->array[$innerLabel]))
+					{
+						$result->addTable(new Piwik_DataTable(), $innerLabel);
+					}
+				
+					$this->copyRowsAndSetLabel($result->array[$innerLabel], $subTable, $label);
+				}
+			}
+		}
+		else
+		{
+			$result = new Piwik_DataTable();
+
+			foreach ($this->array as $label => $subTable)
+			{
+				$this->copyRowsAndSetLabel($result, $subTable, $label);
+			}
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Utility function used by mergeChildren. Copies the rows from one table,
+	 * sets their 'label' columns to a value and adds them to another table.
+	 * 
+	 * @param Piwik_DataTable  $toTable    The table to copy rows to.
+	 * @param Piwik_DataTable  $fromTable  The table to copy rows from.
+	 * @param string           $label      The value to set the 'label' column of every copied row.
+	 */
+	private function copyRowsAndSetLabel($toTable, $fromTable, $label)
+	{
+		foreach ($fromTable->getRows() as $fromRow)
+		{
+			$oldColumns = $fromRow->getColumns();
+			unset($oldColumns['label']);
+		
+			$columns = array_merge(array('label' => $label), $oldColumns);
+			$row = new Piwik_DataTable_Row(array(
+				Piwik_DataTable_Row::COLUMNS => $columns,
+				Piwik_DataTable_Row::METADATA => $fromRow->getMetadata(),
+				Piwik_DataTable_Row::DATATABLE_ASSOCIATED => $fromRow->getIdSubDataTable()
+			));
+			$toTable->addRow($row);
+		}
+	}
+	
+	/**
+	 * Adds a DataTable to all the tables in this array
+	 * NOTE: Will only add $tableToSum if the childTable has some rows
+	 * 
+	 * @param Piwik_DataTable $tableToSum
+	 */
+	public function addDataTable( Piwik_DataTable $tableToSum )
+	{
+		foreach ($this->getArray() as $childTable)
+		{
+			if($childTable->getRowsCount() > 0)
+			{
+				$childTable->addDataTable($tableToSum);
+			}
+		}
+	}
 }

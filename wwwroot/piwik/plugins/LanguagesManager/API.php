@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 4634 2011-05-05 08:56:37Z EZdesign $
+ * @version $Id: API.php 6243 2012-05-02 22:08:23Z SteveG $
  *
  * @category Piwik_Plugins
  * @package Piwik_LanguagesManager
@@ -157,12 +157,12 @@ class Piwik_LanguagesManager_API
 		}
 		return $languageInfo;
 	}
-	
+
 	/**
 	 * Returns the language for the user
 	 *
 	 * @param string $login
-	 * @param string|false $layout
+	 * @return string
 	 */
 	public function getLanguageForUser( $login )
 	{
@@ -176,6 +176,7 @@ class Piwik_LanguagesManager_API
 	 *
 	 * @param string $login
 	 * @param string $languageCode
+	 * @return bool
 	 */
 	public function setLanguageForUser($login, $languageCode)
 	{

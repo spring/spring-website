@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: API.php 5235 2011-09-27 07:20:45Z matt $
+ * @version $Id: API.php 7197 2012-10-15 11:05:19Z matt $
  * 
  * @category Piwik_Plugins
  * @package Piwik_Actions
@@ -28,6 +28,9 @@ class Piwik_Actions_API
 {
 	static private $instance = null;
 	
+	/**
+	 * @return Piwik_Actions_API
+	 */
 	static public function getInstance()
 	{
 		if (self::$instance == null)
@@ -36,16 +39,80 @@ class Piwik_Actions_API
 		}
 		return self::$instance;
 	}
-	
+
 
 	/**
 	 * Backward compatibility. Fallsback to getPageTitles() instead.
 	 * @deprecated Deprecated since Piwik 0.5
 	 * @ignore
+	 *
+	 * @param int $idSite
+	 * @param string $period
+	 * @param $date
+	 * @param bool $segment
+	 * @param bool $expanded
+	 * @param bool|int $idSubtable
+	 * @return Piwik_DataTable
 	 */
 	public function getActions( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
 	{
 	    return $this->getPageTitles( $idSite, $period, $date, $segment, $expanded, $idSubtable );
+	}
+
+	/**
+	 * Returns the list of metrics (pages, downloads, outlinks)
+	 *
+	 * @param int $idSite
+	 * @param string $period
+	 * @param string $date
+	 * @param bool|string $segment
+	 * @param bool|array $columns
+	 * @return Piwik_DataTable
+	 */
+	public function get( $idSite, $period, $date, $segment = false, $columns = false)
+	{
+		Piwik::checkUserHasViewAccess( $idSite );
+		$archive = Piwik_Archive::build( $idSite, $period, $date, $segment );
+		
+		$metrics = array(
+			'Actions_nb_pageviews' => 'nb_pageviews',
+			'Actions_nb_uniq_pageviews' => 'nb_uniq_pageviews',
+			'Actions_nb_downloads' => 'nb_downloads',
+			'Actions_nb_uniq_downloads' => 'nb_uniq_downloads',
+			'Actions_nb_outlinks' => 'nb_outlinks',
+			'Actions_nb_uniq_outlinks' => 'nb_uniq_outlinks',
+			'Actions_nb_searches' => 'nb_searches',
+			'Actions_nb_keywords' => 'nb_keywords',
+		);
+		
+		// get requested columns
+		$columns = Piwik::getArrayFromApiParameter($columns);
+		if(!empty($columns))
+		{
+			// get the columns that are available and requested
+			$columns = array_intersect($columns, array_values($metrics));
+			$columns = array_values($columns); // make sure indexes are right
+			$nameReplace = array();
+			foreach ($columns as $i => $column)
+			{
+				$fullColumn = array_search($column, $metrics);
+				$columns[$i] = $fullColumn;
+				$nameReplace[$fullColumn] = $column;
+			}
+		}
+		else
+		{
+			// get all columns
+			$columns = array_keys($metrics);
+			$nameReplace = &$metrics;
+		}
+		
+		$table = $archive->getDataTableFromNumeric($columns);
+		
+		// replace labels (remove Actions_)
+		$table->filter('ReplaceColumnNames', array($nameReplace));
+		
+		return $table;
 	}
 	
 	public function getPageUrls( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
@@ -53,6 +120,51 @@ class Piwik_Actions_API
 		$dataTable = Piwik_Archive::getDataTableFromArchive('Actions_actions_url', $idSite, $period, $date, $segment, $expanded, $idSubtable );
 		$this->filterPageDatatable($dataTable);
 		$this->filterActionsDataTable($dataTable, $expanded);
+		return $dataTable;
+	}
+
+	public function getPageUrlsFollowingSiteSearch( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
+	{
+		$dataTable = $this->getPageUrls($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->keepPagesFollowingSearch($dataTable);
+		return $dataTable;
+	}
+
+	public function getPageTitlesFollowingSiteSearch( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
+	{
+		$dataTable = $this->getPageTitles($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->keepPagesFollowingSearch($dataTable);
+		return $dataTable;
+	}
+
+	protected function keepPagesFollowingSearch($dataTable)
+	{
+		// Keep only pages which are following site search
+		$dataTable->filter('ColumnCallbackDeleteRow', array(
+			'nb_hits_following_search',
+			create_function('$value', 'return $value > 0;')
+		));
+	}
+
+	/**
+	 * Returns a DataTable with analytics information for every unique entry page URL, for
+	 * the specified site, period & segment.
+	 */
+	public function getEntryPageUrls( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
+	{
+		$dataTable = $this->getPageUrls($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->filterNonEntryActions($dataTable);
+		return $dataTable;
+	}
+	
+	/**
+	 * Returns a DataTable with analytics information for every unique exit page URL, for
+	 * the specified site, period & segment.
+	 */
+	public function getExitPageUrls( $idSite, $period, $date, $segment = false, $expanded = false, $idSubtable = false )
+	{
+		$dataTable = $this->getPageUrls($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->filterNonExitActions($dataTable);
 		return $dataTable;
 	}
 	
@@ -70,6 +182,30 @@ class Piwik_Actions_API
 		$dataTable = Piwik_Archive::getDataTableFromArchive('Actions_actions', $idSite, $period, $date, $segment, $expanded, $idSubtable);
 		$this->filterPageDatatable($dataTable);
 		$this->filterActionsDataTable($dataTable, $expanded);
+		return $dataTable;
+	}
+	
+	/**
+	 * Returns a Piwik_DataTable with analytics information for every unique entry page title
+	 * for the given site, time period & segment.
+	 */
+	public function getEntryPageTitles( $idSite, $period, $date, $segment = false, $expanded = false,
+										$idSubtable = false )
+	{
+		$dataTable = $this->getPageTitles($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->filterNonEntryActions($dataTable);
+		return $dataTable;
+	}
+	
+	/**
+	 * Returns a Piwik_DataTable with analytics information for every unique exit page title
+	 * for the given site, time period & segment.
+	 */
+	public function getExitPageTitles( $idSite, $period, $date, $segment = false, $expanded = false,
+									   $idSubtable = false )
+	{
+		$dataTable = $this->getPageTitles($idSite, $period, $date, $segment, $expanded, $idSubtable);
+		$this->filterNonExitActions($dataTable);
 		return $dataTable;
 	}
 	
@@ -111,7 +247,93 @@ class Piwik_Actions_API
 		$this->filterActionsDataTable($dataTable);
 		return $dataTable;
 	}
-	
+
+	public function getSiteSearchKeywords( $idSite, $period, $date, $segment = false )
+	{
+		$dataTable = $this->getSiteSearchKeywordsRaw($idSite, $period, $date, $segment);
+		$dataTable->deleteColumn(Piwik_Archive::INDEX_SITE_SEARCH_HAS_NO_RESULT);
+		$this->filterPageDatatable($dataTable);
+		$this->filterActionsDataTable($dataTable);
+		$this->addPagesPerSearchColumn($dataTable);
+		return $dataTable;
+	}
+
+	//Visitors can search, and then click "next" to view more results. This is the average number of search results pages viewed for this keyword.
+	public function addPagesPerSearchColumn($dataTable, $columnToRead = 'nb_hits')
+	{
+		$dataTable->filter('ColumnCallbackAddColumnQuotient', array('nb_pages_per_search', $columnToRead, 'nb_visits', $precision = 1));
+	}
+
+	protected function getSiteSearchKeywordsRaw($idSite, $period, $date, $segment)
+	{
+		$dataTable = Piwik_Archive::getDataTableFromArchive('Actions_sitesearch', $idSite, $period, $date, $segment, $expanded = false);
+		return $dataTable;
+	}
+
+	public function getSiteSearchNoResultKeywords( $idSite, $period, $date, $segment = false )
+	{
+		$dataTable = $this->getSiteSearchKeywordsRaw($idSite, $period, $date, $segment);
+		// Delete all rows that have some results
+		$dataTable->filter('ColumnCallbackDeleteRow',
+			array(
+				Piwik_Archive::INDEX_SITE_SEARCH_HAS_NO_RESULT,
+				create_function ( '$value', 'return $value >= 1;')
+			));
+		$dataTable->deleteColumn(Piwik_Archive::INDEX_SITE_SEARCH_HAS_NO_RESULT);
+		$this->filterPageDatatable($dataTable);
+		$this->filterActionsDataTable($dataTable);
+		$this->addPagesPerSearchColumn($dataTable);
+		return $dataTable;
+	}
+
+	public function getSiteSearchCategories( $idSite, $period, $date, $segment = false )
+	{
+		Piwik_Actions::checkCustomVariablesPluginEnabled();
+		$customVariables = Piwik_CustomVariables_API::getInstance()->getCustomVariables($idSite, $period, $date, $segment, $expanded = false, $_leavePiwikCoreVariables = true);
+
+		$customVarNameToLookFor = Piwik_Tracker_Action::CVAR_KEY_SEARCH_CATEGORY;
+
+		$dataTable = new Piwik_DataTable();
+		// Handle case where date=last30&period=day
+		// TODO: this logic should really be refactored somewhere, this is ugly!
+		if($customVariables instanceof Piwik_DataTable_Array)
+		{
+			$dataTable = new Piwik_DataTable_Array();
+			$dataTable->metadata = $customVariables->metadata;
+			$dataTable->setKeyName($customVariables->getKeyName());
+
+			$customVariableDatatables = $customVariables->getArray();
+			$dataTables = $dataTable->getArray();
+			foreach($customVariableDatatables as $key => $customVariableTableForDate)
+			{
+				// we do not enter the IF, in the case idSite=1,3 AND period=day&date=datefrom,dateto,
+				if(isset($dataTable->metadata[$key]['period']))
+				{
+					$row = $customVariableTableForDate->getRowFromLabel($customVarNameToLookFor);
+					if($row)
+					{
+						$dateRewrite = $dataTable->metadata[$key]['period']->getDateStart()->toString();
+						$idSubtable = $row->getIdSubDataTable();
+						$categories = Piwik_CustomVariables_API::getInstance()->getCustomVariablesValuesFromNameId($idSite, $period, $dateRewrite, $idSubtable, $segment);
+						$dataTable->addTable($categories, $key);
+					}
+				}
+			}
+		}
+		elseif($customVariables instanceof Piwik_DataTable)
+		{
+			$row = $customVariables->getRowFromLabel($customVarNameToLookFor);
+			if($row)
+			{
+				$idSubtable = $row->getIdSubDataTable();
+				$dataTable = Piwik_CustomVariables_API::getInstance()->getCustomVariablesValuesFromNameId($idSite, $period, $date, $idSubtable, $segment);
+			}
+		}
+		$this->filterActionsDataTable($dataTable);
+		$this->addPagesPerSearchColumn($dataTable, $columnToRead = 'nb_actions');
+		return $dataTable;
+	}
+
 	/**
 	 * Will search in the DataTable for a Label matching the searched string
 	 * and return only the matching row, or an empty datatable
@@ -135,7 +357,8 @@ class Piwik_Actions_API
 					$searchedString = $search;
 				}
     		}
-			$searchTree = Piwik_Actions::getActionExplodedNames($searchedString, $actionType);
+			Piwik_Actions_ArchivingHelper::reloadConfig();
+			$searchTree = Piwik_Actions_ArchivingHelper::getActionExplodedNames($searchedString, $actionType);
 		}
 
 		if ($table === false)
@@ -166,6 +389,9 @@ class Piwik_Actions_API
 		return $this->doFilterPageDatatableSearch($callBackParameters, $table, $searchTree);
 	}
 
+	/**
+	 * This looks very similar to LabelFilter.php should it be refactored somehow? FIXME
+	 */
 	protected function doFilterPageDatatableSearch($callBackParameters, $table, $searchTree)
 	{
 		// filter a data table array
@@ -242,6 +468,26 @@ class Piwik_Actions_API
 		$dataTable->filter('Sort', array('nb_visits', 'desc', $naturalSort = false, $expanded));
 		
 		$dataTable->queueFilter('ReplaceSummaryRowLabel');
+	}
+	
+	/**
+	 * Removes DataTable rows referencing actions that were never the first action of a visit.
+	 * 
+	 * @param Piwik_DataTable $dataTable
+	 */
+	private function filterNonEntryActions( $dataTable )
+	{
+		$dataTable->filter('ColumnCallbackDeleteRow', array('entry_nb_visits', 'strlen'));
+	}
+	
+	/**
+	 * Removes DataTable rows referencing actions that were never the last action of a visit.
+	 * 
+	 * @param Piwik_DataTable $dataTable
+	 */
+	private function filterNonExitActions( $dataTable )
+	{
+		$dataTable->filter('ColumnCallbackDeleteRow', array('exit_nb_visits', 'strlen'));
 	}
 }
 

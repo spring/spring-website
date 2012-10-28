@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Visit.php 5266 2011-10-04 10:38:36Z matt $
+ * @version $Id: Visit.php 7237 2012-10-19 16:07:08Z capedfuzz $
  *
  * @category Piwik
  * @package Piwik
@@ -35,12 +35,15 @@ interface Piwik_Tracker_Visit_Interface {
  */
 class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 {
+	const UNKNOWN_CODE = 'xx';
+	
 	/**
 	 * @var Piwik_Cookie
 	 */
 	protected $cookie = null;
 	protected $visitorInfo = array();
 	protected $userSettingsInformation = null;
+	protected $visitorCustomVariables = array();
 	protected $idsite;
 	protected $visitorKnown;
 	protected $request;
@@ -48,8 +51,6 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	// can be overwritten in constructor
 	protected $timestamp;
 	protected $ip;
-	// via setForcedVisitorId()
-	protected $forcedVisitorId;
 	
 	// Set to true when we set some custom variables from the cookie
 	protected $customVariablesSetFromRequest = false;
@@ -58,8 +59,6 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 * @var Piwik_Tracker_GoalManager
 	 */
 	protected $goalManager;
-
-	const TIME_IN_PAST_TO_SEARCH_FOR_VISITOR = 86400;
 
 	public function __construct($forcedIpString = null, $forcedDateTime = null)
 	{
@@ -79,7 +78,6 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		}
 
 		$ip = Piwik_IP::P2N($ipString);
-		Piwik_PostEvent('Tracker.Visit.setVisitorIp', $ip);
 		$this->ip = $ip;
 	}
 
@@ -96,7 +94,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		Piwik_PostEvent('Tracker.setRequest.idSite', $idsite, $requestArray);
 		if($idsite <= 0)
 		{
-			Piwik_Tracker_ExitWithException(new Exception('Invalid idSite'));
+			throw new Exception('Invalid idSite');
 		}
 		$this->idsite = $idsite;
 
@@ -139,16 +137,24 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		{
 			return;
 		}
+		
+		// Anonymize IP (after testing for IP exclusion)
+		$ip = $this->ip;
+		Piwik_PostEvent('Tracker.Visit.setVisitorIp', $ip);
+		$this->visitorInfo['location_ip'] = $ip;
+		
 		$this->visitorCustomVariables = self::getCustomVariables($scope = 'visit', $this->request);
 		if(!empty($this->visitorCustomVariables))
 		{
+			printDebug("Visit level Custom Variables: ");
+			printDebug($this->visitorCustomVariables);
 			$this->customVariablesSetFromRequest = true;
 		}
 	
 		$this->goalManager = new Piwik_Tracker_GoalManager();
 		
 		$someGoalsConverted = $visitIsConverted = false;
-		$idActionUrl = $idActionName = false;
+		$idActionUrl = $idActionName = $actionType = false;
 		$action = null;
 
 		$this->goalManager->init($this->request);
@@ -187,8 +193,12 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$visitIsConverted = $someGoalsConverted;
 			
 			$action->loadIdActionNameAndUrl();
-			$idActionUrl = (int)$action->getIdActionUrl();
+			$idActionUrl = $action->getIdActionUrl();
+			if ($idActionUrl !== null) {
+				$idActionUrl = (int)$idActionUrl;
+			}
 			$idActionName = (int)$action->getIdActionName();
+			$actionType = $action->getActionType();
 		}
 
 		// the visitor and session
@@ -196,6 +206,10 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		$isLastActionInTheSameVisit = $this->isLastActionInTheSameVisit();
 
+		if(!$isLastActionInTheSameVisit)
+		{
+			printDebug("Visitor detected, but last action was more than 30 minutes ago...");
+		}
 		// Known visit when:
 		// ( - the visitor has the Piwik cookie with the idcookie ID used by Piwik to match the visitor
 		//   OR
@@ -209,7 +223,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$idRefererActionUrl = $this->visitorInfo['visit_exit_idaction_url'];
 			$idRefererActionName = $this->visitorInfo['visit_exit_idaction_name'];
 			try {
-				$this->handleKnownVisit($idActionUrl, $idActionName, $visitIsConverted);
+				$this->handleKnownVisit($idActionUrl, $idActionName, $actionType, $visitIsConverted);
 				if(!is_null($action))
 				{
 					$action->record( 	$this->visitorInfo['idvisit'],
@@ -248,7 +262,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		if(!$this->isVisitorKnown()
 			|| !$isLastActionInTheSameVisit)
 		{
-			$this->handleNewVisit($idActionUrl, $idActionName, $visitIsConverted);
+			$this->handleNewVisit($idActionUrl, $idActionName, $actionType, $visitIsConverted);
 			if(!is_null($action))
 			{
 				$action->record( $this->visitorInfo['idvisit'], $this->visitorInfo['idvisitor'], 0, 0, 0 );
@@ -263,8 +277,8 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		{
 			$refererTimestamp = Piwik_Common::getRequestVar('_refts', 0, 'int', $this->request);
 			$refererUrl = Piwik_Common::getRequestVar('_ref', '', 'string', $this->request);
-			$refererCampaignName = Piwik_Common::getRequestVar('_rcn', '', 'string', $this->request);
-			$refererCampaignKeyword = Piwik_Common::getRequestVar('_rck', '', 'string', $this->request);
+			$refererCampaignName = trim(urldecode(Piwik_Common::getRequestVar('_rcn', '', 'string', $this->request)));
+			$refererCampaignKeyword = trim(urldecode(Piwik_Common::getRequestVar('_rck', '', 'string', $this->request)));
 
 			$this->goalManager->recordGoals( 
 										$this->idsite,
@@ -274,7 +288,8 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 										$refererTimestamp,
 										$refererUrl,
 										$refererCampaignName,
-										$refererCampaignKeyword
+										$refererCampaignKeyword,
+										$this->getBrowserLanguage()
 			);
 		}
 		unset($this->goalManager);
@@ -302,7 +317,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		{
 			$type = Piwik_Tracker_Action::getActionTypeName($action->getActionType());
 			printDebug("Action is a $type,
-						Action name =  ". $action->getActionName() . ",
+						Action name =  ". $action->getActionName() .",
 						Action URL = ". $action->getActionUrl() );
 		}
 	}
@@ -320,8 +335,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 *
 	 * Tracker.knownVisitorInformation is triggered after saving the new visit data
 	 * Even data is an array with updated information about the visit
+	 * @param $idActionUrl
+	 * @param $idActionName
+	 * @param $actionType
+	 * @param $visitIsConverted
+	 * @throws Piwik_Tracker_Visit_VisitorNotFoundInDatabase
 	 */
-	protected function handleKnownVisit($idActionUrl, $idActionName, $visitIsConverted)
+	protected function handleKnownVisit($idActionUrl, $idActionName, $actionType, $visitIsConverted)
 	{
 		// gather information that needs to be updated
 		$valuesToUpdate = array();
@@ -330,8 +350,15 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		if($idActionUrl !== false)
 		{
 			$valuesToUpdate['visit_exit_idaction_url'] = $idActionUrl;
-			$sqlActionUpdate = "visit_total_actions = visit_total_actions + 1, ";
+			$sqlActionUpdate .= "visit_total_actions = visit_total_actions + 1, ";
+		}
+		if(!empty($idActionName))
+		{
 			$valuesToUpdate['visit_exit_idaction_name'] = (int)$idActionName;
+		}
+		if($actionType == Piwik_Tracker_Action::TYPE_SITE_SEARCH)
+		{
+			$sqlActionUpdate .= "visit_total_searches = visit_total_searches + 1, ";
 		}
 
 		$datetimeServer = Piwik_Tracker::getDatetimeFromTimestamp($this->getCurrentTimestamp());
@@ -353,19 +380,10 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 														+ 2 ;
 		}
 		
-		// Update the idvisitor to the latest known value, in case the cookie value changed for some reasons,
-		// safer to always rely on the most recent values
-		if($this->shouldUseThirdPartyCookie())
+		// Might update the idvisitor when it was forced or overwritten for this visit
+		if(strlen($this->visitorInfo['idvisitor']) == Piwik_Tracker::LENGTH_BINARY_ID)
 		{
-			$idVisitor = $this->cookie->get(0);
-		}
-		else
-		{
-			$idVisitor = Piwik_Common::getRequestVar('_id', '', 'string', $this->request);
-		}
-		if(strlen($idVisitor) == Piwik_Tracker::LENGTH_HEX_ID_STRING)
-		{
-			$valuesToUpdate['idvisitor'] = Piwik_Common::hex2bin($idVisitor);
+			$valuesToUpdate['idvisitor'] = $this->visitorInfo['idvisitor']; 
 		}
 
 		// Ecommerce buyer status
@@ -379,7 +397,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		// Will be updated in cookie
 		$timeSpentRefererAction = $this->getCurrentTimestamp() - $this->visitorInfo['visit_last_action_time'];
-		if($timeSpentRefererAction > Piwik_Tracker_Config::getInstance()->Tracker['visit_standard_length'])
+		if($timeSpentRefererAction > Piwik_Config::getInstance()->Tracker['visit_standard_length'])
 		{
 			$timeSpentRefererAction = 0;
 		}
@@ -440,8 +458,12 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 * 1) Insert the new action
 	 *
 	 * 2) Insert the visit information
+	 * @param $idActionUrl
+	 * @param $idActionName
+	 * @param $actionType
+	 * @param $visitIsConverted
 	 */
-	protected function handleNewVisit($idActionUrl, $idActionName, $visitIsConverted)
+	protected function handleNewVisit($idActionUrl, $idActionName, $actionType, $visitIsConverted)
 	{
 		printDebug("New Visit (IP = ".Piwik_IP::N2P($this->getVisitorIp()).")");
 
@@ -461,7 +483,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		$idcookie = $this->getVisitorIdcookie();
 
-		$defaultTimeOnePageVisit = Piwik_Tracker_Config::getInstance()->Tracker['default_time_one_page_visit'];
+		$defaultTimeOnePageVisit = Piwik_Config::getInstance()->Tracker['default_time_one_page_visit'];
 
 		// Days since first visit
 		$cookieFirstVisitTimestamp = Piwik_Common::getRequestVar('_idts', 0, 'int', $this->request);
@@ -500,16 +522,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		// User settings
 		$userInfo = $this->getUserSettingsInformation();
-		$country = Piwik_Common::getCountry($userInfo['location_browser_lang'],
-											$enableLanguageToCountryGuess = Piwik_Tracker_Config::getInstance()->Tracker['enable_language_to_country_guess'],
-											$this->getVisitorIp());
-
+		
 		// Referrer data
 		$referrer = new Piwik_Tracker_Visit_Referer();
 		$refererUrl	= Piwik_Common::getRequestVar( 'urlref', '', 'string', $this->request);
 		$currentUrl	= Piwik_Common::getRequestVar( 'url', '', 'string', $this->request);
 		$refererInfo = $referrer->getRefererInformation($refererUrl, $currentUrl, $this->idsite);
-
+		
 		/**
 		 * Save the visitor
 		 */
@@ -528,7 +547,12 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			'visit_entry_idaction_name' => (int)$idActionName,
 			'visit_exit_idaction_url' 	=> (int)$idActionUrl,
 			'visit_exit_idaction_name' 	=> (int)$idActionName,
-			'visit_total_actions' 		=> 1,
+			'visit_total_actions' 		=> in_array($actionType,
+												array(Piwik_Tracker_Action::TYPE_ACTION_URL,
+													Piwik_Tracker_Action::TYPE_DOWNLOAD,
+													Piwik_Tracker_Action::TYPE_OUTLINK))
+											? 1 : 0, // if visit starts with something else (e.g. ecommerce order), don't record as an action
+			'visit_total_searches'      => $actionType == Piwik_Tracker_Action::TYPE_SITE_SEARCH ? 1 : 0,
 			'visit_total_time' 			=> $defaultTimeOnePageVisit,
 			'visit_goal_converted'  	=> $visitIsConverted ? 1: 0,
 			'visit_goal_buyer'			=> $this->goalManager->getBuyerType(),
@@ -553,8 +577,11 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			'config_cookie' 			=> $userInfo['config_cookie'],
 			'location_ip' 				=> $this->getVisitorIp(),
 			'location_browser_lang'		=> $userInfo['location_browser_lang'],
-			'location_country' 			=> $country,
 		);
+		
+		// add optional location components
+		$location = $this->getVisitorLocation($userInfo['location_browser_lang']);
+		$this->updateVisitInfoWithLocation($location);
 
 		// Add Custom variable key,value to the visitor array
 		$this->visitorInfo = array_merge($this->visitorInfo, $this->visitorCustomVariables);
@@ -568,6 +595,83 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		$this->saveVisitorInformation();
 	}
+	
+	/**
+	 * Returns the location of the visitor, based on the visitor's IP and browser language.
+	 * 
+	 * @param string $browserLang
+	 * @return array See Piwik_UserCountry_LocationProvider::getLocation for more info.
+	 */
+	private function getVisitorLocation( $browserLang )
+	{
+		$location = array();
+		$userInfo = array('lang' => $browserLang, 'ip' => Piwik_IP::N2P($this->getVisitorIp()));
+		Piwik_PostEvent('Tracker.getVisitorLocation', $location, $userInfo);
+		
+		if (empty($location['country_code'])) // sanity check
+		{
+			$location['country_code'] = self::UNKNOWN_CODE;
+		}
+		
+		return $location;
+	}
+	
+	/**
+	 * Sets visitor info array with location info.
+	 * 
+	 * @param array $location See Piwik_UserCountry_LocationProvider::getLocation for more info.
+	 */
+	private function updateVisitInfoWithLocation( $location )
+	{
+		static $logVisitToLowerLocationMapping = array(
+			'location_country' => Piwik_UserCountry_LocationProvider::COUNTRY_CODE_KEY,
+		);
+		
+		static $logVisitToLocationMapping = array(
+			'location_region' => Piwik_UserCountry_LocationProvider::REGION_CODE_KEY,
+			'location_city' => Piwik_UserCountry_LocationProvider::CITY_NAME_KEY,
+			'location_latitude' => Piwik_UserCountry_LocationProvider::LATITUDE_KEY,
+			'location_longitude' => Piwik_UserCountry_LocationProvider::LONGITUDE_KEY,
+		);
+		
+		foreach ($logVisitToLowerLocationMapping as $column => $locationKey)
+		{
+			if (!empty($location[$locationKey]))
+			{
+				$this->visitorInfo[$column] = strtolower($location[$locationKey]);
+			}
+		}
+		
+		foreach ($logVisitToLocationMapping as $column => $locationKey)
+		{
+			if (!empty($location[$locationKey]))
+			{
+				$this->visitorInfo[$column] = $location[$locationKey];
+			}
+		}
+		
+		// if the location has provider/organization info, set it
+		if (!empty($location[Piwik_UserCountry_LocationProvider::ISP_KEY]))
+		{
+			$providerValue = $location[Piwik_UserCountry_LocationProvider::ISP_KEY];
+			
+			// if the org is set and not the same as the isp, add it to the provider value
+			if (!empty($location[Piwik_UserCountry_LocationProvider::ORG_KEY])
+				&& $location[Piwik_UserCountry_LocationProvider::ORG_KEY] != $providerValue)
+			{
+				$providerValue .= ' - ' . $location[Piwik_UserCountry_LocationProvider::ORG_KEY];
+			}
+		}
+		else if (!empty($location[Piwik_UserCountry_LocationProvider::ORG_KEY]))
+		{
+			$providerValue = $location[Piwik_UserCountry_LocationProvider::ORG_KEY];
+		}
+		
+		if (isset($providerValue))
+		{
+			$this->visitorInfo['location_provider'] = $providerValue;
+		}
+	}
 
 	/**
 	 * Save new visitor information to log_visit table.
@@ -577,11 +681,6 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	{
 		Piwik_PostEvent('Tracker.saveVisitorInformation', $this->visitorInfo);
 
-		if(empty($this->visitorInfo['location_country']))
-		{
-			$this->visitorInfo['location_country'] = 'xx';
-		}
-		$this->visitorInfo['location_continent'] = Piwik_Common::getContinent( $this->visitorInfo['location_country'] );
 		$this->visitorInfo['location_browser_lang'] = substr($this->visitorInfo['location_browser_lang'], 0, 20);
 		$this->visitorInfo['referer_name'] = substr($this->visitorInfo['referer_name'], 0, 70);
 		$this->visitorInfo['referer_keyword'] = substr($this->visitorInfo['referer_keyword'], 0, 255);
@@ -643,12 +742,24 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 */
 	protected function getUserAgent()
 	{
-		return @$_SERVER['HTTP_USER_AGENT'];
+		$default = @$_SERVER['HTTP_USER_AGENT'];
+		return Piwik_Common::getRequestVar('ua', is_null($default) ? false : $default, 'string', $this->request);
+	}
+	
+	/**
+	 * Returns the language the visitor is viewing.
+	 * 
+	 * @return string browser language code, eg. "en-gb,en;q=0.5"
+	 */
+	protected function getBrowserLanguage()
+	{
+	    return Piwik_Common::getRequestVar('lang', Piwik_Common::getBrowserLanguage(), 'string', $this->request);
 	}
 
 	/**
 	 * Returns the current date in the "Y-m-d" PHP format
 	 *
+	 * @param string $format
 	 * @return string
 	 */
 	protected function getCurrentDate( $format = "Y-m-d")
@@ -687,12 +798,15 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		 * As a result, these sophisticated bots exhibit characteristics of
 		 * browsers (cookies enabled, executing JavaScript, etc).
 		 */
-		if ( strpos($ua, 'Googlebot') !== false					// Googlebot
+		$allowBots = Piwik_Common::getRequestVar('bots', false) != false;
+		if ( !$allowBots
+			&& (strpos($ua, 'Googlebot') !== false					// Googlebot
 				|| strpos($ua, 'Google Web Preview') !== false	// Google Instant
 				|| strpos($ua, 'bingbot') !== false				// Bingbot
 				|| strpos($ua, 'YottaaMonitor') !== false		// Yottaa
 				|| Piwik_IP::isIpInRange($ip,
 					array(
+						// Live/Bing/MSN
 						'64.4.0.0/18',
 						'65.52.0.0/14',
 						'157.54.0.0/15',
@@ -701,7 +815,9 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 						'207.46.0.0/16',
 						'207.68.128.0/18',
 						'207.68.192.0/20',
-					))) // Live/Bing/MSN
+						// Chinese bot hammering websites
+						'1.202.218.8' 
+					)))) 
 		{
 			printDebug('Search bot detected, visit excluded');
 			$excluded = true;
@@ -718,8 +834,9 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$toRecord = Piwik_Common::getRequestVar($parameterForceRecord, false, 'int', $this->request);
 			if(!$toRecord)
 			{
-				printDebug($_SERVER['REQUEST_METHOD'].' parameter '.$parameterForceRecord.' not found in URL, request excluded');
+				printDebug(@$_SERVER['REQUEST_METHOD'].' parameter '.$parameterForceRecord.' not found in URL, request excluded');
 				$excluded = true;
+				printDebug("'$parameterForceRecord' parameter not found.");
 			}
 		}
 
@@ -735,12 +852,32 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		if(!$excluded)
 		{
 			$excluded = $this->isIgnoreCookieFound();
+			if($excluded)
+			{
+				printDebug("Ignore cookie found.");
+			}
 		}
 
 		// Checking for excluded IPs
 		if(!$excluded)
 		{
 			$excluded = $this->isVisitorIpExcluded($ip);
+			if($excluded)
+			{
+				printDebug("IP excluded.");
+			}
+		}
+		
+		if(!$excluded)
+		{
+			if( (isset($_SERVER["HTTP_X_PURPOSE"]) 
+					&& in_array($_SERVER["HTTP_X_PURPOSE"], array("preview", "instant")))
+			 || (isset($_SERVER['HTTP_X_MOZ'])
+			 		&& $_SERVER['HTTP_X_MOZ'] == "prefetch"))
+	 		{
+	 			$excluded = true;
+	 			printDebug("Prefetch request detected, not a real visit so we Ignore this visit/pageview");
+	 		}
 		}
 
 		if($excluded)
@@ -793,7 +930,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 */
 	protected function getCookieName()
 	{
-		return Piwik_Tracker_Config::getInstance()->Tracker['cookie_name'];
+		return Piwik_Config::getInstance()->Tracker['cookie_name'];
 	}
 
 	/**
@@ -803,7 +940,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 */
 	protected function getCookieExpire()
 	{
-		return $this->getCurrentTimestamp() + Piwik_Tracker_Config::getInstance()->Tracker['cookie_expire'];
+		return $this->getCurrentTimestamp() + Piwik_Config::getInstance()->Tracker['cookie_expire'];
 	}
 
 	/**
@@ -813,54 +950,21 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 */
 	protected function getCookiePath()
 	{
-		return Piwik_Tracker_Config::getInstance()->Tracker['cookie_path'];
+		return Piwik_Config::getInstance()->Tracker['cookie_path'];
 	}
 
 	protected function shouldUseThirdPartyCookie()
 	{
-		return (bool)Piwik_Tracker_Config::getInstance()->Tracker['use_third_party_id_cookie'];
+		return (bool)Piwik_Config::getInstance()->Tracker['use_third_party_id_cookie'];
 	}
 
 	/**
-	 * This methods tries to see if the visitor has visited the website before.
-	 *
-	 * We have to split the visitor into one of the category
-	 * - Known visitor
-	 * - New visitor
-	 *
-	 * A known visitor is a visitor that has already visited the website in the current month.
-	 * We define a known visitor using the algorithm:
-	 *
-	 * 1) Checking if a cookie contains
-	 * 		// a unique id for the visitor
-	 * 		- id_visitor
-	 *
-	 * 		// the timestamp of the last action in the most recent visit
-	 * 		- timestamp_last_action
-	 *
- 	 *  	// the timestamp of the first action in the most recent visit
-	 * 		- timestamp_first_action
-	 *
-	 * 		// the ID of the most recent visit (which could be in the past or the current visit)
-	 * 		- id_visit
-	 *
-	 * 		// the ID of the most recent action
-	 * 		- id_last_action
-	 *
-	 * 2) If the visitor doesn't have a cookie, we try to look for a similar visitor configuration.
-	 * 	  We search for a visitor with the same plugins/OS/Browser/Resolution for today for this website.
+	 * Is the request for a known VisitorId, based on 1st party, 3rd party (optional) cookies or Tracking API forced Visitor ID
+	 * @throws Exception
 	 */
-	protected function recognizeTheVisitor()
+	protected function assignVisitorIdFromRequest()
 	{
-		$this->visitorKnown = false;
-		$this->setCookie( new Piwik_Cookie(
-								$this->getCookieName(),
-								$this->getCookieExpire(),
-								$this->getCookiePath()) );
-
-		$this->printCookie();
-
-		$found = $forcedVisitorId = false;
+		$found = false;
 
 		// Was a Visitor ID "forced" (@see Tracking API setVisitorId()) for this request?
 		$idVisitor = $this->forcedVisitorId;
@@ -870,14 +974,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			{
 				throw new Exception("Visitor ID (cid) must be ".Piwik_Tracker::LENGTH_HEX_ID_STRING." characters long");
 			}
-			printDebug("Request will be forced to record for this idvisitor = ".$idVisitor);
-			$forcedVisitorId = true;
+			printDebug("Request will be recorded for this idvisitor = ".$idVisitor);
 			$found = true;
 		}
 
+		// - If set to use 3rd party cookies for Visit ID, read the cookie 
 		if(!$found)
 		{
-			// - If set to use 3rd party cookies for Visit ID, read the cookies
 			// - By default, reads the first party cookie ID
 			$useThirdPartyCookie = $this->shouldUseThirdPartyCookie();
 			if($useThirdPartyCookie)
@@ -897,62 +1000,62 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$found = strlen($idVisitor) >= Piwik_Tracker::LENGTH_HEX_ID_STRING;
 		}
 
-		// Does the cookie contain a Visitor ID?
 		if( $found )
 		{
-			$this->visitorInfo['idvisitor'] = Piwik_Common::hex2bin($idVisitor);
-			printDebug("The visitor has the piwik cookie (idvisitor = ".$idVisitor.") ");
+			$truncated = substr($idVisitor, 0, Piwik_Tracker::LENGTH_HEX_ID_STRING);
+			$binVisitorId = @Piwik_Common::hex2bin($truncated);
+			if(!empty($binVisitorId))
+			{
+				$this->visitorInfo['idvisitor'] = $binVisitorId;
+			}
+					
 		}
-		else
-		{
-			printDebug("Visitor doesn't have the piwik cookie.");
-		}
+	}
+
+	/**
+	 * This methods tries to see if the visitor has visited the website before.
+	 *
+	 * We have to split the visitor into one of the category
+	 * - Known visitor
+	 * - New visitor
+	 */
+	protected function recognizeTheVisitor()
+	{
+		$this->visitorKnown = false;
+		$this->setCookie( new Piwik_Cookie(
+								$this->getCookieName(),
+								$this->getCookieExpire(),
+								$this->getCookiePath()) );
+		$this->printCookie();
 
 		$userInfo = $this->getUserSettingsInformation();
 		$configId = $userInfo['config_id'];
-		$timeLookBack = date('Y-m-d H:i:s', $this->getCurrentTimestamp() - self::TIME_IN_PAST_TO_SEARCH_FOR_VISITOR);
-
-		$where = "visit_last_action_time >= ?
-					AND idsite = ?";
-		$bindSql = array( $timeLookBack, $this->idsite);
-
-		$forcedVisitorId = $forcedVisitorId || Piwik_Tracker_Config::getInstance()->Tracker['trust_visitors_cookies'];
 		
-		// we always match on the config_id, except if the current request forces the visitor id
-		if(!$forcedVisitorId)
+		$this->assignVisitorIdFromRequest();
+		$matchVisitorId = !empty($this->visitorInfo['idvisitor']);
+		
+		if($matchVisitorId)
 		{
-			$where .= ' AND config_id = ? ';
-			$bindSql[] = $configId;
-		}
-		// We force to match a visitor ID
-		// 1) If the visitor cookies should be trusted (ie. intranet) - config file setting
-		// 2) or if the Visitor ID was forced via the Tracking API setVisitorId()
-		else if(!empty($this->visitorInfo['idvisitor']))
-		{
-			printDebug("Matching the visitor based on his idcookie: ".bin2hex($this->visitorInfo['idvisitor']) ."...");
-
-			$where .= ' AND idvisitor = ?';
-			$bindSql[] = $this->visitorInfo['idvisitor'];
+			printDebug("Matching visitors with: visitorId=".bin2hex($this->visitorInfo['idvisitor'])." OR configId=".bin2hex($configId));
 		}
 		else
 		{
-			// Forced idvisitor, but empty idvisitor  
-			return;
+			printDebug("Visitor doesn't have the piwik cookie...");
 		}
-
+		
 		$selectCustomVariables = '';
 		// No custom var were found in the request, so let's copy the previous one in a potential conversion later
 		if(!$this->customVariablesSetFromRequest)
 		{
-			$selectCustomVariables = '
-				, custom_var_k1, custom_var_v1,
+			$selectCustomVariables = ', 
+				custom_var_k1, custom_var_v1,
 				custom_var_k2, custom_var_v2,
 				custom_var_k3, custom_var_v3,
 				custom_var_k4, custom_var_v4,
 				custom_var_k5, custom_var_v5';
 		}
 		
-		$sql = " SELECT  	idvisitor,
+		$select = "SELECT  	idvisitor,
 							visit_last_action_time,
 							visit_first_action_time,
 							idvisit,
@@ -961,25 +1064,117 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 							visitor_returning,
 							visitor_days_since_first,
 							visitor_days_since_order,
+							location_country,
+							location_region,
+							location_city,
+							location_latitude,
+							location_longitude,
 							referer_name,
 							referer_keyword,
 							referer_type,
 							visitor_count_visits,
 							visit_goal_buyer
-							$selectCustomVariables
-				FROM ".Piwik_Common::prefixTable('log_visit').
-				" WHERE ".$where."
+							$selectCustomVariables 
+		";
+		$from = "FROM ".Piwik_Common::prefixTable('log_visit');
+
+		
+		$bindSql = array();
+		
+		$timeLookBack = date('Y-m-d H:i:s', $this->getCurrentTimestamp() - Piwik_Config::getInstance()->Tracker['visit_standard_length']);
+
+		// This setting would be enabled for Intranet websites, to ensure that visitors using all the same computer config, same IP
+		// are not counted as 1 visitor. In this case, we want to enforce and trust the visitor ID from the cookie.
+		$trustCookiesOnly = Piwik_Config::getInstance()->Tracker['trust_visitors_cookies'];
+		
+		$shouldMatchOneFieldOnly = ($matchVisitorId && $trustCookiesOnly) || !$matchVisitorId;
+		
+		// Two use cases:
+		// 1) there is no visitor ID so we try to match only on config_id (heuristics)
+		// 		Possible causes of no visitor ID: no browser cookie support, direct Tracking API request without visitor ID passed, etc.
+		// 		We can use config_id heuristics to try find the visitor in the past, there is a risk to assign 
+		// 		this page view to the wrong visitor, but this is better than creating artificial visits.
+		// 2) there is a visitor ID and we trust it (config setting trust_visitors_cookies), so we force to look up this visitor id
+		if($shouldMatchOneFieldOnly)
+		{
+			$where = "visit_last_action_time >= ? AND idsite = ?";
+			$bindSql[] = $timeLookBack;
+			$bindSql[] = $this->idsite;
+			if(!$matchVisitorId)
+			{
+				$where .= ' AND config_id = ?';
+				$bindSql[] = $configId;
+			}
+			else
+			{
+				$where .= ' AND idvisitor = ?';
+				$bindSql[] = $this->visitorInfo['idvisitor'];
+			}
+			
+			$sql = "$select
+				$from
+				WHERE ".$where."
 				ORDER BY visit_last_action_time DESC
 				LIMIT 1";
+		}
+		// We have a config_id AND a visitor_id. We match on either of these.
+		// 		Why do we also match on config_id?
+		//		we do not trust the visitor ID only. Indeed, some browsers, or browser addons, 
+		// 		cause the visitor id from the 1st party cookie to be different on each page view! 
+		// 		It is not acceptable to create a new visit every time such browser does a page view, 
+		// 		so we also backup by searching for matching config_id. 
+		// We use a UNION here so that each sql query uses its own INDEX
+		else
+		{
+			$whereSameBothQueries = "visit_last_action_time >= ? AND idsite = ?";
+			
+			
+			// will use INDEX index_idsite_config_datetime (idsite, config_id, visit_last_action_time)
+			$bindSql[] = $timeLookBack;
+			$bindSql[] = $this->idsite;
+			$where = ' AND config_id = ?';
+			$bindSql[] = $configId;
+			$sqlConfigId = "$select ,
+					0 as priority
+					$from
+					WHERE $whereSameBothQueries $where
+					ORDER BY visit_last_action_time DESC
+					LIMIT 1
+			";
+		
+			// will use INDEX index_idsite_idvisitor (idsite, idvisitor)
+			$bindSql[] = $timeLookBack;
+			$bindSql[] = $this->idsite;
+			$where = ' AND idvisitor = ?';
+			$bindSql[] = $this->visitorInfo['idvisitor'];
+			$sqlVisitorId = "$select ,
+					1 as priority
+					$from
+					WHERE $whereSameBothQueries $where
+					LIMIT 1
+			";
+			
+			// We join both queries and favor the one matching the visitor_id if it did match
+			$sql = " ( $sqlConfigId ) 
+					UNION 
+					( $sqlVisitorId ) 
+					ORDER BY priority DESC 
+					LIMIT 1";
+		}
+		
+		
 		$visitRow = Piwik_Tracker::getDatabase()->fetch($sql, $bindSql);
-
-		if( !Piwik_Tracker_Config::getInstance()->Debug['tracker_always_new_visitor']
+//		var_dump($sql);var_dump($bindSql);var_dump($visitRow);
+		
+		if( !Piwik_Config::getInstance()->Debug['tracker_always_new_visitor']
 			&& $visitRow
 			&& count($visitRow) > 0)
 		{
 			// These values will be used throughout the request
 			$this->visitorInfo['visit_last_action_time'] = strtotime($visitRow['visit_last_action_time']);
 			$this->visitorInfo['visit_first_action_time'] = strtotime($visitRow['visit_first_action_time']);
+			
+			// We always keep the first idvisitor seen for this visit (so that all page views for this visit have the same idvisitor)
 			$this->visitorInfo['idvisitor'] = $visitRow['idvisitor'];
 			$this->visitorInfo['idvisit'] = $visitRow['idvisit'];
 			$this->visitorInfo['visit_exit_idaction_url'] = $visitRow['visit_exit_idaction_url'];
@@ -989,6 +1184,11 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$this->visitorInfo['visitor_days_since_order'] = $visitRow['visitor_days_since_order'];
 			$this->visitorInfo['visitor_count_visits'] = $visitRow['visitor_count_visits'];
 			$this->visitorInfo['visit_goal_buyer'] = $visitRow['visit_goal_buyer'];
+			$this->visitorInfo['location_country'] = $visitRow['location_country'];
+			$this->visitorInfo['location_region'] = $visitRow['location_region'];
+			$this->visitorInfo['location_city'] = $visitRow['location_city'];
+			$this->visitorInfo['location_latitude'] = $visitRow['location_latitude'];
+			$this->visitorInfo['location_longitude'] = $visitRow['location_longitude'];
 			
 			// Referer information will be potentially used for Goal Conversion attribution
 			$this->visitorInfo['referer_name'] = $visitRow['referer_name'];
@@ -1000,11 +1200,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			{
 				for($i=1; $i<=Piwik_Tracker::MAX_CUSTOM_VARIABLES; $i++) 
 				{
-					if(!empty($visitRow['custom_var_k'.$i]))
+					if(isset($visitRow['custom_var_k'.$i])
+					    && strlen($visitRow['custom_var_k'.$i]))
 					{
 						$this->visitorInfo['custom_var_k'.$i] = $visitRow['custom_var_k'.$i];
 					}
-					if(!empty($visitRow['custom_var_v'.$i]))
+					if(isset($visitRow['custom_var_v'.$i])
+					    && strlen($visitRow['custom_var_v'.$i]))
 					{
 						$this->visitorInfo['custom_var_v'.$i] = $visitRow['custom_var_v'.$i];
 					}
@@ -1027,20 +1229,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 	static public function getCustomVariables($scope, $request)
 	{
-		if($scope == 'visit')
-		{
+		if($scope == 'visit') {
 			$parameter = '_cvar';
-			$debug = 'Visit level';
-		}
-		else
-		{
+		} else {
 			$parameter = 'cvar';
-			$debug = 'Page level';
 		}
 		
-		$customVar = Piwik_Common::unsanitizeInputValue(Piwik_Common::getRequestVar( $parameter, '', 'string', $request));
-		$customVar = @json_decode($customVar, $assoc = true);
-
+		$customVar = Piwik_Common::unsanitizeInputValues(Piwik_Common::getRequestVar($parameter, '', 'json', $request));
 		if(!is_array($customVar))
 		{
 			return array();
@@ -1058,7 +1253,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 				printDebug("Invalid custom variables detected (id=$id)");
 				continue;
 			}
-			if(empty($keyValue[1]))
+			if(strlen($keyValue[1]) == 0)
 			{
 				$keyValue[1] = "";
 			}
@@ -1070,17 +1265,13 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 			$customVariables['custom_var_k'.$id] = $key;
 			$customVariables['custom_var_v'.$id] = $value;
 		}
-		if(!empty($customVariables))
-		{
-			printDebug("$debug Custom Variables: ");
-			printDebug($customVariables);
-		}
+
 		return $customVariables;
 	}
 
 	static public function truncateCustomVariable($input)
 	{
-		return substr($input, 0, Piwik_Tracker::MAX_LENGTH_CUSTOM_VARIABLE);
+		return substr(trim($input), 0, Piwik_Tracker::MAX_LENGTH_CUSTOM_VARIABLE);
 	}
 
 	/**
@@ -1108,7 +1299,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 		$plugin_Silverlight		= Piwik_Common::getRequestVar( 'ag', 0, 'int', $this->request);
 		$plugin_Cookie 			= Piwik_Common::getRequestVar( 'cookie', 0, 'int', $this->request);
 
-		$userAgent		= Piwik_Common::sanitizeInputValues($this->getUserAgent());
+		$userAgent		= $this->getUserAgent();
 		$aBrowserInfo	= UserAgentParser::getBrowser($userAgent);
 
 		$browserName	= ($aBrowserInfo !== false && $aBrowserInfo['id'] !== false) ? $aBrowserInfo['id'] : 'UNK';
@@ -1119,7 +1310,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 		$resolution		= Piwik_Common::getRequestVar('res', 'unknown', 'string', $this->request);
 
-		$browserLang	= Piwik_Common::getBrowserLanguage();
+		$browserLang	= $this->getBrowserLanguage();
 
 		$configurationHash = $this->getConfigHash(
 												$os,
@@ -1169,11 +1360,12 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	{
 		return isset($this->visitorInfo['visit_last_action_time'])
 					&& ($this->visitorInfo['visit_last_action_time']
-						> ($this->getCurrentTimestamp() - Piwik_Tracker_Config::getInstance()->Tracker['visit_standard_length']));
+						> ($this->getCurrentTimestamp() - Piwik_Config::getInstance()->Tracker['visit_standard_length']));
 	}
 
 	/**
 	 * Returns true if the recognizeTheVisitor() method did recognize the visitor
+	 * @return bool
 	 */
 	protected function isVisitorKnown()
 	{
@@ -1200,6 +1392,7 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 	 * Returns an object able to handle the current action
 	 * Plugins can return an override Action that for example, does not record the action in the DB
 	 *
+	 * @throws Exception
 	 * @return Piwik_Tracker_Action child or fake but with same public interface
 	 */
 	protected function newAction()
@@ -1241,19 +1434,35 @@ class Piwik_Tracker_Visit implements Piwik_Tracker_Visit_Interface
 
 	/**
 	 * Returns a 64-bit hash of all the configuration settings
+	 * @param $os
+	 * @param $browserName
+	 * @param $browserVersion
+	 * @param $resolution
+	 * @param $plugin_Flash
+	 * @param $plugin_Java
+	 * @param $plugin_Director
+	 * @param $plugin_Quicktime
+	 * @param $plugin_RealPlayer
+	 * @param $plugin_PDF
+	 * @param $plugin_WindowsMedia
+	 * @param $plugin_Gears
+	 * @param $plugin_Silverlight
+	 * @param $plugin_Cookie
+	 * @param $ip
+	 * @param $browserLang
 	 * @return string
 	 */
 	protected function getConfigHash( $os, $browserName, $browserVersion, $resolution, $plugin_Flash, $plugin_Java, $plugin_Director, $plugin_Quicktime, $plugin_RealPlayer, $plugin_PDF, $plugin_WindowsMedia, $plugin_Gears, $plugin_Silverlight, $plugin_Cookie, $ip, $browserLang)
 	{
 		$hash = md5( $os . $browserName . $browserVersion . $plugin_Flash . $plugin_Java . $plugin_Director . $plugin_Quicktime . $plugin_RealPlayer . $plugin_PDF . $plugin_WindowsMedia . $plugin_Gears . $plugin_Silverlight . $plugin_Cookie . $ip . $browserLang, $raw_output = true );
-		$substr = function_exists('mb_orig_substr') ? 'mb_orig_substr' : 'substr';
-		return $substr( $hash, 0, Piwik_Tracker::LENGTH_BINARY_ID );
+		return Piwik_Common::substr( $hash, 0, Piwik_Tracker::LENGTH_BINARY_ID );
 	}
 
 	/**
 	 * Returns either
 	 * - "-1" for a known visitor
 	 * - at least 16 char identifier in hex @see Piwik_Common::generateUniqId()
+	 * @return int|string
 	 */
 	protected function getVisitorUniqueId()
 	{
@@ -1308,37 +1517,49 @@ class Piwik_Tracker_Visit_Referer
 	/**
 	 * Returns an array containing the following information:
 	 * - referer_type
-	 *		- direct			-- absence of referer URL OR referer URL has the same host
-	 *		- site				-- based on the referer URL
-	 *		- search_engine		-- based on the referer URL
-	 *		- campaign			-- based on campaign URL parameter
+	 *        - direct            -- absence of referer URL OR referer URL has the same host
+	 *        - site                -- based on the referer URL
+	 *        - search_engine        -- based on the referer URL
+	 *        - campaign            -- based on campaign URL parameter
 	 *
 	 * - referer_name
-	 * 		- ()
-	 * 		- piwik.net			-- site host name
-	 * 		- google.fr			-- search engine host name
-	 * 		- adwords-search	-- campaign name
+	 *         - ()
+	 *         - piwik.net            -- site host name
+	 *         - google.fr            -- search engine host name
+	 *         - adwords-search    -- campaign name
 	 *
 	 * - referer_keyword
-	 * 		- ()
-	 * 		- ()
-	 * 		- my keyword
-	 * 		- my paid keyword
-	 * 		- ()
-	 * 		- ()
+	 *         - ()
+	 *         - ()
+	 *         - my keyword
+	 *         - my paid keyword
+	 *         - ()
+	 *         - ()
 	 *
 	 * - referer_url : the same for all the referer types
 	 *
-	 * @param URLs must be URL Encoded
+	 * @param $refererUrl must be URL Encoded
+	 * @param $currentUrl
+	 * @param $idSite
+	 * @return array
 	 */
 	public function getRefererInformation($refererUrl, $currentUrl, $idSite)
 	{
 		$this->idsite = $idSite;
 
 		// default values for the referer_* fields
-		$this->refererUrl = Piwik_Common::unsanitizeInputValue($refererUrl);
+		$refererUrl = Piwik_Common::unsanitizeInputValue($refererUrl);
+		if(!empty($refererUrl)
+			&& !Piwik_Common::isLookLikeUrl($refererUrl))
+		{
+			$refererUrl = '';
+		}
+		
+		$currentUrl = Piwik_Tracker_Action::cleanupUrl($currentUrl);
+		
+		$this->refererUrl = $refererUrl;
 		$this->refererUrlParse = @parse_url($this->refererUrl);
-		$this->currentUrlParse = @parse_url(Piwik_Common::unsanitizeInputValue($currentUrl));
+		$this->currentUrlParse = @parse_url($currentUrl);
 		$this->typeRefererAnalyzed = Piwik_Common::REFERER_TYPE_DIRECT_ENTRY;
 		$this->nameRefererAnalyzed = '';
 		$this->keywordRefererAnalyzed = '';
@@ -1383,8 +1604,9 @@ class Piwik_Tracker_Visit_Referer
 		return $refererInformation;
 	}
 
-	/*
+	/**
 	 * Search engine detection
+     * @return bool
 	 */
 	protected function detectRefererSearchEngine()
 	{
@@ -1400,51 +1622,78 @@ class Piwik_Tracker_Visit_Referer
 		return true;
 	}
 
-	/*
-	 * Campaign analysis
-	 */
-	protected function detectRefererCampaign()
+    /**
+     * @param string $string
+     * @return bool
+     */
+    protected function detectCampaignFromString($string)
 	{
-		if(isset($this->currentUrlParse['query']))
+		foreach($this->campaignNames as $campaignNameParameter)
 		{
-			$campaignParameters = Piwik_Common::getCampaignParameters();
-
-			$campaignNames = $campaignParameters[0];
-			foreach($campaignNames as $campaignNameParameter)
+			$campaignName = trim(urldecode(Piwik_Common::getParameterFromQueryString($string, $campaignNameParameter)));
+			if( !empty($campaignName))
 			{
-				$campaignName = Piwik_Common::getParameterFromQueryString($this->currentUrlParse['query'], $campaignNameParameter);
-				if( !empty($campaignName))
+				break;
+			}
+		}
+
+		if(!empty($campaignName))
+		{
+			$this->typeRefererAnalyzed = Piwik_Common::REFERER_TYPE_CAMPAIGN;
+			$this->nameRefererAnalyzed = $campaignName;
+
+			foreach($this->campaignKeywords as $campaignKeywordParameter)
+			{
+				$campaignKeyword = Piwik_Common::getParameterFromQueryString($string, $campaignKeywordParameter);
+				if( !empty($campaignKeyword))
 				{
+					$this->keywordRefererAnalyzed = trim(urldecode($campaignKeyword));
 					break;
 				}
 			}
-
-			if(!empty($campaignName))
-			{
-				$this->typeRefererAnalyzed = Piwik_Common::REFERER_TYPE_CAMPAIGN;
-				$this->nameRefererAnalyzed = $campaignName;
-
-				$campaignKeywords = $campaignParameters[1];
-				foreach($campaignKeywords as $campaignKeywordParameter)
-				{
-					$campaignKeyword = Piwik_Common::getParameterFromQueryString($this->currentUrlParse['query'], $campaignKeywordParameter);
-					if( !empty($campaignKeyword))
-					{
-						$this->keywordRefererAnalyzed = $campaignKeyword;
-						break;
-					}
-				}
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
+	
+	/**
+	 * Campaign analysis
+     * @return bool
+	 */
+	protected function detectRefererCampaign()
+	{
+		if(!isset($this->currentUrlParse['query'])
+			&& !isset($this->currentUrlParse['fragment']))
+		{
+			return false;
+		}
+		$campaignParameters = Piwik_Common::getCampaignParameters();
+		$this->campaignNames = $campaignParameters[0];
+		$this->campaignKeywords = $campaignParameters[1];
+		
+		$found = false;
+		
+		// 1) Detect campaign from query string
+		if(isset($this->currentUrlParse['query']))
+		{
+			$found = $this->detectCampaignFromString($this->currentUrlParse['query']);
+		}
 
-	/*
+		// 2) Detect from fragment #hash
+		if(!$found
+			&& isset($this->currentUrlParse['fragment']))
+		{
+			$found = $this->detectCampaignFromString($this->currentUrlParse['fragment']);
+		}
+		return $found;
+	}
+
+	/**
 	 * We have previously tried to detect the campaign variables in the URL
 	 * so at this stage, if the referer host is the current host,
 	 * or if the referer host is any of the registered URL for this website,
 	 * it is considered a direct entry
+     * @return bool
 	 */
 	protected function detectRefererDirectEntry()
 	{

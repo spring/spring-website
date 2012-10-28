@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: AllColumns.php 5235 2011-09-27 07:20:45Z matt $
+ * @version $Id: AllColumns.php 6398 2012-05-30 09:03:12Z matt $
  * 
  * @category Piwik
  * @package Piwik
@@ -35,7 +35,9 @@ class Piwik_ViewDataTable_HtmlTable_AllColumns extends Piwik_ViewDataTable_HtmlT
 	
 	protected function postDataTableLoadedFromAPI()
 	{
-		parent::postDataTableLoadedFromAPI();
+		$valid = parent::postDataTableLoadedFromAPI();
+		if(!$valid) return false;
+		
 		Piwik_Controller::setPeriodVariablesView($this);
 		$columnUniqueVisitors = false;
 		if($this->period == 'day')
@@ -60,5 +62,7 @@ class Piwik_ViewDataTable_HtmlTable_AllColumns extends Piwik_ViewDataTable_HtmlT
 										$columnConversionRate
 										));
 		$this->dataTable->filter('ColumnCallbackReplace', array('avg_time_on_site', create_function('$averageTimeOnSite', 'return Piwik::getPrettyTimeFromSeconds($averageTimeOnSite);')));
+		
+		return true;
 	}
 }

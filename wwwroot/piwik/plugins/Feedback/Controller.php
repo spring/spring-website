@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Controller.php 4533 2011-04-22 22:05:46Z vipsoft $
+ * @version $Id: Controller.php 6243 2012-05-02 22:08:23Z SteveG $
  *
  * @category Piwik_Plugins
  * @package Piwik_Feedback
@@ -25,6 +25,7 @@ class Piwik_Feedback_Controller extends Piwik_Controller
 
 	/**
 	 * send email to Piwik team and display nice thanks
+	 * @throws Exception
 	 */
 	function sendFeedback()
 	{
@@ -34,11 +35,14 @@ class Piwik_Feedback_Controller extends Piwik_Controller
 		$nonce = Piwik_Common::getRequestVar('nonce', '', 'string');
 
 		$view = Piwik_View::factory('sent');
-		$view->feedbackEmailAddress = Zend_Registry::get('config')->General->feedback_email_address;
+		$view->feedbackEmailAddress = Piwik_Config::getInstance()->General['feedback_email_address'];
 		try
 		{
-			$minimumBodyLength = 35;
-			if(strlen($body) < $minimumBodyLength)
+			$minimumBodyLength = 40;
+			if(strlen($body) < $minimumBodyLength
+				// Avoid those really annoying automated security test emails
+				|| strpos($email, 'probe@') !== false
+				|| strpos($body, '&lt;probe') !== false)
 			{
 				throw new Exception(Piwik_TranslateException('Feedback_ExceptionBodyLength', array($minimumBodyLength)));
 			}

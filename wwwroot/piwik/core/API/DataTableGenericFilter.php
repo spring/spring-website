@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: DataTableGenericFilter.php 5200 2011-09-21 08:00:50Z matt $
+ * @version $Id: DataTableGenericFilter.php 7068 2012-09-27 04:45:55Z capedfuzz $
  * 
  * @category Piwik
  * @package Piwik
@@ -16,11 +16,23 @@
  */
 class Piwik_API_DataTableGenericFilter
 {
+	private static $genericFiltersInfo = null;
+
+	/**
+	 * Constructor
+	 *
+	 * @param $request
+	 */
 	function __construct( $request )
 	{
 		$this->request = $request;
 	}
 
+	/**
+	 * Filters the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 */
 	public function filter($table)
 	{
 		$this->applyGenericFilters($table);
@@ -36,51 +48,56 @@ class Piwik_API_DataTableGenericFilter
 	 * 3 - Filter that keep only a subset of the results
 	 * 4 - Presentation filters
 	 * 
-	 * @return array See the code for spec
+	 * @return array  See the code for spec
 	 */
 	public static function getGenericFiltersInformation()
 	{
-		$genericFilters = array(
-			'Pattern' => array(
-								'filter_column' 			=> array('string'), 
-								'filter_pattern' 			=> array('string'),
-						),
-			'PatternRecursive' => array(
-								'filter_column_recursive' 	=> array('string'), 
-								'filter_pattern_recursive' 	=> array('string'),
-						),
-			'ExcludeLowPopulation'	=> array(
-								'filter_excludelowpop' 		=> array('string'), 
-								'filter_excludelowpop_value'=> array('float', '0'),
-						),
-			'AddColumnsProcessedMetrics'	=> array(
-								'filter_add_columns_when_show_all_columns'	=> array('integer')
-						),
-			'AddColumnsProcessedMetricsGoal'	=> array(
-								'filter_update_columns_when_show_all_goals'	=> array('integer'),
-								'filter_only_display_idgoal' => array('string', Piwik_DataTable_Filter_AddColumnsProcessedMetricsGoal::GOALS_OVERVIEW),
-						),
-			'Sort' => array(
-								'filter_sort_column' 		=> array('string'),
-								'filter_sort_order' 		=> array('string', 'desc'),
-						),
-			'Truncate' => array(
-								'filter_truncate'			=> array('integer'),
-						),
-			'Limit' => array(
-								'filter_offset' 			=> array('integer', '0'),
-								'filter_limit' 				=> array('integer'),
-						),
-		);
+		if (is_null(self::$genericFiltersInfo))
+		{
+			self::$genericFiltersInfo = array(
+				'Pattern' => array(
+									'filter_column' 			=> array('string', 'label'), 
+									'filter_pattern' 			=> array('string'),
+							),
+				'PatternRecursive' => array(
+									'filter_column_recursive' 	=> array('string', 'label'), 
+									'filter_pattern_recursive' 	=> array('string'),
+							),
+				'ExcludeLowPopulation'	=> array(
+									'filter_excludelowpop' 		=> array('string'), 
+									'filter_excludelowpop_value'=> array('float', '0'),
+							),
+				'AddColumnsProcessedMetrics'	=> array(
+									'filter_add_columns_when_show_all_columns'	=> array('integer')
+							),
+				'AddColumnsProcessedMetricsGoal'	=> array(
+									'filter_update_columns_when_show_all_goals'	=> array('integer'),
+									'idGoal' => array('string'),
+							),
+				'Sort' => array(
+									'filter_sort_column' 		=> array('string'),
+									'filter_sort_order' 		=> array('string', 'desc'),
+							),
+				'Truncate' => array(
+									'filter_truncate'			=> array('integer'),
+							),
+				'Limit' => array(
+									'filter_offset' 			=> array('integer', '0'),
+									'filter_limit' 				=> array('integer'),
+									'keep_summary_row'			=> array('integer', '0'),
+							),
+			);
+		}
 		
-		return $genericFilters;
+		return self::$genericFiltersInfo;
 	}
 	
 	/**
 	 * Apply generic filters to the DataTable object resulting from the API Call.
 	 * Disable this feature by setting the parameter disable_generic_filters to 1 in the API call request.
 	 * 
-	 * @param Piwik_DataTable
+	 * @param Piwik_DataTable  $datatable
+	 * @return bool
 	 */
 	protected function applyGenericFilters($datatable)
 	{
@@ -112,6 +129,13 @@ class Piwik_API_DataTableGenericFilter
 				if(isset($info[1]))
 				{
 					$defaultValue = $info[1];
+				}
+				
+				// third element in the array, if it exists, overrides the name of the request variable
+				$varName = $name;
+				if(isset($info[2]))
+				{
+					$varName = $info[2];
 				}
 				
 				try {

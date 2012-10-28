@@ -4,14 +4,14 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Json.php 5243 2011-09-27 09:40:29Z matt $
+ * @version $Id: Json.php 6353 2012-05-28 17:29:23Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
  */
 
 /**
- * JSON export. Using the php 5.2 feature json_encode.
+ * JSON export.
  * Works with recursive DataTable (when a row can be associated with a subDataTable).
  * 
  * @package Piwik
@@ -19,15 +19,25 @@
  */
 class Piwik_DataTable_Renderer_Json extends Piwik_DataTable_Renderer
 {
+	/**
+	 * Computes the dataTable output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	public function render()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		return $this->renderTable($this->table);
 	}
-	
+
+	/**
+	 * Computes the exception output and returns the string/binary
+	 *
+	 * @return string
+	 */
 	function renderException()
 	{
-		self::renderHeader();
+		$this->renderHeader();
 		
 		$exceptionMessage = self::renderHtmlEntities($this->exception->getMessage());
 		$exceptionMessage = str_replace(array("\r\n","\n"), "", $exceptionMessage);
@@ -35,7 +45,13 @@ class Piwik_DataTable_Renderer_Json extends Piwik_DataTable_Renderer
 		
 		return $this->jsonpWrap($exceptionMessage);
 	}
-	
+
+	/**
+	 * Computes the output for the given data table
+	 *
+	 * @param Piwik_DataTable  $table
+	 * @return string
+	 */
 	protected function renderTable($table)
 	{
 		$renderer = new Piwik_DataTable_Renderer_Php();
@@ -54,11 +70,15 @@ class Piwik_DataTable_Renderer_Json extends Piwik_DataTable_Renderer
 		$callback = create_function('&$value,$key', 'if(is_string($value)){$value = html_entity_decode($value, ENT_QUOTES, "UTF-8");}');
 		array_walk_recursive($array, $callback);
 		
-		$str = json_encode($array);
+		$str = Piwik_Common::json_encode($array);
 		
 		return $this->jsonpWrap($str);
 	}
-	
+
+	/**
+	 * @param $str
+	 * @return string
+	 */
 	protected function jsonpWrap($str)
 	{		
 		if(($jsonCallback = Piwik_Common::getRequestVar('callback', false)) === false)
@@ -73,8 +93,11 @@ class Piwik_DataTable_Renderer_Json extends Piwik_DataTable_Renderer
 		
 		return $str;
 	}
-	
-	protected static function renderHeader()
+
+	/**
+	 * Sends the http header for json file
+	 */
+	protected function renderHeader()
 	{
 		@header('Content-Type: application/json; charset=utf-8');
 		Piwik::overrideCacheControlHeaders();

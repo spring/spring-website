@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Mysql.php 4765 2011-05-22 18:52:37Z vipsoft $
+ * @version $Id: Mysql.php 6325 2012-05-26 21:08:06Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -16,6 +16,11 @@
  */
 class Piwik_Db_Adapter_Pdo_Mysql extends Zend_Db_Adapter_Pdo_Mysql implements Piwik_Db_Adapter_Interface
 {
+	/**
+	 * Constructor
+	 *
+	 * @param array|Zend_Config  $config  database configuration
+	 */
 	public function __construct($config)
 	{
 		// Enable LOAD DATA INFILE
@@ -75,19 +80,23 @@ class Piwik_Db_Adapter_Pdo_Mysql extends Zend_Db_Adapter_Pdo_Mysql implements Pi
 
 	/**
 	 * Check MySQL version
+	 *
+	 * @throws Exception
 	 */
 	public function checkServerVersion()
 	{
 		$serverVersion = $this->getServerVersion();
-                $requiredVersion = Zend_Registry::get('config')->General->minimum_mysql_version;
-                if(version_compare($serverVersion, $requiredVersion) === -1)
-                {
-                        throw new Exception(Piwik_TranslateException('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
-                }
+		$requiredVersion = Piwik_Config::getInstance()->General['minimum_mysql_version'];
+		if(version_compare($serverVersion, $requiredVersion) === -1)
+		{
+			throw new Exception(Piwik_TranslateException('General_ExceptionDatabaseVersion', array('MySQL', $serverVersion, $requiredVersion)));
+		}
 	}
 
 	/**
 	 * Check client version compatibility against database server
+	 *
+	 * @throws Exception
 	 */
 	public function checkClientVersion()
 	{
@@ -135,8 +144,8 @@ class Piwik_Db_Adapter_Pdo_Mysql extends Zend_Db_Adapter_Pdo_Mysql implements Pi
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string $errno
+	 * @param Exception  $e
+	 * @param string     $errno
 	 * @return bool
 	 */
 	public function isErrNo($e, $errno)
@@ -186,8 +195,8 @@ class Piwik_Db_Adapter_Pdo_Mysql extends Zend_Db_Adapter_Pdo_Mysql implements Pi
 	 * Prepares and executes an SQL statement with bound data.
 	 * Caches prepared statements to avoid preparing the same query more than once
 	 *
-	 * @param mixed $sql
-	 * @param mixed $bind
+	 * @param string|Zend_Db_Select  $sql   The SQL statement with placeholders.
+	 * @param array                  $bind  An array of data to bind to the placeholders.
 	 * @return Zend_Db_Statement_Interface
 	 */
 	public function query($sql, $bind = array())

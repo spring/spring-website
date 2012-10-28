@@ -5,17 +5,17 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
  */
 
-function setRowData (idsite, visits, actions, revenue, name, url, visitsSummaryValue, actionsSummaryValue, revenueSummaryValue)
+function setRowData (idsite, visits, pageviews, revenue, name, url, visitsSummaryValue, pageviewsSummaryValue, revenueSummaryValue)
 {
 	this.idsite = idsite;
 	this.visits = visits;
 	this.revenue = revenue;
 	this.name = name;
 	this.url = url;
-	this.actions = actions;
+	this.pageviews = pageviews;
 	this.visitsSummaryValue = parseFloat(visitsSummaryValue);
-	this.actionsSummaryValue = parseFloat(actionsSummaryValue);
-	this.revenueSummaryValue = parseFloat(revenueSummaryValue);
+	this.pageviewsSummaryValue = parseFloat(pageviewsSummaryValue);
+	this.revenueSummaryValue = parseFloat(revenueSummaryValue) || 0;
 }
 
 function setOrderBy(self, allSites, params, mOrderBy)
@@ -82,23 +82,22 @@ function orderBy(allSites, params)
 			return (a['visits'] < b['visits']) ? -1 : 1;
 		});
 	}
-	else if(params['mOrderBy'] == 'actions')
+	else if(params['mOrderBy'] == 'pageviews')
 	{
 		allSites.sort(function (a,b) {
-			if (a['actions'] == b['actions']) {
+			if (a['pageviews'] == b['pageviews']) {
 				return 0;
 			}
-			return (a['actions'] < b['actions']) ? -1 : 1;
+			return (a['pageviews'] < b['pageviews']) ? -1 : 1;
 		});
 	}
 	else if(params['mOrderBy'] == 'revenue')
 	{
 		allSites.sort(function (a,b) {
-			if (a['revenue'].replace(/[^0-9\.]+/g,"") == b['revenue'].replace(/[^0-9\.]+/g,"")) {
-				return 0;
-			}
-			return (parseFloat(a['revenue'].replace(/[^0-9\.]+/g,"")) 
-						< parseFloat(b['revenue'].replace(/[^0-9\.]+/g,""))) ? -1 : 1;
+			var lhs = parseFloat(a['revenue'].replace(/[^0-9\.]+/g,"")) || 0,
+				rhs = parseFloat(b['revenue'].replace(/[^0-9\.]+/g,"")) || 0;
+
+			return lhs === rhs ? 0 : ((lhs < rhs) ? -1 : 1);
 		});
 	}
 	else if(params['mOrderBy'] == 'revenueSummary')
@@ -110,13 +109,13 @@ function orderBy(allSites, params)
 			return (a['revenueSummaryValue'] - b['revenueSummaryValue'] <= 0.01) ? -1 : 1;
 		});
 	}
-	else if(params['mOrderBy'] == 'actionsSummary')
+	else if(params['mOrderBy'] == 'pageviewsSummary')
 	{
 		allSites.sort(function (a,b) {
-			if (a['actionsSummaryValue'] == b['actionsSummaryValue']) {
+			if (a['pageviewsSummaryValue'] == b['pageviewsSummaryValue']) {
 				return 0;
 			}
-			return (a['actionsSummaryValue'] - b['actionsSummaryValue'] <= 0.01) ? -1 : 1;
+			return (a['pageviewsSummaryValue'] - b['pageviewsSummaryValue'] <= 0.01) ? -1 : 1;
 		});
 	}
 	else if(params['mOrderBy'] == 'visitsSummary')
@@ -145,7 +144,7 @@ function limitBy(allSites, params)
 
 function switchEvolution(params)
 {
-	$('.actions').hide();
+	$('.pageviews').hide();
 	$('.revenue').hide();
 	$('.visits').hide();
 	$('.' + params['evolutionBy']).show();
@@ -162,23 +161,23 @@ function displayRows(allSites, params)
 	{
 		var str = params['row'];
 		str = str.replace(/%revenueSummary%/g, getImageForSummary(allSites[i].revenueSummaryValue));
-		str = str.replace(/%actionsSummary%/g, getImageForSummary(allSites[i].actionsSummaryValue));
+		str = str.replace(/%pageviewsSummary%/g, getImageForSummary(allSites[i].pageviewsSummaryValue));
 		str = str.replace(/%visitsSummary%/g, getImageForSummary(allSites[i].visitsSummaryValue));
 		str = str.replace(/%sparkline%/g, getSparklineImg(allSites[i].idsite, params['evolutionBy'], params));
-		str = str.replace(/%actions%/g, allSites[i].actions);
+		str = str.replace(/%pageviews%/g, allSites[i].pageviews);
 		str = str.replace(/%idsite%/g, allSites[i].idsite);
 		str = str.replace(/%visits%/g, allSites[i].visits);
 		str = str.replace(/%name%/g, allSites[i].name);
 		str = str.replace(/%revenue%/g, allSites[i].revenue);
 		str = str.replace(/%main_url%/g, allSites[i].url);
-		str = str.replace(/%date%/g, params['date']);
+		str = str.replace(/%date%/g, params['date'] || params['dateSparkline']); // For period=range, dateSparkline only is set
 		str = str.replace(/%period%/g, params['period']);
 		
 		$('#tb').append('<tr class="tables_row" id="row_'+ allSites[i].idsite+'">' + str + '</tr>');
 	}
 
 	$(".table_row").show();
-	$('.actions').hide();
+	$('.pageviews').hide();
 	$('.revenue').hide();
 	$('.visits').hide();
 	$('#main_indicator').hide();
@@ -191,7 +190,12 @@ function getSparklineImg(id, column, params)
 	if(column != 'revenue') {
 		column = 'nb_' + column;
 	}
-	return '<img class="sparkline" alt="" src="?module=MultiSites&action=getEvolutionGraph&period=' + params['period'] + '&date=' + params['dateSparkline']  + '&evolutionBy=' + params['evolutionBy'] + '&columns=' + column  + '&idSite=' + id + '&idsite=' + id + '&viewDataTable=sparkline" width="100" height="25" />';
+	var append = '';
+	var token_auth = broadcast.getValueFromUrl('token_auth');
+	if(token_auth.length) {
+		append = '&token_auth=' + token_auth;
+	}
+	return '<img class="sparkline" alt="" src="?module=MultiSites&action=getEvolutionGraph&period=' + params['period'] + '&date=' + params['dateSparkline']  + '&evolutionBy=' + params['evolutionBy'] + '&columns=' + column  + '&idSite=' + id + '&idsite=' + id + '&viewDataTable=sparkline'+ append +'" width="100" height="25" />';
 }
 
 function showPagination(allSites, params)
@@ -233,7 +237,7 @@ function getImageForSummary(value)
 {
 	if(value > 0)
 	{
-		return '<img src="plugins/MultiSites/images/arrow_up.png" alt="" /> <b style="color: green;">' + value + ' %</b>';
+		return '<img src="plugins/MultiSites/images/arrow_up.png" alt="" /> <b style="color: green;">' + value + '&nbsp;%</b>';
 	}
 	else if(value == 0)
 	{
@@ -241,7 +245,7 @@ function getImageForSummary(value)
 	}
 	else
 	{
-		return '<img src="plugins/MultiSites/images/arrow_down.png" alt="" /> <b style="color: red;">' + value +' %</b>';
+		return '<img src="plugins/MultiSites/images/arrow_down.png" alt="" /> <b style="color: red;">' + value +'&nbsp;%</b>';
 	}
 }
 

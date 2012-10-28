@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: 1.2.3.php 4322 2011-04-05 07:04:43Z matt $
+ * @version $Id: 1.2.3.php 5951 2012-03-04 22:04:41Z vipsoft $
  *
  * @category Piwik
  * @package Updates
@@ -19,7 +19,7 @@ class Piwik_Updates_1_2_3 extends Piwik_Updates
 	{
 		return array(
 			// LOAD DATA INFILE uses the database's charset
-			'ALTER DATABASE `'. Zend_Registry::get('config')->database->dbname .'` DEFAULT CHARACTER SET utf8' => false,
+			'ALTER DATABASE `'. Piwik_Config::getInstance()->database['dbname'] .'` DEFAULT CHARACTER SET utf8' => false,
 
 			// Various performance improvements schema updates
 			'ALTER TABLE `'. Piwik_Common::prefixTable('log_visit') .'` 

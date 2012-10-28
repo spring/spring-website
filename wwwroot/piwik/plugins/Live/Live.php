@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Live.php 3565 2011-01-03 05:49:45Z matt $
+ * @version $Id: Live.php 6314 2012-05-25 11:20:24Z matt $
  *
  * @category Piwik_Plugins
  * @package Piwik_Live
@@ -35,19 +35,24 @@ class Piwik_Live extends Piwik_Plugin
 			'Menu.add' => 'addMenu',
 		);
 	}
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getCssFiles( $notification )
 	{
 		$cssFiles = &$notification->getNotificationObject();
 		
 		$cssFiles[] = "plugins/Live/templates/live.css";
 	}	
-	
+
+	/**
+	 * @param Piwik_Event_Notification $notification  notification object
+	 */
 	function getJsFiles( $notification )
 	{
 		$jsFiles = &$notification->getNotificationObject();
 		
-		$jsFiles[] = "plugins/Live/templates/scripts/spy.js";
 		$jsFiles[] = "plugins/Live/templates/scripts/live.js";
 	}
 
@@ -59,6 +64,7 @@ class Piwik_Live extends Piwik_Plugin
 	public function addWidget() 
 	{
 		Piwik_AddWidget('Live!', 'Live_VisitorsInRealTime', 'Live', 'widget');
+		Piwik_AddWidget('Live!', 'Live_VisitorLog', 'Live', 'getVisitorLog');
 	}
 
 }

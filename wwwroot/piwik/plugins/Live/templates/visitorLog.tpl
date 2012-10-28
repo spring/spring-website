@@ -43,7 +43,7 @@
 {/if}
 
 	{capture assign='visitorColumnContent'}
-		&nbsp;<img src="{$visitor.columns.countryFlag}" title="{$visitor.columns.country}, Provider {$visitor.columns.provider}" />
+		&nbsp;<img src="{$visitor.columns.countryFlag}" title="{$visitor.columns.location}, Provider {$visitor.columns.provider}" />
 		&nbsp;<img src="{$visitor.columns.browserIcon}" title="{$visitor.columns.browserName} with plugins {$visitor.columns.plugins} enabled" />
 		&nbsp;<img src="{$visitor.columns.operatingSystemIcon}" title="{$visitor.columns.operatingSystem}, {$visitor.columns.resolution} ({$visitor.columns.screenType})" />
 		{if $visitor.columns.visitorTypeIcon}
@@ -76,8 +76,8 @@
 	<tr class="label{cycle values='odd,even'}">
 	<td style="display:none;"></td>
 	<td class="label" style="width:12%" width="12%">
-
-				<strong>{$visitor.columns.serverDatePrettyFirstAction} 
+				<strong title="{if $visitor.columns.visitorType=='new'}{'General_NewVisitor'|translate}{else}{'Live_VisitorsLastVisit'|translate:$visitor.columns.daysSinceLastVisit}{/if}">
+				{$visitor.columns.serverDatePrettyFirstAction} 
 				{if $isWidget}<br/>{else}-{/if} {$visitor.columns.serverTimePrettyFirstAction}</strong>
 				{if !empty($visitor.columns.visitIp)} <br/><span title="{if !empty($visitor.columns.visitorId)}{'General_VisitorID'|translate}: {$visitor.columns.visitorId}{/if}">IP: {$visitor.columns.visitIp}</span>{/if}
 				
@@ -93,7 +93,7 @@
 					{foreach from=$visitor.columns.customVariables item=customVariable key=id}
 						{capture assign=name}customVariableName{$id}{/capture}
 						{capture assign=value}customVariableValue{$id}{/capture}
-						<br/><acronym title="{'CustomVariables_CustomVariables'|translate} (index {$id})">{$customVariable.$name|truncate:30:"...":true}</acronym>: {$customVariable.$value|truncate:50:"...":true}
+						<br/><acronym title="{'CustomVariables_CustomVariables'|translate} (index {$id})">{$customVariable.$name|truncate:30:"...":true|escape:'html'}</acronym>: {$customVariable.$value|truncate:50:"...":true|escape:'html'}
 					{/foreach}
 				{/if}
 				{if !$displayVisitorsInOwnColumn}
@@ -127,11 +127,11 @@
 					<img src="{$visitor.columns.searchEngineIcon}" alt="{$visitor.columns.referrerName|escape:'html'}" /> 
 				{/if}
 				{$visitor.columns.referrerName|escape:'html'}
+				{if !empty($visitor.columns.referrerKeyword)}{'Referers_Keywords'|translate}:
 				<br />
-				{if !empty($visitor.columns.referrerKeyword)}{'Referers_Keywords'|translate}:{/if}
 				<a href="{$visitor.columns.referrerUrl|escape:'html'}" target="_blank" style="text-decoration:underline;">
-					{if !empty($visitor.columns.referrerKeyword)}
-						"{$visitor.columns.referrerKeyword|escape:'html'}"{/if}</a>
+						"{$visitor.columns.referrerKeyword|escape:'html'}"</a>
+				{/if}
 				{capture assign='keyword'}{$visitor.columns.referrerKeyword|escape:'html'}{/capture}
 				{capture assign='searchName'}{$visitor.columns.referrerName|escape:"html"}{/capture}
 				{capture assign='position'}#{$visitor.columns.referrerKeywordPosition}{/capture}
@@ -148,26 +148,22 @@
 				{else}
 					{'Live_Actions'|translate}
 				{/if}
-				- {$visitor.columns.visitDurationPretty}
+				{if $visitor.columns.visitDuration > 0}- {$visitor.columns.visitDurationPretty}{/if}
 			</strong>
 			<br />
 			<ol class='visitorLog'>
 			{capture assign='visitorHasSomeEcommerceActivity'}0{/capture}
 			{foreach from=$visitor.columns.actionDetails item=action}
-				{capture assign='customVariablesTooltip'}
-				{if !empty($action.customVariables)}
-					{'CustomVariables_CustomVariables'|translate} 
-					{foreach from=$action.customVariables item=customVariable key=id}
-						{capture assign=name}customVariableName{$id}{/capture}
-						{capture assign=value}customVariableValue{$id}{/capture}
-						 - {$customVariable.$name} = {$customVariable.$value}
-					{/foreach}
-				{/if}
+				{capture assign='customVariablesTooltip'}{if !empty($action.customVariables)}{'CustomVariables_CustomVariables'|translate}
+				{foreach from=$action.customVariables item=customVariable key=id}{capture assign=name}customVariableName{$id}{/capture}{capture assign=value}customVariableValue{$id}{/capture}
+					- {$customVariable.$name|escape:'html'} = {$customVariable.$value|escape:'html'}
+				{/foreach}{/if}
 				{/capture}
-				{if !$javascriptVariablesToSet.filterEcommerce 	
+				{if !$javascriptVariablesToSet.filterEcommerce
 					|| $action.type == 'ecommerceOrder' 	
 					|| $action.type == 'ecommerceAbandonedCart'}
-				<li class="{if !empty($action.goalName)}goal{else}action{/if}" title="{$action.serverTimePretty|escape:'html'}{if !empty($action.url) && strlen(trim($action.url))} - {$action.url|escape:'html'}{/if} {if strlen(trim($customVariablesTooltip))} - {$customVariablesTooltip}{/if}">
+				<li class="{if !empty($action.goalName)}goal{else}action{/if}" title="{$action.serverTimePretty|escape:'html'}{if !empty($action.url) && strlen(trim($action.url))} - {$action.url|escape:'html'}{/if} {if strlen(trim($customVariablesTooltip))}{$customVariablesTooltip|trim}
+				{/if}{if isset($action.timeSpentPretty)} - {'General_TimeOnPage'|translate}: {$action.timeSpentPretty}{/if}">
 				{if $action.type == 'ecommerceOrder' || $action.type == 'ecommerceAbandonedCart'}
  					{* Ecommerce Abandoned Cart / Ecommerce Order *}
  					
@@ -176,6 +172,10 @@
  					{capture assign='visitorHasSomeEcommerceActivity'}1{/capture}
  					<strong>{'Goals_EcommerceOrder'|translate}</strong> <span style='color:#666666'>({$action.orderId})</span>
 					{else}<strong>{'Goals_AbandonedCart'|translate}</strong>
+					
+					{* TODO: would be nice to have the icons Orders / Cart in the ecommerce log footer *}
+					{if $javascriptVariablesToSet.filterEcommerce == 2}{capture assign='visitorHasSomeEcommerceActivity'}1{/capture}{/if}
+					
 					{/if} <br/>
 					<span {if !$isWidget}style='margin-left:20px'{/if}>
 					{if $action.type == 'ecommerceOrder'}
@@ -196,7 +196,7 @@
  					{if !empty($action.itemDetails)}
  					<ul style='list-style:square;margin-left:{if $isWidget}15{else}50{/if}px'>
  					{foreach from=$action.itemDetails item=product}
-						<li>{$product.itemSKU}{if !empty($product.itemName)}: {$product.itemName}{/if}{if !empty($product.itemCategory)} ({$product.itemCategory}){/if}, 
+						<li>{$product.itemSKU|escape}{if !empty($product.itemName)}: {$product.itemName|escape}{/if}{if !empty($product.itemCategory)} ({$product.itemCategory|escape}){/if}, 
 						{'General_Quantity'|translate}: {$product.quantity},
 						{'General_Price'|translate}: {$product.price|money:$javascriptVariablesToSet.idSite}
 						</li> 					
@@ -207,23 +207,25 @@
 					
 				{elseif empty($action.goalName)}
 				{* Page view / Download / Outlink *}
-					{if !empty($action.pageTitle)>0}
-					 	{$action.pageTitle|truncate:80:"...":true}
-						<br/>
-					{/if}
-					{if $action.type == 'download'
-						|| $action.type == 'outlink'}
-						<img src='{$action.icon}'>
+					{if !empty($action.pageTitle)}
+						{if $action.type == 'search'}<img src='{$action.icon}' title='{'Actions_SubmenuSitesearch'|translate|escape:'html'}'>{/if}
+						{$action.pageTitle|unescape|urldecode|escape:'html'|truncate:80:"...":true}
 					{/if}
 					{if !empty($action.url)}
-					 	<a href="{$action.url|escape:'html'}" target="_blank" style="{if $action.type=='action' && !empty($action.pageTitle)}margin-left: 25px;{/if}text-decoration:underline;">{$action.url|escape:'html'|truncate:80:"...":true}</a>
-					{else}
-						{$javascriptVariablesToSet.pageUrlNotDefined}
+						{if $action.type == 'action' && !empty($action.pageTitle)}<br/>{/if}
+						{if $action.type == 'download'
+						|| $action.type == 'outlink'}
+							<img src='{$action.icon}'>
+						{/if}
+						<a href="{$action.url|escape:'html'}" target="_blank" style="{if $action.type=='action' && !empty($action.pageTitle)}margin-left: 25px;{/if}text-decoration:underline;">{$action.url|escape:'html'|truncate:80:"...":true}</a>
+					{elseif $action.type!='search'}
+						<br/>
+						<span style="margin-left: 25px;">{$javascriptVariablesToSet.pageUrlNotDefined}</span>
 					{/if}
 				{else}
 				{* Goal conversion *}
 					<img src="{$action.icon}" /> 
-					<strong>{$action.goalName}</strong>
+					<strong>{$action.goalName|escape:'html'}</strong>
 					{if $action.revenue > 0}, {'Live_GoalRevenue'|translate}: <strong>{$action.revenue|money:$javascriptVariablesToSet.idSite}</strong>{/if}
 				{/if}
 				</li>
@@ -235,10 +237,11 @@
 	{/capture}
 	
 	{if !$javascriptVariablesToSet.filterEcommerce
-		|| (isset($visitorHasSomeEcommerceActivity) && $visitorHasSomeEcommerceActivity)}
+		|| !empty($visitorHasSomeEcommerceActivity)}
 		{$visitorRow}
 	{/if}
 {/foreach}
+
 	</tbody>
 	</table>
 	{/if}
@@ -262,6 +265,30 @@
 			$('.dataTablePrevious').hide();
 			dataTableVisitorLog.param.previous = 0;
 		}
+		
+		// Replace duplicated page views by a NX count instead of using too much vertical space
+        $("ol.visitorLog").each(function () {
+                var prevelement;
+                var prevhtml;
+                var counter = 0;
+                $(this).find("li").each(function () {
+                        counter++;
+                        $(this).val(counter);
+                        var current = $(this).html();
+                        if (current == prevhtml) {
+                                var repeat = prevelement.find(".repeat")
+                                if (repeat.length) {
+                                        repeat.html( (parseInt(repeat.html()) + 1) + "x" );
+                                } else {
+                                        prevelement.append($("<em title='{/literal}{'Live_PageRefreshed'|translate|escape:'js'}{literal}' class='repeat'>2x</em>"));
+                                }
+                                $(this).hide();
+                        } else {
+                                prevhtml = current;
+                                prevelement = $(this);
+                        }
+                });
+        });
 	});
 	{/literal}
 	</script>
@@ -269,15 +296,14 @@
 
 {literal}
 <style type="text/css">
- hr {
+hr {
 	background:none repeat scroll 0 0 transparent;
-	border-color:-moz-use-text-color -moz-use-text-color #EEEEEE;
-	border-style:none none solid;
-	border-width:0 0 1px;
-	color:#CCCCCC;
+	border: 0 none #000;
+	border-bottom: 1px solid #ccc;
+	color:#eee;
 	margin:0 2em 0.5em;
 	padding:0 0 0.5em;
- }
+}
 
 </style>
 {/literal}

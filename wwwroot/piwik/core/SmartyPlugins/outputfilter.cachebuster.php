@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: outputfilter.cachebuster.php 4688 2011-05-14 13:14:21Z vipsoft $
+ * @version $Id: outputfilter.cachebuster.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -27,6 +27,7 @@
  *
  * @param string
  * @param Smarty
+ * @return mixed
  */
 function smarty_outputfilter_cachebuster($source, &$smarty)
 {

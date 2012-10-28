@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Cloud.php 4634 2011-05-05 08:56:37Z EZdesign $
+ * @version $Id: Cloud.php 6300 2012-05-23 21:19:25Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -30,9 +30,13 @@ class Piwik_ViewDataTable_Cloud extends Piwik_ViewDataTable
 	{
 		return 'cloud';
 	}
-		
+
 	/**
 	 * @see Piwik_ViewDataTable::init()
+	 * @param string $currentControllerName
+	 * @param string $currentControllerAction
+	 * @param string $apiMethodToRequestDataTable
+	 * @param null|string $controllerActionCalledWhenRequestSubTable
 	 */
 	function init($currentControllerName,
 						$currentControllerAction,
@@ -51,10 +55,10 @@ class Piwik_ViewDataTable_Cloud extends Piwik_ViewDataTable
 	/**
 	 * @see Piwik_ViewDataTable::main()
 	 *
+	 * @return null
 	 */
 	public function main()
 	{
-		$this->setLimit( 30 );
 		if($this->mainAlreadyExecuted)
 		{
 			return;
@@ -121,6 +125,12 @@ class Piwik_ViewDataTable_Cloud extends Piwik_ViewDataTable
 		$view->javascriptVariablesToSet = $this->getJavascriptVariablesToSet();
 		$view->properties = $this->getViewProperties();
 		$view->reportDocumentation = $this->getReportDocumentation();
+		
+		// if it's likely that the report data for this data table has been purged,
+		// set whether we should display a message to that effect.
+		$view->showReportDataWasPurgedMessage = $this->hasReportBeenPurged();
+		$view->deleteReportsOlderThan = Piwik_GetOption('delete_reports_older_than');
+		
 		return $view;
 	}
 }

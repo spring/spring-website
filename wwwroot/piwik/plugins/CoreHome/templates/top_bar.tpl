@@ -8,7 +8,7 @@
         {elseif $menu._url.module == $currentModule && (empty($menu._url.action) || $menu._url.action == $currentAction)}
             <span class="topBarElem"><b>{$label|translate}</b></span> | 
         {else}
-            <span class="topBarElem"><a id="topmenu-{$menu._url.module|strtolower}" href="index.php{$menu._url|@urlRewriteWithParameters}">{$label|translate}</a></span> | 
+            <span class="topBarElem" {if isset($menu._tooltip)}title="{$menu._tooltip}"{/if}><a id="topmenu-{$menu._url.module|strtolower}" href="index.php{$menu._url|@urlRewriteWithParameters}">{$label|translate}</a></span> | 
         {/if}
     
 {/foreach}
@@ -24,4 +24,9 @@
 
 </div>
 
-{if $showSitesSelection}{include file="CoreHome/templates/sites_selection.tpl"}{/if}
+{if $showSitesSelection}
+<div class="top_bar_sites_selector">
+    <label>{'General_Website'|translate}</label>
+    {include file="CoreHome/templates/sites_selection.tpl"}
+</div>
+{/if}

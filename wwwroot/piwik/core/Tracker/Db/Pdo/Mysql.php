@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Mysql.php 5094 2011-08-11 04:08:52Z matt $
+ * @version $Id: Mysql.php 6486 2012-06-20 21:01:20Z SteveG $
  * 
  * @category Piwik
  * @package Piwik
@@ -19,27 +19,30 @@
 class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 {
 	protected $connection = null;
-	private $dsn;
-	private $username;
-	private $password;
-	private $charset;
-	
+	protected $dsn;
+	protected $username;
+	protected $password;
+	protected $charset;
+
 	/**
 	 * Builds the DB object
+	 *
+	 * @param array   $dbInfo
+	 * @param string  $driverName
 	 */
 	public function __construct( $dbInfo, $driverName = 'mysql') 
 	{
 		if(isset($dbInfo['unix_socket']) && $dbInfo['unix_socket'][0] == '/')
 		{
-			$this->dsn = $driverName.":dbname=${dbInfo['dbname']};unix_socket=${dbInfo['unix_socket']}";
+			$this->dsn = $driverName . ':dbname=' . $dbInfo['dbname'] . ';unix_socket=' . $dbInfo['unix_socket'];
 		}
 		else if ($dbInfo['port'][0] == '/')
 		{
-			$this->dsn = $driverName.":dbname=${dbInfo['dbname']};unix_socket=${dbInfo['port']}";
+			$this->dsn = $driverName . ':dbname=' . $dbInfo['dbname'] . ';unix_socket=' . $dbInfo['port'];
 		}
 		else
 		{
-			$this->dsn = $driverName.":dbname=${dbInfo['dbname']};host=${dbInfo['host']};port=${dbInfo['port']}";
+			$this->dsn = $driverName . ':dbname=' . $dbInfo['dbname'] . ';host=' . $dbInfo['host'] . ';port=' . $dbInfo['port'];
 		}
 		$this->username = $dbInfo['username'];
 		$this->password = $dbInfo['password'];
@@ -94,14 +97,15 @@ class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 	{
 		$this->connection = null;
 	}
-	
+
 	/**
 	 * Returns an array containing all the rows of a query result, using optional bound parameters.
-	 * 
-	 * @param string Query 
-	 * @param array Parameters to bind
-	 * @see also query()
-	 * @throws Exception if an exception occured
+	 *
+	 * @param string  $query       Query
+	 * @param array   $parameters  Parameters to bind
+	 * @return array|bool
+	 * @see query()
+	 * @throws Exception|Piwik_Tracker_Db_Exception if an exception occurred
 	 */
 	public function fetchAll( $query, $parameters = array() )
 	{
@@ -120,11 +124,11 @@ class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 	/**
 	 * Returns the first row of a query result, using optional bound parameters.
 	 * 
-	 * @param string Query 
-	 * @param array Parameters to bind
-	 * @see also query()
-	 * 
-	 * @throws Exception if an exception occured
+	 * @param string  $query Query
+	 * @param array   $parameters Parameters to bind
+	 * @return bool|mixed
+	 * @see query()
+	 * @throws Exception|Piwik_Tracker_Db_Exception if an exception occurred
 	 */
 	public function fetch( $query, $parameters = array() )
 	{
@@ -143,11 +147,10 @@ class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 	/**
 	 * Executes a query, using optional bound parameters.
 	 * 
-	 * @param string Query 
-	 * @param array|string Parameters to bind array('idsite'=> 1)
-	 * 
-	 * @return PDOStatement or false if failed
-	 * @throws Exception if an exception occured
+	 * @param string        $query       Query
+	 * @param array|string  $parameters  Parameters to bind array('idsite'=> 1)
+	 * @return PDOStatement|bool  PDOStatement or false if failed
+	 * @throws Piwik_Tracker_Db_Exception if an exception occured
 	 */
 	public function query($query, $parameters = array()) 
 	{
@@ -195,8 +198,8 @@ class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 	/**
 	 * Test error number
 	 *
-	 * @param Exception $e
-	 * @param string $errno
+	 * @param Exception  $e
+	 * @param string     $errno
 	 * @return bool
 	 */
 	public function isErrNo($e, $errno)
@@ -211,7 +214,7 @@ class Piwik_Tracker_Db_Pdo_Mysql extends Piwik_Tracker_Db
 	/**
 	 * Return number of affected rows in last query
 	 *
-	 * @param mixed $queryResult Result from query()
+	 * @param mixed  $queryResult  Result from query()
 	 * @return int
 	 */
 	public function rowCount($queryResult)

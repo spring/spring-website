@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: function.ajaxErrorDiv.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: function.ajaxErrorDiv.php 6300 2012-05-23 21:19:25Z SteveG $
  * 
  * @category Piwik
  * @package SmartyPlugins
@@ -12,9 +12,10 @@
 
 /**
  * Outputs the generic Ajax error div (displayed when ajax requests are throwing exceptions and returning error messages)
- * 
- * @param id=$ID_NAME ID of the HTML div, defaults to ajaxError
- * @return	string Html of the error message div, hidden by defayult
+ *
+ * @param array $params array([id] => ID of the HTML div, defaults to ajaxError)
+ * @param $smarty
+ * @return string Html of the error message div, hidden by default
  */
 function smarty_function_ajaxErrorDiv($params, &$smarty)
 {

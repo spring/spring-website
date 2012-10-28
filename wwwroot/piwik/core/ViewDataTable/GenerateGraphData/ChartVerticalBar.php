@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: ChartVerticalBar.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: ChartVerticalBar.php 5457 2011-11-22 10:15:49Z EZdesign $
  * 
  * @category Piwik
  * @package Piwik
@@ -28,5 +28,14 @@ class Piwik_ViewDataTable_GenerateGraphData_ChartVerticalBar extends Piwik_ViewD
 	function __construct()
 	{
 		$this->view = new Piwik_Visualization_Chart_VerticalBar();
+	}
+	
+	protected function getUnitsForColumnsToDisplay()
+	{
+		// the bar charts contain the labels a first series
+		// this series has to be removed from the units
+		$units = parent::getUnitsForColumnsToDisplay();
+		array_shift($units);
+		return $units;
 	}
 }

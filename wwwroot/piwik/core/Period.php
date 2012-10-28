@@ -4,7 +4,7 @@
  * 
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Period.php 4311 2011-04-04 18:49:55Z vipsoft $
+ * @version $Id: Period.php 6811 2012-08-17 14:44:17Z EZdesign $
  * 
  * @category Piwik
  * @package Piwik
@@ -29,6 +29,10 @@ abstract class Piwik_Period
 	protected $subperiods = array();
 	protected $subperiodsProcessed = false;
 	protected $label = null;
+
+	/**
+	 * @var Piwik_Date
+	 */
 	protected $date = null;
 	static protected $errorAvailablePeriods = 'day, week, month, year, range';
 	
@@ -37,10 +41,11 @@ abstract class Piwik_Period
 		$this->checkInputDate( $date );
 		$this->date = clone $date;
 	}
-	
+
 	/**
 	 * @param string $strPeriod "day", "week", "month", "year"
 	 * @param Piwik_Date $date Piwik_Date object
+	 * @throws Exception
 	 * @return Piwik_Period
 	 */
 	static public function factory($strPeriod, Piwik_Date $date)
@@ -66,6 +71,25 @@ abstract class Piwik_Period
 				throw new Exception(Piwik_TranslateException('General_ExceptionInvalidPeriod', array($strPeriod, self::$errorAvailablePeriods))); 
 				break;
 		}
+	}
+	
+	/**
+	 * The advanced factory method is easier to use from the API than the factory
+	 * method above. It doesn't require an instance of Piwik_Date and works for
+	 * period=range. Generally speaking, anything that can be passed as period
+	 * and range to the API methods can directly be forwarded to this factory
+	 * method in order to get a suitable instance of Piwik_Period.
+	 * 
+	 * @param string $strPeriod "day", "week", "month", "year", "range"
+	 * @param string $strDate
+	 * @return Piwik_Period
+	 */
+	static public function advancedFactory($strPeriod, $strDate) {
+		if (Piwik_Archive::isMultiplePeriod($strDate, $strPeriod) || $strPeriod == 'range')
+		{
+			return new Piwik_Period_Range($strPeriod, $strDate);
+		}
+		return self::factory($strPeriod, Piwik_Date::factory($strDate));
 	}
 
 	

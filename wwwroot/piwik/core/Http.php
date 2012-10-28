@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Http.php 5166 2011-09-13 01:53:54Z vipsoft $
+ * @version $Id: Http.php 7010 2012-09-18 02:36:36Z matt $
  *
  * @category Piwik
  * @package Piwik
@@ -26,7 +26,7 @@ class Piwik_Http
 	static public function getTransportMethod()
 	{
 		$method = 'curl';
-		if(!extension_loaded('curl'))
+		if(!function_exists('curl_init'))
 		{
 			$method = 'fopen';
 			if(@ini_get('allow_url_fopen') != '1')
@@ -47,13 +47,14 @@ class Piwik_Http
 	 * If no $destinationPath is specified, the trimmed response (without header) is returned as a string.
 	 * If a $destinationPath is specified, the response (without header) is saved to a file.
 	 *
-	 * @param string $aUrl
-	 * @param int $timeout
-	 * @param string $userAgent
-	 * @param string $destinationPath
-	 * @param int $followDepth
-	 * @return bool true (or string) on success; false on HTTP response error code (1xx or 4xx)
-	 * @throws Exception for all other errors
+	 * @param string  $aUrl
+	 * @param int     $timeout
+	 * @param string  $userAgent
+	 * @param string  $destinationPath
+	 * @param int     $followDepth
+	 * @param bool    $acceptLanguage
+	 * @throws Exception
+	 * @return bool  true (or string) on success; false on HTTP response error code (1xx or 4xx)
 	 */
 	static public function sendHttpRequest($aUrl, $timeout, $userAgent = null, $destinationPath = null, $followDepth = 0, $acceptLanguage = false)
 	{
@@ -69,30 +70,32 @@ class Piwik_Http
 			}
 		}
 
+		$acceptLanguage = $acceptLanguage ? 'Accept-Language: '.$acceptLanguage : '';
 		return self::sendHttpRequestBy(self::getTransportMethod(), $aUrl, $timeout, $userAgent, $destinationPath, $file, $followDepth, $acceptLanguage); 			
 	}
 
 	/**
 	 * Sends http request using the specified transport method
 	 *
-	 * @param string $method
-	 * @param string $aUrl
-	 * @param int $timeout
-	 * @param string $userAgent
-	 * @param string $destinationPath
-	 * @param resource $file
-	 * @param int $followDepth
-	 * @return bool true (or string) on success; false on HTTP response error code (1xx or 4xx)
-	 * @throws Exception for all other errors
+	 * @param string       $method
+	 * @param string       $aUrl
+	 * @param int          $timeout
+	 * @param string       $userAgent
+	 * @param string       $destinationPath
+	 * @param resource     $file
+	 * @param int          $followDepth
+	 * @param bool|string  $acceptLanguage               Accept-language header
+	 * @param bool         $acceptInvalidSslCertificate  Only used with $method == 'curl'. If set to true (NOT recommended!) the SSL certificate will not be checked
+	 * @throws Exception
+	 * @return bool  true (or string) on success; false on HTTP response error code (1xx or 4xx)
 	 */
-	static public function sendHttpRequestBy($method = 'socket', $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false)
+	static public function sendHttpRequestBy($method = 'socket', $aUrl, $timeout, $userAgent = null, $destinationPath = null, $file = null, $followDepth = 0, $acceptLanguage = false, $acceptInvalidSslCertificate = false)
 	{
 		if ($followDepth > 5)
 		{
 			throw new Exception('Too many redirects ('.$followDepth.')');
 		}
 
-		$strlen = function_exists('mb_orig_strlen') ? 'mb_orig_strlen' : 'strlen';
 		$contentLength = 0;
 		$fileLength = 0;
 
@@ -100,32 +103,22 @@ class Piwik_Http
 		$xff = 'X-Forwarded-For: '
 			. (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] . ',' : '')
 			. Piwik_IP::getIpFromHeader();
+
+		if(empty($userAgent))
+		{
+			$userAgent = self::getUserAgent();
+		}
+
 		$via = 'Via: '
 			. (isset($_SERVER['HTTP_VIA']) && !empty($_SERVER['HTTP_VIA']) ? $_SERVER['HTTP_VIA'] . ', ' : '')
-			. Piwik_Version::VERSION . ' Piwik'
+			. Piwik_Version::VERSION . ' '
 			. ($userAgent ? " ($userAgent)" : '');
-		$acceptLanguage = $acceptLanguage ? 'Accept-Language:'.$acceptLanguage : '';
-		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Piwik/'.Piwik_Version::VERSION;
 
 		// proxy configuration
-		if(!empty($GLOBALS['PIWIK_TRACKER_MODE']))
-		{
-			$proxyHost = Piwik_Tracker_Config::getInstance()->proxy['host'];
-			$proxyPort = Piwik_Tracker_Config::getInstance()->proxy['port'];
-			$proxyUser = Piwik_Tracker_Config::getInstance()->proxy['username'];
-			$proxyPassword = Piwik_Tracker_Config::getInstance()->proxy['password'];
-		}
-		else
-		{
-			$config = Zend_Registry::get('config');
-			if($config !== false)
-			{
-				$proxyHost = $config->proxy->host;
-				$proxyPort = $config->proxy->port;
-				$proxyUser = $config->proxy->username;
-				$proxyPassword = $config->proxy->password;
-			}
-		}
+		$proxyHost = Piwik_Config::getInstance()->proxy['host'];
+		$proxyPort = Piwik_Config::getInstance()->proxy['port'];
+		$proxyUser = Piwik_Config::getInstance()->proxy['username'];
+		$proxyPassword = Piwik_Config::getInstance()->proxy['password'];
 
 		if($method == 'socket')
 		{
@@ -285,7 +278,7 @@ class Piwik_Http
 					throw new Exception('Timed out waiting for server response');
 				}
 
-				$fileLength += $strlen($line);
+				$fileLength += Piwik_Common::strlen($line);
 
 				if(is_resource($file))
 				{
@@ -345,7 +338,7 @@ class Piwik_Http
 				while(!feof($handle))
 				{
 					$response = fread($handle, 8192);
-					$fileLength += $strlen($response);
+					$fileLength += Piwik_Common::strlen($response);
 					fwrite($file, $response);
 				}
 				fclose($handle);
@@ -353,7 +346,7 @@ class Piwik_Http
 			else
 			{
 				$response = @file_get_contents($aUrl, 0, $ctx);
-				$fileLength = $strlen($response);
+				$fileLength = Piwik_Common::strlen($response);
 			}
 
 			// restore the socket_timeout value
@@ -391,15 +384,18 @@ class Piwik_Http
 				CURLOPT_HEADER => false,
 				CURLOPT_CONNECTTIMEOUT => $timeout,
 			);
-			@curl_setopt_array($ch, $curl_options);
-
-			/*
-			 * use local list of Certificate Authorities, if available
-			 */
-			if(file_exists(PIWIK_INCLUDE_PATH . '/core/DataFiles/cacert.pem'))
+			// Case archive.php is triggering archiving on https:// and the certificate is not valid
+			if($acceptInvalidSslCertificate)
 			{
-				@curl_setopt($ch, CURLOPT_CAINFO, PIWIK_INCLUDE_PATH . '/core/DataFiles/cacert.pem');
+				$curl_options += array(
+					CURLOPT_SSL_VERIFYHOST => false,
+					CURLOPT_SSL_VERIFYPEER => false, 
+				);
 			}
+			
+			@curl_setopt_array($ch, $curl_options);
+			self::configCurlCertificate($ch);
+
 
 			/*
 			 * as of php 5.2.0, CURLOPT_FOLLOWLOCATION can't be set if
@@ -444,8 +440,8 @@ class Piwik_Http
 				$response = '';
 			}
 
-			$contentLength = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-			$fileLength = is_resource($file) ? curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD) : $strlen($response);
+			$contentLength = @curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+			$fileLength = is_resource($file) ? @curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD) : Piwik_Common::strlen($response);
 
 			@curl_close($ch);
 			unset($ch);
@@ -476,12 +472,32 @@ class Piwik_Http
 	}
 
 	/**
+	 * Will configure CURL handle $ch
+	 * to use local list of Certificate Authorities,
+	 */
+	public static function configCurlCertificate( &$ch )
+	{
+		if (file_exists(PIWIK_INCLUDE_PATH . '/core/DataFiles/cacert.pem'))
+		{
+			@curl_setopt($ch, CURLOPT_CAINFO, PIWIK_INCLUDE_PATH . '/core/DataFiles/cacert.pem');
+		}
+	}
+
+	public static function getUserAgent()
+	{
+		return !empty($_SERVER['HTTP_USER_AGENT'])
+			? $_SERVER['HTTP_USER_AGENT']
+			: 'Piwik/' . Piwik_Version::VERSION;
+	}
+
+	/**
 	 * Fetch the file at $url in the destination $destinationPath
 	 *
-	 * @param string $url
-	 * @param string $destinationPath
-	 * @param int $tries
-	 * @return true on success, throws Exception on failure
+	 * @param string  $url
+	 * @param string  $destinationPath
+	 * @param int     $tries
+	 * @throws Exception
+	 * @return bool  true on success, throws Exception on failure
 	 */
 	static public function fetchRemoteFile($url, $destinationPath = null, $tries = 0)
 	{

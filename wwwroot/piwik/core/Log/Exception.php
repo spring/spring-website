@@ -4,7 +4,7 @@
  *
  * @link http://piwik.org
  * @license http://www.gnu.org/licenses/gpl-3.0.html GPL v3 or later
- * @version $Id: Exception.php 2968 2010-08-20 15:26:33Z vipsoft $
+ * @version $Id: Exception.php 6385 2012-05-29 21:36:24Z SteveG $
  *
  * @category Piwik
  * @package Piwik
@@ -20,6 +20,10 @@
 class Piwik_Log_Exception extends Piwik_Log
 {
 	const ID = 'logger_exception';
+
+	/**
+	 * Constructor
+	 */
 	function __construct()
 	{
 		$logToFileFilename = self::ID;
@@ -35,6 +39,9 @@ class Piwik_Log_Exception extends Piwik_Log
 							$logToDatabaseColumnMapping );
 	}
 
+	/**
+	 * Adds the writer
+	 */
 	function addWriteToScreen()
 	{
 		parent::addWriteToScreen();
@@ -43,6 +50,11 @@ class Piwik_Log_Exception extends Piwik_Log
 		$this->addWriter($writerScreen);
 	}
 
+	/**
+	 * Logs the given exception event
+	 *
+	 * @param Exception  $exception
+	 */
 	public function logEvent($exception)
 	{
 		$event = array();
@@ -68,7 +80,7 @@ class Piwik_Log_Exception_Formatter_ScreenFormatter extends Piwik_Log_Formatter_
 	 * Formats data into a single line to be written by the writer.
 	 *
 	 * @param  array    $event    event data
-	 * @return string             formatted line to write to the log
+	 * @return string  formatted line to write to the log
 	 */
 	public function format($event)
 	{

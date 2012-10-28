@@ -21,11 +21,11 @@ function getUserSettingsAJAX()
 	var ajaxRequest = piwikHelper.getStandardAjaxConf('ajaxLoadingUserSettings', 'ajaxErrorUserSettings', params);
 	var alias = encodeURIComponent( $('#alias').val() );
 	var email = encodeURIComponent( $('#email').val() );
-	var password = encodeURIComponent( $('#password').val() );
-	var passwordBis = encodeURIComponent( $('#passwordBis').val() );
+	var password = $('#password').val();
+	var passwordBis = $('#passwordBis').val();
 	var defaultReport = $('input[name=defaultReport]:checked').val();
 	if(defaultReport == 1) {
-		defaultReport = $('#defaultReportWebsite option:selected').val();
+		defaultReport = $('#sitesSelectionSearch .custom_select_main_link').attr('siteid');
 	}
 	var request = '';
 	request += 'module=UsersManager';
@@ -33,8 +33,14 @@ function getUserSettingsAJAX()
 	request += '&format=json';
 	request += '&alias='+alias;
 	request += '&email='+email;
-	request += '&password='+password;
-	request += '&passwordBis='+passwordBis;
+	if (password)
+	{
+		request += '&password='+encodeURIComponent(password);
+	}
+	if (passwordBis)
+	{
+		request += '&passwordBis='+encodeURIComponent(passwordBis);
+	}
 	request += '&defaultReport='+defaultReport;
 	request += '&defaultDate='+defaultDate;
  	request += '&token_auth=' + piwik.token_auth;
@@ -66,8 +72,8 @@ $(document).ready( function() {
 		var onValidate = function() {
 			$.ajax( getUserSettingsAJAX() );
 		}
-		if($('#password').val() != '') {
-			piwikHelper.windowModal( '#confirmPasswordChange', onValidate);
+		if($('#password').length > 0 && $('#password').val() != '') {
+			piwikHelper.modalConfirm( '#confirmPasswordChange', {yes: onValidate});
 		} else {
 			onValidate();
 		}
