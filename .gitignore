@@ -16,9 +16,6 @@ springpw.php
 # mediawiki
 /wwwroot/mediawiki/images
 
-# piwik
-/wwwroot/piwik/tmp
-
 # downloads
 /wwwroot/dl
 
