@@ -1,12 +1,12 @@
 
 /* XMAS */
 html {
-	background-image: -ms-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
-	background-image: -moz-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
-	background-image: -o-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
-	background-image: -webkit-gradient(radial, center bottom, 0, center bottom, 561, color-stop(0, #CC0000), color-stop(1, #2C0000));
-	background-image: -webkit-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
-	background-image: radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
+	background: -ms-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
+	background: -moz-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
+	background: -o-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
+	background: -webkit-gradient(radial, center bottom, 0, center bottom, 561, color-stop(0, #CC0000), color-stop(1, #2C0000));
+	background: -webkit-radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
+	background: radial-gradient(center bottom, ellipse farthest-corner, #CC0000 0%, #2C0000 100%);
 }
 #toplogo {
 	background: transparent url(/images/logo_xmas.png) 10px 18px no-repeat;
