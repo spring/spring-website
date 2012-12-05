@@ -65,7 +65,7 @@
 	#  in PHP as well.  You may need to add "file_uploads = TRUE" to your php.ini.
 	$g_allow_file_upload	= ON;
         $g_file_upload_method   = DISK;
-	$g_absolute_path_default_upload_folder = '/home/spring/www/wwwroot/mantisbt-1.2.12/uploads';
+	$g_absolute_path_default_upload_folder = $_SERVER['DOCUMENT_ROOT'].'/uploads';
 
 	$g_notify_new_user_created_threshold_min = NOBODY;
 
