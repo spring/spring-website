@@ -41,6 +41,7 @@
  * @author Jean-Frédéric
  * @author Kropotkine 113
  * @author Langis Gagnon, gagnon.langis@ic.gc.ca
+ * @author Lapinkiller
  * @author Laurent LABAT, wizzz@apinc.org
  * @author Maurice A. LeBlanc, leblancma@cooptel.qc.ca
  * @author McDutchie
@@ -95,7 +96,7 @@ $s_view_submitted_bug_link = 'Voir le bogue soumis %1$s';
 $s_assigned_projects = 'Projets assignés';
 $s_unassigned_projects = 'Projets non assignés';
 $s_print = 'Imprimer';
-$s_jump = 'Chercher';
+$s_jump = 'Aller';
 $s_copy_users = 'Copier les utilisateurs';
 $s_copy_categories_from = 'Copier les catégories à partir de';
 $s_copy_categories_to = 'Copier les catégories vers';
@@ -242,6 +243,7 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Ceci est un nom dupliqué.'
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Au moins un projet utilise encore ce champ.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valeur non valide pour le champ « %1$s ».';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Définition de champ personnalisé non valide';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propriété de champ personnalisé non valide (%1$s).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Échec d\'indentification par LDAP.';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Échec de connexion au serveur LDAP';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Échec de mise à jour de l\'enregistrement LDAP.';
@@ -254,6 +256,7 @@ $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Catégorie dupliquée.';
 $MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Aucune copie spécifiée.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Catégorie introuvable.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Catégorie « %1$s » introuvable pour le projet « %2$s ».';
+$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Cette catégorie ne peut pas être supprimée, car elle est définie comme "Catégorie par défaut pour les déplacements".';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Version dupliquée.';
 $MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Version « %1$s » introuvable.';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'Nom d\'utilisateur non valide. Le nom d\'utilisateur ne peut contenir que les lettres latines, nombres, espaces, traits d\'union, points, signes plus et traits de soulignement.';
@@ -292,6 +295,7 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'L\'événement « %1$s » est indéfini
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'Le plugiciel n\'est pas enrégisté avec MantisBT.';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Le plugiciel est déjà installé.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'La page du plugiciel est introuvable.';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Échec de l\'installation du plugin: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'La mise à jour du schéma pour le plugiciel a échoué en bloc #%1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Une erreur inconnue « %1$s » s\'est produite durant l\'exécution du plugiciel « %2$s ».';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Le champ « %1$s » possède plus d\'une colonne « %2$s ».';
@@ -395,7 +399,7 @@ $s_delete_account_button = 'Supprimer le compte';
 $s_manage_profiles_link = 'Profils';
 $s_change_preferences_link = 'Préférences';
 $s_edit_account_title = 'Modifier un compte';
-$s_username = 'Utilisateur';
+$s_username = 'Nom d’utilisateur';
 $s_realname = 'Nom réel';
 $s_email = 'Courriel';
 $s_password = 'Mot de passe';
@@ -610,7 +614,7 @@ $s_mantis_version = 'Version de MantisBT';
 $s_schema_version = 'Version du schéma';
 $s_site_path = 'Chemin du site';
 $s_core_path = 'Chemin du répertoire principal';
-$s_plugin_path = 'Chemin du plugin';
+$s_plugin_path = 'Chemin des plugins';
 $s_created_user_part1 = 'Utilisateur créé';
 $s_created_user_part2 = 'avec une accréditation';
 $s_create_new_account_title = 'Créer un nouveau compte';
@@ -642,7 +646,7 @@ $s_1_week_title = '1 semaine';
 $s_never_logged_in_title = 'Ne s\'est jamais connecté';
 $s_prune_accounts = 'Effacer comptes';
 $s_hide_inactive = 'Cacher inactifs';
-$s_show_disabled = 'Affichage désactivé';
+$s_show_disabled = 'Afficher désactivé(s)';
 $s_manage_accounts_title = 'Gérer les comptes';
 $s_p = 'p';
 $s_date_created = 'Date de création';
@@ -954,6 +958,9 @@ $s_issue_id = 'Bogue #';
 $s_recently_visited = 'Visité récemment';
 $s_priority_abbreviation = 'P';
 $s_note_user_id = 'Note par';
+$s_filter_match_type = 'Type de correspondance';
+$s_filter_match_all = 'Toutes les conditions';
+$s_filter_match_any = 'N\'importe quelle condition';
 $s_none = 'aucun';
 $s_current = 'actuelle';
 $s_search = 'Chercher';

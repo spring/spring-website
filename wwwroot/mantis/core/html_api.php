@@ -469,7 +469,8 @@ function html_top_banner() {
 		if( $t_show_url ) {
 			echo '<a href="', config_get( 'logo_url' ), '">';
 		}
-		echo '<img border="0" alt="Mantis Bug Tracker" src="' . helper_mantis_url( $t_logo_image ) . '" />';
+		$t_alternate_text = string_html_specialchars( config_get( 'window_title' ) );
+		echo '<img border="0" alt="', $t_alternate_text, '" src="' . helper_mantis_url( $t_logo_image ) . '" />';
 		if( $t_show_url ) {
 			echo '</a>';
 		}
@@ -514,11 +515,11 @@ function html_login_info() {
 	echo "<span class=\"italic\">$t_now</span>";
 	echo '</td>';
 	echo '<td class="login-info-right">';
-	$t_show_project_selector = true;
-	if( count( current_user_get_accessible_projects() ) == 1 ) {
 
-		// >1
-		$t_project_ids = current_user_get_accessible_projects();
+	# Project Selector hidden if only one project visisble to user
+	$t_show_project_selector = true;
+	$t_project_ids = current_user_get_accessible_projects();
+	if( count( $t_project_ids ) == 1 ) {
 		$t_project_id = (int) $t_project_ids[0];
 		if( count( current_user_get_accessible_subprojects( $t_project_id ) ) == 0 ) {
 			$t_show_project_selector = false;
@@ -543,7 +544,21 @@ function html_login_info() {
 		}
 		echo '<input type="submit" class="button-small" value="' . lang_get( 'switch' ) . '" />';
 		echo '</form>';
+	} else {
+		# User has only one project, set it as both current and default
+		if( ALL_PROJECTS == helper_get_current_project() ) {
+			helper_set_current_project( $t_project_id );
+
+			if ( !current_user_is_protected() ) {
+				current_user_set_default_project( $t_project_id );
+			}
+
+			# Force reload of current page
+			$t_redirect_url = str_replace( config_get( 'short_path' ), '', $_SERVER['REQUEST_URI'] );
+			html_meta_redirect( $t_redirect_url, 0, false );
+		}
 	}
+
 	if( OFF != config_get( 'rss_enabled' ) ) {
 
 		# Link to RSS issues feed for the selected project, including authentication details.
@@ -1238,7 +1253,7 @@ function html_status_legend() {
 	# draw the status bar
 	$width = (int)( 100 / count( $t_status_array ) );
 	foreach( $t_status_array as $t_status => $t_name ) {
-		$t_val = $t_status_names[$t_status];
+		$t_val = isset( $t_status_names[$t_status] ) ? $t_status_names[$t_status] : $t_status_array[$t_status];
 		$t_color = get_status_color( $t_status );
 
 		echo "<td class=\"small-caption\" width=\"$width%\" bgcolor=\"$t_color\">$t_val</td>";
@@ -1375,7 +1390,10 @@ function html_button_bug_change_status( $p_bug ) {
 		$t_current_access,
 		$p_bug->status,
 		false,
-		bug_is_user_reporter( $p_bug->id, auth_get_current_user_id() ) && ( ON == config_get( 'allow_reporter_close' ) ),
+		(  bug_is_user_reporter( $p_bug->id, auth_get_current_user_id() )
+		&& access_has_bug_level( config_get( 'report_bug_threshold' ), $p_bug->id )
+		&& ON == config_get( 'allow_reporter_close' )
+		),
 		$p_bug->project_id );
 
 	if( count( $t_enum_list ) > 0 ) {

@@ -51,7 +51,7 @@ foreach( $t_plugins as $t_basename => $t_plugin ) {
 	}
 }
 
-if ( 0 < count( $t_plugins_installed ) ) { 
+if ( 0 < count( $t_plugins_installed ) ) {
 ?>
 <br />
 <form action="manage_plugin_update.php" method="post">
@@ -153,16 +153,18 @@ foreach ( $t_plugins_installed as $t_basename => $t_plugin ) {
 
 <tr>
 	<td colspan="3"></td>
-	<td colspan="2" class="center"><input type="submit" value="<?php echo lang_get( 'plugin_update' ) ?>"/></td>
+	<td colspan="2" class="center">
+		<input type="submit" class="button" value="<?php echo lang_get( 'plugin_update' ) ?>"/>
+	</td>
 	<td></td>
 </tr>
 
 </table>
 </form>
-<?php 
+<?php
 }
 
-if ( 0 < count( $t_plugins_available ) ) { 
+if ( 0 < count( $t_plugins_available ) ) {
 ?>
 <br />
 <table class="width100" cellspacing="1">
@@ -252,4 +254,3 @@ foreach ( $t_plugins_available as $t_basename => $t_plugin ) {
 
 <?php
 html_page_bottom();
-

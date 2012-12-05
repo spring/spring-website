@@ -144,7 +144,7 @@ function print_successful_redirect( $p_redirect_to ) {
 
 # Print avatar image for the given user ID
 function print_avatar( $p_user_id, $p_size = 80 ) {
-	if ( OFF == config_get( 'show_avatar' ) ) {
+	if ( OFF === config_get( 'show_avatar' ) ) {
 		return;
 	}
 
@@ -455,6 +455,15 @@ function print_assign_to_option_list( $p_user_id = '', $p_project_id = null, $p_
 		$p_threshold = config_get( 'handle_bug_threshold' );
 	}
 
+	print_user_option_list( $p_user_id, $p_project_id, $p_threshold );
+}
+
+
+function print_note_option_list( $p_user_id = '', $p_project_id = null, $p_threshold = null ) {
+	if ( null === $p_threshold ) {
+		$p_threshold = config_get( 'add_bugnote_threshold' );
+	}
+	
 	print_user_option_list( $p_user_id, $p_project_id, $p_threshold );
 }
 
@@ -799,7 +808,7 @@ function print_version_option_list( $p_version = '', $p_project_id = null, $p_re
 
 		$t_version = string_attribute( $version['version'] );
 
-		if ( !in_array( $t_version, $t_listed ) ) {
+		if ( !in_array( $t_version, $t_listed, true ) ) {
 			$t_listed[] = $t_version;
 			echo '<option value="' . $t_version . '"';
 			check_selected( string_attribute( $p_version ), $t_version );
@@ -860,7 +869,7 @@ function print_enum_string_option_list( $p_enum_name, $p_val = 0 ) {
 	}
 }
 
-/*
+/**
  * Returns a list of valid status options based on workflow
  * @param int $p_user_auth User's access level
  * @param int $p_current_value Current issue's status

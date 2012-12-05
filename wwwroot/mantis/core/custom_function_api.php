@@ -168,7 +168,7 @@ function custom_function_default_issue_update_notify( $p_issue_id ) {
 function custom_function_default_issue_create_validate( $p_new_issue_data ) {
 }
 
-# Hook to notify after aa issue has been created.
+# Hook to notify after an issue has been created.
 # In case of errors, this function should call trigger_error()
 # p_issue_id is the issue number that can be used to get the existing state
 function custom_function_default_issue_create_notify( $p_issue_id ) {
@@ -385,7 +385,7 @@ function custom_function_default_enum_released_versions() {
 	return $t_possible_values;
 }
 
-# Construct an enumeration for released versions for the current project.
+# Construct an enumeration for future versions for the current project.
 # The enumeration will be empty if current project is ALL PROJECTS.
 # Enumerations format is: "abc|lmn|xyz"
 # To use this in a custom field type "=future_versions" in the possible values field.
@@ -413,7 +413,7 @@ function custom_function_default_enum_categories() {
 
 	$t_enum = array();
 	foreach( $t_categories as $t_category ) {
-		$t_enum[] = $t_category['category'];
+		$t_enum[] = $t_category['name'];
 	}
 
 	$t_possible_values = implode( '|', $t_enum );

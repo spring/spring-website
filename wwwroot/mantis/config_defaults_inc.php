@@ -80,8 +80,9 @@
 	 * MantisBT Path Settings *
 	 **************************/
 
+	$t_protocol = 'http';
+	$t_host = 'localhost';
 	if ( isset ( $_SERVER['SCRIPT_NAME'] ) ) {
-		$t_protocol = 'http';
 		if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) ) {
 			$t_protocol= $_SERVER['HTTP_X_FORWARDED_PROTO'];
 		} else if ( !empty( $_SERVER['HTTPS'] ) && ( strtolower( $_SERVER['HTTPS'] ) != 'off' ) ) {
@@ -108,26 +109,27 @@
 			$t_host = $_SERVER['SERVER_NAME'] . $t_port;
 		} else if ( isset( $_SERVER['SERVER_ADDR'] ) ) {
 			$t_host = $_SERVER['SERVER_ADDR'] . $t_port;
-		} else {
-			$t_host = 'localhost';
 		}
 
-		$t_self = $_SERVER['SCRIPT_NAME'];
-		$t_self = trim( str_replace( "\0", '', $t_self ) );
+		$t_self = trim( str_replace( "\0", '', $_SERVER['SCRIPT_NAME'] ) );
 		$t_path = str_replace( basename( $t_self ), '', $t_self );
-		$t_path = basename( $t_path ) == "admin" ? dirname( $t_path ) . '/' : $t_path;
-		$t_path = basename( $t_path ) == "soap" ? dirname( dirname( $t_path ) ) . '/' : $t_path;
+		switch( basename( $t_path ) ) {
+			case 'admin':
+				$t_path = rtrim( dirname( $t_path ), '/\\' ) . '/';
+				break;
+			case 'soap':
+				$t_path = rtrim( dirname( dirname( $t_path ) ), '/\\' ) . '/';
+				break;
+			case '':
+				$t_path = '/';
+				break;
+		}
 		if ( strpos( $t_path, '&#' ) ) {
 			echo 'Can not safely determine $g_path. Please set $g_path manually in config_inc.php';
 			die;
 		}
-
-		$t_url	= $t_protocol . '://' . $t_host . $t_path;
-
 	} else {
-		$t_path = '';
-		$t_host = '';
-		$t_protocol = '';
+		$t_path = 'mantisbt/';
 	}
 
 	/**
@@ -135,7 +137,7 @@
 	 * requires trailing /
 	 * @global string $g_path
 	 */
-	$g_path	= isset( $t_url ) ? $t_url : 'http://localhost/mantisbt/';
+	$g_path	= $t_protocol . '://' . $t_host . $t_path;
 
 	/**
 	 * path to your images directory (for icons)
@@ -233,8 +235,10 @@
 	 ****************************/
 
 	/**
-	 * allow users to signup for their own accounts.
-	 * Mail settings must be correctly configured in order for this to work
+	 * Allow users to signup for their own accounts.
+	 * If ON, then $g_send_reset_password must be ON as well, and mail settings
+	 * must be correctly configured
+	 * @see $g_send_reset_password
 	 * @global int $g_allow_signup
 	 */
 	$g_allow_signup			= ON;
@@ -255,9 +259,10 @@
 	$g_notify_new_user_created_threshold_min = ADMINISTRATOR;
 
 	/**
-	 * if ON users will be sent their password when reset.
-	 * if OFF the password will be set to blank. If set to ON, mail settings must be
-	 * correctly configured.
+	 * If ON, users will be sent their password when their account is created
+	 * or password reset (this requires mail settings to be correctly configured).
+	 * If OFF, then the Administrator will have to provide a password when
+	 * creating new accounts, and the password will be set to blank when reset.
 	 * @global int $g_send_reset_password
 	 */
 	$g_send_reset_password	= ON;
@@ -933,12 +938,25 @@
 
 	/**
 	 * Show user avatar
-	 * the current implementation is based on http://www.gravatar.com
-	 * users will need to register there the same address used in
-	 * this MantisBT installation to have their avatar shown
+	 *
+	 * The current implementation is based on http://www.gravatar.com
+	 * Users will need to register there the same email address used in this
+	 * MantisBT installation to have their avatar shown.
 	 * Please note: upon registration or avatar change, it takes some time for
 	 * the updated gravatar images to show on sites
-	 * @global int $g_show_avatar
+	 *
+	 * The config can be either set to OFF (avatars disabled) or set to a string
+	 * defining the default avatar to be used when none is associated with the
+	 * user's email. Valid values:
+	 * - OFF (default)
+	 * - ON (equivalent to 'identicon')
+	 * - One of Gravatar's defaults (mm, identicon, monsterid, wavatar, retro)
+	 *   @link http://en.gravatar.com/site/implement/images/
+	 * - An URL to the default image to be used (for example,
+	 *   "http:/path/to/unknown.jpg" or "%path%images/no_avatar.png")
+	 *
+	 * @global int|string $g_show_avatar
+	 * @see $g_show_avatar_threshold
 	 */
 	$g_show_avatar = OFF;
 
@@ -2510,6 +2528,7 @@
 	 * @global array $g_set_status_threshold
 	 */
 	$g_set_status_threshold = array();
+	$g_set_status_threshold = array( NEW_ => REPORTER );
 
 	/**
 	 * Allow a bug to have no category

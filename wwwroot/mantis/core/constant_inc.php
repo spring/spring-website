@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-define( 'MANTIS_VERSION', '1.2.11' );
+define( 'MANTIS_VERSION', '1.2.12' );
 
 # --- constants -------------------
 # magic numbers
@@ -304,6 +304,7 @@ define( 'ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE', 1301 );
 define( 'ERROR_CUSTOM_FIELD_IN_USE', 1302 );
 define( 'ERROR_CUSTOM_FIELD_INVALID_VALUE', 1303 );
 define( 'ERROR_CUSTOM_FIELD_INVALID_DEFINITION', 1304 );
+define( 'ERROR_CUSTOM_FIELD_INVALID_PROPERTY', 1306 );
 
 # ERROR_LDAP_*
 define( 'ERROR_LDAP_AUTH_FAILED', 1400 );
@@ -317,6 +318,7 @@ define( 'ERROR_CATEGORY_DUPLICATE', 1500 );
 define( 'ERROR_CATEGORY_NO_ACTION', 1501 );
 define( 'ERROR_CATEGORY_NOT_FOUND', 1502 );
 define( 'ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT', 1503 );
+define( 'ERROR_CATEGORY_CANNOT_DELETE_DEFAULT', 1504 );
 
 # ERROR_VERSION_*
 define( 'ERROR_VERSION_DUPLICATE', 1600 );
@@ -369,6 +371,7 @@ define( 'ERROR_PLUGIN_NOT_REGISTERED', 2500 );
 define( 'ERROR_PLUGIN_ALREADY_INSTALLED', 2501 );
 define( 'ERROR_PLUGIN_PAGE_NOT_FOUND', 2502 );
 define( 'ERROR_PLUGIN_UPGRADE_FAILED', 2503 );
+define( 'ERROR_PLUGIN_INSTALL_FAILED', 2504 );
 define( 'ERROR_PLUGIN_GENERIC', 2599 );
 
 # ERROR_COLUMNS_*
@@ -428,6 +431,10 @@ define( 'FILTER_TYPE_INT', 1 );
 define( 'FILTER_TYPE_BOOLEAN', 2 );
 define( 'FILTER_TYPE_MULTI_STRING', 3 );
 define( 'FILTER_TYPE_MULTI_INT', 4 );
+
+# Filter match types
+define( 'FILTER_MATCH_ALL', 0);
+define( 'FILTER_MATCH_ANY', 1);
 
 # Versions
 define( 'VERSION_ALL', null );

@@ -37,7 +37,7 @@ class ImportXml_Issue implements ImportXml_Interface {
 
 	// Read stream until current item finishes, processing
 	// the data found
-	public function process( XMLreader$reader ) {
+	public function process( XMLreader $reader ) {
 
 		//print "\nImportIssue process()\n";
 		$t_project_id = helper_get_current_project(); // TODO: category_get_id_by_name could work by default on current project
@@ -68,15 +68,19 @@ class ImportXml_Issue implements ImportXml_Interface {
 					case 'category':
 						$this->newbug_->category_id = $this->defaultCategory_;
 
-						// TODO: if we port the import/export code to 1.1.x, this needs to be
-						//       improved to cope with the different cases (1.1 => 1.2, 1.2 => 1.1 etc)
 						if( version_compare( MANTIS_VERSION, '1.2', '>' ) === true ) {
 							$reader->read( );
 
 							if( $this->keepCategory_ ) {
-								$t_category_id = category_get_id_by_name( $reader->value, $t_project_id );
-								if( $t_category_id !== false ) {
-									$this->newbug_->category_id = $t_category_id;
+								# Check for the category's existence in the current project
+								# well as its parents (if any)
+								$t_projects_hierarchy = project_hierarchy_inheritance( $t_project_id );
+								foreach( $t_projects_hierarchy as $t_project ) {
+									$t_category_id = category_get_id_by_name( $reader->value, $t_project, false );
+									if( $t_category_id !== false ) {
+										$this->newbug_->category_id = $t_category_id;
+										break;
+									}
 								}
 							}
 
@@ -128,7 +132,7 @@ class ImportXml_Issue implements ImportXml_Interface {
 		//echo "\nnew bug: $this->new_id_\n";
 	}
 
-	public function update_map( Mapper$mapper ) {
+	public function update_map( ImportXml_Mapper $mapper ) {
 		$mapper->add( 'issue', $this->old_id_, $this->new_id_ );
 	}
 

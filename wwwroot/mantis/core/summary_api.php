@@ -29,12 +29,31 @@ require_once( $g_absolute_path . 'config_filter_defaults_inc.php' );
 
 function summary_helper_print_row( $p_label, $p_open, $p_resolved, $p_closed, $p_total ) {
 	printf( '<tr %s>', helper_alternate_class() );
-	printf( '<td width="50%%">%s</td>', string_display_line( $p_label ) );
+	printf( '<td width="50%%">%s</td>', $p_label );
 	printf( '<td width="12%%" class="right">%s</td>', $p_open );
 	printf( '<td width="12%%" class="right">%s</td>', $p_resolved );
 	printf( '<td width="12%%" class="right">%s</td>', $p_closed );
 	printf( '<td width="12%%" class="right">%s</td>', $p_total );
 	print( '</tr>' );
+}
+
+/**
+ * Returns a string representation of the user, together with a link to the issues
+ * acted on by the user ( reported, handled or commented on )
+ *
+ * @param int $p_user_id
+ * @return string
+ */
+function summary_helper_get_developer_label ( $p_user_id ) {
+
+	$t_user = string_display_line( user_get_name( $p_user_id ) );
+
+	return "<a class='subtle' href='view_all_set.php?type=1&amp;temporary=y
+			&amp;".FILTER_PROPERTY_REPORTER_ID."=$p_user_id
+			&amp;".FILTER_PROPERTY_HANDLER_ID."=$p_user_id
+			&amp;".FILTER_PROPERTY_NOTE_USER_ID."=$p_user_id
+			&amp;".FILTER_PROPERTY_MATCH_TYPE."=".FILTER_MATCH_ANY."'>$t_user</a>";
+
 }
 
 # Used in summary reports
@@ -429,7 +448,7 @@ function summary_print_by_developer() {
 		$v_bugcount = $row['bugcount'];
 
 		if(( $v_handler_id != $t_last_handler ) && ( -1 != $t_last_handler ) ) {
-			$t_user = string_display_line( user_get_name( $t_last_handler ) );
+			$t_user = summary_helper_get_developer_label( $t_last_handler );
 
 			$t_bug_link = '<a class="subtle" href="' . config_get( 'bug_count_hyperlink_prefix' ) . '&amp;' . FILTER_PROPERTY_HANDLER_ID . '=' . $t_last_handler;
 			if( 0 < $t_bugs_open ) {
@@ -466,7 +485,7 @@ function summary_print_by_developer() {
 	}
 
 	if( 0 < $t_bugs_total ) {
-		$t_user = string_display_line( user_get_name( $t_last_handler ) );
+		$t_user = summary_helper_get_developer_label( $t_last_handler );
 
 		$t_bug_link = '<a class="subtle" href="' . config_get( 'bug_count_hyperlink_prefix' ) . '&amp;' . FILTER_PROPERTY_HANDLER_ID . '=' . $t_last_handler;
 		if( 0 < $t_bugs_open ) {
@@ -586,8 +605,8 @@ function summary_print_by_category() {
 				FROM $t_mantis_bug_table b
 				JOIN $t_mantis_category_table AS c ON b.category_id=c.id
 				WHERE b.$specific_where
-				GROUP BY $t_project_query category_id, c.name, b.status
-				ORDER BY $t_project_query category_id, c.name, b.status";
+				GROUP BY $t_project_query c.name, b.status
+				ORDER BY $t_project_query c.name";
 
 	$result = db_query( $query );
 
@@ -606,7 +625,7 @@ function summary_print_by_category() {
 		$v_category_id = $row['category_id'];
 		$v_category_name = $row['category_name'];
 
-		if(( $v_category_id != $last_category_id ) && ( $last_category_id != -1 ) ) {
+		if(( $v_category_name != $last_category_name ) && ( $last_category_name != -1 ) ) {
 			$label = $last_category_name;
 			if(( ON == $t_summary_category_include_project ) && ( ALL_PROJECTS == $t_project_id ) ) {
 				$label = sprintf( '[%s] %s', project_get_name( $last_project ), $label );
@@ -812,7 +831,7 @@ function summary_print_developer_resolution( $p_resolution_enum_string ) {
 			echo '<tr align="center" ' . helper_alternate_class( $t_row_count ) . '>';
 			$t_row_count++;
 			echo '<td>';
-			echo string_display_line( user_get_name( $t_handler_id ) );
+			echo summary_helper_get_developer_label( $t_handler_id );
 			echo '</td>';
 
 			# We need to track the percentage of bugs that are considered fixed, as well as

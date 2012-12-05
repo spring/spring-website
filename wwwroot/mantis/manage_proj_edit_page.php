@@ -36,6 +36,7 @@
 	$f_show_global_users = gpc_get_bool( 'show_global_users' );
 
 	project_ensure_exists( $f_project_id );
+	$g_project_override = $f_project_id;
 	access_ensure_project_level( config_get( 'manage_project_threshold' ), $f_project_id );
 
 	$row = project_get_row( $f_project_id );
@@ -64,10 +65,10 @@
 <!-- Name -->
 <tr <?php echo helper_alternate_class() ?>>
 	<td class="category" width="25%">
-		<?php echo lang_get( 'project_name' ) ?>
+		<span class="required">*</span><?php echo lang_get( 'project_name' ) ?>
 	</td>
 	<td width="75%">
-		<input type="text" name="name" size="50" maxlength="128" value="<?php echo string_attribute( $row['name'] ) ?>" />
+		<input type="text" name="name" size="60" maxlength="128" value="<?php echo string_attribute( $row['name'] ) ?>" />
 	</td>
 </tr>
 
@@ -115,21 +116,24 @@
 	</td>
 </tr>
 
-<!-- File upload path (if uploading is enabled) -->
-<?php if ( file_is_uploading_enabled() ) { ?>
+<!-- File upload path (if uploading is enabled and uploading to disk) -->
+<?php
+	$g_project_override = $f_project_id;
+	if( file_is_uploading_enabled() && DATABASE !== config_get( 'file_upload_method' ) ) {
+?>
 <tr <?php echo helper_alternate_class() ?>>
 	<td class="category">
 		<?php echo lang_get( 'upload_file_path' ) ?>
 	</td>
 <?php
-	$t_file_path = $row['file_path'];
-	# Don't reveal the absolute path to non-administrators for security reasons
-	if ( is_blank( $t_file_path ) && current_user_is_administrator() ) {
-		$t_file_path = config_get( 'absolute_path_default_upload_folder' );
-	}
+		$t_file_path = $row['file_path'];
+		# Don't reveal the absolute path to non-administrators for security reasons
+		if ( is_blank( $t_file_path ) && current_user_is_administrator() ) {
+			$t_file_path = config_get( 'absolute_path_default_upload_folder' );
+		}
 ?>
 	<td>
-		<input type="text" name="file_path" size="50" maxlength="250" value="<?php echo string_attribute( $t_file_path ) ?>" />
+		<input type="text" name="file_path" size="60" maxlength="250" value="<?php echo string_attribute( $t_file_path ) ?>" />
 	</td>
 </tr>
 <?php } ?>
@@ -140,7 +144,7 @@
 		<?php echo lang_get( 'description' ) ?>
 	</td>
 	<td>
-		<textarea name="description" cols="60" rows="5"><?php echo string_textarea( $row['description'] ) ?></textarea>
+		<textarea name="description" cols="70" rows="5"><?php echo string_textarea( $row['description'] ) ?></textarea>
 	</td>
 </tr>
 
@@ -148,8 +152,7 @@
 
 <!-- Submit Button -->
 <tr>
-	<td>&#160;</td>
-	<td>
+	<td class="center" colspan="2">
 		<input type="submit" class="button" value="<?php echo lang_get( 'update_project_button' ) ?>" />
 	</td>
 </tr>
@@ -268,7 +271,7 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 
 <tr>
 	<td colspan="6">
-	<input type="submit" value="<?php echo lang_get( 'update_subproject_inheritance' ) ?>" />
+	<input type="submit" class="button" value="<?php echo lang_get( 'update_subproject_inheritance' ) ?>" />
 		</form>
 	</td>
 </tr>
@@ -301,7 +304,7 @@ if ( access_has_global_level ( config_get( 'delete_project_threshold' ) ) ) { ?>
 	} # End looping over projects
 ?>
 			</select>
-			<input type="submit" value="<?php echo lang_get('add_subproject'); ?>">
+			<input type="submit" class="button" value="<?php echo lang_get( 'add_subproject' ); ?>">
 		</form>
 	</td>
 </tr>

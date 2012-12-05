@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** Galician (Galego)
+/** Galician (galego)
  * 
  * See the qqq 'language' for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -27,6 +27,7 @@
  *
  * @author McDutchie
  * @author Toliño
+ * @author Vivaelcelta
  */
 
 $s_actiongroup_menu_move = 'Mover';
@@ -212,7 +213,8 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NOT_FOUND] = 'Non se atopou o campo personaliza
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Este é un nome duplicado.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Polo menos un proxecto aínda emprega este campo.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valor inválido para o campo "%1$s".';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definición do campo inválido personalizado.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definición inválida para o campo personalizado.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propiedade inválida para o campo personalizado (%1$s).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Fallou a autenticación LDAP.';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Fallou a conexión ao servidor LDAP.';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Fallou a actualización do rexistro LDAP.';
@@ -225,6 +227,7 @@ $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Xa existe unha categoría con ese nom
 $MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Non se especificou ningunha acción de copiado.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Non se atopou a categoría.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Non se atopou a categoría "%1$s" no proxecto %2$s".';
+$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Non se pode borrar esta categoría porque está definida como a "categoría predeterminada para os traslados".';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Xa existe unha versión con ese nome.';
 $MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Non se atopou a versión "%1$s".';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'O nome de usuario é inválido. Os nomes de usuario só poden conter letras latinas, números, espazos, guións, puntos, signos máis e guións baixos.';
@@ -263,6 +266,7 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'O evento "%1$s" aínda non foi declarad
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'O complemento non está rexistrado no MantisBT.';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'O complemento xa está instalado.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Non se atopou a páxina do complemento.';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Fallou a instalación do complemento: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Fallou a actualización do esquema do complemento no bloque #%1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Houbo un erro descoñecido "%1$s" durante a execución do complemento "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'O campo "%1$s" contén a columna duplicada "%2$s".';
@@ -390,9 +394,9 @@ $s_email_on_new = 'Enviar un correo en caso dun problema novo';
 $s_email_on_assigned = 'Enviar un correo en caso de cambio de asignación';
 $s_email_on_feedback = 'Enviar un correo en caso dun comentario';
 $s_email_on_resolved = 'Enviar un correo en caso dun problema resolto';
-$s_email_on_closed = 'Enviar un correo en caso dun problema pechado';
+$s_email_on_closed = 'Enviar un correo electrónico en caso dun problema pechado';
 $s_email_on_reopened = 'Enviar un correo en caso dun problema reaberto';
-$s_email_on_bugnote_added = 'Enviar un correo en caso da adición dunha nota';
+$s_email_on_bugnote_added = 'Enviar un correo electrónico en caso da adición dunha nota';
 $s_email_on_status_change = 'Enviar un correo en caso de cambio de estado';
 $s_email_on_priority_change = 'Enviar un correo en caso de cambio da prioridade';
 $s_email_bugnote_limit = 'Enviar un correo en caso de límite de notas';
@@ -694,7 +698,7 @@ $s_plugin_protected = 'Protexido';
 $s_plugin_update = 'Actualizar';
 $s_plugin_actions = 'Accións';
 $s_plugin_install = 'Instalar';
-$s_plugin_upgrade = 'Actualización';
+$s_plugin_upgrade = 'Actualizar';
 $s_plugin_uninstall = 'Desinstalar';
 $s_plugin_uninstall_message = 'Está seguro de querer desinstalar o complemento "%1$s"?';
 $s_plugin_key = 'Clave';
@@ -924,6 +928,9 @@ $s_sort = 'Ordenar por';
 $s_issue_id = 'Problema #';
 $s_recently_visited = 'Visitados recentemente';
 $s_note_user_id = 'Nota por';
+$s_filter_match_type = 'Tipo de coincidencia';
+$s_filter_match_all = 'Todas as condicións';
+$s_filter_match_any = 'Calquera condición';
 $s_none = 'ningún';
 $s_current = 'actual';
 $s_search = 'Procurar';
@@ -1027,6 +1034,7 @@ $s_bytes = 'bytes';
 $s_attachment_missing = 'Faltan os datos adxuntos';
 $s_attachment_count = 'Número de datos adxuntos';
 $s_view_attachments_for_issue = 'Ollar %1$d dato(s) adxunto(s) do problema #%2$d';
+$s_phpmailer_language = 'gl';
 $s_sponsors = '%1$d patrocinador(es)';
 $s_sponsorship_added = 'Patrocinador engadido';
 $s_sponsorship_updated = 'Patrocinador actualizado';

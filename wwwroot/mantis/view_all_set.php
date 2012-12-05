@@ -201,6 +201,8 @@
         $f_note_user_id = gpc_get_string( FILTER_PROPERTY_NOTE_USER_ID, META_FILTER_ANY );
         $f_note_user_id = array( $f_note_user_id );
     }
+    
+    $f_match_type = gpc_get_string ( FILTER_PROPERTY_MATCH_TYPE, FILTER_MATCH_ALL );
 
 	# these are only single values, even when doing advanced filtering
 	$f_per_page				= gpc_get_int( FILTER_PROPERTY_ISSUES_PER_PAGE, -1 );
@@ -421,6 +423,8 @@
 	$t_cookie_version = config_get( 'cookie_version' );
 	$t_default_show_changed = config_get( 'default_show_changed' );
 
+	# Clear the source query id.  Since we have entered new filter criteria.
+	$t_setting_arr['_source_query_id'] = '';
 	switch ( $f_type ) {
 		# New cookie
 		case '0':
@@ -472,6 +476,7 @@
 				$t_setting_arr[ FILTER_PROPERTY_TAG_STRING ] 			= $f_tag_string;
 				$t_setting_arr[ FILTER_PROPERTY_TAG_SELECT ] 			= $f_tag_select;
 				$t_setting_arr[ FILTER_PROPERTY_NOTE_USER_ID ] 			= $f_note_user_id;
+				$t_setting_arr[ FILTER_PROPERTY_MATCH_TYPE ] 			= $f_match_type;
 				$t_setting_arr = array_merge( $t_setting_arr, $f_filter_input );
 				break;
 		# Set the sort order and direction
@@ -500,6 +505,8 @@
 					trigger_error( ERROR_FILTER_TOO_OLD, ERROR );
 					exit; # stop here
 				}
+				# Store the source query id to select the correct filter in the drop down.
+				$t_setting_arr['_source_query_id'] = $f_source_query_id;
 				break;
 		# Generalise the filter
 		case '4':

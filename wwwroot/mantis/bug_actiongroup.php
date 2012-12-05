@@ -154,7 +154,7 @@
 					$f_resolution = gpc_get_int( 'resolution' );
 					$f_fixed_in_version = gpc_get_string( 'fixed_in_version', '' );
 					/** @todo we need to issue a helper_call_custom_function( 'issue_update_validate', array( $t_bug_id, $t_bug_data, $f_bugnote_text ) ); */
-					bug_resolve( $t_bug_id, $f_resolution, $f_fixed_in_version, $f_bug_notetext, null, null, $f_bug_noteprivate );
+					bug_resolve( $t_bug_id, $f_resolution, null, $f_fixed_in_version, null, null, $f_bug_notetext, $f_bug_noteprivate );
 					helper_call_custom_function( 'issue_update_notify', array( $t_bug_id ) );
 				} else {
 					$t_failed_ids[$t_bug_id] = lang_get( 'bug_actiongroup_status' );
@@ -278,6 +278,7 @@
 			$t_form_var = "custom_field_$f_custom_field_id";
 			$t_custom_field_value = gpc_get_custom_field( $t_form_var, $t_custom_field_def['type'], null );
 			custom_field_set_value( $f_custom_field_id, $t_bug_id, $t_custom_field_value );
+			bug_update_date( $t_bug_id );
 			helper_call_custom_function( 'issue_update_notify', array( $t_bug_id ) );
 			break;
 

@@ -104,9 +104,9 @@ function mc_issue_get( $p_username, $p_password, $p_issue_id ) {
 	$t_issue_data['target_version'] = mci_null_if_empty( $t_bug->target_version );
 	$t_issue_data['due_date'] = mci_issue_get_due_date( $t_bug );
 
-	$t_issue_data['description'] = $t_bug->description;
-	$t_issue_data['steps_to_reproduce'] = mci_null_if_empty( $t_bug->steps_to_reproduce );
-	$t_issue_data['additional_information'] = mci_null_if_empty( $t_bug->additional_information );
+	$t_issue_data['description'] = mci_sanitize_xml_string($t_bug->description);
+	$t_issue_data['steps_to_reproduce'] = mci_null_if_empty( mci_sanitize_xml_string($t_bug->steps_to_reproduce) );
+	$t_issue_data['additional_information'] = mci_null_if_empty( mci_sanitize_xml_string($t_bug->additional_information) );
 
 	$t_issue_data['attachments'] = mci_issue_get_attachments( $p_issue_id );
 	$t_issue_data['relationships'] = mci_issue_get_relationships( $p_issue_id, $t_user_id );
@@ -318,7 +318,7 @@ function mci_issue_get_notes( $p_issue_id ) {
 		$t_bugnote['reporter'] = mci_account_get_array_by_id( $t_value->reporter_id );
 		$t_bugnote['date_submitted'] = timestamp_to_iso8601( $t_value->date_submitted, false );
 		$t_bugnote['last_modified'] = timestamp_to_iso8601( $t_value->last_modified, false );
-		$t_bugnote['text'] = $t_value->note;
+		$t_bugnote['text'] = mci_sanitize_xml_string( $t_value->note );
 		$t_bugnote['view_state'] = mci_enum_get_array_by_id( $t_value->view_state, 'view_state', $t_lang );
 		$t_bugnote['time_tracking'] = $t_has_time_tracking_access ? $t_value->time_tracking : 0;
 		$t_bugnote['note_type'] = $t_value->note_type;
@@ -341,20 +341,23 @@ function mci_issue_get_notes( $p_issue_id ) {
  * @param array $p_monitors An array of arrays with the <em>id</em> field set to the id
  *  of the users which should monitor this issue.
  */
-function mci_issue_set_monitors( $p_issue_id , $p_user_id, $p_monitors ) {
+function mci_issue_set_monitors( $p_issue_id , $p_requesting_user_id, $p_monitors ) {
 	if ( bug_is_readonly( $p_issue_id ) ) {
-		return mci_soap_fault_access_denied( $p_user_id, "Issue '$p_issue_id' is readonly" );
+		return mci_soap_fault_access_denied( $p_requesting_user_id, "Issue '$p_issue_id' is readonly" );
 	}
 
-	$t_existing_monitors = bug_get_monitors( $p_issue_id );
+	# 1. get existing monitor ids
+	$t_existing_monitor_ids = bug_get_monitors( $p_issue_id );
 
-	$t_monitors = array();
+	# 2. build new monitors ids
+	$t_new_monitor_ids = array();
 	foreach ( $p_monitors as $t_monitor )
-		$t_monitors[] = $t_monitor['id'];
+		$t_new_monitor_ids[] = $t_monitor['id'];
 
-	foreach ( $t_monitors as $t_user_id ) {
+	# 3. for each of the new monitor ids, add it if it does not already exist
+	foreach ( $t_new_monitor_ids as $t_user_id ) {
 
-		if ( $p_user_id == $t_user_id ) {
+		if ( $p_requesting_user_id == $t_user_id ) {
 			if ( ! access_has_bug_level( config_get( 'monitor_bug_threshold' ), $p_issue_id ) )
 				continue;
 		} else {
@@ -362,15 +365,16 @@ function mci_issue_set_monitors( $p_issue_id , $p_user_id, $p_monitors ) {
 				continue;
 		}
 
-		if ( in_array( $p_user_id, $t_existing_monitors) )
+		if ( in_array( $t_user_id, $t_existing_monitor_ids) )
 			continue;
 
 		bug_monitor( $p_issue_id, $t_user_id);
 	}
 
-	foreach ( $t_existing_monitors as $t_user_id ) {
+	# 4. for each of the existing monitor ids, remove it if it is not found in the new monitor ids
+	foreach ( $t_existing_monitor_ids as $t_user_id ) {
 
-		if ( $p_user_id == $t_user_id ) {
+		if ( $p_requesting_user_id == $t_user_id ) {
 			if ( ! access_has_bug_level( config_get( 'monitor_bug_threshold' ), $p_issue_id ) )
 				continue;
 		} else {
@@ -378,7 +382,7 @@ function mci_issue_set_monitors( $p_issue_id , $p_user_id, $p_monitors ) {
 				continue;
 		}
 
-		if ( in_array( $p_user_id, $t_monitors) )
+		if ( in_array( $t_user_id, $t_new_monitor_ids) )
 			continue;
 
 		bug_unmonitor( $p_issue_id, $t_user_id);
@@ -874,12 +878,12 @@ function mc_issue_update( $p_username, $p_password, $p_issue_id, $p_issue ) {
 						$t_bugnote_changed = true;
 					}
 
-					if ( $t_bugnote->view_state !== $t_view_state_id ) {
+					if ( $t_bugnote->view_state != $t_view_state_id ) {
 						bugnote_set_view_state( $t_bugnote_id, $t_view_state_id == VS_PRIVATE );
 						$t_bugnote_changed = true;
 					}
 
-					if ( isset( $t_note['time_tracking']) && $t_note['time_tracking'] !== $t_bugnote->time_tracking ) {
+					if ( isset( $t_note['time_tracking']) && $t_note['time_tracking'] != $t_bugnote->time_tracking ) {
 						bugnote_set_time_tracking( $t_bugnote_id, mci_get_time_tracking_from_note( $p_issue_id, $t_note ) );
 						$t_bugnote_changed = true;
 					}
@@ -1125,7 +1129,7 @@ function mc_issue_note_update( $p_username, $p_password, $p_note ) {
 	if ( isset( $p_note['view_state'] ) ) {
 		$t_view_state = $p_note['view_state'];
 		$t_view_state_id = mci_get_enum_id_from_objectref( 'view_state', $t_view_state );
-		bugnote_set_view_state( $t_issue_note_id, $t_view_state_id );
+		bugnote_set_view_state( $t_issue_note_id, $t_view_state_id == VS_PRIVATE );
 	}
 
 	bugnote_set_text( $t_issue_note_id, $p_note['text'] );
@@ -1355,7 +1359,7 @@ function mci_issue_data_as_array( $p_issue_data, $p_user_id, $p_lang ) {
 		$t_issue['status'] = mci_enum_get_array_by_id( $p_issue_data->status, 'status', $p_lang );
 
 		$t_issue['reporter'] = mci_account_get_array_by_id( $p_issue_data->reporter_id );
-		$t_issue['summary'] = $p_issue_data->summary;
+		$t_issue['summary'] = mci_sanitize_xml_string( $p_issue_data->summary );
 		$t_issue['version'] = mci_null_if_empty( $p_issue_data->version );
 		$t_issue['build'] = mci_null_if_empty( $p_issue_data->build );
 		$t_issue['profile_id'] = mci_null_if_empty( $p_issue_data->profile_id );
@@ -1378,13 +1382,13 @@ function mci_issue_data_as_array( $p_issue_data, $p_user_id, $p_lang ) {
 		$t_issue['fixed_in_version'] = mci_null_if_empty( $p_issue_data->fixed_in_version );
 		$t_issue['target_version'] = mci_null_if_empty( $p_issue_data->target_version );
 
-		$t_issue['description'] = bug_get_text_field( $t_id, 'description' );
+		$t_issue['description'] = mci_sanitize_xml_string( bug_get_text_field( $t_id, 'description' ) );
 
 		$t_steps_to_reproduce = bug_get_text_field( $t_id, 'steps_to_reproduce' );
-		$t_issue['steps_to_reproduce'] = mci_null_if_empty( $t_steps_to_reproduce );
+		$t_issue['steps_to_reproduce'] = mci_null_if_empty( mci_sanitize_xml_string ($t_steps_to_reproduce) );
 
 		$t_additional_information = bug_get_text_field( $t_id, 'additional_information' );
-		$t_issue['additional_information'] = mci_null_if_empty( $t_additional_information );
+		$t_issue['additional_information'] = mci_null_if_empty( mci_sanitize_xml_string( $t_additional_information ) );
 
 		$t_issue['attachments'] = mci_issue_get_attachments( $p_issue_data->id );
 		$t_issue['relationships'] = mci_issue_get_relationships( $p_issue_data->id, $p_user_id );
@@ -1436,7 +1440,7 @@ function mci_issue_data_as_header_array( $p_issue_data ) {
 		$t_issue['status'] = $p_issue_data->status;
 
 		$t_issue['reporter'] = $p_issue_data->reporter_id;
-		$t_issue['summary'] = $p_issue_data->summary;
+		$t_issue['summary'] = mci_sanitize_xml_string( $p_issue_data->summary );
 		if( !empty( $p_issue_data->handler_id ) ) {
 			$t_issue['handler'] = $p_issue_data->handler_id;
 		}
