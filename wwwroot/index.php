@@ -64,27 +64,20 @@
         // Not enough.. Should not usually happen.
     }
 
-    // And a random video
-    $sql = '';
-    $sql .= 'select physical_filename, real_filename, topic_title, t.topic_id, extension ';
-    $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
-    $sql .= "where t.forum_id = 34 and a.topic_id = t.topic_id and extension = 'flv' ";
-    $sql .= 'order by rand() limit 1';
 
-    $res = mysql_query($sql);
-    if (mysql_num_rows($res) == 1)
-    {
-        $row = mysql_fetch_array($res);
-        $videofile = '/jwvideo' . $row['topic_id'] . '.flv';
-        $videoimage = '/jwimage' . $row['topic_id'] . '.jpg';
-    }
-    else {
-    }
+    $videos = array(
+			"http://www.youtube.com/embed/agShDTYsk_Q",
+			"http://www.youtube.com/embed/JVuXzGniJ54",
+			"http://www.youtube.com/embed/98IQkP2-CVQ",
+			"http://www.youtube.com/embed/aRHuRPMYUnU",
+			
+		);
+    $videofile = $videos[array_rand($videos)];
 
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
-    $fpkeys = array('#NEWSITEMS#', '#CNEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#', '#VIDEOIMAGE#');
-    $fpitems = array($news, $cnews, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile, $videoimage);
+    $fpkeys = array('#NEWSITEMS#', '#CNEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#');
+    $fpitems = array($news, $cnews, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile);
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
 
     // Compose the final page
