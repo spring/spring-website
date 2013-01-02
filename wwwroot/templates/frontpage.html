@@ -28,76 +28,7 @@
                   <table border="0" cellspacing="0" cellpadding="0" width="100%" id="frontmedia">
                     <tr>
                       <td id="frontmediavideotd" valign="top">
-                        <!-- Flash Video / MediaBox -->
-
-                        <script language="javascript" type="text/javascript">
-                        <!--
-                          function mm_click(visible, hidden)
-                          {
-                            var ve = document.getElementById(visible);
-                            var he = document.getElementById(hidden);
-                            he.className = 'mmhide';
-                            ve.className = 'mmshow';
-                          }
-                        // -->
-                        </script>
-
-                        <table border="0" cellpadding="0" cellspacing="0" width="286" height="205" id="frontvideomedia">
-                          <tr>
-                            <td colspan="3">
-
-                              <table border="0" cellspacing="0" cellpadding="0" class="menubar" width="286">
-                                <tr>
-                                  <td class="mmleft" onclick="mm_click('videos', 'screenshots'); return false">
-                                    <a href="/media.php" class="menubar mmleftsel">Videos</a>
-                                  </td>
-                                  <td><img src="/images/menudivider.png" height="25" width="1" alt=""/></td>
-                                  <td class="mmmid" onclick="mm_click('screenshots', 'videos'); return false">
-                                    <a href="/media.php" class="menubar mmmidsel">Screenshots</a>
-                                  </td>
-                                  <td><img src="/images/menudivider.png" height="25" width="1" alt="" /></td>
-                                  <td class="mmright" width="100%">
-                                    <a href="/media.php" class="menubar mmrightsel">Show more!</a>
-                                  </td>
-                                </tr>
-                              </table>
-
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="border: 1px solid #20292E;">
-				<div id='videos' class="mmshow">
-					<iframe width="284" height="180" src="#VIDEOFILE#" frameborder="0" allowfullscreen></iframe>
-				</div>
-                              <div id='screenshots' class="mmhide">
-                                <table cellpadding="0" cellspacing="0" border="0" width="284" height="180">
-                                  <tr>
-                                    <td>
-                                      #SCREEN1#
-                                    </td>
-                                    <td>
-                                      #SCREEN2#
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td>
-                                      #SCREEN3#
-                                    </td>
-                                    <td>
-                                      #SCREEN4#
-                                    </td>
-                                  </tr>
-                                  <tr height="19">
-                                    <td colspan="2" class="screendesc" style="border-top: 1px solid #20292E;">
-                                      Click any image to view a larger version
-                                    </td>
-                                  </tr>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-
+			<iframe width="284" height="205" src="#VIDEOFILE#" frameborder="0" allowfullscreen></iframe>
                       </td>
                       <td align="right" valign="top">
 
@@ -122,7 +53,7 @@
                     </div>
                     <div class="cnews">
                       <div class="newsbar">
-                        Community headlines supplied by <a href="http://springinfo.info">SpringInfo</a>
+                        Community headlines by <a href="http://springinfo.info">SpringInfo</a>
                       </div>
                       #CNEWSITEMS#
                     </div>
