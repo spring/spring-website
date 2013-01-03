@@ -67,10 +67,8 @@
 
     $videos = array(
 			"http://www.youtube.com/embed/vkZaLLyhEgI",
-			"http://www.youtube.com/embed/JVuXzGniJ54",
+			"http://www.youtube.com/embed/2mKhQD2SVqw",
 			"http://www.youtube.com/embed/98IQkP2-CVQ",
-			"http://www.youtube.com/embed/aRHuRPMYUnU",
-			
 		);
     $videofile = $videos[array_rand($videos)];
 
