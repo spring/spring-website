@@ -66,9 +66,10 @@
 
 
     $videos = array(
-			"http://www.youtube.com/embed/vkZaLLyhEgI?rel=0",
-			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0",
-			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0",
+			"http://www.youtube.com/embed/vkZaLLyhEgI?rel=0", #zero-k trailer
+			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0", #spring rts trailer
+			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0", #spring showcase
+			"http://www.youtube.com/embed/e0R2QsMwc98?rel=0", #NOTA trailer
 		);
     $videofile = $videos[array_rand($videos)];
 
