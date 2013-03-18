@@ -70,7 +70,7 @@ function get_news_from_feed($feedurl)
 
 function get_community_news()
 {
-	return get_news_from_feed('http://feeds.feedburner.com/SpringCommunityHeadlines');
+	return get_news_from_feed('http://www.springinfo.info/feed/');
 }
 
 function get_forum_posts()
