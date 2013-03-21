@@ -13,3 +13,8 @@ RewriteRule ^doxygen/(.*)$ http://spring.osocial.se/$1 [L,R=302]
 RewriteRule ^git/$ /cgi-bin/gitweb.cgi [L,QSA]
 RewriteRule ^stylesv([0-9]+).css /styles.css [NC]
 RewriteRule ^indexv([0-9]+).css /index.css [NC]
+
+# redirect for deprecated vclibs (moved to github)
+RewriteRule ^dl/vclibs/spring-vc(8|9|10)libs(.*)$ https://github.com/spring/vclibs$1/ [L,R=301]
+RewriteRule ^dl/vclibs/(.*)$ https://github.com/spring/vclibs10/ [L,R=301]
+
