@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
  *
  * @author Crazymadlover
  * @author Giro720
+ * @author Gusta
  * @author Hamilton Abreu
  * @author Luckas Blade
  * @author Luís Martins, lmar@ualg.pt
@@ -221,6 +222,7 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Este é um nome duplicado.'
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Pelo menos um projecto ainda utiliza este campo.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valor inválido para o campo "%1$s".';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definição de campo personalizado inválida.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propriedade de campo personalizado inválido ( %1$s ).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Falha na Autenticação LDAP.';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Falha na ligação ao servidor LDAP.';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Actualização de Registo LDAP falhou.';
@@ -272,6 +274,7 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'Evento "%1$s" ainda não foi declarado.
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'Plugin não está registado no MantisBT.';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Plugin já está instalado.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Não foi encontrada a página de plugin.';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Instalação do plugin falhada:  %1$s .';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'A actualização do schema do plugin falhou no bloco #%1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Houve um erro desconhecido "%1$s" durante a execução do plugin "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Campo "%1$s" contém coluna duplicada "%2$s".';
@@ -487,7 +490,9 @@ $s_from = 'De';
 $s_to = 'Para';
 $s_sent_you_this_reminder_about = 'enviou-lhe este aviso acerca de';
 $s_bug_reminder = 'Enviar um aviso';
-$s_reminder_sent_to = 'Aviso enviado a:';
+$s_reminder_sent_to = 'Aviso enviado a';
+$s_reminder_sent_none = 'Nenhum lembrete pôde ser mandado';
+$s_reminder_list_truncated = 'lista de destinatários corrompida, olhe o histórico para lista completa';
 $s_bug_send_button = 'Enviar';
 $s_reminder = 'Aviso';
 $s_reminder_explain = 'Esta nota será enviada aos destinatários indicados solicitando comentários a este problema.';
@@ -600,6 +605,7 @@ $s_protected = 'Protegido';
 $s_create_user_button = 'Criar Utilizador';
 $s_hide_disabled = 'Esconder desativados';
 $s_filter_button = 'Aplicar Filtro';
+$s_default_filter = 'Filtro padrão';
 $s_create_filter_link = 'Criar Permalink';
 $s_create_short_link = 'Criar link curto';
 $s_filter_permalink = 'Em seguida está uma ligação permanente para o filtro configurado actualmente:';
@@ -786,7 +792,7 @@ $s_account_reset_protected_msg = 'Conta protegida. Não é possível limpar a pa
 $s_account_reset_msg = 'Um pedido de confirmação foi enviado para o email do utilizador. Através deste pedido, o utilizador poderá modificar a sua palavra-passe.';
 $s_account_reset_msg2 = 'Palavra-chave da conta definida para vazia...';
 $s_account_unlock_msg = 'A conta foi desbloqueada.';
-$s_manage_user_protected_msg = 'Conta protegida. Nível de acesso e protecção activa. Caso contrário a conta foi actualizada...';
+$s_manage_user_protected_msg = 'Conta protegida; os campos \'Nível de acesso\' e \'Ativa\' não podem ser modificados. Os outros campos foram atualizados com sucesso.';
 $s_manage_user_updated_msg = 'Conta Actualizada com Sucesso...';
 $s_email_user_updated_subject = 'Conta actualizada';
 $s_email_user_updated_msg = 'A sua conta foi actualizada por um administrador. Segue-se uma lista destas alterações. Pode actualizar os detalhes e preferências da sua conta em qualquer altura através do URL:';
@@ -1111,7 +1117,7 @@ $s_delete_attachments = 'Apagar anexos';
 $s_delete_attachment_button = 'Apagar';
 $s_delete_attachment_sure_msg = 'Tem a certeza que quer apagar este anexo?';
 $s_upload_issue_attachments = 'Fazer o upload de anexos do problema';
-$s_filters = 'filtros';
+$s_filters = 'Filtros';
 $s_save_filters = 'Gravar filtros';
 $s_save_filters_as_shared = 'Gravar como filtros partilhados';
 $s_use_saved_filters = 'Usar filtros gravados';
@@ -1133,6 +1139,7 @@ $s_handle_sponsored_issue = 'Tratar de problema patrocinado';
 $s_others = 'Outros';
 $s_see_email_addresses_of_other_users = 'Ver os endereços de email dos outros utilizadores';
 $s_send_reminders = 'Enviar lembretes';
+$s_receive_reminders = 'Receber lembretes';
 $s_add_profiles = 'Adicionar perfis';
 $s_notify_of_new_user_created = 'Notifique quando for criado um novo utilizador';
 $s_email_notification = 'Notificação por email';
@@ -1140,7 +1147,7 @@ $s_status_changed_to = 'Estado muda para';
 $s_email_on_deleted = 'Email quando for apagado';
 $s_email_on_sponsorship_changed = 'Email ao mudar de patrocínio';
 $s_email_on_relationship_changed = 'Email quando houver alterações de relacionamento';
-$s_loading = 'A carregar...';
+$s_loading = 'A carregar…';
 $s_between_date = 'Entre';
 $s_on_or_before_date = 'Em ou antes de';
 $s_before_date = 'Antes de';

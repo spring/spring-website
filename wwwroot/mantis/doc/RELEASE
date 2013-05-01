@@ -1,4 +1,96 @@
 MantisBT Release Notes
+======================
+
+1.2.15 Security Release (2013-04-12)
+-------------------------------------------------
+
+MantisBT 1.2.15 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are strongly advised
+to upgrade to this release.
+
+The following security issues were resolved:
+
+ - Any malicious user could use the view issues page (search.php) to execute a
+   filter that could bring down the site by overloading the database server
+   (CVE-2013-1883). Affects MantisBT 1.2.12 and later.
+   Refer to issue #15573 for detailed information.
+
+ - A cross site scripting (XSS) vulnerability allowed execution of arbitrary
+   JavaScript code when deleting a version. Affects MantisBT 1.2.14 and later.
+   Refer to issue #15511 for detailed information.
+
+ - In some cases, the 'Close' button would be available to unauthorized users,
+   allowing them to close issues at will, bypassing the workflow settings.
+   Affects MantisBT 1.2.12 and later.
+   Refer to issue #15453 for detailed information.
+
+This release also includes several bug fixes and enhancements to the tracker
+and the SOAP api, as well as updated translations in many languages.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.14 Security Release (2013-01-29)
+-------------------------------------------------
+
+MantisBT 1.2.14 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are strongly advised
+to upgrade to this release.
+
+Four cross site scripting (XSS) vulnerability issues were discovered and
+resolved:
+
+ - A malicious person could trick a target user's browser into executing
+   arbitrary JavaScript code (CVE-2013-0197). This vulnerability is critical,
+   due to the affected page (search.php) being usable anonymously on public-
+   facing installations (i.e. without the need for a user login).
+   Affects MantisBT 1.2.12 only (earlier versions are not impacted)
+   Refer to issue #15373 for detailed information.
+
+ - A user holding manager/administrator permissions could create a category or
+   project name containing JavaScript code; from that point on, visitors to
+   (a) the Summary page (summary.php) as well as (b) the Configuration Report
+   page (adm_config_report.php), are exposed to having the JavaScript execute
+   within their browser environment. The severity of this issue is mitigated by
+   the need to have a privileged account to modify category and project names.
+   Issue (a) affects MantisBT version 1.2.12 and above, while (b) is on 1.2.13
+   only; earlier releases are not impacted.
+   Refer to issues #15384 (a) and #15415 (b) for detailed information.
+
+ - An administrator could enter a configuration option containing javascript
+   code, which would then be executed when displaying the Configuration Report
+   page (adm_config_report.php). The severity of this issue is mitigated by the
+   need to have a privileged account. Affects all MantisBT 1.2.x versions.
+   Refer to issue #15416 for detailed information.
+
+A workflow-related security issue was also fixed:
+
+ - A user with "Reporter" permissions can modify the workflow status of any
+   issue to "New" even if they do not have the necessary privileges to make
+   this change.
+   Refer to issue #15258 for detailed information.
+
+In addition to the corrections for the above-mentioned security issues, this
+release also includes several bug fixes and enhancements:
+
+ - improved Manage Configuration page (better performance, ability to filter
+   and edit config options)
+ - support for the built-in SOAP extension in addition to nusoap
+ - updated translations in many languages
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.13 Security Release (2013-01-22)
+-------------------------------------------------
+
+This version had to be withdrawn shortly after release, as it introduced a bug
+(#15411) causing the View Issues page to consume significantly more memory for
+instances with large numbers of users (order 10k+), leading to system crashes,
+as well as an XSS issue (#15415) in the Configuration Report page.
+
+We recommend not to use 1.2.13, and deploy version 1.2.14 instead.
+
 
 1.2.12 Maintenance Release (2012-11-10)
 -------------------------------------------------
@@ -259,6 +351,9 @@ There have also been many improvements to the codebase beyond adding features:
 
 [1] The changelog is split between multiple releases:
 
+	1.2.15     http://www.mantisbt.org/bugs/changelog_page.php?version_id=182
+	1.2.14     http://www.mantisbt.org/bugs/changelog_page.php?version_id=181
+	1.2.13     http://www.mantisbt.org/bugs/changelog_page.php?version_id=180
 	1.2.12     http://www.mantisbt.org/bugs/changelog_page.php?version_id=150
 	1.2.11     http://www.mantisbt.org/bugs/changelog_page.php?version_id=148
 	1.2.10     http://www.mantisbt.org/bugs/changelog_page.php?version_id=146

@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage HelperAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -281,7 +281,8 @@ function helper_set_current_project( $p_project_id ) {
  */
 function helper_clear_pref_cookies() {
 	gpc_clear_cookie( config_get( 'project_cookie' ) );
-	gpc_clear_cookie( config_get( 'manage_cookie' ) );
+	gpc_clear_cookie( config_get( 'manage_users_cookie' ) );
+	gpc_clear_cookie( config_get( 'manage_config_cookie' ) );
 }
 
 /**

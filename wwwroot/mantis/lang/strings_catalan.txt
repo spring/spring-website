@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,8 @@
  * @author BroOk
  * @author Martorell
  * @author Paucabot
+ * @author Pitort
+ * @author Ricard.nacher.roig
  * @author SMP
  * @author Solde
  * @author Ssola
@@ -220,6 +222,7 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Aquest nom està duplicat.'
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Al menys un projecte té aquest camp en ús.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valor incorrecte pel camp %1$s.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definició de camp personalitzat no vàlida';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propietat de camp personalitzat no vàlida ( %1$s ).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Ha fallat la validació LDAP';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Ha Fallat la connexió al servidor LDAP';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Ha fallat l\'actualització del registre LDAP.';
@@ -232,6 +235,7 @@ $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Aquesta és una categoria duplicada.'
 $MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'No s\'ha especificat cap acció de còpia.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Categoria no trobada.';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Category "%1$s" no trobada pel projecte "%2$s".';
+$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Aquesta categoria no es pot ser suprimida perquè ha estat definida com a "Categoria predefinida pels desplaçaments".';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Aquesta és una versió duplicada.';
 $MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'No s\'ha trobat la versió "%1$s".';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'El nom d\'usuari és invàlid. Els noms d\'usuari només poden tenir lletres llatines, números, espais, guions, punts, el signe més i subrallats.';
@@ -270,6 +274,7 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'L\'event "%1$s" encara no s\'ha declara
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'El plugin no està registrat en el MantisBT.';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'El plugin ja està instal·lat.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'No s\'ha trobat la pàgina del plugin.';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Ha fallat la instal·lació del connector:  %1$s .';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'L\'actualització de l\'esquema del plugin ha fallat en el bloc #%1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Hi ha hagut un error desconegut "%1$s" en l\'execució del plugin "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'El camp "%1$s" conté duplicats a la columna "%2$s".';
@@ -301,7 +306,7 @@ $s_priority_enum_string = '10:cap,20:baixa,30:normal,40:alta,50:urgent,60:immedi
 $s_severity_enum_string = '10:funcionalitat,20:trivial,30:text,40:ajust,50:menor,60:major,70:penjat,80:bloqueig';
 $s_reproducibility_enum_string = '10:sempre,30:de vegades,50:aleatori,70:no s\'ha intentat,90:no és possible duplicar,100:desconegut';
 $s_status_enum_string = '10:nou,20:es necessiten més dades,30:aceptat,40:confirmat,50:assignat,80:resolt,90:tancat';
-$s_resolution_enum_string = '10:obert,20:arreglat,30:reobert,40:no es pot reproduir,50:no es pot corregir,60:duplicat,70:no es requereixen canvis80:suspès,90:no s\'arreglarà';
+$s_resolution_enum_string = '10:obert,20:arreglat,30:reobert,40:no es pot reproduir,50:no es pot corregir,60:duplicat,70:no es requereixen canvis,80:suspès,90:no s\'arreglarà';
 $s_projection_enum_string = '10:cap,30:ajust,50:canvi menor,70:canvi important,90:redisseny';
 $s_eta_enum_string = '10:cap,20:< 1 dia,30:2-3 dies,40:< 1 setmana,50:< 1 mes,60:> 1 mes';
 $s_sponsorship_enum_string = '0:Impagat,1:Requerit,2:Pagat';
@@ -485,7 +490,9 @@ $s_from = 'De';
 $s_to = 'Per a';
 $s_sent_you_this_reminder_about = 'li ha enviat aquest recordatori sobre';
 $s_bug_reminder = 'Envia un recordatori';
-$s_reminder_sent_to = 'Recordatori enviat a:';
+$s_reminder_sent_to = 'Recordatori enviat a';
+$s_reminder_sent_none = 'Cap recordatori ha pogut ser enviat';
+$s_reminder_list_truncated = 'la llista de destinataris està truncada, mireu l\'historial de problemes per tenir una llista completa';
 $s_bug_send_button = 'Envia';
 $s_reminder = 'Recordatori';
 $s_reminder_explain = 'Aquesta nota serà enviada als destinataris que han sol·licitat més informació sobre aquesta incidència.';
@@ -598,6 +605,7 @@ $s_protected = 'Protegit';
 $s_create_user_button = 'Crea usuari';
 $s_hide_disabled = 'Amaga desactivats';
 $s_filter_button = 'Filtra';
+$s_default_filter = 'Filtre predeterminat';
 $s_create_filter_link = 'Crea Permalink';
 $s_create_short_link = 'Crea Enllaç Curt';
 $s_filter_permalink = 'El següent és un enllaç permanent al filtre configurat actualment:';
@@ -785,7 +793,7 @@ $s_account_reset_protected_msg = 'Compte Protegit. No és possible restablir la 
 $s_account_reset_msg = 'S\'ha enviat un correu de confirmació a l\'adreça de correu electrònic...';
 $s_account_reset_msg2 = 'La contrasenya s\'ha establert en blanc...';
 $s_account_unlock_msg = 'El compta ha estat desbloquejat.';
-$s_manage_user_protected_msg = 'Compte Protegit. Nivell d\'accés i activació protegits. Per la resta, el compte ha estat actualitzat...';
+$s_manage_user_protected_msg = 'Compte Protegit; els camps \'Nivell d\'accés\' i \'Activat\' no poden ser modificats. La resta dels camps han estat actualitzats.';
 $s_manage_user_updated_msg = 'El compte ha estat actualitzat...';
 $s_email_user_updated_subject = 'Compte actualitzat';
 $s_email_user_updated_msg = 'El vostre compte ha estat actualitzat per l\'administrador. La llista dels canvis es mostra a sota. Pot actualitzar els detalls i preferències del compte en qualsevol moment visitant la següent URL:';
@@ -932,6 +940,9 @@ $s_issue_id = 'Incidència #';
 $s_recently_visited = 'Visitades Recentment';
 $s_priority_abbreviation = 'P';
 $s_note_user_id = 'Nota De';
+$s_filter_match_type = 'Tipus de correspondència';
+$s_filter_match_all = 'Totes les condicions';
+$s_filter_match_any = 'Qualsevol condició';
 $s_none = 'cap';
 $s_current = 'actual';
 $s_search = 'Cerca';
@@ -1109,7 +1120,7 @@ $s_delete_attachments = 'Elimina adjunts';
 $s_delete_attachment_button = 'Elimina';
 $s_delete_attachment_sure_msg = 'Està segur que vol esborrar aquest adjunt?';
 $s_upload_issue_attachments = 'Penja adjunts a la incidència';
-$s_filters = 'filtres';
+$s_filters = 'Filtres';
 $s_save_filters = 'Desa filtres';
 $s_save_filters_as_shared = 'Desa filtres com a compartits';
 $s_use_saved_filters = 'Usa filtres desats';
@@ -1131,6 +1142,7 @@ $s_handle_sponsored_issue = 'Modifica incidència patrocinada';
 $s_others = 'ALTRES';
 $s_see_email_addresses_of_other_users = 'examina les adreces de correu d\'altres usuaris';
 $s_send_reminders = 'Envia recordatoris';
+$s_receive_reminders = 'Rebre notificacions';
 $s_add_profiles = 'Afegeix perfils';
 $s_notify_of_new_user_created = 'Notifica la creació d\'un nou usuari';
 $s_email_notification = 'Avís per correu eletrònic';

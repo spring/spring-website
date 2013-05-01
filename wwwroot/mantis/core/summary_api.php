@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage SummaryAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -605,7 +605,7 @@ function summary_print_by_category() {
 				FROM $t_mantis_bug_table b
 				JOIN $t_mantis_category_table AS c ON b.category_id=c.id
 				WHERE b.$specific_where
-				GROUP BY $t_project_query c.name, b.status
+				GROUP BY $t_project_query c.name, b.category_id, b.status
 				ORDER BY $t_project_query c.name";
 
 	$result = db_query( $query );
@@ -626,9 +626,9 @@ function summary_print_by_category() {
 		$v_category_name = $row['category_name'];
 
 		if(( $v_category_name != $last_category_name ) && ( $last_category_name != -1 ) ) {
-			$label = $last_category_name;
+			$label = string_display_line( $last_category_name );
 			if(( ON == $t_summary_category_include_project ) && ( ALL_PROJECTS == $t_project_id ) ) {
-				$label = sprintf( '[%s] %s', project_get_name( $last_project ), $label );
+				$label = sprintf( '[%s] %s', string_display_line( project_get_name( $last_project ) ), $label );
 			}
 
 			$t_bug_link = '<a class="subtle" href="' . config_get( 'bug_count_hyperlink_prefix' ) . '&amp;' . FILTER_PROPERTY_CATEGORY . '=' . urlencode( $last_category_name );
@@ -671,9 +671,9 @@ function summary_print_by_category() {
 	}
 
 	if( 0 < $t_bugs_total ) {
-		$label = $last_category_name;
+		$label = string_display_line( $last_category_name );
 		if(( ON == $t_summary_category_include_project ) && ( ALL_PROJECTS == $t_project_id ) ) {
-			$label = sprintf( '[%s] %s', project_get_name( $last_project ), $label );
+			$label = sprintf( '[%s] %s', string_display_line( project_get_name( $last_project ) ), $label );
 		}
 
 		$t_bug_link = '<a class="subtle" href="' . config_get( 'bug_count_hyperlink_prefix' ) . '&amp;' . FILTER_PROPERTY_CATEGORY . '=' . urlencode( $last_category_name );
@@ -753,7 +753,7 @@ function summary_print_by_project( $p_projects = null, $p_level = 0, $p_cache = 
 	}
 
 	foreach( $p_projects as $t_project ) {
-		$t_name = str_repeat( "&raquo; ", $p_level ) . project_get_name( $t_project );
+		$t_name = str_repeat( "&raquo; ", $p_level ) . string_display_line( project_get_name( $t_project ) );
 
 		$t_pdata = isset( $p_cache[$t_project] ) ? $p_cache[$t_project] : array( 'open' => 0, 'resolved' => 0, 'closed' => 0 );
 

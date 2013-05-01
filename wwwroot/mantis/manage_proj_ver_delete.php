@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -40,7 +40,7 @@
 
 	# Confirm with the user
 	helper_ensure_confirmed( lang_get( 'version_delete_sure' ) .
-		'<br />' . lang_get( 'version' ) . ': ' . $t_version_info->version,
+		'<br />' . lang_get( 'version' ) . ': ' . string_display_line( $t_version_info->version ),
 		lang_get( 'delete_version_button' ) );
 
 	version_remove( $f_version_id );

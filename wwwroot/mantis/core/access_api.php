@@ -18,7 +18,7 @@
  * Access Api
  *
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  * @package CoreAPI
  * @subpackage AccessAPI
@@ -417,25 +417,43 @@ function access_has_bug_level( $p_access_level, $p_bug_id, $p_user_id = null ) {
 	}
 
 	$t_project_id = bug_get_field( $p_bug_id, 'project_id' );
+	$t_bug_is_user_reporter = bug_is_user_reporter( $p_bug_id, $p_user_id );
+	$t_access_level = access_get_project_level( $t_project_id, $p_user_id );
 
 	# check limit_Reporter (Issue #4769)
 	# reporters can view just issues they reported
 	$t_limit_reporters = config_get( 'limit_reporters', null, $p_user_id, $t_project_id );
-	$t_report_bug_threshold = config_get( 'report_bug_threshold', null, $p_user_id, $t_project_id );
-	if ( $t_limit_reporters && !bug_is_user_reporter( $p_bug_id, $p_user_id ) && !access_has_project_level( $t_report_bug_threshold + 1, $t_project_id, $p_user_id ) ) {
-		return false;
+	if( $t_limit_reporters && !$t_bug_is_user_reporter ) {
+		# Here we only need to check that the current user has an access level
+		# higher than the lowest needed to report issues (report_bug_threshold).
+		# To improve performance, esp. when processing for several projects, we
+		# build a static array holding that threshold for each project
+		static $s_thresholds = array();
+		if( !isset( $s_thresholds[$t_project_id] ) ) {
+			$t_report_bug_threshold = config_get( 'report_bug_threshold', null, $p_user_id, $t_project_id );
+			if( !is_array( $t_report_bug_threshold ) ) {
+				$s_thresholds[$t_project_id] = $t_report_bug_threshold + 1;
+			} else if ( empty( $t_report_bug_threshold ) ) {
+				$s_thresholds[$t_project_id] = NOBODY;
+			} else {
+				sort( $t_report_bug_threshold );
+				$s_thresholds[$t_project_id] = $t_report_bug_threshold[0] + 1;
+			}
+		}
+		if( !access_compare_level( $t_access_level, $s_thresholds[$t_project_id] ) ) {
+			return false;
+		}
 	}
 
 	# If the bug is private and the user is not the reporter, then
 	# they must also have higher access than private_bug_threshold
-	if( bug_get_field( $p_bug_id, 'view_state' ) == VS_PRIVATE && !bug_is_user_reporter( $p_bug_id, $p_user_id ) ) {
-		$t_access_level = access_get_project_level( $t_project_id, $p_user_id );
+	if( !$t_bug_is_user_reporter && bug_get_field( $p_bug_id, 'view_state' ) == VS_PRIVATE ) {
 		$t_private_bug_threshold = config_get( 'private_bug_threshold', null, $p_user_id, $t_project_id );
 		return access_compare_level( $t_access_level, $t_private_bug_threshold )
-		    && access_compare_level( $t_access_level, $p_access_level );
+			&& access_compare_level( $t_access_level, $p_access_level );
 	}
 
-	return access_has_project_level( $p_access_level, $t_project_id, $p_user_id );
+	return access_compare_level( $t_access_level, $p_access_level );
 }
 
 /**
@@ -641,6 +659,10 @@ function access_get_status_threshold( $p_status, $p_project_id = ALL_PROJECTS ) 
 	if( isset( $t_thresh_array[(int)$p_status] ) ) {
 		return (int)$t_thresh_array[(int)$p_status];
 	} else {
-		return config_get( 'update_bug_status_threshold', null, null, $p_project_id );
+		if( $p_status == config_get( 'bug_submit_status', null, null, $p_project_id ) ) {
+			return config_get( 'report_bug_threshold', null, null, $p_project_id );
+		} else {
+			return config_get( 'update_bug_status_threshold', null, null, $p_project_id );
+		}
 	}
 }

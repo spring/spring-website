@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage ProjectAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -650,6 +650,30 @@ function project_get_all_user_rows( $p_project_id = ALL_PROJECTS, $p_access_leve
 	return array_values( $t_users );
 }
 
+/**
+ * Returns the upload path for the specified project, empty string if
+ * file_upload_method is DATABASE
+ * @param int $p_project_id
+ * @return string upload path
+ */
+function project_get_upload_path( $p_project_id ) {
+
+	if( DATABASE == config_get( 'file_upload_method', null, ALL_USERS, $p_project_id ) ) {
+		return '';
+	}
+
+	if( $p_project_id == ALL_PROJECTS ) {
+		$t_path = config_get( 'absolute_path_default_upload_folder', '', ALL_USERS, ALL_PROJECTS );
+	} else {
+		$t_path = project_get_field( $p_project_id, 'file_path' );
+		if( is_blank( $t_path ) ) {
+			$t_path = config_get( 'absolute_path_default_upload_folder', '', ALL_USERS, $p_project_id );
+		}
+	}
+
+	return $t_path;
+}
+
 # ===================================
 # Data Modification
 # ===================================
@@ -805,22 +829,4 @@ function project_delete_all_files( $p_project_id ) {
 function project_format_id( $p_project_id ) {
 	$t_padding = config_get( 'display_project_padding' );
 	return( utf8_str_pad( $p_project_id, $t_padding, '0', STR_PAD_LEFT ) );
-}
-
-
-# Return true if the file name identifier is unique, false otherwise
-function project_file_is_name_unique( $p_name ) {
-	$t_file_table = db_get_table( 'mantis_project_file_table' );
-
-	$query = "SELECT COUNT(*)
-				  FROM $t_file_table
-				  WHERE filename=" . db_param();
-	$result = db_query_bound( $query, Array( $p_name ) );
-	$t_count = db_result( $result );
-
-	if( $t_count > 0 ) {
-		return false;
-	} else {
-		return true;
-	}
 }

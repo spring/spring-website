@@ -28,7 +28,7 @@
 	 *
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 
@@ -578,7 +578,7 @@
 	 * String appended to the MantisBT version when displayed to the user
 	 * @global string $g_version_suffix
 	 */
-	$g_version_suffix		= '';
+	$g_version_suffix		= 'master-1.2.x-c4f6493';
 
 	/******************************
 	 * MantisBT Language Settings *
@@ -1056,20 +1056,19 @@
 	 */
 	$g_calendar_date_format   = 'Y-m-d H:i';
 
-	/**************************
+	/******************************
 	 * MantisBT TimeZone Settings *
-	 **************************/
+	 ******************************/
 
 	/**
-	 * Default timezone to use in mantis.
-	 * See http://us.php.net/manual/en/timezones.php
-	 * for a list of valid timezones.
-	 * Note: if this is left blank, we use the result of
-	 * date_default_timezone_get() i.e. in order:
-	 * 1. Reading the TZ environment variable (if non empty)
-	 * 2. Reading the value of the date.timezone php.ini option (if set)
-	 * 3. Querying the host operating system (if supported and allowed by the OS)
-	 * 4. If none of the above succeed, will return a default timezone of UTC.
+	 * Default timezone to use in MantisBT
+	 *
+	 * If this config is left blank, it will be initialized by calling function
+	 * {@link http://php.net/date-default-timezone-get date_default_timezone_get()}
+	 * to determine the default timezone.
+	 * Note that this function's behavior was modified in PHP 5.4.0.
+	 *
+	 * @link http://php.net/timezones List of Supported Timezones
 	 * @global string $g_default_timezone
 	 */
 	$g_default_timezone = '';
@@ -2527,7 +2526,6 @@
 	 * example: $g_set_status_threshold = array( ACKNOWLEDGED => MANAGER, CONFIRMED => DEVELOPER, CLOSED => MANAGER );
 	 * @global array $g_set_status_threshold
 	 */
-	$g_set_status_threshold = array();
 	$g_set_status_threshold = array( NEW_ => REPORTER );
 
 	/**
@@ -2805,28 +2803,36 @@
 	 *****************************/
 
 	/**
-	 * --- cookie path ---------------
-	 * set this to something more restrictive if needed
-	 * http://www.php.net/manual/en/function.setcookie.php
+	 * Specifies the path under which a cookie is visible
+	 * All scripts in this directory and its sub-directories will be able
+	 * to access MantisBT cookies.
+	 * It is recommended to set this to the actual MantisBT path.
+	 * @link http://php.net/function.setcookie
 	 * @global string $g_cookie_path
 	 */
 	$g_cookie_path			= '/';
 
 	/**
-	 *
+	 * The domain that the MantisBT cookies are available to
 	 * @global string $g_cookie_domain
 	 */
 	$g_cookie_domain		= '';
 
 	/**
-	 * cookie version for view_all_page
+	 * Version of the view_all_page cookie
+	 * It is not expected for the user to need to change this setting
+	 * @see $g_view_all_cookie
 	 * @global string $g_cookie_version
 	 */
 	$g_cookie_version		= 'v8';
 
 	/**
-	 * --- cookie prefix ---------------
-	 * set this to a unique identifier.  No spaces or periods.
+	 * Prefix for all MantisBT cookies
+	 * This should be an identifier which does not include spaces or periods,
+	 * and should be unique per MantisBT installation, especially if
+	 * $g_cookie_path is not restricting the cookies' scope to the actual
+	 * MantisBT directory.
+	 * @see $g_cookie_path
 	 * @global string $g_cookie_prefix
 	 */
 	$g_cookie_prefix		= 'MANTIS';
@@ -2850,10 +2856,16 @@
 	$g_view_all_cookie		= '%cookie_prefix%_VIEW_ALL_COOKIE';
 
 	/**
-	 *
-	 * @global string $g_manage_cookie
+	 * Stores the filter criteria for the Manage User page
+	 * @global string $g_manage_users_cookie
 	 */
-	$g_manage_cookie		= '%cookie_prefix%_MANAGE_COOKIE';
+	$g_manage_users_cookie		= '%cookie_prefix%_MANAGE_USERS_COOKIE';
+
+	/**
+	 * Stores the filter criteria for the Manage Config Report page
+	 * @global string $g_manage_config_cookie
+	 */
+	$g_manage_config_cookie		= '%cookie_prefix%_MANAGE_CONFIG_COOKIE';
 
 	/**
 	 *
@@ -3917,8 +3929,9 @@
 		'absolute_path_default_upload_folder', 'ldap_simulation_file_path', 'cookie_path',
 		'plugin_path', 'db_table_prefix', 'db_table_suffix', 'db_table', 'allow_permanent_cookie',
 		'cookie_time_length', 'cookie_domain', 'cookie_version', 'cookie_prefix',
-		'string_cookie', 'project_cookie', 'view_all_cookie', 'manage_cookie', 'logout_cookie',
-		'bug_list_cookie', 'db_username', 'db_password', 'db_schema', 'db_type', 'hostname',
+		'string_cookie', 'project_cookie', 'view_all_cookie', 'manage_users_cookie',
+		'manage_config_cookie', 'logout_cookie', 'bug_list_cookie',
+		'db_username', 'db_password', 'db_schema', 'db_type', 'hostname',
 		'allow_signup', 'database_name', 'show_queries_count', 'show_queries_threshold',
 		'show_queries_list', 'admin_checks', 'version_suffix', 'global_settings', 'use_iis',
 		'default_language', 'language_choices_arr', 'language_auto_map', 'fallback_language',

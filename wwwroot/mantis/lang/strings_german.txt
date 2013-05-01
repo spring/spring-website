@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -507,7 +507,9 @@ $s_from = 'Von';
 $s_to = 'An';
 $s_sent_you_this_reminder_about = 'hat Ihnen diese Erinnerung bezüglich des folgenden Eintrags gesandt';
 $s_bug_reminder = 'Erinnerung senden';
-$s_reminder_sent_to = 'Erinnerung gesendet an:';
+$s_reminder_sent_to = 'Erinnerung gesendet an';
+$s_reminder_sent_none = 'Es konnten keine Erinnerungen gesendet werden';
+$s_reminder_list_truncated = 'Die Liste der Empfänger wurde gekürzt.';
 $s_bug_send_button = 'Absenden';
 $s_reminder = 'Erinnerung';
 $s_reminder_explain = 'Diese Notiz wird an die aufgeführten Empfänger gesandt, um eine Rückmeldung zu diesem Eintrag anzufordern.';
@@ -620,6 +622,7 @@ $s_protected = 'Änderungsgeschützt';
 $s_create_user_button = 'Benutzer anlegen';
 $s_hide_disabled = 'inaktive ausblenden';
 $s_filter_button = 'Filter';
+$s_default_filter = 'Standardfilter';
 $s_create_filter_link = 'Permalink erzeugen';
 $s_create_short_link = 'Kurzen Link erzeugen';
 $s_filter_permalink = 'Dies ist ein permanenter Link zum derzeit aktiven Filter:';
@@ -807,7 +810,7 @@ $s_account_reset_protected_msg = 'Konto geschützt. Passwort kann nicht gelösch
 $s_account_reset_msg = 'Bestätigungsnachricht wurde an Ihre E-Mail-Adresse geschickt …';
 $s_account_reset_msg2 = 'Leeres Passwort wurde gesetzt …';
 $s_account_unlock_msg = 'Das Benutzerkonto wurde entsperrt';
-$s_manage_user_protected_msg = 'Konto geschützt. Zugriffsrechte und Aktivitätsflag sind geschützt. Andere Optionen wurden geändert …';
+$s_manage_user_protected_msg = 'Konto geschützt. Die Felder \'Zugangsberechtigung\' und \'Aktiv\' können nicht geändert werden. Andere Felder wurden erfolgreich aktualisiert.';
 $s_manage_user_updated_msg = 'Konto aktualisiert …';
 $s_email_user_updated_subject = 'Benutzerkonto aktualisiert';
 $s_email_user_updated_msg = 'Ihr Benutzerkonto wurde von einem Administrator aktualisiert. Eine Liste der Änderungen wird unten aufgelistet. Sie können Ihre Kontodetails und Einstellungen jederzeit unter der folgenden URL ändern:';
@@ -1154,6 +1157,7 @@ $s_handle_sponsored_issue = 'Gesponsorten Eintrag bearbeiten';
 $s_others = 'SONSTIGES';
 $s_see_email_addresses_of_other_users = 'E-Mail-Adressen von Benutzern ansehen';
 $s_send_reminders = 'Erinnerungen senden';
+$s_receive_reminders = 'Erinnerungen erhalten';
 $s_add_profiles = 'Profile hinzufügen';
 $s_notify_of_new_user_created = 'Benachrichtigung über neu angelegte Benutzer';
 $s_email_notification = 'E-Mail-Benachrichtigung';

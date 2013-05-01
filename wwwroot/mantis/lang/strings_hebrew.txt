@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -485,7 +485,9 @@ $s_from = 'מאת';
 $s_to = 'אל';
 $s_sent_you_this_reminder_about = 'שלח/ה אליך תזכורת זו בנוגע ל';
 $s_bug_reminder = 'שליחת תזכורת';
-$s_reminder_sent_to = 'תזכורת נשלחה אל:';
+$s_reminder_sent_to = 'תזכורת נשלחה אל';
+$s_reminder_sent_none = 'לא ניתן היה לשלוח את התזכורות';
+$s_reminder_list_truncated = 'רשימת המקבלים נחתכה, נא לפנות להיסטוריה לרשימה המלאה';
 $s_bug_send_button = 'שליחה';
 $s_reminder = 'תזכורת';
 $s_reminder_explain = 'תזכורת זו תשלח אל הנמענים המסומנים.';
@@ -598,6 +600,7 @@ $s_protected = 'מוגן';
 $s_create_user_button = 'שמירה';
 $s_hide_disabled = 'הסתרת חסומים';
 $s_filter_button = 'סינון';
+$s_default_filter = 'מסנן התחלתי';
 $s_create_filter_link = 'ליצור קישור קבוע';
 $s_create_short_link = 'ליצור קישור קצר';
 $s_filter_permalink = 'להלן קישור קבוע למסנן המוגדר כעת:';
@@ -784,7 +787,7 @@ $s_account_reset_protected_msg = 'החשבון מוגן. לא ניתן לאפס 
 $s_account_reset_msg = 'הודעת אישור נשלחה בדוא״ל למשתמש בחשבון. ההודעה תפנה את המשתמש לתהליך בחירת ססמה.';
 $s_account_reset_msg2 = 'הוגדרה ססמה ריקה...';
 $s_account_unlock_msg = 'הנעילה של החשבון הזה בוטלה.';
-$s_manage_user_protected_msg = 'החשבון מוגן. הפרטים עודכנו מלבד ההרשאות ומצב פעילות. אחרת, החשבון עודכן...';
+$s_manage_user_protected_msg = 'החשבון מוגן; לא ניתן לשנות את השדות "רמת גישה" ו"מופעל". שדות אחרים עודכנו בהצלחה.';
 $s_manage_user_updated_msg = 'החשבון עודכן';
 $s_email_user_updated_subject = 'החשבון עודכן';
 $s_email_user_updated_msg = 'החשבון שלך עודכן על־ידי מנהל המערכת. רשימה של השינויים הללו מוצגת להלן. תוכל לעדכן את פרטי החשבון שלך ואת ההעדפות בכל עת על־ידי ביקור בכתובת הבאה:';
@@ -1131,6 +1134,7 @@ $s_handle_sponsored_issue = 'לטפל בבאג שנמצא תחת חסות';
 $s_others = 'שונות';
 $s_see_email_addresses_of_other_users = 'הצגת כתובות דוא״ל של משתמשים אחרים';
 $s_send_reminders = 'שליחת תזכורות';
+$s_receive_reminders = 'קבלת תזכורות';
 $s_add_profiles = 'הוספת פרופילים';
 $s_notify_of_new_user_created = 'פתיחת חשבון חדש';
 $s_email_notification = 'התרעת דוא״ל';

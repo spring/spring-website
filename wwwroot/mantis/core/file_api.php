@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage FileAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -547,15 +547,22 @@ function file_clean_name( $p_filename ) {
 	return preg_replace( '/[\/*?"<>|\\ :&]/', "_", $p_filename );
 }
 
-# Generate a string to use as the identifier for the file
-# It is not guaranteed to be unique and should be checked
-# The string returned should be 32 characters in length
+/**
+ * Generate a string to use as the identifier for the file
+ * It is not guaranteed to be unique and should be checked
+ * @param string $p_seed
+ * @return string MD5 hash to use as filename
+ */
 function file_generate_name( $p_seed ) {
 	return md5( $p_seed . time() );
 }
 
-# Generate a UNIQUE string to use as the identifier for the file
-# The string returned should be 64 characters in length
+/**
+ * Generate a UNIQUE string to use as the identifier for the file
+ * @param string $p_seed Seed to generate the filename
+ * @param string $p_filepath File path
+ * @return string unique file name
+ */
 function file_generate_unique_name( $p_seed, $p_filepath ) {
 	do {
 		$t_string = file_generate_name( $p_seed );
@@ -565,40 +572,59 @@ function file_generate_unique_name( $p_seed, $p_filepath ) {
 	return $t_string;
 }
 
-# Return true if the diskfile name identifier is unique, false otherwise
+/**
+ * Validates that the given disk file name identifier is unique, checking both
+ * in the DB tables (bug and project) and on disk.
+ * This ensures that in case a file has been deleted from disk but its record
+ * remains in the DB, we never get in a situation where the DB points to a file
+ * which is not the originally uploaded one.
+ * @param string $p_name File name
+ * @param string $p_filepath File path
+ * @return bool true if unique
+ */
 function diskfile_is_name_unique( $p_name, $p_filepath ) {
-	$t_file_table = db_get_table( 'mantis_bug_file_table' );
+	$t_bug_file_table = db_get_table( 'mantis_bug_file_table' );
+	$t_project_file_table = db_get_table( 'mantis_project_file_table' );
 
 	$c_name = $p_filepath . $p_name;
 
-	$query = "SELECT COUNT(*)
-				  FROM $t_file_table
-				  WHERE diskfile=" . db_param();
-	$result = db_query_bound( $query, Array( $c_name ) );
-	$t_count = db_result( $result );
+	$t_query = "SELECT count(*)
+		FROM (
+			SELECT diskfile FROM $t_bug_file_table
+			UNION
+			SELECT diskfile FROM $t_project_file_table
+			) f
+		WHERE diskfile=" . db_param();
+	$t_result = db_query_bound( $t_query, array( $c_name ) );
+	$t_count = db_result( $t_result );
 
-	if( $t_count > 0 ) {
-		return false;
-	} else {
-		return true;
-	}
+	return ( $t_count == 0 ) && !file_exists( $c_name );
 }
 
-# Return true if the file name identifier is unique, false otherwise
-function file_is_name_unique( $p_name, $p_bug_id ) {
-	$t_file_table = db_get_table( 'mantis_bug_file_table' );
+/**
+ * Validates that the given file name is unique in the given context (we don't
+ * allow multiple attachments with the same name for a given bug or project)
+ * @param string $p_name File name
+ * @param int $p_bug_id Bug ID (not used for project files)
+ * @param string $p_table optional file table to check: 'project' or 'bug' (default)
+ * @return bool true if unique
+ */
+function file_is_name_unique( $p_name, $p_bug_id, $p_table  = 'bug' ) {
+	$t_file_table = db_get_table( "mantis_${p_table}_file_table" );
 
-	$query = "SELECT COUNT(*)
-				  FROM $t_file_table
-				  WHERE filename=" . db_param() . " AND bug_id=" . db_param();
-	$result = db_query_bound( $query, Array( $p_name, $p_bug_id ) );
-	$t_count = db_result( $result );
-
-	if( $t_count > 0 ) {
-		return false;
-	} else {
-		return true;
+	$t_query = "SELECT COUNT(*)
+		FROM $t_file_table
+		WHERE filename=" . db_param();
+	$t_param = array( $p_name );
+	if( $p_table == 'bug' ) {
+		$t_query .= " AND bug_id=" . db_param();
+		$t_param[] = $p_bug_id;
 	}
+
+	$t_result = db_query_bound( $t_query, $t_param );
+	$t_count = db_result( $t_result );
+
+	return ( $t_count == 0 );
 }
 
 /**
@@ -931,6 +957,8 @@ function file_get_content_type_override( $p_filename ) {
  * @param int $p_bug_id ID of bug containing attachments to be moved
  * @param int $p_project_id_to destination project ID for the bug
  * @return null
+ *
+ * @todo: this function can't cope with source or target storing attachments in DB
  */
 function file_move_bug_attachments( $p_bug_id, $p_project_id_to ) {
 	$t_project_id_from = bug_get_field( $p_bug_id, 'project_id' );

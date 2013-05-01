@@ -22,7 +22,7 @@
  * @package CoreAPI
  * @subpackage ObsoleteAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -142,3 +142,6 @@ config_obsolete( 'graph_colors', '' );
 # changes in 1.2.8
 config_obsolete( 'show_attachment_indicator' );
 config_obsolete( 'default_avatar', '' );
+
+# changes in 1.2.13
+config_obsolete( 'manage_cookie', 'manage_users_cookie' );

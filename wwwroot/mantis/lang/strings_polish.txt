@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,15 +28,19 @@
  * @author Adam Bienias <adam@fireworks.atomnet.pl>
  * @author Arkadiusz Hutta <hutta@poczta.onet.pl> 2005/08/10
  * @author BeginaFelicysym
+ * @author Chrumps
  * @author Cysioland
+ * @author Debeet
  * @author Derbeth
  * @author Hubert Kario <hka@qbs.com.pl>
  * @author Jaroslaw Lewandowski <jotel@jotel.net>
  * @author Kacper Kruszewski <kacper@netcetera.pl>
  * @author Leinad
  * @author Marcin Ulanecki <marcin dot ulanecki at vm dot pl> 2005/09/17
+ * @author Rezonansowy
  * @author Sp5uhe
  * @author Tomasz Czerniejewski <tomc at artifexmundi com> 2005/04/06
+ * @author Ty221
  * @author Woytecr
  */
 
@@ -49,7 +53,7 @@ $s_actiongroup_menu_delete = 'Usuń';
 $s_actiongroup_menu_resolve = 'Rozwiąż';
 $s_actiongroup_menu_update_priority = 'Aktualizuj priorytet';
 $s_actiongroup_menu_update_status = 'Aktualizuj status';
-$s_actiongroup_menu_update_severity = 'Aktualizacja ważności';
+$s_actiongroup_menu_update_severity = 'Aktualizuj ważność';
 $s_actiongroup_menu_update_view_status = 'Aktualizuj widoczność';
 $s_actiongroup_menu_update_category = 'Aktualizuj kategorię';
 $s_actiongroup_menu_set_sticky = 'Przyklej lub odklej';
@@ -60,7 +64,7 @@ $s_actiongroup_menu_update_product_build = 'Uaktualnij wersję produktu';
 $s_actiongroup_menu_add_note = 'Dodaj komentarz';
 $s_actiongroup_menu_attach_tags = 'Dołącz tagi';
 $s_actiongroup_bugs = 'Wybrane zgłoszenia';
-$s_actiongroup_error_issue_is_readonly = 'Zgłoszenie dostępny wyłącznie do odczytu.';
+$s_actiongroup_error_issue_is_readonly = 'Zgłoszenie jest tylko do odczytu.';
 $s_all_projects = 'Wszystkie projekty';
 $s_move_bugs = 'Przenieś zgłoszenia';
 $s_operation_successful = 'Operacja została zakończona pomyślnie.';
@@ -71,8 +75,8 @@ $s_excel_export = 'Eksport do Excela';
 $s_login_anonymously = 'Logowanie anonimowe';
 $s_anonymous = 'Anonimowy';
 $s_jump_to_bugnotes = 'Przejdź do komentarzy';
-$s_public_project_msg = 'Ten projekt jest PUBLICZNY. Wszyscy użytkownicy mają do niego dostęp.';
-$s_private_project_msg = 'Ten projekt jest PRYWATNY. Jedynie administratorzy i ręcznie dodani użytkownicy mają do niego dostęp.';
+$s_public_project_msg = 'Ten projekt jest publiczny. Wszyscy użytkownicy mają do niego dostęp.';
+$s_private_project_msg = 'Ten projekt jest prywatny. Jedynie administratorzy i ręcznie dodani użytkownicy mają do niego dostęp.';
 $s_access_level_project = 'Poziom dostępu';
 $s_view_submitted_bug_link = 'Zobacz zgłoszenie %1$s';
 $s_assigned_projects = 'Projekty przypisane';
@@ -119,7 +123,7 @@ $s_dependant_on = 'nadrzędne dla';
 $s_blocks = 'potomne';
 $s_new_bug = 'Nowe zgłoszenie';
 $s_bugnote_added = 'Dodano komentarz';
-$s_bugnote_edited = 'Edycja komentarza';
+$s_bugnote_edited = 'Edytowano komentarz';
 $s_bugnote_deleted = 'Usunięto komentarz';
 $s_summary_updated = 'Zaktualizowano temat';
 $s_description_updated = 'Zaktualizowano opis';
@@ -225,6 +229,7 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Ta nazwa jest już używana
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Przynajmniej jeden projekt używa jeszcze tego pola.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Błędna wartość pola „%1$s”.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Błędna definicja pola dodatkowego.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Podana własna wartość pola jest nieprawidłowa (%1$s).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Autentykacja LDAP nie powiodła się.';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Komunikacja z serwerem LDAP nie powiodła się.';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Nie udało się uaktualnić rekordu LDAP .';
@@ -276,6 +281,7 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'Zdarzenie „%1$s” nie zostało jeszc
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'Wtyczka nie została zarejestrowana w MantisBT.';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Wtyczka już jest zainstalowana.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Brak strony wtyczki.';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Instalacja wtyczki nie powiodła się: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Błąd aktualizacji schematu wtyczki w bloku %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Wystąpił nieznany błąd „%1$s” w trakcie wykonywania kodu wtyczki „%2$s”.';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Pole „%1$s” zawiera dwa razy kolumnę „%2$s”.';
@@ -304,7 +310,7 @@ $s_project_status_enum_string = '10:tworzony,30:ukończony,50:stabilny,70:zarzuc
 $s_project_view_state_enum_string = '10:publiczny,50:prywatny';
 $s_view_state_enum_string = '10:publiczny,50:prywatny';
 $s_priority_enum_string = '10:żaden,20:niski,30:normalny,40:wysoki,50:pilny,60:natychmiastowy';
-$s_severity_enum_string = '10:propozycja,20:błahy,30:tekst,40:poprawka,50:drobny,60:ważny,70:upadek,80:blokada';
+$s_severity_enum_string = '10:propozycja,20:błahy,30:tekst,40:poprawka,50:drobny,60:ważny,70:błąd krytyczny,80:blokujący';
 $s_reproducibility_enum_string = '10:zawsze,30:czasami,50:losowo,70:nie próbowano,90:nie do powtórzenia,100:nie dotyczy';
 $s_status_enum_string = '10:nowy,20:zwrócony,30:uznany,40:potwierdzony,50:przypisany,80:rozwiązany,90:zamknięty';
 $s_resolution_enum_string = '10:otwarty,20:poprawiony,30:ponownie otwarty,40:nie do powtórzenia,50:nienaprawialny,60:kopia,70:nie wymaga obsługi,80:zawieszony,90:nie zostanie naprawiony';
@@ -316,7 +322,7 @@ $s_new_account_greeting = 'Dziękujemy za rejestrację. Twoje konto nazwa się �
 $s_new_account_greeting_admincreated = 'Użytkownik %1$s stworzył dla Ciebie konto „%2$s”. W celu zakończenia rejestracji, odwiedź następujący adres URL (sprawdź, czy cały adres jest wpisany w jednej linii) i ustaw własne hasło dostępu:';
 $s_new_account_username = 'Nazwa użytkownika:';
 $s_new_account_message = 'Jeśli to nie twoje zgłoszenie, zignoruj tę wiadomość. Nic się nie stanie.';
-$s_new_account_do_not_reply = 'NIE ODPOWIADAJ NA TĘ WIADOMOŚĆ';
+$s_new_account_do_not_reply = 'Nie odpowiadaj na tą wiadomość';
 $s_new_account_email = 'Email:';
 $s_new_account_IP = 'Zdalny adres IP:';
 $s_new_account_signup_msg = 'Następujące konto zostało założone:';
@@ -491,7 +497,9 @@ $s_from = 'Od';
 $s_to = 'Do';
 $s_sent_you_this_reminder_about = 'wysłał ci przypomnienie o';
 $s_bug_reminder = 'Wyślij przypomnienie';
-$s_reminder_sent_to = 'Przypomnienie wysłano do:';
+$s_reminder_sent_to = 'Przypomnienie wysłano do';
+$s_reminder_sent_none = 'Przypomnienia nie mogły zostać wysłane';
+$s_reminder_list_truncated = 'lista odbiorców skrócona';
 $s_bug_send_button = 'Wyślij';
 $s_reminder = 'Przypomnienie';
 $s_reminder_explain = 'Ten komentarz zostanie wysłany do osób obserwujących zgłoszenie.';
@@ -604,6 +612,7 @@ $s_protected = 'Zabezpieczone';
 $s_create_user_button = 'Stwórz użytkownika';
 $s_hide_disabled = 'Ukryj wyłączone';
 $s_filter_button = 'Filtruj';
+$s_default_filter = 'Domyślny filtr';
 $s_create_filter_link = 'Utwórz stałe łącze';
 $s_create_short_link = 'Utórz krótkie łącze';
 $s_filter_permalink = 'To jest stałe łącze do aktualnie skonfigurowanego filtru:';
@@ -791,7 +800,7 @@ $s_account_reset_protected_msg = 'Konto zostało zabezpieczone. Nie można przyp
 $s_account_reset_msg = 'Wiadomość potwierdzającą wysłano na adres e-mail wybranego użytkownika. Postępując zgodnie z jej zawartością użytkownik będzie mógł zmienić swoje hasło.';
 $s_account_reset_msg2 = 'Konto nie wymaga podawania hasła...';
 $s_account_unlock_msg = 'Konto zostało odblokowane.';
-$s_manage_user_protected_msg = 'Konto zostało zabezpieczone. Za wyjątkiem Poziomu dostępu i Włączenia dane zostały zatualizowane...';
+$s_manage_user_protected_msg = 'Konto zostało zabezpieczone; pola \'Poziomu dostępu\' i \'Włączenia\' nie mogą być zmienione. Inne pola zostały pomyślnie zaktualizowane.';
 $s_manage_user_updated_msg = 'Konto zostało zaktualizowane...';
 $s_email_user_updated_subject = 'Konto zaktualizowane';
 $s_email_user_updated_msg = 'Konto zostało zaktualizowane przez administratora. Lista zmian znajduje się poniżej. Możesz zmienić dane i preferencje swojego konta w dowolnym momencie, wchodząc na adres URL:';
@@ -1117,7 +1126,7 @@ $s_delete_attachments = 'Usuń załączniki';
 $s_delete_attachment_button = 'Usuń';
 $s_delete_attachment_sure_msg = 'Czy na pewno chcesz usunąć ten załącznik?';
 $s_upload_issue_attachments = 'Załaduj załącznik';
-$s_filters = 'filtry';
+$s_filters = 'Filtry';
 $s_save_filters = 'Zapisz filtry';
 $s_save_filters_as_shared = 'Zapisz filtry jako współdzielone';
 $s_use_saved_filters = 'Użyj zapisanych filtrów';
@@ -1139,6 +1148,7 @@ $s_handle_sponsored_issue = 'Obsłuż sponsorowane zgłoszenie';
 $s_others = 'INNE';
 $s_see_email_addresses_of_other_users = 'Pokazuj adresy email innych użytkowników';
 $s_send_reminders = 'Wysyłaj przypomnienia';
+$s_receive_reminders = 'Otrzymuj przypomnienia';
 $s_add_profiles = 'Dodawaj profile';
 $s_notify_of_new_user_created = 'Informuj o nowych użytkownikach';
 $s_email_notification = 'Powiadomienia e-mail';

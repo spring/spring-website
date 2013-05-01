@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -470,7 +470,7 @@ $s_product_version = 'Väsjohn vum Produk
 ';
 $s_fixed_in_version = 'Jedonn en dä Version';
 $s_target_version = 'Jeplaant för de Version';
-$s_votes = 'Shtemme';
+$s_votes = 'Schtemme';
 $s_summary = 'Zosammefaßong';
 $s_update_information_button = 'Lohß Jonn!';
 $s_profile = 'Profil';
@@ -554,6 +554,8 @@ $s_category_deleted_msg = 'Di Saachjropp wood fott jeschmeße...';
 $s_category_delete_sure_msg = 'Wells De di Saachjropp „%1$s“ verhaftesh fott schmiiße? <br /> Do sin %2$d Aanjelääjeheite dren.';
 $s_categories = 'Saachjroppe';
 $s_add_category_button = 'Donn en Saachjrupp derbei';
+$s_versions = 'Väsjohne';
+$s_version = 'Väsjohn';
 $s_add_project_button = 'Donn e Projäk derbei';
 $s_projects_title = 'Projäkte';
 $s_version_delete_sure = 'Wells De heh di Version verhaftesch fottschmiiße?';
@@ -597,10 +599,10 @@ $s_signup_title = 'Aanmälde';
 $s_signup_button = 'Aanmälde';
 $s_no_password_request = 'Ding Paßwoot weed vun enem andere Süßteem verwalldt. Donn Desch aan Dinge Verwallder vun däm Süßteem wende.';
 $s_edit_site_settings_title = 'Enschtellunge för di Websait Ändere';
-$s_save_settings_button = 'Enschtellunge faßhallde';
-$s_site_settings_title = 'Enschtellunge för di Webßait';
+$s_save_settings_button = 'Enschtällonge faßhallde';
+$s_site_settings_title = 'Enschtällonge för di Webßait';
 $s_system_info_link = 'Enfommazjuhne övver et Süßteem';
-$s_site_settings_link = 'Enschtellunge för di Webßait';
+$s_site_settings_link = 'Enschtällonge för di Webßait';
 $s_site_settings_updated_msg = 'De Enschtellunge för di Webßait sin jäz aanjepaß';
 $s_summary_title = 'Zosammefaßong';
 $s_summary_advanced_link = 'Fottjeschredde Zosammefaßung';
@@ -621,7 +623,7 @@ $s_total = 'Jesamp';
 $s_most_active = 'Aam aktiivste';
 $s_score = 'Punkte';
 $s_days = 'Dääsch';
-$s_time_stats = 'Shtatistik övver de Zick för äleedesch Saache (Dääsch)';
+$s_time_stats = 'Schtatistik övver de Zick un Door för äleedeschte Saache (Dääsch)';
 $s_longest_open = 'Aam längste unjedonn';
 $s_total_time = 'Jesampzigg';
 $s_any = 'jeede';
@@ -693,7 +695,7 @@ $s_custom_field_project_count = 'Aanzahl Projäkte';
 $s_custom_field_type = 'Zoot';
 $s_custom_field_possible_values = 'Müjjelesche Wääte';
 $s_custom_field_default_value = 'Dä Shtandatt_Wäät';
-$s_custom_field_valid_regexp = '<i lang="en">Regular expression</i>';
+$s_custom_field_valid_regexp = 'Ene rejolähre Ußdrok';
 $s_custom_field_access_level_r = 'Zohjang zom Lässe';
 $s_custom_field_access_level_rw = 'Zohjang zom Schriive';
 $s_custom_field_length_min = 'De köözeste Läng';

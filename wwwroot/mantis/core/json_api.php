@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage JSONAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -33,8 +33,8 @@ require_once( 'lang_api.php' );
 /**
  * Get a chunk of JSON from a given URL.
  * @param string URL
- * @param string Top-level member to retrieve
- * @return multi JSON class structure
+ * @param string Optional top-level member to retrieve
+ * @return multi JSON class structure, false in case of non-existent member
  */
 function json_url( $p_url, $p_member = null ) {
 	$t_data = url_get( $p_url );
@@ -42,8 +42,10 @@ function json_url( $p_url, $p_member = null ) {
 
 	if( is_null( $p_member ) ) {
 		return $t_json;
-	} else {
+	} else if( property_exists( $t_json, $p_member ) ) {
 		return $t_json->$p_member;
+	} else {
+		return false;
 	}
 }
 
@@ -60,6 +62,8 @@ function json_error_handler( $p_type, $p_error, $p_file, $p_line, $p_context ) {
 		}
 	}
 
+	$t_error_code = ERROR_GENERIC; // default
+	
 	# build an appropriate error string
 	switch( $p_type ) {
 		case E_WARNING:
@@ -72,10 +76,12 @@ function json_error_handler( $p_type, $p_error, $p_file, $p_line, $p_context ) {
 			break;
 		case E_USER_ERROR:
 			$t_error_type = "APPLICATION ERROR #$p_error";
+			$t_error_code = $p_error;
 			$t_error_description = error_string( $p_error );
 			break;
 		case E_USER_WARNING:
 			$t_error_type = "APPLICATION WARNING #$p_error";
+			$t_error_code = $p_error;
 			$t_error_description = error_string( $p_error );
 			break;
 		case E_USER_NOTICE:
@@ -91,7 +97,11 @@ function json_error_handler( $p_type, $p_error, $p_file, $p_line, $p_context ) {
 
 	json_output_raw(array(
 		'status' => 'ERROR',
-		'type' => $t_error_type,
+		'error' => array(
+			'code' => $t_error_code,
+			'type' => $t_error_type,
+			'message' => $t_error_description
+		),
 		'contents' => $t_error_description 
 	));
 }

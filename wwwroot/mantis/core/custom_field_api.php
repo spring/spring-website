@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage CustomFieldAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -648,9 +648,10 @@ function custom_field_get_id_from_name( $p_field_name, $p_truncated_length = nul
 		$c_field_name = $p_field_name . '%';
 	}
 
-	$t_result = db_query_bound( $query, $c_field_name );
+	$t_result = db_query_bound( $query, array( $c_field_name ) );
 
 	if( db_num_rows( $t_result ) == 0 ) {
+		$g_cache_name_to_id_map[$p_field_name] = false;
 		return false;
 	}
 
@@ -1160,7 +1161,8 @@ function custom_field_distinct_values( $p_field_def, $p_project_id = ALL_PROJECT
 		$t_query = "
 			SELECT DISTINCT cfst.value
 			FROM $t_from
-			WHERE $t_where1 $t_where2";
+			WHERE $t_where1 $t_where2
+			ORDER BY cfst.value";
 
 		$t_result = db_query_bound( $t_query, $t_params );
 		$t_row_count = db_num_rows( $t_result );

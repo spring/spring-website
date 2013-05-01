@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-define( 'MANTIS_VERSION', '1.2.12' );
+define( 'MANTIS_VERSION', '1.2.16dev' );
 
 # --- constants -------------------
 # magic numbers
@@ -469,6 +469,7 @@ define( 'TOKEN_EXPIRY_AUTHENTICATED', 5 * 60 );
 define( 'TOKEN_EXPIRY_COLLAPSE', 365 * 24 * 60 * 60 );
 
 # config types
+define( 'CONFIG_TYPE_DEFAULT', 0 );
 define( 'CONFIG_TYPE_INT', 1 );
 define( 'CONFIG_TYPE_STRING', 2 );
 define( 'CONFIG_TYPE_COMPLEX', 3 );

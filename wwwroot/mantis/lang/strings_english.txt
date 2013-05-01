@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -584,7 +584,9 @@ $s_from = 'From';
 $s_to = 'To';
 $s_sent_you_this_reminder_about = 'sent you this reminder about';
 $s_bug_reminder = 'Send a reminder';
-$s_reminder_sent_to = 'Reminder sent to:';
+$s_reminder_sent_to = 'Reminder sent to';
+$s_reminder_sent_none = 'No reminders could be sent';
+$s_reminder_list_truncated = 'recipients list truncated';
 $s_bug_send_button = 'Send';
 $s_reminder = 'Reminder';
 $s_reminder_explain = 'This note will be sent to the recipients listed requesting feedback on this issue.';
@@ -748,6 +750,7 @@ $s_create_user_button = 'Create User';
 # manage_page.php
 $s_hide_disabled = 'Hide Disabled';
 $s_filter_button = 'Apply Filter';
+$s_default_filter = 'Default Filter';
 $s_create_filter_link = 'Create Permalink'; # Permalink = Permanent Link
 $s_create_short_link = 'Create Short Link';
 $s_filter_permalink = 'Following is a permanent link to the currently configured filter:';
@@ -997,7 +1000,7 @@ $s_account_reset_msg2 = 'Account password has been set to blank...';
 $s_account_unlock_msg = 'The account has been unlocked.';
 
 # manage_user_update.php
-$s_manage_user_protected_msg = 'Account protected. Access level and enabled protected. Otherwise, account has been updated...';
+$s_manage_user_protected_msg = 'Account protected; the \'Access Level\' and \'Enabled\' fields cannot be modified. Other fields were successfully updated.';
 $s_manage_user_updated_msg = 'Account successfully updated...';
 $s_email_user_updated_subject = 'Account updated';
 $s_email_user_updated_msg = 'Your account has been updated by an administrator. A list of these changes is provided below. You can update your account details and preferences at any time by visiting the following URL:';
@@ -1433,7 +1436,7 @@ $s_delete_attachments = 'Delete attachments';
 $s_delete_attachment_button = 'Delete';
 $s_delete_attachment_sure_msg = 'Are you sure you wish to delete this attachment?';
 $s_upload_issue_attachments = 'Upload issue attachments';
-$s_filters = 'filters';
+$s_filters = 'Filters';
 $s_save_filters = 'Save filters';
 $s_save_filters_as_shared = 'Save filters as shared';
 $s_use_saved_filters = 'Use saved filters';
@@ -1455,6 +1458,7 @@ $s_handle_sponsored_issue = 'Handle sponsored issue';
 $s_others = 'Others';
 $s_see_email_addresses_of_other_users = 'See e-mail addresses of other users';
 $s_send_reminders = 'Send reminders';
+$s_receive_reminders = 'Receive reminders';
 $s_add_profiles = 'Add profiles';
 $s_notify_of_new_user_created = 'Notify of new user created';
 $s_email_notification = 'E-mail notification';

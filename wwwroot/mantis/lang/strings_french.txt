@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -511,7 +511,9 @@ $s_from = 'De';
 $s_to = 'À';
 $s_sent_you_this_reminder_about = 'vous a envoyé un rappel à propos de';
 $s_bug_reminder = 'Envoyer un rappel';
-$s_reminder_sent_to = 'Rappel envoyé à :';
+$s_reminder_sent_to = 'Rappel envoyé à';
+$s_reminder_sent_none = 'Aucun rappel n’a pu être envoyé';
+$s_reminder_list_truncated = 'liste de destinataires tronquée, voyez l’historique des problèmes pour une liste complète';
 $s_bug_send_button = 'Envoyer';
 $s_reminder = 'Rappel';
 $s_reminder_explain = 'Cette note sera envoyée aux destinataires surveillant ce bogue.';
@@ -624,6 +626,7 @@ $s_protected = 'Protégé';
 $s_create_user_button = 'Créer l\'utilisateur';
 $s_hide_disabled = 'Cacher désactivés';
 $s_filter_button = 'Filtrer';
+$s_default_filter = 'Filtre par défaut';
 $s_create_filter_link = 'Créer lien permanent';
 $s_create_short_link = 'Créer lien court';
 $s_filter_permalink = 'Ci-dessous un lien permanent vers le filtre actuel :';
@@ -687,7 +690,7 @@ $s_desc_bug_submit_status = 'Phase pour un nouveau bogue';
 $s_desc_bug_reopen_status = 'Phase pour les bogues réouverts';
 $s_desc_bug_resolved_status_threshold = 'Phase à laquelle un bogue est considéré comme résolu';
 $s_desc_bug_closed_status_threshold = 'Statuts pour lesquels un bogue est considéré comme fermé';
-$s_workflow_change_access = 'Modifier les utilisateurs qui peuvent faire des modifications auworkflow à';
+$s_workflow_change_access = 'Modifier les utilisateurs qui peuvent faire des modifications au workflow à';
 $s_access_change_access = 'Modifier les utilisateurs qui peuvent faire des modifications aux niveaux d\'accès';
 $s_default_not_in_flow = 'La phase par défaut de %1$s n\'est pas définie pour %2$s dans les phases suivantes. Elle sera ignorée.';
 $s_assign_issue = 'Assigner un bogue';
@@ -811,7 +814,7 @@ $s_account_reset_protected_msg = 'Ce compte est protégé. Vous ne pouvez pas r�
 $s_account_reset_msg = 'Le message de confirmation a été envoyé à votre courriel...';
 $s_account_reset_msg2 = 'Mot de passe du compte a été mis à vide...';
 $s_account_unlock_msg = 'Le compte a été déverrouillé.';
-$s_manage_user_protected_msg = 'Compte protégé. Accréditation et activation protégées. Autrement, le compte a été mis à jour...';
+$s_manage_user_protected_msg = 'Compte protégé; les champs \'Niveau d’accès\' et \'Activé\' ne peuvent pas être modifiés. Les autres champs ont bien été mis à jour.';
 $s_manage_user_updated_msg = 'Le compte a été mis à jour...';
 $s_email_user_updated_subject = 'Compte mis à jour';
 $s_email_user_updated_msg = 'Votre compte a été mis à jour par un administrateur. Une liste des modifications est affichée ci-dessous. Vous pouvez mettre à jour les détails et préférences de votre compte en visitant l\'URL suivante :';
@@ -1137,7 +1140,7 @@ $s_delete_attachments = 'Supprimer les pièces jointes';
 $s_delete_attachment_button = 'Supprimer';
 $s_delete_attachment_sure_msg = 'Êtes-vous certain de vouloir supprimer cette pièce jointe ?';
 $s_upload_issue_attachments = 'Mettre à jour les pièces jointes d\'un bogue';
-$s_filters = 'filtres';
+$s_filters = 'Filtres';
 $s_save_filters = 'Enregistrer les filtres';
 $s_save_filters_as_shared = 'Enregistrer et partager les filtres';
 $s_use_saved_filters = 'Utiliser les filtres enregistrés';
@@ -1159,6 +1162,7 @@ $s_handle_sponsored_issue = 'Traiter un bogue commandité';
 $s_others = 'Autres';
 $s_see_email_addresses_of_other_users = 'Voir les adresses de courriel des autres utilisateurs';
 $s_send_reminders = 'Envoyer des rappels';
+$s_receive_reminders = 'Recevoir des rappels';
 $s_add_profiles = 'Ajouter des profils';
 $s_notify_of_new_user_created = 'Signaler de la création d\'un nouvel utilisateur';
 $s_email_notification = 'Notification pour courriel';

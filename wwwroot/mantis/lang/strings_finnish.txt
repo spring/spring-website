@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
  * @author Crt
  * @author Jani Reinikainen, devel@reinikainen.net
  * @author Juha, jomustaj@iki.fi
+ * @author Lliehu
  * @author Nike
  * @author Silvonen
  * @author Str4nd
@@ -465,6 +466,7 @@ $s_unmonitor_bug_button = 'Lopeta tapahtuman seuranta';
 $s_file_upload_msg = 'Tiedoston lähetys onnistui';
 $s_upload_file = 'Lähetä tiedosto';
 $s_select_file = 'Valitse tiedosto';
+$s_select_files = 'Valitse tiedostot';
 $s_upload_file_button = 'Lähetä tiedosto';
 $s_max_file_size = 'Enimmäiskoko';
 $s_bug_reopened_msg = 'Tapahtuma on uudelleenavattu...';
@@ -492,7 +494,7 @@ $s_bug_updated_msg = 'Tapahtuma on onnistuneesti päivitetty...';
 $s_back_to_bug_link = 'Takaisin tapahtumaan';
 $s_update_simple_link = 'Yksinkertainen päivitys';
 $s_updating_bug_advanced_title = 'Päivitetään tapahtuman tietoja';
-$s_id = 'ID';
+$s_id = 'Tunniste';
 $s_category = 'Kategoria';
 $s_severity = 'Vakavuusaste';
 $s_reproducibility = 'Toistettavuus';
@@ -776,7 +778,7 @@ $s_users_new = 'Uusi';
 $s_account_reset_protected_msg = 'Käyttäjätunnus on suojattu. Salasanaa ei voida resetoida.';
 $s_account_reset_msg = 'Vahvistusviesti on lähetetty sähköpostiosoitteeseesi...';
 $s_account_reset_msg2 = 'Käyttäjätunnukselle on asetettu tyhjä salasana...';
-$s_manage_user_protected_msg = 'Käyttäjätunnus on suojattu. Käyttöoikeustaso ja Käytössä -valinnat suojattu. Kaikki muu käyttäjätunnuksessa päivitetty...';
+$s_manage_user_protected_msg = 'Käyttäjätunnus on suojattu. Kenttiö ”käyttöoikeustaso” ja ”käytössä” ei voi muuttaa. Muut kentät päivitettiin.';
 $s_manage_user_updated_msg = 'Käyttäjätunnus päivitetty...';
 $s_email_user_updated_subject = 'Tili päivitetty';
 $s_email_user_updated_msg = 'Ylläpito on päivittänyt tilisi. Lista tehdyistä muutoksista on alla. Voit päivittää tilitietosi ja oletusarvosi käymällä seuraavassa osoitteessa:';
@@ -960,6 +962,7 @@ $s_update_bug_button = 'Muokkaa';
 $s_bug_assign_to_button = 'Osoita henkilölle:';
 $s_bug_status_to_button = 'Muuta tilaksi:';
 $s_reopen_bug_button = 'Avaa uudelleen';
+$s_close_bug_button = 'Sulje';
 $s_move_bug_button = 'Siirrä';
 $s_attached_files = 'Liitetiedostot';
 $s_publish = 'Julkaise';
@@ -1056,6 +1059,7 @@ $s_relationship_warning_blocking_bugs_not_resolved_2 = '<b>Huom:</b> Tällä tap
 $s_create_child_bug_button = 'Kloonaa';
 $s_bug_cloned_to = 'Tapahtuma kloonattu';
 $s_bug_created_from = 'Tapahtuma luotu tapahtumasta';
+$s_copy_attachments_from_parent = 'Kopioi liitteet';
 $s_viewing_bug_relationship_graph_title = 'Relaatiograafi';
 $s_viewing_bug_dependency_graph_title = 'Riippuvuusgraafi';
 $s_relation_graph = 'Relaatiograafi';
@@ -1094,7 +1098,7 @@ $s_delete_attachments = 'Poista liitetiedostoja';
 $s_delete_attachment_button = 'Poista';
 $s_delete_attachment_sure_msg = 'Oletko varma, että haluat poistaa tämän liitetiedoston?';
 $s_upload_issue_attachments = 'Päivitä tapahtuman liitetiedostoja';
-$s_filters = 'suotimet';
+$s_filters = 'Suotimet';
 $s_save_filters = 'Tallenna suotimet';
 $s_save_filters_as_shared = 'Tallenna suotimet jaettuina';
 $s_use_saved_filters = 'Käytä talletettuja suotimia';
@@ -1167,7 +1171,7 @@ $s_tag_related_issues = 'Jaetut tapahtumat (%1$s)';
 $s_tag_stats_attached = 'Liitetyt tapahtumat: %1$s';
 $s_tag_create = 'Luo tägi';
 $s_show_all_tags = 'Kaikki';
-$s_time_tracking_billing_link = 'Laskutus';
+$s_time_tracking_billing_link = 'Ajanseuranta';
 $s_time_tracking = 'Ajanseuranta';
 $s_time_tracking_get_info_button = 'Nouda ajanseurantatietoa';
 $s_time_tracking_cost_per_hour = 'Kustannus / tunti';

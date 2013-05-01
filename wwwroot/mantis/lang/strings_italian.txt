@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -492,7 +492,9 @@ $s_from = 'Da';
 $s_to = 'A';
 $s_sent_you_this_reminder_about = 'ti invia questo memorandum a proposito dell\'anomalia';
 $s_bug_reminder = 'Invia un memorandum';
-$s_reminder_sent_to = 'Memorandum spedito a:';
+$s_reminder_sent_to = 'Memorandum spedito a';
+$s_reminder_sent_none = 'Nessun promemoria può essere inviato';
+$s_reminder_list_truncated = 'elenco destinatari troncato, consulta la cronologia per l\'elenco completo';
 $s_bug_send_button = 'Invia';
 $s_reminder = 'Memorandum';
 $s_reminder_explain = 'Questo memorandum verrà inviato agli utenti selezionati a cui si richiede un feedback sull\'anomalia.';
@@ -606,6 +608,7 @@ $s_protected = 'Protetto';
 $s_create_user_button = 'Crea utente';
 $s_hide_disabled = 'Nascondi disabilitati';
 $s_filter_button = 'Applica il filtro';
+$s_default_filter = 'Filtro predefinito';
 $s_create_filter_link = 'Crea link permanente';
 $s_create_short_link = 'Crea link breve';
 $s_filter_permalink = 'Quello che segue è un link permanente alla configurazione attuale dei filtri:';
@@ -792,7 +795,7 @@ $s_account_reset_protected_msg = 'Account protetto.  Non è possibile resettare 
 $s_account_reset_msg = 'Il codice di convalida è stata inviato via email all\'utente...  Con quello l\'utente sarà in grado di cambiare la propria password.';
 $s_account_reset_msg2 = 'La password è stata rimossa...';
 $s_account_unlock_msg = 'L\'account è stato sbloccato.';
-$s_manage_user_protected_msg = 'Account protetto.  Il livello di accesso e l\'abilitazione non sono modificabili.  Per il resto, l\'account è stato aggiornato...';
+$s_manage_user_protected_msg = 'Account protetto. Il "livello di accesso" e "l\'abilitazione" non sono modificabili. Per il resto, l\'account è stato aggiornato...';
 $s_manage_user_updated_msg = 'Account aggiornato correttamente...';
 $s_email_user_updated_subject = 'Utenza aggiornata';
 $s_email_user_updated_msg = 'La tua utenza é stata aggiornata dall\'amministratore. La lista delle modifiche effettuate é riportata sotto. Puoi modificare i dettagli della tua utenza e le preferenze ogni volta che lo desideri visitando il seguente indirizzo:';
@@ -1117,7 +1120,7 @@ $s_delete_attachments = 'Elimina allegati';
 $s_delete_attachment_button = 'Elimina allegato';
 $s_delete_attachment_sure_msg = 'Sei sicuro di voler eliminare questo allegato?';
 $s_upload_issue_attachments = 'Aggiungere allegati ad una anomalia';
-$s_filters = 'filtri';
+$s_filters = 'Filtri';
 $s_save_filters = 'Crea nuovi filtri';
 $s_save_filters_as_shared = 'Crea nuovi filtri condivisi';
 $s_use_saved_filters = 'Utilizza i filtri memorizzati';
@@ -1139,6 +1142,7 @@ $s_handle_sponsored_issue = 'Gestisce anomalia sponsorizzata';
 $s_others = 'ALTRI';
 $s_see_email_addresses_of_other_users = 'Visualizza indirizzi email altri utenti';
 $s_send_reminders = 'Invia memorandum';
+$s_receive_reminders = 'Ricevi promemoria';
 $s_add_profiles = 'Aggiunge nuovi profili';
 $s_notify_of_new_user_created = 'Notifica creazione nuovi utenti';
 $s_email_notification = 'Notifica via e-mail';

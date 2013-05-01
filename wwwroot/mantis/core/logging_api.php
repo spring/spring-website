@@ -20,7 +20,7 @@
  * @package CoreAPI
  * @subpackage LoggingAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -65,7 +65,8 @@ function log_event( $p_level, $p_msg ) {
 	if ( is_blank( $t_log_destination ) ) {
 		$t_destination = '';
 	} else {
-		list( $t_destination, $t_modifiers ) = explode( ':', $t_log_destination, 2 );
+		# Use @ to avoid error when there is no delimiter in log destination
+		@list( $t_destination, $t_modifiers ) = explode( ':', $t_log_destination, 2 );
 	}
 
 	switch( $t_destination ) {
@@ -91,5 +92,10 @@ function log_event( $p_level, $p_msg ) {
 			# use default PHP error log settings
 				error_log( $t_php_event . PHP_EOL );
 			break;
+	}
+
+	# If running from command line, echo log event to stdout
+	if( php_sapi_name() == 'cli' ) {
+		echo $t_php_event . PHP_EOL;
 	}
 }

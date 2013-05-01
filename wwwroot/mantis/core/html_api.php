@@ -51,7 +51,7 @@
  * @package CoreAPI
  * @subpackage HTMLAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  * @uses lang_api.php
  */
@@ -609,9 +609,15 @@ function html_footer( $p_file = null ) {
 	echo '<table border="0" width="100%" cellspacing="0" cellpadding="0"><tr valign="top"><td>';
 	if( ON == config_get( 'show_version' ) ) {
 		$t_version_suffix = config_get_global( 'version_suffix' );
-		echo "\t", '<span class="timer"><a href="http://www.mantisbt.org/" title="Free Web Based Bug Tracker">MantisBT ', MANTIS_VERSION, ( $t_version_suffix ? " $t_version_suffix" : '' ), '</a>', '[<a href="http://www.mantisbt.org/"  title="Free Web Based Bug Tracker" target="_blank">^</a>]</span>', "\n";
+		$t_mantis_version = MANTIS_VERSION . ( $t_version_suffix ? " $t_version_suffix" : '' );
+		$t_mantis_href = '<a href="http://www.mantisbt.org/" title="Free Web-Based Bug Tracker"';
+		echo
+			"\t", '<span class="timer">',
+			"<a $t_mantis_href>MantisBT $t_mantis_version</a> ",
+			"[<a $t_mantis_href ", 'target="_blank">^</a>]',
+			"</span>\n";
 	}
-	echo "\t", '<address>Copyright &copy; 2000 - 2012 MantisBT Group</address>', "\n";
+	echo "\t<address>Copyright &copy; 2000 - ", date( 'Y' ), " MantisBT Team</address>\n";
 
 	# only display webmaster email is current user is not the anonymous user
 	if( !is_page_name( 'login_page.php' ) && auth_is_user_authenticated() && !current_user_is_anonymous() ) {
@@ -1386,10 +1392,18 @@ function html_button_bug_update( $p_bug_id ) {
 function html_button_bug_change_status( $p_bug ) {
 	$t_current_access = access_get_project_level( $p_bug->project_id );
 
+	# User must have updater access to use the change status button
+	if( !access_has_bug_level( config_get( 'update_bug_threshold' ), $p_bug->id ) ) {
+		return;
+	}
+
 	$t_enum_list = get_status_option_list(
 		$t_current_access,
 		$p_bug->status,
 		false,
+		# Add close if user is bug's reporter, still has rights to report issues
+		# (to prevent users downgraded to viewers from updating issues) and
+		# reporters are allowed to close their own issues
 		(  bug_is_user_reporter( $p_bug->id, auth_get_current_user_id() )
 		&& access_has_bug_level( config_get( 'report_bug_threshold' ), $p_bug->id )
 		&& ON == config_get( 'allow_reporter_close' )
@@ -1563,12 +1577,15 @@ function html_button_bug_reopen( $p_bug ) {
 
 /**
  * Print a button to close the given bug
+ * Only if user can close bugs and workflow allows moving them to that status
  * @param BugData $p_bug Bug object
  * @return null
  */
 function html_button_bug_close( $p_bug ) {
-	if( access_can_close_bug( $p_bug ) ) {
-		$t_closed_status = config_get( 'bug_closed_status_threshold', null, null, $p_bug->project_id );
+	$t_closed_status = config_get( 'bug_closed_status_threshold', null, null, $p_bug->project_id );
+	if(    access_can_close_bug( $p_bug )
+		&& bug_check_workflow( $p_bug->status, $t_closed_status )
+	) {
 		html_button(
 			'bug_change_status_page.php',
 			lang_get( 'close_bug_button' ),

@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -268,7 +268,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'N\'eo ket enrollet al lugant gant 
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Staliet dija eo al lugant.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'N\'eo ket bet kavet pajenn al lugant.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'C\'hwitet eo staliadur al lugant : %1$s.';
-$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Hizivadur ar brastres evit al lugant zo c\'hwitet er bloc\'had #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Hizivadenn ar brastres evit al lugant zo c\'hwitet er bloc\'had #%1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Ur fazi dianav « %1$s » zo c\'hoarvezet e-pad ma oa al lugant « %2$s » o vont en-dro.';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Ar vaezienn « %1$s » he deus meur a vann « %2$s ».';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Er vaezienn « %1$s » ez eus ur vaezienn direizh « %2$s ».';
@@ -484,6 +484,8 @@ $s_to = 'Da';
 $s_sent_you_this_reminder_about = 'en deus kaset deoc\'h un notenn derc\'hel soñj diwar-benn';
 $s_bug_reminder = 'Kas un notenn da zerc\'hel soñj';
 $s_reminder_sent_to = 'Kemenn derc\'hel soñj kaset da:';
+$s_reminder_sent_none = 'N\'eus ket bet gallet kas kemenn derc\'hel soñ ebet';
+$s_reminder_list_truncated = 'troc\'het eo roll an degemererien, sellit ouzh istor ar c\'hudennoù evit kaout ur roll klok';
 $s_bug_send_button = 'Kas';
 $s_reminder = 'Notenn da zerc\'hel soñj';
 $s_reminder_explain = 'Kaset e vo an notenn-mañ d\'an degemererien zo oc\'h evezhiañ an draen-mañ.';
@@ -596,6 +598,7 @@ $s_protected = 'Gwarezet';
 $s_create_user_button = 'Krouiñ un implijer';
 $s_hide_disabled = 'Kuzhat ar re ziweredekaet';
 $s_filter_button = 'Arloañ ar sil';
+$s_default_filter = 'Sil dre ziouer';
 $s_create_filter_link = 'Krouiñ ul liamm pad';
 $s_create_short_link = 'Krouiñ ul liamm berr';
 $s_filter_permalink = 'Amañ dindan ez eus ul liamm pad war-du ar sil red :';
@@ -782,7 +785,7 @@ $s_account_reset_protected_msg = 'Kont gwarezet. Ne c\'haller ket adderaouekaat 
 $s_account_reset_msg = 'Kaset ez eus bet ur goulenn kadarnaat da chomlec\'h postel an implijer diuzet. Gant se e c\'hallo an implijer cheñch e c\'her-tremen.';
 $s_account_reset_msg2 = 'Goulloet eo bet ger-tremen ar gont...';
 $s_account_unlock_msg = 'Dibrennet eo bet ar gont.';
-$s_manage_user_protected_msg = 'Kont gwarezet. Live moned ha gweredekadur gwarezet. A-hend-all, hizivaet eo bet ar gont...';
+$s_manage_user_protected_msg = 'Kont warezet. N\'hall ket ar maeziennoù \'liveoù moned\' ha \'gweredekaet\' bezañ kemmet. A-hend-all, hizivaet eo bet ar maeziennoù ervat.';
 $s_manage_user_updated_msg = 'Hizivaet-mat eo bet ar gont...';
 $s_email_user_updated_subject = 'Hizivaet eo ar gont';
 $s_email_user_updated_msg = 'Hizivaet eo bet ho kont gant ur merour. Kavout a reot ur roll eus ar c\'hemmoù amañ dindan. Gallout a rit hizivaat munudoù ha penndibaboù ho kont forzh pegoulz en ur weladenniñ an URL-mañ :';
@@ -1106,7 +1109,7 @@ $s_delete_attachments = 'Dilemel ar pezhioù stag';
 $s_delete_attachment_button = 'Dilemel';
 $s_delete_attachment_sure_msg = 'Ha sur oc\'h hoc\'h eus c\'hoant da zilemel ar pezh stag-mañ ?';
 $s_upload_issue_attachments = 'Kargañ pezhioù stag an draen';
-$s_filters = 'siloù';
+$s_filters = 'Siloù';
 $s_save_filters = 'Enrollañ ar siloù';
 $s_save_filters_as_shared = 'Enrollañ ha rannañ ar siloù';
 $s_use_saved_filters = 'Implijout ar siloù enrollet';
@@ -1128,6 +1131,7 @@ $s_handle_sponsored_issue = 'Plediñ gant an draen sponsoret';
 $s_others = 'Re all';
 $s_see_email_addresses_of_other_users = 'Gwelet chomlec\'hioù postel an implijerien all';
 $s_send_reminders = 'Kas notennoù derc\'hel soñj';
+$s_receive_reminders = 'Resev kemennoù derc\'hel soñj';
 $s_add_profiles = 'Ouzhpennañ profiloù';
 $s_notify_of_new_user_created = 'Kemenn krouidigezh un implijer nevez';
 $s_email_notification = 'Kemenn dre bostel';

@@ -17,7 +17,7 @@
 /**
  * @package MantisBT
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2012  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -87,13 +87,13 @@ $g_core_path = $t_core_path;
 /*
  * Set include paths
  */
-define ( 'BASE_PATH' , realpath( dirname(__FILE__) ) );
+define ( 'BASE_PATH' , dirname( __FILE__ ) );
 $mantisLibrary = BASE_PATH . DIRECTORY_SEPARATOR . 'library';
 $mantisCore = $g_core_path;
 
 /*
  * Prepend the application/ and tests/ directories to the
- * include_path.  
+ * include_path.
  */
 $path = array(
     $mantisCore,
@@ -248,7 +248,11 @@ if ( function_exists( 'timezone_identifiers_list' ) ) {
 		// having a timezone set avoids a php warning
 		date_default_timezone_set( config_get_global( 'default_timezone' ) );
 	} else {
-		config_set_global( 'default_timezone', date_default_timezone_get(), true );
+		# To ensure proper detection of timezone settings issues, we must not
+		# initialize the default timezone when executing admin checks
+		if( basename( $_SERVER['SCRIPT_NAME'] ) != 'check.php' ) {
+			config_set_global( 'default_timezone', date_default_timezone_get(), true );
+		}
 	}
 	if ( auth_is_user_authenticated() ) {
 		date_default_timezone_set( user_pref_get_pref( auth_get_current_user_id(), 'timezone' ) );
