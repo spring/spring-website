@@ -70,6 +70,7 @@
 			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0", #spring rts trailer
 			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0", #spring showcase
 			"http://www.youtube.com/embed/e0R2QsMwc98?rel=0", #NOTA trailer
+			"http://www.youtube.com/embed/3F7F7NGDDFU?rel=0", #Evolution RTS trailer
 		);
     $videofile = $videos[array_rand($videos)];
 
