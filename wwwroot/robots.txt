@@ -1,23 +1,22 @@
+# ahrefsbot produces like ~20% of traffic, dissalow it
+user-agent: AhrefsBot
+disallow: / 
+# all others
 User-agent: *
-
 # large files
 Disallow: /dl/
 Disallow: /images/
 Disallow: /thumbs/
-
 # wiki
 Disallow: /mediawiki/
 Disallow: /wiki/Special
-
 # repositories
 Disallow: /svn/
 Disallow: /websvn/
-
 # mantis
 Disallow: /manits/print_all_bug_page_word.php
 Disallow: /mantis/print_bug_page.php
 Disallow: /mantis/file_download.php
-
 # phpbb
 Disallow: /phpbb/admin/ 
 Disallow: /phpbb/includes/ 
