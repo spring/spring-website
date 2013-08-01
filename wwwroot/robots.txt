@@ -7,6 +7,7 @@ Disallow: /thumbs/
 
 # wiki
 Disallow: /mediawiki/
+Disallow: /wiki/Special
 
 # repositories
 Disallow: /svn/
