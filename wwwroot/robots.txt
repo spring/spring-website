@@ -25,4 +25,5 @@ Disallow: /phpbb/config.php
 Disallow: /phpbb/groupcp.php 
 Disallow: /phpbb/memberlist.php 
 Disallow: /phpbb/modcp.php 
+Disallow: /phpbb/ucp.php 
 Disallow: /phpbb/profile.php
