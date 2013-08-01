@@ -19,6 +19,7 @@ Disallow: /mantis/print_bug_page.php
 Disallow: /mantis/file_download.php
 # phpbb
 Disallow: /phpbb/admin/ 
+Disallow: /phpbb/download/
 Disallow: /phpbb/includes/ 
 Disallow: /phpbb/common.php 
 Disallow: /phpbb/config.php 
