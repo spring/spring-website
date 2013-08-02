@@ -1,6 +1,7 @@
 # ahrefsbot produces like ~20% of traffic, dissalow it
-user-agent: AhrefsBot
-disallow: / 
+User-agent: AhrefsBot
+Disallow: / 
+
 # all others
 User-agent: *
 # large files
