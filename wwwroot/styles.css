@@ -341,3 +341,10 @@ a {
 		background: transparent url(/images/logosmall.png) 10px 25px no-repeat;
 	}
 }
+
+/* restrict size of phpbb quotes */
+.quotecontent, .attachcontent {
+	max-width: 547px;
+	max-height: 1024px;
+	overflow: auto;
+}
