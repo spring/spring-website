@@ -343,7 +343,7 @@ a {
 }
 
 /* restrict size of phpbb quotes */
-.quotecontent, .attachcontent {
+.quotecontent, .attachcontent, .codecontent {
 	max-width: 547px;
 	max-height: 1024px;
 	overflow: auto;
