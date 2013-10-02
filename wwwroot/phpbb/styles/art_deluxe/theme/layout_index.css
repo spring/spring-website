@@ -1,0 +1,459 @@
+/*
+    Website index, forum view
+*/
+div.forabg, div.forumbg, .panel, .post {
+    clear: both;
+}
+
+ul.linklist {
+    display: block;
+    height: 14px;
+    margin: 6px 4px;
+}
+ul.linklist li {
+    display: block;
+    float: left;
+    list-style-type: none;
+    margin-right: 5px;
+}
+
+div.forabg, div.forumbg {
+    margin: 6px 0;
+}
+.old-ie .forabg, .old-ie .forumbg, .old-ie .panel, .old-ie .post, .old-ie .rules {
+    zoom: 1;
+}
+
+ul.topiclist {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+}
+ul.topiclist li {
+    display: block;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px;
+    border-width: 0;
+}
+ul.topiclist li.header {
+    margin: 4px 4px 2px;
+    padding: 0;
+    border: solid 1px #677077;
+    background: #2d343c url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
+    background: url({T_THEME_PATH}/images/header_g2.png) top center repeat-y, #2d343c url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    color: #fff;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 1px;
+    font-family: 'Droid Sans', Verdana;
+}
+ul.topiclist li.header a, ul.topiclist li.header a:visited { 
+    color: #fff;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: underline;
+}
+ul.topiclist li.header a:hover, ul.topiclist li.header a:active {
+    color: #fff;
+}
+ul.topiclist li.header dt, ul.topiclist li.header dd {
+    font-size: 12px;
+    line-height: 1.2em;
+}
+.old-ie li.header, .old-ie li.header a {
+    color: #fff !important;
+}
+
+ul.topiclist dl { 
+    overflow: hidden; 
+    position: relative;
+}
+ul.topiclist li.row dl {
+	padding: 2px 0;
+}
+
+ul.topiclist dt {
+	display: block;
+	float: left;
+	width: 50%;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+ul.topiclist dd {
+	display: block;
+	float: left;
+	padding: 4px 0;
+	border-left: 1px solid #d4d4d4;
+    transition: border-left-color 0.25s ease;
+    -webkit-transition: border-left-color 0.25s ease;
+    -moz-transition: border-left-color 0.25s ease;
+    -o-transition: border-left-color 0.25s ease;
+    -ms-transition: border-left-color 0.25s ease;
+}
+ul.topiclist li:hover dd {
+	border-left-color: #c8c8c8;
+}
+
+ul.topiclist dfn {
+	/* Labels for post/view counts */
+	position: absolute;
+	left: -999px;
+	width: 990px;
+}
+
+ul.topiclist li.row dt a.subforum {
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	position: relative;
+	white-space: nowrap;
+	padding: 0 0 0 12px;
+}
+
+ul.topiclist li.row dt a.subforum.read {
+	background-image: url("{IMG_SUBFORUM_READ_SRC}");
+}
+
+ul.topiclist li.row dt a.subforum.unread {
+	background-image: url("{IMG_SUBFORUM_UNREAD_SRC}");
+}
+
+.forum-image {
+	float: left;
+	padding-top: 5px;
+	margin-right: 5px;
+}
+
+.feed-icon-forum {
+    float: right;
+    display: block;
+    width: 18px;
+    height: 18px;
+    background: url({T_THEME_PATH}/images/rss.png) 0 0 no-repeat;
+}
+.feed-icon-forum:hover { background-position: 0 -20px; }
+.feed-icon-forum span { display: none; }
+
+li.row {
+}
+
+li.row strong {
+	font-weight: normal;
+}
+
+li.header dt, li.header dd {
+    color: #fff;
+    color: rgba(255, 255, 255, 0.8) !important;
+	line-height: 1em;
+	border-left-width: 0;
+	margin: 0;
+	padding: 4px 0;
+}
+
+li.header dd {
+	margin-left: 1px;
+}
+
+li.header dl {
+	min-height: 0;
+	padding-left: 6px;
+}
+
+li.header dl.icon dt {
+	/* Tweak for headers alignment when folder icon used */
+	padding-left: 0;
+	padding-right: 50px;
+}
+
+/* Forum list column styles */
+dl.icon {
+	min-height: 35px;
+	background-position: 9px 50%;		/* Position of folder icon */
+	background-repeat: no-repeat;
+}
+
+dl.icon dt {
+	padding-left: 45px;					/* Space for folder icon */
+	background-repeat: no-repeat;
+	background-position: 5px 95%;		/* Position of topic icon */
+	font-size: 11px;
+	line-height: 1.3em;
+}
+dl.icon dt div.extra {
+    float: right;
+    padding-top: 4px;
+}
+
+dd.posts, dd.topics, dd.views {
+	width: 8%;
+	text-align: center;
+	line-height: 2.2em;
+	font-size: 12px;
+}
+
+a.forumtitle, a.topictitle {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3em;
+    font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+}
+.unread a.forumtitle, .unread a.forumtitle:visited, 
+.unread a.topictitle, .unread a.topictitle:visited, 
+.reported a.topictitle, .reported a.topictitle:visited,
+.unapproved a.topictitle, .unapproved a.topictitle:visited { 
+    color: #ce6f36; 
+}
+.unread a.forumtitle:hover, .unread a.topictitle:hover, 
+.reported a.topictitle:hover, .unapproved a.topictitle:hover  { 
+    color: #cf3694; 
+}
+
+
+/* List in forum description */
+dl.icon dt ol,
+dl.icon dt ul {
+	list-style-position: inside;
+	margin-left: 1em;
+}
+
+dl.icon dt li {
+	display: list-item;
+	list-style-type: inherit;
+}
+
+dd.lastpost {
+	width: 25%;
+	font-size: 11px;
+}
+
+dd.redirect {
+	font-size: 12px;
+	line-height: 2.5em;
+}
+
+dd.moderation {
+	font-size: 11px;
+}
+
+dd.lastpost span, ul.topiclist dd.searchby span, ul.topiclist dd.info span, ul.topiclist dd.time span, dd.redirect span, dd.moderation span {
+	display: block;
+	padding-left: 5px;
+}
+
+dd.time {
+	width: auto;
+	line-height: 200%;
+	font-size: 11px;
+}
+
+dd.extra {
+	width: 12%;
+	line-height: 200%;
+	text-align: center;
+	font-size: 11px;
+}
+
+dd.mark {
+	float: right !important;
+	width: 9%;
+	text-align: center;
+	line-height: 200%;
+	font-size: 11px;
+}
+
+dd.info {
+	width: 30%;
+}
+
+dd.option {
+	width: 15%;
+	line-height: 200%;
+	text-align: center;
+	font-size: 11px;
+}
+
+dd.searchby {
+	width: 47%;
+	font-size: 11px;
+	line-height: 1em;
+}
+
+ul.topiclist dd.searchextra {
+	margin-left: 5px;
+	padding: 0.2em 0;
+	font-size: 11px;
+	color: #333333;
+	border-left: none;
+	clear: both;
+	width: 98%;
+	overflow: hidden;
+}
+
+/* Container for post/reply buttons */
+.topic-actions {
+    margin: 0 4px 3px;
+	font-size: 11px;
+	height: 28px;
+	min-height: 28px;
+}
+div[class].topic-actions {
+	height: auto;
+}
+
+/* Buttons */
+.buttons {
+    float: left;
+}
+.buttons div {
+	float: left;
+	margin: 0 5px 0 0;
+	background-position: 0 100%;
+}
+.old-ie .buttons div {
+    margin-left: 10px;
+}
+.buttons div a {
+    font-size: 13px;
+    line-height: 1em;
+    white-space: nowrap;
+    display: inline-block;
+    position: relative;
+    margin: 0 0 0 10px;
+    padding: 6px 12px 0 2px;
+    height: 20px;
+    text-decoration: none;
+    text-align: center;
+    color: #8997a2;
+    color: rgba(255, 255, 255, 0.75);
+    background: url({T_THEME_PATH}/images/buttons.png) top right no-repeat;
+    text-shadow: rgba(0,0,0,0.1) 1px 1px 1px;
+}
+.browser-ie .buttons div a {
+    line-height: 21.49px;
+    padding-top: 2px;
+    height: 24px;
+}
+.old-ie .buttons div a { color: #fff !important; }
+
+
+.buttons div a, .buttons div a:hover, .buttons div a:active {
+    text-decoration: none;
+    border-width: 0;
+    outline-style: none;
+}
+.buttons div a:hover, .buttons div a:active { 
+    color: #fff; 
+    color: rgba(255, 255, 255, 0.9);
+}
+.buttons div a span {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -10px;
+    width: 10px;
+    background: url({T_THEME_PATH}/images/buttons.png) top left no-repeat;
+}
+
+.buttons div a:hover {
+    background-position: right -30px;
+}
+.buttons div a:active {
+    background-position: right bottom;
+}
+.buttons div a:hover span {
+    background-position: left -30px;
+}
+.buttons div a:active span {
+    background-position: left bottom;
+}
+
+
+/* Pagination
+---------------------------------------- */
+.pagination {
+	width: auto;
+	text-align: right;
+	margin-top: 5px;
+	margin-bottom: 3px;
+	float: right;
+}
+
+.pagination span.page-sep {
+	display: none;
+}
+
+li.pagination {
+	margin-top: 0;
+}
+
+.pagination strong, .pagination b {
+	font-weight: normal;
+}
+
+.pagination span strong {
+	padding: 0 2px;
+	margin: 0 2px;
+	font-weight: normal;
+    border-color: #74838f;
+    background-color: #394859;
+    color: #fff;
+}
+
+.pagination span a, .pagination span a:link, .pagination span a:visited, .pagination span a:active {
+	font-weight: normal;
+	text-decoration: none;
+	margin: 0 2px;
+	padding: 0 2px;
+    border: solid 1px #ccc;
+    background-color: #f4f4f4;
+	line-height: 1.5em;
+    transition: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    -ms-transition: none;
+}
+
+.pagination span a:hover {
+    border-color: #e0c5b5;
+    background-color: #ce6f36;
+    color: #fff;
+}
+.pagination span a:active {
+    border-color: #e1b6d0;
+    background-color: #cf3694;
+    color: #fff;
+}
+
+.pagination img {
+	vertical-align: middle;
+}
+
+/* Pagination in viewforum for multipage topics */
+.row .pagination {
+	display: block;
+	float: right;
+	width: auto;
+	margin-top: 0;
+	padding: 1px 0 1px 15px;
+	font-size: 0.9em;
+	background: none 0 50% no-repeat;
+}
+
+/* Miscellaneous styles
+---------------------------------------- */
+#forum-permissions {
+	float: right;
+	width: auto;
+	padding-left: 5px;
+	margin-left: 5px;
+	margin-top: 10px;
+	text-align: right;
+}
+
+/* Login on index */
+body.section-index #page-body > form > h3 { display: none; }
+

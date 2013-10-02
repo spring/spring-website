@@ -1,0 +1,414 @@
+/* proSilver Form Styles
+---------------------------------------- */
+
+/* General form styles
+----------------------------------------*/
+fieldset {
+	border-width: 0;
+}
+
+input[type="text"], input[type="password"], select, textarea {
+	font-weight: normal;
+    background: #d8d8d8;
+    color: #444;
+    outline-style: none;
+    border: solid 1px #b8b8b8;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    font-family: Verdana,Helvetica,Arial,sans-serif;
+    line-height: 1em;
+    font-size: 12px;
+    transition-property: border-color, background-color, color;
+    -webkit-transition-property: border-color, background-color, color;
+    -moz-transition-property: border-color, background-color, color;
+    -o-transition-property: border-color, background-color, color;
+    -ms-transition-property: border-color, background-color, color;
+    transition-duration: 0.25s;
+    -webkit-transition-duration: 0.25s;
+    -moz-transition-duration: 0.25s;
+    -o-transition-duration: 0.25s;
+    -ms-transition-duration: 0.25s;
+}
+
+input[type="text"]:hover, input[type="password"]:hover, select:hover, textarea:hover {
+    color: #666;
+    border-color: #c58057;
+    background-color: #e8e8e8;
+}
+input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+    border-color: #4c6278;
+    background-color: #f0f0f0;
+    color: #444;
+}
+
+
+input {
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 0 3px;
+	font-size: 12px;
+}
+
+select {
+	cursor: pointer;
+	vertical-align: middle;
+	padding: 1px;
+}
+
+option {
+	padding-right: 1em;
+}
+
+option.disabled-option {
+	color: #999;
+}
+
+textarea {
+	width: 60%;
+	padding: 2px;
+	line-height: 1.4em;
+}
+
+label {
+	cursor: default;
+	padding-right: 5px;
+}
+
+label input {
+	vertical-align: middle;
+}
+
+label img {
+	vertical-align: middle;
+}
+
+/* Definition list layout for forms
+---------------------------------------- */
+fieldset dl {
+	padding: 4px 0;
+}
+
+fieldset dt {
+	float: left;	
+	width: 40%;
+	text-align: left;
+	display: block;
+}
+
+fieldset dd {
+	margin-left: 41%;
+	vertical-align: top;
+	margin-bottom: 3px;
+}
+
+/* Specific layout 1 */
+fieldset.fields1 dt {
+	width: 15em;
+	border-right-width: 0;
+}
+
+fieldset.fields1 dd {
+	margin-left: 15em;
+	border-left-width: 0;
+}
+
+fieldset.fields1 {
+	background-color: transparent;
+}
+
+fieldset.fields1 div {
+	margin-bottom: 3px;
+}
+
+/* Set it back to 0px for the reCaptcha divs: PHPBB3-9587 */
+fieldset.fields1 #recaptcha_widget_div div {
+	margin-bottom: 0;
+}
+
+/* Specific layout 2 */
+fieldset.fields2 dt {
+	width: 15em;
+	border-right-width: 0;
+}
+
+fieldset.fields2 dd {
+	margin-left: 16em;
+	border-left-width: 0;
+}
+
+/* Form elements */
+dt label {
+	font-weight: bold;
+	color: #444;
+	font-size: 12px;
+    font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+	text-align: left;
+}
+
+dd label {
+	white-space: nowrap;
+}
+
+dd input, dd textarea {
+	margin-right: 3px;
+}
+
+dd select {
+	width: auto;
+}
+
+dd textarea {
+	width: 85%;
+}
+
+#timezone {
+	width: 95%;
+}
+
+/* Quick-login on index page */
+fieldset.quick-login {
+	margin-top: 5px;
+}
+
+fieldset.quick-login input {
+	width: auto;
+}
+
+fieldset.quick-login input.inputbox {
+	width: 15%;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+fieldset.quick-login label {
+	white-space: nowrap;
+	padding-right: 2px;
+}
+
+/* Display options on viewtopic/viewforum pages  */
+fieldset.display-options {
+	text-align: center;
+	margin: 3px 0 5px 0;
+}
+
+fieldset.display-options label {
+	white-space: nowrap;
+	padding-right: 2px;
+}
+
+fieldset.display-options a {
+	margin-top: 3px;
+}
+
+/* Display actions for ucp and mcp pages */
+fieldset.display-actions {
+	text-align: right;
+	line-height: 2em;
+	white-space: nowrap;
+	padding-right: 1em;
+}
+
+fieldset.display-actions label {
+	white-space: nowrap;
+	padding-right: 2px;
+}
+
+fieldset.sort-options {
+	line-height: 2em;
+}
+
+/* MCP forum selection*/
+fieldset.forum-selection {
+	margin: 5px 0 3px 0;
+	float: right;
+}
+
+fieldset.forum-selection2 {
+	margin: 13px 0 3px 0;
+	float: right;
+}
+
+/* Jumpbox */
+fieldset.jumpbox {
+	text-align: right;
+	margin-top: 15px;
+	height: 2.5em;
+}
+
+fieldset.quickmod {
+	width: 50%;
+	float: right;
+	text-align: right;
+	height: 2.5em;
+}
+
+/* Submit button fieldset */
+fieldset.submit-buttons {
+	text-align: center;
+	vertical-align: middle;
+	margin: 5px 0;
+}
+
+fieldset.submit-buttons input {
+	vertical-align: middle;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+/* Posting page styles
+----------------------------------------*/
+
+/* Buttons used in the editor */
+#format-buttons {
+	margin: 15px 0 2px 0;
+}
+
+#format-buttons input, #format-buttons select {
+	vertical-align: middle;
+}
+
+/* Main message box */
+#message-box {
+	width: 80%;
+}
+
+#message-box textarea {
+	width: 100%;
+}
+
+/* Emoticons panel */
+#smiley-box {
+	width: 18%;
+	float: right;
+}
+
+#smiley-box img {
+	margin: 3px;
+}
+
+/* Input field styles
+---------------------------------------- */
+.inputbox {
+	padding: 2px;
+	cursor: text;
+}
+
+input.inputbox	{ width: 85%; }
+input.medium	{ width: 50%; }
+input.narrow	{ width: 25%; }
+input.tiny		{ width: 125px; }
+
+textarea.inputbox {
+	width: 85%;
+}
+
+.autowidth {
+	width: auto !important;
+}
+
+/* Form button styles
+---------------------------------------- */
+input.button1, input.button2 {
+	font-size: 1em;
+}
+
+a.button1, input.button1, input.button3, a.button2, input.button2 {
+	width: auto !important;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+.browser-webkit a.button1, .browser-webkit input.button1, .browser-webkit input.button3, .browser-webkit a.button2, .browser-webkit input.button2 {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.browser-ie a.button1, .browser-ie input.button1, .browser-ie input.button3, .browser-ie a.button2, .browser-ie input.button2 {
+    padding: 4px 6px;
+}
+
+a.button1, input.button1 {
+	font-weight: bold;
+	color: #313942;
+    background: #e8e8e8;
+    border: solid 1px #b8b8b8;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+input.button3 {
+	padding: 0;
+	margin: 0;
+	line-height: 5px;
+	height: 12px;
+	font-variant: small-caps;
+}
+
+/* Alternative button */
+a.button2, input.button2, input.button3 {
+	border: 1px solid #b8b8b8;
+    background: #d8d8d8;
+	color: #666;
+	padding-left: 6px;
+	padding-right: 6px;
+	font-size: 12px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
+/* <a> button in the style of the form buttons */
+a.button1, a.button1:link, a.button1:visited, a.button1:active, a.button2, a.button2:link, a.button2:visited, a.button2:active {
+	text-decoration: none;
+	color: #313942;
+	padding: 2px 8px;
+	line-height: 250%;
+	vertical-align: text-bottom;
+}
+
+/* Hover states */
+a.button1:hover, input.button1:hover, a.button2:hover, input.button2:hover, input.button3:hover {
+    color: #ce6f36;
+    border-color: #d59c7a;
+    background-color: #f0f0f0;
+}
+
+input.disabled {
+	font-weight: normal;
+	color: #666666;
+}
+
+/* Topic and forum Search */
+.search-box {
+	margin-top: 3px;
+	margin-left: 5px;
+	float: left;
+}
+
+.search-box input {
+}
+
+input.search {
+	background-image: url("{T_THEME_PATH}/images/search_mini.gif");
+	background-repeat: no-repeat;
+	background-position: 3px 4px;
+	padding-left: 18px;
+}
+
+.full { width: 95%; }
+.medium { width: 50%;}
+.narrow { width: 25%;}
+.tiny { width: 10%;}
+
+/* Animated buttons */
+.search-box input.button2 {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    -webkit-transition: opacity 0.25s ease;
+    -moz-transition: opacity 0.25s ease;
+    -o-transition: opacity 0.25s ease;
+    -ms-transition: opacity 0.25s ease;
+}
+.search-box:hover input.button2, .search-box.focus input.button2 {
+    opacity: 1;
+}

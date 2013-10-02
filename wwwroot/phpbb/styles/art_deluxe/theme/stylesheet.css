@@ -1,0 +1,20 @@
+/*
+    Change "none" to "block" (without quotes) to show website title and description in header
+*/
+#header p, #header h1 { display: none; }
+
+/*
+    Change "inline" to "none" (without quotes) to hide logo image
+*/
+#header a { display: inline; }
+
+
+/*
+    Include css files
+*/
+@import url("layout_global.css");
+@import url("layout_main.css");
+@import url("layout_forms.css");
+@import url("layout_index.css");
+@import url("layout_topic.css");
+@import url("layout_pages.css");
