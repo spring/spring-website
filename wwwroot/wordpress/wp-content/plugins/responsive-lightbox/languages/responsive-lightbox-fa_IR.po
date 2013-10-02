@@ -1,0 +1,407 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox\n"
+"POT-Creation-Date: 2013-07-09 10:46+0330\n"
+"PO-Revision-Date: 2013-07-09 21:07+0330\n"
+"Last-Translator: Alimir <info@alimir.ir>\n"
+"Language-Team: Alimir.ir <info@alimir.ir>\n"
+"Language: Persian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: ../responsive-lightbox.php:129
+msgid "prettyPhoto"
+msgstr "اسکریپت prettyPhoto"
+
+#: ../responsive-lightbox.php:131
+msgid "slow"
+msgstr "کند"
+
+#: ../responsive-lightbox.php:132
+msgid "normal"
+msgstr "نرمال"
+
+#: ../responsive-lightbox.php:133
+msgid "fast"
+msgstr "سریع"
+
+#: ../responsive-lightbox.php:136
+msgid "default"
+msgstr "پیشفرض"
+
+#: ../responsive-lightbox.php:137
+msgid "light rounded"
+msgstr "گردی روشن"
+
+#: ../responsive-lightbox.php:138
+msgid "dark rounded"
+msgstr "گردی تیره"
+
+#: ../responsive-lightbox.php:139
+msgid "light square"
+msgstr "مربع روشن"
+
+#: ../responsive-lightbox.php:140
+msgid "dark square"
+msgstr "مربع تیره"
+
+#: ../responsive-lightbox.php:141
+msgid "facebook"
+msgstr "فیسبوک"
+
+#: ../responsive-lightbox.php:144
+msgid "window"
+msgstr ""
+
+#: ../responsive-lightbox.php:145
+msgid "transparent"
+msgstr ""
+
+#: ../responsive-lightbox.php:146
+msgid "opaque"
+msgstr ""
+
+#: ../responsive-lightbox.php:147
+msgid "direct"
+msgstr ""
+
+#: ../responsive-lightbox.php:148
+msgid "gpu"
+msgstr ""
+
+#: ../responsive-lightbox.php:153
+msgid "SwipeBox"
+msgstr "اسکریپت SwipeBox"
+
+#: ../responsive-lightbox.php:155
+msgid "CSS"
+msgstr "سی اس اس"
+
+#: ../responsive-lightbox.php:156
+msgid "jQuery"
+msgstr "جی کوئری"
+
+#: ../responsive-lightbox.php:162
+msgid "rel"
+msgstr ""
+
+#: ../responsive-lightbox.php:163
+msgid "class"
+msgstr ""
+
+#: ../responsive-lightbox.php:167
+msgid "Enable"
+msgstr "فعال"
+
+#: ../responsive-lightbox.php:168
+msgid "Disable"
+msgstr "غیر فعال"
+
+#: ../responsive-lightbox.php:173 ../responsive-lightbox.php:209
+msgid "General settings"
+msgstr "تنظیمات عمومی"
+
+#: ../responsive-lightbox.php:178 ../responsive-lightbox.php:218
+msgid "Lightbox settings"
+msgstr "تنظیمات لایت باکس"
+
+#: ../responsive-lightbox.php:210
+msgid "Lightbox script"
+msgstr "فرم افکت لایت باکس"
+
+#: ../responsive-lightbox.php:211
+msgid "Selector"
+msgstr "سلکتور"
+
+#: ../responsive-lightbox.php:212
+msgid "Galleries"
+msgstr "گالری ها"
+
+#: ../responsive-lightbox.php:213
+msgid "Image links"
+msgstr "تصاویر لینک دار"
+
+#: ../responsive-lightbox.php:214
+msgid "Deactivation"
+msgstr "بی اثر سازی"
+
+#: ../responsive-lightbox.php:222
+msgid "Animation type"
+msgstr "نوع انیمیشن"
+
+#: ../responsive-lightbox.php:223
+msgid "Top and bottom bars"
+msgstr "نوار بالا و پایین"
+
+#: ../responsive-lightbox.php:227
+msgid "Animation speed"
+msgstr "سرعت انتقال انیمیشن"
+
+#: ../responsive-lightbox.php:228
+msgid "Slideshow"
+msgstr "اسلایدشو"
+
+#: ../responsive-lightbox.php:229
+msgid "Slideshow autoplay"
+msgstr "حرکت  خودکار اسلایشو"
+
+#: ../responsive-lightbox.php:230
+msgid "Opacity"
+msgstr "شفافیت"
+
+#: ../responsive-lightbox.php:231
+msgid "Show title"
+msgstr "نمایش عنوان"
+
+#: ../responsive-lightbox.php:232
+msgid "Allow resize big images"
+msgstr "تغییر سایز تصاویر بزرگ"
+
+#: ../responsive-lightbox.php:233
+msgid "Width"
+msgstr "طول"
+
+#: ../responsive-lightbox.php:234
+msgid "Height"
+msgstr "عرض"
+
+#: ../responsive-lightbox.php:235
+msgid "Theme"
+msgstr "پوسته"
+
+#: ../responsive-lightbox.php:236
+msgid "Horizontal padding"
+msgstr "پیمایش افقی"
+
+#: ../responsive-lightbox.php:237
+msgid "Hide Flash"
+msgstr "استفاده از فلش"
+
+#: ../responsive-lightbox.php:238
+msgid "Flash Window Mode (wmode)"
+msgstr "فرم پنجره ی فلش"
+
+#: ../responsive-lightbox.php:239
+msgid "Video autoplay"
+msgstr "نمایش خودکار فایل های تصویری"
+
+#: ../responsive-lightbox.php:240
+msgid "Modal"
+msgstr "شرط بستن لایت باکس"
+
+#: ../responsive-lightbox.php:241
+msgid "Deeplinking"
+msgstr "قابلیت Deeplinking"
+
+#: ../responsive-lightbox.php:242
+msgid "Overlay gallery"
+msgstr "جایگشت گالری"
+
+#: ../responsive-lightbox.php:243
+msgid "Keyboard shortcuts"
+msgstr "میان بر های صفحه کلید"
+
+#: ../responsive-lightbox.php:244
+msgid "Social (Twitter, Facebook)"
+msgstr "شبکه های اجتماعی (فیسبوک، توییتر)"
+
+#: ../responsive-lightbox.php:262
+msgid "Select your preffered ligthbox effect script."
+msgstr "افکت نمایش لایت باکس را انتخاب نمایید."
+
+#: ../responsive-lightbox.php:272
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr ""
+
+#: ../responsive-lightbox.php:290
+msgid "Add lightbox to WordPress image galleries by default"
+msgstr "استفاده از لایت باکس در گالری های پیشفرض وردپرس"
+
+#: ../responsive-lightbox.php:308
+msgid "Add lightbox to WordPress image links by default"
+msgstr "استفاده از لایت باکس در تصاویر لینک دار وردپرس"
+
+#: ../responsive-lightbox.php:326
+msgid "Delete settings on plugin deactivation"
+msgstr "تنظیمات را در حالت غیر فعال افزونه پاک کن"
+
+#: ../responsive-lightbox.php:344
+msgid "Select a method of applying a lightbox effect."
+msgstr "متدی را برای فرم افکت لایت باکس انتخاب نمایید."
+
+#: ../responsive-lightbox.php:362
+msgid "Disable if you don't want to display top and bottom bars."
+msgstr ""
+"اگر می خواهید نوار بالا و پایین به نمایش در نیاید این قابلیت را غیر فعال "
+"کنید."
+
+#: ../responsive-lightbox.php:366
+msgid "Enter the time for images animation (in miliseconds)"
+msgstr "زمان انیمیشن تصویر را به میلی ثانیه وارد نمایید"
+
+#: ../responsive-lightbox.php:384
+msgid "Select animation speed for lightbox effect"
+msgstr "سرعت انتقال افکت لایت باکس را انتخاب کنید"
+
+#: ../responsive-lightbox.php:402
+msgid "Display images as slideshow"
+msgstr "نمایش تصاویر به صورت اسلایدشو"
+
+#: ../responsive-lightbox.php:406
+msgid "Enter time (in miliseconds)"
+msgstr "زمان را به میلی ثانیه وارد کنید"
+
+#: ../responsive-lightbox.php:424
+msgid "Automatically start slideshow"
+msgstr "نمایش خودکار اسلایدشو"
+
+#: ../responsive-lightbox.php:434
+msgid "Value between 0 and 1 (for e.g. 0.5)"
+msgstr "مقداری بین 0 و 1 (مثلا 0.5)"
+
+#: ../responsive-lightbox.php:452
+msgid "Display image tiltle"
+msgstr "نمایش عنوان تصویر"
+
+#: ../responsive-lightbox.php:470
+msgid "Resize the photos bigger than viewport."
+msgstr "تغییر سایز تصاویری با ابعاد بزرگتر از صفحه ی نمایش."
+
+#: ../responsive-lightbox.php:480 ../responsive-lightbox.php:490
+msgid "in pixels"
+msgstr "به پیکسل"
+
+#: ../responsive-lightbox.php:508
+msgid "Select theme for lightbox effect"
+msgstr "قالبی را برای افکت لایت باکس انتخاب کنید."
+
+#: ../responsive-lightbox.php:518
+msgid "Horizontal padding (in pixels)"
+msgstr "پیمایش افقی (مقدار به پیکسل)"
+
+#: ../responsive-lightbox.php:536
+msgid ""
+"Hides all the flash object on a page. Enable this if flash appears over "
+"prettyPhoto"
+msgstr ""
+
+#: ../responsive-lightbox.php:554
+msgid "Select flash window mode"
+msgstr ""
+
+#: ../responsive-lightbox.php:572
+msgid "Automatically start videos"
+msgstr "نمایش خودکار تصاویر ویدیویی"
+
+#: ../responsive-lightbox.php:590
+msgid "If set to true, only the close button will close the window"
+msgstr "اگر فعال باشد، پنجره تنها با کلیک بر روی دکمه ی بستن، بسته خواهد شد"
+
+#: ../responsive-lightbox.php:608
+msgid "Allow prettyPhoto to update the url to enable deeplinking"
+msgstr ""
+
+#: ../responsive-lightbox.php:626
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over"
+msgstr ""
+
+#: ../responsive-lightbox.php:644
+msgid "Set to false if you open forms inside prettyPhoto"
+msgstr ""
+
+#: ../responsive-lightbox.php:662
+msgid "Display links to Facebook and Twitter"
+msgstr "نمایش لینک های فیسبوک و توویتر"
+
+#: ../responsive-lightbox.php:755
+msgid ""
+"Changes were not saved because there was attempt to save settings of "
+"inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"تغییرات، به دلیل تلاش برای فعال سازی اسکریپت غیر فعال، ذخیره نشد. تنظیمات "
+"اولیه مجددا بارگذاری شد. "
+
+#: ../responsive-lightbox.php:767
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr "تنظیمات اسکریپت SwipeBox به حالت پیشفرض بازگردانی شد."
+
+#: ../responsive-lightbox.php:773
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr "تنظیمات اسکریپت PrettyPhoto به حالت پیشفرض بازگردانی شد."
+
+#: ../responsive-lightbox.php:777
+msgid ""
+"Changes were not set to defaults because there was attempt to reset settings "
+"of inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+
+#: ../responsive-lightbox.php:791 ../responsive-lightbox.php:792
+#: ../responsive-lightbox.php:806 ../responsive-lightbox.php:838
+msgid "Responsive Lightbox"
+msgstr "لایت باکس واکنش گرا"
+
+#: ../responsive-lightbox.php:831
+msgid "Reset to defaults"
+msgstr "بازیابی تنظیمات اولیه"
+
+#: ../responsive-lightbox.php:840
+msgid "Need support?"
+msgstr "نیاز به پشتیبانی دارید؟"
+
+#: ../responsive-lightbox.php:841
+msgid ""
+"If you are having problems with this plugin, please talk about them in the"
+msgstr ""
+"اگر مشکلی با این افزونه دارید می توانید آن را را در انجمن پشتیبانی به آدرس "
+"روبرو در میان بگذارید:"
+
+#: ../responsive-lightbox.php:841
+msgid "Support forum"
+msgstr "انجمن پشتیبانی"
+
+#: ../responsive-lightbox.php:843
+msgid "Do you like this plugin?"
+msgstr "از این افزونه خوشتون اومده؟"
+
+#: ../responsive-lightbox.php:844
+msgid "Rate it 5"
+msgstr "امتیاز دهی"
+
+#: ../responsive-lightbox.php:844
+msgid "on WordPress.org"
+msgstr "در مخزن وردپرس"
+
+#: ../responsive-lightbox.php:845
+msgid "Blog about it & link to the"
+msgstr "مشاهده مشخصات بیشتر در"
+
+#: ../responsive-lightbox.php:845
+msgid "plugin page"
+msgstr "صفحه ی افزونه"
+
+#: ../responsive-lightbox.php:846
+msgid "Check out our other"
+msgstr "مشاهده ی دیگر"
+
+#: ../responsive-lightbox.php:846
+msgid "WordPress plugins"
+msgstr "افزونه های وردپرس ما"
+
+#: ../responsive-lightbox.php:871
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr "آیا از بازگشت تنظیمات اسکریپت به حال پیشفرض، اطمینان دارید؟"
+
+#: ../responsive-lightbox.php:997
+msgid "Support"
+msgstr "پشتیبانی"
+
+#: ../responsive-lightbox.php:1019
+msgid "Settings"
+msgstr "تنظیمات"

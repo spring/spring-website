@@ -1,0 +1,584 @@
+# Copyright (C) 2012 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: table of contents plus 1207\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/table-of-contents-plus\n"
+"POT-Creation-Date: 2012-08-01 13:02:20+00:00\n"
+"PO-Revision-Date: 2012-08-02 11:59+0800\n"
+"Last-Translator: icedream <icedream@tesfans.org>\n"
+"Language-Team: Chinese (Simplified) <icedream@tesfans.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: CHINA\n"
+
+#: toc.php:169
+msgid "Settings"
+msgstr "设置"
+
+#: toc.php:339
+#: toc.php:340
+msgid "TOC"
+msgstr "TOC"
+
+#: toc.php:474
+msgid "Options saved."
+msgstr "选项已保存。"
+
+#: toc.php:476
+msgid "Save failed."
+msgstr "保存失败。"
+
+#: toc.php:488
+msgid "Main Options"
+msgstr "主要选项"
+
+#: toc.php:489
+msgid "Sitemap"
+msgstr "站点地图"
+
+#: toc.php:490
+msgid "Help"
+msgstr "帮助"
+
+#: toc.php:498
+msgid "Position"
+msgstr "位置"
+
+#: toc.php:501
+msgid "Before first heading (default)"
+msgstr "第一个标题前面（默认）"
+
+#: toc.php:502
+msgid "Top"
+msgstr "顶部"
+
+#: toc.php:503
+msgid "Bottom"
+msgstr "底部"
+
+#: toc.php:508
+msgid "Show when"
+msgstr "当……显示"
+
+#: toc.php:518
+msgid "or more headings are present"
+msgstr "或者更多标题存在时"
+
+#: toc.php:522
+msgid "Auto insert for the following content types"
+msgstr "自动插入以下类别的内容中"
+
+#: toc.php:535
+msgid "Heading text"
+msgstr "标题"
+
+#: toc.php:537
+msgid "Show title on top of the table of contents"
+msgstr "在目录顶部显示标题"
+
+#: toc.php:540
+msgid "Eg: Contents, Table of Contents, Page Contents"
+msgstr "例：目录、Contents、Table of Contents、Page Contents"
+
+#: toc.php:542
+msgid "Allow the user to toggle the visibility of the table of contents"
+msgstr "允许用户显示/隐藏目录"
+
+#: toc.php:547
+msgid "Show text"
+msgstr "显示文本"
+
+#: toc.php:549
+msgid "Eg: show"
+msgstr "例：显示"
+
+#: toc.php:552
+msgid "Hide text"
+msgstr "隐藏文本"
+
+#: toc.php:554
+msgid "Eg: hide"
+msgstr "例：隐藏"
+
+#: toc.php:563
+msgid "Show hierarchy"
+msgstr "显示层次化"
+
+#: toc.php:567
+msgid "Number list items"
+msgstr "显示编号"
+
+#: toc.php:571
+msgid "Enable smooth scroll effect"
+msgstr "开启平滑滚动效果"
+
+#: toc.php:572
+msgid "Scroll rather than jump to the anchor link"
+msgstr "平滑滚动到相应锚位置而不是跳转"
+
+#: toc.php:577
+msgid "Appearance"
+msgstr "外观"
+
+#: toc.php:581
+msgid "Width"
+msgstr "宽度"
+
+#: toc.php:584
+msgid "Fixed width"
+msgstr "固定宽度"
+
+#: toc.php:588
+msgid "(default)"
+msgstr "(默认)"
+
+#: toc.php:595
+msgid "Relative"
+msgstr "相关宽度"
+
+#: toc.php:596
+msgid "Auto"
+msgstr "自动调整"
+
+#: toc.php:604
+msgid "Other"
+msgstr "其他"
+
+#: toc.php:605
+msgid "User defined"
+msgstr "用户自定义"
+
+#: toc.php:609
+msgid "Please enter a number and"
+msgstr "请输入数字并"
+
+#: toc.php:609
+msgid "select its units, eg: 100px, 10em"
+msgstr "选择相应的单位，如：100px, 10em"
+
+#: toc.php:620
+msgid "Wrapping"
+msgstr "自动换行"
+
+#: toc.php:623
+msgid "None (default)"
+msgstr "无（默认）"
+
+#: toc.php:624
+msgid "Left"
+msgstr "向左"
+
+#: toc.php:625
+msgid "Right"
+msgstr "向右"
+
+#: toc.php:630
+msgid "Font size"
+msgstr "字体大小"
+
+#: toc.php:641
+msgid "Presentation"
+msgstr "风格"
+
+#: toc.php:644
+msgid "Grey (default)"
+msgstr "灰色（默认）"
+
+#: toc.php:649
+msgid "Light blue"
+msgstr "淡蓝色"
+
+#: toc.php:654
+msgid "White"
+msgstr "白色"
+
+#: toc.php:659
+msgid "Black"
+msgstr "黑色"
+
+#: toc.php:664
+msgid "Transparent"
+msgstr "透明"
+
+#: toc.php:669
+msgid "Custom"
+msgstr "自定义"
+
+#: toc.php:679
+msgid "Background"
+msgstr "背景"
+
+#: toc.php:683
+msgid "Border"
+msgstr "边框"
+
+#: toc.php:687
+#: toc.php:1498
+msgid "Title"
+msgstr "标题"
+
+#: toc.php:691
+msgid "Links"
+msgstr "链接"
+
+#: toc.php:695
+msgid "Links (hover)"
+msgstr "链接(鼠标经过)"
+
+#: toc.php:710
+msgid "Leaving the value as"
+msgstr "数值设定为"
+
+#: toc.php:710
+msgid "will inherit your theme's styles"
+msgstr "将使用主题的风格"
+
+#: toc.php:715
+msgid "Preserve theme bullets"
+msgstr "主题兼容"
+
+#: toc.php:716
+msgid "If your theme includes background images for unordered list elements, enable this to support them"
+msgstr "如果您的主题有修改无序列表的背景图片时，您可以开启此功能添加主题兼容。"
+
+#: toc.php:721
+msgid "Advanced"
+msgstr "高级"
+
+#: toc.php:721
+#: toc.php:816
+msgid "show"
+msgstr "显示"
+
+#: toc.php:723
+msgid "Power options"
+msgstr "驱动选项"
+
+#: toc.php:727
+msgid "Include homepage"
+msgstr "包含首页"
+
+#: toc.php:728
+msgid "Show the table of contents for qualifying items on the homepage"
+msgstr "对首页中排序的列表也添加目录内容支持"
+
+#: toc.php:731
+msgid "Exclude CSS file"
+msgstr "不加载CSS"
+
+#: toc.php:732
+msgid "Prevent the loading of this plugin's CSS styles. When selected, the presentation options from above will also be ignored."
+msgstr "不加载插件内置的CSS。勾选此项后，上面的选项也将失效。"
+
+#: toc.php:735
+msgid "Heading levels"
+msgstr "标题等级"
+
+#: toc.php:737
+msgid "Include (or exclude) the following heading levels"
+msgstr "包含(或者排除)以下标题级别"
+
+#: toc.php:743
+msgid "heading "
+msgstr "标题 "
+
+#: toc.php:749
+msgid "Smooth scroll top offset"
+msgstr "顶部偏移"
+
+#: toc.php:752
+msgid "If you have a consistent menu across the top of your site, you can adjust the top offset to stop the headings from appearing underneath the top menu. A setting of 30 accommodates the WordPress admin bar. This setting appears after you have enabled smooth scrolling from above."
+msgstr "如果您的站点顶部有固定的菜单栏，您可以调整顶部偏移让标题显示在该菜单栏下面。推荐使用的数值30是为Wordpress管理菜单栏设计的。修改以上数值后此设置生效。"
+
+#: toc.php:756
+msgid "Default anchor prefix"
+msgstr "默认锚前缀"
+
+#: toc.php:759
+msgid "Anchor targets are restricted to alphanumeric characters as per HTML specification (see readme for more detail). The default anchor prefix will be used when no characters qualify. When left blank, a number will be used instead."
+msgstr "因为HTML规范化的要求，锚目标只能使用数字或者字幕。(详情可以查看说明文档)。如果您编辑内容时未定义锚前缀，toc+将使用这边的默认值。放空，则使用数字。"
+
+#: toc.php:760
+msgid "This option normally applies to content written in character sets other than ASCII."
+msgstr "此选项只能输入字符集而不是ASCII。"
+
+#: toc.php:761
+msgid "Eg: i, toc_index, index, _"
+msgstr "例：i, toc_index, index, _"
+
+#: toc.php:767
+msgid "Usage"
+msgstr "使用"
+
+#: toc.php:768
+msgid "If you would like to fully customise the position of the table of contents, you can use the"
+msgstr "如果您想要完全自定义目录的显示位置，您可以使用短代码"
+
+#: toc.php:768
+msgid "shortcode by placing it at the desired position of your post, page or custom post type. This method allows you to generate the table of contents despite having auto insertion disabled for its content type. Please visit the help tab for further information about this shortcode."
+msgstr "，并把它放在您想要的位置中，可以是文章、页面或者是自定义的文章类型。此方法方便您在任何情况下生成目录，即使您关闭了该内容类型的自动插入。详细内容可以查看帮助标签中个关于短代码的说明。"
+
+#: toc.php:776
+msgid "At its simplest, placing"
+msgstr "简单点说，输入"
+
+#: toc.php:776
+msgid "into a page will automatically create a sitemap of all pages and categories. This also works in a text widget."
+msgstr "在页面中将显示所有页面、分类的站点地图。您也可以在文本小工具使用此工具。"
+
+#: toc.php:780
+msgid "Show page listing"
+msgstr "显示页面列表"
+
+#: toc.php:784
+msgid "Show category listing"
+msgstr "显示分类列表"
+
+#: toc.php:788
+msgid "Heading type"
+msgstr "标题类型"
+
+#: toc.php:789
+msgid "Use"
+msgstr "使用"
+
+#: toc.php:798
+msgid "to print out the titles"
+msgstr "输出标题"
+
+#: toc.php:802
+msgid "Pages label"
+msgstr "页面标签"
+
+#: toc.php:804
+msgid "Eg: Pages, Page List"
+msgstr "例：页面、页面列表"
+
+#: toc.php:808
+msgid "Categories label"
+msgstr "分类标签"
+
+#: toc.php:810
+msgid "Eg: Categories, Category List"
+msgstr "例：分类、分类列表"
+
+#: toc.php:816
+msgid "Advanced usage"
+msgstr "高级功能"
+
+#: toc.php:818
+msgid "lets you print out a listing of only pages. Similarly"
+msgstr " 用来输出纯页面列表。同样地，"
+
+#: toc.php:818
+msgid "can be used to print out a category listing. They both can accept a number of attributes so visit the help tab for more information."
+msgstr " 用来输出纯分类列表。两者都有其他的参数设定，具体查看帮助标签的内容。"
+
+#: toc.php:819
+msgid "Examples"
+msgstr "例"
+
+#: toc.php:821
+msgid "hides the heading from a category listing"
+msgstr " 将标题从分类列表中移除"
+
+#: toc.php:822
+msgid "Uses h6 to display"
+msgstr " 在一个含页面ID为1和15的页面列表中，用 h6 显示 "
+
+#: toc.php:822
+msgid "on a page listing excluding pages with IDs 1 and 15."
+msgstr "。"
+
+#: toc.php:830
+msgid "Where's my table of contents?"
+msgstr "目录内容显示在哪里？"
+
+#: toc.php:831
+msgid "If you're reading this, then chances are you have successfully installed and enabled the plugin and you're just wondering why the index isn't appearing right?  Try the following:"
+msgstr "如果您正在阅读此内容的话，则表示您可以成功安装并开启了此插件。而您现在所困惑的便是为什么目录内容没有正常显示？您可以尝试："
+
+#: toc.php:833
+msgid "In most cases, the post, page or custom post type has less than the minimum number of headings. By default, this is set to four so make sure you have at least four headings within your content. If you want to change this value, you can find it under 'Main Options' &gt; 'Show when'."
+msgstr "在大部分情况下，您的文章、页面或者自定义文章类别中所含有的标题数量少于要求的最小值。默认下，最小值为4，这表示说如果您想要显示目录，您的内容中至少得有4个标题。如果您需要修改此数值的话，可以再“主要选项” &gt; “当……显示”中调整。"
+
+#: toc.php:834
+msgid "Is auto insertion enabled for your content type? By default, only pages are enabled."
+msgstr "您的内容类别中支持自动插入？默认情况下，仅支持页面类型。"
+
+#: toc.php:835
+msgid "Have you got"
+msgstr "内容中是否使用了 "
+
+#: toc.php:835
+msgid "somewhere within the content? This will disable the index for the current post, page or custom post type."
+msgstr " 短代码？这将阻止当前文章、页面或者自定义页面显示目录。"
+
+#: toc.php:836
+msgid "If you are using the TOC+ widget, check if you have the"
+msgstr "如果您正在使用 TOC+ 小工具，检查以下是否开启了 "
+
+#: toc.php:836
+#: toc.php:1504
+msgid "Show the table of contents only in the sidebar"
+msgstr "仅在侧边栏中显示目录"
+
+#: toc.php:836
+msgid "enabled as this will limit its display to only the sidebar. You can check by going into Appearance &gt; Widgets."
+msgstr "。如果不了解的么可以到外观 &gt; 小工具中查看。"
+
+#: toc.php:839
+msgid "How do I stop the table of contents from appearing on a single page?"
+msgstr "如果避免在单独页面中显示目录？"
+
+#: toc.php:840
+msgid "Place the following"
+msgstr "在内容任意位置中输入短代码 "
+
+#: toc.php:840
+msgid "anywhere on the page to suppress the table of contents. This is known as a shortcode and works for posts, pages and custom post types that make use of the_content()"
+msgstr "可以避免目录内容的显示。此短代码对任何帖子、页面以及其他使用the_content()的自定义文章类型都有效。"
+
+#: toc.php:842
+msgid "I've set wrapping to left or right but the headings don't wrap around the table of contents"
+msgstr "我已经设置自动换行为左或者右，但是标题并没有环绕在目录附近"
+
+#: toc.php:843
+msgid "This normally occurs when there is a CSS clear directive in or around the heading specified by the theme author. This directive tells the user agent to reset the previous wrapping specifications."
+msgstr "一般是因为您使用的主题中CSS移除了标题的指令。该指令让用户代理重置了前一个自动换行规则。"
+
+#: toc.php:844
+msgid "You can adjust your theme's CSS or try moving the table of contents position to the top of the page. If you didn't build your theme, I'd highly suggest you try the"
+msgstr "您可以调整您的主题CSS或者尝试移动目录内容的位置到页面顶部。如果您对主题并不了解，强烈建议尝试用 "
+
+#: toc.php:844
+msgid "if you wish to make CSS changes."
+msgstr " 修改CSS。"
+
+#: toc.php:846
+msgid "Why are some headings not included in the table of contents?"
+msgstr "为什么部分标题没有显示在目录中？"
+
+#: toc.php:847
+msgid "First, make sure the title text that isn't appearing in the table of contents is actually marked up as a heading (eg heading 1 through to 6).  After verifying that it really is a heading, make sure that there are no linebreaks or enters from the start to the end of the heading HTML tags.  Eg, it should not be like the following:"
+msgstr "首先，请确认标题中未显示的标题文本确实标记为标题（例：标题1到标题6）。如果已确认是标题的话，请检查一下h标签内的文本是否有跳行。例：不要出现以下形式："
+
+#: toc.php:853
+msgid "Rather, it should be something like:"
+msgstr "正确地，应该是："
+
+#: toc.php:858
+msgid "The sitemap uses a strange font disimilar to the rest of the site"
+msgstr "站点地图与站点使用的字体不一样"
+
+#: toc.php:859
+msgid "No extra styles are created for the sitemap, instead it inherits any styles you used when adding the shortcode. If you copy and pasted, you probably also copied the 'code' tags surrounding it so remove them if this is the case."
+msgstr "这边并没有定义站点地图的风格，相反的，它支持继承前一个内容的风格。如果您纯粹的复制粘贴，您可以不小心把风格也给复制进去了。"
+
+#: toc.php:860
+msgid "In most cases, try to have the shortcode on its own line with nothing before or after the square brackets."
+msgstr "大部分情况下，建议重启一行添加短代码，避免受到其他风格的影响。"
+
+#: toc.php:862
+msgid "What were those shortcodes and attributes again?"
+msgstr "什么是短代码？什么又是短代码参数？"
+
+#: toc.php:863
+msgid "When attributes are left out for the shortcodes below, they will fallback to the settings you defined under Settings &gt; TOC+."
+msgstr "如果短代码输入时未输入参数，插件将使用 设置 &gt; TOC+ 的设置。"
+
+#: toc.php:867
+msgid "Shortcode"
+msgstr "短代码"
+
+#: toc.php:868
+msgid "Description"
+msgstr "介绍"
+
+#: toc.php:869
+msgid "Attributes"
+msgstr "参数"
+
+#: toc.php:875
+msgid "Lets you generate the table of contents at the preferred position. Also useful for sites that only require a TOC on a small handful of pages."
+msgstr "在您想要的位置生成目录内容。同时方便那些只有一点儿内容但是需要生成目录的站点。"
+
+#: toc.php:878
+msgid "text, title of the table of contents"
+msgstr "：数值为文本，表示目录的标题"
+
+#: toc.php:879
+msgid "true/false, shows or hides the title"
+msgstr "：数值为true/false，表示显示或者隐藏标题"
+
+#: toc.php:880
+msgid "text, either \"left\" or \"right\""
+msgstr "：数值为文本，可为 \"left\" 或者 \"right\" (分别表示“向左”或者“向右”)"
+
+#: toc.php:881
+msgid "numbers, this lets you select the heading levels you want included in the table of contents. Separate multiple levels with a comma. Example: include headings 3, 4 and 5 but exclude the others with"
+msgstr "：数值为数字，用来选择要再目录中显示的标题级别，可以“,”隔开不同的级别。例：下面代码表示仅显示第三/四/五级标题..."
+
+#: toc.php:887
+msgid "Allows you to disable the table of contents for the current post, page, or custom post type."
+msgstr "用来禁止当前内容中目录的显示。"
+
+#: toc.php:892
+msgid "Produces a listing of all pages and categories for your site. You can use this on any post, page or even in a text widget."
+msgstr "生成站点地图。您可以在文章、页面甚至文本小工具中使用此代码。"
+
+#: toc.php:897
+msgid "Lets you print out a listing of only pages."
+msgstr "仅输出页面的列表。"
+
+#: toc.php:900
+msgid "number between 1 and 6, defines which html heading to use"
+msgstr "：数值为 1 到 6 之间的数字，用来定义html使用的标题"
+
+#: toc.php:901
+msgid "text, title of the list"
+msgstr "：数值为文本，用来定义列表的标题"
+
+#: toc.php:902
+msgid "true/false, shows or hides the list heading"
+msgstr "：数值为true/false，显示/隐藏列表标题"
+
+#: toc.php:903
+msgid "IDs of the pages or categories you wish to exclude"
+msgstr "：数值为数字，表示您移除的页面或者分类的ID"
+
+#: toc.php:909
+msgid "Similar to"
+msgstr "类 "
+
+#: toc.php:909
+msgid "but for categories."
+msgstr " 但仅输出分类。"
+
+#: toc.php:915
+msgid "I have another question..."
+msgstr "还有其他不明白的地方..."
+
+#: toc.php:916
+msgid "Visit the"
+msgstr "可以访问 "
+
+#: toc.php:916
+msgid "plugin homepage"
+msgstr "插件主页"
+
+#: toc.php:916
+msgid "to ask your question - who knows, maybe your question has already been answered. I'd really like to hear your suggestions if you have any."
+msgstr " 求助 - 谁知道呢，也许您的问题已经解答过了。如果您有建议的话，我会更乐意。"
+
+#: toc.php:922
+msgid "Update Options"
+msgstr "更新设置"
+
+#: toc.php:1413
+msgid "Display the table of contents in the sidebar with this widget"
+msgstr "在小工具中显示目录"
+

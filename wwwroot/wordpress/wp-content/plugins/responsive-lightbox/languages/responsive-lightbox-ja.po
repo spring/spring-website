@@ -1,0 +1,312 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox\n"
+"POT-Creation-Date: 2013-08-12 10:20+0100\n"
+"PO-Revision-Date: 2013-09-18 23:19+0900\n"
+"Last-Translator: \n"
+"Language-Team: stranger-jp\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+msgid "prettyPhoto"
+msgstr "prettyPhoto"
+
+msgid "slow"
+msgstr "遅い"
+
+msgid "normal"
+msgstr "普通"
+
+msgid "fast"
+msgstr "速い"
+
+msgid "default"
+msgstr "デフォルト"
+
+msgid "light rounded"
+msgstr "明るい 角丸"
+
+msgid "dark rounded"
+msgstr "暗い 角丸"
+
+msgid "light square"
+msgstr "明るい 四角"
+
+msgid "dark square"
+msgstr "暗い 四角"
+
+msgid "facebook"
+msgstr "facebook"
+
+msgid "window"
+msgstr "ウィンドウ"
+
+msgid "transparent"
+msgstr "透明"
+
+msgid "opaque"
+msgstr "不透明"
+
+msgid "direct"
+msgstr "指示"
+
+msgid "gpu"
+msgstr "GPU"
+
+msgid "SwipeBox"
+msgstr "SwipeBox"
+
+msgid "CSS"
+msgstr "CSS"
+
+msgid "jQuery"
+msgstr "jQuery"
+
+msgid "Enable"
+msgstr "有効"
+
+msgid "Disable"
+msgstr "無効"
+
+msgid "General settings"
+msgstr "全般設定"
+
+msgid "Lightbox settings"
+msgstr "Lightboxの設定"
+
+msgid "Lightbox script"
+msgstr "Lightboxスクリプト"
+
+msgid "Selector"
+msgstr "セレクタ"
+
+msgid "Galleries"
+msgstr "ギャラリー"
+
+msgid "Video links"
+msgstr "動画リンク"
+
+msgid "Image links"
+msgstr "画像リンク"
+
+msgid "Single images as gallery"
+msgstr "ギャラリーのような表示"
+
+msgid "Deactivation"
+msgstr "プラグインの設定を削除"
+
+msgid "Animation type"
+msgstr "アニメーションタイプ"
+
+msgid "Top and bottom bars"
+msgstr "上部と下部のバー"
+
+msgid "Video max width"
+msgstr "ビデオ最大幅"
+
+msgid "Animation speed"
+msgstr "アニメーションの速度"
+
+msgid "Slideshow"
+msgstr "スライドショー"
+
+msgid "Slideshow autoplay"
+msgstr "スライドショーの自動再生"
+
+msgid "Opacity"
+msgstr "不透明"
+
+msgid "Show title"
+msgstr "タイトルの表示"
+
+msgid "Allow resize big images"
+msgstr "大きな画像サイズを変更可能"
+
+msgid "Video width"
+msgstr "ビデオの幅"
+
+msgid "Video height"
+msgstr "ビデオの高さ"
+
+msgid "Theme"
+msgstr "テーマ"
+
+msgid "Horizontal padding"
+msgstr "水平パディング"
+
+msgid "Hide Flash"
+msgstr "フラッシュを隠す"
+
+msgid "Flash Window Mode (wmode)"
+msgstr "フラッシュ・ウィンドウモード(wmode)"
+
+msgid "Video autoplay"
+msgstr "ビデオ自動再生"
+
+msgid "Modal"
+msgstr "モーダル"
+
+msgid "Deeplinking"
+msgstr "ディープリンク"
+
+msgid "Overlay gallery"
+msgstr "オーバーレイギャラリー"
+
+msgid "Keyboard shortcuts"
+msgstr "キーボードショートカット"
+
+msgid "Social (Twitter, Facebook)"
+msgstr "ソーシャル(TwitterやFacebook)"
+
+msgid "Select your preffered ligthbox effect script."
+msgstr "好みのLigthboxのエフェクトを選択します。"
+
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr "relセレクタをLightboxのエフェクトに適用させる場合に選択します。"
+
+msgid "Add lightbox to WordPress image galleries by default"
+msgstr "デフォルトは WordPressの画像ギャラリーにLightboxを追加します。"
+
+msgid "Add lightbox to YouTube and Vimeo video links by default"
+msgstr "デフォルトはYouTubeやVimeoの動画リンクにlightboxを追加します。"
+
+msgid "Add lightbox to WordPress image links by default"
+msgstr "デフォルトはWordPressの画像リンクにlightboxを追加します。"
+
+msgid "Display single post images as a gallery"
+msgstr "ギャラリーのように単一の投稿画像を表示します。"
+
+msgid "Delete settings on plugin deactivation"
+msgstr "プラグインの非活性化の設定を削除します。"
+
+msgid "Select a method of applying a lightbox effect."
+msgstr "Lightboxエフェクトを適用する方法を選択します。"
+
+msgid "Disable if you don't want to top and bottom bars to be hidden after a period of time."
+msgstr "一定期間後に隠される上部と下部のバーを非表示にする場合は無効にします。"
+
+msgid "Enter the time after which the top and bottom bars will be hidden (when hiding is enabled)."
+msgstr "上部と下部のバーが(隠蔽が有効になっている場合)に隠れされるまでの時間を入力してください。"
+
+msgid "Enter the max video width in a lightbox"
+msgstr "Lightboxの最大ビデオの幅を入力してください。"
+
+msgid "Select animation speed for lightbox effect"
+msgstr "Lightboxエフェクトのアニメーション速度を選択してください。"
+
+msgid "Display images as slideshow"
+msgstr "スライドショーで画像を表示します。"
+
+msgid "Enter time (in miliseconds)"
+msgstr "時間(ミリ秒単位)を入力します。"
+
+msgid "Automatically start slideshow"
+msgstr "有効で自動的にスライドショーを開始します。"
+
+msgid "Value between 0 and 1 (for e.g. 0.5)"
+msgstr "0と1 (例えば0.5)の間の値"
+
+msgid "Display image tiltle"
+msgstr "有効にすると画像のタイトルが表示されます。"
+
+msgid "Resize the photos bigger than viewport."
+msgstr "ビューポートよりも写真が大き場合リサイズします。"
+
+msgid "in pixels"
+msgstr "ピクセル単位"
+
+msgid "Select theme for lightbox effect"
+msgstr "Lightboxのエフェクトのテーマを選択します。"
+
+msgid "Horizontal padding (in pixels)"
+msgstr "水平パディング(ピクセル単位)"
+
+msgid "Hides all the flash object on a page. Enable this if flash appears over prettyPhoto"
+msgstr "ページ上の非表示には、すべてのFlashオブジェクト。フラッシュがprettyPhoto上に表示されている場合、これを有効に"
+
+msgid "Select flash window mode"
+msgstr "フラッシュ・ウィンドウモードを選択します。"
+
+msgid "Automatically start videos"
+msgstr "ビデオを自動再生するかどうかを設定します。"
+
+msgid "If set to true, only the close button will close the window"
+msgstr "有効に設定した場合、閉じるボタンでウィンドウを閉じます。"
+
+msgid "Allow prettyPhoto to update the url to enable deeplinking"
+msgstr "prettyPhotoがディープリンクを有効にするURLを更新することを許可します。"
+
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over"
+msgstr "有効にした場合ギャラリーの上にマウスでフルスクリーンで画像をオーバーレイします。"
+
+msgid "Set to false if you open forms inside prettyPhoto"
+msgstr "prettyPhoto内部フォームを開く場合は無効にします。"
+
+msgid "Display links to Facebook and Twitter"
+msgstr "FacebookやTwitterへのリンクを表示します。"
+
+msgid "Changes were not saved because there was attempt to save settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "非アクティブスクリプトの設定を保存しようとする試みがあったので、変更は保存されませんでした。サイトは、適切なスクリプトの設定にリロードされています。"
+
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr "SwipeBoxスクリプトの設定がデフォルトに復元されました。"
+
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr "prettyPhotoスクリプトの設定がデフォルトに復元されました。"
+
+msgid "Changes were not set to defaults because there was attempt to reset settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "非アクティブスクリプトの設定をリセットする試みがあったので変更はデフォルトに設定されていません。サイトは適切なスクリプトの設定にリロードされています。"
+
+msgid "Responsive Lightbox"
+msgstr "レスポンシブLightbox"
+
+msgid "Reset to defaults"
+msgstr "デフォルトにリセット"
+
+msgid "Need support?"
+msgstr "Need support?"
+
+msgid "If you are having problems with this plugin, please talk about them in the"
+msgstr "If you are having problems with this plugin, please talk about them in the"
+
+msgid "Support forum"
+msgstr "Support forum"
+
+msgid "Do you like this plugin?"
+msgstr "Do you like this plugin?"
+
+msgid "Rate it 5"
+msgstr "Rate it 5"
+
+msgid "on WordPress.org"
+msgstr "on WordPress.org"
+
+msgid "Blog about it & link to the"
+msgstr "Blog about it & link to the"
+
+msgid "plugin page"
+msgstr "plugin page"
+
+msgid "Check out our other"
+msgstr "Check out our other"
+
+msgid "WordPress plugins"
+msgstr "WordPress plugins"
+
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr "設定をデフォルトにリセットしてもよろしいですか？"
+
+msgid "Support"
+msgstr "サポート"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Value between 0 and 100, 100 for no opacity"
+msgstr "0～100の値で100は透明度なしです。"

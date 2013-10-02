@@ -1,0 +1,426 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox fr\n"
+"POT-Creation-Date: 2013-07-09 19:35+0100\n"
+"PO-Revision-Date: 2013-07-14 17:44+0100\n"
+"Last-Translator: Li-An <lian00@gmail.com>\n"
+"Language-Team: Li-An <lian00@gmail.com>\n"
+"Language: Français\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../responsive-lightbox.php:253
+msgid "prettyPhoto"
+msgstr "prettyPhoto"
+
+#: ../responsive-lightbox.php:255
+msgid "slow"
+msgstr "lent"
+
+#: ../responsive-lightbox.php:256
+msgid "normal"
+msgstr "normal"
+
+#: ../responsive-lightbox.php:257
+msgid "fast"
+msgstr "rapide"
+
+#: ../responsive-lightbox.php:260
+msgid "default"
+msgstr "par défaut"
+
+#: ../responsive-lightbox.php:261
+msgid "light rounded"
+msgstr "coins arrondis clair"
+
+#: ../responsive-lightbox.php:262
+msgid "dark rounded"
+msgstr "coins arrondis sombre"
+
+#: ../responsive-lightbox.php:263
+msgid "light square"
+msgstr "rectangle clair"
+
+#: ../responsive-lightbox.php:264
+msgid "dark square"
+msgstr "rectangle sombre"
+
+#: ../responsive-lightbox.php:265
+msgid "facebook"
+msgstr "facebook"
+
+#: ../responsive-lightbox.php:268
+msgid "window"
+msgstr "fenêtre"
+
+#: ../responsive-lightbox.php:269
+msgid "transparent"
+msgstr "transparente"
+
+#: ../responsive-lightbox.php:270
+msgid "opaque"
+msgstr "opaque"
+
+#: ../responsive-lightbox.php:271
+msgid "direct"
+msgstr "direct"
+
+#: ../responsive-lightbox.php:272
+msgid "gpu"
+msgstr "gpu"
+
+#: ../responsive-lightbox.php:277
+msgid "SwipeBox"
+msgstr "SwipeBox"
+
+#: ../responsive-lightbox.php:279
+msgid "CSS"
+msgstr "CSS"
+
+#: ../responsive-lightbox.php:280
+msgid "jQuery"
+msgstr "jQuery"
+
+#: ../responsive-lightbox.php:286
+msgid "Enable"
+msgstr "Activé"
+
+#: ../responsive-lightbox.php:287
+msgid "Disable"
+msgstr "Désactivé"
+
+#: ../responsive-lightbox.php:292 ../responsive-lightbox.php:328
+msgid "General settings"
+msgstr "Réglages généraux"
+
+#: ../responsive-lightbox.php:297 ../responsive-lightbox.php:338
+msgid "Lightbox settings"
+msgstr "Réglages Lightbox"
+
+#: ../responsive-lightbox.php:329
+msgid "Lightbox script"
+msgstr "Script Lightbox"
+
+#: ../responsive-lightbox.php:330
+msgid "Selector"
+msgstr "Sélecteur"
+
+#: ../responsive-lightbox.php:331
+msgid "Galleries"
+msgstr "Galeries"
+
+#: ../responsive-lightbox.php:332
+msgid "Video links"
+msgstr "Liens vidéo"
+
+#: ../responsive-lightbox.php:333
+msgid "Image links"
+msgstr "Liens image"
+
+#: ../responsive-lightbox.php:334
+msgid "Deactivation"
+msgstr "Désactivation"
+
+#: ../responsive-lightbox.php:342
+msgid "Animation type"
+msgstr "Type d'animation"
+
+#: ../responsive-lightbox.php:343
+msgid "Top and bottom bars"
+msgstr "Barre en haut et en bas"
+
+#: ../responsive-lightbox.php:344
+msgid "Video max width"
+msgstr "Largeur max vidéo"
+
+#: ../responsive-lightbox.php:348
+msgid "Animation speed"
+msgstr "Vitesse d'animation"
+
+#: ../responsive-lightbox.php:349
+msgid "Slideshow"
+msgstr "Diaporama"
+
+#: ../responsive-lightbox.php:350
+msgid "Slideshow autoplay"
+msgstr "Démarrage automatique diaporama"
+
+#: ../responsive-lightbox.php:351
+msgid "Opacity"
+msgstr "Opacité"
+
+#: ../responsive-lightbox.php:352
+msgid "Show title"
+msgstr "Montrer le titre"
+
+#: ../responsive-lightbox.php:353
+msgid "Allow resize big images"
+msgstr "Autoriser le redimensionnement des grandes images"
+
+#: ../responsive-lightbox.php:354
+msgid "Video width"
+msgstr "Largeur vidéo"
+
+#: ../responsive-lightbox.php:355
+msgid "Video height"
+msgstr "Hauteur vidéo"
+
+#: ../responsive-lightbox.php:356
+msgid "Theme"
+msgstr "Thème"
+
+#: ../responsive-lightbox.php:357
+msgid "Horizontal padding"
+msgstr "Padding horizontal"
+
+#: ../responsive-lightbox.php:358
+msgid "Hide Flash"
+msgstr "Cacher le Flash"
+
+#: ../responsive-lightbox.php:359
+msgid "Flash Window Mode (wmode)"
+msgstr "Mode fenêtre Flash (wmode)"
+
+#: ../responsive-lightbox.php:360
+msgid "Video autoplay"
+msgstr "Autodémarrage de vidéo"
+
+#: ../responsive-lightbox.php:361
+msgid "Modal"
+msgstr "Modale"
+
+#: ../responsive-lightbox.php:362
+msgid "Deeplinking"
+msgstr "Deeplinking"
+
+#: ../responsive-lightbox.php:363
+msgid "Overlay gallery"
+msgstr "Galerie superposée"
+
+#: ../responsive-lightbox.php:364
+msgid "Keyboard shortcuts"
+msgstr "Raccourcis clavier"
+
+#: ../responsive-lightbox.php:365
+msgid "Social (Twitter, Facebook)"
+msgstr "Social (Twitter, Facebook)"
+
+#: ../responsive-lightbox.php:383
+msgid "Select your preffered ligthbox effect script."
+msgstr "Sélectionnez votre script d'effet Lightbox préféré."
+
+#: ../responsive-lightbox.php:393
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr "Sélectionnez à quel sélecteur rel l'effet Lightbox sera appliqué."
+
+#: ../responsive-lightbox.php:411
+msgid "Add lightbox to WordPress image galleries by default"
+msgstr "Ajouter Lightbox aux images de galeries Wordpress par défaut"
+
+#: ../responsive-lightbox.php:429
+msgid "Add lightbox to YouTube and Vimeo video links by default"
+msgstr "Ajouter Lightbox aus liens vidéos YouTube et Vimeo par défaut"
+
+#: ../responsive-lightbox.php:447
+msgid "Add lightbox to WordPress image links by default"
+msgstr "Ajouter Lightbox aux liens d'images Wordpress par défaut"
+
+#: ../responsive-lightbox.php:465
+msgid "Delete settings on plugin deactivation"
+msgstr "Supprimer les réglages à la désactivation du plugin"
+
+#: ../responsive-lightbox.php:483
+msgid "Select a method of applying a lightbox effect."
+msgstr "Sélectionnez une méthode d'application de l'effet Lightbox."
+
+#: ../responsive-lightbox.php:501
+msgid "Disable if you don't want to display top and bottom bars."
+msgstr ""
+"Désactivez si vous ne voulez pas afficher les barres au dessus et en "
+"dessous. "
+
+#: ../responsive-lightbox.php:505
+msgid "Enter the time for images animation (in miliseconds)"
+msgstr "Entrez le temps d'animation pour les images (en millisecondes)"
+
+#: ../responsive-lightbox.php:515
+msgid "Enter the max video width in a lightbox"
+msgstr "Entrez la largeur max de la vidéà dans une Lightbox"
+
+#: ../responsive-lightbox.php:533
+msgid "Select animation speed for lightbox effect"
+msgstr "Sélectionnez une vitesse d'animation pour l'effet Lightbox"
+
+#: ../responsive-lightbox.php:551
+msgid "Display images as slideshow"
+msgstr "Afficher les images dans un diaporama"
+
+#: ../responsive-lightbox.php:555
+msgid "Enter time (in miliseconds)"
+msgstr "Entrez le temps (en millisecondes)"
+
+#: ../responsive-lightbox.php:573
+msgid "Automatically start slideshow"
+msgstr "Démarrer automatiquement le diaporama"
+
+#: ../responsive-lightbox.php:583
+msgid "Value between 0 and 1 (for e.g. 0.5)"
+msgstr "Une valeur entre 0 et 1 (par exemple 0.5)"
+
+#: ../responsive-lightbox.php:601
+msgid "Display image tiltle"
+msgstr "Afficher le titre de l'image"
+
+#: ../responsive-lightbox.php:619
+msgid "Resize the photos bigger than viewport."
+msgstr "Redimensionner les images plus grandes que la fenêtre d'affichage."
+
+#: ../responsive-lightbox.php:629 ../responsive-lightbox.php:639
+msgid "in pixels"
+msgstr "en pixels"
+
+#: ../responsive-lightbox.php:657
+msgid "Select theme for lightbox effect"
+msgstr "Sélectionnez le thème pour l'effet Lightbox"
+
+#: ../responsive-lightbox.php:667
+msgid "Horizontal padding (in pixels)"
+msgstr "Padding horizontal (en pixels)"
+
+#: ../responsive-lightbox.php:685
+msgid ""
+"Hides all the flash object on a page. Enable this if flash appears over "
+"prettyPhoto"
+msgstr ""
+"Cacher les objets Flash sur une page. Activez si des animations Flash "
+"apparaissent au dessus de prettyPhoto."
+
+#: ../responsive-lightbox.php:703
+msgid "Select flash window mode"
+msgstr "Sélectionner le mode de fenêtre Flash"
+
+#: ../responsive-lightbox.php:721
+msgid "Automatically start videos"
+msgstr "Démarrer automatiquement les vidéos"
+
+#: ../responsive-lightbox.php:739
+msgid "If set to true, only the close button will close the window"
+msgstr "Si activé, seul le bouton de fermeture permettra de fermer la fenêtre"
+
+#: ../responsive-lightbox.php:757
+msgid "Allow prettyPhoto to update the url to enable deeplinking"
+msgstr "Autorise prettyPhoto à mettre à jour l'URL pour activer le deeplinking"
+
+#: ../responsive-lightbox.php:775
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over"
+msgstr ""
+"Si activé, une galerie sera affichée par dessus l'image plein écran au "
+"passage de la souris"
+
+#: ../responsive-lightbox.php:793
+msgid "Set to false if you open forms inside prettyPhoto"
+msgstr "Désactivez si vous ouvrez des formulaires dans prettyPhoto"
+
+#: ../responsive-lightbox.php:811
+msgid "Display links to Facebook and Twitter"
+msgstr "Afficher des liens vers Facebook et Twitter"
+
+#: ../responsive-lightbox.php:906
+msgid ""
+"Changes were not saved because there was attempt to save settings of "
+"inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"Les modifications n'ont pas été sauvegardées parce qu'il y a eu une "
+"tentative pour sauvegarder les réglages d'un script inactif. Le site a été "
+"rafraîchi avec les réglages de script convenables."
+
+#: ../responsive-lightbox.php:918
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr ""
+"Les réglages du script SwipeBox ont été rétablis dans leurs valeurs par "
+"défaut."
+
+#: ../responsive-lightbox.php:924
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr ""
+"Les réglages du script prettyPhoto ont été rétablis dans leurs valeurs par "
+"défaut."
+
+#: ../responsive-lightbox.php:928
+msgid ""
+"Changes were not set to defaults because there was attempt to reset settings "
+"of inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"La remise aux valeurs par défaut n'a pas été effectuée parce qu'il y a eu "
+"une tentative pour remettre par défaut les réglages d'un script inactif. Le "
+"site a été rafraîchi avec les réglages de script convenables."
+
+#: ../responsive-lightbox.php:942 ../responsive-lightbox.php:943
+#: ../responsive-lightbox.php:957 ../responsive-lightbox.php:989
+msgid "Responsive Lightbox"
+msgstr "Responsive Lightbox"
+
+#: ../responsive-lightbox.php:982
+msgid "Reset to defaults"
+msgstr "Rétablir les valeurs par défaut"
+
+#: ../responsive-lightbox.php:991
+msgid "Need support?"
+msgstr "Vous avez besoin d'aide ?"
+
+#: ../responsive-lightbox.php:992
+msgid ""
+"If you are having problems with this plugin, please talk about them in the"
+msgstr "Si vous avez des problèmes avec ce plugin, veuillez en parler dans"
+
+#: ../responsive-lightbox.php:992
+msgid "Support forum"
+msgstr "forum d'aide"
+
+#: ../responsive-lightbox.php:994
+msgid "Do you like this plugin?"
+msgstr "Aimez-vous ce plugin ?"
+
+#: ../responsive-lightbox.php:995
+msgid "Rate it 5"
+msgstr "Mettez lui la note 5"
+
+#: ../responsive-lightbox.php:995
+msgid "on WordPress.org"
+msgstr "sur WordPress.org"
+
+#: ../responsive-lightbox.php:996
+msgid "Blog about it & link to the"
+msgstr "Blogguez à son propos et faites un lien vers"
+
+#: ../responsive-lightbox.php:996
+msgid "plugin page"
+msgstr "la page de plugin"
+
+#: ../responsive-lightbox.php:997
+msgid "Check out our other"
+msgstr "Jetez un coup d'oeil sur"
+
+#: ../responsive-lightbox.php:997
+msgid "WordPress plugins"
+msgstr "les plugins WordPress"
+
+#: ../responsive-lightbox.php:1022
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr ""
+"Êtes-vous sûr de vouloir rétablir les réglages des scripts aux valeurs par "
+"défaut ?"
+
+#: ../responsive-lightbox.php:1149
+msgid "Support"
+msgstr "Aide"
+
+#: ../responsive-lightbox.php:1171
+msgid "Settings"
+msgstr "Réglages"

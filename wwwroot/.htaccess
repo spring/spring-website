@@ -18,3 +18,15 @@ RewriteRule ^indexv([0-9]+).css /index.css [NC]
 RewriteRule ^dl/vclibs/spring-vc(8|9|10)libs(.*)$ https://github.com/spring/vclibs$1/ [L,R=301]
 RewriteRule ^dl/vclibs/(.*)$ https://github.com/spring/vclibs10/ [L,R=301]
 
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
