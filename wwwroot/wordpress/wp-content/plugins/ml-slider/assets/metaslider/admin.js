@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
     });
 
     // bind an event to the slides table to update the menu order of each slide
-    jQuery('.metaslider .left table').bind('updateSlideOrder', function(event) {
+    jQuery('.metaslider .left table').live('updateSlideOrder', function(event) {
         jQuery('tr', this).each(function() {
             jQuery('input.menu_order', jQuery(this)).val(jQuery(this).index());
         });

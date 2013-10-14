@@ -25,7 +25,6 @@ class My_List_Table extends WP_List_Table {
 
   function admin_header() {
     $page = ( isset($_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : false;
-
     if( 'wp_rss_multi_importer_admin' != $page )
 
     return;
@@ -58,9 +57,6 @@ class My_List_Table extends WP_List_Table {
     }
   }
 
-
-
-
 function get_sortable_columns() {
   $sortable_columns = array(
     'posttitle'  => array('posttitle',false),
@@ -86,12 +82,13 @@ function usort_reorder( $a, $b ) {
   // If no sort, default to title
   $orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'postdate';
   // If no order, default to asc
-  $order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'desc';
+  $order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'asc';
   // Determine sort order
   $result = strcmp( $a[$orderby], $b[$orderby] );
   // Send final sort direction to usort
   return ( $order === 'asc' ) ? $result : -$result;
 }
+
 
 function column_posttitle($item){
 	$pt_page=(isset($_REQUEST['page']) ? $_REQUEST['page']: null);	
@@ -102,6 +99,21 @@ function column_posttitle($item){
         );
 		if(!$item['postprotect']){$actions['preserve'] =sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$pt_page,'preserve',$item['ID'],$pt_getpage);}
 		if($item['postprotect']){ $actions['readydelete'] = sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Auto Delete</a>',$pt_page,'readydelete',$item['ID'],$pt_getpage); }
+
+  return sprintf('%1$s %2$s', $item['posttitle'], $this->row_actions($actions) );
+}
+
+
+
+
+
+function column_posttitle_old($item){
+  $actions = array(
+            'delete'    => sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$_REQUEST['page'],'preserve',$item['ID'],$_GET['paged']),
+			'view'    => sprintf('<a href="%s">View</a>',$item['guid']),
+        );
+
+		if($item['postprotect']){ $actions['readydelete'] = sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Auto Delete</a>',$_REQUEST['page'],'readydelete',$item['ID'],$_GET['paged']); }
 
   return sprintf('%1$s %2$s', $item['posttitle'], $this->row_actions($actions) );
 }
@@ -138,8 +150,7 @@ function column_cb($item) {
     }
 
 function prepare_items() {
-	$search = (isset($_POST['s']) ? trim($_POST['s']) : null);
-	//$search = trim($_POST['s']);
+	$search=(isset($_POST['s']) ? trim($_POST['s']) : null);	
   	global $wpdb;
   	$columns  = $this->get_columns();
   	$hidden   = array();
@@ -150,7 +161,7 @@ function prepare_items() {
 
 	$post_options_delete = get_option('rss_post_options');
 	$expSetting=$post_options_delete['expiration'];
-	$autoDelete=$post_options_delete['autoDelete'];
+	$autoDelete=(isset($post_options_delete['autoDelete'])) ? $post_options_delete['autoDelete'] : null;
 	$serverTimezone=$post_options_delete['timezone'];
 	if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 		date_default_timezone_set($serverTimezone);
@@ -209,7 +220,7 @@ foreach ($ids as $id){
   
   	usort( $this->example_data, array( &$this, 'usort_reorder' ) );
   
-  	$per_page = 20;
+  	$per_page = 10;
   	$current_page = $this->get_pagenum();
   	$total_items = count( $this->example_data );
 
@@ -233,7 +244,6 @@ foreach ($ids as $id){
 
 
 function getDateUntil($postDate,$expSetting){
-	$timeSince='';
 	$originalPost=$postDate;
 	$deleteDate=$originalPost+($expSetting*60*60*24);
 	$rightNow=time();
@@ -264,10 +274,10 @@ function getDateUntil($postDate,$expSetting){
 
 function my_add_menu_items(){
   $hook = add_menu_page( 'My Plugin List Table', 'My List Table Example', 'activate_plugins', 'my_list_test', 'my_render_list_page' );
-  add_action( "load-$hook", 'add_options' );
+  add_action( "load-$hook", 'rssmi_add_options' );
 }
 
-function add_options() {
+function rssmi_add_options() {
   global $myListTable;
   $option = 'per_page';
   $args = array(
@@ -279,8 +289,6 @@ function add_options() {
   $myListTable = new My_List_Table();
 }
 //add_action( 'admin_menu', 'my_add_menu_items' );
-
-
 
 
 
@@ -312,9 +320,8 @@ function undelete_single_meta_post($mypostid){			//  DELETE META POST DATA FUNCT
    
 
 function my_render_list_page(){
-
   global $myListTable;
-  echo '</pre><div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div><h2>WP RSS Multi-Importer</h2><div class="wrap"><h2>Manage Feed to Post Auto Delete Actions</h2>'; 
+  echo '</pre><div class="wrap"><h2>Manage Feed to Post Auto Delete Actions</h2>'; 
 
 
 	if( isset($_POST['s']) ){
@@ -328,7 +335,7 @@ function my_render_list_page(){
     <div style="background:#ECECEC;border:1px solid #CCC;padding:0 10px;margin-top:5px;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;">
         <p>This page lists all the articles you have imported using the plugin using Feed to Post.  If the articles are set to be deleted, you'll see the time until deletion in the last column (otherwise it is marked with n/a).</p> 
         <p>If you've set the plugin to automatically delete imported articles but want one or more imported articles NOT to be deleted, you can do this using the page.  Click Do Not Delete for any single article you don't want automatically deleted or check off all the articles you want to be preserved and choose Do Not Delete from the drop down menu and click Apply.</p>
-<p>If at any time you want to delete all the posts created by this plugin and all the featured images associated with these posts, click this button once (then wait a minute or so and refresh this page) - NOTE:  This will delete only the posts created by this plugin.<button type="button" name="fetchdelete" id="fetch-delete" value=""><?php _e("CLICK TO DELETE ALL PLUGIN POSTS NOW", 'wp-rss-multi-importer')?></button> </p><div id="fnote"></div>
+		<p style="color:red">If at any time you want to delete all the post created by this plugin and all the featured images associated with these posts, click this button once (then wait a minute or so and refresh this page) - NOTE:  This will delete only the posts created by this plugin.<button type="button" name="fetchdelete" id="fetch-delete" value=""><?php _e("CLICK TO DELETE ALL PLUGIN POSTS NOW", 'wp-rss-multi-importer')?></button> </p>
     </div>
 
 
@@ -340,20 +347,4 @@ function my_render_list_page(){
   $myListTable->display(); 
   echo '</form></div>'; 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

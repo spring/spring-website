@@ -1,12 +1,11 @@
 <?php
-
 $feedID = (isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_feedID'] : NULL);
 $catID = (isset( $_GET[ 'rssmi_catID' ] ) ? $_GET['rssmi_catID'] :  NULL);
 if (!IS_NULL($feedID) || !IS_NULL($catID) ){
 	if(! class_exists('SimplePie')){
 	     		require_once(ABSPATH . WPINC . '/class-simplepie.php');
 	}
-	class SimplePie_RSSMI extends SimplePie {}	
+	class SimplePie_RSSMI extends SimplePie {}
 	$post_options = get_option('rss_post_options');
 	if($post_options['active']==1){
 		if (!IS_NULL($feedID)){
@@ -23,6 +22,8 @@ if (!IS_NULL($feedID) || !IS_NULL($catID) ){
 }
 
 
+
+	
 
 
 function deleteArticles(){
@@ -84,6 +85,7 @@ function setFeaturedImage($post_id,$url,$featuredImageTitle){
 
 
 
+
 function rssmi_import_feed_post() {
 	
 	$post_options = get_option('rss_post_options');
@@ -100,7 +102,6 @@ add_action('wp_ajax_fetch_now', 'fetch_rss_callback');
 
 function fetch_rss_callback() {
 
-
 	$post_options = get_option('rss_post_options');
 
 		if($post_options['active']==1){
@@ -109,16 +110,10 @@ function fetch_rss_callback() {
 		
 			if ($result===3){
 					echo '<h3>There was a problem with fetching feeds.  This is likely due to a settings problem or invalid feeds.</h3>';
-			
-					
 			}elseif ($result===4){
 				echo '<h3>There were no new feed items to add.</h3>';
-			
 			}else{
-	        	echo '<h3>The most recent valid feeds have been put into posts.</h3>';
-				echo '<p>To check if any feeds are currently not working, click on the Feed List tab</p>';
-			
-	
+	        	echo '<h3>The most recent feeds have been put into posts.</h3>';
 			}
 			
 			
@@ -143,8 +138,8 @@ add_action('wp_ajax_fetch_delete', 'fetch_rss_callback_delete');
 function fetch_rss_callback_delete() {
 
 			rssmi_delete_feed_post_admin();
-			echo '<h3>All posts have been deleted.</h3>';
-			die();
+
+
 }
 
 
@@ -252,8 +247,9 @@ function getAllWPCats(){
 
 
 function wp_rss_multi_importer_post($feedID=NULL,$catID=NULL){
-	
- 	$postMsg = FALSE; 
+
+ $postMsg = FALSE; 
+
 
 	
 require_once(ABSPATH . "wp-admin" . '/includes/media.php');
@@ -275,6 +271,19 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	global $fopenIsSet;
 	$fopenIsSet = ini_get('allow_url_fopen');
 
+	if ($option_items==false) return 3;
+
+
+if(!empty($option_items)){
+$cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
+
+	if (count($cat_array)==0) {  // for backward compatibility
+		$noExistCat=1;
+	}else{
+		$noExistCat=0;	
+	}
+
+}
 
 
 
@@ -284,7 +293,7 @@ if(!IS_NULL($feedID)){
 	$feedIDArray=explode(",",$feedID);
 }
  
-   if(!empty($post_options)){
+   if(!empty($option_items)){
 
 	
 //GET PARAMETERS  
@@ -293,13 +302,14 @@ $sortDir=0;  // 1 is ascending
 $maxperPage=$options['maxperPage'];
 global $setFeaturedImage;
 $setFeaturedImage=$post_options['setFeaturedImage'];
-$addSource=(isset($post_options['addSource']) ? $post_options['addSource'] : null);	
+$addSource=$post_options['addSource'];
 $sourceAnchorText=$post_options['sourceAnchorText'];
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
-$addAuthor=(isset($post_options['addAuthor']) ? $post_options['addAuthor'] : null);	
+$addAuthor=$post_options['addAuthor'];
+$bloguserid=$post_options['bloguserid'];
 $post_format=$post_options['post_format'];
-$postTags=(isset($post_options['postTags']) ? $post_options['postTags'] : null);
+$postTags=$post_options['postTags'];
 global $RSSdefaultImage;
 $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
 $serverTimezone=$post_options['timezone'];
@@ -307,13 +317,12 @@ $autoDelete=$post_options['autoDelete'];
 $sourceWords=$post_options['sourceWords'];
 $readMore=$post_options['readmore'];
 $showVideo=$post_options['showVideo'];
-$custom_type_name=$post_options['custom_type_name'];
-$includeExcerpt=(isset($post_options['includeExcerpt']) ? $post_options['includeExcerpt'] : null);
+$includeExcerpt=$post_options['includeExcerpt'];
 global $morestyle;
 $morestyle=' ...read more';
 $sourceWords_Label=$post_options['sourceWords_Label'];
+if (!is_null($readMore) && $readMore!='') {$morestyle=$readMore;} 
 
-if (!is_null($readMore) && strlen($readMore)>0) {$morestyle=$readMore;} 
 
 switch ($sourceWords) {
     case 1:
@@ -385,31 +394,27 @@ if(empty($options['sourcename'])){
 }
 global $ftp;
 $ftp=1;  //identify pass to excerpt_functions comes from feed to post
-
+global $anyimage;  // to identify any image in description 
+$anyimage=1;
 
 global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
 $descNum=$post_options['descnum'];
 $stripAll=$post_options['stripAll'];
-
-$stripSome=(isset($post_options['stripSome']) ? $post_options['stripSome'] : null);
 $maxperfetch=$post_options['maxperfetch'];
-$showsocial=(isset($post_options['showsocial']) ? $post_options['showsocial'] : null);
+$showsocial=$post_options['showsocial'];
 $overridedate=$post_options['overridedate'];
-$commentStatus=(isset($post_options['commentstatus']) ? $post_options['commentstatus'] : null);
+$commentStatus=$post_options['commentstatus'];
 $noFollow=(isset($post_options['noFollow']) ? $post_options['noFollow'] : 0 );
-
-
+$floatType=(isset($post_options['floatType']) ? $post_options['floatType'] : 0);
+$stripSome=(isset($post_options['stripSome']) ? $post_options['stripSome'] : null);
 if ($commentStatus=='1'){
 	$comment_status='closed';
 }else{
 	$comment_status='open';	
 }
 
-
 $adjustImageSize=1;
-
-$floatType=1;
 
 if ($floatType=='1'){
 	$float="left";
@@ -419,61 +424,227 @@ if ($floatType=='1'){
 
 
 
-global $wpdb;
-$myarray = array();
-$feed_array=$wpdb->get_results("SELECT ID FROM $wpdb->posts WHERE  post_type ='rssmi_feed' AND post_status='publish'");
+
+   for ($i=1;$i<=$size;$i=$i+1){
+
+	//  condition here that id number is here
+
+   			$key =key($option_items);
+				if ( !strpos( $key, '_' ) > 0 ) continue; //this makes sure only feeds are included here...everything else are options
+				
+   			$rssName= $option_items[$key];
+
+			$rssID=str_replace('feed_name_','',$key);  //get feed ID number
+
+   			next($option_items);
+   			
+   			$key =key($option_items);
+   			
+   			$rssURL=$option_items[$key];
 
 
 
- //  ***  GET THE FEED URLS  ***
-foreach ($feed_array as $feed){ 
-
-	$feedlimit=0;
-	$rssmi_cat= get_post_meta($feed->ID, 'rssmi_cat', true );
-	$rssmi_url= get_post_meta($feed->ID, 'rssmi_url', true );
-	$rssmi_user= get_post_meta($feed->ID, 'rssmi_user', true );
-	$rssmi_title= get_the_title( $feed->ID); 
-	$rssmi_feedID=$feed->ID;
+  	next($option_items);
+	$key =key($option_items);
 	
-//  *** MAKE SURE THEY ARE IN THE DESIRED CATEGORIES ***
 
-if (((!in_array(0, $catArray ) && in_array(intval($rssmi_cat), $catArray ))) || in_array(0, $catArray ) || !EMPTY($feedIDArray)) {  
+$rssCatID=$option_items[$key]; 
 
 
-if (!EMPTY($feedIDArray)){	//only pick up specific feed arrary if indicated in querystring
-	if (!in_array($rssmi_feedID, $feedIDArray )) {
-		continue;
+if (((!in_array(0, $catArray )  && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray )  || $noExistCat==1 || !EMPTY($feedIDArray)) {  //makes sure only desired categories are included
+
+
+	if (!EMPTY($feedIDArray)){	//only pick up specific feed arrary if indicated in querystring
+		if (!in_array($rssID, $feedIDArray )) {
+			if (count($cat_array)>0) { // for backward compatibility
+		  		next($option_items); //skip feed category
+			}
+			continue;
 	}
 }
 
-	$myfeeds[] = array("FeedName"=>$rssmi_title,"FeedURL"=>$rssmi_url,"FeedCatID"=>$rssmi_cat, "FeedUser"=>$rssmi_user); 
+
+
+	$myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL,"FeedCatID"=>$rssCatID); //with Feed Category ID
 
 
 }
    
+$cat_array = preg_grep("^feed_cat_^", array_keys($option_items));  // for backward compatibility
+
+	if (count($cat_array)>0) {
+
+  next($option_items); //skip feed category
+}
+
+   }
+
+  if ($maxposts=="") return 3;  // check to confirm they set options
+
+if (empty($myfeeds)){
+
+
+	return 3;
+
 }
 
 
-	$dumpthis = (isset($dumpthis) ? $dumpthis : null);
 
-//$myarray=get_my_array($myfeeds,$sortDir,$maxposts, $dumpthis,$source);
 
-//  *** GET THE THE FEED ITEMS FOR EACH OF THE FEED URLS ***
+$directFetch=1;
 
-$myarray=get_my_array($myfeeds,$sortDir,$maxposts, $dumpthis);  
 
-if (is_integer($myarray)) return $myarray;  // RETURNS ERROR CODE IF PRESENT
+ 
+ foreach($myfeeds as $feeditem){
+
+
+	$url=(string)($feeditem["FeedURL"]);
+
+	
+	while ( stristr($url, 'http') != $url )
+		$url = substr($url, 1);
+
+
+			if (empty($url)) {continue;}
+
+
+				$url = esc_url_raw(strip_tags($url));
+
+						if ($directFetch==1){
+							$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed,$showVideo);
+						}else{
+							$feed = fetch_feed($url);
+						}
+					
+	
+	
+
+	if (is_wp_error( $feed ) ) {
+	
+		if ($size<4){
+			
+			return 3;
+			exit;
+
+		}else{
+	//echo $feed->get_error_message();	
+		continue;
+		}
+	}
+
+	$maxfeed= $feed->get_item_quantity(0);  
+	
+	
+	if ($feedAuthor = $feed->get_author())
+	{
+		$feedAuthor=$feed->get_author()->get_name();
+	}
+
+	if ($feedHomePage=$feed->get_link()){
+		$feedHomePage=$feed->get_link();
+	}
+
+
+	//SORT DEPENDING ON SETTINGS
+
+		if($sortDir==1){
+
+			for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
+				$item = $feed->get_item($i);
+				 if (empty($item))	continue;
+
+				if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
+
+
+							if ($enclosure = $item->get_enclosure()){
+								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+									$mediaImage=$item->get_enclosure()->get_thumbnail();
+								}else if (!IS_NULL($item->get_enclosure()->get_link())){
+									$mediaImage=$item->get_enclosure()->get_link();	
+								}
+							}
+
+
+							if ($itemAuthor = $item->get_author())
+							{
+								$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+							}else if (!IS_NULL($feedAuthor)){
+								$itemAuthor=$feedAuthor;
+
+							}
+
+
+
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"feedURL"=>$feeditem["FeedURL"],"feedHomePage"=>$feedHomePage);
+
+							unset($mediaImage);
+							unset($itemAuthor);
+
+				}
+
+			}else{	
+
+			for ($i=0;$i<=$maxposts-1;$i++){
+					$item = $feed->get_item($i);
+					if (empty($item))	continue;
+					
+					if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
+
+
+				if ($enclosure = $item->get_enclosure()){
+
+					if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+						$mediaImage=$item->get_enclosure()->get_thumbnail();
+					}else if (!IS_NULL($item->get_enclosure()->get_link())){
+						$mediaImage=$item->get_enclosure()->get_link();	
+					}	
+				}
+
+
+				if ($itemAuthor = $item->get_author())
+				{
+					$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+				}else if (!IS_NULL($feedAuthor)){
+					$itemAuthor=$feedAuthor;
+
+				}
+
+/*  maybe useful for later on
+
+				preg_match('|<iframe [^>]*(src="([^"]+)")[^>]*|', $item->get_content(), $matches);
+				if (!empty($matches)){
+					$iframeURL= $matches[2];
+					}else{
+					$iframeURL='';	
+					}
+	*/			
+
+
+
+
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"feedURL"=>$feeditem["FeedURL"]);
+
+
+							unset($mediaImage);
+							unset($itemAuthor);
+					}	
+			}
+
+
+		}
+
+
 
 
 
 //  CHECK $myarray BEFORE DOING ANYTHING ELSE //
 
-if (isset($dumpthis) && $dumpthis==1){
+if ($dumpthis==1){
 	var_dump($myarray);
 }
 if (!isset($myarray) || empty($myarray)){
+	
 	return 3;
-	exit;
 }
 
 //$myarrary sorted by mystrdate
@@ -513,16 +684,18 @@ $wpdb->show_errors = true;
 
 
 foreach($myarray as $items) {
-	
+
+
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
-//	echo $thisLink.'<br>';
 	
-	
+	$orig_video_link=$items["mylink"];
+
 	// VIDEO CHECK
-	if ($targetWindow==0){
-		$getVideoArray=rssmi_video($items["mylink"]);
+	if ($targetWindow==0  || $showVideo==1){
+		$vitem=$items["mylink"];
+		$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
 		$openWindow=$getVideoArray[1];
 		$items["mylink"]=$getVideoArray[0];
 		$vt=$getVideoArray[2];
@@ -530,22 +703,32 @@ foreach($myarray as $items) {
 	
 
 	
+
+	
+
+	
 	
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
+
 	$thisLink=mysql_real_escape_string($thisLink);
-	
-	
+
+
 
 			$wpdb->flush();
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
-		
-			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_type!='rssmi_feed_item' and post_title like '%".mysql_real_escape_string(trim($items["mytitle"]))."%'");
 			
-		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle)){ 
-		
+	//	if (!empty($items["mytitle"])){
+			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string(trim($items["mytitle"]))."%'");	
+	//	}
 			
-			$added=$added=1;
+		
+		
+		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
+		
+		
+			$added=$added+1;
+		
 			$thisContent='';
   			$post = array();  
 
@@ -572,9 +755,15 @@ foreach($myarray as $items) {
 		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>  ';  
 			}
 
+
+
+	$thisExcerpt = showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome,$items["feedHomePage"]);
 	
-	$thisExcerpt = showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
+
+
 	
+
+
 	
 	if ((strpos($items["mylink"],'www.youtube.com')>0 || strpos($items["mylink"],'player.vimeo')>0 ) && $showVideo==1){
 		
@@ -583,16 +772,15 @@ foreach($myarray as $items) {
 		}else if ($vt=='vm'){
 			$thisExcerpt = rssmi_vimeo_video_content($items["mydesc"])."<br>";
 		}
-
+	
 	//	$thisContent.="\r\n".$orig_video_link."\r\n";
 
 		$thisExcerpt .= '<iframe title=".$items["mytitle"]." width="420" height="315" src="'.$items["mylink"].'" frameborder="0" allowfullscreen allowTransparency="true"></iframe>';
 	}
 	
 
-$thisContent .= $thisExcerpt;
 
-
+	$thisContent .= $thisExcerpt;
 
 
 	if ($addSource==1){
@@ -612,7 +800,7 @@ $thisContent .= $thisExcerpt;
 		        $anchorText=$items["myGroup"];
 		}	
 		
-	$thisContent .= ' <p>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$anchorText.'</a></p>';
+		$thisContent .= ' <p>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$anchorText.'</a></p>';
 	}
 
 
@@ -621,8 +809,9 @@ $thisContent .= $thisExcerpt;
 	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a>&nbsp;&nbsp;<a href="http://plus.google.com/share?url='.rawurlencode($items["mylink"]).'"><img src="'.WP_RSS_MULTI_IMAGES.'gplus.png"/></a></span>';
 	}
 	
+//	$thisContent.="\r\n".$vitem."\r\n";
+	
   	$post['post_content'] = $thisContent;
-
 
 	if ($includeExcerpt==1){
 		$post['post_excerpt'] = $thisExcerpt;
@@ -633,13 +822,11 @@ $thisContent .= $thisExcerpt;
 	
 	$blogcatid=array();
 	
-	if (!empty($post_options['categoryid']['plugcatid'])){
+	if (!empty($post_options['categoryid'])){
 		$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
-		
-		$blogcatid = (isset($post_options['categoryid']['wpcatid'][$catkey]) ? $post_options['categoryid']['wpcatid'][$catkey] : 0);
-		//$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
+		$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
 	}else{
-		$blogcatid=0;
+		$blogcatid=0;	
 	}
 	
 	
@@ -658,11 +845,8 @@ $thisContent .= $thisExcerpt;
 	$post['post_category'] =$blogcatid;
 	
 	
-	if(is_null($items["bloguserid"])){
 		if (is_null($bloguserid) || empty($bloguserid)){$bloguserid=1;}  //check that userid isn't empty else give it admin status
-	}else{
-		$bloguserid=$items["bloguserid"];
-	}
+	
 	
 	$post['post_author'] =$bloguserid;
 	
@@ -672,33 +856,35 @@ $thisContent .= $thisExcerpt;
 	
 	if (!empty($category_tags[$mycatid]['tags'])) {	
 		$postTags=$category_tags[$mycatid]['tags'];
-	}else{
-		$postTags='';
 	}
 
 	if($postTags!=''){
 		$post['tags_input'] =$postTags;
 	}
 	
-	if($custom_type_name!=''){
-		$post['post_type'] =$custom_type_name;
+	if ($showVideo==1){
+		global $allowedposttags;
+		$allowedposttags['iframe'] = array('src' => array () );
 	}
 
  	$post_id = wp_insert_post($post);
-	set_post_format( $post_id , $post_format);
+
+
 	
+	
+	set_post_format( $post_id , $post_format);
+
 	if(add_post_meta($post_id, 'rssmi_source_link', $thisLink)!=false){
 	
-	
 
-	if ($setFeaturedImage==1 || $setFeaturedImage==2){
-		global $featuredImage;
+		if ($setFeaturedImage==1 || $setFeaturedImage==2){
+			global $featuredImage;
 			if (isset($featuredImage)){
 				$featuredImageTitle=trim($items["mytitle"]);	
 				setFeaturedImage($post_id,$featuredImage,$featuredImageTitle);
 				unset($featuredImage);
-				}
 			}
+		}
 			
 	}else{
 		
@@ -710,14 +896,16 @@ $thisContent .= $thisExcerpt;
 	}
 
 	unset($post);
-
 }
 
 
+
 }
+
 if ($added==0) return 4;
 	$postMsg = TRUE; 
 }
+
 if ($autoDelete==1){
 	rssmi_delete_posts();
 }

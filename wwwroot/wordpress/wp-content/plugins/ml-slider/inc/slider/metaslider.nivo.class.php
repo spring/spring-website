@@ -14,7 +14,7 @@ class MetaNivoSlider extends MetaSlider {
     public function __construct($id) {
         parent::__construct($id);
 
-        add_filter('metaslider_nivo_slider_parameters', array($this, 'set_autoplay_parameter'), 10, 2);
+        add_filter('metaslider_nivo_slider_parameters', array($this, 'set_autoplay_parameter'), 10, 3);
 
     }
 
@@ -23,17 +23,19 @@ class MetaNivoSlider extends MetaSlider {
      * Nivo slider uses "ManualAvance = false" (ie, false autoplays the slideshow)
      * Take care of the manualAdvance parameter here.
      */
-    public function set_autoplay_parameter($options, $slider_id) {
+    public function set_autoplay_parameter($options, $slider_id, $settings) {
+        global $wp_filter;
         if (isset($options["autoPlay"])) {
             if ($options["autoPlay"] == 'true') {
                 $options["manualAdvance"] = 'false';
             } else {
                 $options["manualAdvance"] = 'true';
             }
+
+            unset($options['autoPlay']);
         }
-        
         // we don't want this filter hanging around if there's more than one slideshow on the page
-        remove_filter('metaslider_nivo_slider_parameters', array($this, 'set_autoplay_parameter'));
+        remove_filter('metaslider_nivo_slider_parameters', array($this, 'set_autoplay_parameter'), 10, 3);
 
         return $options;
     }

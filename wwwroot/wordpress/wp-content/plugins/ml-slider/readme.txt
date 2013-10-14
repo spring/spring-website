@@ -4,7 +4,7 @@ Tags: widget,wordpress slider,slideshow,wordpress slideshow,image slider,flexsli
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CQ84KC4X8YKW8
 Requires at least: 3.5
 Tested up to: 3.6
-Stable tag: 2.2.2
+Stable tag: 2.3-beta
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -106,22 +106,30 @@ if (is_front_page() || is_home()) {
 
 == Changelog ==
 
-= 2.3 =
+= 2.3 [18/09/13] =
 * Improvement: Flex Slider upgraded to v2.2
 * Improvement: Responsive Slides upgraded to v1.54
 * Improvement: 'Create first slideshow' prompt added for new users
+* Change: 'scoped' attribute removed from inline CSS tag until browsers catch up with supporting it properly. A new filter has been added: "metaslider_style_attributes" if you wish to add the scoped attribute back in.
+* Change: wp_footer check removed due to confusion
+* New Feature: 'metaslider_max_tabs' filter added to convert tab list to ordered drop down menu
+* Fix: Remove 'Insert Media' tab from 'Add Slide' modal (WP 3.6 only)
+* New Feature: Filters added to allow modification of image slide HTML
+* Improvement: Settings area tidied up
+* Improvement: Image URL Field less restrictive
+* Improvement: HTML Output tidied up
 
-= 2.2.2 =
+= 2.2.2 [21/08/13] =
 * Improvement: System check added with option to dismiss messages. Checks made for: role scoper plugin, wp_footer, wordpress version & GD/ImageMagick.
 
-= 2.2.1 =
+= 2.2.1 [08/08/13] =
 * Fix: Responsive slides styling in FireFox (reported by and thanks to: dznr418)
 * Fix: Flex Slider carousel causing browser to crash in some circumstances
 
-= 2.2 =
+= 2.2 [01/08/13] =
 * Fix: Paragraph tags being added to output using Nivo Slider
 
-= 2.1.6 =
+= 2.1.6 [22/07/2013] =
 * Fix: Use the original image file if the slideshow size is the same size as the image file
 * Fix: Conflict with Advanced Post Types Order plugin
 * Fix: Colorbox conflict when using resizable elements in lightbox
@@ -131,25 +139,25 @@ if (is_front_page() || is_home()) {
 * Fix: Coin slider caption width in FireFox
 * Improvement: Added hook to adjust carousel image margin
 
-= 2.1.5 =
+= 2.1.5 [24/05/13] =
 * Fix: HTML 5 Validation
 
-= 2.1.4 =
+= 2.1.4 [21/05/13] =
 * Fix: Widget markup invalid (reported by and thanks to: CarlosCanvas)
 
-= 2.1.3 =
+= 2.1.3 [21/05/13] =
 * Fix: User Access Manager Plugin incompatibility issues (reported by and thanks to: eltipografico)
 
-= 2.1.2 =
+= 2.1.2 [21/05/13] =
 * Fix: Nivo Slider theme select dropdown (reported by and thanks to: macks)
 * Fix: HTML5 Validation fix for inline styles
 * Improvement: Title field added to widget (suggested by and thanks to: pa_esp)
 * New feature: Spanish language pack (thanks to eltipografico)
 
-= 2.1.1 =
+= 2.1.1 [13/05/13] =
 * Fix: PHP version compatibility
 
-= 2.1 =
+= 2.1 [12/05/13] =
 * New feature: Widget added
 * New feature: System check added (checks for required image libraries and WordPress version)
 * Fix: Multiple CSS fixes added for popular themes
@@ -157,23 +165,23 @@ if (is_front_page() || is_home()) {
 * Improvement: Display warning message when unchecking Print JS and Print CSS options
 * Improvement: Coinslider navigation centered
 
-= 2.0.2 =
+= 2.0.2 [02/05/13] =
 * Fix: PHP Error when using slides the same size as the slideshow
 
-= 2.0.1 =
+= 2.0.1 [28/04/13] =
 * New feature: French language pack (thanks to: fb-graphiklab)
 * Fix: Use transparent background on default flexslider theme
 * Fix: Set direction to LTR for flexslider viewport (fix for RTL languages)
 * Fix: Nivoslider HTML Captions
 * Fix: Responsive slides navigation positioning
 
-= 2.0 =
+= 2.0 [21/04/13] =
 * Fix: Responsive slides navigation styling
 * Fix: Update slide order on save
 * Fix: Smart crop edge cases
 * Fix: Flexslider navigation overflow
 
-= 2.0-betaX =
+= 2.0-betaX [17/04/13] =
 * Improvement: Error messages exposed in admin is Meta Slider cannot load the slides
 * Improvement: Load default settings if original settings are corrupt/incomplete
 * Fix: Smart Crop ratio
@@ -197,7 +205,7 @@ if (is_front_page() || is_home()) {
 * Fix: Nivo slider invalid markup (reported by and thanks to: nellyshark)
 * Fix: JS && encoding error (reported by and thanks to: neefje)
 
-= 1.3 =
+= 1.3 [28/02/13] =
 * Renamed to Meta Slider (previously ML Slider)
 * Improvement: Admin styling cleaned up
 * Improvement: Code refactored
@@ -210,12 +218,12 @@ if (is_front_page() || is_home()) {
 * Fix: JS && encoding error (reported by and thanks to: neefje)
 * Fix: Editors now have permission to use MetaSlider (reported by and thanks to: rritsud)
 
-= 1.2.1 =
+= 1.2.1 [20/02/13] =
 * Fix: Number of slides per slideshow limited to WordPress 'blog pages show at most' setting (reported by and thanks to: Kenny)
 * Fix: Add warning when BMP file is added to slider (reported by and thanks to: MadBong)
 * Fix: Allow images smaller than default thumbnail size to be added to slider (reported by and thanks to: MadBong)
 
-= 1.2 =
+= 1.2 [19/02/13] =
 * Improvement: Code refactored
 * Fix: Unable to assign the same image to more than one slider
 * Fix: JavaScript error when jQuery is loaded in page footer
@@ -223,16 +231,16 @@ if (is_front_page() || is_home()) {
 * Fix: Captions not being escaped (reported by and thanks to: papabeers)
 * Improvement: Add multiple files to slider from Media Browser
 
-= 1.1 =
+= 1.1 [18/02/13] =
 * Improvement: Code refactored
 * Fix: hitting [enter] brings up Media Library
 * Improvement: Settings for new sliders now based on the last edited slider
 * Improvement: More screenshots added
 
-= 1.0.1 =
+= 1.0.1 [17/02/13] =
 * Fix: min version incorrect (should be 3.5)
 
-= 1.0 =
+= 1.0 [15/02/13] =
 * Initial version
 
 == Upgrade Notice ==

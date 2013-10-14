@@ -27,8 +27,6 @@ function wp_section_text() {
 
 function wp_rss_multi_importer_template_page(){
    ?>	
-			<div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div>
-		<h2><?php  _e("WP RSS Multi-Importer", 'wp-rss-multi-importer')?></h2>
 	   <div class="wrap">
 		<h2><label for="title"><?php _e("How to Use Templates", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
@@ -62,8 +60,7 @@ save_template_function($thistemplate);
 
 
 function wp_rss_multi_importer_style_tags(){
-   ?>				<div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div>
-		<h2><?php  _e("WP RSS Multi-Importer", 'wp-rss-multi-importer')?></h2>
+   ?>	
 	   <div class="wrap">
 		<h2><label for="title"><?php _e("Shortcode Parameters", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
@@ -91,15 +88,16 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
 <tr ><td ><?php _e("Use this to override the no follow option", 'wp-rss-multi-importer')?></td><td>nofollow</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer nofollow="1"]<br>(1=no follow, 0=follow)</td></tr>
+
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorprep</td><td>By</td><td>[wp_rss_multi_importer authorprep="from"]</td></tr>
 <tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
 <tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
-
 <tr ><td ><?php _e("Use this to override the default excerpt length setting", 'wp-rss-multi-importer')?></td><td>excerptlength</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer excerptlength="100"]</td></tr>
+<tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
-	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet_list.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
+	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
 	
 	</td></tr>
 

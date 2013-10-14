@@ -4,18 +4,11 @@ add_action('admin_init','upgrade_db');  // Used starting in version 2.22...after
 
 function upgrade_db() {
 	
-	$plugin_version = get_option('rss_import_options');
-	$old_version=$plugin_version['plugin_version'];
-    $plugin_version['plugin_version'] = number_format(WP_RSS_MULTI_VERSION, 2);
-	update_option( 'rss_import_options', $plugin_version );
-	
-	
-	
-	
-	
+
 
 	$myoptions = get_option( 'rss_import_items' ); 
 	$newoptions = get_option('rss_import_options');
+	if(isset($newoptions['plugin_version'])) $plugin_version=$newoptions['plugin_version'];
 	$categoryoptions=get_option('rss_import_categories_images');
 
 	
@@ -69,7 +62,7 @@ function upgrade_db() {
 		}
 	
 		$post_settings['categoryid']['plugcatid'][1]=$post_options['category'];
-		$post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
+		if (isset($post_options['wpcategory'])) $post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
 			update_option( 'rss_post_options', $post_settings );
 	}
 	
@@ -109,6 +102,15 @@ function upgrade_db() {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	if (!empty($categoryoptions) && !is_array($categoryoptions[1]) ){
@@ -123,7 +125,7 @@ function upgrade_db() {
 }
 	
 	//for resetting the admin message
-	if ($plugin_version<2.40){
+	if (isset($plugin_version) && $plugin_version<2.40){
 	$wprssmi_admin_options = get_option( 'rss_admin_options' );
 	$wprssmi_admin_options['dismiss_slug'] ='false';
 	//update_option( 'wprssmi_admin_options', $post_settings );
@@ -152,64 +154,8 @@ function upgrade_db() {
 	}
 	
 	
-
 	
-	//this upgrades for 2.70 - only if upgrading
-	//2.68 is beta version, so don't upgrade database for beta users
-	
-	$option_items = get_option( 'rss_import_items' ); 
-	
-	$plugin_version=$newoptions['plugin_version'];
-	
-	if (!empty($option_items) && floatval($old_version)<WP_RSS_MULTI_VERSION and floatval($old_version)!=2.68){	
-	
-		
-		$post_options = get_option('rss_post_options');
-		$bloguserid=$post_options['bloguserid'];
-		if(is_null($bloguserid)){$bloguserid=1;}
-	$option_values = array_values($option_items);
-	remove_action('save_post', 'rssmi_save_custom_fields');
-	remove_action('wp_insert_post', 'rssmi_fetch_feed_items'); 
-	for ($i = 0; $i <= count($option_items) - 1; $i++) {
-		$feed_item = array(
-	        'post_title' => $option_values[$i],
-	        'post_content' => '',
-	        'post_status' => 'publish',
-	        'post_type' => 'rssmi_feed'
-	    );
-		$inserted_ID = wp_insert_post( $feed_item );
-		$i=$i+1;
-		update_post_meta($inserted_ID,"rssmi_url", $option_values[$i]);
-		$i=$i+1;
-		update_post_meta($inserted_ID,"rssmi_cat", $option_values[$i]);
-		update_post_meta($inserted_ID,"rssmi_user", $bloguserid);
-		rssmi_fetch_feed_items($inserted_ID);
-		unset($feed_item);
-		
-	}
-		add_action( 'save_post', 'rssmi_save_custom_fields' );
-		add_action('wp_insert_post', 'rssmi_fetch_feed_items'); 
-	//	delete_option('rss_import_items');
-	
-	}
-
-
 }
-
-
-
-function rssmi_get_wp_categories($catid){
-	$option_post_items = get_option( 'rss_post_options' ); 
-	if (!empty($option_post_items['categoryid'])){
-		$catkey=array_search($catid, $option_post_items['categoryid']['plugcatid']);
-		$wpcatid=$option_post_items['categoryid']['wpcatid'][$catkey];
-	}else{
-		$wpcatid=0;	
-	}
-	return $wpcatid;
-}
-
-
 
 
 

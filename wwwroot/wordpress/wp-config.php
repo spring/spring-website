@@ -14,6 +14,7 @@
  * @package WordPress
  */
 
+// ** MySQL settings - You can get this info from your web host ** //
 $curpath = dirname(__FILE__);
 require($curpath."/../../springpw.php");
 
@@ -21,7 +22,7 @@ require($curpath."/../../springpw.php");
 /** The name of the database for WordPress */
 // //Added by WP-Cache Manager
 define('WP_CACHE', true); //Added by WP-Cache Manager
-define('WPCACHEHOME', $curpath.'/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+define( 'WPCACHEHOME', '/home/springtest/www/wwwroot/wordpress2/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_NAME', $spring_dbname);
 
 /** MySQL database username */
@@ -48,14 +49,14 @@ define('DB_COLLATE', '');
  *
  * @since 2.6.0
  */
-define('AUTH_KEY',         '~H=3f.mUfD]h5C)?OvA)tfaT,/Ub!4A0$K9&w|Z@$mh{I~z;j.dB+%>ph$JjY .>');
-define('SECURE_AUTH_KEY',  '6 0W-[N?Pe@2OL*W|)-76ie@L#rzp{47$(:U8:las;0vvrK?~^w5qV.ePP(4J,}A');
-define('LOGGED_IN_KEY',    'W!?mGU$g@usW? kMw`HU|^oewz?SD}Q1[4&$fJf4@xLdd)1?X4kM-`}XvJ[Dgwyd');
-define('NONCE_KEY',        'y/UMr.>[$}N:8YIt6%|U}Y*9W,Y%X/4fCvR^u|-H8YW<!11-KAK}k7#pi}UbC![B');
-define('AUTH_SALT',        'r_T--MVqlK$juMgy5!-qztx5]M$%+`BgxjpFVVbG:I=p?hs]k.?q(l/oy?h-&62Z');
-define('SECURE_AUTH_SALT', '|bk%-Q%;2++XXCiKD%xo`bAsOPlq|/=T#-2Uou7_0dmB>$@mdi_&.?w0awz=QZGJ');
-define('LOGGED_IN_SALT',   ')`4#$<x|a(r]|h*St+:F27zb0c*Ag.LI9&JLtZM:vb=(ucBI7O])19%f2XO8t7.s');
-define('NONCE_SALT',       'aap*ho(.L%|62:vg-.EXVHZ_1r>gqlwV/W^~|sm_iI&{Or|Njsr82*DDw6q]Y|}y');
+define('AUTH_KEY',         'put your unique phrase here');
+define('SECURE_AUTH_KEY',  'put your unique phrase here');
+define('LOGGED_IN_KEY',    'put your unique phrase here');
+define('NONCE_KEY',        'put your unique phrase here');
+define('AUTH_SALT',        'put your unique phrase here');
+define('SECURE_AUTH_SALT', 'put your unique phrase here');
+define('LOGGED_IN_SALT',   'put your unique phrase here');
+define('NONCE_SALT',       'put your unique phrase here');
 
 /**#@-*/
 
@@ -65,7 +66,7 @@ define('NONCE_SALT',       'aap*ho(.L%|62:vg-.EXVHZ_1r>gqlwV/W^~|sm_iI&{Or|Njsr8
  * You can have multiple installations in one database if you give each a unique
  * prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wp_';
+$table_prefix  = 'wp2_';
 
 /**
  * WordPress Localized Language, defaults to English.

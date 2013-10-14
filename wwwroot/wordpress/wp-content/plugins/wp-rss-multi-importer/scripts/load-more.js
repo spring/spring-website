@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
 		// Insert the "More Posts" link.
 		$('.rssmi_wrap')
 			.append('<div class="pbd-alp-placeholder-'+ pageNum +'"></div>')
-			.append('<p id="pbd-alp-load-posts"><a href="#">Load More Posts</a></p>');
+			.append('<p id="pbd-alp-load-posts"><a href="#">See More Content</a></p>');
 			
 		// Remove the current navigation if present.
 		$('.rssmi_pagination').remove();
@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
 		if(pageNum <= max) {
 			// Show that we're working.
 			//alert(pageNum);
-			$(this).text('Loading posts....');
+			$(this).text('Loading content....');
 			$('.pbd-alp-placeholder-'+ pageNum).load(nextLink + ' .rssmi_wrap',
 				function() {
 					// Have the posts fade in
@@ -69,10 +69,11 @@ jQuery(document).ready(function($) {
 					
 					// Update the button message.
 					if(pageNum <= max) {
-						$('#pbd-alp-load-posts a').text('Load More Posts');
+						$('#pbd-alp-load-posts a').text('See More Content');
 					} else {
-						$('#pbd-alp-load-posts a').text('No more posts to load.');
-						$('#pbd-alp-load-posts a').fadeOut(6000, function(){});
+						$('#pbd-alp-load-posts a').text('No more content to load.');
+					//	$('#pbd-alp-load-posts a').fadeOut(6000, function(){});
+						$('#pbd-alp-load-posts a').fadeTo(6000, 0);
 					}
 				}
 			);

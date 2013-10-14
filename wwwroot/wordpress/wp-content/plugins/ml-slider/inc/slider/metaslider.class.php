@@ -111,7 +111,9 @@ class MetaSlider {
             'smartCrop' => true,
             'carouselMode' => false,
             'easing' => 'linear',
-            'autoPlay' => true
+            'autoPlay' => true,
+            'thumb_width' => 150,
+            'thumb_height' => 100
         );
         
         return $params;
@@ -234,15 +236,15 @@ class MetaSlider {
         }
 
         // build the HTML
-        $html  = "\n<!--meta slider-->";
-        $html .= "\n<div style='{$style}' class='{$class}'>";
+        $html  = "\n<!-- meta slider -->";
+        $html .= "\n<div style=\"{$style}\" class=\"{$class}\">";
         $html .= "\n    " . $this->get_inline_css();
-        $html .= "\n    <div id='metaslider_container_{$this->id}'>";
+        $html .= "\n    <div id=\"metaslider_container_{$this->id}\">";
         $html .= "\n        " . $this->get_html(); 
         $html .= "\n    </div>";
         $html .= $this->get_inline_javascript();
         $html .= "\n</div>";
-        $html .= "\n<!--//meta slider-->";
+        $html .= "\n<!--// meta slider-->";
 
         return $html;
     }
@@ -262,10 +264,8 @@ class MetaSlider {
 
         $custom_js = apply_filters("metaslider_{$type}_slider_javascript", "", $this->id);
 
-        $script  = "\n    <script type='text/javascript'>";
+        $script  = "\n    <script type=\"text/javascript\">";
         $script .= "\n        var " . $identifier . " = function($) {";
-        // See: https://bugzilla.mozilla.org/show_bug.cgi?id=830056
-        $script .= "\n            if ($.browser.mozilla) { $('.metaslider style').removeAttr('scoped'); }; ";
         $script .= "\n            $('#" . $identifier . "')." . $this->js_function . "({ ";
         $script .= "\n                " . $this->get_javascript_parameters();
         $script .= "\n            });";
@@ -295,10 +295,10 @@ class MetaSlider {
             if ($param = $this->get_param($name)) {
                 $val = $this->get_setting($name);
 
-                if (gettype($default) == 'string') {
-                    $options[$param] = '"' . $val . '"';
-                } else {
+                if (gettype($default) == 'integer' || $val == 'true' || $val == 'false') {
                     $options[$param] = $val;
+                } else {
+                    $options[$param] = '"' . $val . '"';
                 }                
             }
         }
@@ -307,7 +307,7 @@ class MetaSlider {
         $type = $this->get_setting('type');
 
         if (has_filter("metaslider_{$type}_slider_parameters")) {
-            $options = apply_filters("metaslider_{$type}_slider_parameters", $options, $this->id);
+            $options = apply_filters("metaslider_{$type}_slider_parameters", $options, $this->id, $this->settings);
         }
 
         // create key:value strings
@@ -332,10 +332,12 @@ class MetaSlider {
     private function get_inline_css() {
         if (has_filter("metaslider_css")) {
             $css = apply_filters("metaslider_css", "", $this->settings, $this->id);
-            $scoped = ' scoped';
+
+            // use this to add the scoped attribute for HTML5 validation (if needed)
+            $attributes = apply_filters("metaslider_style_attributes", "", $this->settings, $this->id);
 
             if (strlen($css)) {
-                return "<style type='text/css' scoped>{$css}\n    </style>";
+                return "<style type=\"text/css\"{$attributes}>{$css}\n    </style>";
             }
         }
 
@@ -380,7 +382,7 @@ class MetaSlider {
         $old_settings = $this->get_settings();
 
         // convert submitted checkbox values from 'on' or 'off' to boolean values
-        $checkboxes = array('hoverPause', 'links', 'navigation', 'reverse', 'random', 'printCss', 'printJs', 'smoothHeight', 'center', 'smartCrop', 'carouselMode', 'autoPlay');
+        $checkboxes = array('hoverPause', 'links', 'reverse', 'random', 'printCss', 'printJs', 'smoothHeight', 'center', 'smartCrop', 'carouselMode', 'autoPlay');
 
         foreach ($checkboxes as $checkbox) {
             if (isset($new_settings[$checkbox]) && $new_settings[$checkbox] == 'on') {

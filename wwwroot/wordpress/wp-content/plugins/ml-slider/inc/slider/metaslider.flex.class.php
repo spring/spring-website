@@ -9,17 +9,27 @@ class MetaFlexSlider extends MetaSlider {
     protected $css_path = 'sliders/flexslider/flexslider.css';
     protected $carousel_item_margin = 5;
 
+    /**
+     * Constructor
+     * 
+     * @param integer $id slideshow ID
+     */
     public function __construct($id) {
         parent::__construct($id);
+
         add_filter('metaslider_flex_slider_parameters', array($this, 'enable_carousel_mode'), 10, 2);
         add_filter('metaslider_flex_slider_parameters', array($this, 'enable_easing'), 10, 2);
-        add_filter('metaslider_css', array($this, 'get_carousel_css'), 10, 3);
+        add_filter('metaslider_css', array($this, 'get_carousel_css'), 11, 3);
         
         $this->carousel_item_margin = apply_filters('metaslider_carousel_margin', $this->carousel_item_margin, $id);
     }
 
     /**
      * Adjust the slider parameters so they're comparible with the carousel mode
+     * 
+     * @param array $options
+     * @param integer $slider_id
+     * @return array $options
      */
     public function enable_carousel_mode($options, $slider_id) {
         if (isset($options["carouselMode"])) {
@@ -35,13 +45,17 @@ class MetaFlexSlider extends MetaSlider {
         }
         
         // we don't want this filter hanging around if there's more than one slideshow on the page
-        remove_filter('metaslider_flex_slider_parameters', array($this, 'enable_carousel_mode'));
+        remove_filter('metaslider_flex_slider_parameters', array($this, 'enable_carousel_mode'), 10, 2);
         
         return $options;
     }
 
     /**
      * Adjust the slider parameters so they're comparible with the carousel mode
+     * 
+     * @param array $options
+     * @param integer $slider_id
+     * @return array $options
      */
     public function enable_easing($options, $slider_id) {
         if (isset($options["easing"])) {
@@ -49,17 +63,22 @@ class MetaFlexSlider extends MetaSlider {
         }
         
         // we don't want this filter hanging around if there's more than one slideshow on the page
-        remove_filter('metaslider_flex_slider_parameters', array($this, 'enable_easing'));
+        remove_filter('metaslider_flex_slider_parameters', 'enable_easing');
 
         return $options;
     }
 
     /**
      * Return css to ensure our slides are rendered correctly in the carousel
+     * 
+     * @param string $css
+     * @param array $settings
+     * @param integer $slider_id
+     * @return string $css
      */
     public function get_carousel_css($css, $settings, $slider_id) {
         if (isset($settings["carouselMode"]) && $settings['carouselMode'] == 'true') {
-            $css .= "\n#metaslider_{$slider_id}.flexslider li {margin-right: {$this->carousel_item_margin}px;}";
+            $css .= "\n        #metaslider_{$slider_id}.flexslider li {margin-right: {$this->carousel_item_margin}px;}";
         }
 
         return $css;
@@ -68,7 +87,8 @@ class MetaFlexSlider extends MetaSlider {
     /**
      * Enable the parameters that are accepted by the slider
      * 
-     * @return array enabled parameters
+     * @param string $param
+     * @return array|boolean enabled parameters (false if parameter doesn't exist)
      */
     protected function get_param($param) {
         $params = array(
@@ -99,6 +119,7 @@ class MetaFlexSlider extends MetaSlider {
      */
     public function enqueue_scripts() {
         parent::enqueue_scripts();
+
         if ($this->get_setting('printJs') == 'true') {
             wp_enqueue_script('metaslider-easing', METASLIDER_ASSETS_URL . 'easing/jQuery.easing.min.js', array('jquery'), METASLIDER_VERSION);
         }
@@ -110,11 +131,18 @@ class MetaFlexSlider extends MetaSlider {
      * @return string slider markup.
      */
     protected function get_html() {
-        $return_value = "<div id='" . $this->get_identifier() . "' class='flexslider'>";
-        $return_value .= "\n            <ul class='slides'>";
+        $return_value = "<div id=\"" . $this->get_identifier() . "\" class=\"flexslider\">";
+        $return_value .= "\n            <ul class=\"slides\">";
 
         foreach ($this->slides as $slide) {
-            $return_value .= "\n                <li style='display: none;'>\n    " . $slide . "\n                </li>";
+            // backwards compatibility with older versions of Meta Slider Pro (< v2.0)
+            // MS Pro < 2.0 does not include the <li>
+            // MS Pro 2.0+ returns the <li>
+            if (strpos($slide, '<li') === 0) {
+                $return_value .= "\n                " . $slide;
+            } else {
+                $return_value .= "\n                <li style=\"display: none;\">" . $slide . "</li>";
+            }
         }
         
         $return_value .= "\n            </ul>";

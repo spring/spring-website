@@ -1,4 +1,5 @@
 <?php
+$readable='<div class="rssmi_wrap">';
 foreach($myarray as $items) {
 
 if ($pag!==1){ 	
@@ -90,6 +91,6 @@ $readable .=  '<div class="rss-output">';
 	
 	
 	}
-	
+	$readable .=  '</div>';
 	
 ?>

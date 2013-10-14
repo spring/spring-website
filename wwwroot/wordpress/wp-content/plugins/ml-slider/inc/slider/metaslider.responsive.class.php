@@ -48,7 +48,7 @@ class MetaResponsiveSlider extends MetaSlider {
             if (!$first) {
                 $style = " style='display: none;'";
             }
-            $return_value .= "\n            <li{$style}>\n" . $slide . "\n            </li>";
+            $return_value .= "\n            <li{$style}>" . $slide . "</li>";
             $first = false;
         }
         

@@ -2,7 +2,7 @@
 
 // Only load scripts and CSS if we are on this plugin's options page (admin)
 
-if (( isset( $_GET['page'] )) && ((strpos("wprssmi",$_GET['page'] ,0)!==false) || (strpos('wprssmi_options',$_GET['page'] )!==false ) || (strpos('wprssmi_options2',$_GET['page'] )!==false ) || (strpos('wprssmi_options3',$_GET['page'] )!==false ) || (strpos('wprssmi_options4',$_GET['page'] )!==false ))) {
+if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin' ) {
 
     add_action( 'init', 'wprssmi_register_scripts' );
 
@@ -13,6 +13,8 @@ if (( isset( $_GET['page'] )) && ((strpos("wprssmi",$_GET['page'] ,0)!==false) |
 
 }
 
+
+
 function rssmi_noindex_function()
 {
 	global $wp_query;
@@ -22,6 +24,9 @@ function rssmi_noindex_function()
 echo '<meta name="robots" content="noindex, nofollow">';
 }
 }
+
+
+
 
 
 
@@ -52,6 +57,7 @@ function pbd_alp_init($max,$paged,$nextPost,$imageURL,$pag) {
  		);
 
  }
+
 
 /**
     * Load scripts for admin, including check for version since new method (.on) used available in jquery 1.7.1
@@ -99,15 +105,13 @@ function wprssmi_ajax_load_scripts() {
 
 
 
-
-
-
  
    
   add_action( 'wp_enqueue_scripts', 'wprssmi_frontend_scripts' );
    
    function wprssmi_frontend_scripts() {
 		wp_enqueue_script( 'jquery' );  
+			
    }
 
 
@@ -117,6 +121,7 @@ add_action( 'wp_enqueue_scripts', 'wprssmi_tempate_header' );
 function wprssmi_tempate_header(){
 
 		wp_enqueue_style( 'wprssmi_template_styles', plugins_url( 'templates/templates.css', dirname(__FILE__)) );
+
 	
 }
 
@@ -142,8 +147,8 @@ function wprssmi_tempate_header(){
 
 
 function rssmi_footer_scripts(){
-	wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', dirname(__FILE__)) );
-	wp_enqueue_script( 'showexcerpt', plugins_url('scripts/show-excerpt.js', dirname(__FILE__)) );  	
+	wp_enqueue_style( 'wprssmi_frontend', plugins_url( 'css/frontend.css', dirname(__FILE__)) );
+	wp_enqueue_script( 'wprssmi_showexcerpt', plugins_url('scripts/show-excerpt.js', dirname(__FILE__)) );  	
 }
 
 function colorbox_scripts(){
@@ -151,7 +156,7 @@ function colorbox_scripts(){
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', dirname(__FILE__)) );
  wp_enqueue_script( 'wprssmi_detect_mobile', plugins_url( 'scripts/detect-mobile.js', dirname(__FILE__)) );
 	//echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
-	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344})});</script>";	
+	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344});jQuery('a.rssmi_vimeo').colorbox({iframe:true, innerWidth:500, innerHeight:409})});</script>";	
 	
 }
 
@@ -190,6 +195,9 @@ function vertical_scroll_footer_scripts(){
  }
 
 
+function cluetip_scripts(){
+		wp_enqueue_script( 'cluetip', plugins_url( 'scripts/jquery.cluetip.js', dirname(__FILE__)) , array('jquery'));  	
+}
 
 
 

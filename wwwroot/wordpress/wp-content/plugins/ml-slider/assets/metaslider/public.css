@@ -37,9 +37,14 @@
     width: 100%;
 }
 
+.metaslider .caption-wrap .caption img {
+    width: auto;
+}
+
 /** quick resets **/
 #widgets .metaslider ul, 
 #widgets .metaslider ol,
+#content .metaslider unmodifiedl,
 .metaslider .flexslider ul,
 .metaslider .flexslider .slides li,
 .metaslider .flexslider .slides ul,

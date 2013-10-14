@@ -2,7 +2,7 @@
 /*
 Plugin Name: Responsive Lightbox
 Description: Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
-Version: 1.1.2
+Version: 1.2.1
 Author: dFactory
 Author URI: http://www.dfactory.eu/
 Plugin URI: http://www.dfactory.eu/plugins/responsive-lightbox/
@@ -60,9 +60,36 @@ class Responsive_Lightbox
 				'hide_bars' => TRUE,
 				'hide_bars_delay' => 5000,
 				'video_max_width' => 1080
+			),
+			'fancybox' => array(
+				'modal' => FALSE,
+				'show_overlay' => TRUE,
+				'show_close_button' => TRUE,
+				'enable_escape_button' => TRUE,
+				'hide_on_overlay_click' => TRUE,
+				'hide_on_content_click' => FALSE,
+				'cyclic' => FALSE,
+				'show_nav_arrows' => TRUE,
+				'auto_scale' => TRUE,
+				'scrolling' => 'yes',
+				'center_on_scroll' => TRUE,
+				'opacity' => TRUE,
+				'overlay_opacity' => 70,
+				'overlay_color' => '#666',
+				'title_show' => TRUE,
+				'title_position' => 'outside',
+				'transitions' => 'fade',
+				'easings' => 'swing',
+				'speeds' => 300,
+				'change_speed' => 300,
+				'change_fade' => 100,
+				'padding' => 5,
+				'margin' => 5,
+				'video_width' => 1080,
+				'video_height' => 720
 			)
 		),
-		'version' => '1.0.5'
+		'version' => '1.2.1'
 	);
 	private $scripts = array();
 	private $options = array();
@@ -76,7 +103,9 @@ class Responsive_Lightbox
 		register_deactivation_hook(__FILE__, array(&$this, 'multisite_deactivation'));
 
 		//changes from older versions
-		if(version_compare((($db_version = get_option('responsive_lightbox_version')) === FALSE ? '1.0.0' : $db_version), '1.0.5', '<'))
+		$db_version = get_option('responsive_lightbox_version');
+
+		if(version_compare(($db_version === FALSE ? '1.0.0' : $db_version), '1.0.5', '<'))
 		{
 			if(($array = get_option('rl_settings')) !== FALSE)
 			{
@@ -92,6 +121,9 @@ class Responsive_Lightbox
 
 			update_option('responsive_lightbox_version', $this->defaults['version']);
 		}
+
+		if(version_compare(($db_version === FALSE ? '1.0.0' : $db_version), '1.2.0', '<'))
+			update_option('responsive_lightbox_version', $this->defaults['version']);
 
 		$this->options['settings'] = array_merge($this->defaults['settings'], (($array = get_option('responsive_lightbox_settings')) === FALSE ? array() : $array));
 		$this->options['configuration'] = array_merge($this->defaults['configuration'], (($array = get_option('responsive_lightbox_configuration')) === FALSE ? array() : $array));
@@ -122,7 +154,7 @@ class Responsive_Lightbox
 
 	public function add_videos_lightbox_selector($content)
 	{
-		preg_match_all('/<a(.*?)href=(?:\'|")(http:\/\/(?:www\.)?((youtube\.com\/watch\?v=[a-z0-9]{11})|(vimeo\.com\/[0-9]{8,})))(?:\'|")(.*?)>/i', $content, $links);
+		preg_match_all('/<a(.*?)href=(?:\'|")((?:(?:http|https):\/\/)?(?:www\.)?((youtube\.com\/watch\?v=[a-z0-9_\-]+)|(vimeo\.com\/[0-9]{8,})))(?:\'|")(.*?)>/i', $content, $links);
 
 		if(isset($links[0]))
 		{
@@ -165,7 +197,7 @@ class Responsive_Lightbox
 		if(isset($links[0]))
 		{
 			if($this->options['settings']['images_as_gallery'] === TRUE)
-				$rel_hash = '[gallery-'.wp_generate_password(4).']';
+				$rel_hash = '[gallery-'.wp_generate_password(4, FALSE, FALSE).']';
 
 			foreach($links[0] as $id => $link)
 			{
@@ -254,6 +286,28 @@ class Responsive_Lightbox
 				'animations' => array(
 					'css' => __('CSS', 'responsive-lightbox'),
 					'jquery' => __('jQuery', 'responsive-lightbox')
+				)
+			),
+			'fancybox' => array(
+				'name' => __('FancyBox', 'responsive-lightbox'),
+				'transitions' => array(
+					'elastic' => __('elastic', 'responsive-lightbox'),
+					'fade' => __('fade', 'responsive-lightbox'),
+					'none' => __('none', 'responsive-lightbox')
+				),
+				'scrollings' => array(
+					'auto' => __('auto', 'responsive-lightbox'),
+					'yes' => __('yes', 'responsive-lightbox'),
+					'no' => __('no', 'responsive-lightbox')
+				),
+				'easings' => array(
+					'swing' => __('swing', 'responsive-lightbox'),
+					'linear' => __('linear', 'responsive-lightbox')
+				),
+				'positions' => array(
+					'outside' => __('outside', 'responsive-lightbox'),
+					'inside' => __('inside', 'responsive-lightbox'),
+					'over' => __('over', 'responsive-lightbox')
 				)
 			)
 		);
@@ -382,7 +436,7 @@ class Responsive_Lightbox
 		{
 			add_settings_field('rl_sw_animation', __('Animation type', 'responsive-lightbox'), array(&$this, 'rl_sw_animation'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 			add_settings_field('rl_sw_hide_bars', __('Top and bottom bars', 'responsive-lightbox'), array(&$this, 'rl_sw_hide_bars'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
-			add_settings_field('rl_video_max_width', __('Video max width', 'responsive-lightbox'), array(&$this, 'rl_video_max_width'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_sw_video_max_width', __('Video max width', 'responsive-lightbox'), array(&$this, 'rl_sw_video_max_width'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 		}
 		elseif($this->options['settings']['script'] === 'prettyphoto')
 		{
@@ -405,18 +459,46 @@ class Responsive_Lightbox
 			add_settings_field('rl_pp_keyboard_shortcuts', __('Keyboard shortcuts', 'responsive-lightbox'), array(&$this, 'rl_pp_keyboard_shortcuts'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 			add_settings_field('rl_pp_social', __('Social (Twitter, Facebook)', 'responsive-lightbox'), array(&$this, 'rl_pp_social'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 		}
+		elseif($this->options['settings']['script'] === 'fancybox')
+		{
+			add_settings_field('rl_fb_modal', __('Modal', 'responsive-lightbox'), array(&$this, 'rl_fb_modal'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_show_overlay', __('Show overlay', 'responsive-lightbox'), array(&$this, 'rl_fb_show_overlay'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_show_close_button', __('Show close button', 'responsive-lightbox'), array(&$this, 'rl_fb_show_close_button'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_enable_escape_button', __('Enable escape button', 'responsive-lightbox'), array(&$this, 'rl_fb_enable_escape_button'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_hide_on_overlay_click', __('Hide on overlay click', 'responsive-lightbox'), array(&$this, 'rl_fb_hide_on_overlay_click'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_hide_on_content_click', __('Hide on content click', 'responsive-lightbox'), array(&$this, 'rl_fb_hide_on_content_click'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_cyclic', __('Cyclic', 'responsive-lightbox'), array(&$this, 'rl_fb_cyclic'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_show_nav_arrows', __('Show nav arrows', 'responsive-lightbox'), array(&$this, 'rl_fb_show_nav_arrows'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_auto_scale', __('Auto scale', 'responsive-lightbox'), array(&$this, 'rl_fb_auto_scale'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_scrolling', __('Scrolling (in/out)', 'responsive-lightbox'), array(&$this, 'rl_fb_scrolling'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_center_on_scroll', __('Center on scroll', 'responsive-lightbox'), array(&$this, 'rl_fb_center_on_scroll'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_opacity', __('Opacity', 'responsive-lightbox'), array(&$this, 'rl_fb_opacity'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_overlay_opacity', __('Overlay opacity', 'responsive-lightbox'), array(&$this, 'rl_fb_overlay_opacity'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_overlay_color', __('Overlay color', 'responsive-lightbox'), array(&$this, 'rl_fb_overlay_color'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_title_show', __('Title show', 'responsive-lightbox'), array(&$this, 'rl_fb_title_show'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_title_position', __('Title position', 'responsive-lightbox'), array(&$this, 'rl_fb_title_position'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_transitions', __('Transition (in/out)', 'responsive-lightbox'), array(&$this, 'rl_fb_transitions'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_easings', __('Easings (in/out)', 'responsive-lightbox'), array(&$this, 'rl_fb_easings'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_speeds', __('Speed (in/out)', 'responsive-lightbox'), array(&$this, 'rl_fb_speeds'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_change_speed', __('Change speed', 'responsive-lightbox'), array(&$this, 'rl_fb_change_speed'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_change_fade', __('Change fade', 'responsive-lightbox'), array(&$this, 'rl_fb_change_fade'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_padding', __('Padding', 'responsive-lightbox'), array(&$this, 'rl_fb_padding'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_margin', __('Margin', 'responsive-lightbox'), array(&$this, 'rl_fb_margin'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_video_width', __('Video width', 'responsive-lightbox'), array(&$this, 'rl_fb_video_width'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_fb_video_height', __('Video height', 'responsive-lightbox'), array(&$this, 'rl_fb_video_height'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+		}
 	}
 
 
 	public function rl_script()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_script" class="wplikebtns">';
 
 		foreach($this->scripts as $val => $trans)
 		{
 			echo '
-			<input id="rl-script-'.$val.'" type="radio" name="responsive_lightbox_settings[script]" value="'.$val.'" '.checked($val, $this->options['settings']['script'], FALSE).' />
+			<input id="rl-script-'.$val.'" type="radio" name="responsive_lightbox_settings[script]" value="'.esc_attr($val).'" '.checked($val, $this->options['settings']['script'], FALSE).' />
 			<label for="rl-script-'.$val.'">'.$trans['name'].'</label>';
 		}
 
@@ -429,8 +511,8 @@ class Responsive_Lightbox
 	public function rl_selector()
 	{
 		echo '
-		<div>
-			<input type="text" value="'.$this->options['settings']['selector'].'" name="responsive_lightbox_settings[selector]" />
+		<div id="rl_selector">
+			<input type="text" value="'.esc_attr($this->options['settings']['selector']).'" name="responsive_lightbox_settings[selector]" />
 			<p class="description">'.__('Select to which rel selector lightbox effect will be applied to.', 'responsive-lightbox').'</p>
 		</div>';
 	}
@@ -439,17 +521,17 @@ class Responsive_Lightbox
 	public function rl_galleries()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_galleries" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-galleries-'.$val.'" type="radio" name="responsive_lightbox_settings[galleries]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['galleries'], FALSE).' />
+			<input id="rl-galleries-'.$val.'" type="radio" name="responsive_lightbox_settings[galleries]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['galleries'], FALSE).' />
 			<label for="rl-galleries-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Add lightbox to WordPress image galleries by default', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Add lightbox to WordPress image galleries by default.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -457,17 +539,17 @@ class Responsive_Lightbox
 	public function rl_videos()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_videos" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-videos-'.$val.'" type="radio" name="responsive_lightbox_settings[videos]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['videos'], FALSE).' />
+			<input id="rl-videos-'.$val.'" type="radio" name="responsive_lightbox_settings[videos]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['videos'], FALSE).' />
 			<label for="rl-videos-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Add lightbox to YouTube and Vimeo video links by default', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Add lightbox to YouTube and Vimeo video links by default.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -475,17 +557,17 @@ class Responsive_Lightbox
 	public function rl_image_links()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_image_links" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-image-links-'.$val.'" type="radio" name="responsive_lightbox_settings[image_links]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['image_links'], FALSE).' />
+			<input id="rl-image-links-'.$val.'" type="radio" name="responsive_lightbox_settings[image_links]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['image_links'], FALSE).' />
 			<label for="rl-image-links-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Add lightbox to WordPress image links by default', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Add lightbox to WordPress image links by default.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -493,17 +575,17 @@ class Responsive_Lightbox
 	public function rl_images_as_gallery()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_images_as_gallery" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-images-as-gallery-'.$val.'" type="radio" name="responsive_lightbox_settings[images_as_gallery]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['images_as_gallery'], FALSE).' />
+			<input id="rl-images-as-gallery-'.$val.'" type="radio" name="responsive_lightbox_settings[images_as_gallery]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['images_as_gallery'], FALSE).' />
 			<label for="rl-images-as-gallery-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Display single post images as a gallery', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Display single post images as a gallery.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -511,17 +593,17 @@ class Responsive_Lightbox
 	public function rl_deactivation_delete()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_deactivation_delete" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-deactivation-delete-'.$val.'" type="radio" name="responsive_lightbox_settings[deactivation_delete]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['deactivation_delete'], FALSE).' />
+			<input id="rl-deactivation-delete-'.$val.'" type="radio" name="responsive_lightbox_settings[deactivation_delete]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['settings']['deactivation_delete'], FALSE).' />
 			<label for="rl-deactivation-delete-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Delete settings on plugin deactivation', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Delete settings on plugin deactivation.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -529,13 +611,13 @@ class Responsive_Lightbox
 	public function rl_sw_animation()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_sw_animation" class="wplikebtns">';
 
 		foreach($this->scripts['swipebox']['animations'] as $val => $trans)
 		{
 			echo '
-			<input id="rl-animation-'.$val.'" type="radio" name="responsive_lightbox_configuration[swipebox][animation]" value="'.$val.'" '.checked($val, $this->options['configuration']['swipebox']['animation'], FALSE).' />
-			<label for="rl-animation-'.$val.'">'.$trans.'</label>';
+			<input id="rl-sw-animation-'.$val.'" type="radio" name="responsive_lightbox_configuration[swipebox][animation]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['swipebox']['animation'], FALSE).' />
+			<label for="rl-sw-animation-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
@@ -547,31 +629,31 @@ class Responsive_Lightbox
 	public function rl_sw_hide_bars()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_sw_hide_bars" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-hide-bars-'.$val.'" type="radio" name="responsive_lightbox_configuration[swipebox][hide_bars]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['swipebox']['hide_bars'], FALSE).' />
-			<label for="rl-hide-bars-'.$val.'">'.$trans.'</label>';
+			<input id="rl-sw-hide-bars-'.$val.'" type="radio" name="responsive_lightbox_configuration[swipebox][hide_bars]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['swipebox']['hide_bars'], FALSE).' />
+			<label for="rl-sw-hide-bars-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
 			<p class="description">'.__('Disable if you don\'t want to top and bottom bars to be hidden after a period of time.', 'responsive-lightbox').'</p>
-		</div>
-		<div id="rl_sw_hide_bars_delay"'.($this->options['configuration']['swipebox']['hide_bars'] === FALSE ? ' style="display: none;"' : '').'>
-			<input type="text" name="responsive_lightbox_configuration[swipebox][hide_bars_delay]" value="'.$this->options['configuration']['swipebox']['hide_bars_delay'].'" />
-			<p class="description">'.__('Enter the time after which the top and bottom bars will be hidden (when hiding is enabled).', 'responsive-lightbox').'</p>
+			<div id="rl_sw_hide_bars_delay"'.($this->options['configuration']['swipebox']['hide_bars'] === FALSE ? ' style="display: none;"' : '').'>
+				<input type="text" name="responsive_lightbox_configuration[swipebox][hide_bars_delay]" value="'.esc_attr($this->options['configuration']['swipebox']['hide_bars_delay']).'" />
+				<p class="description">'.__('Enter the time after which the top and bottom bars will be hidden (when hiding is enabled).', 'responsive-lightbox').'</p>
+			</div>
 		</div>';
 	}
 
 
-	public function rl_video_max_width()
+	public function rl_sw_video_max_width()
 	{
 		echo '
-		<div>
-			<input type="text" name="responsive_lightbox_configuration[swipebox][video_max_width]" value="'.$this->options['configuration']['swipebox']['video_max_width'].'" />
-			<p class="description">'.__('Enter the max video width in a lightbox', 'responsive-lightbox').'</p>
+		<div id="rl_sw_video_max_width">
+			<input type="text" name="responsive_lightbox_configuration[swipebox][video_max_width]" value="'.esc_attr($this->options['configuration']['swipebox']['video_max_width']).'" />
+			<p class="description">'.__('Enter the max video width in a lightbox.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -579,17 +661,17 @@ class Responsive_Lightbox
 	public function rl_pp_animation_speed()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_animation_speed" class="wplikebtns">';
 
 		foreach($this->scripts['prettyphoto']['animation_speeds'] as $val => $trans)
 		{
 			echo '
-			<input id="rl-animation-speed-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][animation_speed]" value="'.$val.'" '.checked($val, $this->options['configuration']['prettyphoto']['animation_speed'], FALSE).' />
-			<label for="rl-animation-speed-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-animation-speed-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][animation_speed]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['prettyphoto']['animation_speed'], FALSE).' />
+			<label for="rl-pp-animation-speed-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Select animation speed for lightbox effect', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Select animation speed for lightbox effect.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -597,21 +679,21 @@ class Responsive_Lightbox
 	public function rl_pp_slideshow()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_slideshow" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-slideshow-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][slideshow]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['slideshow'], FALSE).' />
-			<label for="rl-slideshow-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-slideshow-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][slideshow]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['slideshow'], FALSE).' />
+			<label for="rl-pp-slideshow-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Display images as slideshow', 'responsive-lightbox').'</p>
-		</div>
-		<div id="rl_pp_slideshow_delay"'.($this->options['configuration']['prettyphoto']['slideshow'] === FALSE ? ' style="display: none;"' : '').'>
-			<input type="text" name="responsive_lightbox_configuration[prettyphoto][slideshow_delay]" value="'.$this->options['configuration']['prettyphoto']['slideshow_delay'].'" />
-			<p class="description">'.__('Enter time (in miliseconds)', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Display images as slideshow.', 'responsive-lightbox').'</p>
+			<div id="rl_pp_slideshow_delay"'.($this->options['configuration']['prettyphoto']['slideshow'] === FALSE ? ' style="display: none;"' : '').'>
+				<input type="text" name="responsive_lightbox_configuration[prettyphoto][slideshow_delay]" value="'.esc_attr($this->options['configuration']['prettyphoto']['slideshow_delay']).'" />
+				<p class="description">'.__('Enter time (in miliseconds).', 'responsive-lightbox').'</p>
+			</div>
 		</div>';
 	}
 
@@ -619,17 +701,17 @@ class Responsive_Lightbox
 	public function rl_pp_slideshow_autoplay()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_slideshow_autoplay" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-slideshow-autoplay-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][slideshow_autoplay]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['slideshow_autoplay'], FALSE).' />
-			<label for="rl-slideshow-autoplay-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-slideshow-autoplay-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][slideshow_autoplay]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['slideshow_autoplay'], FALSE).' />
+			<label for="rl-pp-slideshow-autoplay-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Automatically start slideshow', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Automatically start slideshow.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -637,12 +719,12 @@ class Responsive_Lightbox
 	public function rl_pp_opacity()
 	{
 		echo '
-		<div>
-			<input type="text" id="rl_pp_opacity_input" class="hide-if-js" name="responsive_lightbox_configuration[prettyphoto][opacity]" value="'.$this->options['configuration']['prettyphoto']['opacity'].'" />
+		<div id="rl_pp_opacity">
+			<input type="text" id="rl_pp_opacity_input" class="hide-if-js" name="responsive_lightbox_configuration[prettyphoto][opacity]" value="'.esc_attr($this->options['configuration']['prettyphoto']['opacity']).'" />
 			<div class="wplike-slider">
-				<span class="left hide-if-no-js">0</span><span class="middle" id="rl_pp_opacity_span"></span><span class="right hide-if-no-js">100</span>
+				<span class="left hide-if-no-js">0</span><span class="middle" id="rl_pp_opacity_span" title="'.esc_attr($this->options['configuration']['prettyphoto']['opacity']).'"></span><span class="right hide-if-no-js">100</span>
 			</div>
-			<p class="description">'.__('Value between 0 and 100, 100 for no opacity', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Value between 0 and 100, 100 for no opacity.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -650,17 +732,17 @@ class Responsive_Lightbox
 	public function rl_pp_title()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_title" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-show-title-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][show_title]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['show_title'], FALSE).' />
-			<label for="rl-show-title-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-show-title-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][show_title]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['show_title'], FALSE).' />
+			<label for="rl-pp-show-title-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Display image tiltle', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Display image tiltle.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -668,13 +750,13 @@ class Responsive_Lightbox
 	public function rl_pp_allow_resize()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_allow_resize" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-allow-resize-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][allow_resize]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['allow_resize'], FALSE).' />
-			<label for="rl-allow-resize-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-allow-resize-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][allow_resize]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['allow_resize'], FALSE).' />
+			<label for="rl-pp-allow-resize-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
@@ -686,8 +768,8 @@ class Responsive_Lightbox
 	public function rl_pp_width()
 	{
 		echo '
-		<div>
-			<input type="text" name="responsive_lightbox_configuration[prettyphoto][width]" value="'.$this->options['configuration']['prettyphoto']['width'].'" />
+		<div id="rl_pp_width">
+			<input type="text" name="responsive_lightbox_configuration[prettyphoto][width]" value="'.esc_attr($this->options['configuration']['prettyphoto']['width']).'" />
 			<p class="description">'.__('in pixels', 'responsive-lightbox').'</p>
 		</div>';
 	}
@@ -696,8 +778,8 @@ class Responsive_Lightbox
 	public function rl_pp_height()
 	{
 		echo '
-		<div>
-			<input type="text" name="responsive_lightbox_configuration[prettyphoto][height]" value="'.$this->options['configuration']['prettyphoto']['height'].'" />
+		<div id="rl_pp_height">
+			<input type="text" name="responsive_lightbox_configuration[prettyphoto][height]" value="'.esc_attr($this->options['configuration']['prettyphoto']['height']).'" />
 			<p class="description">'.__('in pixels', 'responsive-lightbox').'</p>
 		</div>';
 	}
@@ -706,17 +788,17 @@ class Responsive_Lightbox
 	public function rl_pp_theme()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_theme" class="wplikebtns">';
 
 		foreach($this->scripts['prettyphoto']['themes'] as $val => $trans)
 		{
 			echo '
-			<input id="rl-theme-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][theme]" value="'.$val.'" '.checked($val, $this->options['configuration']['prettyphoto']['theme'], FALSE).' />
-			<label for="rl-theme-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-theme-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][theme]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['prettyphoto']['theme'], FALSE).' />
+			<label for="rl-pp-theme-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Select theme for lightbox effect', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Select theme for lightbox effect.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -724,9 +806,9 @@ class Responsive_Lightbox
 	public function rl_pp_horizontal_padding()
 	{
 		echo '
-		<div>
-			<input type="text" name="responsive_lightbox_configuration[prettyphoto][horizontal_padding]" value="'.$this->options['configuration']['prettyphoto']['horizontal_padding'].'" />
-			<p class="description">'.__('Horizontal padding (in pixels)', 'responsive-lightbox').'</p>
+		<div id="rl_pp_horizontal_padding">
+			<input type="text" name="responsive_lightbox_configuration[prettyphoto][horizontal_padding]" value="'.esc_attr($this->options['configuration']['prettyphoto']['horizontal_padding']).'" />
+			<p class="description">'.__('Horizontal padding (in pixels).', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -734,17 +816,17 @@ class Responsive_Lightbox
 	public function rl_pp_hide_flash()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_hide_flash" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-hide-flash-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][hide_flash]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['hide_flash'], FALSE).' />
-			<label for="rl-hide-flash-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-hide-flash-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][hide_flash]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['hide_flash'], FALSE).' />
+			<label for="rl-pp-hide-flash-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Hides all the flash object on a page. Enable this if flash appears over prettyPhoto', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Hides all the flash object on a page. Enable this if flash appears over prettyPhoto.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -752,17 +834,17 @@ class Responsive_Lightbox
 	public function rl_pp_wmode()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_wmode" class="wplikebtns">';
 
 		foreach($this->scripts['prettyphoto']['wmodes'] as $val => $trans)
 		{
 			echo '
-			<input id="rl-wmode-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][wmode]" value="'.$val.'" '.checked($val, $this->options['configuration']['prettyphoto']['wmode'], FALSE).' />
-			<label for="rl-wmode-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-wmode-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][wmode]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['prettyphoto']['wmode'], FALSE).' />
+			<label for="rl-pp-wmode-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Select flash window mode', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Select flash window mode.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -770,17 +852,17 @@ class Responsive_Lightbox
 	public function rl_pp_video_autoplay()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_video_autoplay" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-video-autoplay-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][video_autoplay]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['video_autoplay'], FALSE).' />
-			<label for="rl-video-autoplay-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-video-autoplay-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][video_autoplay]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['video_autoplay'], FALSE).' />
+			<label for="rl-pp-video-autoplay-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Automatically start videos', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Automatically start videos.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -788,17 +870,17 @@ class Responsive_Lightbox
 	public function rl_pp_modal()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_modal" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-modal-close-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][modal]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['modal'], FALSE).' />
-			<label for="rl-modal-close-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-modal-close-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][modal]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['modal'], FALSE).' />
+			<label for="rl-pp-modal-close-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('If set to true, only the close button will close the window', 'responsive-lightbox').'</p>
+			<p class="description">'.__('If set to true, only the close button will close the window.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -806,17 +888,17 @@ class Responsive_Lightbox
 	public function rl_pp_deeplinking()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_deeplinking" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-deeplinking-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][deeplinking]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['deeplinking'], FALSE).' />
-			<label for="rl-deeplinking-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-deeplinking-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][deeplinking]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['deeplinking'], FALSE).' />
+			<label for="rl-pp-deeplinking-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Allow prettyPhoto to update the url to enable deeplinking', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Allow prettyPhoto to update the url to enable deeplinking.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -824,17 +906,17 @@ class Responsive_Lightbox
 	public function rl_pp_overlay_gallery()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_overlay_gallery" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-overlay-gallery-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][overlay_gallery]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['overlay_gallery'], FALSE).' />
-			<label for="rl-overlay-gallery-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-overlay-gallery-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][overlay_gallery]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['overlay_gallery'], FALSE).' />
+			<label for="rl-pp-overlay-gallery-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('If enabled, a gallery will overlay the fullscreen image on mouse over', 'responsive-lightbox').'</p>
+			<p class="description">'.__('If enabled, a gallery will overlay the fullscreen image on mouse over.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -842,17 +924,17 @@ class Responsive_Lightbox
 	public function rl_pp_keyboard_shortcuts()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_keyboard_shortcuts" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-keyboard-shortcuts-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][keyboard_shortcuts]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['keyboard_shortcuts'], FALSE).' />
-			<label for="rl-keyboard-shortcuts-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-keyboard-shortcuts-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][keyboard_shortcuts]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['keyboard_shortcuts'], FALSE).' />
+			<label for="rl-pp-keyboard-shortcuts-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Set to false if you open forms inside prettyPhoto', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Set to false if you open forms inside prettyPhoto.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -860,17 +942,398 @@ class Responsive_Lightbox
 	public function rl_pp_social()
 	{
 		echo '
-		<div class="wplikebtns">';
+		<div id="rl_pp_social" class="wplikebtns">';
 
 		foreach($this->choices as $val => $trans)
 		{
 			echo '
-			<input id="rl-social-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][social]" value="'.$val.'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['social'], FALSE).' />
-			<label for="rl-social-'.$val.'">'.$trans.'</label>';
+			<input id="rl-pp-social-'.$val.'" type="radio" name="responsive_lightbox_configuration[prettyphoto][social]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['prettyphoto']['social'], FALSE).' />
+			<label for="rl-pp-social-'.$val.'">'.$trans.'</label>';
 		}
 
 		echo '
-			<p class="description">'.__('Display links to Facebook and Twitter', 'responsive-lightbox').'</p>
+			<p class="description">'.__('Display links to Facebook and Twitter.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_transitions()
+	{
+		echo '
+		<div id="rl_fb_transition" class="wplikebtns">';
+
+		foreach($this->scripts['fancybox']['transitions'] as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-transitions-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][transitions]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['fancybox']['transitions'], FALSE).' />
+			<label for="rl-fb-transitions-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('The transition type.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_padding()
+	{
+		echo '
+		<div id="rl_fb_padding">
+			<input type="text" name="responsive_lightbox_configuration[fancybox][padding]" value="'.esc_attr($this->options['configuration']['fancybox']['padding']).'" />
+			<p class="description">'.__('Space between FancyBox wrapper and content.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_margin()
+	{
+		echo '
+		<div id="rl_fb_margin">
+			<input type="text" name="responsive_lightbox_configuration[fancybox][margin]" value="'.esc_attr($this->options['configuration']['fancybox']['margin']).'" />
+			<p class="description">'.__('Space between viewport and FancyBox wrapper.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_modal()
+	{
+		echo '
+		<div id="rl_fb_modal" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-modal-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][modal]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['modal'], FALSE).' />
+			<label for="rl-fb-modal-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('When true, "overlayShow" is set to TRUE and "hideOnOverlayClick", "hideOnContentClick", "enableEscapeButton", "showCloseButton" are set to FALSE.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_show_overlay()
+	{
+		echo '
+		<div id="rl_fb_show_overlay" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-show-overlay-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][show_overlay]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['show_overlay'], FALSE).' '.disabled($this->options['configuration']['fancybox']['modal'], TRUE, FALSE).' />
+			<label for="rl-fb-show-overlay-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle overlay.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_show_close_button()
+	{
+		echo '
+		<div id="rl_fb_show_close_button" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-show-close-button-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][show_close_button]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['show_close_button'], FALSE).' '.disabled($this->options['configuration']['fancybox']['modal'], TRUE, FALSE).' />
+			<label for="rl-fb-show-close-button-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle close button.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_enable_escape_button()
+	{
+		echo '
+		<div id="rl_fb_enable_escape_button" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-enable-escape-button-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][enable_escape_button]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['enable_escape_button'], FALSE).' '.disabled($this->options['configuration']['fancybox']['modal'], TRUE, FALSE).' />
+			<label for="rl-fb-enable-escape-button-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle if pressing Esc button closes FancyBox.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_hide_on_overlay_click()
+	{
+		echo '
+		<div id="rl_fb_hide_on_overlay_click" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-hide-on-overlay-click-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][hide_on_overlay_click]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['hide_on_overlay_click'], FALSE).' '.disabled($this->options['configuration']['fancybox']['modal'], TRUE, FALSE).' />
+			<label for="rl-fb-hide-on-overlay-click-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle if clicking the overlay should close FancyBox.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_hide_on_content_click()
+	{
+		echo '
+		<div id="rl_fb_hide_on_content_click" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-hide-on-content-click-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][hide_on_content_click]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['hide_on_content_click'], FALSE).' '.disabled($this->options['configuration']['fancybox']['modal'], TRUE, FALSE).' />
+			<label for="rl-fb-hide-on-content-click-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle if clicking the content should close FancyBox.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_cyclic()
+	{
+		echo '
+		<div id="rl_fb_cyclic" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-cyclic-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][cyclic]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['cyclic'], FALSE).' />
+			<label for="rl-fb-cyclic-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('When true, galleries will be cyclic, allowing you to keep pressing next/back.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_show_nav_arrows()
+	{
+		echo '
+		<div id="rl_fb_show_nav_arrows" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-show-nav-arrows-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][show_nav_arrows]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['show_nav_arrows'], FALSE).' />
+			<label for="rl-fb-show-nav-arrows-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle navigation arrows.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_auto_scale()
+	{
+		echo '
+		<div id="rl_fb_auto_scale" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-auto-scale-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][auto_scale]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['auto_scale'], FALSE).' />
+			<label for="rl-fb-auto-scale-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('If true, FancyBox is scaled to fit in viewport.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_scrolling()
+	{
+		echo '
+		<div id="rl_fb_scrolling" class="wplikebtns">';
+
+		foreach($this->scripts['fancybox']['scrollings'] as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-scrolling-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][scrolling]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['fancybox']['scrolling'], FALSE).' />
+			<label for="rl-fb-scrolling-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Set the overflow CSS property to create or hide scrollbars.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_center_on_scroll()
+	{
+		echo '
+		<div id="rl_fb_center_on_scroll" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-center-on-scroll-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][center_on_scroll]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['center_on_scroll'], FALSE).' />
+			<label for="rl-fb-center-on-scroll-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('When true, FancyBox is centered while scrolling page.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_opacity()
+	{
+		echo '
+		<div id="rl_fb_opacity" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-opacity-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][opacity]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['opacity'], FALSE).' />
+			<label for="rl-fb-opacity-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('When true, transparency of content is changed for elastic transitions.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_overlay_opacity()
+	{
+		echo '
+		<div id="rl_fb_overlay_opacity">
+			<input type="text" id="rl_fb_overlay_opacity_input" class="hide-if-js" name="responsive_lightbox_configuration[fancybox][overlay_opacity]" value="'.esc_attr($this->options['configuration']['fancybox']['overlay_opacity']).'" />
+			<div class="wplike-slider">
+				<span class="left hide-if-no-js">0</span><span class="middle" id="rl_fb_overlay_opacity_span" title="'.esc_attr($this->options['configuration']['fancybox']['overlay_opacity']).'"></span><span class="right hide-if-no-js">100</span>
+			</div>
+			<p class="description">'.__('Opacity of the overlay.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_overlay_color()
+	{
+		echo '
+		<div id="rl_fb_overlay_color">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['overlay_color']).'" id="rl_fb_overlay_color_input" name="responsive_lightbox_configuration[fancybox][overlay_color]" data-default-color="'.$this->defaults['configuration']['fancybox']['overlay_color'].'" />
+			<p class="description">'.__('Color of the overlay.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_title_show()
+	{
+		echo '
+		<div id="rl_fb_title_show" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-title-show-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][title_show]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['fancybox']['title_show'], FALSE).' />
+			<label for="rl-fb-title-show-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Toggle title.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_title_position()
+	{
+		echo '
+		<div id="rl_fb_title_position" class="wplikebtns">';
+
+		foreach($this->scripts['fancybox']['positions'] as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-title-position-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][title_position]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['fancybox']['title_position'], FALSE).' />
+			<label for="rl-fb-title-position-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('The position of title.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_easings()
+	{
+		echo '
+		<div id="rl_fb_easings" class="wplikebtns">';
+
+		foreach($this->scripts['fancybox']['easings'] as $val => $trans)
+		{
+			echo '
+			<input id="rl-fb-easings-'.$val.'" type="radio" name="responsive_lightbox_configuration[fancybox][easings]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['fancybox']['easings'], FALSE).' />
+			<label for="rl-fb-easings-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Easing used for elastic animations.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_speeds()
+	{
+		echo '
+		<div id="rl_fb_speeds">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['speeds']).'" name="responsive_lightbox_configuration[fancybox][speeds]" />
+			<p class="description">'.__('Speed of the fade and elastic transitions, in milliseconds.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_change_speed()
+	{
+		echo '
+		<div id="rl_fb_change_speed">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['change_speed']).'" name="responsive_lightbox_configuration[fancybox][change_speed]" />
+			<p class="description">'.__('Speed of resizing when changing gallery items, in milliseconds.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_change_fade()
+	{
+		echo '
+		<div id="rl_fb_change_fade">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['change_fade']).'" name="responsive_lightbox_configuration[fancybox][change_fade]" />
+			<p class="description">'.__('Speed of the content fading while changing gallery items.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_video_width()
+	{
+		echo '
+		<div id="rl_fb_video_width">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['video_width']).'" name="responsive_lightbox_configuration[fancybox][video_width]" />
+			<p class="description">'.__('Width of the video.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_fb_video_height()
+	{
+		echo '
+		<div id="rl_fb_video_height">
+			<input type="text" value="'.esc_attr($this->options['configuration']['fancybox']['video_height']).'" name="responsive_lightbox_configuration[fancybox][video_height]" />
+			<p class="description">'.__('Height of the video.', 'responsive-lightbox').'</p>
 		</div>';
 	}
 
@@ -883,86 +1346,166 @@ class Responsive_Lightbox
 		if(isset($_POST['save_rl_settings']))
 		{
 			//script
-			$input['script'] = (isset($input['script']) && in_array($input['script'], array_keys($this->scripts)) ? $input['script'] : $this->options['settings']['script']);
+			$input['script'] = (isset($input['script']) && in_array($input['script'], array_keys($this->scripts)) ? $input['script'] : $this->defaults['settings']['script']);
 
 			//selector
-			$input['selector'] = sanitize_text_field(isset($input['selector']) && $input['selector'] !== '' ? $input['selector'] : $this->options['settings']['selector']);
+			$input['selector'] = sanitize_text_field(isset($input['selector']) && $input['selector'] !== '' ? $input['selector'] : $this->defaults['settings']['selector']);
 
 			//checkboxes
-			$input['galleries'] = (isset($input['galleries']) && in_array($input['galleries'], array_keys($this->choices)) ? ($input['galleries'] === 'yes' ? TRUE : FALSE) : $this->options['settings']['galleries']);
-			$input['videos'] = (isset($input['videos']) && in_array($input['videos'], array_keys($this->choices)) ? ($input['videos'] === 'yes' ? TRUE : FALSE) : $this->options['settings']['videos']);
-			$input['image_links'] = (isset($input['image_links']) && in_array($input['image_links'], array_keys($this->choices)) ? ($input['image_links'] === 'yes' ? TRUE : FALSE) : $this->options['settings']['image_links']);
-			$input['images_as_gallery'] = (isset($input['images_as_gallery']) && in_array($input['images_as_gallery'], array_keys($this->choices)) ? ($input['images_as_gallery'] === 'yes' ? TRUE : FALSE) : $this->options['settings']['images_as_gallery']);
-			$input['deactivation_delete'] = (isset($input['deactivation_delete']) && in_array($input['deactivation_delete'], array_keys($this->choices)) ? ($input['deactivation_delete'] === 'yes' ? TRUE : FALSE) : $this->options['settings']['deactivation_delete']);
+			$input['galleries'] = (isset($input['galleries']) && in_array($input['galleries'], array_keys($this->choices)) ? ($input['galleries'] === 'yes' ? TRUE : FALSE) : $this->defaults['settings']['galleries']);
+			$input['videos'] = (isset($input['videos']) && in_array($input['videos'], array_keys($this->choices)) ? ($input['videos'] === 'yes' ? TRUE : FALSE) : $this->defaults['settings']['videos']);
+			$input['image_links'] = (isset($input['image_links']) && in_array($input['image_links'], array_keys($this->choices)) ? ($input['image_links'] === 'yes' ? TRUE : FALSE) : $this->defaults['settings']['image_links']);
+			$input['images_as_gallery'] = (isset($input['images_as_gallery']) && in_array($input['images_as_gallery'], array_keys($this->choices)) ? ($input['images_as_gallery'] === 'yes' ? TRUE : FALSE) : $this->defaults['settings']['images_as_gallery']);
+			$input['deactivation_delete'] = (isset($input['deactivation_delete']) && in_array($input['deactivation_delete'], array_keys($this->choices)) ? ($input['deactivation_delete'] === 'yes' ? TRUE : FALSE) : $this->defaults['settings']['deactivation_delete']);
 		}
 		elseif(isset($_POST['save_rl_configuration']))
 		{
 			if($this->options['settings']['script'] === 'swipebox' && $_POST['script_r'] === 'swipebox')
 			{
 				//animation
-				$input['swipebox']['animation'] = (isset($input['swipebox']['animation']) && in_array($input['swipebox']['animation'], array_keys($this->scripts['swipebox']['animations'])) ? $input['swipebox']['animation'] : $this->options['configuration']['swipebox']['animation']);
+				$input['swipebox']['animation'] = (isset($input['swipebox']['animation']) && in_array($input['swipebox']['animation'], array_keys($this->scripts['swipebox']['animations'])) ? $input['swipebox']['animation'] : $this->defaults['configuration']['swipebox']['animation']);
 
 				//hide bars
-				$input['swipebox']['hide_bars'] = (isset($input['swipebox']['hide_bars']) && in_array($input['swipebox']['hide_bars'], array_keys($this->choices)) ? ($input['swipebox']['hide_bars'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['swipebox']['hide_bars']);
-				$input['swipebox']['hide_bars_delay'] = (int)($input['swipebox']['hide_bars_delay'] > 0 ? $input['swipebox']['hide_bars_delay'] : $this->options['configuration']['swipebox']['hide_bars_delay']);
-				$input['swipebox']['video_max_width'] = (int)($input['swipebox']['video_max_width'] > 0 ? $input['swipebox']['video_max_width'] : $this->options['configuration']['swipebox']['video_max_width']);
+				$input['swipebox']['hide_bars'] = (isset($input['swipebox']['hide_bars']) && in_array($input['swipebox']['hide_bars'], array_keys($this->choices)) ? ($input['swipebox']['hide_bars'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['swipebox']['hide_bars']);
+				$input['swipebox']['hide_bars_delay'] = (int)($input['swipebox']['hide_bars_delay'] > 0 ? $input['swipebox']['hide_bars_delay'] : $this->defaults['configuration']['swipebox']['hide_bars_delay']);
+				$input['swipebox']['video_max_width'] = (int)($input['swipebox']['video_max_width'] > 0 ? $input['swipebox']['video_max_width'] : $this->defaults['configuration']['swipebox']['video_max_width']);
 			}
 			elseif($this->options['settings']['script'] === 'prettyphoto' && $_POST['script_r'] === 'prettyphoto')
 			{
 				//animation speed
-				$input['prettyphoto']['animation_speed'] = (isset($input['prettyphoto']['animation_speed']) && in_array($input['prettyphoto']['animation_speed'], array_keys($this->scripts['prettyphoto']['animation_speeds'])) ? $input['prettyphoto']['animation_speed'] : $this->options['configuration']['prettyphoto']['animation_speed']);
+				$input['prettyphoto']['animation_speed'] = (isset($input['prettyphoto']['animation_speed']) && in_array($input['prettyphoto']['animation_speed'], array_keys($this->scripts['prettyphoto']['animation_speeds'])) ? $input['prettyphoto']['animation_speed'] : $this->defaults['configuration']['prettyphoto']['animation_speed']);
 
 				//slideshows
-				$input['prettyphoto']['slideshow'] = (isset($input['prettyphoto']['slideshow']) && in_array($input['prettyphoto']['slideshow'], array_keys($this->choices)) ? ($input['prettyphoto']['slideshow'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['slideshow']);
-				$input['prettyphoto']['slideshow_delay'] = (int)($input['prettyphoto']['slideshow_delay'] > 0 ? $input['prettyphoto']['slideshow_delay'] : $this->options['configuration']['prettyphoto']['slideshow_delay']);
-				$input['prettyphoto']['slideshow_autoplay'] = (isset($input['prettyphoto']['slideshow_autoplay']) && in_array($input['prettyphoto']['slideshow_autoplay'], array_keys($this->choices)) ? ($input['prettyphoto']['slideshow_autoplay'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['slideshow_autoplay']);
+				$input['prettyphoto']['slideshow'] = (isset($input['prettyphoto']['slideshow']) && in_array($input['prettyphoto']['slideshow'], array_keys($this->choices)) ? ($input['prettyphoto']['slideshow'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['slideshow']);
+				$input['prettyphoto']['slideshow_delay'] = (int)($input['prettyphoto']['slideshow_delay'] > 0 ? $input['prettyphoto']['slideshow_delay'] : $this->defaults['configuration']['prettyphoto']['slideshow_delay']);
+				$input['prettyphoto']['slideshow_autoplay'] = (isset($input['prettyphoto']['slideshow_autoplay']) && in_array($input['prettyphoto']['slideshow_autoplay'], array_keys($this->choices)) ? ($input['prettyphoto']['slideshow_autoplay'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['slideshow_autoplay']);
 
 				//opacity
 				$input['prettyphoto']['opacity'] = (int)$input['prettyphoto']['opacity'];
 
 				if($input['prettyphoto']['opacity'] < 0 || $input['prettyphoto']['opacity'] > 100)
-					$input['prettyphoto']['opacity'] = $this->options['configuration']['prettyphoto']['opacity'];
+					$input['prettyphoto']['opacity'] = $this->defaults['configuration']['prettyphoto']['opacity'];
 
 				//title
-				$input['prettyphoto']['show_title'] = (isset($input['prettyphoto']['show_title']) && in_array($input['prettyphoto']['show_title'], array_keys($this->choices)) ? ($input['prettyphoto']['show_title'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['show_title']);
+				$input['prettyphoto']['show_title'] = (isset($input['prettyphoto']['show_title']) && in_array($input['prettyphoto']['show_title'], array_keys($this->choices)) ? ($input['prettyphoto']['show_title'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['show_title']);
 
 				//resize
-				$input['prettyphoto']['allow_resize'] = (isset($input['prettyphoto']['allow_resize']) && in_array($input['prettyphoto']['allow_resize'], array_keys($this->choices)) ? ($input['prettyphoto']['allow_resize'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['allow_resize']);
+				$input['prettyphoto']['allow_resize'] = (isset($input['prettyphoto']['allow_resize']) && in_array($input['prettyphoto']['allow_resize'], array_keys($this->choices)) ? ($input['prettyphoto']['allow_resize'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['allow_resize']);
 
 				//dimensions
-				$input['prettyphoto']['width'] = (int)($input['prettyphoto']['width'] > 0 ? $input['prettyphoto']['width'] : $this->options['configuration']['prettyphoto']['width']);
-				$input['prettyphoto']['height'] = (int)($input['prettyphoto']['height'] > 0 ? $input['prettyphoto']['height'] : $this->options['configuration']['prettyphoto']['height']);
+				$input['prettyphoto']['width'] = (int)($input['prettyphoto']['width'] > 0 ? $input['prettyphoto']['width'] : $this->defaults['configuration']['prettyphoto']['width']);
+				$input['prettyphoto']['height'] = (int)($input['prettyphoto']['height'] > 0 ? $input['prettyphoto']['height'] : $this->defaults['configuration']['prettyphoto']['height']);
 
 				//separator
-				$input['prettyphoto']['separator'] = sanitize_text_field(isset($input['prettyphoto']['separator']) && $input['prettyphoto']['separator'] !== '' ? $input['prettyphoto']['separator'] : $this->options['configuration']['prettyphoto']['separator']);
+				$input['prettyphoto']['separator'] = sanitize_text_field(isset($input['prettyphoto']['separator']) && $input['prettyphoto']['separator'] !== '' ? $input['prettyphoto']['separator'] : $this->defaults['configuration']['prettyphoto']['separator']);
 
 				//theme
-				$input['prettyphoto']['theme'] = (isset($input['prettyphoto']['theme']) && in_array($input['prettyphoto']['theme'], array_keys($this->scripts['prettyphoto']['themes'])) ? $input['prettyphoto']['theme'] : $this->options['configuration']['prettyphoto']['theme']);
+				$input['prettyphoto']['theme'] = (isset($input['prettyphoto']['theme']) && in_array($input['prettyphoto']['theme'], array_keys($this->scripts['prettyphoto']['themes'])) ? $input['prettyphoto']['theme'] : $this->defaults['configuration']['prettyphoto']['theme']);
 
 				//padding
-				$input['prettyphoto']['horizontal_padding'] = (int)($input['prettyphoto']['horizontal_padding'] > 0 ? $input['prettyphoto']['horizontal_padding'] : $this->options['configuration']['prettyphoto']['horizontal_padding']);
+				$input['prettyphoto']['horizontal_padding'] = (int)($input['prettyphoto']['horizontal_padding'] > 0 ? $input['prettyphoto']['horizontal_padding'] : $this->defaults['configuration']['prettyphoto']['horizontal_padding']);
 
 				//flash
-				$input['prettyphoto']['hide_flash'] = (isset($input['prettyphoto']['hide_flash']) && in_array($input['prettyphoto']['hide_flash'], array_keys($this->choices)) ? ($input['prettyphoto']['hide_flash'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['hide_flash']);
-				$input['prettyphoto']['wmode'] = (isset($input['prettyphoto']['wmode']) && in_array($input['prettyphoto']['wmode'], array_keys($this->scripts['prettyphoto']['wmodes'])) ? $input['prettyphoto']['wmode'] : $this->options['configuration']['prettyphoto']['wmode']);
+				$input['prettyphoto']['hide_flash'] = (isset($input['prettyphoto']['hide_flash']) && in_array($input['prettyphoto']['hide_flash'], array_keys($this->choices)) ? ($input['prettyphoto']['hide_flash'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['hide_flash']);
+				$input['prettyphoto']['wmode'] = (isset($input['prettyphoto']['wmode']) && in_array($input['prettyphoto']['wmode'], array_keys($this->scripts['prettyphoto']['wmodes'])) ? $input['prettyphoto']['wmode'] : $this->defaults['configuration']['prettyphoto']['wmode']);
 
 				//video autoplay
-				$input['prettyphoto']['video_autoplay'] = (isset($input['prettyphoto']['video_autoplay']) && in_array($input['prettyphoto']['video_autoplay'], array_keys($this->choices)) ? ($input['prettyphoto']['video_autoplay'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['video_autoplay']);
+				$input['prettyphoto']['video_autoplay'] = (isset($input['prettyphoto']['video_autoplay']) && in_array($input['prettyphoto']['video_autoplay'], array_keys($this->choices)) ? ($input['prettyphoto']['video_autoplay'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['video_autoplay']);
 
 				//modal
-				$input['prettyphoto']['modal'] = (isset($input['prettyphoto']['modal']) && in_array($input['prettyphoto']['modal'], array_keys($this->choices)) ? ($input['prettyphoto']['modal'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['modal']);
+				$input['prettyphoto']['modal'] = (isset($input['prettyphoto']['modal']) && in_array($input['prettyphoto']['modal'], array_keys($this->choices)) ? ($input['prettyphoto']['modal'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['modal']);
 
 				//deeplinking
-				$input['prettyphoto']['deeplinking'] = (isset($input['prettyphoto']['deeplinking']) && in_array($input['prettyphoto']['deeplinking'], array_keys($this->choices)) ? ($input['prettyphoto']['deeplinking'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['deeplinking']);
+				$input['prettyphoto']['deeplinking'] = (isset($input['prettyphoto']['deeplinking']) && in_array($input['prettyphoto']['deeplinking'], array_keys($this->choices)) ? ($input['prettyphoto']['deeplinking'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['deeplinking']);
 
 				//overlay gallery
-				$input['prettyphoto']['overlay_gallery'] = (isset($input['prettyphoto']['overlay_gallery']) && in_array($input['prettyphoto']['overlay_gallery'], array_keys($this->choices)) ? ($input['prettyphoto']['overlay_gallery'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['overlay_gallery']);
+				$input['prettyphoto']['overlay_gallery'] = (isset($input['prettyphoto']['overlay_gallery']) && in_array($input['prettyphoto']['overlay_gallery'], array_keys($this->choices)) ? ($input['prettyphoto']['overlay_gallery'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['overlay_gallery']);
 
 				//keyboard shortcuts
-				$input['prettyphoto']['keyboard_shortcuts'] = (isset($input['prettyphoto']['keyboard_shortcuts']) && in_array($input['prettyphoto']['keyboard_shortcuts'], array_keys($this->choices)) ? ($input['prettyphoto']['keyboard_shortcuts'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['keyboard_shortcuts']);
+				$input['prettyphoto']['keyboard_shortcuts'] = (isset($input['prettyphoto']['keyboard_shortcuts']) && in_array($input['prettyphoto']['keyboard_shortcuts'], array_keys($this->choices)) ? ($input['prettyphoto']['keyboard_shortcuts'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['keyboard_shortcuts']);
 
 				//social
-				$input['prettyphoto']['social'] = (isset($input['prettyphoto']['social']) && in_array($input['prettyphoto']['social'], array_keys($this->choices)) ? ($input['prettyphoto']['social'] === 'yes' ? TRUE : FALSE) : $this->options['configuration']['prettyphoto']['social']);
+				$input['prettyphoto']['social'] = (isset($input['prettyphoto']['social']) && in_array($input['prettyphoto']['social'], array_keys($this->choices)) ? ($input['prettyphoto']['social'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['prettyphoto']['social']);
+			}
+			elseif($this->options['settings']['script'] === 'fancybox' && $_POST['script_r'] === 'fancybox')
+			{
+				//modal
+				$input['fancybox']['modal'] = (isset($input['fancybox']['modal']) && in_array($input['fancybox']['modal'], array_keys($this->choices)) ? ($input['fancybox']['modal'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['modal']);
+
+				//show overlay
+				$input['fancybox']['show_overlay'] = (isset($input['fancybox']['show_overlay']) && in_array($input['fancybox']['show_overlay'], array_keys($this->choices)) ? ($input['fancybox']['show_overlay'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['show_overlay']);
+
+				//show close button
+				$input['fancybox']['show_close_button'] = (isset($input['fancybox']['show_close_button']) && in_array($input['fancybox']['show_close_button'], array_keys($this->choices)) ? ($input['fancybox']['show_close_button'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['show_close_button']);
+
+				//enable escape button
+				$input['fancybox']['enable_escape_button'] = (isset($input['fancybox']['enable_escape_button']) && in_array($input['fancybox']['enable_escape_button'], array_keys($this->choices)) ? ($input['fancybox']['enable_escape_button'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['enable_escape_button']);
+
+				//hide on overlay click
+				$input['fancybox']['hide_on_overlay_click'] = (isset($input['fancybox']['hide_on_overlay_click']) && in_array($input['fancybox']['hide_on_overlay_click'], array_keys($this->choices)) ? ($input['fancybox']['hide_on_overlay_click'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['hide_on_overlay_click']);
+
+				//hide on content click
+				$input['fancybox']['hide_on_content_click'] = (isset($input['fancybox']['hide_on_content_click']) && in_array($input['fancybox']['hide_on_content_click'], array_keys($this->choices)) ? ($input['fancybox']['hide_on_content_click'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['hide_on_content_click']);
+
+				//cyclic
+				$input['fancybox']['cyclic'] = (isset($input['fancybox']['cyclic']) && in_array($input['fancybox']['cyclic'], array_keys($this->choices)) ? ($input['fancybox']['cyclic'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['cyclic']);
+
+				//show nav arrows
+				$input['fancybox']['show_nav_arrows'] = (isset($input['fancybox']['show_nav_arrows']) && in_array($input['fancybox']['show_nav_arrows'], array_keys($this->choices)) ? ($input['fancybox']['show_nav_arrows'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['show_nav_arrows']);
+
+				//auto scale
+				$input['fancybox']['auto_scale'] = (isset($input['fancybox']['auto_scale']) && in_array($input['fancybox']['auto_scale'], array_keys($this->choices)) ? ($input['fancybox']['auto_scale'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['auto_scale']);
+
+				//scrolling
+				$input['fancybox']['scrolling'] = (isset($input['fancybox']['scrolling']) && in_array($input['fancybox']['scrolling'], array_keys($this->scripts['fancybox']['scrollings'])) ? $input['fancybox']['scrolling'] : $this->defaults['configuration']['fancybox']['scrolling']);
+
+				//center on scroll
+				$input['fancybox']['center_on_scroll'] = (isset($input['fancybox']['center_on_scroll']) && in_array($input['fancybox']['center_on_scroll'], array_keys($this->choices)) ? ($input['fancybox']['center_on_scroll'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['center_on_scroll']);
+
+				//opacity
+				$input['fancybox']['opacity'] = (isset($input['fancybox']['opacity']) && in_array($input['fancybox']['opacity'], array_keys($this->choices)) ? ($input['fancybox']['opacity'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['opacity']);
+
+				//title_show
+				$input['fancybox']['title_show'] = (isset($input['fancybox']['title_show']) && in_array($input['fancybox']['title_show'], array_keys($this->choices)) ? ($input['fancybox']['title_show'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['fancybox']['title_show']);
+
+				//overlay opacity
+				$input['fancybox']['overlay_opacity'] = (int)$input['fancybox']['overlay_opacity'];
+
+				if($input['fancybox']['overlay_opacity'] < 0 || $input['fancybox']['overlay_opacity'] > 100)
+					$input['fancybox']['overlay_opacity'] = $this->defaults['configuration']['fancybox']['overlay_opacity'];
+
+				//overlay color
+				$input['fancybox']['overlay_color'] = sanitize_text_field($input['fancybox']['overlay_color']);
+
+				//title position
+				$input['fancybox']['title_position'] = (isset($input['fancybox']['title_position']) && in_array($input['fancybox']['title_position'], array_keys($this->scripts['fancybox']['positions'])) ? $input['fancybox']['title_position'] : $this->defaults['configuration']['fancybox']['title_position']);
+
+				//transitions
+				$input['fancybox']['transitions'] = (isset($input['fancybox']['transitions']) && in_array($input['fancybox']['transitions'], array_keys($this->scripts['fancybox']['transitions'])) ? $input['fancybox']['transitions'] : $this->defaults['configuration']['fancybox']['transitions']);
+
+				//easings
+				$input['fancybox']['easings'] = (isset($input['fancybox']['easings']) && in_array($input['fancybox']['easings'], array_keys($this->scripts['fancybox']['easings'])) ? $input['fancybox']['easings'] : $this->defaults['configuration']['fancybox']['easings']);
+
+				//speeds
+				$input['fancybox']['speeds'] = (int)($input['fancybox']['speeds'] > 0 ? $input['fancybox']['speeds'] : $this->defaults['configuration']['fancybox']['speeds']);
+
+				//change speed
+				$input['fancybox']['change_speed'] = (int)($input['fancybox']['change_speed'] > 0 ? $input['fancybox']['change_speed'] : $this->defaults['configuration']['fancybox']['change_speed']);
+
+				//change fade
+				$input['fancybox']['change_fade'] = (int)($input['fancybox']['change_fade'] > 0 ? $input['fancybox']['change_fade'] : $this->defaults['configuration']['fancybox']['change_fade']);
+				
+				//padding
+				$input['fancybox']['padding'] = (int)($input['fancybox']['padding'] > 0 ? $input['fancybox']['padding'] : $this->defaults['configuration']['fancybox']['padding']);
+
+				//margin
+				$input['fancybox']['margin'] = (int)($input['fancybox']['margin'] > 0 ? $input['fancybox']['margin'] : $this->defaults['configuration']['fancybox']['margin']);
+
+				//video width
+				$input['fancybox']['video_width'] = (int)($input['fancybox']['video_width'] > 0 ? $input['fancybox']['video_width'] : $this->defaults['configuration']['fancybox']['video_width']);
+
+				//video height
+				$input['fancybox']['video_height'] = (int)($input['fancybox']['video_height'] > 0 ? $input['fancybox']['video_height'] : $this->defaults['configuration']['fancybox']['video_height']);
 			}
 			else
 			{
@@ -988,6 +1531,12 @@ class Responsive_Lightbox
 				$input['prettyphoto'] = $this->defaults['configuration']['prettyphoto'];
 
 				add_settings_error('reset_prettyphoto_settings', 'prettyphoto_reset', __('Settings of prettyPhoto script were restored to defaults.', 'responsive-lightbox'), 'updated');
+			}
+			elseif($this->options['settings']['script'] === 'fancybox' && $_POST['script_r'] === 'fancybox')
+			{
+				$input['fancybox'] = $this->defaults['configuration']['fancybox'];
+
+				add_settings_error('reset_prettyphoto_settings', 'prettyphoto_reset', __('Settings of FancyBox script were restored to defaults.', 'responsive-lightbox'), 'updated');
 			}
 			else
 			{
@@ -1033,7 +1582,7 @@ class Responsive_Lightbox
 			</h2>
 			<div class="metabox-holder postbox-container responsive-lightbox-settings">
 				<form action="options.php" method="post">
-					<input type="hidden" name="script_r" value="'.$this->options['settings']['script'].'" />';
+					<input type="hidden" name="script_r" value="'.esc_attr($this->options['settings']['script']).'" />';
 
 		wp_nonce_field('update-options');
 		settings_fields($this->tabs[$tab_key]['key']);
@@ -1055,12 +1604,12 @@ class Responsive_Lightbox
 				<h3 class="metabox-title">'.__('Responsive Lightbox', 'responsive-lightbox').'</h3>
 				<div class="inner">
 					<h3>'.__('Need support?', 'responsive-lightbox').'</h3>
-					<p>'.__('If you are having problems with this plugin, please talk about them in the', 'responsive-lightbox').' <a href="http://dfactory.eu/support/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=support" target="_blank" title="'.__('Support forum', 'responsive-lightbox').'">'.__('Support forum', 'responsive-lightbox').'</a></p>
+					<p>'.__('If you are having problems with this plugin, please talk about them in the', 'responsive-lightbox').' <a href="http://www.dfactory.eu/support/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=support" target="_blank" title="'.__('Support forum', 'responsive-lightbox').'">'.__('Support forum', 'responsive-lightbox').'</a></p>
 					<hr />
 					<h3>'.__('Do you like this plugin?', 'responsive-lightbox').'</h3>
 					<p><a href="http://wordpress.org/support/view/plugin-reviews/responsive-lightbox" target="_blank" title="'.__('Rate it 5', 'responsive-lightbox').'">'.__('Rate it 5', 'responsive-lightbox').'</a> '.__('on WordPress.org', 'responsive-lightbox').'<br />'.
-					__('Blog about it & link to the', 'responsive-lightbox').' <a href="http://dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=blog-about" target="_blank" title="'.__('plugin page', 'responsive-lightbox').'">'.__('plugin page', 'responsive-lightbox').'</a><br />'.
-					__('Check out our other', 'responsive-lightbox').' <a href="http://dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins" target="_blank" title="'.__('WordPress plugins', 'responsive-lightbox').'">'.__('WordPress plugins', 'responsive-lightbox').'</a>
+					__('Blog about it & link to the', 'responsive-lightbox').' <a href="http://www.dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=blog-about" target="_blank" title="'.__('plugin page', 'responsive-lightbox').'">'.__('plugin page', 'responsive-lightbox').'</a><br />'.
+					__('Check out our other', 'responsive-lightbox').' <a href="http://www.dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins" target="_blank" title="'.__('WordPress plugins', 'responsive-lightbox').'">'.__('WordPress plugins', 'responsive-lightbox').'</a>
 					</p>            
 					<hr />
 					<p class="df-link">Created by <a href="http://www.dfactory.eu/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=created-by" target="_blank" title="dFactory - Quality plugins for WordPress"><img src="'.plugins_url('/images/logo-dfactory.png' , __FILE__ ).'" title="dFactory - Quality plugins for WordPress" alt="dFactory - Quality plugins for WordPress" /></a></p>
@@ -1075,30 +1624,39 @@ class Responsive_Lightbox
 	{
 		if($page === 'settings_page_responsive-lightbox')
 		{
-			wp_enqueue_script(
+			wp_register_script(
 				'responsive-lightbox-admin',
 				plugins_url('js/admin.js', __FILE__),
-				array('jquery', 'jquery-ui-core', 'jquery-ui-button', 'jquery-ui-slider')
+				array('jquery', 'jquery-ui-core', 'jquery-ui-button', 'jquery-ui-slider', 'wp-color-picker')
 			);
+
+			wp_enqueue_script('responsive-lightbox-admin');
 
 			wp_localize_script(
 				'responsive-lightbox-admin',
 				'rlArgs',
 				array(
 					'resetScriptToDefaults' => __('Are you sure you want to reset scripts settings to defaults?', 'responsive-lightbox'),
-					'opacity' => $this->options['configuration']['prettyphoto']['opacity']
+					'opacity_pp' => $this->options['configuration']['prettyphoto']['opacity'],
+					'opacity_fb' => $this->options['configuration']['fancybox']['overlay_opacity']
 				)
 			);
 
-			wp_enqueue_style(
+			wp_enqueue_style('wp-color-picker');
+
+			wp_register_style(
 				'responsive-lightbox-admin',
 				plugins_url('css/admin.css', __FILE__)
 			);
 
-			wp_enqueue_style(
+			wp_enqueue_style('responsive-lightbox-admin');
+
+			wp_register_style(
 				'responsive-lightbox-wplike',
 				plugins_url('css/wp-like-ui-theme.css', __FILE__)
 			);
+
+			wp_enqueue_style('responsive-lightbox-wplike');
 		}
 	}
 
@@ -1113,16 +1671,20 @@ class Responsive_Lightbox
 
 		if($this->options['settings']['script'] === 'prettyphoto')
 		{
-			wp_enqueue_script(
+			wp_register_script(
 				'responsive-lightbox-prettyphoto',
 				plugins_url('assets/prettyphoto/js/jquery.prettyPhoto.js', __FILE__),
 				array('jquery')
 			);
 
-			wp_enqueue_style(
-				'responsive-lightbox-front',
+			wp_enqueue_script('responsive-lightbox-prettyphoto');
+
+			wp_register_style(
+				'responsive-lightbox-prettyphoto-front',
 				plugins_url('assets/prettyphoto/css/prettyPhoto.css', __FILE__)
 			);
+
+			wp_enqueue_style('responsive-lightbox-prettyphoto-front');
 
 			$args = array_merge(
 				$args,
@@ -1152,16 +1714,20 @@ class Responsive_Lightbox
 		}
 		elseif($this->options['settings']['script'] === 'swipebox')
 		{
-			wp_enqueue_script(
+			wp_register_script(
 				'responsive-lightbox-swipebox',
 				plugins_url('assets/swipebox/source/jquery.swipebox.min.js', __FILE__),
 				array('jquery')
 			);
 
-			wp_enqueue_style(
-				'responsive-lightbox-front',
+			wp_enqueue_script('responsive-lightbox-swipebox');
+
+			wp_register_style(
+				'responsive-lightbox-swipebox-front',
 				plugins_url('assets/swipebox/source/swipebox.css', __FILE__)
 			);
+
+			wp_enqueue_style('responsive-lightbox-swipebox-front');
 
 			$args = array_merge(
 				$args,
@@ -1173,14 +1739,68 @@ class Responsive_Lightbox
 				)
 			);
 		}
+		elseif($this->options['settings']['script'] === 'fancybox')
+		{
+			wp_register_script(
+				'responsive-lightbox-fancybox',
+				plugins_url('assets/fancybox/jquery.fancybox-1.3.4.js', __FILE__),
+				array('jquery')
+			);
 
-		wp_enqueue_script(
+			wp_enqueue_script('responsive-lightbox-fancybox');
+
+			wp_register_style(
+				'responsive-lightbox-fancybox-front',
+				plugins_url('assets/fancybox/jquery.fancybox-1.3.4.css', __FILE__)
+			);
+
+			wp_enqueue_style('responsive-lightbox-fancybox-front');
+
+			$args = array_merge(
+				$args,
+				array(
+					'modal' => $this->getBooleanValue($this->options['configuration']['fancybox']['modal']),
+					'showOverlay' => $this->getBooleanValue($this->options['configuration']['fancybox']['show_overlay']),
+					'showCloseButton' => $this->getBooleanValue($this->options['configuration']['fancybox']['show_close_button']),
+					'enableEscapeButton' => $this->getBooleanValue($this->options['configuration']['fancybox']['enable_escape_button']),
+					'hideOnOverlayClick' => $this->getBooleanValue($this->options['configuration']['fancybox']['hide_on_overlay_click']),
+					'hideOnContentClick' => $this->getBooleanValue($this->options['configuration']['fancybox']['hide_on_content_click']),
+					'cyclic' => $this->getBooleanValue($this->options['configuration']['fancybox']['cyclic']),
+					'showNavArrows' => $this->getBooleanValue($this->options['configuration']['fancybox']['show_nav_arrows']),
+					'autoScale' => $this->getBooleanValue($this->options['configuration']['fancybox']['auto_scale']),
+					'scrolling' => $this->options['configuration']['fancybox']['scrolling'],
+					'centerOnScroll' => $this->getBooleanValue($this->options['configuration']['fancybox']['center_on_scroll']),
+					'opacity' => $this->getBooleanValue($this->options['configuration']['fancybox']['opacity']),
+					'overlayOpacity' => $this->options['configuration']['fancybox']['overlay_opacity'],
+					'overlayColor' => $this->options['configuration']['fancybox']['overlay_color'],
+					'titleShow' => $this->getBooleanValue($this->options['configuration']['fancybox']['title_show']),
+					'titlePosition' => $this->options['configuration']['fancybox']['title_position'],
+					'transitions' => $this->options['configuration']['fancybox']['transitions'],
+					'easings' => $this->options['configuration']['fancybox']['easings'],
+					'speeds' => $this->options['configuration']['fancybox']['speeds'],
+					'changeSpeed' => $this->options['configuration']['fancybox']['change_speed'],
+					'changeFade' => $this->options['configuration']['fancybox']['change_fade'],
+					'padding' => $this->options['configuration']['fancybox']['padding'],
+					'margin' => $this->options['configuration']['fancybox']['margin'],
+					'videoWidth' => $this->options['configuration']['fancybox']['video_width'],
+					'videoHeight' => $this->options['configuration']['fancybox']['video_height']
+				)
+			);
+		}
+
+		wp_register_script(
 			'responsive-lightbox-front',
 			plugins_url('js/front.js', __FILE__),
 			array('jquery')
 		);
 
-		wp_localize_script('responsive-lightbox-front', 'rlArgs', $args);
+		wp_enqueue_script('responsive-lightbox-front');
+
+		wp_localize_script(
+			'responsive-lightbox-front',
+			'rlArgs',
+			$args
+		);
 	}
 
 

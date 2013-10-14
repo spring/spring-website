@@ -18,7 +18,13 @@
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
-<link rel="icon" type="image/png" href="http://test.springrts.com/wordpress/wp-content/uploads/2013/10/springlogofavicon.png">
+<link rel="icon" type="image/png" href="http://test.springrts.com/wordpress2/wp-content/uploads/2013/10/springlogofavicon.png">
+
+<!-- Start Shared Tags Across all Sites -->
+	<META NAME="Title" CONTENT="The Spring Project">
+	<meta name="description" content="Spring is a free RTS engine developed for Windows, Linux and Mac OS X!" >
+	<meta name="keywords" content="spring,engine,strategy,tactics,game,design,free,windows,linux,osx,rts,real,time,community,developers,github,oss,open,source,foss">
+<!-- End Shared Tags Across all Sites -->
 
 <?php wp_head(); ?>
 </head>
@@ -31,10 +37,10 @@
 		<div class="site-branding">
 			<div class="logopositioning">
 				<div class="logo">
-					<img src="http://test.springrts.com/wordpress/wp-content/uploads/2013/10/springlogoheaderfull.png" alt="The Spring Project Logo">
+					<img src="http://test.springrts.com/wordpress2/wp-content/uploads/2013/10/springlogoheaderfull.png" alt="The Spring Project Logo">
 				</div>
 			</div>
-			<?php echo do_shortcode("[metaslider id=8]"); ?>
+			<?php echo do_shortcode("[metaslider id=38]"); ?>
 		</div>
 	</header><!-- #masthead -->
 </div>

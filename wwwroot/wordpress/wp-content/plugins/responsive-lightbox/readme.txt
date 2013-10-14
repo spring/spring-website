@@ -4,7 +4,7 @@ Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.1.2
+Stable tag: 1.2.1
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -18,7 +18,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 
 = Features include: =
 
-* Select from 2 responsive lightbox scripts
+* Select from 3 responsive lightbox scripts
 * Automatically add lightbox to WordPress image galleries
 * Automatically add lightbox to WordPress image links
 * Automatically add lightbox to WordPress video links (YouTube, Vimeo)
@@ -53,6 +53,16 @@ No questions yet.
 2. screenshot-2.jpg
 
 == Changelog ==
+
+
+= 1.2.1 =
+* New: Support for images loaded via AJAX
+* Tweak: Updated Japanese translation
+
+= 1.2.0 =
+* New: Added FancyBox script
+* Tweak: UI enhancements for options
+* Tweak: Better YouTube video handling (including https protocol) 
 
 = 1.1.2 =
 * New: Japanese translation, thanks to stranger-jp
@@ -89,5 +99,6 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.1.2 =
-New: Japanese translation, thanks to stranger-jp
+= 1.2.1 =
+* New: Support for images loaded via AJAX
+* Tweak: Updated Japanese translation
