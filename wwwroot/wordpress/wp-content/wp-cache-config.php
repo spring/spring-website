@@ -21,7 +21,7 @@ $wp_cache_disable_utf8 = 0; //Added by WP-Cache Manager
 $cache_time_interval = '3600'; //Added by WP-Cache Manager
 $cache_schedule_type = 'interval'; //Added by WP-Cache Manager
 $cache_page_secret = '71c9ebf789d19b789eeecb55ff579279'; //Added by WP-Cache Manager
-$wp_cache_home_path = '/wordpress2/'; //Added by WP-Cache Manager
+$wp_cache_home_path = '/wordpress/'; //Added by WP-Cache Manager
 $wp_cache_slash_check = 1; //Added by WP-Cache Manager
 if ( ! defined('WPCACHEHOME') )
 	define( 'WPCACHEHOME', WP_CONTENT_DIR . "/plugins/wp-super-cache/" ); //Added by WP-Cache Manager

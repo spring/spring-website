@@ -22,7 +22,7 @@ require($curpath."/../../springpw.php");
 /** The name of the database for WordPress */
 // //Added by WP-Cache Manager
 define('WP_CACHE', true); //Added by WP-Cache Manager
-define( 'WPCACHEHOME', '/home/springtest/www/wwwroot/wordpress2/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+define('WPCACHEHOME', '/home/springtest/www/wwwroot/wordpress/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_NAME', $spring_dbname);
 
 /** MySQL database username */
@@ -66,7 +66,7 @@ define('NONCE_SALT',       'put your unique phrase here');
  * You can have multiple installations in one database if you give each a unique
  * prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = 'wp2_';
+$table_prefix  = 'wp_';
 
 /**
  * WordPress Localized Language, defaults to English.
