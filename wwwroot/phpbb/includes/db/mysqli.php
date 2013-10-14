@@ -27,12 +27,19 @@ include_once($phpbb_root_path . 'includes/db/dbal.' . $phpEx);
 class dbal_mysqli extends dbal
 {
 	var $multi_insert = true;
+	var $connect_error = '';
 
 	/**
 	* Connect to server
 	*/
 	function sql_connect($sqlserver, $sqluser, $sqlpassword, $database, $port = false, $persistency = false , $new_link = false)
 	{
+		if (!function_exists('mysqli_connect'))
+		{
+			$this->connect_error = 'mysqli_connect function does not exist, is mysqli extension installed?';
+			return $this->sql_error('');
+		}
+
 		// Mysqli extension supports persistent connection since PHP 5.3.0
 		$this->persistency = (version_compare(PHP_VERSION, '5.3.0', '>=')) ? $persistency : false;
 		$this->user = $sqluser;
@@ -316,6 +323,76 @@ class dbal_mysqli extends dbal
 	}
 
 	/**
+	* Gets the estimated number of rows in a specified table.
+	*
+	* @param string $table_name		Table name
+	*
+	* @return string				Number of rows in $table_name.
+	*								Prefixed with ~ if estimated (otherwise exact).
+	*
+	* @access public
+	*/
+	function get_estimated_row_count($table_name)
+	{
+		$table_status = $this->get_table_status($table_name);
+
+		if (isset($table_status['Engine']))
+		{
+			if ($table_status['Engine'] === 'MyISAM')
+			{
+				return $table_status['Rows'];
+			}
+			else if ($table_status['Engine'] === 'InnoDB' && $table_status['Rows'] > 100000)
+			{
+				return '~' . $table_status['Rows'];
+			}
+		}
+
+		return parent::get_row_count($table_name);
+	}
+
+	/**
+	* Gets the exact number of rows in a specified table.
+	*
+	* @param string $table_name		Table name
+	*
+	* @return string				Exact number of rows in $table_name.
+	*
+	* @access public
+	*/
+	function get_row_count($table_name)
+	{
+		$table_status = $this->get_table_status($table_name);
+
+		if (isset($table_status['Engine']) && $table_status['Engine'] === 'MyISAM')
+		{
+			return $table_status['Rows'];
+		}
+
+		return parent::get_row_count($table_name);
+	}
+
+	/**
+	* Gets some information about the specified table.
+	*
+	* @param string $table_name		Table name
+	*
+	* @return array
+	*
+	* @access protected
+	*/
+	function get_table_status($table_name)
+	{
+		$sql = "SHOW TABLE STATUS
+			LIKE '" . $this->sql_escape($table_name) . "'";
+		$result = $this->sql_query($sql);
+		$table_status = $this->sql_fetchrow($result);
+		$this->sql_freeresult($result);
+
+		return $table_status;
+	}
+
+	/**
 	* Build LIKE expression
 	* @access private
 	*/
@@ -346,18 +423,29 @@ class dbal_mysqli extends dbal
 	*/
 	function _sql_error()
 	{
-		if (!$this->db_connect_id)
+		if ($this->db_connect_id)
 		{
-			return array(
+			$error = array(
+				'message'	=> @mysqli_error($this->db_connect_id),
+				'code'		=> @mysqli_errno($this->db_connect_id)
+			);
+		}
+		else if (function_exists('mysqli_connect_error'))
+		{
+			$error = array(
 				'message'	=> @mysqli_connect_error(),
-				'code'		=> @mysqli_connect_errno()
+				'code'		=> @mysqli_connect_errno(),
+			);
+		}
+		else
+		{
+			$error = array(
+				'message'	=> $this->connect_error,
+				'code'		=> '',
 			);
 		}
 
-		return array(
-			'message'	=> @mysqli_error($this->db_connect_id),
-			'code'		=> @mysqli_errno($this->db_connect_id)
-		);
+		return $error;
 	}
 
 	/**

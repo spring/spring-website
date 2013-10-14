@@ -32,6 +32,7 @@ include_once($phpbb_root_path . 'includes/db/dbal.' . $phpEx);
 class dbal_mssql_odbc extends dbal
 {
 	var $last_query_text = '';
+	var $connect_error = '';
 
 	/**
 	* Connect to server
@@ -68,7 +69,24 @@ class dbal_mssql_odbc extends dbal
 			@ini_set('odbc.defaultlrl', $max_size);
 		}
 
-		$this->db_connect_id = ($this->persistency) ? @odbc_pconnect($this->server, $this->user, $sqlpassword) : @odbc_connect($this->server, $this->user, $sqlpassword);
+		if ($this->persistency)
+		{
+			if (!function_exists('odbc_pconnect'))
+			{
+				$this->connect_error = 'odbc_pconnect function does not exist, is odbc extension installed?';
+				return $this->sql_error('');
+			}
+			$this->db_connect_id = @odbc_pconnect($this->server, $this->user, $sqlpassword);
+		}
+		else
+		{
+			if (!function_exists('odbc_connect'))
+			{
+				$this->connect_error = 'odbc_connect function does not exist, is odbc extension installed?';
+				return $this->sql_error('');
+			}
+			$this->db_connect_id = @odbc_connect($this->server, $this->user, $sqlpassword);
+		}
 
 		return ($this->db_connect_id) ? $this->db_connect_id : $this->sql_error('');
 	}
@@ -256,49 +274,6 @@ class dbal_mssql_odbc extends dbal
 	}
 
 	/**
-	* Seek to given row number
-	* rownum is zero-based
-	*/
-	function sql_rowseek($rownum, &$query_id)
-	{
-		global $cache;
-
-		if ($query_id === false)
-		{
-			$query_id = $this->query_result;
-		}
-
-		if (isset($cache->sql_rowset[$query_id]))
-		{
-			return $cache->sql_rowseek($rownum, $query_id);
-		}
-
-		if ($query_id === false)
-		{
-			return false;
-		}
-
-		$this->sql_freeresult($query_id);
-		$query_id = $this->sql_query($this->last_query_text);
-
-		if ($query_id === false)
-		{
-			return false;
-		}
-
-		// We do not fetch the row for rownum == 0 because then the next resultset would be the second row
-		for ($i = 0; $i < $rownum; $i++)
-		{
-			if (!$this->sql_fetchrow($query_id))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	* Get last inserted id after insert statement
 	*/
 	function sql_nextid()
@@ -354,6 +329,14 @@ class dbal_mssql_odbc extends dbal
 	}
 
 	/**
+	* {@inheritDoc}
+	*/
+	function sql_lower_text($column_name)
+	{
+		return "LOWER(SUBSTRING($column_name, 1, DATALENGTH($column_name)))";
+	}
+
+	/**
 	* Build LIKE expression
 	* @access private
 	*/
@@ -377,10 +360,22 @@ class dbal_mssql_odbc extends dbal
 	*/
 	function _sql_error()
 	{
-		return array(
-			'message'	=> @odbc_errormsg(),
-			'code'		=> @odbc_error()
-		);
+		if (function_exists('odbc_errormsg'))
+		{
+			$error = array(
+				'message'	=> @odbc_errormsg(),
+				'code'		=> @odbc_error(),
+			);
+		}
+		else
+		{
+			$error = array(
+				'message'	=> $this->connect_error,
+				'code'		=> '',
+			);
+		}
+
+		return $error;
 	}
 
 	/**

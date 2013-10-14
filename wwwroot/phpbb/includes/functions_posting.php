@@ -288,13 +288,15 @@ function posting_gen_topic_icons($mode, $icon_id)
 
 	if (sizeof($icons))
 	{
+		$root_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? generate_board_url() . '/' : $phpbb_root_path;
+
 		foreach ($icons as $id => $data)
 		{
 			if ($data['display'])
 			{
 				$template->assign_block_vars('topic_icon', array(
 					'ICON_ID'		=> $id,
-					'ICON_IMG'		=> $phpbb_root_path . $config['icons_path'] . '/' . $data['img'],
+					'ICON_IMG'		=> $root_path . $config['icons_path'] . '/' . $data['img'],
 					'ICON_WIDTH'	=> $data['width'],
 					'ICON_HEIGHT'	=> $data['height'],
 
@@ -421,16 +423,6 @@ function upload_attachment($form_name, $forum_id, $local = false, $local_storage
 
 	$cat_id = (isset($extensions[$file->get('extension')]['display_cat'])) ? $extensions[$file->get('extension')]['display_cat'] : ATTACHMENT_CATEGORY_NONE;
 
-	// Make sure the image category only holds valid images...
-	if ($cat_id == ATTACHMENT_CATEGORY_IMAGE && !$file->is_image())
-	{
-		$file->remove();
-
-		// If this error occurs a user tried to exploit an IE Bug by renaming extensions
-		// Since the image category is displaying content inline we need to catch this.
-		trigger_error($user->lang['ATTACHED_IMAGE_NOT_IMAGE']);
-	}
-
 	// Do we have to create a thumbnail?
 	$filedata['thumbnail'] = ($cat_id == ATTACHMENT_CATEGORY_IMAGE && $config['img_create_thumbnail']) ? 1 : 0;
 
@@ -471,6 +463,16 @@ function upload_attachment($form_name, $forum_id, $local = false, $local_storage
 		return $filedata;
 	}
 
+	// Make sure the image category only holds valid images...
+	if ($cat_id == ATTACHMENT_CATEGORY_IMAGE && !$file->is_image())
+	{
+		$file->remove();
+
+		// If this error occurs a user tried to exploit an IE Bug by renaming extensions
+		// Since the image category is displaying content inline we need to catch this.
+		trigger_error($user->lang['ATTACHED_IMAGE_NOT_IMAGE']);
+	}
+
 	$filedata['filesize'] = $file->get('filesize');
 	$filedata['mimetype'] = $file->get('mimetype');
 	$filedata['extension'] = $file->get('extension');
@@ -497,7 +499,14 @@ function upload_attachment($form_name, $forum_id, $local = false, $local_storage
 	{
 		if ($free_space <= $file->get('filesize'))
 		{
-			$filedata['error'][] = $user->lang['ATTACH_QUOTA_REACHED'];
+			if ($auth->acl_get('a_'))
+			{
+				$filedata['error'][] = $user->lang['ATTACH_DISK_FULL'];
+			}
+			else
+			{
+				$filedata['error'][] = $user->lang['ATTACH_QUOTA_REACHED'];
+			}
 			$filedata['post_attach'] = false;
 
 			$file->remove();
@@ -1160,7 +1169,7 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 /**
 * User Notification
 */
-function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id, $topic_id, $post_id)
+function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id, $topic_id, $post_id, $author_name = '')
 {
 	global $db, $user, $config, $phpbb_root_path, $phpEx, $auth;
 
@@ -1180,36 +1189,32 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 	$topic_title = ($topic_notification) ? $topic_title : $subject;
 	$topic_title = censor_text($topic_title);
 
-	// Get banned User ID's
-	$sql = 'SELECT ban_userid
-		FROM ' . BANLIST_TABLE . '
-		WHERE ban_userid <> 0
-			AND ban_exclude <> 1';
-	$result = $db->sql_query($sql);
-
-	$sql_ignore_users = ANONYMOUS . ', ' . $user->data['user_id'];
-	while ($row = $db->sql_fetchrow($result))
+	// Exclude guests, current user and banned users from notifications
+	if (!function_exists('phpbb_get_banned_user_ids'))
 	{
-		$sql_ignore_users .= ', ' . (int) $row['ban_userid'];
+		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 	}
-	$db->sql_freeresult($result);
+	$sql_ignore_users = phpbb_get_banned_user_ids();
+	$sql_ignore_users[ANONYMOUS] = ANONYMOUS;
+	$sql_ignore_users[$user->data['user_id']] = $user->data['user_id'];
 
 	$notify_rows = array();
 
 	// -- get forum_userids	|| topic_userids
 	$sql = 'SELECT u.user_id, u.username, u.user_email, u.user_lang, u.user_notify_type, u.user_jabber
 		FROM ' . (($topic_notification) ? TOPICS_WATCH_TABLE : FORUMS_WATCH_TABLE) . ' w, ' . USERS_TABLE . ' u
-		WHERE w.' . (($topic_notification) ? 'topic_id' : 'forum_id') . ' = ' . (($topic_notification) ? $topic_id : $forum_id) . "
-			AND w.user_id NOT IN ($sql_ignore_users)
-			AND w.notify_status = " . NOTIFY_YES . '
+		WHERE w.' . (($topic_notification) ? 'topic_id' : 'forum_id') . ' = ' . (($topic_notification) ? $topic_id : $forum_id) . '
+			AND ' . $db->sql_in_set('w.user_id', $sql_ignore_users, true) . '
+			AND w.notify_status = ' . NOTIFY_YES . '
 			AND u.user_type IN (' . USER_NORMAL . ', ' . USER_FOUNDER . ')
 			AND u.user_id = w.user_id';
 	$result = $db->sql_query($sql);
 
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$notify_rows[$row['user_id']] = array(
-			'user_id'		=> $row['user_id'],
+		$notify_user_id = (int) $row['user_id'];
+		$notify_rows[$notify_user_id] = array(
+			'user_id'		=> $notify_user_id,
 			'username'		=> $row['username'],
 			'user_email'	=> $row['user_email'],
 			'user_jabber'	=> $row['user_jabber'],
@@ -1219,30 +1224,29 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 			'method'		=> $row['user_notify_type'],
 			'allowed'		=> false
 		);
+
+		// Add users who have been already notified to ignore list
+		$sql_ignore_users[$notify_user_id] = $notify_user_id;
 	}
 	$db->sql_freeresult($result);
 
 	// forum notification is sent to those not already receiving topic notifications
 	if ($topic_notification)
 	{
-		if (sizeof($notify_rows))
-		{
-			$sql_ignore_users .= ', ' . implode(', ', array_keys($notify_rows));
-		}
-
 		$sql = 'SELECT u.user_id, u.username, u.user_email, u.user_lang, u.user_notify_type, u.user_jabber
 			FROM ' . FORUMS_WATCH_TABLE . ' fw, ' . USERS_TABLE . " u
 			WHERE fw.forum_id = $forum_id
-				AND fw.user_id NOT IN ($sql_ignore_users)
-				AND fw.notify_status = " . NOTIFY_YES . '
+				AND " . $db->sql_in_set('fw.user_id', $sql_ignore_users, true) . '
+				AND fw.notify_status = ' . NOTIFY_YES . '
 				AND u.user_type IN (' . USER_NORMAL . ', ' . USER_FOUNDER . ')
 				AND u.user_id = fw.user_id';
 		$result = $db->sql_query($sql);
 
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$notify_rows[$row['user_id']] = array(
-				'user_id'		=> $row['user_id'],
+			$notify_user_id = (int) $row['user_id'];
+			$notify_rows[$notify_user_id] = array(
+				'user_id'		=> $notify_user_id,
 				'username'		=> $row['username'],
 				'user_email'	=> $row['user_email'],
 				'user_jabber'	=> $row['user_jabber'],
@@ -1273,7 +1277,6 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 		}
 	}
 
-
 	// Now, we have to do a little step before really sending, we need to distinguish our users a little bit. ;)
 	$msg_users = $delete_ids = $update_notification = array();
 	foreach ($notify_rows as $user_id => $row)
@@ -1286,6 +1289,20 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 		{
 			$msg_users[] = $row;
 			$update_notification[$row['notify_type']][] = $row['user_id'];
+
+			/*
+			* We also update the forums watch table for this user when we are
+			* sending out a topic notification to prevent sending out another
+			* notification in case this user is also subscribed to the forum
+			* this topic was posted in.
+			* Since an UPDATE query is used, this has no effect on users only
+			* subscribed to the topic (i.e. no row is created) and should not
+			* be a performance issue.
+			*/
+			if ($row['notify_type'] === 'topic')
+			{
+				$update_notification['forum'][] = $row['user_id'];
+			}
 		}
 	}
 	unset($notify_rows);
@@ -1323,6 +1340,7 @@ function user_notification($mode, $subject, $topic_title, $forum_name, $forum_id
 					'USERNAME'		=> htmlspecialchars_decode($addr['name']),
 					'TOPIC_TITLE'	=> htmlspecialchars_decode($topic_title),
 					'FORUM_NAME'	=> htmlspecialchars_decode($forum_name),
+					'AUTHOR_NAME'	=> htmlspecialchars_decode($author_name),
 
 					'U_FORUM'				=> generate_board_url() . "/viewforum.$phpEx?f=$forum_id",
 					'U_TOPIC'				=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t=$topic_id",
@@ -1680,8 +1698,9 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 	// The variable name should be $post_approved, because it indicates if the post is approved or not
 	$post_approval = 1;
 
-	// Check the permissions for post approval. Moderators are not affected.
-	if (!$auth->acl_get('f_noapprove', $data['forum_id']) && !$auth->acl_get('m_approve', $data['forum_id']))
+	// Check the permissions for post approval.
+	// Moderators must go through post approval like ordinary users.
+	if (!$auth->acl_get('f_noapprove', $data['forum_id']))
 	{
 		// Post not approved, but in queue
 		$post_approval = 0;
@@ -2585,7 +2604,11 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 	// Send Notifications
 	if (($mode == 'reply' || $mode == 'quote' || $mode == 'post') && $post_approval)
 	{
-		user_notification($mode, $subject, $data['topic_title'], $data['forum_name'], $data['forum_id'], $data['topic_id'], $data['post_id']);
+		// If a username was supplied or the poster is a guest, we will use the supplied username.
+		// Doing it this way we can use "...post by guest-username..." in notifications when
+		// "guest-username" is supplied or ommit the username if it is not.
+		$username = ($username !== '' || !$user->data['is_registered']) ? $username : $user->data['username'];
+		user_notification($mode, $subject, $data['topic_title'], $data['forum_name'], $data['forum_id'], $data['topic_id'], $data['post_id'], $username);
 	}
 
 	$params = $add_anchor = '';
@@ -2622,7 +2645,7 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 *				- 'topic_last_post_subject'
 *				- 'topic_last_poster_name'
 *				- 'topic_last_poster_colour'
-* @param int $bump_time The time at which topic was bumped, usually it is a current time as obtained via time(). 
+* @param int $bump_time The time at which topic was bumped, usually it is a current time as obtained via time().
 * @return string An URL to the bumped topic, example: ./viewtopic.php?forum_id=1&amptopic_id=2&ampp=3#p3
 */
 function phpbb_bump_topic($forum_id, $topic_id, $post_data, $bump_time = false)

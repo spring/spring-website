@@ -98,14 +98,10 @@ class phpbb_default_captcha
 			$link = append_sid($phpbb_root_path . 'ucp.' . $phpEx,  'mode=confirm&amp;confirm_id=' . $this->confirm_id . '&amp;type=' . $this->type);
 			$explain = $user->lang(($this->type != CONFIRM_POST) ? 'CONFIRM_EXPLAIN' : 'POST_CONFIRM_EXPLAIN', '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>');
 
-			$captcha = '<div style="background-image:url(\'' . $link . '\'); width:360px; height:96px"></div>';
-
 			$template->assign_vars(array(
 				'CONFIRM_IMAGE_LINK'		=> $link,
-				//'CONFIRM_IMAGE'				=> '<img src="' . $link . '" />',
-				//'CONFIRM_IMG'				=> '<img src="' . $link . '" />',
-				'CONFIRM_IMAGE'				=> $captcha,
-				'CONFIRM_IMG'				=> $captcha,
+				'CONFIRM_IMAGE'				=> '<img src="' . $link . '" />',
+				'CONFIRM_IMG'				=> '<img src="' . $link . '" />',
 				'CONFIRM_ID'				=> $this->confirm_id,
 				'S_CONFIRM_CODE'			=> true,
 				'S_TYPE'					=> $this->type,
