@@ -17,18 +17,17 @@ html {
     height: 100%;
 }
 body {
-    max-width: 1000px;
-    margin: auto;
+    margin: 0;
     padding: 0;
     min-height: 100%;
     font-family: Verdana;
     line-height: 1.2em;
     font-size: 12px;
-    color: #444;
+    color: #000;
     text-shadow: rgba(255, 255, 255, 0.3) 1px 1px 1px;
 }
 html, body {
-    background: #313942 url({T_THEME_PATH}/images/outerbg.gif) top left repeat;
+    background: #3d4a6a url({T_THEME_PATH}/images/outerbg.gif) top left repeat;
 }
 body.simple { 
     width: auto; 
@@ -38,16 +37,30 @@ body.simple {
 }
 
 a, a:visited {
-    color: #394859;
+    color: #3e5795;
     text-decoration: none;
-    transition: color 0.25s ease;
     -webkit-transition: color 0.25s ease;
     -moz-transition: color 0.25s ease;
     -o-transition: color 0.25s ease;
     -ms-transition: color 0.25s ease;
+    transition: color 0.25s ease;
 }
 a:hover { color: #ce6f36; }
-a:active { color: #cf3694; }
+a:active { 
+    color: #cf3694; 
+    -moz-transform: translate(0, 1px);
+    -webkit-transform: translate(0, 1px);
+    -o-transform: translate(0, 1px);
+    -ms-transform: translate(0, 1px);
+    transform: translate(0, 1px);
+}
+.buttons a:active, .profile-icons a:active, div.dropdown-tabs a:active, .nav-links a:active, #page-header a:active {
+    -moz-transform: none;
+    -webkit-transform: none;
+    -o-transform: none;
+    -ms-transform: none;
+    transform: none;
+}
 
 img { border-width: 0; }
 
@@ -132,27 +145,27 @@ div.forabg, div.forumbg, div.panel-wrapper {
 
 .corners-top, .corners-bottom { display: none; }
 
-div.nav-links, img, .topic-actions, .profile-icons {
+.profile-icons {
     opacity: 0;
 }
-div.nav-links, img, .topic-actions, .profile-icons, div.rules, div.forabg, div.forumbg, div.post, .panel, .cp-mini {
-    transition: opacity 1s ease;
+.profile-icons, div.rules, div.forabg, div.forumbg, div.post, .panel, .cp-mini {
     -webkit-transition: opacity 1s ease;
     -moz-transition: opacity 1s ease;
     -o-transition: opacity 1s ease;
     -ms-transition: opacity 1s ease;
+    transition: opacity 1s ease;
 }
 body.transform div.nav-links {
-    transition-property: border-color, background-color, opacity;
     -webkit-transition-property: border-color, background-color, opacity;
     -moz-transition-property: border-color, background-color, opacity;
     -o-transition-property: border-color, background-color, opacity;
     -ms-transition-property: border-color, background-color, opacity;
-    transition-duration: 0.5s, 0.5s, 2s;
+    transition-property: border-color, background-color, opacity;
     -webkit-transition-duration: 0.5s, 0.5s, 2s;
     -moz-transition-duration: 0.5s, 0.5s, 2s;
     -o-transition-duration: 0.5s, 0.5s, 2s;
     -ms-transition-duration: 0.5s, 0.5s, 2s;
+    transition-duration: 0.5s, 0.5s, 2s;
 }
 body.transform div.nav-links, body.transform img, body.transform .topic-actions, body.transform .profile-icons { opacity: 1; }
 
@@ -209,7 +222,7 @@ a.right:hover {
 }
 
 a.top {
-	background: none no-repeat top left;
+	background: url("{IMG_ICON_BACK_TOP_SRC}") no-repeat top left;
 	text-decoration: none;
 	width: {IMG_ICON_BACK_TOP_WIDTH}px;
 	height: {IMG_ICON_BACK_TOP_HEIGHT}px;
@@ -230,21 +243,21 @@ a.top2 {
 }
 
 a.up, a.down, a.left, a.right, a.top, a.top2 {
-    transition-property: color, background-position;
     -webkit-transition-property: color, background-position;
     -moz-transition-property: color, background-position;
     -o-transition-property: color, background-position;
     -ms-transition-property: color, background-position;
-    transition-duration: 0.25s;
+    transition-property: color, background-position;
     -webkit-transition-duration: 0.25s;
     -moz-transition-duration: 0.25s;
     -o-transition-duration: 0.25s;
     -ms-transition-duration: 0.25s;
-    transition-timing-function: ease;
+    transition-duration: 0.25s;
     -webkit-transition-timing-function: ease;
     -moz-transition-timing-function: ease;
     -o-transition-timing-function: ease;
     -ms-transition-timing-function: ease;
+    transition-timing-function: ease;
 }
 
 
@@ -309,7 +322,7 @@ dl.details dt {
 	clear: left;
 	width: 30%;
 	text-align: right;
-	color: #666;
+	color: #444;
 	display: block;
 }
 
@@ -317,7 +330,7 @@ dl.details dd {
 	margin-left: 0;
 	padding-left: 5px;
 	margin-bottom: 5px;
-	color: #444;
+	color: #000;
 	float: left;
 	width: 65%;
 }
@@ -356,3 +369,14 @@ fieldset.display-options {
 	font-weight: bold;
 	font-size: 12px;
 }
+
+/*
+    Old browser
+*/
+#old-browser {
+    text-align: center;
+    padding: 4px;
+    color: #000;
+    background-color: #f49257;
+}
+#old-browser a { color: #000 !important; }

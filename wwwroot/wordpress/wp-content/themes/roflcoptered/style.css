@@ -1130,7 +1130,7 @@ background-image: -webkit-gradient(
 .learn-more {
     text-align: right;
     height: 58px;
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/learnmore-notactive.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/learnmore-notactive.jpg');
     
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -1140,13 +1140,13 @@ background-image: -webkit-gradient(
 }
 
 .learn-more:hover {
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/learnmore-active.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/learnmore-active.jpg');
 }
 
 .download-and-play {
     text-align: right;
     height: 58px;
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/downloadandplay-notactive.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/downloadandplay-notactive.jpg');
     
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -1156,13 +1156,13 @@ background-image: -webkit-gradient(
 }
 
 .download-and-play:hover {
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/downloadandplay-active.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/downloadandplay-active.jpg');
 }
 
 .see-the-games {
     text-align: right;
     height: 58px;
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/seethegames-notactive.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/seethegames-notactive.jpg');
     
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
@@ -1172,7 +1172,7 @@ background-image: -webkit-gradient(
 }
 
 .see-the-games:hover {
-    background-image:url('http://test.springrts.com/wordpress2/wp-content/themes/roflcoptered/images/jpg/seethegames-active.jpg');
+    background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/seethegames-active.jpg');
 }
 
 @media screen and (max-width: 675px) {

@@ -10,43 +10,24 @@ get_header(); ?>
 
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main" role="main">
-
 			<section class="error-404 not-found">
-				<header class="page-header">
-					<h1 class="page-title"><?php _e( 'Oops! That page can&rsquo;t be found.', 'roflcoptered' ); ?></h1>
-				</header><!-- .page-header -->
+				<header class="entry-header">
+					<h1 class="entry-title">404 - Decapitatorbot could not find your head</h1>
+				</header>
 
 				<div class="page-content">
-					<p><?php _e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'roflcoptered' ); ?></p>
+
+					<h1>Autonomous Warcrim Unit could not find what you were looking for...</h1>
+					
+					<p><img class="aligncenter size-medium wp-image-303" alt="decapitorcz92" src="http://test.springrts.com/wordpress/wp-content/uploads/2013/10/decapitorcz92-199x300.png" width="199" height="300" /></p>
+
+					<h1>I F*** IN SKY!</h1>
+
+					<br />
 
 					<?php get_search_form(); ?>
 
-					<?php the_widget( 'WP_Widget_Recent_Posts' ); ?>
-
-					<?php if ( roflcoptered_categorized_blog() ) : // Only show the widget if site has multiple categories. ?>
-					<div class="widget widget_categories">
-						<h2 class="widgettitle"><?php _e( 'Most Used Categories', 'roflcoptered' ); ?></h2>
-						<ul>
-						<?php
-							wp_list_categories( array(
-								'orderby'    => 'count',
-								'order'      => 'DESC',
-								'show_count' => 1,
-								'title_li'   => '',
-								'number'     => 10,
-							) );
-						?>
-						</ul>
-					</div><!-- .widget -->
-					<?php endif; ?>
-
-					<?php
-					/* translators: %1$s: smiley */
-					$archive_content = '<p>' . sprintf( __( 'Try looking in the monthly archives. %1$s', 'roflcoptered' ), convert_smilies( ':)' ) ) . '</p>';
-					the_widget( 'WP_Widget_Archives', 'dropdown=1', "after_title=</h2>$archive_content" );
-					?>
-
-					<?php the_widget( 'WP_Widget_Tag_Cloud' ); ?>
+					<p>&nbsp;</p>
 
 				</div><!-- .page-content -->
 			</section><!-- .error-404 -->

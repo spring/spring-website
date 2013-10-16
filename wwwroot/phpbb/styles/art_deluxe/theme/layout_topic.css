@@ -22,6 +22,7 @@
 	width: 76%;
 	float: left;
 	clear: both;
+	word-wrap: break-word;
 }
 
 .postbody .ignore {
@@ -43,7 +44,7 @@
 	font-size: 16px;
     font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
 }
-.postbody h3, .postbody h3 a, .postbody h3 a:visited { color: #394859; }
+.postbody h3, .postbody h3 a, .postbody h3 a:visited { color: #3e5795; }
 .postbody h3 a:hover { color: #ce6f36; }
 
 .postbody h3 img {
@@ -51,8 +52,16 @@
 	vertical-align: bottom;
 }
 
+.postbody .post-header {
+	overflow: hidden;
+}
+
+.postbody .post-header h3 {
+	float: left;
+}
+
 .postbody .content {
-	font-size: 12px;
+	font-size: 13px;
 }
 
 .search .postbody {
@@ -72,10 +81,11 @@
 	margin: 4px 0;
 	padding: 0;
 	font-size: 16px;
-	color: #394859;
+	color: #3e5795;
 }
 
 .postbody > .notice {
+    clear: left;
     margin-top: 10px;
     font-size: 11px;
     font-style: italic;
@@ -85,11 +95,11 @@
 ----------------------------------------*/
 .post ul.profile-icons li {
     opacity: 0;
-    transition: opacity 0.25s ease;
     -webkit-transition: opacity 0.25s ease;
     -moz-transition: opacity 0.25s ease;
     -o-transition: opacity 0.25s ease;
     -ms-transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 .post:hover ul.profile-icons li {
     opacity: 1;
@@ -115,11 +125,11 @@ ul.profile-icons li a {
 	background-color: #dfdfdf;
 	background-position: 0 0;
 	opacity: 1;
-    transition: opacity 0.25s ease;
     -webkit-transition: opacity 0.25s ease;
     -moz-transition: opacity 0.25s ease;
     -o-transition: opacity 0.25s ease;
     -ms-transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 
 /* Hide <a> text and hide off-state image when rolling over (prevents flicker in IE) */
@@ -188,7 +198,7 @@ p.author {
 	padding: 0 0 5px;
 	font-size: 11px;
 	line-height: 1.2em;
-	color: #666;
+	color: #444;
 }
 p.author img { margin-right: 4px; }
 p.author strong { font-weight: normal; }
@@ -198,7 +208,7 @@ p.author strong { font-weight: normal; }
 	margin-top: 1.5em;
 	padding-top: 0.2em;
 	font-size: 11px;
-	color: #888;
+	color: #444;
 	border-top: 1px solid #ccc;
 	clear: left;
 	line-height: 140%;
@@ -225,14 +235,13 @@ dd .signature {
 /* Poster profile block
 ----------------------------------------*/
 .postprofile {
-	/* Also see tweaks.css */
 	margin: 2px 0 10px 0;
 	min-height: 80px;
-	color: #888;
+	color: #444;
 	border-left: 1px solid #ccc;
 	width: 22%;
 	float: right;
-	display: inline;
+	word-wrap: break-word;
 }
 .pm .postprofile {
 	border-left: 1px solid #ccc;
@@ -251,7 +260,7 @@ dd .signature {
 
 .postprofile strong {
 	font-weight: normal;
-	color: #394859;
+	color: #3e5795;
 }
 
 .avatar {
@@ -322,19 +331,17 @@ fieldset.polls dd input {
 fieldset.polls dd div {
 	text-align: right;
 	font-family: Arial, Helvetica, sans-serif;
-	color: #fff;
 	color: rgba(255, 255, 255, 0.8);
 	font-weight: normal;
 	padding: 0 3px;
 	overflow: visible;
 	min-width: 12px;
-	background: #394859 url({T_THEME_PATH}/images/poll.png) 0 0 repeat-x;
+	background: #3e5795 url({T_THEME_PATH}/images/poll.png) 0 0 repeat-x;
 	border: solid 0px transparent;
 	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-moz-webkit-radius: 6px;
 	border-top-color: #eee;
 }
+.old-ie fieldset.polls dd div { color: #fff; }
 
 fieldset.polls dd div.pollbar2 { background-position: 0 -25px; }
 fieldset.polls dd div.pollbar3 { background-position: 0 -50px; }
@@ -350,9 +357,7 @@ blockquote {
 	background: rgba(255, 255, 255, 0.3) url({T_THEME_PATH}/images/bb_quote.gif) 5px 8px no-repeat;
 	border: 1px solid #ccc;
 	border-radius: 8px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
-	font-size: 12px;
+	font-size: 13px;
 	margin: 0.5em 1px 0 25px;
 	overflow: hidden;
 	padding: 5px;
@@ -376,8 +381,8 @@ blockquote cite {
 	font-weight: normal;
 	margin-left: 20px;
 	display: block;
-	font-size: 11px;
-	color: #888;
+	font-size: 12px;
+	color: #444;
 }
 
 blockquote.uncited {
@@ -390,8 +395,6 @@ dl.codebox {
 	background-color: rgba(255, 255, 255, 0.5);
 	border: 1px solid #ccc;
 	border-radius: 8px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
 	margin: 0.5em 1px 0 25px;
 	font-size: 1em;
 }
@@ -402,7 +405,7 @@ dl.codebox dt {
 	font-size: 11px;
 	font-weight: normal;
 	display: block;
-	color: #888;
+	color: #444;
 }
 
 blockquote dl.codebox {
@@ -417,18 +420,19 @@ dl.codebox code {
 	max-height: 200px;
 	white-space: normal;
 	padding-top: 5px;
-	font: 0.9em Monaco, "Andale Mono","Courier New", Courier, mono;
+	font-family: Monaco, "Andale Mono","Courier New", Courier, mono;
+	font-size: 13px;
 	line-height: 1.3em;
-	color: #666;
+	color: #000;
 	margin: 2px 0;
 }
 
 .syntaxbg		{ color: #f7f7f7; }
-.syntaxcomment	{ color: #888; }
-.syntaxdefault	{ color: #444; }
-.syntaxhtml		{ color: #444; }
+.syntaxcomment	{ color: #444; }
+.syntaxdefault	{ color: #000; }
+.syntaxhtml		{ color: #000; }
 .syntaxkeyword	{ color: #ce6f36; }
-.syntaxstring	{ color: #394859; }
+.syntaxstring	{ color: #3e5795; }
 
 /* Attachments
 ----------------------------------------*/
@@ -440,13 +444,14 @@ dl.codebox code {
 	background-color: rgba(255, 255, 255, 0.5);
 	border: 1px dashed #ccc;
 	border-radius: 8px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
 	clear: left;
+	max-width: 98%;
+	max-width: -moz-calc(100% - 14px);
+	max-width: calc(100% - 14px);
 }
 
 .attachbox dt {
-	color: #888;
+	color: #444;
 	font-size: 11px;
 }
 
@@ -535,16 +540,16 @@ dl.thumbnail dt a:hover img {
     Reported / unapproved
 */
 p.rules {
-    background: #f4e6dd;
     background: rgba(206, 111, 54, 0.1);
     border: solid 1px #cba68f;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
 	padding: 6px;
 	margin: 5px 10px;
 	font-size: 12px;
 	line-height: 1.4em;
+}
+.old-ie p.rules {
+    background: #f4e6dd;
 }
 p.rules:hover {
     border-color: rgba(203, 41, 106, 0.5);
@@ -577,3 +582,36 @@ p.rules a {
 */
 .posthilit { color: #ce6f36; }
 
+/*
+	Zoom in image
+*/
+span.zoom-container {
+	position: relative;
+	display: inline-block;
+	min-height: 34px;
+}
+span.zoom-image { 
+	display: none; 
+    -webkit-transition: opacity 0.25s ease;
+    -moz-transition: opacity 0.25s ease;
+    -o-transition: opacity 0.25s ease;
+    -ms-transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
+	opacity: 0.7;
+}
+img.zoom + span.zoom-image {
+	display: block;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 30px;
+	height: 30px;
+	background: url("{T_THEME_PATH}/images/zoom.png") 0 0 no-repeat;
+	cursor: pointer;
+}
+.zoom-container:hover span.zoom-image { opacity: 1; }
+img.zoom.zoomed-in + span.zoom-image { 
+	background-position: 0 -30px;
+	opacity: 0;
+}
+.zoom-container:hover img.zoom.zoomed-in + span.zoom-image { opacity: 0.7; }

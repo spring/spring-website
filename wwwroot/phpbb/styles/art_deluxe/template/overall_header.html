@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
+<html dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}">
 <head>
-
 <meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
-<meta http-equiv="content-language" content="{S_USER_LANG}" />
 <meta http-equiv="imagetoolbar" content="no" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width" />
 {META}
 <title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
 
@@ -18,6 +17,13 @@
 	<!-- IF S_ENABLE_FEEDS_FORUM and S_FORUM_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_FORUM} - {FORUM_NAME}" href="{U_FEED}?f={S_FORUM_ID}" /><!-- ENDIF -->
 	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
 <!-- ENDIF -->
+
+<!--
+   phpBB style name:    Artodia Deluxe
+   Based on style:      prosilver (this is the default phpBB3 style)
+   Prosilver author:    Tom Beddard ( http://www.subBlue.com/ )
+   Deluxe author:       Vjacheslav Trushkin ( http://www.artodia.com/ )
+-->
 
 <link href="{T_STYLESHEET_LINK}" rel="stylesheet" type="text/css" />
 
@@ -32,12 +38,9 @@
 	var onload_functions = new Array();
 	var onunload_functions = new Array();
 
-	<!-- IF S_USER_PM_POPUP -->
-		if ({S_NEW_PM})
-		{
-			var url = '{UA_POPUP_PM}';
-			window.open(url.replace(/&amp;/g, '&'), '_phpbbprivmsg', 'height=225,resizable=yes,scrollbars=yes, width=400');
-		}
+	<!-- IF S_USER_PM_POPUP and S_NEW_PM -->
+        var url = '{UA_POPUP_PM}';
+        window.open(url.replace(/&amp;/g, '&'), '_phpbbprivmsg', 'height=225,resizable=yes,scrollbars=yes, width=400');
 	<!-- ENDIF -->
 
 	/**
@@ -58,7 +61,7 @@
 		{
 			eval(onload_functions[i]);
 		}
-	}
+	};
 
 	window.onunload = function()
 	{
@@ -66,16 +69,21 @@
 		{
 			eval(onunload_functions[i]);
 		}
-	}
+	};
 	
 	/*
 	    Style specific stuff
     */
 	var laSearchMini = '{LA_SEARCH_MINI}';
-
+    var imagesetLang = '{T_IMAGESET_LANG_PATH}';
 // ]]>
 </script>
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/jquery-1.6.2.min.js"></script>
+<!--[if lt IE 9]>
+	<script type="text/javascript" src="{T_TEMPLATE_PATH}/jquery-1.10.2.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<script type="text/javascript" src="{T_TEMPLATE_PATH}/jquery-2.0.3.min.js"></script>
+<!--<![endif]-->
 <!--[if lte IE 8]><script type="text/javascript"> var oldIE = true; </script><![endif]-->
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/style.js"></script>
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/forum_fn.js"></script>
@@ -109,7 +117,7 @@
 		a: '{LA_BBCODE_A_HELP}',
 		s: '{LA_BBCODE_S_HELP}',
 		f: '{LA_BBCODE_F_HELP}',
-		e: '{LA_BBCODE_E_HELP}',
+		y: '{LA_BBCODE_Y_HELP}',
 		d: '{LA_BBCODE_D_HELP}'
 		<!-- BEGIN custom_tags -->
 			,cb_{custom_tags.BBCODE_ID}: '{custom_tags.A_BBCODE_HELPLINE}'
@@ -143,49 +151,52 @@
 </head>
 
 <body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
-<a id="top" name="top" accesskey="t"></a>
 
 <div id="header">
     <a href="{U_INDEX}" title="{L_INDEX}" id="logo">{SITE_LOGO_IMG}</a>
     <h1>{SITENAME}</h1>
     <p>{SITE_DESCRIPTION}</p>
-    <p class="skiplink"><a href="#start_here">{L_SKIP}</a></p>
 </div>
 
-<div id="page-header">
-    <!-- IF S_DISPLAY_SEARCH -->
-        <div id="search-adv">
-            <a href="{U_SEARCH}" title="{L_SEARCH_ADV_EXPLAIN}"><span>{L_SEARCH_ADV}</span></a>
-        </div>
-    <!-- ENDIF -->
-    <!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
-        <div id="search-box">
-            <form action="{U_SEARCH}" method="post" id="search">
-                <input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" class="inputbox search" value="<!-- IF SEARCH_WORDS-->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" />
-                {S_SEARCH_HIDDEN_FIELDS}
-            </form>
-        </div>
-    <!-- ENDIF -->
+<div id="page-header" class="responsive-menu-nojs">
+	<div id="menu-wrapper">
+		<div class="menu-buttons responsive-menu" style="display:none;">
+			<a href="javascript:void(0);"><!-- IF L_MENU --><span>{L_MENU}</span><!-- ELSE --><span class="arrow">&darr;&darr;&darr;</span><!-- ENDIF --></a>
+		</div>
+	
+		<div id="nav-header" class="menu-buttons">
+			<!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
+				<a href="{U_PROFILE}" title="{L_PROFILE}" accesskey="e"><span>{L_PROFILE}</span></a> 
+				<!-- IF U_RESTORE_PERMISSIONS -->
+					<a href="{U_RESTORE_PERMISSIONS}"><span>{L_RESTORE_PERMISSIONS}</span></a> 
+				<!-- ENDIF -->
+			<!-- ENDIF -->
+			<a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}"><span>{L_FAQ}</span></a> 
+			<!-- IF not S_IS_BOT -->
+				<!-- IF S_DISPLAY_MEMBERLIST --><a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}"><span>{L_MEMBERLIST}</span></a> <!-- ENDIF -->
+				<!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --><a href="{U_REGISTER}"><span>{L_REGISTER}</span></a> <!-- ENDIF -->
+				 <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x"><span>{L_LOGIN_LOGOUT}</span></a> 
+			<!-- ENDIF -->
+			<a href="javascript:void(0);" class="responsive-menu-hide" style="display:none;"><span>X</span></a>
+		</div>
 
-    <div id="nav-header">
-        <!-- IF not S_IS_BOT and S_USER_LOGGED_IN -->
-            <a href="{U_PROFILE}" title="{L_PROFILE}" accesskey="e"><span>{L_PROFILE}</span></a> 
-            <!-- IF U_RESTORE_PERMISSIONS -->
-                <a href="{U_RESTORE_PERMISSIONS}"><span>{L_RESTORE_PERMISSIONS}</span></a> 
-            <!-- ENDIF -->
-        <!-- ENDIF -->
-        <a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}"><span>{L_FAQ}</span></a> 
-        <!-- IF not S_IS_BOT -->
-            <!-- IF S_DISPLAY_MEMBERLIST --><a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}"><span>{L_MEMBERLIST}</span></a> <!-- ENDIF -->
-            <!-- IF not S_USER_LOGGED_IN and S_REGISTER_ENABLED and not (S_SHOW_COPPA or S_REGISTRATION) --><a href="{U_REGISTER}"><span>{L_REGISTER}</span></a> <!-- ENDIF -->
-             <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x"><span>{L_LOGIN_LOGOUT}</span></a> 
-        <!-- ENDIF -->
-    </div>
-
+		<!-- IF S_DISPLAY_SEARCH -->
+			<div id="search-adv">
+				<a href="{U_SEARCH}" title="{L_SEARCH_ADV_EXPLAIN}"><span>{L_SEARCH_ADV}</span></a>
+			</div>
+		<!-- ENDIF -->
+		<!-- IF S_DISPLAY_SEARCH and not S_IN_SEARCH -->
+			<div id="search-box">
+				<form action="{U_SEARCH}" method="get" id="search">
+					<input name="keywords" id="keywords" type="text" maxlength="128" title="{L_SEARCH_KEYWORDS}" class="inputbox search" value="<!-- IF SEARCH_WORDS-->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" />
+					{S_SEARCH_HIDDEN_FIELDS}
+				</form>
+			</div>
+		<!-- ENDIF -->
+	</div>
 </div>
 
 <div id="page-body">
-    <a name="start_here"></a>
 
     <div class="nav-extra">
         <!-- IF U_EMAIL_TOPIC --><a href="{U_EMAIL_TOPIC}" title="{L_EMAIL_TOPIC}">{L_EMAIL_TOPIC}</a><!-- ENDIF -->
@@ -195,7 +206,7 @@
     </div>
 
     <div class="nav-links">
-        <a href="{U_INDEX}" accesskey="h" class="first"><span>{L_INDEX}</span></a> 
+        <a href="{U_INDEX}" accesskey="h"><span>{L_INDEX}</span></a> 
         <!-- BEGIN navlinks --><a href="{navlinks.U_VIEW_FORUM}"><span>{navlinks.FORUM_NAME}</span></a><!-- END navlinks -->
     </div>
     
@@ -209,8 +220,8 @@
 
     <!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
     <div id="information" class="rules">
-        <div class="inner"><span class="corners-top"><span></span></span>
+        <div class="inner">
             <strong>{L_INFORMATION}:</strong> {L_BOARD_DISABLED}
-        <span class="corners-bottom"><span></span></span></div>
+        </div>
     </div>
     <!-- ENDIF -->

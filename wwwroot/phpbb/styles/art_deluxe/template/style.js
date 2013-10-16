@@ -23,7 +23,7 @@ $(document).ready(function() {
     // transformations
     if(!oldIE)
     {
-        setTimeout("$('body').addClass('transform');", 2000);
+        setTimeout("$('body').addClass('transform');", 500);
         $(window).load(function() { $('body').addClass('transform'); });
     }
 
@@ -43,6 +43,29 @@ $(document).ready(function() {
         if(i > 0) $(this).before(' &bull; ');
     });
     
+    $('.responsive-menu-nojs .responsive-menu').each(function()
+    {
+    	var $this = $(this),
+    		link = $this.children('a'),
+    		parent = $this.parents('.responsive-menu-nojs');
+    	if (!link.length || !parent.length) return;
+    	parent.removeClass('responsive-menu-nojs');
+    	link.add(parent.find('.responsive-menu-hide')).click(function() { parent.toggleClass('responsive-menu-visible'); });
+    });
+
+    // swap title and buttons in posts and wrap them in div
+    $('.postbody > .profile-icons:first-child + h3').each(function() {
+        var $this = $(this);
+        $this.prev().wrapAll('<div class="post-header" />');
+        $this.prev().prepend($this);
+    });
+
+    // clear logo width/height
+    $('#logo img').attr({
+    	width	: '',
+    	height	: ''
+    });
+
     // clear divs
     $('#page-body, #footer').append('<div class="clear"></div>');
     $('.cp-mini:last').after('<div class="clear"></div>');
@@ -91,7 +114,7 @@ $(document).ready(function() {
     });
     
     // remove rounded block within rounded block
-    $('div.panel div.post, div.panel ul.topiclist, div.panel table.table1').parents('div.panel').addClass('panel-wrapper');
+    $('div.panel div.post, div.panel ul.topiclist, div.panel table.table1, div.panel dl.panel').parents('div.panel').addClass('panel-wrapper');
     
     // tabs
     $('#tabs, #navigation, #minitabs').each(function()
@@ -170,17 +193,89 @@ $(document).ready(function() {
         if(this.value == '') this.value = laSearchMini;
         $('#search-box').removeClass('focused');
     });
-});
 
-$(window).load(function() {
-    // set min width
-    var min = 40;
-    $('#nav-header a, #search-adv, #search-box').each(function()
+	// shorten long links in posts
+	$('a.postlink').each(function() {
+		var $this = $(this);
+		
+		if ($this.children().length)
+		{
+			return;
+		}
+		
+		var html = $this.html();
+		if (html.length > 50 && html.indexOf('://') > 0 && html.indexOf(' ') < 0)
+		{
+			$this.html(html.substr(0, 39) + ' ... ' + html.substr(-10));
+		}
+	});
+
+    // resize big images
+    function imageClicked(event)
     {
-        min += $(this).width() + 20;
-    });
-    $('body').css('min-width', Math.min(
-        Math.floor(min),
-        Math.floor($('body').width())
-        ) + 'px');
+    	var $this = $(this);
+    	if ($this.hasClass('zoomed-in'))
+		{
+			$this.removeClass('zoomed-in').css('max-width', $(this).attr('data-max-width') + 'px');
+		}
+		else
+		{
+			$this.addClass('zoomed-in').css('max-width', '');
+		}
+    }
+    function zoomClicked(event)
+    {
+		imageClicked.apply($(this).prev().get(0), arguments);
+		event.stopPropagation();
+    }
+	function resizeImage(width)
+	{
+		var $this = $(this);
+		$this.wrap('<span class="zoom-container" />').attr('data-max-width', width).css({
+			'max-width': width + 'px',
+			cursor: 'pointer'
+			}).addClass('zoom').click(imageClicked).after('<span class="zoom-image" />').next().click(zoomClicked);
+	}
+    function checkImage()
+    {
+		var maxWidth = Math.floor(this.parentNode.clientWidth - 10);
+		if (this.width > maxWidth)
+		{
+			resizeImage.call(this, maxWidth);
+		}
+    }
+    $('.postbody img').each(function() {
+    	var $this = $(this);
+    	if ($this.closest('a').length)
+    	{
+    		return;
+		}
+		if (this.complete)
+		{
+			checkImage.call(this);
+		}
+		else
+		{
+			$this.load(checkImage);
+		}
+	});
+    
+    // old browser warning
+    function hasCookie(search)
+    {
+        var cookie = document.cookie.split(';');
+        search += '=';
+        for(var i=0; i<cookie.length; i++)
+        {
+            var c = cookie[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(search) == 0) return true;
+        }
+        return false;
+    }
+    if(oldIE && imagesetLang && !hasCookie('oldie'))
+    {
+        $('body').prepend('<div id="old-browser" style="display: none;"></div>');
+        $('#old-browser').load(imagesetLang + '/oldie.txt', function() { $('#old-browser').slideDown(); });
+    }
 });

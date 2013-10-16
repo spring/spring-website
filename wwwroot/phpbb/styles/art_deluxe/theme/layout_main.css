@@ -9,7 +9,9 @@
     padding-bottom: 5px;
     background: url({T_THEME_PATH}/images/header_g1.png) top left repeat-x;
     background: url({T_THEME_PATH}/images/header_g2.png) top center repeat-y, url({T_THEME_PATH}/images/header_g1.png) top left repeat-x;
+    background-size: 100% 1px, 1px 100px;
 }
+.old-ie #header { background: url({T_THEME_PATH}/images/header_g1.png) top left repeat-x; }
 .old-ie #header {
     padding-bottom: 0;
 }
@@ -27,10 +29,12 @@
     text-decoration: none;
     border-width: 0;
 }
-#header a > img { 
+#header a img {
+	display: inline-block;
     margin: 0; 
     padding: 0;
     opacity: 1 !important;
+    max-width: 100%;
 }
 
 #header p, #header h1 {
@@ -46,26 +50,29 @@
 
 #header h1 {
     font-size: 24px;
-    color: #9aa5ae;
     color: rgba(255, 255, 255, 0.8);
+}
+.old-ie #header h1 {
+    color: #e4e7ef;
 }
 #header p {
     font-size: 16px;
-    color: #88939b;
     color: rgba(255, 255, 255, 0.7);
 }
-
-#header .skiplink { display: none; }
-
+.old-ie #header p {
+    color: #d0d5e0;
+}
 
 #page-header {
     clear: both;
     margin: 0 10px;
+    padding: 1px 0 0;
     min-height: 10px;
     background: url({T_THEME_PATH}/images/hdr_tr.gif) top right no-repeat, url({T_THEME_PATH}/images/hdr_tl.gif) top left no-repeat, url({T_THEME_PATH}/images/hdr_l.gif) top left repeat-y, url({T_THEME_PATH}/images/hdr_r.gif) top right repeat-y, url({T_THEME_PATH}/images/hdr_t.gif) top left repeat-x, #dadada url({T_THEME_PATH}/images/innerbg.gif) top left repeat;
 }
 .old-ie #page-header {
     background: #dadada url({T_THEME_PATH}/images/innerbg.gif) top left repeat;
+    padding: 0;
 }
 .old-ie #page-header .hdr1 {
     background: url({T_THEME_PATH}/images/hdr_t.gif) top left repeat-x;
@@ -82,21 +89,29 @@
 .old-ie #page-header .hdr5 {
     background: url({T_THEME_PATH}/images/hdr_tr.gif) top right no-repeat;
     min-height: 10px;
+    padding: 1px 0 0;
 }
 
+#menu-wrapper {
+	margin: -20px 0 0;
+	position: relative;
+}
+#menu-wrapper:after {
+	content: '';
+	display: block;
+	clear: both;
+}
 
-#nav-header, #search-adv {
+.menu-buttons, #search-adv {
     display: block;
     float: left;
     z-index: 1;
     margin-left: 5px;
-    position: relative;
-    top: -19px;
     font-size: 12px;
     line-height: 1em;
     text-align: center;
 }
-#nav-header a, #nav-header a:visited, #search-adv a, #search-adv a:visited {
+.menu-buttons a, .menu-buttons a:visited, #search-adv a, #search-adv a:visited {
     display: block;
     float: left;
     margin: 0;
@@ -106,13 +121,13 @@
     line-height: 1em;
     background: url({T_THEME_PATH}/images/menu.png) top left no-repeat;
     text-decoration: none;
-    transition: none;
     -webkit-transition: none;
     -moz-transition: none;
     -o-transition: none;
     -ms-transition: none;
+    transition: none;
 }
-#nav-header a span, #search-adv a span {
+.menu-buttons a span, #search-adv a span {
     display: inline-block;
     margin: 0;
     margin-right: -10px;
@@ -122,14 +137,14 @@
     height: 23px;
     background: url({T_THEME_PATH}/images/menu2.png) top right no-repeat;
     font-size: 12px;
-    color: #81939f;
+    color: #c8d0e2;
     text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
 }
 
-#nav-header a:hover, #nav-header a.new, #search-adv a:hover {
+.menu-buttons a:hover, .menu-buttons a.new, #search-adv a:hover {
     background-position: bottom left;
 }
-#nav-header a:hover span, #nav-header a.new span, #search-adv a:hover span {
+.menu-buttons a:hover span, .menu-buttons a.new span, #search-adv a:hover span {
     background-position: bottom right;
     color: #fff;
     text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
@@ -143,10 +158,8 @@
     margin-right: 5px;
 }
 #search-box {
-    position: relative;
     float: right;
     z-index: 1;
-    top: -19px;
     width: 180px;
     height: 29px;
     background: url({T_THEME_PATH}/images/header_search.png) center left no-repeat;
@@ -169,15 +182,13 @@
     margin: 0;
     padding: 4px 3px;
     border-width: 0;
-    -moz-border-radius: 0;
-    -moz-webkit-radius: 0;
     border-radius: 0;
     background: transparent;
     height: 16px;
     width: 160px;
     line-height: 1em;
     font-size: 11px;
-    color: #81939f;
+    color: #c8d0e2;
     outline-style: none;
     -webkit-appearance: none;
 }
@@ -202,13 +213,13 @@
     padding: 8px;
     padding-top: 15px;
     font-size: 11px;
-    color: #737b83;
     color: rgba(255, 255, 255, 0.3);
     background: url({T_THEME_PATH}/images/hdr_br.gif) top right no-repeat, url({T_THEME_PATH}/images/hdr_bl.gif) 0 0 no-repeat, url({T_THEME_PATH}/images/hdr_b.gif) 0 0 repeat-x;
 }
 .old-ie #footer {
     background: url({T_THEME_PATH}/images/hdr_b.gif) 0 0 repeat-x;
     padding: 0;
+    color: #a4abbd;
 }
 .old-ie #footer .hdr1 {
     background: url({T_THEME_PATH}/images/hdr_bl.gif) 0 0 no-repeat;
@@ -222,22 +233,23 @@
     text-shadow: rgba(0, 0, 0, 0.1) 1px 2px 1px;
 }
 #footer .copyright a, #footer .copyright a:visited {
-    color: #737b83;
     color: rgba(255, 255, 255, 0.3);
     text-decoration: underline;
 }
 #footer .copyright a:hover, #footer .copyright strong a {
-    color: #9099a2;
     color: rgba(255, 255, 255, 0.7);
     text-decoration: underline;
 }
 .old-ie #footer .copyright, .old-ie #footer .copyright a {
-    color: #737b83 !important;
+    color: #a4abbd;
+}
+.old-ie #footer .copyright a:hover, .old-ie #footer .copyright strong a {
+    color: #cdd1dd;
 }
 
 body.simple .copyright {
     text-align: center;
-    color: #666;
+    color: #444;
     font-size: 11px;
 }
 
@@ -287,28 +299,25 @@ body.simple #page-body > h2.solo {
 */
 .nav-links {
     clear: left;
-    position: relative;
-    left: -4px;
-    top: -14px;
-    height: 34px;
-    margin: 0;
+    height: 40px;
+    margin: 0 -4px;
     padding: 0;
     text-align: left;
 }
-.nav-links-footer { top: 0; }
 .nav-links a {
     display: block;
     float: left;
     height: 34px;
     padding-right: 15px;
     margin-right: -9px;
+    margin-bottom: 5px;
     background: url({T_THEME_PATH}/images/nav2.png) right -40px no-repeat;
 }
 .old-ie .nav-links a { color: #fff !important; }
 .nav-links a, .nav-links a:visited, .nav-links a:hover, .nav-links a:active {
     outline-style: none;
 }
-.nav-links a.first {
+.nav-links a:first-child {
     background-position: right 0;
 }
 .nav-links a span {
@@ -319,14 +328,16 @@ body.simple #page-body > h2.solo {
     height: 24px;
     font-size: 12px;
     line-height: 1em;
-    color: #8f9aa1;
     color: rgba(255, 255, 255, 0.7);
     text-shadow: rgba(0, 0, 0, 0.1) 1px 2px 1px;
     white-space: nowrap;
     max-width: 200px;
     overflow: hidden;
 }
-.nav-links a.first span {
+.old-ie .nav-links a span {
+    color: #dadee7;
+}
+.nav-links a:first-child span {
     padding-left: 6px;
     background-position: -20px 0;
 }
@@ -336,25 +347,24 @@ body.simple #page-body > h2.solo {
 .nav-links a:hover span {
     background-position: 0 -80px;
 }
-.nav-links a.first:hover span {
+.nav-links a:first-child:hover span {
     background-position: -20px -80px;
 }
-.nav-links a.first span, .nav-links a:hover span {
-    color: #e5dad4;
+.nav-links a:first-child span, .nav-links a:hover span {
     color: rgba(255, 255, 255, 0.7);
+}
+.old-ie .nav-links a:first-child span, .old-ie .nav-links a:hover span {
+    color: #e5dad4;
 }
 
 .nav-extra {
     clear: right;
     float: right;
-    position: relative;
-    top: -8px;
     font-size: 11px;
-    margin: 8px;
-    color: #999;
+    margin: 0 8px;
+    color: #888;
 }
-.nav-extra-footer { top: 0; }
-.nav-extra .time { color: #666; }
+.nav-extra .time { color: #444; }
 
 /*
     Rules
@@ -362,16 +372,16 @@ body.simple #page-body > h2.solo {
 div.rules {
     margin: 6px 4px;
     padding: 6px;
-    background: #f4e6dd;
     background: rgba(206, 111, 54, 0.1);
     border: solid 1px #cba68f;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -moz-webkit-radius: 6px;
     text-shadow: none;
 }
+.old-ie div.rules {
+    background: #f4e6dd;
+}
 div.rules .inner > strong { 
-    color: #394859; 
+    color: #3e5795; 
     font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
     font-size: 14px;
     font-weight: normal;
@@ -382,3 +392,14 @@ div.rules .inner > strong {
     padding: 20px;
 }
 
+
+/*
+	Link to switch to mobile style
+*/
+.mobile-style-switch a {
+	padding: 5px 10px 6px;
+	border: 1px solid #c0c0c0;
+	border-radius: 10px;
+	background: #dfdfdf;
+	box-shadow: #e8e8e8 0 0 0 1px inset;
+}

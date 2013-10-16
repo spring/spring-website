@@ -26,6 +26,7 @@ div.forabg, div.forumbg {
 
 ul.topiclist {
     display: block;
+    clear: both;
     list-style-type: none;
     margin: 0;
 }
@@ -39,21 +40,20 @@ ul.topiclist li {
 ul.topiclist li.header {
     margin: 4px 4px 2px;
     padding: 0;
-    border: solid 1px #677077;
-    background: #2d343c url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
-    background: url({T_THEME_PATH}/images/header_g2.png) top center repeat-y, #2d343c url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
+    border: solid 1px #969fb3;
+    background: #384461 url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
+    background: url({T_THEME_PATH}/images/header_g2.png) top center repeat-y, #384461 url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    color: #fff;
     color: rgba(255, 255, 255, 0.9);
     text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 1px;
     font-family: 'Droid Sans', Verdana;
 }
 ul.topiclist li.header a, ul.topiclist li.header a:visited { 
-    color: #fff;
     color: rgba(255, 255, 255, 0.9);
     text-decoration: underline;
+}
+.old-ie ul.topiclist li.header, .old-ie ul.topiclist li.header a, .old-ie ul.topiclist li.header a:visited {
+    color: #fff;
 }
 ul.topiclist li.header a:hover, ul.topiclist li.header a:active {
     color: #fff;
@@ -61,9 +61,6 @@ ul.topiclist li.header a:hover, ul.topiclist li.header a:active {
 ul.topiclist li.header dt, ul.topiclist li.header dd {
     font-size: 12px;
     line-height: 1.2em;
-}
-.old-ie li.header, .old-ie li.header a {
-    color: #fff !important;
 }
 
 ul.topiclist dl { 
@@ -80,18 +77,20 @@ ul.topiclist dt {
 	width: 50%;
 	padding-left: 5px;
 	padding-right: 5px;
+	min-height: 35px;
 }
+ul.topiclist .header dt { min-height: 0; }
 
 ul.topiclist dd {
 	display: block;
 	float: left;
 	padding: 4px 0;
 	border-left: 1px solid #d4d4d4;
-    transition: border-left-color 0.25s ease;
     -webkit-transition: border-left-color 0.25s ease;
     -moz-transition: border-left-color 0.25s ease;
     -o-transition: border-left-color 0.25s ease;
     -ms-transition: border-left-color 0.25s ease;
+    transition: border-left-color 0.25s ease;
 }
 ul.topiclist li:hover dd {
 	border-left-color: #c8c8c8;
@@ -144,12 +143,14 @@ li.row strong {
 }
 
 li.header dt, li.header dd {
-    color: #fff;
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(255, 255, 255, 0.8);
 	line-height: 1em;
 	border-left-width: 0;
 	margin: 0;
 	padding: 4px 0;
+}
+.old-ie li.header dt, .old-ie li.header dd {
+    color: #fff;
 }
 
 li.header dd {
@@ -233,6 +234,10 @@ dd.redirect {
 	line-height: 2.5em;
 }
 
+dd.redirect.empty {
+    display: none;
+}
+
 dd.moderation {
 	font-size: 11px;
 }
@@ -284,7 +289,7 @@ ul.topiclist dd.searchextra {
 	margin-left: 5px;
 	padding: 0.2em 0;
 	font-size: 11px;
-	color: #333333;
+	color: #000;
 	border-left: none;
 	clear: both;
 	width: 98%;
@@ -325,7 +330,6 @@ div[class].topic-actions {
     height: 20px;
     text-decoration: none;
     text-align: center;
-    color: #8997a2;
     color: rgba(255, 255, 255, 0.75);
     background: url({T_THEME_PATH}/images/buttons.png) top right no-repeat;
     text-shadow: rgba(0,0,0,0.1) 1px 1px 1px;
@@ -335,7 +339,7 @@ div[class].topic-actions {
     padding-top: 2px;
     height: 24px;
 }
-.old-ie .buttons div a { color: #fff !important; }
+.old-ie .buttons div a { color: #cad0e0; }
 
 
 .buttons div a, .buttons div a:hover, .buttons div a:active {
@@ -344,8 +348,10 @@ div[class].topic-actions {
     outline-style: none;
 }
 .buttons div a:hover, .buttons div a:active { 
-    color: #fff; 
     color: rgba(255, 255, 255, 0.9);
+}
+.old-ie .buttons div a:hover, .old-ie .buttons div a:active {
+    color: #fff; 
 }
 .buttons div a span {
     display: block;
@@ -397,8 +403,8 @@ li.pagination {
 	padding: 0 2px;
 	margin: 0 2px;
 	font-weight: normal;
-    border-color: #74838f;
-    background-color: #394859;
+    border: 1px solid #aab4cd;
+    background-color: #3e5795;
     color: #fff;
 }
 
@@ -410,11 +416,11 @@ li.pagination {
     border: solid 1px #ccc;
     background-color: #f4f4f4;
 	line-height: 1.5em;
-    transition: none;
     -webkit-transition: none;
     -moz-transition: none;
     -o-transition: none;
     -ms-transition: none;
+    transition: none;
 }
 
 .pagination span a:hover {

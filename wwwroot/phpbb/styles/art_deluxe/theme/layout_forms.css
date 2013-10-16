@@ -1,4 +1,4 @@
-/* proSilver Form Styles
+/* Form Styles
 ---------------------------------------- */
 
 /* General form styles
@@ -10,36 +10,34 @@ fieldset {
 input[type="text"], input[type="password"], select, textarea {
 	font-weight: normal;
     background: #d8d8d8;
-    color: #444;
+    color: #000;
     outline-style: none;
     border: solid 1px #b8b8b8;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
     font-family: Verdana,Helvetica,Arial,sans-serif;
     line-height: 1em;
     font-size: 12px;
-    transition-property: border-color, background-color, color;
     -webkit-transition-property: border-color, background-color, color;
     -moz-transition-property: border-color, background-color, color;
     -o-transition-property: border-color, background-color, color;
     -ms-transition-property: border-color, background-color, color;
-    transition-duration: 0.25s;
+    transition-property: border-color, background-color, color;
     -webkit-transition-duration: 0.25s;
     -moz-transition-duration: 0.25s;
     -o-transition-duration: 0.25s;
     -ms-transition-duration: 0.25s;
+    transition-duration: 0.25s;
 }
 
 input[type="text"]:hover, input[type="password"]:hover, select:hover, textarea:hover {
-    color: #666;
+    color: #444;
     border-color: #c58057;
     background-color: #e8e8e8;
 }
 input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
-    border-color: #4c6278;
+    border-color: #5a79c3;
     background-color: #f0f0f0;
-    color: #444;
+    color: #000;
 }
 
 
@@ -54,6 +52,7 @@ select {
 	cursor: pointer;
 	vertical-align: middle;
 	padding: 1px;
+	max-width: 400px;
 }
 
 option {
@@ -61,7 +60,7 @@ option {
 }
 
 option.disabled-option {
-	color: #999;
+	color: #888;
 }
 
 textarea {
@@ -140,7 +139,7 @@ fieldset.fields2 dd {
 /* Form elements */
 dt label {
 	font-weight: bold;
-	color: #444;
+	color: #000;
 	font-size: 12px;
     font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
 	text-align: left;
@@ -328,12 +327,10 @@ a.button1, input.button1, input.button3, a.button2, input.button2 {
 
 a.button1, input.button1 {
 	font-weight: bold;
-	color: #313942;
+	color: #3d4a6a;
     background: #e8e8e8;
     border: solid 1px #b8b8b8;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
 }
 
 input.button3 {
@@ -348,19 +345,17 @@ input.button3 {
 a.button2, input.button2, input.button3 {
 	border: 1px solid #b8b8b8;
     background: #d8d8d8;
-	color: #666;
+	color: #444;
 	padding-left: 6px;
 	padding-right: 6px;
 	font-size: 12px;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
 }
 
 /* <a> button in the style of the form buttons */
 a.button1, a.button1:link, a.button1:visited, a.button1:active, a.button2, a.button2:link, a.button2:visited, a.button2:active {
 	text-decoration: none;
-	color: #313942;
+	color: #3d4a6a;
 	padding: 2px 8px;
 	line-height: 250%;
 	vertical-align: text-bottom;
@@ -375,7 +370,7 @@ a.button1:hover, input.button1:hover, a.button2:hover, input.button2:hover, inpu
 
 input.disabled {
 	font-weight: normal;
-	color: #666666;
+	color: #666;
 }
 
 /* Topic and forum Search */
@@ -403,11 +398,11 @@ input.search {
 /* Animated buttons */
 .search-box input.button2 {
     opacity: 0;
-    transition: opacity 0.25s ease;
     -webkit-transition: opacity 0.25s ease;
     -moz-transition: opacity 0.25s ease;
     -o-transition: opacity 0.25s ease;
     -ms-transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 .search-box:hover input.button2, .search-box.focus input.button2 {
     opacity: 1;

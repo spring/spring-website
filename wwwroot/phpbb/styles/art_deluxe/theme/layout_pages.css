@@ -53,7 +53,7 @@ div#message h2, #confirm h2, #agreement h2 {
     padding-right: 10px;
     height: 18px;
     background: url({T_THEME_PATH}/images/tabs_left.png) top right no-repeat;
-    color: #394859;
+    color: #3e5795;
     text-shadow: rgba(0,0,0,0.1) 1px 1px 1px;
 }
 #tabs li a:hover, #tabs li.activetab a, #navigation li a:hover, #navigation li#active-subsection a, #minitabs li a:hover, #minitabs li.activetab a {
@@ -87,7 +87,7 @@ div#message h2, #confirm h2, #agreement h2 {
     background-position: bottom left;
 }
 #navigation strong, #tabs strong, #minitabs strong { 
-    color: #394859; 
+    color: #3e5795; 
     font-weight: normal;
 }
 li.activetab strong, #active-subsection strong,
@@ -104,7 +104,7 @@ div.cp-panel {
     background: none;
     padding: 0;
 }
-p.linkmcp { color: #999; }
+p.linkmcp { color: #888; }
 
 #cp-main > h2, #cp-main > form > h2 {
     font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
@@ -180,6 +180,10 @@ ul.cplist {
 	width: 100%;
 }
 
+div.panel dl.panel, div.panel dl.panel .hdr2-last {
+    padding: 10px;
+}
+
 
 /* Friends list */
 .cp-mini {
@@ -195,7 +199,7 @@ ul.cplist {
 
 dl.mini dt {
 	font-weight: normal;
-	color: #444;
+	color: #000;
 	font-size: 14px;
 	line-height: 1.3em;
     font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
@@ -220,9 +224,6 @@ dl.mini dd {
 }
 
 /* PM panel adjustments */
-.pm-panel-header {
-}
-
 .reply-all {
 	display: block; 
 	padding-top: 4px; 
@@ -241,7 +242,7 @@ dl.mini dd {
 
 /* PM Message history */
 .current {
-	color: #888;
+	color: #000;
 }
 
 /* Defined rules list for PM options */
@@ -263,8 +264,6 @@ ol.def-rules li {
     border: solid 1px #d0d0d0;
 	border-width: 0 3px;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 }
 
 .pmlist li.pm_message_reported_colour dl, .pm_message_reported_colour {
@@ -276,7 +275,7 @@ ol.def-rules li {
 }
 
 .pmlist li.pm_replied_colour dl, .pm_replied_colour {
-	border-color: #394859;
+	border-color: #3e5795;
 }
 
 .pmlist li.pm_friend_colour dl, .pm_friend_colour {
@@ -320,7 +319,7 @@ ol.def-rules li {
 	font-weight: normal;
 	font-size: 14px;
 	line-height: 1.4em;
-	color: #394859;
+	color: #3e5795;
 }
 
 #topicreview {
@@ -409,12 +408,9 @@ table.table1 {
 
 table.table1 th {
 	font-weight: normal;
-    border: solid 1px #677077;
-    background: #2d343c url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
+    border: solid 1px #969fb3;
+    background: #384461 url({T_THEME_PATH}/images/th.gif) 0 0 repeat-x;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    color: #fff;
     color: rgba(255, 255, 255, 0.9);
     font-size: 12px;
     font-family: 'Droid Sans', Verdana;
@@ -422,8 +418,10 @@ table.table1 th {
     padding: 3px 4px;
 }
 table.table1 thead th a, table.table1 thead th a:visited {
-    color: #fff;
     color: rgba(255, 255, 255, 0.8);
+}
+.old-ie table.table1 th, .old-ie table.table1 thead th a, .old-ie table.table1 thead th a:visited {
+    color: #fff;
 }
 table.table1 thead th a:hover {
     color: #fff;
@@ -442,8 +440,6 @@ table.table1 td {
 	padding: 4px;
 	border: 1px solid #c0c0c0;
 	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
 }
 
 /* Specific column styles */
@@ -470,7 +466,7 @@ table.info tbody th {
 	padding: 3px;
 	text-align: right;
 	vertical-align: top;
-	color: #000000;
+	color: #000;
 	font-weight: normal;
 }
 
@@ -521,7 +517,7 @@ div.dropdown-tabs > a {
     padding-top: 6px;
     padding-right: 24px;
     height: 18px;
-    color: #394859;
+    color: #3e5795;
     text-shadow: rgba(0,0,0,0.1) 1px 1px 1px;
     background: url({T_THEME_PATH}/images/tabs_popup.png) top right no-repeat;
 }
@@ -533,15 +529,11 @@ div.dropdown-tabs > ul {
     top: 24px;
     left: 0;
     z-index: 2;
-    background: #dfdfdf url({T_THEME_PATH}/images/innerbg.png);
+    background: #dfdfdf url({T_THEME_PATH}/images/innerbg.gif);
     padding: 0;
-    border: solid 2px #454f5a;
+    border: solid 2px #57678f;
     border-radius: 6px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    box-shadow: 1px 1px 5px #454f5a;
-    -moz-box-shadow: 1px 1px 5px #454f5a;
-    -webkit-box-shadow: 1px 1px 5px #454f5a;
+    box-shadow: 1px 1px 5px #57678f;
 }
 div.dropdown-tabs:hover > ul { display: block; }
 .dropdown-tabs li a, .dropdown-tabs span,
