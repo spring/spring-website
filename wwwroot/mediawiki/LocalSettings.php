@@ -139,6 +139,7 @@ $wgAllowExternalImages = true;
 $wgScriptPath = '/mediawiki';         # Path to the actual files. This should already be there
 $wgArticlePath = '/wiki/$1';  # Virtual path. This directory MUST be different from the one used in $wgScriptPath
 $wgUsePathInfo = true;
+$wgLogo = "$wgScriptPath/skins/spring_wiki.png";
 
 // PHPBB User Database Plugin. (Requires MySQL Database)
 require_once( "$IP/extensions/Auth_phpBB.php" );

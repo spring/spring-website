@@ -3,4 +3,4 @@
 	url = git://github.com/mantisbt-plugins/source-integration.git
 [submodule "wwwroot/mediawiki/skins/strapping"]
 	path = wwwroot/mediawiki/skins/strapping
-	url = https://github.com/OSAS/strapping-mediawiki
+	url = https://github.com/spring/strapping-mediawiki
