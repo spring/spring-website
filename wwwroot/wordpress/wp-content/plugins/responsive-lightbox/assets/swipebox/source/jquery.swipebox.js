@@ -1,9 +1,9 @@
 /*---------------------------------------------------------------------------------------------
 
 @author       Constantin Saguin - @brutaldesign
-@link            http://csag.co
+@link            http://bsign.co
 @github        http://github.com/brutaldesign/swipebox
-@version     1.2.1
+@version     1.1.2
 @license      MIT License
 
 ----------------------------------------------------------------------------------------------*/
@@ -14,111 +14,55 @@
 
 		var defaults = {
 			useCSS : true,
-			hideBarsDelay : 3000,
-			videoMaxWidth : 1140,
-			vimeoColor : 'CCCCCC',
-			beforeOpen: null,
-		      	afterClose: null
+			hideBarsDelay : 3000
 		},
 		
-		plugin = this,
-		elements = [], // slides array [{href:'...', title:'...'}, ...],
-		elem = elem,
-		selector = elem.selector,
-		$selector = $(selector),
-		isTouch = document.createTouch !== undefined || ('ontouchstart' in window) || ('onmsgesturechange' in window) || navigator.msMaxTouchPoints,
-		supportSVG = !!(window.SVGSVGElement),
-		winWidth = window.innerWidth ? window.innerWidth : $(window).width(),
-		winHeight = window.innerHeight ? window.innerHeight : $(window).height(),
-		html = '<div id="swipebox-overlay">\
-				<div id="swipebox-slider"></div>\
-				<div id="swipebox-caption"></div>\
-				<div id="swipebox-action">\
-					<a id="swipebox-close"></a>\
-					<a id="swipebox-prev"></a>\
-					<a id="swipebox-next"></a>\
-				</div>\
-		</div>';
+			plugin = this,
+			$elem = $(elem),
+			elem = elem,
+			selector = elem.selector,
+			$selector = $(selector),
+			isTouch = document.createTouch !== undefined || ('ontouchstart' in window) || ('onmsgesturechange' in window) || navigator.msMaxTouchPoints,
+			supportSVG = !!(window.SVGSVGElement),
+			html = '<div id="swipebox-overlay">\
+					<div id="swipebox-slider"></div>\
+					<div id="swipebox-caption"></div>\
+					<div id="swipebox-action">\
+						<a id="swipebox-close"></a>\
+						<a id="swipebox-prev"></a>\
+						<a id="swipebox-next"></a>\
+					</div>\
+			</div>';
 
 		plugin.settings = {}
 
 		plugin.init = function(){
 
 			plugin.settings = $.extend({}, defaults, options);
-
-			if ($.isArray(elem)) {
-
-				elements = elem;
-				ui.target = $(window);
-				ui.init(0);
-
-			}else{
-
-				$selector.click(function(e){
-					elements = [];
-					var index , relType, relVal;
-
-					if (!relVal) {
-						relType = 'rel';
-						relVal  = $(this).attr(relType);
-					}
-
-					if (relVal && relVal !== '' && relVal !== 'nofollow') {
-						$elem = $selector.filter('[' + relType + '="' + relVal + '"]');
-					}else{
-						$elem = $(selector);
-					}
-
-					$elem.each(function(){
-
-						var title = null, href = null;
-						
-						if( $(this).attr('title') )
-							title = $(this).attr('title');
-
-						if( $(this).attr('href') )
-							href = $(this).attr('href');
-
-						elements.push({
-							href: href,
-							title: title
-						});
-					});
-					
-					index = $elem.index($(this));
-					e.preventDefault();
-					e.stopPropagation();
-					ui.target = $(e.target);
-					ui.init(index);
-				});
-			}
-		}
-
-		plugin.refresh = function() {
-			if (!$.isArray(elem)) {
-				ui.destroy();
-				$elem = $(selector);
-				ui.actions();
-			}
+			
+			$selector.click(function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				index = $elem.index($(this));
+				ui.target = $(e.target);
+				ui.init(index);
+			});
 		}
 
 		var ui = {
 
 			init : function(index){
-				if (plugin.settings.beforeOpen) 
-					plugin.settings.beforeOpen();
 				this.target.trigger('swipebox-start');
-				$.swipebox.isOpen = true;
 				this.build();
 				this.openSlide(index);
-				this.openMedia(index);
-				this.preloadMedia(index+1);
-				this.preloadMedia(index-1);
+				this.openImg(index);
+				this.preloadImg(index+1);
+				this.preloadImg(index-1);
 			},
 
 			build : function(){
 				var $this = this;
-
+				
 				$('body').append(html);
 
 				if($this.doCssTrans()){
@@ -154,7 +98,7 @@
 					});
 				}
 				
-				$.each( elements,  function(){
+				$elem.each(function(){
 					$('#swipebox-slider').append('<div class="slide"></div>');
 				});
 
@@ -163,49 +107,20 @@
 				$this.keyboard();
 				$this.gesture();
 				$this.animBars();
-				$this.resize();
-				
-			},
 
-			setDim : function(){
-
-				var width, height, sliderCss = {};
-				
-				if( "onorientationchange" in window ){
-
-					window.addEventListener("orientationchange", function() {
-						if( window.orientation == 0 ){
-							width = winWidth;
-							height = winHeight;
-						}else if( window.orientation == 90 || window.orientation == -90 ){
-							width = winHeight;
-							height = winWidth;
-						}
-					}, false);
-					
-				
-				}else{
-
-					width = window.innerWidth ? window.innerWidth : $(window).width();
-					height = window.innerHeight ? window.innerHeight : $(window).height();
-				}
-
-				sliderCss = {
-					width : width,
-					height : height
-				}
-
-
-				$('#swipebox-overlay').css(sliderCss);
-
-			},
-
-			resize : function (){
-				var $this = this;
-				
 				$(window).resize(function() {
 					$this.setDim();
 				}).resize();
+			},
+
+			setDim : function(){
+				var sliderCss = {
+					width : $(window).width(),
+					height : window.innerHeight ? window.innerHeight : $(window).height() // fix IOS bug
+				}
+
+				$('#swipebox-overlay').css(sliderCss);
+
 			},
 
 			supportTransition : function() {
@@ -229,13 +144,13 @@
 					var $this = this,
 					distance = null,
 					swipMinDistance = 10,
-					startCoords = {},
+					startCoords = {}, 
 					endCoords = {};
-					var bars = $('#swipebox-caption, #swipebox-action');
+					var b = $('#swipebox-caption, #swipebox-action');
 
-					bars.addClass('visible-bars');
+					b.addClass('visible-bars');
 					$this.setTimeout();
-
+					
 					$('body').bind('touchstart', function(e){
 
 						$(this).addClass('touching');
@@ -254,23 +169,22 @@
 
 	           			}).bind('touchend',function(e){
 	           				e.preventDefault();
-					e.stopPropagation();
-   				
-   					distance = endCoords.pageX - startCoords.pageX;
+						e.stopPropagation();
+	   				
+	   					distance = endCoords.pageX - startCoords.pageX;
 	       				
 	       				if( distance >= swipMinDistance ){
-	       					
 	       					// swipeLeft
 	       					$this.getPrev();
-	       				
-	       				}else if( distance <= - swipMinDistance ){
-	       					
+	       				}
+
+	       				else if( distance <= - swipMinDistance ){
 	       					// swipeRight
 	       					$this.getNext();
 	       				
 	       				}else{
 	       					// tap
-	       					if(!bars.hasClass('visible-bars')){
+	       					if(!b.hasClass('visible-bars')){
 							$this.showBars();
 							$this.setTimeout();
 						}else{
@@ -284,7 +198,7 @@
 						
 					});
 
-           				}
+           			}
 			},
 
 			setTimeout: function(){
@@ -304,40 +218,40 @@
 			},
 
 			showBars : function(){
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var b = $('#swipebox-caption, #swipebox-action');
 				if(this.doCssTrans()){
-					bars.addClass('visible-bars');
+					b.addClass('visible-bars');
 				}else{
 					$('#swipebox-caption').animate({ top : 0 }, 500);
 					$('#swipebox-action').animate({ bottom : 0 }, 500);
 					setTimeout(function(){
-						bars.addClass('visible-bars');
+						b.addClass('visible-bars');
 					}, 1000);
 				}
 			},
 
 			hideBars : function(){
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var b = $('#swipebox-caption, #swipebox-action');
 				if(this.doCssTrans()){
-					bars.removeClass('visible-bars');
+					b.removeClass('visible-bars');
 				}else{
 					$('#swipebox-caption').animate({ top : '-50px' }, 500);
 					$('#swipebox-action').animate({ bottom : '-50px' }, 500);
 					setTimeout(function(){
-						bars.removeClass('visible-bars');
+						b.removeClass('visible-bars');
 					}, 1000);
 				}
 			},
 
 			animBars : function(){
 				var $this = this;
-				var bars = $('#swipebox-caption, #swipebox-action');
+				var b = $('#swipebox-caption, #swipebox-action');
 					
-				bars.addClass('visible-bars');
+				b.addClass('visible-bars');
 				$this.setTimeout();
 				
 				$('#swipebox-slider').click(function(e){
-					if(!bars.hasClass('visible-bars')){
+					if(!b.hasClass('visible-bars')){
 						$this.showBars();
 						$this.setTimeout();
 					}
@@ -345,11 +259,11 @@
 
 				$('#swipebox-action').hover(function() {
 				  		$this.showBars();
-						bars.addClass('force-visible-bars');
+						b.addClass('force-visible-bars');
 						$this.clearTimeout();
 					
 					},function() { 
-						bars.removeClass('force-visible-bars');
+						b.removeClass('force-visible-bars');
 						$this.setTimeout();
 
 				});
@@ -375,7 +289,7 @@
 			actions : function(){
 				var $this = this;
 				
-				if( elements.length < 2 ){
+				if( $elem.length < 2 ){
 					$('#swipebox-prev, #swipebox-next').hide();
 				}else{
 					$('#swipebox-prev').bind('click touchend', function(e){
@@ -420,113 +334,60 @@
 				$('#swipebox-prev, #swipebox-next').removeClass('disabled');
 				if(index == 0){
 					$('#swipebox-prev').addClass('disabled');
-				}else if( index == elements.length - 1 ){
+				}else if( index == $elem.length - 1 ){
 					$('#swipebox-next').addClass('disabled');
 				}
 			},
 		
 			openSlide : function (index){
+				
 				$('html').addClass('swipebox');
 				$(window).trigger('resize'); // fix scroll bar visibility on desktop
 				this.setSlide(index, true);
 			},
 		
-			preloadMedia : function (index){
-				var $this = this, src = null;
-
-				if( elements[index] !== undefined )
-					src = elements[index].href;
-
-				if( !$this.isVideo(src) ){
-					setTimeout(function(){
-						$this.openMedia(index);
-					}, 1000);
-				}else{
-					$this.openMedia(index);
-				}
+			preloadImg : function (index){
+				var $this = this;
+				setTimeout(function(){
+					$this.openImg(index);
+				}, 1000);
 			},
 			
-			openMedia : function (index){
-				var $this = this, src = null;
-
-				if( elements[index] !== undefined )
-					src = elements[index].href;
-
-				if(index < 0 || index >= elements.length){
+			openImg : function (index){
+				var $this = this;
+				if(index < 0 || index >= $elem.length){
 					return false;
 				}
 
-				if( !$this.isVideo(src) ){
-					$this.loadMedia(src, function(){
-						$('#swipebox-slider .slide').eq(index).html(this);
-					});
-				}else{
-					$('#swipebox-slider .slide').eq(index).html($this.getVideo(src));
-				}
-				
+				$this.loadImg($elem.eq(index).attr('href'), function(){
+					$('#swipebox-slider .slide').eq(index).html(this);
+				});
 			},
 
-			setTitle : function (index, isFirst){
-				var title = null;
 
+			setTitle : function(index, isFirst){
 				$('#swipebox-caption').empty();
-
-				if( elements[index] !== undefined )
-					title = elements[index].title;
 				
-				if(title){
-					$('#swipebox-caption').append(title);
+				if($elem.eq(index).attr('title')){
+					$('#swipebox-caption').append($elem.eq(index).attr('title'));
 				}
-			},
-
-			isVideo : function (src){
-
-				if( src ){
-					if( 
-						src.match(/youtube\.com\/watch\?v=([a-zA-Z0-9\-_]+)/) 
-						|| src.match(/vimeo\.com\/([0-9]*)/) 
-					){
-						return true;
-					}
-				}
-					
-			},
-
-			getVideo : function(url){
-				var iframe = '';
-				var output = '';
-				var youtubeUrl = url.match(/watch\?v=([a-zA-Z0-9\-_]+)/);
-				var vimeoUrl = url.match(/vimeo\.com\/([0-9]*)/);
-				if( youtubeUrl ){
-
-					iframe = '<iframe width="560" height="315" src="//www.youtube.com/embed/'+youtubeUrl[1]+'" frameborder="0" allowfullscreen></iframe>';
-				
-				}else if(vimeoUrl){
-
-					iframe = '<iframe width="560" height="315"  src="http://player.vimeo.com/video/'+vimeoUrl[1]+'?byline=0&amp;portrait=0&amp;color='+plugin.settings.vimeoColor+'" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
-				
-				}
-
-				return '<div class="swipebox-video-container" style="max-width:'+plugin.settings.videomaxWidth+'px"><div class="swipebox-video">'+iframe+'</div></div>';
 			},
 			
-			loadMedia : function (src, callback){
-				if( !this.isVideo(src) ){
-					var img = $('<img>').on('load', function(){
-						callback.call(img);
-					});
-					
-					img.attr('src',src);
-				}	
+			loadImg : function (src, callback){
+				var img = $('<img>').on('load', function(){
+					callback.call(img);
+				});
+				
+				img.attr('src',src);
 			},
 			
 			getNext : function (){
 				var $this = this;
 				index = $('#swipebox-slider .slide').index($('#swipebox-slider .slide.current'));
-				if(index+1 < elements.length){
+				if(index+1 < $elem.length){
 					index++;
 					$this.setSlide(index);
-					$this.preloadMedia(index+1);
+					$this.preloadImg(index+1);
 				}
 				else{
 					
@@ -538,11 +399,12 @@
 			},
 			
 			getPrev : function (){
+				var $this = this;
 				index = $('#swipebox-slider .slide').index($('#swipebox-slider .slide.current'));
 				if(index > 0){
 					index--;
-					this.setSlide(index);
-					this.preloadMedia(index-1);
+					$this.setSlide(index);
+					$this.preloadImg(index-1);
 				}
 				else{
 					
@@ -555,39 +417,35 @@
 
 
 			closeSlide : function (){
-				$('html').removeClass('swipebox');
+				var $this = this;
 				$(window).trigger('resize');
-				this.destroy();
+				$('html').removeClass('swipebox');
+				$this.destroy();
 			},
 
 			destroy : function(){
+				var $this = this;
 				$(window).unbind('keyup');
 				$('body').unbind('touchstart');
 				$('body').unbind('touchmove');
 				$('body').unbind('touchend');
 				$('#swipebox-slider').unbind();
 				$('#swipebox-overlay').remove();
-				if (!$.isArray(elem))
-					elem.removeData('_swipebox');
-				if ( this.target )
-					this.target.trigger('swipebox-destroy');
-				$.swipebox.isOpen = false;
-				if (plugin.settings.afterClose) 
-					plugin.settings.afterClose();
+				$elem.removeData('_swipebox');
+				$this.target.trigger('swipebox-destroy');
  			}
 
-		};
+		}
 
 		plugin.init();
 		
-	};
+	}
 
 	$.fn.swipebox = function(options){
 		if (!$.data(this, "_swipebox")) {
 			var swipebox = new $.swipebox(this, options);
 			this.data('_swipebox', swipebox);
 		}
-		return this.data('_swipebox');
 	}
 
 }(window, document, jQuery));

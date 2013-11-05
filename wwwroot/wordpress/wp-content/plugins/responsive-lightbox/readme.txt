@@ -4,7 +4,7 @@ Donate link: http://www.dfactory.eu/
 Tags: gallery, images, lightbox, links, photos, template, theme, photo, image, picture, slideshow, modal, overlay, YouTube, Vimeo, video, videos
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -18,7 +18,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 
 = Features include: =
 
-* Select from 3 responsive lightbox scripts
+* Select from 3 responsive lightbox scripts (SwipeBox, prettyPhoto, FancyBox)
 * Automatically add lightbox to WordPress image galleries
 * Automatically add lightbox to WordPress image links
 * Automatically add lightbox to WordPress video links (YouTube, Vimeo)
@@ -54,6 +54,9 @@ No questions yet.
 
 == Changelog ==
 
+= 1.2.2 =
+* New: Option to force PNG icons in case of display problems
+* Fix: Bug with video width not working in SwipeBox
 
 = 1.2.1 =
 * New: Support for images loaded via AJAX
@@ -99,6 +102,6 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.2.1 =
-* New: Support for images loaded via AJAX
-* Tweak: Updated Japanese translation
+= 1.2.2 =
+* New: Option to force PNG icons in case of display problems
+* Fix: Bug with video width not working in SwipeBox

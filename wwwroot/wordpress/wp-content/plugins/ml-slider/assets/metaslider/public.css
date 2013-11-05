@@ -44,13 +44,17 @@
 /** quick resets **/
 #widgets .metaslider ul, 
 #widgets .metaslider ol,
-#content .metaslider unmodifiedl,
+#content .metaslider ul,
+#content .metaslider ol,
+.entry .metaslider ul,
+.entry .metaslider ol,
 .metaslider .flexslider ul,
 .metaslider .flexslider .slides li,
 .metaslider .flexslider .slides ul,
 .metaslider .flexslider .slides ol,
 .metaslider .flexslider .flex-direction-nav,
-.metaslider .flexslider .flex-direction-nav li
+.metaslider .flexslider .flex-direction-nav li,
+.entry-content .metaslider .flexslider ol.flex-control-nav
  {
     border: 0;
     border-top: 0;
@@ -65,4 +69,5 @@
     list-style-type: none;
     list-style: none;
     padding: 0;
+    line-height: normal;
 }

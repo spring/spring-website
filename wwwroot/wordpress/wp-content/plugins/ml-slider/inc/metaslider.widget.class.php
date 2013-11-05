@@ -2,6 +2,10 @@
 /**
  * Adds Meta Slider widget.
  */
+
+// disable direct access
+if (!defined('ABSPATH')) exit;
+
 class MetaSlider_Widget extends WP_Widget {
 
 	/**

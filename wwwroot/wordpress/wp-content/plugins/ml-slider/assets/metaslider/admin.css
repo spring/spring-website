@@ -35,40 +35,12 @@
   width: 100%;
   margin: 0 0 8px 0;
 }
-#goProWrap {
-  border-right: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  -webkit-border-bottom-left-radius: 3px;
-  -webkit-border-bottom-right-radius: 3px;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
-  background: #e3e3e3;
-  background-image: -webkit-gradient(linear, left bottom, left top, from(#dfdfdf), to(#f1f1f1));
-  background-image: -webkit-linear-gradient(bottom, #dfdfdf, #f1f1f1);
-  background-image: -moz-linear-gradient(bottom, #dfdfdf, #f1f1f1);
-  background-image: -o-linear-gradient(bottom, #dfdfdf, #f1f1f1);
-  background-image: linear-gradient(to top, #dfdfdf, #f1f1f1);
-  float: right;
-}
-#goProWrap span {
-  z-index: 1;
-  padding: 0 6px;
-  height: 22px;
-  line-height: 22px;
-  font-size: 12px;
-  display: block;
-  text-shadow: rgba(255, 255, 255, 0.7) 0 1px 0;
-}
-#goProWrap a {
-  text-decoration: none;
-}
 .bubble {
   position: relative;
   height: 20px;
   padding: 0px 5px;
-  background: #FFFFFF;
-  border: firebrick solid 2px;
+  background: #b6e026;
+  border: #b6e026 solid 2px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -76,7 +48,10 @@
   text-align: center;
   vertical-align: middle;
   line-height: 20px;
-  margin-left: 10px;
+  margin-left: 6px;
+  color: black;
+  text-shadow: none;
+  bottom: 2px;
 }
 .bubble:after {
   content: "";
@@ -85,7 +60,7 @@
   left: -6px;
   border-style: solid;
   border-width: 5px 6px 5px 0;
-  border-color: transparent #FFFFFF;
+  border-color: transparent #b6e026;
   display: block;
   width: 0;
   z-index: 1;
@@ -97,7 +72,7 @@
   left: -9px;
   border-style: solid;
   border-width: 6px 7px 6px 0;
-  border-color: transparent firebrick;
+  border-color: transparent #b6e026;
   display: block;
   width: 0;
   z-index: 0;
@@ -154,6 +129,7 @@
 }
 .metaslider .tipsy-tooltip {
   font-size: 0.9em;
+  cursor: help;
 }
 .metaslider .nav-tab-active input {
   padding: 0;
@@ -250,6 +226,9 @@
   text-transform: uppercase;
   font-size: 9px;
   opacity: 0.6;
+  word-wrap: break-word;
+  max-width: 140px;
+  padding: 0 5px;
 }
 .metaslider .left table tr.slide td.col-1:hover .delete-slide {
   display: block;
@@ -436,4 +415,47 @@ ul.info li {
 }
 .delete-slider {
   margin: 0 5px 3px 0 !important;
+}
+#ms-pro-meta-link-wrap {
+  float: right;
+  height: 23px;
+  padding: 0;
+  margin: 0 0 0 6px;
+  font-family: sans-serif;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background: #e3e3e3;
+  background-image: -webkit-gradient(linear,left bottom,left top,from(#dfdfdf),to(#f1f1f1));
+  background-image: -webkit-linear-gradient(bottom,#dfdfdf,#f1f1f1);
+  background-image: -moz-linear-gradient(bottom,#dfdfdf,#f1f1f1);
+  background-image: -o-linear-gradient(bottom,#dfdfdf,#f1f1f1);
+  background-image: linear-gradient(to top,#dfdfdf,#f1f1f1);
+  -webkit-border-bottom-left-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  position: relative;
+  top: -1px;
+}
+
+#ms-pro-meta-link-wrap a {
+  text-decoration: none;
+  z-index: 1;
+  padding: 1px 6px 0 6px;
+  height: 22px;
+  line-height: 22px;
+  font-size: 12px;
+  display: block;
+  text-shadow: rgba(255,255,255,0.7) 0 1px 0;
+  background: none;
+}
+input:-ms-input-placeholder {
+    color:LightGray;
+}
+textarea:-ms-input-placeholder {
+    color:LightGray;
+}
+.attachment-display-settings {
+  display: none;
 }

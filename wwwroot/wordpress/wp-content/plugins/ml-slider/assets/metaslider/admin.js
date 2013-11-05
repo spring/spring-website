@@ -1,5 +1,7 @@
 jQuery(document).ready(function($) {
 
+    jQuery("#ms-pro-meta-link-wrap").appendTo('#screen-meta-links');
+
     // Enable the correct options for this slider type
     var switchType = function(slider) {
         jQuery('.metaslider .option:not(.' + slider + ')').attr('disabled', 'disabled').parents('tr').hide();
@@ -117,6 +119,16 @@ jQuery(document).ready(function($) {
         return height;
     };
 
+    // IE10 treats placeholder text as the actual value of a textarea
+    // http://stackoverflow.com/questions/13764607/html5-placeholder-attribute-on-textarea-via-jquery-in-ie10
+    var fixIE10PlaceholderText = function() {
+        jQuery("textarea").each(function() {
+            if (jQuery(this).val() == jQuery(this).attr('placeholder')) {
+                jQuery(this).val('');
+            }
+        });
+    }
+
     // AJAX save & preview
     jQuery(".metaslider form").find("input[type=submit]").click(function(e) {
         e.preventDefault();
@@ -124,10 +136,12 @@ jQuery(document).ready(function($) {
         // update slide order
         jQuery(".metaslider .left table").trigger('updateSlideOrder');
 
+        fixIE10PlaceholderText();
+
         // get some values from elements on the page:
         var the_form = jQuery(this).parents("form");
         var data = the_form.serialize();
-        var url = the_form.attr( 'action' );
+        var url = the_form.attr('action');
         var button = e.target;
 
         jQuery(".metaslider .spinner").show();
@@ -141,6 +155,8 @@ jQuery(document).ready(function($) {
             success: function(data) {
                 // update the slides with the response html
                 $(".metaslider .left tbody").html($(".metaslider .left tbody", data).html());
+                
+                fixIE10PlaceholderText();
 
                 if (button.id === 'preview') {
                     jQuery.colorbox({

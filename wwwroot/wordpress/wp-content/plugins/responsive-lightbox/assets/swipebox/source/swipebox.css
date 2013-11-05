@@ -63,7 +63,7 @@ html.swipebox {
   max-width: 1140px;
   max-height: 100%;
   width: 100%;
-  padding:5%;
+  padding: 0;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -260,5 +260,3 @@ html.swipebox {
   line-height: 43px;
   font-family: Helvetica, Arial, sans-serif;
 }
-
-

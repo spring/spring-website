@@ -88,8 +88,8 @@ class MetaSlider {
             'cssClass' => '',
             'printCss' => true,
             'printJs' => true,
-            'width' => 565,
-            'height' => 290,
+            'width' => 700,
+            'height' => 300,
             'spw' => 7,
             'sph' => 5,
             'delay' => 3000,
@@ -157,6 +157,8 @@ class MetaSlider {
             'order' => 'ASC',
             'post_type' => 'attachment',
             'post_status' => 'inherit',
+            'lang' => '', // polylang, ingore language filter
+            'suppress_filters' => 1, // wpml, ignore language filter
             'posts_per_page' => -1,
             'tax_query' => array(
                 array(

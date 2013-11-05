@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
 	$(document).on('ready ajaxComplete', function() {
 		if(rlArgs.script === 'swipebox') {
 			$('a[rel*="'+rlArgs.selector+'"]').swipebox({
-				useCSS: rlArgs.animation,
+				useCSS: (rlArgs.animation === '1' ? true : false),
 				hideBarsDelay: (rlArgs.hideBars === '1' ? parseInt(rlArgs.hideBarsDelay) : 0),
 				videoMaxWidth: parseInt(rlArgs.videoMaxWidth)
 			});

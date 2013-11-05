@@ -26,6 +26,18 @@ class MetaImageSlide extends MetaSlide {
 
         $this->add_or_update_or_delete_meta($slide_id, 'type', 'image');
 
+        $settings = get_post_meta($slider_id, 'ml-slider_settings', true);
+
+        // create a copy of the correct sized image
+        $imageHelper = new MetaSliderImageHelper(
+            $slide_id,
+            $settings['width'], 
+            $settings['height'], 
+            isset($settings['smartCrop']) ? $settings['smartCrop'] : 'false'
+        );
+
+        $url = $imageHelper->get_image_url();
+
         echo $this->get_admin_slide();
         die();
     }
@@ -39,6 +51,7 @@ class MetaImageSlide extends MetaSlide {
         // get some slide settings
         $thumb   = $this->get_thumb();
         $full    = wp_get_attachment_image_src($this->slide->ID, 'full');
+        $filename = basename($full[0]);
         $url     = get_post_meta($this->slide->ID, 'ml-slider_url', true);
         $target  = get_post_meta($this->slide->ID, 'ml-slider_new_window', true) ? 'checked=checked' : '';
         $caption = htmlentities($this->slide->post_excerpt, ENT_QUOTES, 'UTF-8');
@@ -53,7 +66,7 @@ class MetaImageSlide extends MetaSlide {
         $row .= "    <td class='col-1'>";
         $row .= "        <div class='thumb' style='background-image: url({$thumb})'>";
         $row .= "            <a class='delete-slide confirm' href='?page=metaslider&id={$this->slider->ID}&deleteSlide={$this->slide->ID}'>x</a>";
-        $row .= "            <span class='slide-details'>Image {$full[1]} x {$full[2]}</span>";
+        $row .= "            <span class='slide-details'>Image {$filename}</span>";
         $row .= "        </div>";
         $row .= "    </td>";
         $row .= "    <td class='col-2'>";
@@ -84,21 +97,17 @@ class MetaImageSlide extends MetaSlide {
             isset($this->settings['smartCrop']) ? $this->settings['smartCrop'] : 'false'
         );
 
-        $url = $imageHelper->get_image_url();
-
-        if (is_wp_error($url)) {
-            return ""; // bail out here. todo: look at a way of notifying the admin
-        }
+        $thumb = $imageHelper->get_image_url();
 
         // store the slide details
         $slide = array(
             'id' => $this->slide->ID,
-            'thumb' => $url,
-            'url' => get_post_meta($this->slide->ID, 'ml-slider_url', true),
-            'alt' => get_post_meta($this->slide->ID, '_wp_attachment_image_alt', true),
+            'thumb' => $thumb,
+            'url' => __(get_post_meta($this->slide->ID, 'ml-slider_url', true)),
+            'alt' => __(get_post_meta($this->slide->ID, '_wp_attachment_image_alt', true)),
             'target' => get_post_meta($this->slide->ID, 'ml-slider_new_window', true) ? '_blank' : '_self', 
-            'caption' => html_entity_decode($this->slide->post_excerpt, ENT_NOQUOTES, 'UTF-8'),
-            'caption_raw' => $this->slide->post_excerpt,
+            'caption' => __(html_entity_decode($this->slide->post_excerpt, ENT_NOQUOTES, 'UTF-8')),
+            'caption_raw' => __($this->slide->post_excerpt),
             'class' => "slider-{$this->slider->ID} slide-{$this->slide->ID}",
             'rel' => "",
             'data-thumb' => ""

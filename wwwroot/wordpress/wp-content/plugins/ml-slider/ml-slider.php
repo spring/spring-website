@@ -3,7 +3,7 @@
  * Plugin Name: Meta Slider
  * Plugin URI: http://www.metaslider.com
  * Description: 4 sliders in 1! Choose from Nivo Slider, Flex Slider, Coin Slider or Responsive Slides.
- * Version: 2.3
+ * Version: 2.4.2
  * Author: Matcha Labs
  * Author URI: http://www.matchalabs.com
  * License: GPLv2 or later
@@ -14,7 +14,10 @@
  * GNU General Public License for more details.
  */
 
-define('METASLIDER_VERSION', '2.3');
+// disable direct access
+if (!defined('ABSPATH')) exit;
+
+define('METASLIDER_VERSION', '2.4.2');
 define('METASLIDER_BASE_URL', plugin_dir_url(__FILE__));
 define('METASLIDER_ASSETS_URL', METASLIDER_BASE_URL . 'assets/');
 define('METASLIDER_BASE_DIR_LONG', dirname(__FILE__));
@@ -70,7 +73,6 @@ class MetaSliderPlugin {
         add_filter('media_view_strings', array($this, 'custom_media_uploader_tabs'), 5);
         add_action('media_upload_metaslider_pro', array($this, 'metaslider_pro_tab'));
         
-
         // add 'go pro' link to plugin options
         $plugin = plugin_basename(__FILE__);
         add_filter("plugin_action_links_{$plugin}", array($this,'upgrade_to_pro') );
@@ -113,8 +115,9 @@ class MetaSliderPlugin {
 
         echo "<div class='metaslider'>";
         echo "<p style='text-align: center; font-size: 1.2em; margin-top: 50px;'>Get the Pro Addon pack to add support for: <b>Post Feed</b> Slides, <b>YouTube</b> Slides, <b>HTML</b> Slides & <b>Vimeo</b> Slides</p>";
-        echo "<p style='text-align: center; font-size: 1.2em;'><b>NEW:</b> Animated HTML <b>Layer</b> Slides (with an awesome Drag & Drop editor!)</p>";
-        echo "<p style='text-align: center; font-size: 1.2em;'><b>NEW:</b> Live Theme Editor!</p>";
+        echo "<p style='text-align: center; font-size: 1.2em;'><b>NEW: </b> Animated HTML <b>Layer</b> Slides (with an awesome Drag & Drop editor!)</p>";
+        echo "<p style='text-align: center; font-size: 1.2em;'><b></b> Live Theme Editor!</p>";
+        echo "<p style='text-align: center; font-size: 1.2em;'><b>NEW:</b> Thumbnail Navigation for Flex & Nivo Slider!</p>";
         echo "<a class='probutton' href='{$link}' target='_blank'>Get <span class='logo'><strong>Meta</strong>Slider</span><span class='super'>Pro</span></a>";
         echo "<span class='subtext'>Opens in a new window</span>";
         echo "</div>";
@@ -239,8 +242,10 @@ class MetaSliderPlugin {
         add_action('admin_print_scripts-' . $page, array($this, 'register_admin_scripts'));
         add_action('admin_print_styles-' . $page, array($this, 'register_admin_styles'));
         add_action('load-' . $page, array($this, 'help_tab'));
-
+        
     }
+
+
 
     /**
      * Upgrade CTA.
@@ -251,10 +256,9 @@ class MetaSliderPlugin {
 
             $link .= '?utm_source=lite&utm_medium=nag&utm_campaign=pro';
 
-            $goPro = "<div id='goProWrap'><span>Meta Slider Lite v" . METASLIDER_VERSION . 
-                " - <a target='_blank' href='{$link}'>" . 
+            $goPro = "<div id='ms-pro-meta-link-wrap'><a target='_blank' href='{$link}'>Meta Slider Lite v" . METASLIDER_VERSION . " - " . 
                 __('Upgrade to Pro $19', 'metaslider') . 
-                "</a></span></div>";
+                "</a></div>";
 
             echo $goPro;
         }
@@ -280,7 +284,10 @@ class MetaSliderPlugin {
     public function register_post_type() {
         register_post_type('ml-slider', array(
             'query_var' => false,
-            'rewrite' => false
+            'rewrite' => false,
+            'labels' => array(
+                'name' => 'Meta Slider'
+            )
         ));
     }
 
@@ -433,6 +440,7 @@ class MetaSliderPlugin {
             'post_type' => 'ml-slider',
             'num_posts' => 1,
             'post_status' => 'publish',
+            'suppress_filters' => 1, // wpml, ignore language filter
             'orderby' => $orderby,
             'order' => $order
         );
@@ -462,6 +470,7 @@ class MetaSliderPlugin {
             'post_type' => 'ml-slider',
             'post_status' => 'publish',
             'orderby' => $sort_key,
+            'suppress_filters' => 1, // wpml, ignore language filter
             'order' => 'ASC',
             'posts_per_page' => -1
         );
@@ -620,7 +629,7 @@ class MetaSliderPlugin {
                             </tr>
                             <?php if ($max_tabs && count($this->all_meta_sliders()) > $max_tabs) { ?>
                             <tr>
-                                <td width='40%' class='tipsy-tooltip' title="<?php _e("Slideshow title", 'metaslider') ?>">
+                                <td class='tipsy-tooltip' title="<?php _e("Slideshow title", 'metaslider') ?>">
                                     <?php _e("Title", 'metaslider') ?>
                                 </td>
                                 <td>
@@ -629,12 +638,14 @@ class MetaSliderPlugin {
                             </tr>
                             <?php } ?>
                             <tr>
-                                <td width='40%' class='tipsy-tooltip' title="<?php _e("Set the initial size for the slides (width x height)", 'metaslider') ?>">
+                                <td class='tipsy-tooltip' title="<?php _e("Set the initial size for the slides (width x height)", 'metaslider') ?>">
                                     <?php _e("Size", 'metaslider') ?> (<?php _e("px", 'metaslider') ?>)
                                 </td>
                                 <td>
-                                    <?php _e("Width", 'metaslider') ?>: <input type='text' size='3' class="width tipsy-tooltip-top" title='<?php _e("Width", 'metaslider') ?>' name="settings[width]" value='<?php echo $this->slider->get_setting('width') ?>' /> 
-                                    <?php _e("Height", 'metaslider') ?>: <input type='text' size='3' class="height tipsy-tooltip-top" title='<?php _e("Height", 'metaslider') ?>' name="settings[height]" value='<?php echo $this->slider->get_setting('height') ?>' />
+                                        <?php _e("Width", 'metaslider') ?>:
+                                        <input type='number' min='0' max='9999' class="width tipsy-tooltip-top" title='<?php _e("Width", 'metaslider') ?>' name="settings[width]" value='<?php echo $this->slider->get_setting('width') ?>' />
+                                        <?php _e("Height", 'metaslider') ?>:
+                                        <input type='number' min='0' max='9999' class="height tipsy-tooltip-top" title='<?php _e("Height", 'metaslider') ?>' name="settings[height]" value='<?php echo $this->slider->get_setting('height') ?>' />
                                 </td>
                             </tr>
                             <tr>
@@ -708,8 +719,9 @@ class MetaSliderPlugin {
                                                             " . __("Navigation", 'metaslider')  . "
                                                         </td>
                                                         <td style='padding: 0 8px 8px 8px;'>
-                                                            <input type='radio' name='settings[navigation]' value='false' {$falseChecked} />" . __("Hidden", 'metaslider') . "</option><br />
-                                                            <input type='radio' name='settings[navigation]' value='true' {$trueChecked} />" . __("Dots", 'metaslider') . "</option><br />
+                                                            <label><input type='radio' name='settings[navigation]' value='false' {$falseChecked} />" . __("Hidden", 'metaslider') . "</option></label><br />
+                                                            <label><input type='radio' name='settings[navigation]' value='true' {$trueChecked} />" . __("Dots", 'metaslider') . "</option></label><br />
+                                                            <label><input type='radio' disabled='disabled' /><span style='color: #c0c0c0'>" . __("Thumbnails (Pro)", 'metaslider') . "</span></option></label>
                                                         </td>
                                                     </tr>";
 
@@ -727,7 +739,7 @@ class MetaSliderPlugin {
                                 </td>
                             </tr>
                             <tr>
-                                <td width='40%' class='tipsy-tooltip' title="<?php _e("Start the slideshow on page load", 'metaslider') ?>">
+                                <td class='tipsy-tooltip' title="<?php _e("Start the slideshow on page load", 'metaslider') ?>">
                                     <?php _e("Auto play", 'metaslider') ?>
                                 </td>
                                 <td>
@@ -889,7 +901,7 @@ class MetaSliderPlugin {
                                 <td colspan='2' class='highlight'><?php _e("Developer Options", 'metaslider') ?></td>
                             </tr>
                             <tr>
-                                <td width='40%' class='tipsy-tooltip' title="<?php _e("Specify any custom CSS Classes you would like to be added to the slider wrapper", 'metaslider') ?>">
+                                <td class='tipsy-tooltip' title="<?php _e("Specify any custom CSS Classes you would like to be added to the slider wrapper", 'metaslider') ?>">
                                     <?php _e("CSS classes", 'metaslider') ?>
                                 </td>
                                 <td>
@@ -897,19 +909,18 @@ class MetaSliderPlugin {
                                 </td>
                             </tr>
                             <tr>
-                                <td class='tipsy-tooltip' title="<?php _e("Uncheck this is you would like to include your own CSS", 'metaslider') ?>">
-                                    <?php _e("Print CSS", 'metaslider') ?>
+                                <td class='tipsy-tooltip' title="<?php _e("Uncheck this is you would like to include your own Javascript", 'metaslider') ?>">
+                                    <?php _e("Print Scripts", 'metaslider') ?>
                                 </td>
                                 <td>
                                     <input type='checkbox' class='useWithCaution' name="settings[printCss]" <?php if ($this->slider->get_setting('printCss') == 'true') echo 'checked=checked' ?> />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class='tipsy-tooltip' title="<?php _e("Uncheck this is you would like to include your own Javascript", 'metaslider') ?>">
-                                    <?php _e("Print JS", 'metaslider') ?>
-                                </td>
-                                <td>
+                                    <span class='tipsy-tooltip' title="<?php _e("Uncheck this is you would like to include your own CSS", 'metaslider') ?>">
+                                        <?php _e("CSS", 'metaslider') ?>
+                                    </span>
                                     <input type='checkbox' class='useWithCaution' name="settings[printJs]" <?php if ($this->slider->get_setting('printJs') == 'true') echo 'checked=checked' ?> />
+                                    <span class='tipsy-tooltip' title="<?php _e("Uncheck this is you would like to include your own Javascript", 'metaslider') ?>">
+                                        <?php _e("JavaScript", 'metaslider') ?>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
@@ -970,4 +981,5 @@ class MetaSliderPlugin {
 }
 
 $metaslider = new MetaSliderPlugin();
+
 ?>

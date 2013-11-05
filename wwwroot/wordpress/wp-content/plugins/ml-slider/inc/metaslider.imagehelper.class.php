@@ -188,6 +188,8 @@ class MetaSliderImageHelper {
             $dest_url = $this->resize_image($orig_size, $dest_size, $dest_file_name);
         }
 
+        $dest_url = apply_filters('metaslider_resized_image_url', $dest_url, $this->url);
+
         return $dest_url;
     }
 

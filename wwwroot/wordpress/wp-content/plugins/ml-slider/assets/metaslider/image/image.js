@@ -5,7 +5,7 @@
 	$(function () {
 		var file_frame;
 		
-		jQuery('.metaslider .add-slide').live('click', function(event){
+		jQuery('.metaslider .add-slide').on('click', function(event){
 			event.preventDefault();
 
 			// If the media frame already exists, reopen it.

@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: metaslider\n"
-"POT-Creation-Date: 2013-10-10 15:38-0000\n"
-"PO-Revision-Date: 2013-10-10 15:38-0000\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2013-10-10 15:44-0000\n"
+"PO-Revision-Date: 2013-10-10 15:44-0000\n"
+"Last-Translator: Miguel <contacto@eltipografico.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,15 +20,15 @@ msgstr ""
 
 #: ../ml-slider.php:144
 msgid "Image"
-msgstr ""
+msgstr "图像"
 
 #: ../ml-slider.php:145
 msgid "Add to slider"
-msgstr ""
+msgstr "添加到滑块"
 
 #: ../ml-slider.php:164
 msgid "More Slide Types"
-msgstr ""
+msgstr "更多幻灯片类型"
 
 #: ../ml-slider.php:213 ../inc/slide/metaslide.image.class.php:62
 msgid "URL"
@@ -36,41 +36,41 @@ msgstr ""
 
 #: ../ml-slider.php:214 ../inc/slide/metaslide.image.class.php:60
 msgid "Caption"
-msgstr ""
+msgstr "标题"
 
 #: ../ml-slider.php:215 ../inc/slide/metaslide.image.class.php:61
 msgid "New Window"
-msgstr ""
+msgstr "新窗口"
 
 #: ../ml-slider.php:216
 msgid "Are you sure?"
-msgstr ""
+msgstr "你确定吗？"
 
 #: ../ml-slider.php:219
 msgid ""
 "Caution: This setting is for advanced developers only. If you're unsure, "
 "leave it checked."
-msgstr ""
+msgstr "注意：此设置仅适用于高级开发。"
 
 #: ../ml-slider.php:256
 msgid "Upgrade to Pro $19"
-msgstr ""
+msgstr "升级到专业版$19"
 
 #: ../ml-slider.php:272
 msgid "Documentation"
-msgstr ""
+msgstr "文档"
 
 #: ../ml-slider.php:393
 msgid "New Slider"
-msgstr ""
+msgstr "新的滑动"
 
 #: ../ml-slider.php:486
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
 #: ../ml-slider.php:487
 msgid "Responsive"
-msgstr ""
+msgstr "响应"
 
 #: ../ml-slider.php:488 ../ml-slider.php:492
 msgid "Yes"
@@ -82,7 +82,7 @@ msgstr ""
 
 #: ../ml-slider.php:490 ../ml-slider.php:633
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 #: ../ml-slider.php:490
 msgid "kb"
@@ -90,55 +90,55 @@ msgstr ""
 
 #: ../ml-slider.php:491
 msgid "Mobile Friendly"
-msgstr ""
+msgstr "移动"
 
 #: ../ml-slider.php:519
 msgid "New slideshow created. Click 'Add Slide' to get started!"
-msgstr ""
+msgstr "创建新的幻灯片。点击“添加幻灯片”以开始浏览网页！"
 
 #: ../ml-slider.php:536
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #: ../ml-slider.php:537
 msgid "Add New Slideshow"
-msgstr ""
+msgstr "添加新的幻灯片"
 
 #: ../ml-slider.php:553
 msgid "Create your first slideshow"
-msgstr ""
+msgstr "创建第一份幻灯片"
 
 #: ../ml-slider.php:570
 msgid "Slides"
-msgstr ""
+msgstr "幻灯片"
 
 #: ../ml-slider.php:573 ../ml-slider.php:574
 msgid "Add Slide"
-msgstr ""
+msgstr "添加幻灯片"
 
 #: ../ml-slider.php:593
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: ../ml-slider.php:594
 msgid "Save"
-msgstr ""
+msgstr "保存"
 
 #: ../ml-slider.php:595
 msgid "Save & Preview"
-msgstr ""
+msgstr "保存并预览"
 
 #: ../ml-slider.php:623
 msgid "Slideshow title"
-msgstr ""
+msgstr "幻灯片标题"
 
 #: ../ml-slider.php:624
 msgid "Title"
-msgstr ""
+msgstr "标题"
 
 #: ../ml-slider.php:632
 msgid "Set the initial size for the slides (width x height)"
-msgstr ""
+msgstr "设置幻灯片的初始大小（ 宽 x 高 ）"
 
 #: ../ml-slider.php:633
 msgid "px"
@@ -146,83 +146,83 @@ msgstr ""
 
 #: ../ml-slider.php:637
 msgid "Width"
-msgstr ""
+msgstr "宽度"
 
 #: ../ml-slider.php:640
 msgid "Height"
-msgstr ""
+msgstr "高度"
 
 #: ../ml-slider.php:645
 msgid "Slide transition effect"
-msgstr ""
+msgstr "幻灯片过渡效果"
 
 #: ../ml-slider.php:646
 msgid "Effect"
-msgstr ""
+msgstr "效果"
 
 #: ../ml-slider.php:650 ../ml-slider.php:760
 msgid "Random"
-msgstr ""
+msgstr "随机"
 
 #: ../ml-slider.php:651
 msgid "Swirl"
-msgstr ""
+msgstr "漩涡"
 
 #: ../ml-slider.php:652
 msgid "Rain"
-msgstr ""
+msgstr "雨"
 
 #: ../ml-slider.php:653
 msgid "Straight"
-msgstr ""
+msgstr "直"
 
 #: ../ml-slider.php:654
 msgid "Slide Down"
-msgstr ""
+msgstr "向下滑动"
 
 #: ../ml-slider.php:655
 msgid "Slice Up"
-msgstr ""
+msgstr "切片"
 
 #: ../ml-slider.php:656
 msgid "Slide Up Left"
-msgstr ""
+msgstr "向左滑动"
 
 #: ../ml-slider.php:657
 msgid "Slice Up Down"
-msgstr ""
+msgstr "切片向下"
 
 #: ../ml-slider.php:658
 msgid "Slide Up Down Left"
-msgstr ""
+msgstr "向上滑动"
 
 #: ../ml-slider.php:659
 msgid "Fold"
-msgstr ""
+msgstr "折"
 
 #: ../ml-slider.php:660
 msgid "Fade"
-msgstr ""
+msgstr "褪色"
 
 #: ../ml-slider.php:661
 msgid "Slide In Right"
-msgstr ""
+msgstr "向右滑动"
 
 #: ../ml-slider.php:662
 msgid "Slide In Left"
-msgstr ""
+msgstr "向左滑动"
 
 #: ../ml-slider.php:663
 msgid "Box Random"
-msgstr ""
+msgstr "随机"
 
 #: ../ml-slider.php:664
 msgid "Box Rain"
-msgstr ""
+msgstr "箱式"
 
 #: ../ml-slider.php:665
 msgid "Box Rain Reverse"
-msgstr ""
+msgstr "箱式"
 
 #: ../ml-slider.php:666
 msgid "Box Rain Grow Reverse"
@@ -230,31 +230,31 @@ msgstr ""
 
 #: ../ml-slider.php:667
 msgid "Slide"
-msgstr ""
+msgstr "滑动"
 
 #: ../ml-slider.php:672
 msgid "Change the slider style"
-msgstr ""
+msgstr "更改滑盖造型"
 
 #: ../ml-slider.php:673
 msgid "Theme"
-msgstr ""
+msgstr "主题"
 
 #: ../ml-slider.php:694
 msgid "Controls"
-msgstr ""
+msgstr "控制"
 
 #: ../ml-slider.php:697 ../ml-slider.php:711
 msgid "Show slide navigation row"
-msgstr ""
+msgstr "显示幻灯片导航"
 
 #: ../ml-slider.php:698
 msgid "Arrows"
-msgstr ""
+msgstr "箭头"
 
 #: ../ml-slider.php:712
 msgid "Navigation"
-msgstr ""
+msgstr "导航"
 
 #: ../ml-slider.php:715
 msgid "Hidden"
@@ -262,7 +262,7 @@ msgstr ""
 
 #: ../ml-slider.php:716
 msgid "Dots"
-msgstr ""
+msgstr "点"
 
 #: ../ml-slider.php:717
 msgid "Thumbnails (Pro)"
@@ -270,90 +270,90 @@ msgstr ""
 
 #: ../ml-slider.php:724
 msgid "Advanced Settings"
-msgstr ""
+msgstr "“高级设置”"
 
 #: ../ml-slider.php:727
 msgid "Center align the slideshow"
-msgstr ""
+msgstr "居中对齐幻灯片"
 
 #: ../ml-slider.php:728
 msgid "Center align"
-msgstr ""
+msgstr "居中对齐"
 
 #: ../ml-slider.php:735
 msgid "Start the slideshow on page load"
-msgstr ""
+msgstr "在页面加载启动幻灯片"
 
 #: ../ml-slider.php:736
 msgid "Auto play"
-msgstr ""
+msgstr "自动播放"
 
 #: ../ml-slider.php:743
 msgid ""
 "Smart Crop ensures your responsive slides are cropped to a ratio that "
 "results in a consistent slideshow size"
-msgstr ""
+msgstr "智能变换，确保您的响应幻灯片裁剪的比率，结果在一个一致的幻灯片大小"
 
 #: ../ml-slider.php:744
 msgid "Smart crop"
-msgstr ""
+msgstr "智能"
 
 #: ../ml-slider.php:751
 msgid ""
 "Display as carousel - when selected the effect and direction options will be "
 "ignored."
-msgstr ""
+msgstr "显示为旋转 - 当选择后其他效果和方向设置将被忽略。"
 
 #: ../ml-slider.php:752
 msgid "Carousel mode"
-msgstr ""
+msgstr "传送带模式"
 
 #: ../ml-slider.php:759
 msgid "Randomise the order of the slides"
-msgstr ""
+msgstr "随机顺序幻灯片"
 
 #: ../ml-slider.php:767
 msgid ""
 "Pause the slideshow when hovering over slider, then resume when no longer "
 "hovering"
-msgstr ""
+msgstr "当鼠标悬停在图片上时暂停幻灯片"
 
 #: ../ml-slider.php:768
 msgid "Hover pause"
-msgstr ""
+msgstr "悬停时间"
 
 #: ../ml-slider.php:775
 msgid "Reverse the animation direction"
-msgstr ""
+msgstr "反向动画"
 
 #: ../ml-slider.php:776
 msgid "Reverse"
-msgstr ""
+msgstr "逆转"
 
 #: ../ml-slider.php:783
 msgid "How long to display each slide, in milliseconds"
-msgstr ""
+msgstr "幻灯片的播放间隔，单位毫秒"
 
 #: ../ml-slider.php:784
 msgid "Slide delay"
-msgstr ""
+msgstr "滑动延迟"
 
 #: ../ml-slider.php:784 ../ml-slider.php:792 ../ml-slider.php:871
 #: ../ml-slider.php:887
 msgid "ms"
-msgstr ""
+msgstr "毫秒"
 
 #: ../ml-slider.php:791
 msgid "Set the speed of animations, in milliseconds"
-msgstr ""
+msgstr "设置动画的速度，单位毫秒"
 
 #: ../ml-slider.php:792
 msgid "Animation speed"
-msgstr ""
+msgstr "动画速度"
 
 #: ../ml-slider.php:799
 msgid "Number of squares (width x height)"
-msgstr ""
+msgstr "宽 x 高"
 
 #: ../ml-slider.php:800
 msgid "Number of squares"
@@ -365,27 +365,27 @@ msgstr ""
 
 #: ../ml-slider.php:816
 msgid "Select the sliding direction"
-msgstr ""
+msgstr "选择的滑动方向"
 
 #: ../ml-slider.php:816
 msgid "Slide direction"
-msgstr ""
+msgstr "滑动方向"
 
 #: ../ml-slider.php:819
 msgid "Horizontal"
-msgstr ""
+msgstr "横向"
 
 #: ../ml-slider.php:820
 msgid "Vertical"
-msgstr ""
+msgstr "垂直"
 
 #: ../ml-slider.php:825
 msgid "Animation easing effect"
-msgstr ""
+msgstr "动画宽松效果"
 
 #: ../ml-slider.php:826
 msgid "Easing"
-msgstr ""
+msgstr "松"
 
 #: ../ml-slider.php:854
 msgid "Set the text for the 'previous' direction item"
@@ -409,33 +409,33 @@ msgstr ""
 
 #: ../ml-slider.php:871
 msgid "Square delay"
-msgstr ""
+msgstr "延迟"
 
 #: ../ml-slider.php:878
 msgid "Opacity of title and navigation"
-msgstr ""
+msgstr "标题和导航的透明度"
 
 #: ../ml-slider.php:879
 msgid "Opacity"
-msgstr ""
+msgstr "透明度"
 
 #: ../ml-slider.php:886
 msgid "Set the fade in speed of the caption"
-msgstr ""
+msgstr "设置速度的标题淡入"
 
 #: ../ml-slider.php:887
 msgid "Caption speed"
-msgstr ""
+msgstr "速度"
 
 #: ../ml-slider.php:894
 msgid "Developer Options"
-msgstr ""
+msgstr "开发人员选项"
 
 #: ../ml-slider.php:897
 msgid ""
 "Specify any custom CSS Classes you would like to be added to the slider "
 "wrapper"
-msgstr ""
+msgstr "指定的任何自定义CSS类"
 
 #: ../ml-slider.php:898
 msgid "CSS classes"
@@ -459,11 +459,11 @@ msgstr ""
 
 #: ../ml-slider.php:922
 msgid "Delete Slider"
-msgstr ""
+msgstr "删除滑块"
 
 #: ../ml-slider.php:931
 msgid "Usage"
-msgstr ""
+msgstr "用法"
 
 #: ../ml-slider.php:937
 msgid "Shortcode"
@@ -471,20 +471,20 @@ msgstr ""
 
 #: ../ml-slider.php:943
 msgid "Template Include"
-msgstr ""
+msgstr "模板包括"
 
 #: ../inc/metaslider.widget.class.php:14
 msgid "Meta Slider"
-msgstr ""
+msgstr "梅塔滑块"
 
 #: ../inc/metaslider.widget.class.php:107
 msgid "Title:"
-msgstr ""
+msgstr "标题："
 
 #: ../inc/metaslider.widget.class.php:110
 msgid "Select Slider:"
-msgstr ""
+msgstr "选择滑块："
 
 #: ../inc/metaslider.widget.class.php:120
 msgid "No slideshows found"
-msgstr ""
+msgstr "没有幻灯片"
