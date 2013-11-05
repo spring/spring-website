@@ -22,6 +22,7 @@ $path = array( $IP, "$IP/includes", "$IP/languages" );
 set_include_path( implode( PATH_SEPARATOR, $path ) . PATH_SEPARATOR . get_include_path() );
 
 require_once( "$IP/includes/DefaultSettings.php" );
+require_once( "$IP/skins/strapping/strapping.php" );
 
 # If PHP's memory limit is very low, some operations may fail.
 # ini_set( 'memory_limit', '20M' );
@@ -110,7 +111,9 @@ $wgLanguageCode = "en";
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook':
-$wgDefaultSkin = 'monobook';
+#$wgDefaultSkin = 'monobook';
+$wgDefaultSkin = "strapping";
+#$wgDefaultSkin = 'springnew'
 
 ## For attaching licensing metadata to pages, and displaying an
 ## appropriate copyright notice / icon. GNU Free Documentation
@@ -187,7 +190,6 @@ $wgAuth_Config['NoWikiError']    = 'You are not a member of the required phpBB g
 
 $wgAuth = new Auth_phpBB($wgAuth_Config);     // Auth_phpBB Plugin.
 
-$wgDefaultSkin = 'springnew';
 
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
