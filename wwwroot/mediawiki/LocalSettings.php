@@ -181,7 +181,7 @@ $wgAuth_Config['User_GroupTB']   = 'phpbb3_user_group';  // Name of your PHPBB u
 $wgAuth_Config['PathToPHPBB']    = '../phpbb/';         // Path from this file to your phpBB install.
 
 // Local
-$wgAuth_Config['LoginMessage']   = '<b>You need a phpBB account to login.</b><br /><a href="' . $wgAuth_Config['PathToPHPBB'] .
+$wgAuth_Config['LoginMessage']   = '<b>You need a <u>phpBB</u> account to login.</b><br /><a href="' . $wgAuth_Config['PathToPHPBB'] .
                                    'ucp.php?mode=register">Click here to create an account.</a>'; // Localize this message.
 $wgAuth_Config['NoWikiError']    = 'You are not a member of the required phpBB group.'; // Localize this message.
 

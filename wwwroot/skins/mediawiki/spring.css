@@ -187,6 +187,9 @@ h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 #pagehistory .autocomment,
 #pagehistory .comment    {color: #ccc;}
 
+#userloginForm h2        {display: none;}
+#userloginlink           {color: red; font-size: 15pt; line-height: 19pt}
+
 /* many !importants because ResourceLoader loads WikiEditor CSS *after* skin CSS... */
 table.diff               {background-color: #3A4A50 !important; border: 1px #aaa solid;}
 td.diff-otitle,
