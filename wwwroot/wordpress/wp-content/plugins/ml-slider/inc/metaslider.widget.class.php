@@ -82,27 +82,24 @@ class MetaSlider_Widget extends WP_Widget {
 			$title = $instance['title'];
 		}
 
-        // list the tabs
-        $args = array(
+        
+  		$posts = get_posts(array(
             'post_type' => 'ml-slider',
             'post_status' => 'publish',
             'orderby' => 'date',
             'order' => 'ASC',
             'posts_per_page' => -1
-        );
-        
-        $the_query = new WP_Query($args);
-        
-        while ($the_query->have_posts()) {
-            $the_query->the_post();
-            $active = $selected_slider == $the_query->post->ID ? true : false;
+		));
+
+		foreach($posts as $post) {
+			$active = $selected_slider == $post->ID ? true : false;
             
             $sliders[] = array(
                 'active' => $active,
-                'title' => get_the_title(),
-                'id' => $the_query->post->ID
+                'title' => $post->post_title,
+                'id' => $post->ID
             );
-        }
+		}
         
 		?>
 		<p>

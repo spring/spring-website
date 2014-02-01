@@ -2,12 +2,14 @@
 /*
 Plugin Name: Responsive Lightbox
 Description: Responsive Lightbox allows users to view larger versions of images and galleries in a lightbox (overlay) effect optimized for mobile devices.
-Version: 1.2.2
+Version: 1.3.2
 Author: dFactory
 Author URI: http://www.dfactory.eu/
 Plugin URI: http://www.dfactory.eu/plugins/responsive-lightbox/
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
+Text Domain: responsive-lightbox
+Domain Path: /languages
 
 Responsive Lightbox
 Copyright (C) 2013, Digital Factory - info@digitalfactory.pl
@@ -88,9 +90,14 @@ class Responsive_Lightbox
 				'margin' => 5,
 				'video_width' => 1080,
 				'video_height' => 720
+			),
+			'nivo' => array(
+				'effect' => 'fade',
+				'keyboard_nav' => TRUE,
+				'error_message' => 'The requested content cannot be loaded. Please try again later.'
 			)
 		),
-		'version' => '1.2.2'
+		'version' => '1.3.2'
 	);
 	private $scripts = array();
 	private $options = array();
@@ -153,7 +160,7 @@ class Responsive_Lightbox
 		if($this->options['settings']['videos'] === TRUE)
 			add_filter('the_content', array(&$this, 'add_videos_lightbox_selector'));
 
-		if($this->options['settings']['image_links'] === TRUE)
+		if($this->options['settings']['image_links'] === TRUE || $this->options['settings']['images_as_gallery'] === TRUE)
 			add_filter('the_content', array(&$this, 'add_links_lightbox_selector'));
 	}
 
@@ -315,6 +322,18 @@ class Responsive_Lightbox
 					'inside' => __('inside', 'responsive-lightbox'),
 					'over' => __('over', 'responsive-lightbox')
 				)
+			),
+			'nivo' => array(
+				'name' => __('Nivo Lightbox', 'responsive-lightbox'),
+				'effects' => array(
+					'fade' => __('fade', 'responsive-lightbox'),
+					'fadeScale' => __('fade scale', 'responsive-lightbox'),
+					'slideLeft' => __('slide left', 'responsive-lightbox'),
+					'slideRight' => __('slide right', 'responsive-lightbox'),
+					'slideUp' => __('slide up', 'responsive-lightbox'),
+					'slideDown' => __('slide down', 'responsive-lightbox'),
+					'fall' => __('fall', 'responsive-lightbox')
+				)
 			)
 		);
 
@@ -327,7 +346,8 @@ class Responsive_Lightbox
 			'general-settings' => array(
 				'name' => __('General settings', 'responsive-lightbox'),
 				'key' => 'responsive_lightbox_settings',
-				'submit' => 'save_rl_settings'
+				'submit' => 'save_rl_settings',
+				'reset' => 'reset_rl_settings',
 			),
 			'configuration' => array(
 				'name' => __('Lightbox settings', 'responsive-lightbox'),
@@ -381,7 +401,7 @@ class Responsive_Lightbox
 			$current_blog_id = $wpdb->blogid;
 			$blogs_ids = $wpdb->get_col($wpdb->prepare('SELECT blog_id FROM '.$wpdb->blogs, ''));
 
-			if(($activated_blogs = get_site_option('responsive_lightbox_activated', FALSE, FALSE)) === FALSE)
+			if(($activated_blogs = get_site_option('responsive_lightbox_activated_blogs', FALSE, FALSE)) === FALSE)
 				$activated_blogs = array();
 
 			foreach($blogs_ids as $blog_id)
@@ -493,6 +513,12 @@ class Responsive_Lightbox
 			add_settings_field('rl_fb_margin', __('Margin', 'responsive-lightbox'), array(&$this, 'rl_fb_margin'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 			add_settings_field('rl_fb_video_width', __('Video width', 'responsive-lightbox'), array(&$this, 'rl_fb_video_width'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 			add_settings_field('rl_fb_video_height', __('Video height', 'responsive-lightbox'), array(&$this, 'rl_fb_video_height'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+		}
+		elseif($this->options['settings']['script'] === 'nivo')
+		{
+			add_settings_field('rl_nv_effect', __('Effect', 'responsive-lightbox'), array(&$this, 'rl_nv_effect'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_nv_keyboard_nav', __('Keyboard navigation', 'responsive-lightbox'), array(&$this, 'rl_nv_keyboard_nav'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
+			add_settings_field('rl_nv_error_message', __('Error message', 'responsive-lightbox'), array(&$this, 'rl_nv_error_message'), 'responsive_lightbox_configuration', 'responsive_lightbox_configuration');
 		}
 	}
 
@@ -1363,6 +1389,52 @@ class Responsive_Lightbox
 	}
 
 
+	public function rl_nv_effect()
+	{
+		echo '
+		<div id="rl_nv_effect" class="wplikebtns">';
+
+		foreach($this->scripts['nivo']['effects'] as $val => $trans)
+		{
+			echo '
+			<input id="rl-nv-effect-'.$val.'" type="radio" name="responsive_lightbox_configuration[nivo][effect]" value="'.esc_attr($val).'" '.checked($val, $this->options['configuration']['nivo']['effect'], FALSE).' />
+			<label for="rl-nv-effect-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('The effect to use when showing the lightbox.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_nv_keyboard_nav()
+	{
+		echo '
+		<div id="rl_nv_keyboard_nav" class="wplikebtns">';
+
+		foreach($this->choices as $val => $trans)
+		{
+			echo '
+			<input id="rl-nv-keyboard-nav-'.$val.'" type="radio" name="responsive_lightbox_configuration[nivo][keyboard_nav]" value="'.esc_attr($val).'" '.checked(($val === 'yes' ? TRUE : FALSE), $this->options['configuration']['nivo']['keyboard_nav'], FALSE).' />
+			<label for="rl-nv-keyboard-nav-'.$val.'">'.$trans.'</label>';
+		}
+
+		echo '
+			<p class="description">'.__('Enable/Disable keyboard navigation (left/right/escape).', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
+	public function rl_nv_error_message()
+	{
+		echo '
+		<div id="rl_nv_error_message">
+			<input type="text" value="'.esc_attr($this->options['configuration']['nivo']['error_message']).'" name="responsive_lightbox_configuration[nivo][error_message]" />
+			<p class="description">'.__('Error message if the content cannot be loaded.', 'responsive-lightbox').'</p>
+		</div>';
+	}
+
+
 	/**
 	 * Validates settings
 	*/
@@ -1537,6 +1609,17 @@ class Responsive_Lightbox
 				//video height
 				$input['fancybox']['video_height'] = (int)($input['fancybox']['video_height'] > 0 ? $input['fancybox']['video_height'] : $this->defaults['configuration']['fancybox']['video_height']);
 			}
+			elseif($this->options['settings']['script'] === 'nivo' && $_POST['script_r'] === 'nivo')
+			{
+				//effect
+				$input['nivo']['effect'] = (isset($input['nivo']['effect']) && in_array($input['nivo']['effect'], array_keys($this->scripts['nivo']['effects'])) ? $input['nivo']['effect'] : $this->defaults['configuration']['nivo']['effect']);
+
+				//keyboard navigation
+				$input['nivo']['keyboard_nav'] = (isset($input['nivo']['keyboard_nav']) && in_array($input['nivo']['keyboard_nav'], array_keys($this->choices)) ? ($input['nivo']['keyboard_nav'] === 'yes' ? TRUE : FALSE) : $this->defaults['configuration']['nivo']['keyboard_nav']);
+
+				//error message
+				$input['nivo']['error_message'] = sanitize_text_field($input['nivo']['error_message']);
+			}
 			else
 			{
 				//clear input to not change settings
@@ -1547,6 +1630,12 @@ class Responsive_Lightbox
 
 			//we have to merge rest of the scripts settings
 			$input = array_merge($this->options['configuration'], $input);
+		}
+		elseif(isset($_POST['reset_rl_settings']))
+		{
+			$input = $this->defaults['settings'];
+
+			add_settings_error('reset_general_settings', 'general_reset', __('Settings restored to defaults.', 'responsive-lightbox'), 'updated');
 		}
 		elseif(isset($_POST['reset_rl_configuration']))
 		{
@@ -1566,7 +1655,13 @@ class Responsive_Lightbox
 			{
 				$input['fancybox'] = $this->defaults['configuration']['fancybox'];
 
-				add_settings_error('reset_prettyphoto_settings', 'prettyphoto_reset', __('Settings of FancyBox script were restored to defaults.', 'responsive-lightbox'), 'updated');
+				add_settings_error('reset_fancybox_settings', 'fancybox_reset', __('Settings of FancyBox script were restored to defaults.', 'responsive-lightbox'), 'updated');
+			}
+			elseif($this->options['settings']['script'] === 'nivo' && $_POST['script_r'] === 'nivo')
+			{
+				$input['nivo'] = $this->defaults['configuration']['nivo'];
+
+				add_settings_error('reset_nivo_settings', 'nivo_reset', __('Settings of Nivo script were restored to defaults.', 'responsive-lightbox'), 'updated');
 			}
 			else
 			{
@@ -1624,7 +1719,7 @@ class Responsive_Lightbox
 		submit_button('', 'primary', $this->tabs[$tab_key]['submit'], FALSE);
 
 		echo ' ';
-		echo ($tab_key === 'configuration' ? submit_button(__('Reset to defaults', 'responsive-lightbox'), 'secondary', $this->tabs[$tab_key]['reset'], FALSE) : '');
+		echo submit_button(__('Reset to defaults', 'responsive-lightbox'), 'secondary', $this->tabs[$tab_key]['reset'], FALSE);
 
 		echo '
 					</p>
@@ -1639,7 +1734,7 @@ class Responsive_Lightbox
 					<h3>'.__('Do you like this plugin?', 'responsive-lightbox').'</h3>
 					<p><a href="http://wordpress.org/support/view/plugin-reviews/responsive-lightbox" target="_blank" title="'.__('Rate it 5', 'responsive-lightbox').'">'.__('Rate it 5', 'responsive-lightbox').'</a> '.__('on WordPress.org', 'responsive-lightbox').'<br />'.
 					__('Blog about it & link to the', 'responsive-lightbox').' <a href="http://www.dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=blog-about" target="_blank" title="'.__('plugin page', 'responsive-lightbox').'">'.__('plugin page', 'responsive-lightbox').'</a><br />'.
-					__('Check out our other', 'responsive-lightbox').' <a href="http://www.dfactory.eu/plugins/responsive-lightbox/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins" target="_blank" title="'.__('WordPress plugins', 'responsive-lightbox').'">'.__('WordPress plugins', 'responsive-lightbox').'</a>
+					__('Check out our other', 'responsive-lightbox').' <a href="http://www.dfactory.eu/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=other-plugins" target="_blank" title="'.__('WordPress plugins', 'responsive-lightbox').'">'.__('WordPress plugins', 'responsive-lightbox').'</a>
 					</p>            
 					<hr />
 					<p class="df-link">Created by <a href="http://www.dfactory.eu/?utm_source=responsive-lightbox-settings&utm_medium=link&utm_campaign=created-by" target="_blank" title="dFactory - Quality plugins for WordPress"><img src="'.plugins_url('/images/logo-dfactory.png' , __FILE__ ).'" title="dFactory - Quality plugins for WordPress" alt="dFactory - Quality plugins for WordPress" /></a></p>
@@ -1666,6 +1761,7 @@ class Responsive_Lightbox
 				'responsive-lightbox-admin',
 				'rlArgs',
 				array(
+					'resetSettingsToDefaults' => __('Are you sure you want to reset these settings to defaults?', 'responsive-lightbox'),
 					'resetScriptToDefaults' => __('Are you sure you want to reset scripts settings to defaults?', 'responsive-lightbox'),
 					'opacity_pp' => $this->options['configuration']['prettyphoto']['opacity'],
 					'opacity_fb' => $this->options['configuration']['fancybox']['overlay_opacity']
@@ -1822,6 +1918,39 @@ class Responsive_Lightbox
 					'margin' => $this->options['configuration']['fancybox']['margin'],
 					'videoWidth' => $this->options['configuration']['fancybox']['video_width'],
 					'videoHeight' => $this->options['configuration']['fancybox']['video_height']
+				)
+			);
+		}
+		elseif($this->options['settings']['script'] === 'nivo')
+		{
+			wp_register_script(
+				'responsive-lightbox-nivo',
+				plugins_url('assets/nivo/nivo-lightbox.min.js', __FILE__),
+				array('jquery')
+			);
+
+			wp_enqueue_script('responsive-lightbox-nivo');
+
+			wp_register_style(
+				'responsive-lightbox-nivo-front',
+				plugins_url('assets/nivo/nivo-lightbox.css', __FILE__)
+			);
+
+			wp_enqueue_style('responsive-lightbox-nivo-front');
+
+			wp_register_style(
+				'responsive-lightbox-nivo-front-template',
+				plugins_url('assets/nivo/themes/default/default.css', __FILE__)
+			);
+
+			wp_enqueue_style('responsive-lightbox-nivo-front-template');
+
+			$args = array_merge(
+				$args,
+				array(
+					'effect' => $this->options['configuration']['nivo']['effect'],
+					'keyboardNav' => $this->getBooleanValue($this->options['configuration']['nivo']['keyboard_nav']),
+					'errorMessage' => esc_attr($this->options['configuration']['nivo']['error_message'])
 				)
 			);
 		}

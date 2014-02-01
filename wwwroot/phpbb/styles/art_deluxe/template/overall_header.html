@@ -165,14 +165,21 @@
          "text"    : "Navigate..."
       }).appendTo("nav select");
       
-      // Populate dropdown with menu items
-      $("nav a").each(function() {
-       var el = $(this);
-       $("<option />", {
-           "value"   : el.attr("href"),
-           "text"    : el.text()
-       }).appendTo("nav select");
-      });
+		// Populate dropdown with menu items
+		$("nav a").each(function() {
+		var el = $(this);
+		var da = '';
+		if($(this).parents('.sub-menu').length){
+			da = '- ';
+		}
+		if($(this).parents('.sub-menu').length == 2){
+			da = '-- ';
+		}
+		$("<option />", {
+			"value" : el.attr("href"),
+			"text" : da + el.text()
+		}).appendTo("nav select");
+		});
       
 	   // To make dropdown actually work
       $("nav select").change(function() {
@@ -187,26 +194,52 @@
 
 <body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">
 <div class="site-wrapper">
+<div class="logo-menu-wrapper">
 <div id="header">
     <a href="{U_INDEX}" title="{L_INDEX}" id="logo"><img src="http://test.springrts.com/wordpress/wp-content/uploads/2013/10/Spring-Community-Forums-Banner.jpg" alt="The Spring Project Community Forums Logo"></a>
     <h1>{SITENAME}</h1>
     <p>{SITE_DESCRIPTION}</p>
 </div>
 
-<!-- This menu is hardcoded directly from the main site... Don't blame me... Abma made me do it :-) That said, to update it simply view source from the main site, and copy and paste the nav section here and it will work fine -->
+<!-- This menu is hardcoded directly from the main site... Don't blame me... Abma made me do it :-) That said, to update it simply view source from the main site, and copy and paste the nav section here and it will work fine. One more thing, don't forget to set the classes 'current-menu-item current_page_item' to the forum link so that it shows as the current menu item -->
 <nav id="site-navigation" class="main-navigation" role="navigation">
-<ul id="menu-main-navigation-1" class="menu responsiveSelectFullMenu"><li class="menu-item menu-item-type-post_type menu-item-object-page first menu-item-22"><a href="http://test.springrts.com/">Home</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21"><a href="http://test.springrts.com/about/">About</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-20"><a href="http://test.springrts.com/games/">Games</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-62"><a target="_blank" href="http://springrts.com/wiki/Engine_Development">Development</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-19"><a href="http://test.springrts.com/media/">Media</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-63"><a target="_blank" href="http://springrts.com/wiki/FAQ">Help</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-64"><a href="http://test.springrts.com/phpbb/">Forums</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-65"><a target="_blank" href="http://springrts.com/wiki">Wiki</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-66"><a target="_blank" href="http://springrts.com/mantis/">Report a Bug</a></li>
-<li class="menu-item menu-item-type-custom menu-item-object-custom last menu-item-67"><a target="_blank" href="http://springrts.com/wiki/Download">Download</a></li>
+<ul id="menu-main-navigation-1" class="menu responsiveSelectFullMenu"><li class="menu-item menu-item-type-post_type menu-item-object-page page_item page-item-11 first menu-item-22"><a href="http://springrts.com/">Home</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-21"><a href="http://springrts.com/about/">About</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-19"><a href="http://springrts.com/media/">Media</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-336"><a href="#">Community</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-64"><a href="http://springrts.com/phpbb/">Forums</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-65"><a target="_blank" href="http://springrts.com/wiki">Wiki</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-66"><a target="_blank" href="http://springrts.com/mantis/">Report a Bug</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-344"><a href="#">Follow Us</a>
+	<ul class="sub-menu">
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-347 current-menu-item current_page_item"><a href="https://www.facebook.com/springrtsengine?ref=ts">Facebook</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-345"><a target="_blank" href="http://www.google.com/+SpringRTSEngine">Google+</a></li>
+		<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-346"><a target="_blank" href="http://www.youtube.com/channel/UCvuhoUup-5W627doLtl4Iyg">Youtube</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-337"><a href="#">Development</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-339"><a href="http://springrts.com/wiki/Gamedev:Main">Game Development</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-340"><a href="http://springrts.com/wiki/Map_development">Map Development</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-341"><a href="http://springrts.com/wiki/Development:Getting_Started">Engine Development</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-338"><a target="_blank" href="http://goo.gl/wBlTbf">Donate</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-67"><a target="_blank" href="http://springrts.com/wiki/Download">Download</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-20"><a href="http://springrts.com/games/">Games</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom last menu-item-343"><a href="http://www.springfiles.com">Maps</a></li>
+</ul>
+</li>
 </ul>
 </nav>
+</div>
 
 <div class="forumbody-wrapper">
 <div id="page-header" class="responsive-menu-nojs">

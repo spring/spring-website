@@ -13,6 +13,9 @@
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
+<!-- Place this tag in your head or just before your close body tag. -->
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width">
 <title><?php wp_title( '|', true, 'right' ); ?></title>
@@ -30,6 +33,7 @@
 </head>
 
 <body <?php body_class(); ?>>
+
 <div id="sitewrapper">
 <div id="headercontent">
 	<?php do_action( 'before' ); ?>

@@ -63,6 +63,20 @@ jQuery(document).ready(function($) {
 				width: parseInt(rlArgs.videoWidth),
 				height: parseInt(rlArgs.videoHeight)
 			});
+		} else if(rlArgs.script === 'nivo') {
+			$.each($('a[rel*="'+rlArgs.selector+'"]'), function() {
+				var match = $(this).attr('rel').match(new RegExp(rlArgs.selector+'\\[(gallery\\-(?:[\\da-z]{1,4}))\\]', 'ig'));
+
+				if(match !== null) {
+					$(this).attr('data-lightbox-gallery', match[0]);
+				}
+			});
+
+			$('a[rel*="'+rlArgs.selector+'"]').nivoLightbox({
+				effect: rlArgs.effect,
+				keyboardNav: (rlArgs.keyboardNav === '1' ? true : false),
+				errorMessage: rlArgs.errorMessage
+			});
 		}
 	});
 

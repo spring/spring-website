@@ -9,6 +9,12 @@
 .metaslider {
     position: relative;
 }
+.metaslider.nav-hidden .flexslider {
+    margin-bottom: 0;
+}
+.metaslider.nav-hidden.add-margin .flexslider {
+    margin-bottom: 40px;
+}
 
 .metaslider .caption {
     padding: 5px 10px;
@@ -42,12 +48,17 @@
 }
 
 /** quick resets **/
+.article .metaslider ol,
+.art-article .metaslider img,
 #widgets .metaslider ul, 
 #widgets .metaslider ol,
 #content .metaslider ul,
 #content .metaslider ol,
+#content .metaslider li,
 .entry .metaslider ul,
 .entry .metaslider ol,
+.entry-content .metaslider ul,
+.entry-content .metaslider ol,
 .metaslider .flexslider ul,
 .metaslider .flexslider .slides li,
 .metaslider .flexslider .slides ul,
@@ -70,4 +81,8 @@
     list-style: none;
     padding: 0;
     line-height: normal;
+}
+.metaslider .slides img {
+	width: 100%; 
+	display: block;
 }

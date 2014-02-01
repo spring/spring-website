@@ -55,7 +55,7 @@ html[xmlns] .slides {display: block;}
 .flexslider:hover .flex-next {opacity: 0.8; right: 5px;}
 .flexslider:hover .flex-prev {opacity: 0.8; left: 5px;}
 .flexslider:hover .flex-next:hover, .flexslider:hover .flex-prev:hover {opacity: 1;}
-.flex-direction-nav .flex-disabled {opacity: .3!important; filter:alpha(opacity=30); cursor: default;}
+.flex-direction-nav .flex-disabled {cursor: default; pointer-events: none;}
 
 /* Control Nav */
 .flex-control-nav {width: 100%; position: absolute; bottom: -40px; text-align: center;}
@@ -74,6 +74,8 @@ html[xmlns] .slides {display: block;}
   .flex-direction-nav .flex-prev {opacity: 1; left: 0;}
   .flex-direction-nav .flex-next {opacity: 1; right: 0;}
 }
+
+
 
 /** Custom Meta Slider CSS **/
 .flexslider {
@@ -122,4 +124,17 @@ html[xmlns] .slides {display: block;}
 
 .flex-control-nav {
 	margin: auto;
+}
+
+.metaslider .flexslider.filmstrip {
+	margin-top: 10px;
+}
+.metaslider .flexslider.filmstrip .slides li {
+    cursor: pointer;
+    opacity: 0.5;
+}
+.metaslider .flexslider.filmstrip .slides li.flex-active-slide,
+.metaslider .flexslider.filmstrip .slides li:hover,
+.metaslider .flexslider.filmstrip .slides li:focus {
+    opacity: 1.0 !important;
 }

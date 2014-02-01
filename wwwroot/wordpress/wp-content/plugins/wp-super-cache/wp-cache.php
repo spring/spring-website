@@ -3,7 +3,7 @@
 Plugin Name: WP Super Cache
 Plugin URI: http://ocaoimh.ie/wp-super-cache/
 Description: Very fast caching plugin for WordPress.
-Version: 1.3.2
+Version: 1.4
 Author: Donncha O Caoimh
 Author URI: http://ocaoimh.ie/
 */
@@ -34,6 +34,18 @@ if( !defined('WP_CONTENT_DIR') )
 
 $wp_cache_config_file = WP_CONTENT_DIR . '/wp-cache-config.php';
 
+if ( !defined( 'WPCACHEHOME' ) ) {
+	define( 'WPCACHEHOME', dirname( __FILE__ ) . '/' );
+	$wp_cache_config_file_sample = WPCACHEHOME . 'wp-cache-config-sample.php';
+	$wp_cache_file = WPCACHEHOME . 'advanced-cache.php';
+} elseif ( WPCACHEHOME != dirname( __FILE__ ) . '/' ) {
+	$wp_cache_config_file_sample = dirname( __FILE__ ) . '/wp-cache-config-sample.php';
+	$wp_cache_file = dirname( __FILE__ ) . '/advanced-cache.php';
+} else {
+	$wp_cache_config_file_sample = WPCACHEHOME . 'wp-cache-config-sample.php';
+	$wp_cache_file = WPCACHEHOME . 'advanced-cache.php';
+}
+
 if( !@include($wp_cache_config_file) ) {
 	get_wpcachehome();
 	$wp_cache_config_file_sample = WPCACHEHOME . 'wp-cache-config-sample.php';
@@ -42,9 +54,7 @@ if( !@include($wp_cache_config_file) ) {
 	get_wpcachehome();
 }
 
-$wp_cache_config_file_sample = WPCACHEHOME . 'wp-cache-config-sample.php';
 $wp_cache_link = WP_CONTENT_DIR . '/advanced-cache.php';
-$wp_cache_file = WPCACHEHOME . 'advanced-cache.php';
 
 if( !defined( 'WP_CACHE' ) || ( defined( 'WP_CACHE' ) && constant( 'WP_CACHE' ) == false ) ) {
 	$wp_cache_check_wp_config = true;
@@ -980,7 +990,7 @@ jQuery(document).ready(function(){
 			<td>
 				<fieldset>
 				<legend class="hidden">Advanced</legend>
-				<label><input type='checkbox' name='wp_cache_mfunc_enabled' <?php if( $wp_cache_mfunc_enabled ) echo "checked"; ?> value='1' <?php if ( $wp_cache_mod_rewrite || $super_cache_enabled == false ) { echo "disabled='disabled'"; } ?>> <?php _e( 'Enable dynamic caching (mfunc, mclude, dynamic-cached-content). See the <a href="http://wordpress.org/extend/plugins/wp-super-cache/faq/">FAQ</a> for further details.)', 'wp-super-cache' ); ?></label><br />
+				<label><input type='checkbox' name='wp_cache_mfunc_enabled' <?php if( $wp_cache_mfunc_enabled ) echo "checked"; ?> value='1' <?php if ( $wp_cache_mod_rewrite ) { echo "disabled='disabled'"; } ?>> <?php _e( 'Enable dynamic caching. Requires PHP or legacy caching. (See <a href="http://wordpress.org/extend/plugins/wp-super-cache/faq/">FAQ</a> or wp-super-cache/plugins/dynamic-cache-test.php for example code.)', 'wp-super-cache' ); ?></label><br />
 				<label><input type='checkbox' name='wp_cache_mobile_enabled' <?php if( $wp_cache_mobile_enabled ) echo "checked"; ?> value='1'> <?php _e( 'Mobile device support. (External plugin or theme required. See the <a href="http://wordpress.org/extend/plugins/wp-super-cache/faq/">FAQ</a> for further details.)', 'wp-super-cache' ); ?></label><br />
 				<?php if ( $wp_cache_mobile_enabled ) {
 					echo '<blockquote><h4>' . __( 'Mobile Browsers', 'wp-super-cache' ) . '</h4>' . implode( ', ', $wp_cache_mobile_browsers ) . "<br /><h4>" . __( 'Mobile Prefixes', 'wp-super-cache' ) . "</h4>" . implode( ', ', $wp_cache_mobile_prefixes ) . "<br /></blockquote>";
@@ -1273,6 +1283,9 @@ function wpsc_admin_tabs( $current = 0 ) {
 
 function wsc_mod_rewrite() {
 	global $cache_enabled, $super_cache_enabled, $valid_nonce, $cache_path, $wp_cache_mod_rewrite, $wpmu_version;
+
+	if ( defined( 'WPSC_DISABLE_HTACCESS_UPDATE' ) )
+		return false;
 
 	if ( !$wp_cache_mod_rewrite )
 		return false;
@@ -2081,7 +2094,7 @@ function wp_cache_create_advanced_cache() {
 		$global_config_file = dirname(ABSPATH) . '/wp-config.php';
 	}
 
-	$line = 'define( \'WPCACHEHOME\', \'' . constant( 'WPCACHEHOME' ) . '\' );';
+	$line = 'define( \'WPCACHEHOME\', \'' . dirname( __FILE__ ) . '/\' );';
 	if ( !is_writeable_ACLSafe($global_config_file) || !wp_cache_replace_line('define *\( *\'WPCACHEHOME\'', $line, $global_config_file ) ) {
 			echo '<div id="message" class="updated fade"><h3>' . __( 'Warning', 'wp-super-cache' ) . "! <em>" . sprintf( __( 'Could not update %s!</em> WPCACHEHOME must be set in config file.', 'wp-super-cache' ), $global_config_file ) . "</h3>";
 			return false;
@@ -2626,12 +2639,14 @@ function wp_cache_plugin_actions( $links, $file ) {
 add_filter( 'plugin_action_links', 'wp_cache_plugin_actions', 10, 2 );
 
 function wp_cache_admin_notice() {
-	global $cache_enabled;
+	global $cache_enabled, $wp_cache_phase1_loaded;
 	if( substr( $_SERVER["PHP_SELF"], -11 ) == 'plugins.php' && !$cache_enabled && function_exists( "admin_url" ) )
 		echo '<div class="error"><p><strong>' . sprintf( __('WP Super Cache is disabled. Please go to the <a href="%s">plugin admin page</a> to enable caching.', 'wp-super-cache' ), admin_url( 'options-general.php?page=wpsupercache' ) ) . '</strong></p></div>';
 
-	if ( defined( 'ADVANCEDCACHEPROBLEM' ) )
-		echo '<div class="error"><p><strong>' . sprintf( __( 'Warning! WP Super Cache caching broken! The script advanced-cache.php could not load wp-cache-phase1.php.<br /><br />Please edit %1$s/advanced-cache.php and make sure the path to %2$swp-cache-phase1.php is correct.', 'wp-super-cache' ), WP_CONTENT_DIR, WPCACHEHOME ) . '</strong></p></div>';
+	if ( defined( 'ADVANCEDCACHEPROBLEM' ) || ( $cache_enabled && false == isset( $wp_cache_phase1_loaded ) ) ) {
+		echo '<div class="error"><p>' . sprintf( __( 'Warning! WP Super Cache caching <strong>was</strong> broken but has been <strong>fixed</strong>! The script advanced-cache.php could not load wp-cache-phase1.php.<br /><br />The file %1$s/advanced-cache.php has been recreated and WPCACHEHOME fixed in your wp-config.php. Reload to hide this message.', 'wp-super-cache' ), WP_CONTENT_DIR ) . '</p></div>';
+		wp_cache_create_advanced_cache();
+	}
 }
 add_action( 'admin_notices', 'wp_cache_admin_notice' );
 
@@ -3145,24 +3160,4 @@ function supercache_admin_bar_render() {
 }
 add_action( 'wp_before_admin_bar_render', 'supercache_admin_bar_render' );
 
-add_filter( 'preprocess_comment','no_mfunc_in_comments' );
-add_filter( 'comment_text','no_mfunc_in_comments' );
-add_filter( 'comment_excerpt','no_mfunc_in_comments' );
-add_filter( 'comment_text_rss','no_mfunc_in_comments' );
-
-function no_mfunc_in_comments( $comment_data ) {
-	if ( is_array( $comment_data ) )
-		$text = $comment_data[ 'comment_content' ];
-	else
-		$text = $comment_data;
-
-	if ( preg_match( '/<!--\s*mclude|<!--\s*mfunc|<!--\s*dynamic-cached-content/i', $text )) { 
-		$text = preg_replace( '#(<!--\s*(mclude|mfunc|dynamic-cached-content))#ism','<!-- unsafe comment zapped -->', $text );
-		if ( is_array( $comment_data ) )
-			$comment_data[ 'comment_content' ] = $text;
-		else
-			$comment_data = $text;
-	}
-	return $comment_data;
-}
 ?>

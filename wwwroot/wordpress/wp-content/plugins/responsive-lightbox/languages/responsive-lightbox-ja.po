@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Responsive Lightbox\n"
 "POT-Creation-Date: 2013-08-12 10:20+0100\n"
-"PO-Revision-Date: 2013-10-04 12:10+0900\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2013-11-01 09:42+0900\n"
+"Last-Translator: stranger-jp <wordpress.stranger.jp@gmail.com>\n"
 "Language-Team: stranger-jp\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgid "General settings"
 msgstr "全般設定"
 
 msgid "Lightbox settings"
-msgstr "Lightboxの設定"
+msgstr "Lightbox設定"
 
 msgid "Lightbox script"
 msgstr "Lightboxスクリプト"
@@ -172,7 +172,7 @@ msgid "Select to which rel selector lightbox effect will be applied to."
 msgstr "relセレクタをLightboxのエフェクトに適用させる場合に選択します。"
 
 msgid "Add lightbox to WordPress image galleries by default."
-msgstr "デフォルトは WordPressの画像ギャラリーにLightboxを追加します。"
+msgstr "デフォルトはWordPressの画像ギャラリーにLightboxを追加します。"
 
 msgid "Add lightbox to YouTube and Vimeo video links by default."
 msgstr "デフォルトはYouTubeやVimeoの動画リンクにlightboxを追加します。"
@@ -184,16 +184,22 @@ msgid "Display single post images as a gallery."
 msgstr "ギャラリーのように単一の投稿画像を表示します。"
 
 msgid "Delete settings on plugin deactivation."
-msgstr "プラグインの非活性化の設定を削除します。"
+msgstr "プラグインの非活性化設定を削除します。"
 
 msgid "Select a method of applying a lightbox effect."
-msgstr "Lightboxエフェクトを適用する方法を選択します。"
+msgstr "Lightboxの効果の適用方法を選択します。"
 
-msgid "Disable if you don't want to top and bottom bars to be hidden after a period of time."
+msgid ""
+"Disable if you don't want to top and bottom bars to be hidden after a period "
+"of time."
 msgstr "一定期間後に隠される上部と下部のバーを非表示にする場合は無効にします。"
 
-msgid "Enter the time after which the top and bottom bars will be hidden (when hiding is enabled)."
-msgstr "上部と下部のバーが(隠蔽が有効になっている場合)に隠れされるまでの時間を入力してください。"
+msgid ""
+"Enter the time after which the top and bottom bars will be hidden (when "
+"hiding is enabled)."
+msgstr ""
+"上部と下部のバーが(隠蔽が有効になっている場合)隠れされるまでの時間を入力して"
+"ください。"
 
 msgid "Enter the max video width in a lightbox"
 msgstr "Lightboxの最大動画の幅を入力してください。"
@@ -214,7 +220,7 @@ msgid "Value between 0 and 1 (for e.g. 0.5)"
 msgstr "0と1 (例えば0.5)の間の値"
 
 msgid "Display image tiltle."
-msgstr "有効にすると画像のタイトルが表示されます。"
+msgstr "有効にすると画像のタイトルを表示します。"
 
 msgid "Resize the photos bigger than viewport."
 msgstr "ビューポートよりも写真が大き場合リサイズします。"
@@ -241,7 +247,9 @@ msgid "Allow prettyPhoto to update the url to enable deeplinking."
 msgstr "prettyPhotoがディープリンクを有効にするURLを更新することを許可します。"
 
 msgid "If enabled, a gallery will overlay the fullscreen image on mouse over."
-msgstr "有効にした場合ギャラリーにマウスオーバーでフルスクリーン画像をオーバーレイします。"
+msgstr ""
+"有効にした場合ギャラリーにマウスオーバーでフルスクリーン画像をオーバーレイし"
+"ます。"
 
 msgid "Set to false if you open forms inside prettyPhoto"
 msgstr "prettyPhoto内部フォームを開く場合は無効にします。"
@@ -249,8 +257,12 @@ msgstr "prettyPhoto内部フォームを開く場合は無効にします。"
 msgid "Display links to Facebook and Twitter."
 msgstr "FacebookやTwitterへのリンクを表示します。"
 
-msgid "Changes were not saved because there was attempt to save settings of inactive script. The site has been reloaded to the proper script settings."
-msgstr "無効なスクリプトの設定を保存しようとする試みがあったので変更は保存されませんでした。サイトは適切なスクリプトの設定でリロードされています。"
+msgid ""
+"Changes were not saved because there was attempt to save settings of "
+"inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"無効なスクリプトの設定を保存しようとする試みがあったので変更は保存されません"
+"でした。サイトは適切なスクリプトの設定でリロードされています。"
 
 msgid "Settings of SwipeBox script were restored to defaults."
 msgstr "SwipeBoxスクリプトの設定がデフォルトに復元されました。"
@@ -258,8 +270,12 @@ msgstr "SwipeBoxスクリプトの設定がデフォルトに復元されまし�
 msgid "Settings of prettyPhoto script were restored to defaults."
 msgstr "prettyPhotoスクリプトの設定がデフォルトに復元されました。"
 
-msgid "Changes were not set to defaults because there was attempt to reset settings of inactive script. The site has been reloaded to the proper script settings."
-msgstr "非アクティブスクリプトの設定をリセットする試みがあったので変更はデフォルトに設定されていません。サイトは適切なスクリプトの設定にリロードされています。"
+msgid ""
+"Changes were not set to defaults because there was attempt to reset settings "
+"of inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"非アクティブスクリプトの設定をリセットする試みがあったので変更はデフォルトに"
+"設定されていません。サイトは適切なスクリプトの設定にリロードされています。"
 
 msgid "Responsive Lightbox"
 msgstr "レスポンシブLightbox"
@@ -270,8 +286,10 @@ msgstr "デフォルトにリセット"
 msgid "Need support?"
 msgstr "Need support?"
 
-msgid "If you are having problems with this plugin, please talk about them in the"
-msgstr "If you are having problems with this plugin, please talk about them in the"
+msgid ""
+"If you are having problems with this plugin, please talk about them in the"
+msgstr ""
+"If you are having problems with this plugin, please talk about them in the"
 
 msgid "Support forum"
 msgstr "Support forum"
@@ -337,7 +355,7 @@ msgid "Cyclic"
 msgstr "循環"
 
 msgid "Easing used for elastic animations."
-msgstr "緩和が弾性アニメーションに使用されます。"
+msgstr "緩和弾性アニメーションに使用されます。"
 
 msgid "Easings (in/out)"
 msgstr "Easings (イン/アウト)"
@@ -357,8 +375,14 @@ msgstr "フェード"
 msgid "FancyBox"
 msgstr "FancyBox"
 
+msgid "Effect"
+msgstr "効果"
+
 msgid "Height of the video."
 msgstr "動画の高さ。"
+
+msgid "The effect to use when showing the lightbox."
+msgstr "lightboxを表示するときに効果を使用します。"
 
 msgid "Hide on content click"
 msgstr "コンテンツをクリックで隠す"
@@ -366,8 +390,12 @@ msgstr "コンテンツをクリックで隠す"
 msgid "Hide on overlay click"
 msgstr "オーバーレイをクリックで隠す"
 
-msgid "Hides all the flash object on a page. Enable this if flash appears over prettyPhoto."
-msgstr "ページですべてのフラッシュを非表示にします。フラッシュがprettyPhoto上で表示される場合これを有効にしてください。"
+msgid ""
+"Hides all the flash object on a page. Enable this if flash appears over "
+"prettyPhoto."
+msgstr ""
+"ページですべてのフラッシュを非表示にします。フラッシュがprettyPhoto上で表示さ"
+"れる場合これを有効にしてください。"
 
 msgid "If true, FancyBox is scaled to fit in viewport."
 msgstr "有効の場合 FancyBoxはビューポートに収まるようにスケーリングします。"
@@ -412,13 +440,13 @@ msgid "Set to false if you open forms inside prettyPhoto."
 msgstr "prettyPhoto内部フォームを開く場合は無効にします。"
 
 msgid "Settings of FancyBox script were restored to defaults."
-msgstr "FancyBoxスクリプトの設定がデフォルトに復元されました。"
+msgstr "FancyBoxスクリプトの設定をデフォルトに復元しました。"
 
 msgid "Show close button"
-msgstr "閉じるボタンを表示する"
+msgstr "閉じるボタンを表示"
 
 msgid "Show nav arrows"
-msgstr "ナビゲーション矢印を表示する"
+msgstr "ナビゲーション矢印を表示"
 
 msgid "Show overlay"
 msgstr "オーバーレイを表示"
@@ -436,7 +464,7 @@ msgid "Speed of resizing when changing gallery items, in milliseconds."
 msgstr "ギャラリーの項目を変更するときのサイズ変更速度。(ミリ秒単位)"
 
 msgid "Speed of the content fading while changing gallery items."
-msgstr "ギャラリーアイテムを変えながらフェードするコンテンツの速度。"
+msgstr "ギャラリーのコンテンツ項目を変るフェージングの速度。"
 
 msgid "Speed of the fade and elastic transitions, in milliseconds."
 msgstr "フェードと弾力性の速度。(ミリ秒単位)"
@@ -463,7 +491,8 @@ msgid "Toggle if clicking the content should close FancyBox."
 msgstr "コンテンツをクリックするとFancyBoxを閉じるべきかどうかを切り替えます。"
 
 msgid "Toggle if clicking the overlay should close FancyBox."
-msgstr "オーバーレイをクリックすると、 FancyBoxを閉じるべきかどうかを切り替えます。"
+msgstr ""
+"オーバーレイをクリックすると、 FancyBoxを閉じるべきかどうかを切り替えます。"
 
 msgid "Toggle if pressing Esc button closes FancyBox."
 msgstr "ESCボタンを押すとFancyBoxを閉じた場合に切り替えます。"
@@ -480,17 +509,25 @@ msgstr "タイトルを切り替えます。"
 msgid "Transition (in/out)"
 msgstr "トランジション(イン/アウト)"
 
-msgid "When true, \"overlayShow\" is set to TRUE and \"hideOnOverlayClick\", \"hideOnContentClick\", \"enableEscapeButton\", \"showCloseButton\" are set to FALSE."
-msgstr "有効にした場合\"オーバーレイを表示\"は有効になり、\"閉じるボタンを表示する\"、\"Escボタンを有効\"、\"オーバーレイをクリックで隠す\"、\"コンテンツをクリックで隠す\"は無効になります。"
+msgid ""
+"When true, \"overlayShow\" is set to TRUE and \"hideOnOverlayClick\", "
+"\"hideOnContentClick\", \"enableEscapeButton\", \"showCloseButton\" are set "
+"to FALSE."
+msgstr ""
+"有効にした場合\"オーバーレイを表示\"は有効になり、\"閉じるボタンを表示"
+"\"、\"Escボタンを有効\"、\"オーバーレイをクリックで隠す\"、\"コンテンツをク"
+"リックで隠す\"は無効になります。"
 
 msgid "When true, FancyBox is centered while scrolling page."
-msgstr "有効の場合スクロールするとFancyBoxが中央に配置されます。"
+msgstr "有効の場合スクロールするとFancyBoxを中央に配置します。"
 
-msgid "When true, galleries will be cyclic, allowing you to keep pressing next/back."
-msgstr "有効の場合ギャラリーは周期的です。そして、次に/後ろに圧迫し続けることができます。"
+msgid ""
+"When true, galleries will be cyclic, allowing you to keep pressing next/back."
+msgstr ""
+"有効の場合ギャラリーは繰り返し、次へ/戻るを押すと維持することができます。"
 
 msgid "When true, transparency of content is changed for elastic transitions."
-msgstr "有効の場合コンテンツの透明度は弾力性のある移行に変更されます。"
+msgstr "有効の場合コンテンツの透明度は弾性遷移に変更されます。"
 
 msgid "Width of the video."
 msgstr "動画の幅。"
@@ -499,4 +536,51 @@ msgid "yes"
 msgstr "はい"
 
 msgid "Set the overflow CSS property to create or hide scrollbars."
-msgstr "スクロールバーを作成したり、非表示にオーバーフローのCSSプロパティを設定します。"
+msgstr ""
+"スクロールバーを作成したり、非表示にオーバーフローのCSSプロパティを設定しま"
+"す。"
+
+msgid "Nivo Lightbox"
+msgstr "Nivo Lightbox"
+
+msgid "fade scale"
+msgstr "フェードスケール"
+
+msgid "slide left"
+msgstr "左へスライド"
+
+msgid "slide right"
+msgstr "右へスライド"
+
+msgid "slide up"
+msgstr "上へスライド"
+
+msgid "slide down"
+msgstr "下へスライド"
+
+msgid "fall"
+msgstr "フォール"
+
+msgid "Keyboard navigation"
+msgstr "キーボードナビゲーション"
+
+msgid "Error messageThe effect to use when showing the lightbox."
+msgstr "lightboxを表示するとき、効果が使うエラーメッセージ。"
+
+msgid "Enable/Disable keyboard navigation (left/right/escape)."
+msgstr "キーボードナビゲーションを有効/無効にします。(右/左/エスケープ)"
+
+msgid "Error message"
+msgstr "エラーメッセージ"
+
+msgid "Error message if the content cannot be loaded."
+msgstr "コンテンツがロードできない場合のエラーメッセージ。"
+
+msgid "Settings restored to defaults."
+msgstr "設定をデフォルトに復元します。"
+
+msgid "Settings of Nivo script were restored to defaults."
+msgstr "Nivoスクリプトの設定をデフォルトに復元しました。"
+
+msgid "Are you sure you want to reset these settings to defaults?"
+msgstr "これらの設定をデフォルトにリセットしてもよろしいですか？"

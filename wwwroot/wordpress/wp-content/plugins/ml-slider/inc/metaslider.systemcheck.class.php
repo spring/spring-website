@@ -87,7 +87,7 @@ class MetaSliderSystemCheck {
             return;
         }
 
-        if (is_plugin_active('role-scoper/role-scoper.php')) {
+        if (function_exists('is_plugin_active') && is_plugin_active('role-scoper/role-scoper.php')) {
 
             $access_types = get_option('scoper_disabled_access_types');
 

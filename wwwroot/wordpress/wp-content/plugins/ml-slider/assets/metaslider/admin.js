@@ -1,11 +1,13 @@
 jQuery(document).ready(function($) {
 
-    jQuery("#ms-pro-meta-link-wrap").appendTo('#screen-meta-links');
+    jQuery("#screen-options-link-wrap").appendTo('#screen-meta-links').show();
 
     // Enable the correct options for this slider type
     var switchType = function(slider) {
         jQuery('.metaslider .option:not(.' + slider + ')').attr('disabled', 'disabled').parents('tr').hide();
         jQuery('.metaslider .option.' + slider).removeAttr('disabled').parents('tr').show();
+        jQuery('.metaslider .radio:not(.' + slider + ')').attr('disabled', 'disabled');
+        jQuery('.metaslider .radio.' + slider).removeAttr('disabled');
 
         // make sure that the selected option is available for this slider type
         if (jQuery('.effect option:selected').attr('disabled') === 'disabled') {
@@ -16,17 +18,13 @@ jQuery(document).ready(function($) {
         if (jQuery('.theme option:selected').attr('disabled') === 'disabled') {
             jQuery('.theme option:enabled:first').attr('selected', 'selected');
         }
-
-        // slides - set red background on incompatible slides
-        jQuery('.metaslider .slide:not(.' + slider + ')').css('background', '#FFD9D9');
-        jQuery('.metaslider .slide.' + slider).css('background', '');
     };
 
     // enable the correct options on page load
     switchType(jQuery('.metaslider .select-slider:checked').attr('rel'));
 
     // handle slide libary switching
-    jQuery('.metaslider .select-slider').click(function() {
+    jQuery('.metaslider .select-slider').on('click', function() {
         switchType(jQuery(this).attr('rel'));
     });
 
@@ -54,29 +52,66 @@ jQuery(document).ready(function($) {
         });
     });
 
+    // bind an event to the slides table to update the menu order of each slide
+    jQuery('.metaslider .left table').live('resizeSlides', function(event) {
+        var slideshow_width = jQuery('input.width').val();
+        var slideshow_height = jQuery('input.height').val();
+
+        jQuery("tr.slide input[name='resize_slide_id']", this).each(function() {
+            $this = jQuery(this);
+
+            var thumb_width = $this.attr('data-width');
+            var thumb_height = $this.attr('data-height');
+
+            if ((thumb_width != slideshow_width || thumb_height != slideshow_height)) {
+                $this.attr('data-width', slideshow_width);
+                $this.attr('data-height', slideshow_height);
+
+                var resizing = jQuery('<div class="resize_overlay" />');
+                $this.parent().parent().children('.col-1').children('.thumb').append(resizing);
+
+                var data = {
+                    action: 'resize_image_slide',
+                    slider_id: window.parent.metaslider_slider_id,
+                    slide_id: $this.attr('data-slide_id'),
+                    _wpnonce: metaslider.resize_nonce
+                };
+
+                jQuery.ajax({   
+                    type: "POST",
+                    data : data,
+                    cache: false,
+                    url: metaslider.ajaxurl,
+                    success: function(data) {
+                        if (console && console.log) {
+                            console.log(data);
+                        }
+                        
+                        resizing.remove();
+                    }   
+                });
+            }
+        });
+    });
+
     // show the confirm dialogue
-    jQuery(".confirm").live('click', function() {
+    jQuery(".confirm").on('click', function() {
         return confirm(metaslider.confirm);
     });
 
-    $('.useWithCaution').change(function(){
+    $('.useWithCaution').on('change', function(){
         if(!this.checked) {
-            return alert(metaslider.useWithCaution);
+            alert(metaslider.useWithCaution);
+            return true;
         }
     });
 
-    // show the confirm dialogue
-    jQuery(".toggle").live('click', function(e) {
-        e.preventDefault();
-        jQuery(this).next('.message').toggle();
-    });
-
     // helptext tooltips
-    jQuery(".metaslider .tipsy-tooltip").tipsy({className: 'msTipsy', live: true, delayIn: 500, html: true, fade: true, gravity: 'e'});
-    jQuery(".metaslider .tipsy-tooltip-top").tipsy({live: true, delayIn: 500, html: true, fade: true, gravity: 'se'});
+    jQuery(".metaslider .tipsy-tooltip").tipsy({className: 'msTipsy', live: true, delayIn: 500, html: true, gravity: 'e'});
+    jQuery(".metaslider .tipsy-tooltip-top").tipsy({live: true, delayIn: 500, html: true, gravity: 'se'});
 
     // Select input field contents when clicked
-    jQuery(".metaslider .shortcode input").click(function() {
+    jQuery(".metaslider .shortcode input, .metaslider .shortcode textarea").on('click', function() {
         this.select();
     });
 
@@ -97,9 +132,9 @@ jQuery(document).ready(function($) {
 
     // return lightbox width
     var getLightboxWidth = function() {
-        var width = parseInt(jQuery('input.width').val(), 10) + 'px';
+        var width = parseInt(jQuery('input.width').val(), 10);
 
-        if (jQuery('#carouselMode').is(':checked')) {
+        if (jQuery('.carouselMode').is(':checked')) {
             width = '75%';
         }
         
@@ -109,15 +144,21 @@ jQuery(document).ready(function($) {
     // return lightbox height
     var getLightboxHeight = function() {
         var height = parseInt(jQuery('input.height').val(), 10);
+        var thumb_height = parseInt(jQuery('input.thumb_height').val(), 10);
 
-        if (!isNaN(height)) {
-            height = height + 80 + 'px'
-        } else {
+        if (isNaN(height)) {
             height = '70%';
+        } else {
+        	height = height + 50;
+
+        	if (!isNaN(thumb_height)) {
+        		height = height + thumb_height;
+        	}
         }
 
         return height;
     };
+
 
     // IE10 treats placeholder text as the actual value of a textarea
     // http://stackoverflow.com/questions/13764607/html5-placeholder-attribute-on-textarea-via-jquery-in-ie10
@@ -129,8 +170,20 @@ jQuery(document).ready(function($) {
         });
     }
 
+    jQuery(".metaslider .toggle .hndle, .metaslider .toggle .handlediv").on('click', function() {
+    	$(this).parent().toggleClass('closed');
+    });
+
+    jQuery('.metaslider').on('click', 'ul.tabs li', function() {
+    	var tab = $(this);
+    	tab.parent().parent().children('.tabs-content').children('div.tab').hide();
+    	tab.parent().parent().children('.tabs-content').children('div.'+tab.attr('rel')).show();
+    	tab.siblings().removeClass('selected');
+    	tab.addClass('selected');
+    });
+
     // AJAX save & preview
-    jQuery(".metaslider form").find("input[type=submit]").click(function(e) {
+    jQuery(".metaslider form").find("input[type=submit]").on('click', function(e) {
         e.preventDefault();
 
         // update slide order
@@ -153,9 +206,18 @@ jQuery(document).ready(function($) {
             cache: false,
             url: url,
             success: function(data) {
-                // update the slides with the response html
-                $(".metaslider .left tbody").html($(".metaslider .left tbody", data).html());
-                
+                var response = jQuery(data);
+                jQuery(".metaslider .left table").trigger('resizeSlides');
+
+                jQuery("button[data-thumb]", response).each(function() {
+                    var $this = jQuery(this);
+                    var editor_id = $this.attr('data-editor_id');
+                    jQuery("button[data-editor_id=" + editor_id + "]")
+                        .attr('data-thumb', $this.attr('data-thumb'))
+                        .attr('data-width', $this.attr('data-width'))
+                        .attr('data-height', $this.attr('data-height'));
+                });
+
                 fixIE10PlaceholderText();
 
                 if (button.id === 'preview') {

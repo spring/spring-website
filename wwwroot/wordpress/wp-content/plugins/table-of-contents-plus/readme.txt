@@ -3,8 +3,8 @@ Contributors: conjur3r
 Donate link: 
 Tags: table of contents, indexes, toc, sitemap, cms, options, list, page listing, category listing
 Requires at least: 3.2
-Tested up to: 3.6
-Stable tag: 1308
+Tested up to: 3.7.1
+Stable tag: 1311
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,7 @@ Custom post types are supported, however, auto insertion works only when the_con
 
 = Available Languages =
 * Australian English (default)
+* Dutch - [Renee](http://101themes.com/)
 * Polish - [Jakub](http://notatki.4use.pl/)
 * Simplified Chinese - [icedream](http://www.tesfans.org/)
 * Slovak - Boris Gereg
@@ -61,6 +62,7 @@ This plugin requires PHP 5.
 
 
 == Shortcodes ==
+The plugin was designed to be as seamless and painfree as possible and did not require you to insert a shortcode for operation.  However, using the shortcode allows you to fully control the position of the table of contents within your page.  The following shortcodes are available with this plugin.
 
 When attributes are left out for the shortcodes below, they will fallback to the settings you defined under Settings > TOC+.  The following are detailed in the help tab.
 
@@ -99,7 +101,19 @@ Use the following CSS classes to customise the appearance of your listing:
 * toc_sitemap_posts_list
 
 
+== I love it, how can I show my appreciation? ==
+If you have been impressed with this plugin and would like to somehow show some appreciation, rather than send a donation my way, please donate to your charity of choice.
+
+I will never ask for any form of reward or compensation.  Helping others achieve their goals is satisfying for me :)
+
+
 == Changelog ==
+
+= 1311 =
+* Released: 10 November 2013
+* Added third parameter to toc_get_index API function to enable eligibility check (eg apply minimum heading check, is post type enabled, etc). This has been switched off by default and only affects those using the API. Thanks [Jonon](http://dublue.com/plugins/toc/comment-page-5/#comment-1943) for your comment.
+* Added Dutch translation courtesy [Renee](http://101themes.com/)
+* Apply bullet option to TOC+ widget, thanks to [Thomas Pani for the patch](http://dublue.com/plugins/toc/comment-page-5/#comment-2040).
 
 = 1308 =
 * Released: 5 August 2013

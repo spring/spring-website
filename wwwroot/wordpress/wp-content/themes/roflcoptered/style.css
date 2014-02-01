@@ -86,8 +86,6 @@ background-image: -webkit-gradient(
     margin:auto;
     padding-left: 20px;
     padding-right: 20px;
-    overflow: hidden;
-
 }
 
 #headercontent {
@@ -111,7 +109,7 @@ background-image: -webkit-gradient(
 }
 
 .site-branding {
-    maxheight: 98px;
+    max-height: 98px;
 }
 
 .logopositioning{
@@ -329,14 +327,13 @@ address {
 	margin: 0 0 1.5em;
 }
 pre {
-	background: #eee;
 	font-family: "Courier 10 Pitch", Courier, monospace;
 	font-size: 15px;
 	font-size: 1.5rem;
 	line-height: 1.6;
 	margin-bottom: 1.6em;
 	padding: 1.6em;
-	overflow: auto;
+	word-wrap:break-word;
 	max-width: 100%;
 }
 code, kbd, tt, var {
@@ -670,12 +667,18 @@ h6 {
     border-bottom-left-radius:10px;
 }
 
-.main-navigation .last {
+.main-navigation li:last-child {
     border-top-left-radius:0px;
     border-top-right-radius:0px;
     border-bottom-right-radius:9px;
     border-bottom-left-radius:0px;
-    border-right: 0px solid rgba(84,97,104,0.5);
+}
+
+.main-navigation li li:last-child {
+    border-top-left-radius:0px;
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+    border-bottom-left-radius:0px;
 }
 
 .main-navigation li {
@@ -744,6 +747,7 @@ background-image: -webkit-gradient(
 	list-style: none;
 	margin: 0;
 	padding-left: 0;
+
 }
 .main-navigation li {
 	float: left;
@@ -1220,7 +1224,7 @@ div.title {
     font-size: 14px;
 
     margin-left: -26px;
-    margin-right: -27px;
+    margin-right: -26px;
     margin-bottom: 15px;
     padding-left: 20px;
     padding-bottom: 10px;
@@ -1267,6 +1271,7 @@ div.title a:hover {
 }
 
 div.rss-output {
+	word-wrap: break-word;
     clear: both;
 }
 
@@ -1563,7 +1568,6 @@ span.source {
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-
 }
 .site-main .gallery a img {
 	border: none;
@@ -1724,4 +1728,22 @@ a:active {
 /* When Infinite Scroll has reached its end we need to re-display elements that were hidden (via .neverending) before */
 .infinity-end.neverending .site-footer {
 	display: block;
+}
+
+/* =Style Google+ Embedded Posts
+----------------------------------------------- */
+
+#___post_0 {
+	max-width: 740px !important;
+	width: 100% !important;
+}
+
+div.Yc.bsa {
+	max-width: 740px !important;
+	width: 100% !important;
+}
+
+#___post_0 iframe {
+	max-width: 740px !important;
+	width: 100% !important;
 }

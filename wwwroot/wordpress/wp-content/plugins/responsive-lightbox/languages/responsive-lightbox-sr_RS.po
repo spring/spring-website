@@ -1,0 +1,417 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox fr\n"
+"POT-Creation-Date: 2013-07-09 19:35+0100\n"
+"PO-Revision-Date: 2013-10-24 16:29+0100\n"
+"Last-Translator: Li-An <lian00@gmail.com>\n"
+"Language-Team: Li-An <lian00@gmail.com>\n"
+"Language: Français\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../responsive-lightbox.php:253
+msgid "prettyPhoto"
+msgstr "prettyPhoto"
+
+#: ../responsive-lightbox.php:255
+msgid "slow"
+msgstr "polako"
+
+#: ../responsive-lightbox.php:256
+msgid "normal"
+msgstr "normalno"
+
+#: ../responsive-lightbox.php:257
+msgid "fast"
+msgstr "brzo"
+
+#: ../responsive-lightbox.php:260
+msgid "default"
+msgstr "default"
+
+#: ../responsive-lightbox.php:261
+msgid "light rounded"
+msgstr "svetlo zaokrugljeno"
+
+#: ../responsive-lightbox.php:262
+msgid "dark rounded"
+msgstr "tamno zaokrugljeno"
+
+#: ../responsive-lightbox.php:263
+msgid "light square"
+msgstr "svetao kvadrat"
+
+#: ../responsive-lightbox.php:264
+msgid "dark square"
+msgstr "taman kvadrat"
+
+#: ../responsive-lightbox.php:265
+msgid "facebook"
+msgstr "facebook"
+
+#: ../responsive-lightbox.php:268
+msgid "window"
+msgstr "prozor"
+
+#: ../responsive-lightbox.php:269
+msgid "transparent"
+msgstr "transparentno "
+
+#: ../responsive-lightbox.php:270
+msgid "opaque"
+msgstr "neprozirno"
+
+#: ../responsive-lightbox.php:271
+msgid "direct"
+msgstr "direktno"
+
+#: ../responsive-lightbox.php:272
+msgid "gpu"
+msgstr "gpu"
+
+#: ../responsive-lightbox.php:277
+msgid "SwipeBox"
+msgstr "SwipeBox"
+
+#: ../responsive-lightbox.php:279
+msgid "CSS"
+msgstr "CSS"
+
+#: ../responsive-lightbox.php:280
+msgid "jQuery"
+msgstr "jQuery"
+
+#: ../responsive-lightbox.php:286
+msgid "Enable"
+msgstr "Omogući"
+
+#: ../responsive-lightbox.php:287
+msgid "Disable"
+msgstr "Onesposobi"
+
+#: ../responsive-lightbox.php:292 ../responsive-lightbox.php:328
+msgid "General settings"
+msgstr "Opšte postavke"
+
+#: ../responsive-lightbox.php:297 ../responsive-lightbox.php:338
+msgid "Lightbox settings"
+msgstr "Lightbox postavke"
+
+#: ../responsive-lightbox.php:329
+msgid "Lightbox script"
+msgstr "Lightbox script"
+
+#: ../responsive-lightbox.php:330
+msgid "Selector"
+msgstr "Selektor"
+
+#: ../responsive-lightbox.php:331
+msgid "Galleries"
+msgstr "Galerijje"
+
+#: ../responsive-lightbox.php:332
+msgid "Video links"
+msgstr "Video linkovi"
+
+#: ../responsive-lightbox.php:333
+msgid "Image links"
+msgstr "Linkovi slika"
+
+#: ../responsive-lightbox.php:334
+msgid "Deactivation"
+msgstr "Deaktivacija"
+
+#: ../responsive-lightbox.php:342
+msgid "Animation type"
+msgstr "Tip animacije"
+
+#: ../responsive-lightbox.php:343
+msgid "Top and bottom bars"
+msgstr "Gornje i donje poluge"
+
+#: ../responsive-lightbox.php:344
+msgid "Video max width"
+msgstr "Maksimalna dužina videa"
+
+#: ../responsive-lightbox.php:348
+msgid "Animation speed"
+msgstr "Brzina animacije"
+
+#: ../responsive-lightbox.php:349
+msgid "Slideshow"
+msgstr "Slideshow"
+
+#: ../responsive-lightbox.php:350
+msgid "Slideshow autoplay"
+msgstr "Slideshow autoplay"
+
+#: ../responsive-lightbox.php:351
+msgid "Opacity"
+msgstr "Neprozirnost"
+
+#: ../responsive-lightbox.php:352
+msgid "Show title"
+msgstr "Prikaži naslov"
+
+#: ../responsive-lightbox.php:353
+msgid "Allow resize big images"
+msgstr "Dozvoli promenu veličine velikih slika"
+
+#: ../responsive-lightbox.php:354
+msgid "Video width"
+msgstr "Video širina"
+
+#: ../responsive-lightbox.php:355
+msgid "Video height"
+msgstr "Video visina"
+
+#: ../responsive-lightbox.php:356
+msgid "Theme"
+msgstr "Tema"
+
+#: ../responsive-lightbox.php:357
+msgid "Horizontal padding"
+msgstr "Horizontal popunjavanje"
+
+#: ../responsive-lightbox.php:358
+msgid "Hide Flash"
+msgstr "Sakrij Flash"
+
+#: ../responsive-lightbox.php:359
+msgid "Flash Window Mode (wmode)"
+msgstr "Flash Window Mode (wmode)"
+
+#: ../responsive-lightbox.php:360
+msgid "Video autoplay"
+msgstr "Video autoplay"
+
+#: ../responsive-lightbox.php:361
+msgid "Modal"
+msgstr "Modal"
+
+#: ../responsive-lightbox.php:362
+msgid "Deeplinking"
+msgstr "Deeplinking"
+
+#: ../responsive-lightbox.php:363
+msgid "Overlay gallery"
+msgstr "Zadržavanje galerije"
+
+#: ../responsive-lightbox.php:364
+msgid "Keyboard shortcuts"
+msgstr "Skraćenice na tastaturu"
+
+#: ../responsive-lightbox.php:365
+msgid "Social (Twitter, Facebook)"
+msgstr "Social (Twitter, Facebook)"
+
+#: ../responsive-lightbox.php:383
+msgid "Select your preffered ligthbox effect script."
+msgstr "Izaberite omiljeni ligthbox efekat script."
+
+#: ../responsive-lightbox.php:393
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr "Izaberite koji rel selektor lightbox efekat će biti primenjen."
+
+#: ../responsive-lightbox.php:411
+msgid "Add lightbox to WordPress image galleries by default"
+msgstr "Dodajte lightbox za WordPress galeriju slika po defaultu"
+
+#: ../responsive-lightbox.php:429
+msgid "Add lightbox to YouTube and Vimeo video links by default"
+msgstr "Dodajte lightbox za YouTube i Vimeo video linkove  po defaultu  "
+
+#: ../responsive-lightbox.php:447
+msgid "Add lightbox to WordPress image links by default"
+msgstr "Dodajte lightbox za WordPress linkove slika po defaultu"
+
+#: ../responsive-lightbox.php:465
+msgid "Delete settings on plugin deactivation"
+msgstr "Izbriši postavke o deaktivaciji plugina  "
+
+#: ../responsive-lightbox.php:483
+msgid "Select a method of applying a lightbox effect."
+msgstr "Selektuj metod primenjivanja lightbox efekta."
+
+#: ../responsive-lightbox.php:501
+msgid "Disable if you don't want to display top and bottom bars."
+msgstr ""
+"Onesposobi ako ne želite da bude prikazano na gornjim i donjim polugama"
+
+#: ../responsive-lightbox.php:505
+msgid "Enter the time for images animation (in miliseconds)"
+msgstr "Unesite vreme slike animacije (u milisekundama)"
+
+#: ../responsive-lightbox.php:515
+msgid "Enter the max video width in a lightbox"
+msgstr "Unesite maksimalnu dužinu videa u lightbox-u"
+
+#: ../responsive-lightbox.php:533
+msgid "Select animation speed for lightbox effect"
+msgstr "Selektuj brzinu animacije za lightbox efekat"
+
+#: ../responsive-lightbox.php:551
+msgid "Display images as slideshow"
+msgstr "Prikaži slike kao slideshow"
+
+#: ../responsive-lightbox.php:555
+msgid "Enter time (in miliseconds)"
+msgstr "Unesi vreme (u milisekundama)"
+
+#: ../responsive-lightbox.php:573
+msgid "Automatically start slideshow"
+msgstr "Automatski aktiviraj slideshow"
+
+#: ../responsive-lightbox.php:583
+msgid "Value between 0 and 1 (for e.g. 0.5)"
+msgstr "Vrednost izmedju 0 i 1 (npr. 0.5)"
+
+#: ../responsive-lightbox.php:601
+msgid "Display image tiltle"
+msgstr "Prikaži naslov slike"
+
+#: ../responsive-lightbox.php:619
+msgid "Resize the photos bigger than viewport."
+msgstr "Promeni veličinu fotografijama koje su veće od viewport-a."
+
+#: ../responsive-lightbox.php:629 ../responsive-lightbox.php:639
+msgid "in pixels"
+msgstr "u pixelima"
+
+#: ../responsive-lightbox.php:657
+msgid "Select theme for lightbox effect"
+msgstr "Selektuj temu za  lightbox efekat"
+
+#: ../responsive-lightbox.php:667
+msgid "Horizontal padding (in pixels)"
+msgstr "Horizontalno postavljanje (u pixelima)"
+
+#: ../responsive-lightbox.php:685
+msgid ""
+"Hides all the flash object on a page. Enable this if flash appears over "
+"prettyPhoto"
+msgstr ""
+"Sakriva sve flash object-e na stranici. Omogući ovo ako se flash pojavi "
+"preko prettyPhoto"
+
+#: ../responsive-lightbox.php:703
+msgid "Select flash window mode"
+msgstr "Selektuj flash window mode"
+
+#: ../responsive-lightbox.php:721
+msgid "Automatically start videos"
+msgstr "Automatiski pokreni videe"
+
+#: ../responsive-lightbox.php:739
+msgid "If set to true, only the close button will close the window"
+msgstr ""
+"Ako je postavjleno na  dobro, pojaviće se samo ZATVORI dugme na prozoru."
+
+#: ../responsive-lightbox.php:757
+msgid "Allow prettyPhoto to update the url to enable deeplinking"
+msgstr "Dozvoli prettyPhoto da update-uje url za omogućavanje deeplinking-a"
+
+#: ../responsive-lightbox.php:775
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over"
+msgstr "Ako je omogućeno, galerija će postaviti sliku preko celog ekrana mišem"
+
+#: ../responsive-lightbox.php:793
+msgid "Set to false if you open forms inside prettyPhoto"
+msgstr "Namesti na loše ako otvorite forme unutar prettyPhoto"
+
+#: ../responsive-lightbox.php:811
+msgid "Display links to Facebook and Twitter"
+msgstr "Prikaži linkove za Facebook i Twitter"
+
+#: ../responsive-lightbox.php:906
+msgid ""
+"Changes were not saved because there was attempt to save settings of "
+"inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"Promene nisu sačuvane jer je pokušano sačuvavanje postavki neaktivnog "
+"skripta. Sajt je ponovo učitan u odgovarajućim script postavkama."
+
+#: ../responsive-lightbox.php:918
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr "Postavke SwipeBox scripta gde je ponovo namešten na default."
+
+#: ../responsive-lightbox.php:924
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr "Postavke prettyPhoto scripta gde je ponovo namešten na default."
+
+#: ../responsive-lightbox.php:928
+msgid ""
+"Changes were not set to defaults because there was attempt to reset settings "
+"of inactive script. The site has been reloaded to the proper script settings."
+msgstr ""
+"Promene nisu nameštene na default jer je pokušano resetovanje postavki "
+"neaktivnog skripta. Sajt je ponovo učitan u odgovarajućim script postavkama."
+
+#: ../responsive-lightbox.php:942 ../responsive-lightbox.php:943
+#: ../responsive-lightbox.php:957 ../responsive-lightbox.php:989
+msgid "Responsive Lightbox"
+msgstr "Responsive Lightbox"
+
+#: ../responsive-lightbox.php:982
+msgid "Reset to defaults"
+msgstr "Resetujte do defaulta"
+
+#: ../responsive-lightbox.php:991
+msgid "Need support?"
+msgstr "Potrebna vam je podrška?"
+
+#: ../responsive-lightbox.php:992
+msgid ""
+"If you are having problems with this plugin, please talk about them in the"
+msgstr "Ako imate probleme sa ovim pluginom, pričajte o njima u "
+
+#: ../responsive-lightbox.php:992
+msgid "Support forum"
+msgstr "Forum podrške"
+
+#: ../responsive-lightbox.php:994
+msgid "Do you like this plugin?"
+msgstr "Da li vam se dopada plugin?"
+
+#: ../responsive-lightbox.php:995
+msgid "Rate it 5"
+msgstr "Oceni u 5"
+
+#: ../responsive-lightbox.php:995
+msgid "on WordPress.org"
+msgstr "on WordPress.org"
+
+#: ../responsive-lightbox.php:996
+msgid "Blog about it & link to the"
+msgstr "Blog o tome i link za"
+
+#: ../responsive-lightbox.php:996
+msgid "plugin page"
+msgstr "plugin stranica"
+
+#: ../responsive-lightbox.php:997
+msgid "Check out our other"
+msgstr "Proverite druge naše"
+
+#: ../responsive-lightbox.php:997
+msgid "WordPress plugins"
+msgstr "WordPress pluginovi"
+
+#: ../responsive-lightbox.php:1022
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr ""
+"Da li ste sigurni da želite da resetujete postavke skripta po defaultu?"
+
+#: ../responsive-lightbox.php:1149
+msgid "Support"
+msgstr "Podrška"
+
+#: ../responsive-lightbox.php:1171
+msgid "Settings"
+msgstr "Postavke"

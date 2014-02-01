@@ -5,11 +5,11 @@ Plugin URI: 	http://dublue.com/plugins/toc/
 Description: 	A powerful yet user friendly plugin that automatically creates a table of contents. Can also output a sitemap listing all pages and categories.
 Author: 		Michael Tran
 Author URI: 	http://dublue.com/
-Version: 		1308
+Version: 		1311
 License:		GPL2
 */
 
-/*  Copyright 2012  Michael Tran  (michael@dublue.com)
+/*  Copyright 2013  Michael Tran  (michael@dublue.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -1667,6 +1667,13 @@ if ( !class_exists( 'toc_widget' ) ) :
 				$title = apply_filters('widget_title', $instance['title'] );
 				if ( strpos($title, '%PAGE_TITLE%') !== false ) $title = str_replace( '%PAGE_TITLE%', get_the_title(), $title );
 				$hide_inline = $toc_options['show_toc_in_widget_only'];
+
+				$css_classes = '';
+				// bullets?
+				if ( $toc_options['bullet_spacing'] )
+					$css_classes .= ' have_bullets';
+				else
+					$css_classes .= ' no_bullets';
 				
 				if ( $items ) {
 					// before widget (defined by themes)
@@ -1676,7 +1683,7 @@ if ( !class_exists( 'toc_widget' ) ) :
 					if ( !$title ) $title = $toc_options['heading_text'];
 					echo 
 						$before_title . $title . $after_title .
-						'<ul class="toc_widget_list">' . $items . '</ul>'
+						'<ul class="toc_widget_list' . $css_classes . '">' . $items . '</ul>'
 					;
 					
 					// after widget (defined by themes)
@@ -1740,26 +1747,37 @@ endif;
  * Returns a HTML formatted string of the table of contents without the surrounding UL or OL
  * tags to enable the theme editor to supply their own ID and/or classes to the outer list.
  *
- * There are two optional parameters you can feed this function with:
+ * There are three optional parameters you can feed this function with:
  *
  *		- $content is the entire content with headings.  If blank, will default to the current $post
  *
  * 		- $link is the URL to prefix the anchor with.  If provided a string, will use it as the prefix.  
  *		If set to true then will try to obtain the permalink from the $post object.
+ *
+ *		- $apply_eligibility bool, defaults to false.  When set to true, will apply the check to
+ *		see if bit of content has the prerequisites needed for a TOC, eg minimum number of headings
+ *		enabled post type, etc.
  */
-function toc_get_index( $content = '', $prefix_url = '' )
+function toc_get_index( $content = '', $prefix_url = '', $apply_eligibility = false )
 {
 	global $wp_query, $tic;
 	
 	$return = '';
 	$find = $replace = array();
+	$proceed = true;
 	
 	if ( !$content ) {
 		$post = get_post( $wp_query->post->ID );
 		$content = wptexturize($post->post_content);
 	}
 	
-	if ( $tic->is_eligible() ) {
+	if ( $apply_eligibility ) {
+		if ( !$tic->is_eligible() ) {
+			$proceed = false;
+		}
+	}
+
+	if ( $proceed ) {
 		$return = $tic->extract_headings( $find, $replace, $content );
 		if ( $prefix_url ) $return = str_replace('href="#', 'href="' . $prefix_url . '#', $return);
 	}

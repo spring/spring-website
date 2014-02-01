@@ -14,12 +14,14 @@ class MetaFlexSlider extends MetaSlider {
      * 
      * @param integer $id slideshow ID
      */
-    public function __construct($id) {
-        parent::__construct($id);
+    public function __construct($id, $shortcode_settings) {
+        parent::__construct($id, $shortcode_settings);
 
         add_filter('metaslider_flex_slider_parameters', array($this, 'enable_carousel_mode'), 10, 2);
         add_filter('metaslider_flex_slider_parameters', array($this, 'enable_easing'), 10, 2);
+        add_filter('metaslider_flex_slider_javascript_before', array($this, 'no_conflict_add_flexslider_class'), 9, 2);
         add_filter('metaslider_css', array($this, 'get_carousel_css'), 11, 3);
+        add_filter('metaslider_css_classes', array($this, 'remove_bottom_margin'), 11, 3);
         
         $this->carousel_item_margin = apply_filters('metaslider_carousel_margin', $this->carousel_item_margin, $id);
     }
@@ -51,7 +53,29 @@ class MetaFlexSlider extends MetaSlider {
     }
 
     /**
-     * Adjust the slider parameters so they're comparible with the carousel mode
+     * If 'No Conflict' mode is enabled, the slideshow is output without the 'flexslider' class.
+     * This stops themes and plugins from being able to call $('.flexslider').flexslider({}); on Meta
+     * Slider slideshows. Only once the Meta Slider javascript is executed is the flexslider class 
+     * added to the container, so not to break custom CSS for existing users.
+     *
+     * @since 2.6-beta
+     * @param array $options
+     * @param integer $slider_id
+     * @return array $options
+     */
+    public function no_conflict_add_flexslider_class($js, $slider_id) {
+    	if ($this->get_setting('noConflict') == 'true') {
+    		$js .= "$('#metaslider_{$slider_id}').addClass('flexslider'); // theme/plugin conflict avoidance";
+    	}
+
+        // we don't want this filter hanging around if there's more than one slideshow on the page
+        remove_filter('metaslider_flex_slider_javascript_before', array($this, 'add_flexslider_class'), 9, 2);
+        
+        return $js;
+    }
+
+    /**
+     * Ensure CSS transitions are disabled when easing is enabled.
      * 
      * @param array $options
      * @param integer $slider_id
@@ -63,9 +87,28 @@ class MetaFlexSlider extends MetaSlider {
         }
         
         // we don't want this filter hanging around if there's more than one slideshow on the page
-        remove_filter('metaslider_flex_slider_parameters', 'enable_easing');
+        remove_filter('metaslider_flex_slider_parameters', array($this, 'enable_easing'), 10, 2);
 
         return $options;
+    }
+
+    /**
+     * Add a 'nav-hidden' class to slideshows where the navigation is hidden.
+     * 
+     * @param string $css
+     * @param array $settings
+     * @param integer $slider_id
+     * @return string $css
+     */
+    public function remove_bottom_margin($class, $id, $settings) {
+        if (isset($settings["navigation"]) && $settings['navigation'] == 'false') {
+            return $class .= " nav-hidden";
+        }
+
+        // we don't want this filter hanging around if there's more than one slideshow on the page
+        remove_filter('metaslider_css_classes', array($this, 'remove_bottom_margin'), 11, 3);
+
+        return $class;
     }
 
     /**
@@ -80,6 +123,9 @@ class MetaFlexSlider extends MetaSlider {
         if (isset($settings["carouselMode"]) && $settings['carouselMode'] == 'true') {
             $css .= "\n        #metaslider_{$slider_id}.flexslider li {margin-right: {$this->carousel_item_margin}px;}";
         }
+
+        // we don't want this filter hanging around if there's more than one slideshow on the page
+        remove_filter('metaslider_css', array($this, 'get_carousel_css'), 11, 3);
 
         return $css;
     }
@@ -131,7 +177,9 @@ class MetaFlexSlider extends MetaSlider {
      * @return string slider markup.
      */
     protected function get_html() {
-        $return_value = "<div id=\"" . $this->get_identifier() . "\" class=\"flexslider\">";
+    	$class = $this->get_setting('noConflict') == 'true' ? "" : ' class="flexslider"';
+
+        $return_value = '<div id="' . $this->get_identifier() . '"' . $class . '>';
         $return_value .= "\n            <ul class=\"slides\">";
 
         foreach ($this->slides as $slide) {

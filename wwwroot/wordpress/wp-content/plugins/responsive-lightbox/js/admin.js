@@ -64,22 +64,26 @@ jQuery(document).ready(function($) {
 	});
 
 	$(document).on('change', '#rl-pp-slideshow-yes, #rl-pp-slideshow-no', function(event) {
-		if($('#rl-pp-slideshow-yes:checked').val() === 'yes') {
+		if($(this).val() === 'yes') {
 			$('#rl_pp_slideshow_delay').fadeIn(300);
-		} else if($('#rl-pp-slideshow-no:checked').val() === 'no') {
+		} else {
 			$('#rl_pp_slideshow_delay').fadeOut(300);
 		}
 	});
 
 	$(document).on('change', '#rl-sb-hide-bars-yes, #rl-sb-hide-bars-no', function(event) {
-		if($('#rl-sb-hide-bars-yes:checked').val() === 'yes') {
+		if($(this).val() === 'yes') {
 			$('#rl_sb_hide_bars_delay').fadeIn(300);
-		} else if($('#rl-sb-hide-bars-no:checked').val() === 'no') {
+		} else {
 			$('#rl_sb_hide_bars_delay').fadeOut(300);
 		}
 	});
 
 	$(document).on('click', 'input#reset_rl_configuration', function(event) {
 		return confirm(rlArgs.resetScriptToDefaults);
+	});
+
+	$(document).on('click', 'input#reset_rl_settings', function(event) {
+		return confirm(rlArgs.resetSettingsToDefaults);
 	});
 });
