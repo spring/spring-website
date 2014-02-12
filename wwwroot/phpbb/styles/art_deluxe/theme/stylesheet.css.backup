@@ -3344,18 +3344,12 @@ div.dropdown-tabs:hover > ul { display: block; }
     border-bottom-left-radius:10px;
 }
 
-.main-navigation li:last-child {
+.main-navigation .last {
     border-top-left-radius:0px;
     border-top-right-radius:0px;
-    border-bottom-right-radius:9px;
+    border-bottom-right-radius:10px;
     border-bottom-left-radius:0px;
-}
-
-.main-navigation li li:last-child {
-    border-top-left-radius:0px;
-    border-top-right-radius:0px;
-    border-bottom-right-radius:0px;
-    border-bottom-left-radius:0px;
+    border-right: 0px solid rgba(84,97,104,0.5);
 }
 
 .main-navigation li {
