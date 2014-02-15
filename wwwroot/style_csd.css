@@ -1,0 +1,6 @@
+
+/* CSD */
+html {
+	background: -ms-linear-gradient(-10deg, #F00 16.6%, #F80 16.7%, #F80 33.3%, #FF0 33.4%, #FF0 49.9%, #080 50%, #080 66.6%, #00F 66.7%, #00F 83.3%, #A0C 83.4%);
+	background: linear-gradient(100deg, #F00 16.6%, #F80 16.7%, #F80 33.3%, #FF0 33.4%, #FF0 49.9%, #080 50%, #080 66.6%, #00F 66.7%, #00F 83.3%, #A0C 83.4%) transparent;
+}

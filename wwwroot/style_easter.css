@@ -1,0 +1,6 @@
+
+/* EASTER */
+html {
+	background: -ms-linear-gradient(top, #487f00 0%,#9ecb2d 100%);
+	background: linear-gradient(to bottom, #487f00 0%,#9ecb2d 100%);
+}
