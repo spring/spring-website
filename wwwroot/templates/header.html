@@ -35,8 +35,6 @@
 	var jan7th_date = new get7thJanuar(Date().getYear());
 	var easter_date = getEaster(Date().getYear());
 
-	document.write("<link rel=\"stylesheet\" href=\"/style_ukraine.css\" type=\"text/css\"/>");
-
 	if ((currentTime >= advent_date) || (currentTime < jan7th_date)) {
 		document.write("<link rel=\"stylesheet\" href=\"/style_xmas.css\" type=\"text/css\"/>");
 	}
