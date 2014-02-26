@@ -599,7 +599,33 @@ fieldset.display-options {
     line-height: 1em;
     text-align: center;
 }
+.menu-buttons, #search-adv-google {
+    display: block;
+    float: left;
+    z-index: 1;
+    margin-left: 5px;
+	margin-top: 0px;
+    font-size: 12px;
+    line-height: 1em;
+    text-align: center;
+}
 .menu-buttons a, .menu-buttons a:visited, #search-adv a, #search-adv a:visited {
+    display: block;
+    float: left;
+    margin: 0;
+    margin-right: 10px;
+    padding: 0;
+    padding-left: 14px;
+    line-height: 1em;
+    background: url({T_THEME_PATH}/images/menu.png) top left no-repeat;
+    text-decoration: none;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    -ms-transition: none;
+    transition: none;
+}
+.menu-buttons a, .menu-buttons a:visited, #search-adv-google a, #search-adv-google a:visited {
     display: block;
     float: left;
     margin: 0;
@@ -628,8 +654,24 @@ fieldset.display-options {
     color: #fff;
     text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
 }
+.menu-buttons a span, #search-adv-google a span {
+    display: inline-block;
+    margin: 0;
+    margin-right: -10px;
+    padding: 0;
+    padding-right: 14px;
+    padding-top: 9px;
+    height: 23px;
+    background: url({T_THEME_PATH}/images/menu2.png) top right no-repeat;
+    font-size: 12px;
+    color: #fff;
+    text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
+}
 
 .menu-buttons a:hover, .menu-buttons a.new, #search-adv a:hover {
+    background-position: bottom left;
+}
+.menu-buttons a:hover, .menu-buttons a.new, #search-adv-google a:hover {
     background-position: bottom left;
 }
 .menu-buttons a:hover span, .menu-buttons a.new span, #search-adv a:hover span {
@@ -637,9 +679,21 @@ fieldset.display-options {
     color: #fff;
     text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
 }
+.menu-buttons a:hover span, .menu-buttons a.new span, #search-adv-google a:hover span {
+    background-position: bottom right;
+    color: #fff;
+    text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 0;
+}
 #nav-header strong { font-weight: normal; }
 
 #search-adv {
+    float: right;
+    z-index: 1;
+	margin-top: 0px;
+    margin-left: 0;
+    margin-right: 5px;
+}
+#search-adv-google {
     float: right;
     z-index: 1;
 	margin-top: 0px;
