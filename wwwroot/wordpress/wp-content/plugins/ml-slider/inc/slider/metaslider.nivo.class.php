@@ -99,17 +99,17 @@ class MetaNivoSlider extends MetaSlider {
      * @return string slider markup.
      */
     protected function get_html() {
-        $retVal  = "<div class='slider-wrapper theme-{$this->get_theme()}'>";
-        $retVal .= "\n            <div class='ribbon'></div>";
-        $retVal .= "\n            <div id='" . $this->get_identifier() . "' class='nivoSlider'>";
+        $return_value  = "<div class='slider-wrapper theme-{$this->get_theme()}'>";
+        $return_value .= "\n            <div class='ribbon'></div>";
+        $return_value .= "\n            <div id='" . $this->get_identifier() . "' class='nivoSlider'>";
         
         foreach ($this->slides as $slide) {
-            $retVal .= "\n                " . $slide;
+            $return_value .= "\n                " . $slide;
         }
         
-        $retVal .= "\n            </div>\n        </div>";
+        $return_value .= "\n            </div>\n        </div>";
         
-        return $retVal;
+        return apply_filters('metaslider_nivo_slider_get_html', $return_value, $this->id, $this->settings);;
     }
 }
 ?>

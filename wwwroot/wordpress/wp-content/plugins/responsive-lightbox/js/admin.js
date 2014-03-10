@@ -79,6 +79,14 @@ jQuery(document).ready(function($) {
 		}
 	});
 
+	$(document).on('change', '#rl-enable-custom-events-yes, #rl-enable-custom-events-no', function(event) {
+		if($(this).val() === 'yes') {
+			$('#rl_custom_events').fadeIn(300);
+		} else {
+			$('#rl_custom_events').fadeOut(300);
+		}
+	});
+
 	$(document).on('click', 'input#reset_rl_configuration', function(event) {
 		return confirm(rlArgs.resetScriptToDefaults);
 	});

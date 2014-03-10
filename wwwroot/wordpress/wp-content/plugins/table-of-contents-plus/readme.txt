@@ -3,8 +3,8 @@ Contributors: conjur3r
 Donate link: 
 Tags: table of contents, indexes, toc, sitemap, cms, options, list, page listing, category listing
 Requires at least: 3.2
-Tested up to: 3.7.1
-Stable tag: 1311
+Tested up to: 3.8.1
+Stable tag: 1402
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,6 +28,7 @@ Custom post types are supported, however, auto insertion works only when the_con
 = Available Languages =
 * Australian English (default)
 * Dutch - [Renee](http://101themes.com/)
+* German - [Cord Peter](http://drv-gemeinschaft.de/)
 * Polish - [Jakub](http://notatki.4use.pl/)
 * Simplified Chinese - [icedream](http://www.tesfans.org/)
 * Slovak - Boris Gereg
@@ -108,6 +109,15 @@ I will never ask for any form of reward or compensation.  Helping others achieve
 
 
 == Changelog ==
+
+= 1402 =
+* Released: 19 February 2014
+* Added German translation courtesy [Cord Peter](http://drv-gemeinschaft.de/)
+* Modify toc_get_index API function to also reset minimum number of headings to 0.
+* Removing the TOC+ widget from the sidebar no longer requires you to uncheck the 'Show the table of contents only in the sidebar' option. It will be reset on removal.
+* Delay count of headings until disqualified have been removed. Thanks to [Simone di Saintjust](http://dublue.com/plugins/toc/comment-page-6/#comment-2190) for raising it.
+* Using the TOC+ widget, you can now limit the display to selected post types. Thanks to [Pete Markovic](http://dublue.com/plugins/toc/comment-page-6/#comment-2248) for the idea.
+* Updated translation file (extra options added).
 
 = 1311 =
 * Released: 10 November 2013

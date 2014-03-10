@@ -1,13 +1,20 @@
-.responsive-lightbox-settings { width:68%; margin-right:20px; }
-.responsive-lightbox-settings h3 { font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif; font-weight: bold; }
-.responsive-lightbox-settings hr, .df-credits hr { border: solid #ddd; border-width: 1px 0 0; clear: both; height: 0; -moz-box-shadow: 0px 1px 0px #fff; -webkit-box-shadow: 0px 1px 0px #fff; box-shadow: 0px 1px 0px #fff; margin:15px 0; }
-.df-credits { width:28%; max-width:350px; margin-top:20px; border:1px solid #ddd; background:#fcfcfc; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
-.df-credits h3 { margin-top:5px; }
-.df-credits h3.metabox-title { background: #f9f9f9 url(images/bg_fallback.png) 0 -50px repeat-x; background: -moz-linear-gradient(top, #2e9fd2 0%, #21759B 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2e9fd2), color-stop(100%,#21759B)); background: -webkit-linear-gradient(top, #2e9fd2 0%,#21759B 100%); background: -o-linear-gradient(top, #2e9fd2 0%,#21759B 100%); background: -ms-linear-gradient(top, #2e9fd2 0%,#21759B 100%); background: linear-gradient(top, #2e9fd2 0%,#21759B 100%); -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset; -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset;	border: 1px solid; border-color: #21759b; border-bottom-color: #1e6a8d; -webkit-box-shadow: inset 0 1px 0 rgba(120,200,230,0.5); box-shadow: inset 0 1px 0 rgba(120,200,230,0.5); color: #fff; text-decoration: none; text-shadow: 0 1px 0 rgba(0,0,0,0.5); margin:0; line-height:32px; font-weight:normal; padding:0 10px; }
-.df-credits .inner { padding:15px 10px; }
-.df-credits .df-link { font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif; font-style:italic; margin:0; }
+/* Responsive Lightbox settings */
+.df-credits { float: right; width: 280px; background: #fff; margin: 20px -300px 20px 20px; position: relative; }
+.df-credits .inner { padding-left: 10px; padding-right: 10px; }
+.df-credits h3 { font-size: 14px; line-height: 1.4; margin: 0;  padding: 8px 12px; border-bottom: 1px solid #eee; }
+.df-credits .df-link { font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif; font-style:italic; padding-bottom: 10px; margin: 0; }
 .df-credits .df-link a { vertical-align: middle; padding: 5px 0 0 4px; }
+.responsive-lightbox-settings { margin-right: 300px; }
+.responsive-lightbox-settings hr, .df-credits hr { border: solid #eee; border-width: 1px 0 0; clear: both; height: 0; }
+.responsive-lightbox-settings form { float: left; min-width: 463px; width: auto; }
+.responsive-lightbox-settings fieldset span.description { margin-bottom: 8px; margin-top: 4px; display: block; }
+
 .wplike-slider span.middle { width: 150px; }
 .wplike-slider span.left { margin-right: 10px; }
 .wplike-slider span.right { margin-left: 10px; }
-#rl_nv_error_message input { width: 400px; }
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 959px) {
+	.df-credits { width: 100%; float: none; margin: 20px 0; }
+	.responsive-lightbox-settings { margin-right: 0; }
+}

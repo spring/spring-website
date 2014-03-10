@@ -45,15 +45,15 @@ class MetaCoinSlider extends MetaSlider {
      * @return string slider markup.
      */
     protected function get_html() {
-        $retVal = "<div id='" . $this->get_identifier() . "' class='coin-slider'>";
+        $return_value = "<div id='" . $this->get_identifier() . "' class='coin-slider'>";
         
         foreach ($this->slides as $slide) {
-            $retVal .= "\n" . $slide;
+            $return_value .= "\n" . $slide;
         }
         
-        $retVal .= "\n        </div>";
+        $return_value .= "\n        </div>";
         
-        return $retVal;
+        return apply_filters('metaslider_coin_slider_get_html', $return_value, $this->id, $this->settings); $retVal;
     }
 }
 ?>

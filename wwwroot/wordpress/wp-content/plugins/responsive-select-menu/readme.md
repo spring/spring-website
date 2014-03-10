@@ -8,9 +8,9 @@
 
 **Tags:** responsive, menu, select, drop down, 
 
-**Requires at least:** 3.3
+**Requires at least:** 3.6
 
-**Tested up to:** 3.6
+**Tested up to:** 3.8
 
 **Stable tag:** trunk
 

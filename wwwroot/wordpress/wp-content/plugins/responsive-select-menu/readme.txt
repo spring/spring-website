@@ -2,9 +2,9 @@
 Contributors: sevenspark
 Donate link: http://bit.ly/DonateResponsiveSelect
 Tags: responsive, menu, select, drop down, 
-Requires at least: 3.3
-Tested up to: 3.6
-Stable tag: 1.5.2
+Requires at least: 3.6
+Tested up to: 3.8
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,10 @@ If your theme creates a menu the standard way with wp_nav_menu, it should work. 
 2. Responsive select menu Control Panel
 
 == Changelog ==
+
+= 1.5.3 =
+* Added UberMenu Conditionals compatibility
+* Added filterable first menu item names
 
 = 1.5.2 =
 * Resolved WordPress 3.6 Strict Warnings

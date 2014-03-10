@@ -3,15 +3,25 @@
     clear: both
 }
 
-.metaslider #poststuff #post-body.columns-2 {
-    margin-right: 320px
-}
-
 .metaslider #post-body.columns-2 #postbox-container-1 {
     margin-right: -320px;
     width: 300px;
-    clear: both;
 }
+
+.metaslider #poststuff #post-body.columns-2 {
+    margin-right: 320px;
+}
+
+.rtl .metaslider #post-body.columns-2 #postbox-container-1 {
+    margin-left: -320px;
+    margin-right: 0;
+}
+
+.rtl .metaslider #poststuff #post-body.columns-2 {
+    margin-left: 320px;
+    margin-right: 0;
+}
+
 
 .metaslider .left input,
 .metaslider .left textarea {
@@ -88,14 +98,18 @@
     margin: 0 3px
 }
 
-.metaslider #poststuff .right h3.configuration,
-.metaslider #poststuff .left h3 {
+.metaslider #poststuff .right h3.configuration {
     padding: 7px 7px 7px 12px;
     line-height: 27px;
 }
 
+.metaslider #poststuff .left h3 {
+    padding: 7px 5px;
+    line-height: 27px;
+}
+
 .metaslider #poststuff .left th {
-    padding: 0 7px 0 0
+    padding: 0 7px;
 }
 
 .metaslider .left table tr.slide input.url {
@@ -279,15 +293,14 @@
     bottom: 0;
     left: 0;
     position: absolute;
-    background: white;
-    color: #333;
+    background: #333;
+    color: white;
     padding: 5px;
     font-size: 12px;
-    opacity: 0.7;
+    opacity: 0.8;
     word-wrap: break-word;
     width: 140px;
     padding: 3px 5px;
-    font-weight: bold;
 }
 
 .metaslider .left table tr.slide td.col-1:hover .delete-slide {
@@ -320,12 +333,22 @@
     padding: 0px;
     color: #a9a9a9;
     line-height: 20px;
-    bottom: 23px;
+    bottom: 22px;
     right: 0;
 }
 
+.rtl .metaslider .left table tr.slide .tabs-content .new_window {
+    position: relative;
+    float: left;
+}
+
+
 .metaslider .left table tr.slide .tabs-content .new_window input {
     margin-left: 3px
+}
+
+.rtl .metaslider .left table tr.slide .tabs-content .new_window input {
+    margin-right: 3px
 }
 
 .metaslider .left table tr.slide .tabs-content .new_window label {
@@ -334,6 +357,9 @@
     font-size: 11px;
 }
 
+.metaslider tr.radio {
+    display: table-row;
+}
 .metaslider .left table td {
     border-top: 0;
     border-bottom: 1px solid #e1e1e1;
@@ -341,7 +367,11 @@
 }
 
 .metaslider .left table td.col-2 {
-    padding: 12px 12px 12px 0
+    padding: 12px 12px 12px 0;
+}
+
+.rtl .metaslider .left table td.col-2 {
+    padding: 12px 0 12px 12px;
 }
 
 .metaslider .right .highlight {
@@ -465,9 +495,9 @@ input[type=radio]:checked + label {
 .metaslider .right #save {
     margin-right: 0
 }
-
-.metaslider .right label {
-    margin-right: 10px
+.rtl .metaslider .right #save {
+    margin-right: 4px;
+    margin-left: 0;
 }
 
 .metaslider .right .number input:focus {
@@ -483,6 +513,33 @@ input[type=radio]:checked + label {
     float: left;
     height: 26px;
     margin: 0;
+}
+
+.rtl .metaslider .right .number .after,
+.rtl .metaslider .right .number input {
+    float: right;
+}
+.rtl .metaslider .right .number .after {
+    border-left: 1px solid #ddd;
+    border-right: 0;
+}
+.rtl .metaslider .right .number input {
+    border-right: 1px solid #ddd;
+    border-left: 0;
+}
+
+.metaslider .right .radio ul {
+    margin: 0;
+}
+.metaslider .right .radio li {
+    margin: 0 0 2px 0;
+    clear: both;
+}
+.metaslider .right .radio input[type="radio"] {
+    margin-top: 0;
+}
+.rtl .metaslider .right .radio input[type="radio"] {
+    float: right;
 }
 
 .metaslider .right .number input {
@@ -579,7 +636,7 @@ input[type=radio]:checked + label {
     cursor: inherit
 }
 
-.metaslider .right .postbox.toggle h3 {
+.metaslider .right .postbox.ms-toggle h3 {
     cursor: pointer
 }
 
@@ -595,9 +652,11 @@ input[type=radio]:checked + label {
 }
 
 .metaslider table td,
-.metaslider table td input,
+.metaslider table td input[type=text],
+.metaslider table td input[type=number],
 .metaslider table td select,
-.metaslider table td textarea {
+.metaslider table td textarea,
+.metaslider table td label {
     font-size: 12px
 }
 
@@ -630,7 +689,7 @@ input[type=radio]:checked + label {
 
 .metaslider .nav-tab-active {
     background: transparent;
-	padding: 8px 13px 8px;
+	padding: 9px 13px 8px;
 	border-bottom: 1px solid #f1f1f1;
 	margin-top: auto;
 	position: relative;
@@ -638,14 +697,13 @@ input[type=radio]:checked + label {
 }
 
 .metaslider .nav-tab-active input {
-    padding: 0;
+    padding: 0 13px 0 0;
     margin: 0;
     border: 0;
     width: 100px;
     font-size: 13px;
-    background: transparent;
+    background: transparent url(edit.png) no-repeat center right;
     box-shadow: none;
-    font-weight: bold;
 }
 
 .metaslider .warning {
@@ -741,7 +799,7 @@ textarea:-ms-input-placeholder {
     margin: 0 0 0 5px;
     cursor: pointer;
     padding: 3px 5px;
-    float: left;
+    display: inline-block;
     line-height: 14px;
     color: #ccc;
     position: relative;

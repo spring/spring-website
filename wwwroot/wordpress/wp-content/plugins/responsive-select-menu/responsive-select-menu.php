@@ -4,14 +4,14 @@
 Plugin Name: Responsive Select Menu
 Plugin URI: http://wpmegamenu.com/responsive-select-menu
 Description: Turn your menu into a select box at small viewport sizes
-Version: 1.5.2
+Version: 1.5.3
 Author: Chris Mavricos, SevenSpark
 Author URI: http://sevenspark.com
 License: GPLv2
-Copyright 2011-2013  Chris Mavricos, SevenSpark http://sevenspark.com (email : chris@sevenspark.com) 
+Copyright 2011-2014  Chris Mavricos, SevenSpark http://sevenspark.com (email : chris@sevenspark.com) 
 */
 
-define( 'RESPONSIVE_SELECT_MENU_VERSION', '1.5.2' );
+define( 'RESPONSIVE_SELECT_MENU_VERSION', '1.5.3' );
 define( 'RESPONSIVE_SELECT_MENU_SETTINGS', 'responsive-select-menu' );
 
 require_once( 'sparkoptions/SparkOptions.class.php' );		//SevenSpark Options Panel
@@ -164,8 +164,8 @@ jQuery(document).ready( function($){
 			
 			$selectNav = $this->selectNavMenu( $args );
 			
-			$args['container_class'].= ' responsiveSelectContainer';	
-			$args['menu_class'].= ' responsiveSelectFullMenu';
+			$args['container_class'].= ($args['container_class'] == '' ? '' : ' ') . 'responsiveSelectContainer';	
+			$args['menu_class'].= ($args['menu_class'] == '' ? '' : ' ') . 'responsiveSelectFullMenu';
 
 			//This line would add a container if it doesn't exist, but has the potential to break certain theme menus
 			//if( $args['container'] != 'nav' ) $args['container'] = 'div';	//make sure there's a container to add class to
@@ -195,7 +195,7 @@ jQuery(document).ready( function($){
 
 			$itemName = $this->settings->op( 'first_item' );
 			$selected = $this->settings->op( 'current_selected' ) ? '' : 'selected="selected"';
-			$firstOp = '<option value="" '.$selected.'>'.$itemName.'</option>';
+			$firstOp = '<option value="" '.$selected.'>'.apply_filters( 'rsm_first_item_text' , $itemName , $args ).'</option>';
 
 			$args['container'] = false;
 			$args['menu_class'] = 'responsiveMenuSelect';
@@ -634,5 +634,51 @@ class ResponsiveSelectWalker extends Walker_Nav_Menu{
 			}
 		}
 		return isset( $this->menuItemOptions[ $item_id ][ $option_id ] ) ? stripslashes( $this->menuItemOptions[ $item_id ][ $option_id ] ) : '';
+	}
+
+
+
+
+
+
+
+	/* Recursive function to remove all children */
+	function clear_children( &$children_elements , $id ){
+
+		if( empty( $children_elements[ $id ] ) ) return;
+
+		foreach( $children_elements[ $id ] as $child ){
+			$this->clear_children( $children_elements , $child->ID );
+		}
+		unset( $children_elements[ $id ] );
+	}
+
+	/**
+	 * Traverse elements to create list from elements.
+	 *
+	 * Calls parent function in UberMenuWalker.class.php
+	 */
+	function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, &$output ) {
+
+		if ( !$element )
+			return;
+
+		global $responsiveMenuSelect;
+
+		if( $responsiveMenuSelect->getSettings()->op( 'uber-enabled' ) ){
+
+			$id_field = $this->db_fields['id'];
+			$id = $element->$id_field;
+
+			$display_on = apply_filters( 'uberMenu_display_item' , true , $this , $element , $max_depth, $depth, $args );
+
+			if( !$display_on ){
+				$this->clear_children( $children_elements , $id );
+				return;
+			}
+		}
+		
+		Walker_Nav_Menu::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+		//UberMenuWalker::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 	}
 }

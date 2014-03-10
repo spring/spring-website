@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
                     _wpnonce: metaslider.resize_nonce
                 };
 
-                jQuery.ajax({   
+                jQuery.ajax({
                     type: "POST",
                     data : data,
                     cache: false,
@@ -86,9 +86,9 @@ jQuery(document).ready(function($) {
                         if (console && console.log) {
                             console.log(data);
                         }
-                        
+
                         resizing.remove();
-                    }   
+                    }
                 });
             }
         });
@@ -125,7 +125,7 @@ jQuery(document).ready(function($) {
             jQuery(".metaslider input[type=submit]").removeAttr('disabled');
         }
 
-        setTimeout(checkPendingRequest, 1000); 
+        setTimeout(checkPendingRequest, 1000);
     }
 
     checkPendingRequest();
@@ -137,7 +137,7 @@ jQuery(document).ready(function($) {
         if (jQuery('.carouselMode').is(':checked')) {
             width = '75%';
         }
-        
+
         return width;
     };
 
@@ -170,7 +170,7 @@ jQuery(document).ready(function($) {
         });
     }
 
-    jQuery(".metaslider .toggle .hndle, .metaslider .toggle .handlediv").on('click', function() {
+    jQuery(".metaslider .ms-toggle .hndle, .metaslider .ms-toggle .handlediv").on('click', function() {
     	$(this).parent().toggleClass('closed');
     });
 
@@ -200,7 +200,7 @@ jQuery(document).ready(function($) {
         jQuery(".metaslider .spinner").show();
         jQuery(".metaslider input[type=submit]").attr('disabled', 'disabled');
 
-        jQuery.ajax({   
+        jQuery.ajax({
             type: "POST",
             data : data,
             cache: false,
@@ -220,7 +220,7 @@ jQuery(document).ready(function($) {
 
                 fixIE10PlaceholderText();
 
-                if (button.id === 'preview') {
+                if (button.id === 'ms-preview') {
                     jQuery.colorbox({
                         iframe: true,
                         href: metaslider.iframeurl + "?slider_id=" + jQuery(button).data("slider_id"),
@@ -231,7 +231,7 @@ jQuery(document).ready(function($) {
                         fastIframe: false
                     });
                 }
-            }   
+            }
         });
     });
 });

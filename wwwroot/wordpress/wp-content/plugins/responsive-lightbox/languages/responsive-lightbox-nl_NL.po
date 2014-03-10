@@ -1,0 +1,744 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Responsive Lightbox\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-17 00:03+0100\n"
+"PO-Revision-Date: 2014-02-19 00:51+0100\n"
+"Last-Translator: basbva\n"
+"Language-Team: basbva.nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"X-Generator: Poedit 1.6.3\n"
+"X-Poedit-KeywordsList: gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-Country: NETHERLANDS\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../responsive-lightbox.php:276
+msgid "prettyPhoto"
+msgstr "prettyPhoto"
+
+#: ../responsive-lightbox.php:278
+msgid "slow"
+msgstr "langzaam"
+
+#: ../responsive-lightbox.php:279
+msgid "normal"
+msgstr "normaal"
+
+#: ../responsive-lightbox.php:280
+msgid "fast"
+msgstr "snel"
+
+#: ../responsive-lightbox.php:283
+msgid "default"
+msgstr "standaard"
+
+#: ../responsive-lightbox.php:284
+msgid "light rounded"
+msgstr "afgerond licht"
+
+#: ../responsive-lightbox.php:285
+msgid "dark rounded"
+msgstr "afgerond donker"
+
+#: ../responsive-lightbox.php:286
+msgid "light square"
+msgstr "hoekig licht"
+
+#: ../responsive-lightbox.php:287
+msgid "dark square"
+msgstr "hoekig donker"
+
+#: ../responsive-lightbox.php:288
+msgid "facebook"
+msgstr "facebook"
+
+#: ../responsive-lightbox.php:291
+msgid "window"
+msgstr "venster"
+
+#: ../responsive-lightbox.php:292
+msgid "transparent"
+msgstr "transparant"
+
+#: ../responsive-lightbox.php:293
+msgid "opaque"
+msgstr "opaak"
+
+#: ../responsive-lightbox.php:294
+msgid "direct"
+msgstr "direct"
+
+#: ../responsive-lightbox.php:295
+msgid "gpu"
+msgstr "GPU"
+
+#: ../responsive-lightbox.php:299
+msgid "SwipeBox"
+msgstr "SwipeBox"
+
+#: ../responsive-lightbox.php:301
+msgid "CSS"
+msgstr "CSS"
+
+#: ../responsive-lightbox.php:302
+msgid "jQuery"
+msgstr "jQuery"
+
+#: ../responsive-lightbox.php:306
+msgid "FancyBox"
+msgstr "FancyBox"
+
+#: ../responsive-lightbox.php:308
+msgid "elastic"
+msgstr "elastisch"
+
+#: ../responsive-lightbox.php:309
+#: ../responsive-lightbox.php:330
+msgid "fade"
+msgstr "vervagen"
+
+#: ../responsive-lightbox.php:310
+msgid "none"
+msgstr "geen"
+
+#: ../responsive-lightbox.php:313
+msgid "auto"
+msgstr "automatisch"
+
+#: ../responsive-lightbox.php:314
+msgid "yes"
+msgstr "ja"
+
+#: ../responsive-lightbox.php:315
+msgid "no"
+msgstr "nee"
+
+#: ../responsive-lightbox.php:318
+msgid "swing"
+msgstr "swing"
+
+#: ../responsive-lightbox.php:319
+msgid "linear"
+msgstr "lineair"
+
+#: ../responsive-lightbox.php:322
+msgid "outside"
+msgstr "buiten"
+
+#: ../responsive-lightbox.php:323
+msgid "inside"
+msgstr "binnen"
+
+#: ../responsive-lightbox.php:324
+msgid "over"
+msgstr "over"
+
+#: ../responsive-lightbox.php:328
+msgid "Nivo Lightbox"
+msgstr "Nivo Lightbox"
+
+#: ../responsive-lightbox.php:331
+msgid "fade scale"
+msgstr "fade scale"
+
+#: ../responsive-lightbox.php:332
+msgid "slide left"
+msgstr "linksom"
+
+#: ../responsive-lightbox.php:333
+msgid "slide right"
+msgstr "rechtsom"
+
+#: ../responsive-lightbox.php:334
+msgid "slide up"
+msgstr "omhoog"
+
+#: ../responsive-lightbox.php:335
+msgid "slide down"
+msgstr "omlaag"
+
+#: ../responsive-lightbox.php:336
+msgid "fall"
+msgstr "vallen"
+
+#: ../responsive-lightbox.php:342
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: ../responsive-lightbox.php:343
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#: ../responsive-lightbox.php:348
+#: ../responsive-lightbox.php:449
+msgid "General settings"
+msgstr "Algemene instellingen"
+
+#: ../responsive-lightbox.php:354
+#: ../responsive-lightbox.php:461
+msgid "Lightbox settings"
+msgstr "Lightbox instellingen"
+
+#: ../responsive-lightbox.php:450
+msgid "Lightbox script"
+msgstr "Lightbox-script"
+
+#: ../responsive-lightbox.php:451
+msgid "Selector"
+msgstr "Selecteerder"
+
+#: ../responsive-lightbox.php:452
+msgid "Galleries"
+msgstr "Galerijen"
+
+#: ../responsive-lightbox.php:453
+msgid "Video links"
+msgstr "Video Links"
+
+#: ../responsive-lightbox.php:454
+msgid "Image links"
+msgstr "Links naar afbeeldingen"
+
+#: ../responsive-lightbox.php:455
+msgid "Single images as gallery"
+msgstr "Losse afbeeldingen als galerij"
+
+#: ../responsive-lightbox.php:456
+msgid "Custom events"
+msgstr "Custom events"
+
+#: ../responsive-lightbox.php:457
+msgid "Deactivation"
+msgstr "Deactivatie"
+
+#: ../responsive-lightbox.php:465
+msgid "Animation type"
+msgstr "Animatietype"
+
+#: ../responsive-lightbox.php:466
+msgid "Force PNG icons"
+msgstr "Forceer PNG symbolen"
+
+#: ../responsive-lightbox.php:467
+msgid "Top and bottom bars"
+msgstr "Boven- en onderbalken"
+
+#: ../responsive-lightbox.php:468
+msgid "Video max width"
+msgstr "Video (grootste breedte)"
+
+#: ../responsive-lightbox.php:472
+msgid "Animation speed"
+msgstr "Animatiesnelheid"
+
+#: ../responsive-lightbox.php:473
+msgid "Slideshow"
+msgstr "Diashow"
+
+#: ../responsive-lightbox.php:474
+msgid "Slideshow autoplay"
+msgstr "Autostart diashow"
+
+#: ../responsive-lightbox.php:475
+#: ../responsive-lightbox.php:504
+msgid "Opacity"
+msgstr "Opaciteit"
+
+#: ../responsive-lightbox.php:476
+msgid "Show title"
+msgstr "Toon titel"
+
+#: ../responsive-lightbox.php:477
+msgid "Allow resize big images"
+msgstr "Verkleinen van grote afbeeldingen toestaan"
+
+#: ../responsive-lightbox.php:478
+#: ../responsive-lightbox.php:516
+msgid "Video width"
+msgstr "Videobreedte"
+
+#: ../responsive-lightbox.php:479
+#: ../responsive-lightbox.php:517
+msgid "Video height"
+msgstr "Videohoogte"
+
+#: ../responsive-lightbox.php:480
+msgid "Theme"
+msgstr "Thema"
+
+#: ../responsive-lightbox.php:481
+msgid "Horizontal padding"
+msgstr "Horizontale padding"
+
+#: ../responsive-lightbox.php:482
+msgid "Hide Flash"
+msgstr "Verberg Flash"
+
+#: ../responsive-lightbox.php:483
+msgid "Flash Window Mode (wmode)"
+msgstr "Flash-venstermodus (wmode)"
+
+#: ../responsive-lightbox.php:484
+msgid "Video autoplay"
+msgstr "Autostart video"
+
+#: ../responsive-lightbox.php:485
+#: ../responsive-lightbox.php:493
+msgid "Modal"
+msgstr "Modus"
+
+#: ../responsive-lightbox.php:486
+msgid "Deeplinking"
+msgstr "Dieplinken"
+
+#: ../responsive-lightbox.php:487
+msgid "Overlay gallery"
+msgstr "Overlay-galerij"
+
+#: ../responsive-lightbox.php:488
+msgid "Keyboard shortcuts"
+msgstr "Sneltoetsen"
+
+#: ../responsive-lightbox.php:489
+msgid "Social (Twitter, Facebook)"
+msgstr "Sociaal (Twitter, Facebook)"
+
+#: ../responsive-lightbox.php:494
+msgid "Show overlay"
+msgstr "Toon overlay"
+
+#: ../responsive-lightbox.php:495
+msgid "Show close button"
+msgstr "Toon sluitknop"
+
+#: ../responsive-lightbox.php:496
+msgid "Enable escape button"
+msgstr "esc-toets inschakelen"
+
+#: ../responsive-lightbox.php:497
+msgid "Hide on overlay click"
+msgstr "Verbergen bij overlay-klik"
+
+#: ../responsive-lightbox.php:498
+msgid "Hide on content click"
+msgstr "Verbergen bij inhoud-klik"
+
+#: ../responsive-lightbox.php:499
+msgid "Cyclic"
+msgstr "Cyclisch"
+
+#: ../responsive-lightbox.php:500
+msgid "Show nav arrows"
+msgstr "Toon navigatiepijlen"
+
+#: ../responsive-lightbox.php:501
+msgid "Auto scale"
+msgstr "Automatisch schalen"
+
+#: ../responsive-lightbox.php:502
+msgid "Scrolling (in/out)"
+msgstr "Scrollen (in/uit)"
+
+#: ../responsive-lightbox.php:503
+msgid "Center on scroll"
+msgstr "Centreer bij scrollen"
+
+#: ../responsive-lightbox.php:505
+msgid "Overlay opacity"
+msgstr "Overlay-opaciteit"
+
+#: ../responsive-lightbox.php:506
+msgid "Overlay color"
+msgstr "Overlay-kleur"
+
+#: ../responsive-lightbox.php:507
+msgid "Title show"
+msgstr "Titel tonen"
+
+#: ../responsive-lightbox.php:508
+msgid "Title position"
+msgstr "Titelpositie"
+
+#: ../responsive-lightbox.php:509
+msgid "Transition (in/out)"
+msgstr "Overgang (in/uit)"
+
+#: ../responsive-lightbox.php:510
+msgid "Easings (in/out)"
+msgstr "Beweging (in/uit)"
+
+#: ../responsive-lightbox.php:511
+msgid "Speed (in/out)"
+msgstr "Snelheid (in/uit)"
+
+#: ../responsive-lightbox.php:512
+msgid "Change speed"
+msgstr "Veranderingssnelheid"
+
+#: ../responsive-lightbox.php:513
+msgid "Change fade"
+msgstr "Snelheid van vervagen"
+
+#: ../responsive-lightbox.php:514
+msgid "Padding"
+msgstr "Padding"
+
+#: ../responsive-lightbox.php:515
+msgid "Margin"
+msgstr "Marge"
+
+#: ../responsive-lightbox.php:521
+msgid "Effect"
+msgstr "Effect"
+
+#: ../responsive-lightbox.php:522
+msgid "Keyboard navigation"
+msgstr "Toetsenbordnavigatie"
+
+#: ../responsive-lightbox.php:523
+msgid "Error message"
+msgstr "Foutmelding"
+
+#: ../responsive-lightbox.php:541
+msgid "Select your preffered ligthbox effect script."
+msgstr "Selecteer het Lightbox effect-script van je voorkeur."
+
+#: ../responsive-lightbox.php:551
+msgid "Select to which rel selector lightbox effect will be applied to."
+msgstr "Geef een rel selecteerder op voor het Lightbox-effect."
+
+#: ../responsive-lightbox.php:569
+msgid "Enable triggering lightbox on custom jquery events."
+msgstr "Schakel openen van Lightbox bij 'custom jquery events' in."
+
+#: ../responsive-lightbox.php:572
+msgid "Enter a space separated list of events."
+msgstr "Voer een spatiegescheiden lijst van 'events' in."
+
+#: ../responsive-lightbox.php:591
+msgid "Add lightbox to WordPress image galleries by default."
+msgstr "Lightbox standaard toewijzen aan Wordpress beeldgalerijen."
+
+#: ../responsive-lightbox.php:609
+msgid "Add lightbox to YouTube and Vimeo video links by default."
+msgstr "Lightbox standaard toewijzen aan YouTube- en Vimeo links."
+
+#: ../responsive-lightbox.php:627
+msgid "Add lightbox to WordPress image links by default."
+msgstr "Lightbox standaard toewijzen aan links naar afbeeldingen."
+
+#: ../responsive-lightbox.php:645
+msgid "Display single post images as a gallery."
+msgstr "Losse afbeeldingen in een bericht als galerij tonen."
+
+#: ../responsive-lightbox.php:663
+msgid "Delete settings on plugin deactivation."
+msgstr "Instellingen wissen bij deactivatie van de plugin."
+
+#: ../responsive-lightbox.php:681
+msgid "Select a method of applying a lightbox effect."
+msgstr "Selecteer een methode om een Lightbox-effekt toe te passen."
+
+#: ../responsive-lightbox.php:699
+msgid "Disable if you don't want to top and bottom bars to be hidden after a period of time."
+msgstr "Schakel deze optie uit om de onder- en bovenbalken niet te verbergen."
+
+#: ../responsive-lightbox.php:702
+msgid "Enter the time after which the top and bottom bars will be hidden (when hiding is enabled)."
+msgstr "Voer de tijd in waarna de boven- en onderbalk worden verborgen (als verbergen is ingeschakeld)."
+
+#: ../responsive-lightbox.php:713
+msgid "Enter the max video width in a lightbox."
+msgstr "Geef de grootste breedte aan voor video in een Lightbox."
+
+#: ../responsive-lightbox.php:731
+msgid "Enable this if you're having problems with navigation icons not visible on some devices."
+msgstr "Inschakelen als je problemen hebt met de zichtbaarheid van navigatiepijlen op sommige apparaten."
+
+#: ../responsive-lightbox.php:749
+msgid "Select animation speed for lightbox effect."
+msgstr "Selecteer de animatiesnelheid van het Lightbox-effect."
+
+#: ../responsive-lightbox.php:767
+msgid "Display images as slideshow."
+msgstr "Afbeeldingen tonen als diashow."
+
+#: ../responsive-lightbox.php:770
+msgid "Enter time (in miliseconds)."
+msgstr "Tijd aangeven (in milliseconden)."
+
+#: ../responsive-lightbox.php:789
+msgid "Automatically start slideshow."
+msgstr "Diashow automatisch starten."
+
+#: ../responsive-lightbox.php:802
+msgid "Value between 0 and 100, 100 for no opacity."
+msgstr "Waarde tussen 0 en 100 (0 is transparant)."
+
+#: ../responsive-lightbox.php:820
+msgid "Display image tiltle."
+msgstr "Titel van de afbeelding tonen."
+
+#: ../responsive-lightbox.php:838
+msgid "Resize the photos bigger than viewport."
+msgstr "Foto's groter dan het zichtvenster verkleinen."
+
+#: ../responsive-lightbox.php:848
+#: ../responsive-lightbox.php:858
+msgid "in pixels"
+msgstr "in pixels"
+
+#: ../responsive-lightbox.php:876
+msgid "Select theme for lightbox effect."
+msgstr "Selecteer een thema voor het Lightbox-effect."
+
+#: ../responsive-lightbox.php:886
+msgid "Horizontal padding (in pixels)."
+msgstr "Horizontale padding (in pixels)."
+
+#: ../responsive-lightbox.php:904
+msgid "Hides all the flash object on a page. Enable this if flash appears over prettyPhoto."
+msgstr "Verbergt alle flash-objecten op een pagina. Pas toe wanneer flash over PrettyPhoto heen verschijnt."
+
+#: ../responsive-lightbox.php:922
+msgid "Select flash window mode."
+msgstr "Flash-venstermodus selecteren."
+
+#: ../responsive-lightbox.php:940
+msgid "Automatically start videos."
+msgstr "Start video's automatisch."
+
+#: ../responsive-lightbox.php:958
+msgid "If set to true, only the close button will close the window."
+msgstr "Indien actief kan het venster alleen met de sluitknop gesloten worden."
+
+#: ../responsive-lightbox.php:976
+msgid "Allow prettyPhoto to update the url to enable deeplinking."
+msgstr "PrettyPhoto toestaan de URL te actualiseren om te kunnen dieplinken."
+
+#: ../responsive-lightbox.php:994
+msgid "If enabled, a gallery will overlay the fullscreen image on mouse over."
+msgstr "Schakelt een galerij-overlay in bij muizen over de Lightbox afbeelding."
+
+#: ../responsive-lightbox.php:1012
+msgid "Set to false if you open forms inside prettyPhoto."
+msgstr "Deactiveer om formulieren in prettyPhoto te openen."
+
+#: ../responsive-lightbox.php:1030
+msgid "Display links to Facebook and Twitter."
+msgstr "Toon links naar Facebook en Twitter."
+
+#: ../responsive-lightbox.php:1048
+msgid "The transition type."
+msgstr "Type van overgang."
+
+#: ../responsive-lightbox.php:1058
+msgid "Space between FancyBox wrapper and content."
+msgstr "Ruimte tussen de Fancybox omtrek en inhoud."
+
+#: ../responsive-lightbox.php:1068
+msgid "Space between viewport and FancyBox wrapper."
+msgstr "Ruimte tussen de FancyBox omtrek en zichtvenster."
+
+#: ../responsive-lightbox.php:1086
+msgid "When true, \"overlayShow\" is set to TRUE and \"hideOnOverlayClick\", \"hideOnContentClick\", \"enableEscapeButton\", \"showCloseButton\" are set to FALSE."
+msgstr "Indien ingeschakeld is \"overlayShow\" actief en zijn \"showCloseButton\", \"enableEscapeButton\", \"hideOnOverlayClick\" en \"hideOnContentClick\" inactief."
+
+#: ../responsive-lightbox.php:1104
+msgid "Toggle overlay."
+msgstr "Overlay tonen (\"overlayShow\")."
+
+#: ../responsive-lightbox.php:1122
+msgid "Toggle close button."
+msgstr "Sluitknop tonen (\"showCloseButton\")."
+
+#: ../responsive-lightbox.php:1140
+msgid "Toggle if pressing Esc button closes FancyBox."
+msgstr "Esc-toets inschakelen om Fancybox te sluiten (\"enableEscapeButton\")."
+
+#: ../responsive-lightbox.php:1158
+msgid "Toggle if clicking the overlay should close FancyBox."
+msgstr "Inschakelen als klikken op de overlay Fancybox moet sluiten (\"hideOnOverlayClick\")."
+
+#: ../responsive-lightbox.php:1176
+msgid "Toggle if clicking the content should close FancyBox."
+msgstr "Inschakelen als klikken op de inhoud Fancybox moet sluiten (\"hideOnContentClick\")."
+
+#: ../responsive-lightbox.php:1194
+msgid "When true, galleries will be cyclic, allowing you to keep pressing next/back."
+msgstr "Toon galerijen als cycli, met de 'volgende/vorige'-functie nog steeds actief."
+
+#: ../responsive-lightbox.php:1212
+msgid "Toggle navigation arrows."
+msgstr "Navigatiepijlen inschakelen."
+
+#: ../responsive-lightbox.php:1230
+msgid "If true, FancyBox is scaled to fit in viewport."
+msgstr "FancyBox verschalen om in het zichtvenster te passen."
+
+#: ../responsive-lightbox.php:1248
+msgid "Set the overflow CSS property to create or hide scrollbars."
+msgstr "Stel de CSS-eigenschap 'overflow' in om schuifbalken te tonen of te verbergen."
+
+#: ../responsive-lightbox.php:1266
+msgid "When true, FancyBox is centered while scrolling page."
+msgstr "Fancybox centreren bij scrollen door de pagina."
+
+#: ../responsive-lightbox.php:1284
+msgid "When true, transparency of content is changed for elastic transitions."
+msgstr "Indien actief verandert de transparantie van inhoud bij elastische overgangen."
+
+#: ../responsive-lightbox.php:1297
+msgid "Opacity of the overlay."
+msgstr "Opaciteit van de overlay."
+
+#: ../responsive-lightbox.php:1307
+msgid "Color of the overlay."
+msgstr "Kleur van de overlay."
+
+#: ../responsive-lightbox.php:1325
+msgid "Toggle title."
+msgstr "Inschakelen om titel te tonen."
+
+#: ../responsive-lightbox.php:1343
+msgid "The position of title."
+msgstr "De positie van de titel."
+
+#: ../responsive-lightbox.php:1361
+msgid "Easing used for elastic animations."
+msgstr "Soort van beweging bij elastische animaties."
+
+#: ../responsive-lightbox.php:1371
+msgid "Speed of the fade and elastic transitions, in milliseconds."
+msgstr "Duur van vervagende en elastische overgangen, in milliseconden."
+
+#: ../responsive-lightbox.php:1381
+msgid "Speed of resizing when changing gallery items, in milliseconds."
+msgstr "Duur van verschalen bij wisselingen in de galerij, in milliseconden."
+
+#: ../responsive-lightbox.php:1391
+msgid "Speed of the content fading while changing gallery items."
+msgstr "Duur van vervagen bij wisselingen in de galerij."
+
+#: ../responsive-lightbox.php:1401
+msgid "Width of the video."
+msgstr "Breedte van de video."
+
+#: ../responsive-lightbox.php:1411
+msgid "Height of the video."
+msgstr "Hoogte van de video."
+
+#: ../responsive-lightbox.php:1429
+msgid "The effect to use when showing the lightbox."
+msgstr "Het te kiezen effect wanneer Lightbox wordt getoond."
+
+#: ../responsive-lightbox.php:1447
+msgid "Enable/Disable keyboard navigation (left/right/escape)."
+msgstr "Toetsenbordnavigatie in- of uitschakelen (links/rechts/esc)."
+
+#: ../responsive-lightbox.php:1457
+msgid "Error message if the content cannot be loaded."
+msgstr "Foutmelding als de inhoud niet geladen kan worden."
+
+#: ../responsive-lightbox.php:1661
+msgid "Changes were not saved because there was attempt to save settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "Wijzigingen zijn niet bewaard omdat geprobeerd is instellingen van een inactieve script te wijzigen. De site is herladen met de juiste scriptinstellingen."
+
+#: ../responsive-lightbox.php:1671
+msgid "Settings restored to defaults."
+msgstr "Standaard instellingen zijn hersteld."
+
+#: ../responsive-lightbox.php:1679
+msgid "Settings of SwipeBox script were restored to defaults."
+msgstr "Standaard instellingen van SwipeBox-script zijn hesteld."
+
+#: ../responsive-lightbox.php:1685
+msgid "Settings of prettyPhoto script were restored to defaults."
+msgstr "Standaard instellingen van prettyPhoto-script zijn hersteld."
+
+#: ../responsive-lightbox.php:1691
+msgid "Settings of FancyBox script were restored to defaults."
+msgstr "Standaard instellingen van FancyBox-script zijn hersteld."
+
+#: ../responsive-lightbox.php:1697
+msgid "Settings of Nivo script were restored to defaults."
+msgstr "Standaard instellingen van Nivo-script zijn hersteld."
+
+#: ../responsive-lightbox.php:1701
+msgid "Changes were not set to defaults because there was attempt to reset settings of inactive script. The site has been reloaded to the proper script settings."
+msgstr "Standaard instellingen zijn niet hersteld omdat geprobeerd is de instellingen van een inactieve script te herstellen. De site is herladen met de juiste scriptinstellingen."
+
+#: ../responsive-lightbox.php:1715
+#: ../responsive-lightbox.php:1716
+#: ../responsive-lightbox.php:1730
+#: ../responsive-lightbox.php:1744
+msgid "Responsive Lightbox"
+msgstr "Responsive Lightbox"
+
+#: ../responsive-lightbox.php:1746
+msgid "Need support?"
+msgstr "Hulp nodig?"
+
+#: ../responsive-lightbox.php:1747
+msgid "If you are having problems with this plugin, please talk about them in the"
+msgstr "Als je een probleem hebt met deze plugin meldt dit dan in het "
+
+#: ../responsive-lightbox.php:1747
+msgid "Support forum"
+msgstr "Support Forum"
+
+#: ../responsive-lightbox.php:1749
+msgid "Do you like this plugin?"
+msgstr "Bevalt deze plugin?"
+
+#: ../responsive-lightbox.php:1750
+msgid "Rate it 5"
+msgstr "Beoordeel met 5 sterren"
+
+#: ../responsive-lightbox.php:1750
+msgid "on WordPress.org"
+msgstr "op WordPress.org"
+
+#: ../responsive-lightbox.php:1751
+msgid "Blog about it & link to the"
+msgstr "Schijf erover & link naar de"
+
+#: ../responsive-lightbox.php:1751
+msgid "plugin page"
+msgstr "plugin pagina"
+
+#: ../responsive-lightbox.php:1752
+msgid "Check out our other"
+msgstr "Bekijk ook onze andere"
+
+#: ../responsive-lightbox.php:1752
+msgid "WordPress plugins"
+msgstr "WordPress Plugins"
+
+#: ../responsive-lightbox.php:1772
+msgid "Reset to defaults"
+msgstr "Herstel standaard instellingen"
+
+#: ../responsive-lightbox.php:1799
+msgid "Are you sure you want to reset these settings to defaults?"
+msgstr "Weet je zeker dat je de algemene standaardinstellingen wilt herstellen?"
+
+#: ../responsive-lightbox.php:1800
+msgid "Are you sure you want to reset scripts settings to defaults?"
+msgstr "Weet je zeker dat je de standaard scriptinstellingen wilt herstellen?"
+
+#: ../responsive-lightbox.php:2047
+msgid "Support"
+msgstr "Support"
+
+#: ../responsive-lightbox.php:2069
+msgid "Settings"
+msgstr "Instellingen"
+

@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: matchalabs
-Tags: widget,wordpress slider,slideshow,wordpress slideshow,image slider,flexslider,flex slider,nivoslider,nivo slider,responsiveslides,responsive,responsive slides,coinslider,coin slider,slideshow,carousel,responsive slider,vertical slides,ml slider,image rotator,metaslider,meta,ajax,metaslider pro
+Tags: wordpress slideshow,seo,slideshow,slider,widget,wordpress slider,image slider,flexslider,flex slider,nivoslider,nivo slider,responsive,responsive slides,coinslider,coin slider,slideshow,carousel,responsive slider,vertical slides
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CQ84KC4X8YKW8
 Requires at least: 3.5
 Tested up to: 3.8
@@ -8,35 +8,40 @@ Stable tag: 2.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-4 sliders in 1! Choose from Nivo Slider, Flex Slider, Coin Slider or Responsive Slides.
+Easy to use slideshow plugin. Create SEO optimised responsive slideshows with Nivo Slider, Flex Slider, Coin Slider and Responsive Slides.
 
 == Description ==
 
 http://www.youtube.com/watch?v=I7IfkV6iLqo
 
-Meta Slider is a flexible, easy to use slideshow administration plugin that lets you choose between 4 jQuery sliders.
+Meta Slider is the most popular slideshow plugin for WordPress. Creating slideshows with [Meta Slider](http://www.metaslider.com/) is fast and easy. Simply select images from your WordPress Media Library, drag and drop them into place, set slide captions, links and SEO fields all from one page. You can choose from 4 different slideshow types (Flex Slider, Nivo Slider, Responsive Slides & Coin Slider) and use the provided shortcode or template include to easily embed slideshows in your blog.
 
-* **Flex Slider 2** (Responsive, 2 transition effects, carousel mode)
-* **Nivo Slider** (Responsive, 16 transition effects, 4 themes)
-* **Responsive Slides** (Responsive & incredibly light weight)
-* **Coin Slider** (4 transition effects)
+**Includes**
 
-Features:
+* **Flex Slider 2** - Responsive, 2 transition effects, carousel mode
+* **Nivo Slider** - Responsive, 16 transition effects, 4 themes
+* **Responsive Slides** - Responsive & incredibly light weight
+* **Coin Slider** - 4 transition effects
 
-* Simple, easy to use interface - perfect for individual users, developers & clients
+**Features**
+
+* Simple, easy to use interface - perfect for individual users, developers & clients!
 * Create Responsive, SEO optimised slideshows in seconds
-* Unrestricted support for Image slides (supports caption, URL, title text, alt text)
+* Unrestricted support for Image slides (supports caption, link, title text, alt text)
+* Full width slideshow support
 * Drag and drop slide reordering
+* Admin preview
 * Intelligent image cropping
 * Built in Widget and Shortcode
-* Tonnes of slideshow configuration options (per slideshow)
+* Loads of slideshow configuration options - transition effect, speed etc (per slideshow)
 * Fully localised
 * WordPress Multi Site compatible
 * Compatible with translation plugins (WPML, PolyLang & qTranslate)
-* Extensive Developer API
+* Extensive Developer API (hooks & filters)
 * Fast - only the minimum JavaScript/CSS is included on your page
+* Free, active, basic support (covering installation issues and theme/plugin conflicts)
 
-Looking for a little more? Get the **Meta Slider Pro** addon pack to add support for:
+Upgrade to [Meta Slider Pro](http://www.metaslider.com/upgrade) to add support for:
 
 * YouTube & Vimeo slides
 * HTML slides
@@ -44,8 +49,9 @@ Looking for a little more? Get the **Meta Slider Pro** addon pack to add support
 * Dynamic Post Feed/Featured Image Slides (content slider)
 * Custom Themes
 * Thumbnail Navigation
+* Premium Support
 
-Meta Slider has been translated into the following languages:
+**Translations**
 
 * French (thanks to fb-graphiklab)
 * Spanish (thanks to eltipografico)
@@ -53,7 +59,7 @@ Meta Slider has been translated into the following languages:
 * Polish (thanks to gordon34)
 * Chinese (thanks to 断青丝)
 * Taiwanese (thanks to 断青丝)
-* Norwegian
+* Norwegian (thanks to Dreamsoft)
 
 Read more and thanks to:
 
@@ -99,10 +105,10 @@ You will need to paste the "Template Include" code into your theme (you can find
 
 If you want to include the slideshow on your homepage only, use this code:
 
-`<?php 
+`<?php
 if (is_front_page() || is_home()) {
     echo do_shortcode("[metaslider id=123]"); //replace 123 with slider ID
-} 
+}
 ?>`
 
 Theme specific instructions:
@@ -111,7 +117,7 @@ http://www.metaslider.com/documentation/theme-integration/
 
 = It's not working - what can I do? =
 
-Check out the troubleshooting page here: 
+Check out the troubleshooting page here:
 
 http://www.metaslider.com/documentation/troubleshooting/
 
@@ -129,6 +135,17 @@ See www.metaslider.com/documentation/image-cropping/
 6. Administration panel - selecting slides
 
 == Changelog ==
+
+= 2.6.3 [23/01/14] =
+
+* Improvement: Various admin screen styling improvements
+* Fix: Add 'ms-' prefix to Advanced settings toggle boxes and Preview button (avoid theme conflicts)
+* Fix: RTL fixes
+* Improvement: Filters added for complete slideshow output
+* Improvement: Filter added for slide image label
+* Improvement: 'No Conflict' mode refactored
+* Improvement: 'slider' parameter added to flexslider before/start/after etc callbacks
+* Change: Renamed in admin menu from "Meta Slider Lite" to "Meta Slider"
 
 = 2.6.2 [02/01/14] =
 
@@ -345,3 +362,5 @@ More info/Comments: http://www.metaslider.com/coming-soon-meta-slider-2-6-free/
 * Initial version
 
 == Upgrade Notice ==
+
+

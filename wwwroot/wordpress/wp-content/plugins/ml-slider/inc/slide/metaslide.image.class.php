@@ -101,13 +101,16 @@ class MetaImageSlide extends MetaSlide {
         $str_caption    = __("Caption", 'metaslider');
         $str_new_window = __("New Window", 'metaslider');
         $str_url        = __("URL", 'metaslider');
+        $str_label      = __("Image Slide", "metaslider");
+
+        $slide_label = apply_filters("metaslider_image_slide_label", $str_label, $this->slide, $this->settings);
 
         // slide row HTML
         $row  = "<tr class='slide image flex responsive nivo coin'>";
         $row .= "    <td class='col-1'>";
         $row .= "        <div class='thumb' style='background-image: url({$thumb})'>";
         $row .= "            <a class='delete-slide confirm' href='?page=metaslider&amp;id={$this->slider->ID}&amp;deleteSlide={$this->slide->ID}'>x</a>";
-        $row .= "            <span class='slide-details'>" . __("Image Slide", "metaslider") . "</span>";
+        $row .= "            <span class='slide-details'>" . $slide_label . "</span>";
         $row .= "        </div>";
         $row .= "    </td>";
         $row .= "    <td class='col-2'>";
