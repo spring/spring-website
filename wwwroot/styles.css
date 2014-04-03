@@ -208,8 +208,9 @@ a.menubar:hover {
 	padding: 0;
 	padding-left: 12px;
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight:bold;
+	text-shadow: 2px 2px 2px rgba(0,0,0,0.35);
 	color: #EEEEEE;
 }
 .bottombar {
