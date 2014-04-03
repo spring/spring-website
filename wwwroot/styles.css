@@ -189,58 +189,6 @@ a.menubar:hover {
 	line-height: 14pt;
 }
 
-@media screen and (max-width: 1000px) {
-	html {
-		background: #272E33;
-		background-image: linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
-		background-image: -o-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
-		background-image: -moz-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
-		background-image: -webkit-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
-		background-image: -ms-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
-	}
-
-	#menu {
-		background: #272E33;
-		height: auto;
-		margin-bottom: 0;
-	}
-
-	#menu ul {
-		border-radius: 0;
-		box-shadow: none;
-		float: none;
-		height: auto;
-	}
-
-	#menu li {
-		float: none;
-		display: inline-block;
-		height: auto;
-	}
-	#menu li a {
-		display: inherit;
-		height: auto;
-		line-height: auto;
-		text-shadow: 0 0 4px rgba(255,255,255,0.5);
-	}
-	#menu li:hover a {
-		text-shadow: 0 0 10px rgba(255,255,255,1);
-	}
-
-	#menu .headermenuleft,
-	#menu .headermenu,
-	#menu .headermenuright,
-	#menu .headermenuleft:hover,
-	#menu .headermenu:hover,
-	#menu .headermenuright:hover {
-		border: none;
-		background: transparent;
-		border-radius: 0;
-	}
-}
-
-
-
 
 
 
@@ -316,7 +264,57 @@ a {
 }
 
 
-@media screen and (max-width: 1000px) {
+
+
+@media screen and (max-width: 760px) {
+	html {
+		background: #272E33;
+		background-image: linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -o-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -moz-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -webkit-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+		background-image: -ms-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
+	}
+
+	#menu {
+		background: #272E33;
+		height: auto;
+		margin-bottom: 0;
+	}
+
+	#menu ul {
+		border-radius: 0;
+		box-shadow: none;
+		float: none;
+		height: auto;
+	}
+
+	#menu li {
+		float: none;
+		display: inline-block;
+		height: auto;
+	}
+	#menu li a {
+		display: inherit;
+		height: auto;
+		line-height: auto;
+		text-shadow: 0 0 4px rgba(255,255,255,0.5);
+	}
+	#menu li:hover a {
+		text-shadow: 0 0 10px rgba(255,255,255,1);
+	}
+
+	#menu .headermenuleft,
+	#menu .headermenu,
+	#menu .headermenuright,
+	#menu .headermenuleft:hover,
+	#menu .headermenu:hover,
+	#menu .headermenuright:hover {
+		border: none;
+		background: transparent;
+		border-radius: 0;
+	}
+
 	.topbannershadow {
 		border-radius: 0;
 	}
@@ -334,6 +332,7 @@ a {
 		border-radius: 0;
 	}
 }
+
 @media screen and (max-width: 633px) {
 	.topbannershadow {
 		border-radius: 0;
