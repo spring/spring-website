@@ -36,10 +36,10 @@ class SkinSpringNew extends Skin {
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);        
 		$s .= '<tr><td>';
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
+		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
 		$s .= '<tr>';
 		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '<td bgcolor="#4C626F" width="758">';
+		$s .= '<td bgcolor="#4C626F" width="100%">';
 
 		$s .= "\n<div id='content'>\n";
 
@@ -155,13 +155,13 @@ class SkinSpringNew extends Skin {
 		$s = "";
 		//$s = "\n<div id='quickbar'>";
 
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
+		$s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="100%">';
 		$s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
-		$s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
+		$s .= '<td height="25" class="toolbar" width="95%" colspan="2">Page editing toolbox</td></tr>';
 		$s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>'; 
 		$s .= '<td bgcolor="#38474E" class="bottom">';
 
-		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
+		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="95%"><tr valign="top"><td>';
 
 		$sep = "<br />";
 		//$s .= $this->menuHead( "qbfind" );

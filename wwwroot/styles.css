@@ -30,7 +30,7 @@ body {
 #wrapper {
 	text-align:left;
 	margin:0 auto;
-	width:760px;
+	width: 100px;
 	max-width:100%;
 	margin-bottom: 18px;
 }
@@ -189,7 +189,7 @@ a.menubar:hover {
 	line-height: 14pt;
 }
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 1000px) {
 	html {
 		background: #272E33;
 		background-image: linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
@@ -246,8 +246,17 @@ a.menubar:hover {
 
 
 .locationbar {
-	background-image: url(/images/location_bar.png);
-	background-repeat:no-repeat;
+	background-color: #34414A;
+	background-repeat:repeat-x;
+	background: linear-gradient(top, #34414A, #506673 100%);
+	background: -o-linear-gradient(top, #34414A, #506673 100%);
+	background: -moz-linear-gradient(top, #34414A, #506673 100%);
+	background: -webkit-linear-gradient(top, #34414A, #506673 100%);
+	background: -ms-linear-gradient(top, #34414A, #506673 100%);
+	border-right:  1px solid #20292E;
+	border-left:   1px solid #20292E;
+	border-bottom: 1px solid #20292E;
+        border-radius: 10px 10px 0 0;
 	padding: 0;
 	padding-left: 12px;
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
@@ -256,8 +265,8 @@ a.menubar:hover {
 	color: #EEEEEE;
 }
 .bottombar {
-	background-image: url(/images/bottom.png);
-	background-repeat: no-repeat;
+	background: #242c2f;
+	border-radius: 0 0 0 7px;
 	padding-left: 12px;
 	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 10px;
@@ -307,7 +316,7 @@ a {
 }
 
 
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 1000px) {
 	.topbannershadow {
 		border-radius: 0;
 	}
