@@ -143,3 +143,23 @@ require get_template_directory() . '/inc/customizer.php';
  * Load Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
+
+/* Add our custom logo to the wordpress login screen */
+add_action("login_head", "my_login_head");
+function my_login_head() {
+	echo "
+	<style>
+		body.login #login h1 a {
+			background: url('http://test.springrts.com/wordpress/wp-content/uploads/2014/04/SpringBanner234x60mkII.png') no-repeat scroll center top transparent;
+			width: 234px !important;
+			height: 60px;
+		}
+	</style>
+	";
+}
+
+/* Change title for login screen */
+add_filter('login_headertitle', create_function(false,"return 'Return to Spring RTS Engine';"));
+
+/* Change url for login screen */
+add_filter('login_headerurl', create_function(false,"return home_url();"));

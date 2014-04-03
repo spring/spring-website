@@ -8,6 +8,9 @@ get_header(); ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
 
+	<header class="entry-header">
+     		<h1 class="entry-title"><?php the_title(); ?></h1>
+	</header><!-- .entry-header -->
 	<div class="welcome-banner-text-overlay-relative">
 		<div class="welcome-banner-text-overlay-absolute">
 			<p class="banner-overlay-title">Welcome to the Spring Engine website!</p>
@@ -31,10 +34,12 @@ get_header(); ?>
 			</div>
 		</div>
 
-<?php 
-	echo do_shortcode("[wp_rss_multi_importer hdsize=24px]"); 
-?>
+		<?php 
+			echo do_shortcode("[wp_rss_multi_importer hdsize=24px]"); 
+		?>
 
+		<div style="clear: both;"></div>
+		
 	</div>
 
 		</main><!-- #main -->

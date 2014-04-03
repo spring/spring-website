@@ -969,7 +969,7 @@ background-image: -webkit-gradient(
 
 /* exceptions for the welcome banner slider */
 .metaslider-41 {
-    margin-top: -14px !important;
+    margin-top: 10px !important;
     margin-left: -10px !important;
     margin-right: -10px !important;
     
@@ -1332,6 +1332,7 @@ div.rssmi_pagination {
     max-width:760px !important;
     width: 100% !important;
     margin-top: 20px;
+	margin-bottom: 20px;
     padding-top: 0px !important;
 
     

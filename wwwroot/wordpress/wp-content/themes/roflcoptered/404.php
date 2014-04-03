@@ -25,7 +25,7 @@ get_header(); ?>
 
 					<p>&nbsp;</p>
 
-					<?php /* get_search_form(); */ ?>
+					<?php get_search_form(); ?>
 
 
 				</div><!-- .page-content -->
@@ -34,6 +34,7 @@ get_header(); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
+<?php /*
 <script>
   (function() {
     var cx = '009330874965769538744:h9ps9dc3sla';
@@ -47,4 +48,6 @@ get_header(); ?>
   })();
 </script>
 <gcse:search></gcse:search>
+*/ ?>
+
 <?php get_footer(); ?>
