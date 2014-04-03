@@ -266,7 +266,7 @@ a {
 
 
 
-@media screen and (max-width: 760px) {
+@media (max-width: 760px), (max-device-width: 760px) {
 	html {
 		background: #272E33;
 		background-image: linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
@@ -333,7 +333,7 @@ a {
 	}
 }
 
-@media screen and (max-width: 633px) {
+@media (max-width: 633px), (max-device-width: 633px) {
 	.topbannershadow {
 		border-radius: 0;
 	}
