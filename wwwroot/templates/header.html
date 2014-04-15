@@ -31,9 +31,9 @@
 
 	// Christmas
 	var currentTime = new Date();
-	var advent_date = new getAdvent(Date().getYear());
-	var jan7th_date = new get7thJanuar(Date().getYear());
-	var easter_date = getEaster(Date().getYear());
+	var advent_date = new getAdvent(currentTime.getFullYear());
+	var jan7th_date = new get7thJanuar(currentTime.getFullYear());
+	var easter_date = getEaster(currentTime.getFullYear());
 
 	if ((currentTime >= advent_date) || (currentTime < jan7th_date)) {
 		document.write("<link rel=\"stylesheet\" href=\"/style_xmas.css\" type=\"text/css\"/>");

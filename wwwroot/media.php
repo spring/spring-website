@@ -78,17 +78,17 @@
 
         if ($row['forum_id'] == 35) {
             $item = '<a href="screenshot.php?id=' . $row['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
-            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /><br /></a>';
+            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /></a>';
         }
         elseif ($row['forum_id'] == 34) {
             $item = '<a href="' . get_link(array('play' => $row['topic_id'])) . '">';
-            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /><br /></a>';
+            $item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /></a>';
         }
 
         $media .= str_replace('#ITEM#', $item, $itemtemplate);
         $media .= '</td>';
 
-        if ($count % 3 == 2)
+        if ($count % 4 == 3)
             $media .= '</tr><tr>';
 
         $count++;

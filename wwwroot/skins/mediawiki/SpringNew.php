@@ -35,11 +35,12 @@ class SkinSpringNew extends Skin {
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);        
-		$s .= '<tr><td>';
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
-		$s .= '<tr>';
-		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '<td bgcolor="#4C626F" width="100%">';
+//		$s .= '<tr><td>';
+//		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
+//		$s .= '<tr>';
+//		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
+//		$s .= '<td bgcolor="#4C626F" width="100%">';
+		$s .= '<tr><td bgcolor="#FF0000" width="100%">';
 
 		$s .= "\n<div id='content'>\n";
 
@@ -99,8 +100,8 @@ class SkinSpringNew extends Skin {
 
 
 		$s .= '</td>';
-		$s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '</tr></table>';
+		//$s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
+		//$s .= '</tr></table>';
 
 		$s .= '</tr></td>';
 		$s .= file_get_contents('../wwwroot/templates/footer.html');

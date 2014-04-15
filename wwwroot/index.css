@@ -11,43 +11,52 @@ a:hover {
 }
 
 .title {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	color: #EEE;
 }
 
 
 
 .welcome {
+	width: 100%;
 	height: 239px;
 	background-color: #38474E;
-	background-position: top right;
+	background-position: center;
 	background-repeat: no-repeat;
 	border-bottom: 1px solid #20292E;
+	position: relative;
 }
 #welcometext {
-	float: left;
+	position: absolute; bottom: 0; left: 0;
+	background-image: linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
+	background-image: -o-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
+	background-image: -moz-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
+	background-image: -webkit-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
+	background-image: -ms-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
+	box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.706), inset 0px 1px rgba(255, 255, 255, 0.298),
+		inset 0px 3px rgba(255, 255, 255, 0.128), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -15px 30px rgba(0, 0, 0, 0.298);
+
+	border-radius: 10px;
 	padding: 10px;
+	padding-bottom:14px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 24px;
+	font-size: 25px;
+	text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	color: #EEE;
 }
 .welcomesmall {
-	font-size: 12px;
+	font-size: 60%;
 	font-weight: bold;
 	margin-left: 2px;
 	margin-bottom: -3px;
 }
 .byline {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 14px;
 	color: #EEE;
 }
 
 .bigbar {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 24px;
 	font-weight:bold;
 	color: #EEE;
@@ -93,6 +102,8 @@ a:hover {
 .downloadbar:hover  {background-position:right -174px;}
 .gamesbar:hover     {background-position:right -290px;}
 
+#frontmediavideotd iframe {box-shadow: 0 3px 12px rgba(0,0,0,0.9);}
+
 
 .mmleft,
 .mmmid,
@@ -100,11 +111,6 @@ a:hover {
 
 .mmleft  {border-top-left-radius: 5px;}
 .mmright {border-top-right-radius: 5px;}
-
-/* for less capable browsers */
-.mmleft:hover  { background-image: url(/images/selected_media_left.png); }
-.mmmid:hover   { background-image: url(/images/selected_button_background.gif); }
-.mmright:hover { background-image: url(/images/selected_media_right.png); }
 
 .mmleft:hover,
 .mmmid:hover,
@@ -124,7 +130,6 @@ a:hover {
 	display: block;
 }
 .screendesc {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 12px;
 	font-weight:bold;
 	color: #EEE;
@@ -135,33 +140,45 @@ a:hover {
 .news {
 }
 .newsbar {
-	background-image: url(/images/news_bar.png);
-	background-repeat:no-repeat;
-	padding: 5px 0px 0px 7px;
-	height: 20px;
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 11px;
+	/*height: 25px;*/
+	background-color: #34414A;
+	background: linear-gradient(top, #34414A, #506673 100%);
+	background: -o-linear-gradient(top, #34414A, #506673 100%);
+	background: -moz-linear-gradient(top, #34414A, #506673 100%);
+	background: -webkit-linear-gradient(top, #34414A, #506673 100%);
+	background: -ms-linear-gradient(top, #34414A, #506673 100%);
+	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
+	border-right:  1px solid #20292E;
+	border-left:   1px solid #20292E;
+	border-bottom: 1px solid #20292E;
+	border-radius: 10px 0 0 0;
+	padding: 4px 0 3px 12px;
+	font-size: 15px;
 	font-weight:bold;
+	text-shadow: 2px 2px 1px rgba(0,0,0,0.95);
 	color: #EEE;
 }
 .newsitem {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 13px;
+	font-size: 16px;
 	color: #EEE;
-	line-height: 16px;
-	border-left: 1px solid #20292E;
+	border-left:   1px solid #20292E;
 	border-bottom: 1px solid #20292E;
 	padding: 8px;
 	background-color: #38474E;
+	background: -webkit-linear-gradient(-65deg, #566, #38474E 200px);
+	background: linear-gradient(-65deg, #566, #38474E 200px);
+	background: -o-linear-gradient(-65deg, #566, #38474E 200px);
+	background: -moz-linear-gradient(-65deg, #566, #38474E 200px);
+	background: -webkit-linear-gradient(-65deg, #566, #38474E 200px);
+	background: -ms-linear-gradient(-65deg, #566, #38474E 200px);
+	box-shadow: inset 1px 1px rgba(255, 255, 255, 0.198);
 }
 .newsheadline {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
-	font-size: 18px;
+	font-size: 22px;
 	color: #EEE;
 	text-shadow: 2px 2px 2px #111;
 }
 .newsabout {
-	font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
 	font-size: 11px;
 	color: #EEE;
 	line-height: 18px;
@@ -172,16 +189,17 @@ a:hover {
 .cnews {
 	float: right;
 	clear: right;
-	border-bottom: 1px solid #20292E;
-	margin: 5px 0 24px 24px;
+	margin: 10px 0 24px 24px;
+	border-bottom: 8px solid #20292E;
+	border-radius: 0 0 0 5px;
 	width: 40%;
+}
+.cnews .newsheadline {
+	font-size: 16px;
 }
 .cnews .newsitem {
 	padding: 4px;
 	border-bottom: none;
-}
-.cnews .newsheadline {
-	font-size: 13px;
 }
 .cnews .newsheadline:before {
 	content: '▸ ';
@@ -190,17 +208,25 @@ a:hover {
 
 /* media page */
 .mediabanner {
-	background: url("images/contentheader.png");
-	border-right: 1px solid #20292E;
-	border-left:  1px solid #20292E;
+	background: #3f4d58 right url("images/contentheader.png") no-repeat;
+	border-right:  1px solid #20292E;
+	border-left:   1px solid #20292E;
+	border-bottom: 1px solid #20292E;
 
 	width: 100%;
 	height: 93px;
 
+	text-align: right;
 	vertical-align: middle;
-	padding-left: 25px;
+	padding-right: 25px;
 
 	font-size: 25px;
+}
+
+.thumbnail {
+	box-shadow: 0 4px 10px #222;
+	border: 1px solid #333;
+	width: 174px;
 }
 
 .taglist {
