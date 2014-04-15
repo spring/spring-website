@@ -96,7 +96,7 @@ class acp_captcha
 			}
 			else if ($submit)
 			{
-				trigger_error($user->lang['FORM_INVALID'] . adm_back_link(), E_USER_WARNING);
+				trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 			else
 			{
@@ -124,6 +124,8 @@ class acp_captcha
 					'CAPTCHA_PREVIEW_TPL'	=> $demo_captcha->get_demo_template($id),
 					'S_CAPTCHA_HAS_CONFIG'	=> $demo_captcha->has_config(),
 					'CAPTCHA_SELECT'		=> $captcha_select,
+
+					'U_ACTION'				=> $this->u_action,
 				));
 			}
 		}
