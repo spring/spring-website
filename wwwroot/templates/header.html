@@ -2,7 +2,7 @@
 // <![CDATA[
 	function getAdvent(year) {
 		var d = new Date();
-		d.setFullYear(year, 12, 24);    // xmas
+		d.setFullYear(year, 11, 24);    // xmas
 		d.setDate(d.getDate() - 3 * 7); // substract 3 weeks
 		while (d.getDay() != 0) {
 			d.setDate(d.getDate() - 1);
@@ -10,7 +10,8 @@
 		return d;
 	}
 	function get7thJanuar(year) {
-		return new Date(year + '-01-07 00:00:00');
+		var d = new Date(); d.setFullYear(year, 0, 7);
+		return d;
 	}
 	function getEaster(year) {
 		var a = year % 19;
@@ -28,7 +29,7 @@
 		var n0 = (h + l + 7 * m + 114)
 		var n = Math.floor(n0 / 31) - 1;
 		var p = n0 % 31 + 1;
-		return new Date(year,n,p);
+		return new Date(year,n,p,0,0,0,0);
 	}
 
 	// Christmas
