@@ -1,8 +1,9 @@
 <script type="text/javascript">
 // <![CDATA[
 	function getAdvent(year) {
-		var DAY_IN_MS = 24 * 60 * 60 * 1000;
-		var d = new Date(new Date(year + '-12-24 00:00:00').getTime() - 3 * 7 * DAY_IN_MS);
+		var d = new Date();
+		d.setFullYear(year, 12, 24);    // xmas
+		d.setDate(d.getDate() - 3 * 7); // substract 3 weeks
 		while (d.getDay() != 0) {
 			d.setDate(d.getDate() - 1);
 		}
