@@ -64,7 +64,7 @@ body {
     font-size: 16px !important;
     background-color: #38464F;
 	background-repeat:repeat-x;
-	
+
 background-image: linear-gradient(bottom, rgb(56,70,79) 0%, rgb(132,152,163) 100%);
 background-image: -o-linear-gradient(bottom, rgb(56,70,79) 0%, rgb(132,152,163) 100%);
 background-image: -moz-linear-gradient(bottom, rgb(56,70,79) 0%, rgb(132,152,163) 100%);
@@ -95,7 +95,7 @@ background-image: -webkit-gradient(
     margin:10px auto 0px;
     background-color: rgb(76, 98, 111);
     padding-top: 0px;
-    
+
     border: 0px solid #dadada;
     border-top: 0px;
     border-right: 0px;
@@ -104,7 +104,7 @@ background-image: -webkit-gradient(
     border-top-right-radius:0px;
     border-bottom-right-radius:0px;
     border-bottom-left-radius:0px;
-    
+
     box-shadow: 0px 0px 15px rgba(0,0,0,1);
 }
 
@@ -208,7 +208,7 @@ background-image: -webkit-gradient(
     margin: 10px auto;
     background-color: #38474e;
     padding: 10px;
-    
+
     border: 0px solid #dadada;
     border-top: 0px;
     border-right: 0px;
@@ -217,7 +217,7 @@ background-image: -webkit-gradient(
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-    
+
 
     box-shadow: 0px 0px 15px rgba(0,0,0,1);
 }
@@ -600,7 +600,7 @@ h3 {
     font-family: 'Droid Sans', sans-serif;
     font-weight: normal;
     text-shadow: 3px 3px 5px rgba(0,0,0,1);
-    
+
 }
 
 h4 {
@@ -636,17 +636,17 @@ h6 {
 .main-navigation {
 	clear: both;
 	display: block;
-    
+
 	float: right;
-    
+
 	/* max-width: 700px; */
-    
-	margin-top: 0px;    
-    
+
+	margin-top: 0px;
+
 	padding: 0px;
-    
+
     border: 0px solid #dadada;
-    
+
 	border-top: 0px;
     border-right: 0px;
     border-bottom: 0px;
@@ -654,9 +654,9 @@ h6 {
     border-top-right-radius:0px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-    
 
-    
+
+
 	box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -696,14 +696,14 @@ h6 {
     	color-stop(0, rgb(34,43,49)),
     	color-stop(1, rgb(50,63,71))
 );
-    
+
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
     -ms-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
-    
-    
+
+
 
 }
 
@@ -763,7 +763,7 @@ background-image: -webkit-gradient(
 	text-decoration: none;
     color: #ffffff;
     font-size: 13px;
-    font-weight: bold; 
+    font-weight: bold;
     text-shadow: 0px 0px 5px rgba(0, 0, 0, 1)
 }
 .main-navigation a:hover {
@@ -780,7 +780,7 @@ background-image: -webkit-gradient(
 		top: 29px;
 		left: 0;
 	z-index: 99999;
-    
+
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
     -ms-transition: all 0.2s ease-in-out;
@@ -797,7 +797,7 @@ background-image: -webkit-gradient(
 }
 .main-navigation ul ul li {
     border-top: 1px solid rgba(84,97,104,0.5);
-    
+
 background-image: linear-gradient(left , rgb(74,91,102) 0%, rgb(31,48,56) 100%);
 background-image: -o-linear-gradient(left , rgb(74,91,102) 0%, rgb(31,48,56) 100%);
 background-image: -moz-linear-gradient(left , rgb(74,91,102) 0%, rgb(31,48,56) 100%);
@@ -841,7 +841,7 @@ background-image: -webkit-gradient(
         margin-bottom: 20px;
         width: 80%;
         box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
-    }   
+    }
 }
 
 /* Small menu */
@@ -850,7 +850,7 @@ background-image: -webkit-gradient(
 .menu-toggle  {
 	display: none;
 	cursor: pointer;
-    
+
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
     -ms-transition: all 0.2s ease-in-out;
@@ -861,24 +861,24 @@ background-image: -webkit-gradient(
 @media screen and (max-width: 600px) {
     .menu-toggle {
         border-bottom-right-radius:0px;
-        border-bottom-left-radius:9px;    
+        border-bottom-left-radius:9px;
     }
-    
+
     .menu-toggle:active {
         border-bottom-right-radius:0px;
-        border-bottom-left-radius:0px;    
+        border-bottom-left-radius:0px;
     }
-    
+
 	.menu-toggle,
 	.main-navigation.toggled .nav-menu {
 		display: block;
         float: right;
-        
+
         padding-top: 5px;
         padding-bottom: 5px;
         padding-right: 10px;
         padding-left: 10px;
-        
+
     background-image: linear-gradient(bottom, rgb(34,43,49) 100%, rgb(50,63,71) 0%);
     background-image: -o-linear-gradient(bottom, rgb(34,43,49) 100%, rgb(50,63,71) 0%);
     background-image: -moz-linear-gradient(bottom, rgb(34,43,49) 100%, rgb(50,63,71) 0%);
@@ -892,12 +892,12 @@ background-image: -webkit-gradient(
 	    color-stop(1, rgb(34,43,49)),
 	    color-stop(0, rgb(50,63,71))
     );
-    
-     
+
+
 	}
 	.main-navigation ul {
 		display: none;
-        border-top-left-radius:10px;   
+        border-top-left-radius:10px;
         border-bottom-right-radius:9px;
         border-bottom-left-radius:10px;
 	}
@@ -937,18 +937,18 @@ h1.entry-title {
     font-size: 14px;
     font-weight: bold;
     text-shadow: 1px 1px 5px rgba(0,0,0,1);
-    
+
     margin: -10px;
     padding-left: 15px;
     padding-top: 3px;
     padding-bottom: 3px;
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
-    
+
     border-bottom: 1px solid #20292e;
 
-    
+
 background-image: linear-gradient(top, rgb(51,63,72) 0%, rgb(80,102,115) 100%);
 background-image: -o-linear-gradient(top, rgb(51,63,72) 0%, rgb(80,102,115) 100%);
 background-image: -moz-linear-gradient(top, rgb(51,63,72) 0%, rgb(80,102,115) 100%);
@@ -972,7 +972,7 @@ background-image: -webkit-gradient(
     margin-top: 10px !important;
     margin-left: -10px !important;
     margin-right: -10px !important;
-    
+
 }
 
 /*welcome banner image text*/
@@ -987,7 +987,7 @@ background-image: -webkit-gradient(
     top: 155px;
     z-index: 500;
     background-color:rgba(56,71,78,0.5);
-    
+
     padding: 10px;
 }
 
@@ -1084,7 +1084,7 @@ background-image: -webkit-gradient(
     position:fixed;
     top:-9999px;
     right:-9999px;
-    
+
 }
 
 
@@ -1135,7 +1135,7 @@ background-image: -webkit-gradient(
     text-align: right;
     height: 58px;
     background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/learnmore-notactive.jpg');
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1151,7 +1151,7 @@ background-image: -webkit-gradient(
     text-align: right;
     height: 58px;
     background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/downloadandplay-notactive.jpg');
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1167,7 +1167,7 @@ background-image: -webkit-gradient(
     text-align: right;
     height: 58px;
     background-image:url('http://test.springrts.com/wordpress/wp-content/themes/roflcoptered/images/jpg/seethegames-notactive.jpg');
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1188,7 +1188,7 @@ background-image: -webkit-gradient(
 
 @media screen and (max-width: 600px) {
     .playlist-learn-download-see-wrapper {
-        background-color: #20292e;  
+        background-color: #20292e;
     }
     .learn-download-see {
            margin-top: 0px;
@@ -1228,11 +1228,11 @@ div.title {
     margin-bottom: 15px;
     padding-left: 20px;
     padding-bottom: 10px;
-    
+
     border-top: 1px solid #20292e;
     border-bottom: 1px solid #495a67;
 
-    
+
 background-image: linear-gradient(top, rgb(51,63,80) 0%, rgb(80,102,115) 100%);
 background-image: -o-linear-gradient(top, rgb(51,63,80) 0%, rgb(80,102,115) 100%);
 background-image: -moz-linear-gradient(top, rgb(51,63,80) 0%, rgb(80,102,115) 100%);
@@ -1282,12 +1282,12 @@ div.rss-output img {
     margin-bottom: 20px;
     background-color: #38474e;
     box-shadow: 0px 0px 15px rgba(0,0,0,1);
-    
+
     border-top-left-radius:3px;
     border-top-right-radius:10px;
     border-bottom-right-radius:3px;
     border-bottom-left-radius:10px;
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1307,12 +1307,12 @@ span.socialicons img {
     padding: 5px;
     background-color: #38474e;
     box-shadow: 0px 0px 15px rgba(0,0,0,1);
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1335,7 +1335,7 @@ div.rssmi_pagination {
 	margin-bottom: 20px;
     padding-top: 0px !important;
 
-    
+
 background-image: linear-gradient(top, rgb(34,43,49) 0%, rgb(50,63,71) 100%);
 background-image: -o-linear-gradient(top, rgb(34,43,49) 0%, rgb(50,63,71) 100%);
 background-image: -moz-linear-gradient(top, rgb(34,43,49) 0%, rgb(50,63,71) 100%);
@@ -1349,12 +1349,12 @@ background-image: -webkit-gradient(
 	color-stop(0, rgb(34,43,49)),
 	color-stop(1, rgb(50,63,71))
 );
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-    
+
 
     box-shadow: 0px 0px 15px rgba(0,0,0,1);
 }
@@ -1423,12 +1423,12 @@ span.source {
     padding: 5px;
     background-color: #38474e;
     box-shadow: 0px 0px 15px rgba(1,0,0,1);
-    
+
     border-top-left-radius:3px;
     border-top-right-radius:10px;
     border-bottom-right-radius:3px;
     border-bottom-left-radius:10px;
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1445,12 +1445,12 @@ span.source {
     padding: 5px;
     background-color: #38474e;
     box-shadow: 0px 0px 15px rgba(1,0,0,1);
-    
+
     border-top-left-radius:3px;
     border-top-right-radius:10px;
     border-bottom-right-radius:3px;
     border-bottom-left-radius:10px;
-    
+
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
@@ -1471,15 +1471,15 @@ span.source {
     padding: 0px 20px 20px 20px;
     margin-left: 10px;
     margin-top: 20px;
-    
+
     display: block;
     background-color: #20292e;
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
-    
+
 }
 
 .games-right {
@@ -1490,10 +1490,10 @@ span.source {
     padding: 0px 20px 20px 20px;
     margin-right: 10px;
     margin-top: 20px;
-    
+
     display: block;
     background-color: #20292e;
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
@@ -1564,7 +1564,7 @@ span.source {
 	padding: 5px 10px;
     max-width: 75%;
 	margin: auto !important;
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
@@ -1649,7 +1649,7 @@ a:active {
     background-color: #20292e;
 
     max-width: 100%;
-    
+
     border-top-left-radius:10px;
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
@@ -1705,10 +1705,10 @@ a:active {
     margin-left: -10px;
     margin-right: -10px;
     margin-bottom: -10px;
-    
+
     text-align: right;
     font-size: 12px;
-    
+
         border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
 }
