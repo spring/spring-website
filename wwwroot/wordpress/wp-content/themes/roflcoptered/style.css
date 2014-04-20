@@ -121,9 +121,8 @@ background-image: -webkit-gradient(
 }
 
 .logo img {
-    position: absolute;
-    top:10px !important;
-    left:10px !important;
+    margin-top: 10px;
+    margin-left:10px;
     z-index: 9999;
 }
 
