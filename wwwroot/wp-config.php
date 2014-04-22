@@ -15,14 +15,13 @@
  */
 
 // ** MySQL settings - You can get this info from your web host ** //
-$curpath = dirname(__FILE__);
-require($curpath."/../../springpw.php");
+require_once( dirname(__FILE__)."/../springpw.php" );
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
 // //Added by WP-Cache Manager
 define('WP_CACHE', true); //Added by WP-Cache Manager
-define('WPCACHEHOME', '/home/springtest/www/wwwroot/wordpress/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+define('WPCACHEHOME', __DIR__.'/wordpress/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_NAME', $spring_dbname);
 
 /** MySQL database username */
@@ -91,7 +90,6 @@ define('WP_DEBUG', false);
 
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
-
+	define('ABSPATH', dirname(__FILE__) . '/wordpress/');
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
