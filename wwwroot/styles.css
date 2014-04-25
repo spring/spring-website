@@ -1,8 +1,36 @@
 @charset "utf-8";
 
+
+/* download urls for systems with FreeSans not installed */
+@font-face {
+	font-family: 'spring-freesans';
+	src: url('/fonts/FreeSans.otf'), url('/fonts/FreeSans.ttf');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'spring-freesans';
+	src: url('/fonts/FreeSansBold.otf'), url('/fonts/FreeSansBold.ttf');
+	font-weight: bold;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'spring-freesans';
+	src: url('/fonts/FreeSansOblique.otf'), url('/fonts/FreeSansOblique.ttf');
+	font-weight: normal;
+	font-style: italic;
+}
+@font-face {
+	font-family: 'spring-freesans';
+	src: url('/fonts/FreeSansBoldOblique.otf'), url('/fonts/FreeSansBoldOblique.ttf');
+	font-weight: bold;
+	font-style: italic;
+}
+
+
 html {
 	font-size: 14px;
-	font-family: FreeSans;
+	font-family: FreeSans, 'spring-freesans';
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
