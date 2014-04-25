@@ -11,9 +11,7 @@ html {
 /* MEDIAWIKI */
 #mw-content-text         {width: 100%; overflow: hidden;
                           margin-left: 10px; margin-right: 0; padding-top: 10px;
-                          padding-bottom: 12px;
-/*                          font-family: Verdana, Arial, sans-serif;
-                          font-size: 10pt;*/ color: #eeeeee;}
+                          padding-bottom: 12px; color: #eeeeee;}
 #mw-content-text > *     {margin-right: 10px;}
 #specialform             {display: inline;}
 #content                 {top: 0; margin: 0; padding: 0 0 0 10px;
@@ -24,22 +22,20 @@ html {
 #quickbar                {position: relative; left: 4px; top: 18px; 
                           width: 140px; padding: 0; margin-top: 0;
                           visibility: visible; z-index: 99;
-//                          font-family: Verdana, Arial, sans-serif;
                           font-size: 8pt; font-weight: bold; line-height: 9.5pt;
                           text-decoration: none;
                           color: black;}
 #quickbar a              {color: #468;}
 #quickbar h6             {padding: 0; margin-bottom: 2px; margin-top: 6px;
-//                          font-family: Verdana, Arial, sans-serif;
                           font-size: 10pt; font-weight: bold; line-height: 12pt;
                           text-decoration: none;
                           color: #666;}
 #quickbar form           {padding: 0; margin-top: 0;}
-#sitetitle               {color: white; //font-family: Times, serif;
+#sitetitle               {color: white;
                           font-weight: normal; font-size: 32pt;
                           line-height: 32pt;}
-.bottom                  {/*font-family: Verdana, Arial, sans-serif;*/ font-size: 10pt;}
-.bottom h6               {font-size: 14px; font-weight: bold;}
+.bottom                  {}
+.bottom h6               {font-weight: bold;}
 #toolbar                 {border-bottom: 14px solid #20292E; width: 100%;}
 #toolbar a               {font-size: 14px}
 .toolbartitle            {background-color: #34414A;
@@ -53,15 +49,13 @@ html {
                           border-bottom: 1px solid #20292E;
                           border-radius: 10px 0 0 0;
                           padding: 0 0 0 12px;
-//                          font-family: "DejaVu Sans", Verdana, Arial, sans-serif;
                           font-size: 13px;
                           font-weight:bold;
                           text-shadow: 2px 2px 2px rgba(0,0,0,0.35);
                           color: #EEE;}
-.catlinks                {//font-family: Verdana, Arial, sans-serif;
-                          font-size: 13px;}
+.catlinks                {font-size: 13px;}
 #footer                  {padding: 16px;}
-#footer *                {/*font-family: Verdana, Arial, sans-serif;*/ font-size: 10pt;}
+#footer *                {font-size: 10pt;}
 #footer form             {display: inline;}
 #footer td.top           {background-color: #6688AA; color: white;
                           margin-top: 4px; margin-bottom: 4px;
@@ -72,10 +66,8 @@ html {
                           text-decoration: none; font-size: 10pt;}
 #footer td.bottom        {font-size: 10pt; padding: 0;}
 #footer table.gsc-branding { display: none; } /* Google Custom Search */
-#pagestats               {//font-family: Verdana, Arial, sans-serif;
-                          font-size: 9pt; color: black;}
-#sitesub                 {//font-family: Verdana, Arial, sans-serif;
-                          font-size: 9pt; font-weight: bold;
+#pagestats               {font-size: 9pt; color: black;}
+#sitesub                 {font-size: 9pt; font-weight: bold;
                           color: black;
                           padding-top: 0;}
 
@@ -116,10 +108,8 @@ html {
 
 
 /* SOME STUFF */
-#mw-content-text p       {margin-top: 1ex;
-                          //font-family: Verdana, Arial, sans-serif;
-                          /*font-size: 10pt;*/ color: #eeeeee;}
-#mw-content-text td,#mw-content-text th {//font-family: Verdana, Arial, sans-serif;
+#mw-content-text p       {margin-top: 1ex; color: #eeeeee;}
+#mw-content-text td,#mw-content-text th {
                           font-size: 10pt; color: #eeeeee;}
 #mw-content-text p.subtitle {color: #666666; font-size: 11pt; font-weight: bold;
                           padding-top: 0; margin-top: 0; padding-bottom: 1ex;}
@@ -153,8 +143,7 @@ h1, h2, h3, h4, h5, h6   {color: #eeeeee;
 #mw-content-text h1,
 #mw-content-text h2,
 #mw-content-text h3,
-#mw-content-text h4      {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;
-                          /*font-family: Arial,Tahoma,"Bitstream Vera Sans","Tiresias Signfont",Verdana,FreeSans,sans-serif;*/}
+#mw-content-text h4      {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;}
 #mw-content-text h1      {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
 h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
@@ -165,7 +154,7 @@ h2 .mw-headline:before   {content: '\25b8';}
 h3 .mw-headline:before   {content: '\25b8\25b8'; }
 h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
 .mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
-.mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;} 
+.mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;}
 .editsection             {margin-right: 5px;}
 
 /* LEFT SHIFT AFTER H1 HEADERS */
