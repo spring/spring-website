@@ -30,7 +30,7 @@
 
 html {
 	font-size: 14px;
-	font-family: FreeSans, 'spring-freesans';
+	font-family: FreeSans, 'spring-freesans', sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
