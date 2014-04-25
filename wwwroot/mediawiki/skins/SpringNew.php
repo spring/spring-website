@@ -47,14 +47,8 @@ class SpringNewTemplate extends LegacyTemplate {
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);
-		$s .= '<tr><td>';
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
-		$s .= '<tr>';
-		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '<td bgcolor="#4C626F" width="758">';
 
 		$s .= "\n<div id='content'>\n";
-
 
 		//$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
 		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
@@ -76,7 +70,7 @@ class SpringNewTemplate extends LegacyTemplate {
 	{
 		global $wgUser, $wgOut;
 
-		$s = "\n</div><br clear='all' />\n";
+		$s = "\n</div>\n";
 
 		//$s .= '</td>';
 		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
@@ -118,9 +112,6 @@ class SpringNewTemplate extends LegacyTemplate {
 		$s .= "</tr></table>\n</div>\n";
 
 
-		$s .= '</td>';
-		$s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '</tr></table>';
 
 
 		$s .= '</tr></td>';
@@ -168,13 +159,12 @@ class SpringNewTemplate extends LegacyTemplate {
 		$s = "";
 		//$s = "\n<div id='quickbar'>";
 
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
-		$s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
-		$s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
+		$s .= '<table id="toolbar" border="0" cellpadding="0" cellspacing="0" align="right">';
+		$s .= '<tr><td height="25" class="toolbartitle" width="100%" colspan="2">Page editing toolbox</td></tr>';
 		$s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>';
 		$s .= '<td bgcolor="#38474E" class="bottom">';
 
-		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
+		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="100%"><tr valign="top"><td>';
 
 		$sep = "<br />";
 		//$s .= $this->menuHead( "qbfind" );
@@ -290,8 +280,6 @@ class SpringNewTemplate extends LegacyTemplate {
 
 		$s .= '</td></tr></table>';
 
-		$s .= '</td></tr>';
-		$s .= '<tr height="1"><td bgcolor="#20292E" colspan="2"><img src="/images/pixel.gif" height="1" width="10" /></td>';
 		$s .= '</tr></table>';
 
 		//$s .= $sep . "\n</div>\n";
