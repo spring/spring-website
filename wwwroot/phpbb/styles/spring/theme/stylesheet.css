@@ -689,3 +689,11 @@ pre {
 .username-coloured {
 	font-weight: bold;
 }
+
+
+/* restrict size of phpbb quotes */
+.quotecontent, .attachcontent, .codecontent {
+	max-width:  100%;
+	max-height: 1024px;
+	overflow: auto;
+}

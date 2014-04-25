@@ -365,10 +365,3 @@ a {
 		background: transparent url(/images/logosmall.png) no-repeat;
 	}
 }
-
-/* restrict size of phpbb quotes */
-.quotecontent, .attachcontent, .codecontent {
-	max-width:  547px;
-	max-height: 1024px;
-	overflow: auto;
-}
