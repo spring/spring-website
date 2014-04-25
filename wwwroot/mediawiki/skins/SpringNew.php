@@ -47,6 +47,7 @@ class SpringNewTemplate extends LegacyTemplate {
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);
+		$s .= '<tr><td bgcolor="#4C626F">';
 
 		$s .= "\n<div id='content'>\n";
 
