@@ -282,6 +282,9 @@ a {
 
 
 
+@media (max-width: 1050px), (max-device-width: 1050px) {
+	#mediatoolbar { display: none; }
+}
 
 @media (max-width: 760px), (max-device-width: 760px) {
 	html {
@@ -341,15 +344,16 @@ a {
 		width:     100%;
 		max-width: 100%;
 	}
-	#frontmediavideotd, #frontvideomedia {
-		display:none;
-	}
 	#frontrightbuttons {
 		width:100%;
 		max-width:100%;
 	}
 	#topbannerfade {
 		border-radius: 0;
+	}
+
+	#frontmediavideotd, #frontvideomedia {
+		display:none;
 	}
 }
 

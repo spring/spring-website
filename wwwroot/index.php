@@ -52,11 +52,10 @@
         }
 
         foreach ($screens as $screen) {
-            $thumb = get_thumbnail($screen['physical_filename'], 142, 80);
+            $thumb = get_thumbnail($screen['physical_filename'], 237, 119);
             $title = $screen['topic_title'];
-            //$title .= ' - &lt;a href=&quot;screenshot.php?topic=' . $screen['topic_id'] . '&quot;&gt;Click here to see the original image&lt;/a&gt;';
             $imgline = '<a href="screenshot.php?id=' . $screen['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
-            $imgline .= '<img src="' . $thumb . '" width="142" height="80" border="0" alt="" /><br /></a>';
+            $imgline .= '<img class="frontscreenshot" src="' . $thumb . '" width="237" height="119" border="0" alt="" /></a>';
             $screenthumbs[] = $imgline;
         }
     }
