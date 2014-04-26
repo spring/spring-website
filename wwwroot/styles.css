@@ -55,7 +55,6 @@ p {
 #header {
 	margin-bottom: 15px;
 	max-width: 100%;
-	overflow: hidden;
 }
 
 
@@ -296,6 +295,8 @@ a {
 		background-image: -ms-linear-gradient(top, #8498a3 0px, #8498a3 19px, #272E33 20px);
 		max-width: 100%;
 	}
+
+	#header { overflow: hidden; }
 
 	#menu {
 		background: #272E33;
