@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 html {
-	font-size: 14px;
+	font-size: 16px;
 	font-family: FreeSans, "DejaVu Sans", Verdana, Arial, sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
@@ -44,6 +44,7 @@ body {
 	border-radius: 10px 10px 0 7px;
 	box-shadow: 0 0 10px 1px rgba(0,0,0,0.7);
 	width: 100%;
+	background: #4C626F;
 }
 
 p {
@@ -53,6 +54,8 @@ p {
 
 #header {
 	margin-bottom: 15px;
+	max-width: 100%;
+	overflow: hidden;
 }
 
 
@@ -276,8 +279,6 @@ a {
 	height: 25px;
 	float:left;
 }
-
-
 
 
 

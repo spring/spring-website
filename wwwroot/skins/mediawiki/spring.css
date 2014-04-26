@@ -10,12 +10,12 @@ html {
 
 /* MEDIAWIKI */
 #mw-content-text         {width: 100%; overflow: hidden;
-                          margin-left: 10px; margin-right: 0; padding-top: 10px;
-                          padding-bottom: 12px; color: #eeeeee;}
-#mw-content-text > *     {margin-right: 10px;}
+                          margin: 0; padding: 10px 0 12px 0;
+                          color: #eeeeee;}
 #specialform             {display: inline;}
-#content                 {top: 0; margin: 0; padding: 0 0 0 10px;
+#content                 {top: 0; margin: 0; padding: 0 0 0 10px; overflow: hidden;
                           border-left: 1px solid #20292E; border-right: 1px solid #20292E;}
+#article                 {padding-right: 10px;}
 #topbar                  {padding: 0px;}
 #powersearch             {background: #38474e; border: solid 1px #20292E; padding: 5px;}
 #powersearch *           {margin: 2px !important;}
@@ -34,11 +34,13 @@ html {
 #sitetitle               {color: white;
                           font-weight: normal; font-size: 32pt;
                           line-height: 32pt;}
-.bottom                  {}
-.bottom h6               {font-weight: bold;}
-#toolbar                 {border-bottom: 14px solid #20292E; width: 100%;}
+#toolbar                 {width: 100%;}
 #toolbar a               {font-size: 14px}
-.toolbartitle            {background-color: #34414A;
+#toolbar h6              {font-weight: bold;}
+.toolbartitle            {height: 24px;
+                          line-height: 24px;
+                          vertical-align: middle;
+                          background-color: #34414A;
                           background: linear-gradient(top, #34414A, #506673 100%);
                           background: -o-linear-gradient(top, #34414A, #506673 100%);
                           background: -moz-linear-gradient(top, #34414A, #506673 100%);
@@ -53,6 +55,10 @@ html {
                           font-weight:bold;
                           text-shadow: 2px 2px 2px rgba(0,0,0,0.35);
                           color: #EEE;}
+#toolbar > table         {background-color: #38474E;
+                          border-left: 1px solid #20292E;
+                          border-bottom: 14px solid #20292E;
+                          border-radius: 0 0 0 4px;}
 .catlinks                {font-size: 13px;}
 #footer                  {padding: 16px;}
 #footer *                {font-size: 10pt;}
@@ -64,7 +70,6 @@ html {
                           font-size: 8pt;}
 #footer td.top a         {background-color: #6688AA; color: white;
                           text-decoration: none; font-size: 10pt;}
-#footer td.bottom        {font-size: 10pt; padding: 0;}
 #footer table.gsc-branding { display: none; } /* Google Custom Search */
 #pagestats               {font-size: 9pt; color: black;}
 #sitesub                 {font-size: 9pt; font-weight: bold;
@@ -73,24 +78,6 @@ html {
 
 
 /* TABLE OF CONTENT */
-@media (min-width: 1200px) {
-  #toc[summary=Contents]  {position: relative; right:0px; top:5px; width:240px; overflow: hidden;
-                           border: 1px solid #111; border-spacing: 0px;
-						   margin-left:20px; margin-bottom:20px;
-						   -webkit-border-radius: 10px; -moz-border-radius: 10px;border-radius: 10px;
-                           background: #38464F;}
-  #toc tr td > ul         {margin-top: 0.5ex; margin-right: 0.5ex;}
-}
-/*@media (max-width: 1199px) {
-  #toc[summary=Contents]  {background: transparent; border: none; border-spacing: 0px;}
-  #toc div                {line-height: 20px; padding-left: 5px; padding-right: 5px;
-                           border-bottom: 1px solid #20292E;
-                           background: transparent url("/images/news_bar.png");}
-  #toc                    {margin-left: 5px; margin-right: 0; padding: 0;} 
-  #toc td                 {margin: 0; padding: 0;} 
-  #toc tr td > ul         {margin: 0; padding: 5px;
-                           border: 1px solid #20292E; border-right:0px; border-top:0px; background: #38474e;}
-}*/
 .mw-content-ltr .toc ul ul,
 .mw-content-ltr #toc ul ul,
 .mw-content-rtl .mw-content-ltr .toc ul ul,
@@ -210,7 +197,10 @@ td.diff-addedline        {background-color: #4a4 !important;}
 ins.diffchange           {background-color: #32A032; color: #050;}
 del.diffchange           {color: #f33;}
 small                    {font-size: 75%;}
-#categories              {margin-bottom: 10px}
+#categories              {margin: 0 10px 10px 10px;
+                          border-color: #20292E;
+                          border-radius: 10px;
+                          box-shadow: 0 0 2px rgba(0,0,0,0.4);}
 
 
 /* CUSTOM LEGEND CLASS */
@@ -259,3 +249,16 @@ fieldset#mw-searchoptions{background-color: inherit;}
 #mw-content-text .wikiEditor-ui-toolbar .page-table h5 {color: black; margin: 3px;}
 ul#filetoc {background-color: transparent; border: none;}
 .success, .warning, .error {font-size: inherit;}
+
+
+
+@media (max-width: 900px) {
+	#qbspecialpages   {display:none}
+}
+@media (max-width: 700px) {
+	#mw-content-text  {font-size: 13px;}
+	#qbbrowse         {display:none}
+}
+@media (max-width: 500px) {
+	#qbpageoptions    {display:none}
+}
