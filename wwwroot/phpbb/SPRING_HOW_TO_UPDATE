@@ -1,8 +1,8 @@
 
 DO SPRING CHANGES:
 1. get most recent phpBB
-2. apply SPRING.patch to it and hope it works
-3. update SPRING.patch (diff -ruN phpBB.stock/ phpbb.spring/ > SPRING.patch)
+2. apply SPRING.patch to it and hope it works (patch -p1 < SPRING.patch)
+3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "SPRING.patch" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
 4. copy phpBB.old/mobiquo folder to new phpBB install (or get a more recent one of it)
 5. copy phpBB.old/styles/spring/* folder to new phpBB install
 6. copy phpBB.old/images/smilies/* folder to new phpBB install
