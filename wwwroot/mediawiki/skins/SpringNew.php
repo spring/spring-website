@@ -61,20 +61,17 @@ class SpringNewTemplate extends LegacyTemplate {
 	{
 		global $wgUser, $wgOut;
 
-		$s = "\n</div>\n";
-
 		// category fix
 		$catlinks = $this->getSkin()->getCategoryLinks();
 		if (strlen($catlinks) > 2) {
-			$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories">';
-				// Mediawiki 1.19 adds the ul and li tags, which mediawiki 1.16 did not have.
-				$catstr = $this->getSkin()->getCategories();
-				$catstr = str_replace('<ul>', '', str_replace('</ul>', '', $catstr));
-				$catstr = str_replace('<li>', '', str_replace('</li>', ' ', $catstr));
-				$s .= "<tr><td>$catstr</td></tr>";
-			$s .= '</table>';
+			// Mediawiki 1.19 adds the ul and li tags, which mediawiki 1.16 did not have.
+			$catstr = $this->getSkin()->getCategories();
+			$catstr = str_replace('<ul>', '', str_replace('</ul>', '', $catstr));
+			$catstr = str_replace('<li>', '', str_replace('</li>', ' ', $catstr));
+			$s .= $catstr;
 		}
 
+		$s = "\n</div>\n";
 
 		$qb = $this->getSkin()->qbSetting();
 		if ( 0 != $qb ) { $s .= $this->quickBar(); }
