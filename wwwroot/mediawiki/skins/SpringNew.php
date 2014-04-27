@@ -60,6 +60,7 @@ class SpringNewTemplate extends LegacyTemplate {
 	function doAfterContent()
 	{
 		global $wgUser, $wgOut;
+		$s = "";
 
 		// category fix
 		$catlinks = $this->getSkin()->getCategoryLinks();
@@ -71,7 +72,7 @@ class SpringNewTemplate extends LegacyTemplate {
 			$s .= $catstr;
 		}
 
-		$s = "\n</div>\n";
+		$s .= "\n</div>\n";
 
 		$qb = $this->getSkin()->qbSetting();
 		if ( 0 != $qb ) { $s .= $this->quickBar(); }
