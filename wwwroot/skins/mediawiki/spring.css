@@ -195,8 +195,8 @@ td.diff-addedline        {background-color: #4a4 !important;}
 ins.diffchange           {background-color: #32A032; color: #050;}
 del.diffchange           {color: #f33;}
 small                    {font-size: 75%;}
-#catlinks                {width: 100%;
-                          margin: 0 10px 10px 10px;
+#catlinks                {margin: 0 10px 10px 10px;
+                          padding: 7px;
                           text-align: center;
                           border-color: #20292E;
                           background-color: #38474E;
