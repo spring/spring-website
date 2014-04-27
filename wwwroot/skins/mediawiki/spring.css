@@ -257,7 +257,8 @@ ul#filetoc {background-color: transparent; border: none;}
 }
 @media (max-width: 700px) {
 	#mw-content-text  {font-size: 13px;}
-	#qbbrowse         {display:none}
+	#qbbrowse         {display:none;}
+	#toc              {display:block; float:none;}
 }
 @media (max-width: 500px) {
 	#qbpageoptions    {display:none}
