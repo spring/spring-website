@@ -165,6 +165,7 @@ a.menubar:hover {
 	padding:0;
 	height: 100%;
 	border-radius: 0 0 7px 7px;
+	border-bottom: 1px solid rgba(0,0,0,0.5);
 	box-shadow: 0 0 10px 1px rgba(0,0,0,0.7);
 }
 
@@ -201,7 +202,7 @@ a.menubar:hover {
 /* Separator between header menu items */
 #menu .headermenuleft,
 #menu .headermenu {
-	border-right: 1px solid #556269;
+	border-right: 1px solid rgba(255, 255, 255, 0.106);
 }
 
 #menu a {
@@ -307,6 +308,7 @@ a {
 	#menu ul {
 		border-radius: 0;
 		box-shadow: none;
+		border-bottom: none;
 		float: none;
 		height: auto;
 	}
