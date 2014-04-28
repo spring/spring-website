@@ -14,6 +14,7 @@ html {
                           color: #eeeeee;}
 #specialform             {display: inline;}
 #content                 {top: 0; margin: 0; padding: 0 0 0 10px; overflow: hidden;
+                          background-color: #4C626F;
                           border-left: 1px solid #20292E; border-right: 1px solid #20292E;}
 #article                 {/*padding-right: 10px;*/}
 #topbar                  {padding: 0px;}
@@ -129,7 +130,7 @@ h1, h2, h3, h4, h5, h6   {color: #eeeeee;
 #mw-content-text h2,
 #mw-content-text h3,
 #mw-content-text h4      {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;}
-#mw-content-text h1      {padding-top:10px; padding-bottom: 7px; border-bottom: 1px #eee solid;}
+#mw-content-text h1      {padding-top:10px; padding-bottom: 7px; margin-right:10px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
 h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
 h3 .mw-headline          {font-size: 14.5px; margin-left: 5px}
@@ -258,7 +259,7 @@ ul#filetoc {background-color: transparent; border: none;}
 @media (max-width: 700px) {
 	#mw-content-text  {font-size: 13px;}
 	#qbbrowse         {display:none;}
-	#toc              {display:block; float:none;}
+	#toc              {display:block; float:none; margin-right: 10px;}
 }
 @media (max-width: 500px) {
 	#qbpageoptions    {display:none}

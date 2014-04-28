@@ -155,7 +155,6 @@ a~a>.frontscreenshot {
 .news {
 }
 .newsbar {
-	/*height: 25px;*/
 	background-color: #34414A;
 	background: linear-gradient(top, #34414A, #506673 100%);
 	background: -o-linear-gradient(top, #34414A, #506673 100%);
@@ -180,12 +179,12 @@ a~a>.frontscreenshot {
 	border-bottom: 1px solid #20292E;
 	padding: 8px;
 	background-color: #38474E;
-	background: -webkit-linear-gradient(-65deg, #566, #38474E 200px);
-	background: linear-gradient(-65deg, #566, #38474E 200px);
-	background: -o-linear-gradient(-65deg, #566, #38474E 200px);
-	background: -moz-linear-gradient(-65deg, #566, #38474E 200px);
-	background: -webkit-linear-gradient(-65deg, #566, #38474E 200px);
-	background: -ms-linear-gradient(-65deg, #566, #38474E 200px);
+	background: -webkit-linear-gradient(-65deg, #506161, #38474E 200px);
+	background: linear-gradient(-65deg, #506161, #38474E 200px);
+	background: -o-linear-gradient(-65deg, #506161, #38474E 200px);
+	background: -moz-linear-gradient(-65deg, #506161, #38474E 200px);
+	background: -webkit-linear-gradient(-65deg, #506161, #38474E 200px);
+	background: -ms-linear-gradient(-65deg, #506161, #38474E 200px);
 	box-shadow: inset 1px 1px rgba(255, 255, 255, 0.198);
 }
 .newsheadline {
