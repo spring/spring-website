@@ -57,5 +57,3 @@ while ( $row = mysql_fetch_array($res))
 //echo "</rss>\n";
 echo $rss->createFeed("RSS2.0");
 
-
-?>
