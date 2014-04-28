@@ -1,6 +1,6 @@
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/config.php phpBB3.spring/config.php
---- phpBB3.stock/config.php	2013-09-28 03:24:48.000000000 +0200
-+++ phpBB3.spring/config.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/config.php phpbb/config.php
+--- phpBB3/config.php	2013-09-28 03:24:48.000000000 +0200
++++ phpbb/config.php	2014-04-28 06:32:33.738914715 +0200
 @@ -0,0 +1,20 @@
 +<?php
 +// phpBB 3.0.x auto-generated configuration file
@@ -22,9 +22,9 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 +// @define('DEBUG', true);
 +// @define('DEBUG_EXTRA', true);
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/feedcreator.class.php phpBB3.spring/feedcreator.class.php
---- phpBB3.stock/feedcreator.class.php	1970-01-01 01:00:00.000000000 +0100
-+++ phpBB3.spring/feedcreator.class.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/feedcreator.class.php phpbb/feedcreator.class.php
+--- phpBB3/feedcreator.class.php	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/feedcreator.class.php	2014-04-28 06:32:33.738914715 +0200
 @@ -0,0 +1,1541 @@
 +<?php
 +/***************************************************************************
@@ -1567,9 +1567,9 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 +***************************************************************************/
 +
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/includes/captcha/plugins/captcha_abstract.php phpBB3.spring/includes/captcha/plugins/captcha_abstract.php
---- phpBB3.stock/includes/captcha/plugins/captcha_abstract.php	2013-09-28 03:20:51.000000000 +0200
-+++ phpBB3.spring/includes/captcha/plugins/captcha_abstract.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/includes/captcha/plugins/captcha_abstract.php phpbb/includes/captcha/plugins/captcha_abstract.php
+--- phpBB3/includes/captcha/plugins/captcha_abstract.php	2013-09-28 03:20:51.000000000 +0200
++++ phpbb/includes/captcha/plugins/captcha_abstract.php	2014-04-28 06:32:33.738914715 +0200
 @@ -98,10 +98,14 @@
  			$link = append_sid($phpbb_root_path . 'ucp.' . $phpEx,  'mode=confirm&amp;confirm_id=' . $this->confirm_id . '&amp;type=' . $this->type);
  			$explain = $user->lang(($this->type != CONFIRM_POST) ? 'CONFIRM_EXPLAIN' : 'POST_CONFIRM_EXPLAIN', '<a href="mailto:' . htmlspecialchars($config['board_contact']) . '">', '</a>');
@@ -1594,58 +1594,9 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 -?>
 \ No newline at end of file
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/includes/functions_admin.php phpBB3.spring/includes/functions_admin.php
---- phpBB3.stock/includes/functions_admin.php	2013-09-28 03:20:51.000000000 +0200
-+++ phpBB3.spring/includes/functions_admin.php	2014-04-15 14:31:18.000000000 +0200
-@@ -617,8 +617,13 @@
- /**
- * Remove topic(s)
- */
--function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_sync = true, $call_delete_posts = true)
-+function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_sync = true, $call_delete_posts = true, $force_delete = false)
- {
-+	// move to spambox instead of deleting
-+	if ($where_type === 'topic_id' && $force_delete === false) { // only apply to lists of topic ids, not range - no idea what will call range
-+		move_topics($where_ids, '18');
-+		return 0;
-+	}
- 	global $db, $config;
- 
- 	$approved_topics = 0;
-@@ -724,6 +729,12 @@
- */
- function delete_posts($where_type, $where_ids, $auto_sync = true, $posted_sync = true, $post_count_sync = true, $call_delete_topics = true)
- {
-+	// move deleted posts to the spambox 'deleted posts' thread
-+	if ($where_type === 'post_id') {
-+		move_posts($where_ids, '20246', $auto_sync);
-+		return 1;
-+	}
-+
- 	global $db, $config, $phpbb_root_path, $phpEx;
- 
- 	if ($where_type === 'range')
-@@ -1938,7 +1949,7 @@
- 			if (!sizeof($topic_data))
- 			{
- 				// If we get there, topic ids were invalid or topics did not contain any posts
--				delete_topics($where_type, $where_ids, true);
-+				delete_topics($where_type, $where_ids, true, true, true, true);
- 				return;
- 			}
- 
-@@ -1951,7 +1962,7 @@
- 					$delete_topic_ids[] = $topic_id;
- 				}
- 
--				delete_topics('topic_id', $delete_topic_ids, false);
-+				delete_topics('topic_id', $delete_topic_ids, false, true, true, true);
- 				unset($delete_topics, $delete_topic_ids);
- 			}
- 
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/includes/utf/utf_normalizer.php phpBB3.spring/includes/utf/utf_normalizer.php
---- phpBB3.stock/includes/utf/utf_normalizer.php	2013-09-28 03:20:51.000000000 +0200
-+++ phpBB3.spring/includes/utf/utf_normalizer.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/includes/utf/utf_normalizer.php phpbb/includes/utf/utf_normalizer.php
+--- phpBB3/includes/utf/utf_normalizer.php	2013-09-28 03:20:51.000000000 +0200
++++ phpbb/includes/utf/utf_normalizer.php	2014-04-28 06:32:33.738914715 +0200
 @@ -151,7 +151,8 @@
  	* @param	string	&$str	Unchecked UTF string
  	* @return	string			The string, validated and in normal form
@@ -1663,9 +1614,9 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 -?>
 \ No newline at end of file
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/newposts.php phpBB3.spring/newposts.php
---- phpBB3.stock/newposts.php	1970-01-01 01:00:00.000000000 +0100
-+++ phpBB3.spring/newposts.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/newposts.php phpbb/newposts.php
+--- phpBB3/newposts.php	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/newposts.php	2014-04-28 06:32:33.738914715 +0200
 @@ -0,0 +1,82 @@
 +<?php
 +require_once("config.php");
@@ -1749,9 +1700,9 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 +
 +
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/newsrss.php phpBB3.spring/newsrss.php
---- phpBB3.stock/newsrss.php	1970-01-01 01:00:00.000000000 +0100
-+++ phpBB3.spring/newsrss.php	2014-04-15 14:31:18.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/newsrss.php phpbb/newsrss.php
+--- phpBB3/newsrss.php	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/newsrss.php	2014-04-28 06:32:33.738914715 +0200
 @@ -0,0 +1,61 @@
 +<?php
 +require_once("config.php");
@@ -1814,15 +1765,15 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 +
 +
 +?>
-diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x .install -x SPRING.patch phpBB3.stock/SPRING_HOW_TO_UPDATE phpBB3.spring/SPRING_HOW_TO_UPDATE
---- phpBB3.stock/SPRING_HOW_TO_UPDATE	1970-01-01 01:00:00.000000000 +0100
-+++ phpBB3.spring/SPRING_HOW_TO_UPDATE	2014-04-26 19:00:11.000000000 +0200
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/SPRING_HOW_TO_UPDATE phpbb/SPRING_HOW_TO_UPDATE
+--- phpBB3/SPRING_HOW_TO_UPDATE	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/SPRING_HOW_TO_UPDATE	2014-04-28 06:32:15.990911288 +0200
 @@ -0,0 +1,17 @@
 +
 +DO SPRING CHANGES:
 +1. get most recent phpBB
 +2. apply SPRING.patch to it and hope it works (patch -p1 < SPRING.patch)
-+3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "styles" -x "docs" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
++3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "SPRING.patch" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
 +4. copy phpBB.old/mobiquo folder to new phpBB install (or get a more recent one of it)
 +5. copy phpBB.old/styles/spring/* folder to new phpBB install
 +6. copy phpBB.old/images/smilies/* folder to new phpBB install
@@ -1835,3 +1786,48 @@ diff -ruN -x mobiquo -x cache -x images -x files -x styles -x docs -x install -x
 +DONE
 +9. delete old phpBB install if wanted
 +10. finished
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/SPRING_HOW_TO_UPDATE.orig phpbb/SPRING_HOW_TO_UPDATE.orig
+--- phpBB3/SPRING_HOW_TO_UPDATE.orig	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/SPRING_HOW_TO_UPDATE.orig	2014-04-28 06:32:15.000000000 +0200
+@@ -0,0 +1,17 @@
++
++DO SPRING CHANGES:
++1. get most recent phpBB
++2. apply SPRING.patch to it and hope it works (patch -p1 < SPRING.patch)
++3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "SPRING.patch" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
++4. copy phpBB.old/mobiquo folder to new phpBB install (or get a more recent one of it)
++5. copy phpBB.old/styles/spring/* folder to new phpBB install
++6. copy phpBB.old/images/smilies/* folder to new phpBB install
++
++UPDATE PHP MYSQL DB:
++7. you should have a install folder in your new phpBB install,
++   open it from a browser (http://myspringrts.com/phpbb/install/database_update.php)
++8. mv install .install (or just remove it)
++
++DONE
++9. delete old phpBB install if wanted
++10. finished
+diff -ruN -x mobiquo -x cache -x files -x images -x styles -x docs -x install -x .install -x SPRING.patch phpBB3/SPRING_HOW_TO_UPDATE.rej phpbb/SPRING_HOW_TO_UPDATE.rej
+--- phpBB3/SPRING_HOW_TO_UPDATE.rej	1970-01-01 01:00:00.000000000 +0100
++++ phpbb/SPRING_HOW_TO_UPDATE.rej	2014-04-28 06:32:42.514916357 +0200
+@@ -0,0 +1,20 @@
++--- SPRING_HOW_TO_UPDATE	2014-04-26 19:00:11.000000000 +0200
+++++ SPRING_HOW_TO_UPDATE	1970-01-01 01:00:00.000000000 +0100
++@@ -1,17 +0,0 @@
++-
++-DO SPRING CHANGES:
++-1. get most recent phpBB
++-2. apply SPRING.patch to it and hope it works (patch -p1 < SPRING.patch)
++-3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "styles" -x "docs" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
++-4. copy phpBB.old/mobiquo folder to new phpBB install (or get a more recent one of it)
++-5. copy phpBB.old/styles/spring/* folder to new phpBB install
++-6. copy phpBB.old/images/smilies/* folder to new phpBB install
++-
++-UPDATE PHP MYSQL DB:
++-7. you should have a install folder in your new phpBB install,
++-   open it from a browser (http://myspringrts.com/phpbb/install/database_update.php)
++-8. mv install .install (or just remove it)
++-
++-DONE
++-9. delete old phpBB install if wanted
++-10. finished

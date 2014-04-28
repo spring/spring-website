@@ -617,13 +617,8 @@ function move_posts($post_ids, $topic_id, $auto_sync = true)
 /**
 * Remove topic(s)
 */
-function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_sync = true, $call_delete_posts = true, $force_delete = false)
+function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_sync = true, $call_delete_posts = true)
 {
-	// move to spambox instead of deleting
-	if ($where_type === 'topic_id' && $force_delete === false) { // only apply to lists of topic ids, not range - no idea what will call range
-		move_topics($where_ids, '18');
-		return 0;
-	}
 	global $db, $config;
 
 	$approved_topics = 0;
@@ -729,12 +724,6 @@ function delete_topics($where_type, $where_ids, $auto_sync = true, $post_count_s
 */
 function delete_posts($where_type, $where_ids, $auto_sync = true, $posted_sync = true, $post_count_sync = true, $call_delete_topics = true)
 {
-	// move deleted posts to the spambox 'deleted posts' thread
-	if ($where_type === 'post_id') {
-		move_posts($where_ids, '20246', $auto_sync);
-		return 1;
-	}
-
 	global $db, $config, $phpbb_root_path, $phpEx;
 
 	if ($where_type === 'range')
@@ -1949,7 +1938,7 @@ function sync($mode, $where_type = '', $where_ids = '', $resync_parents = false,
 			if (!sizeof($topic_data))
 			{
 				// If we get there, topic ids were invalid or topics did not contain any posts
-				delete_topics($where_type, $where_ids, true, true, true, true);
+				delete_topics($where_type, $where_ids, true);
 				return;
 			}
 
@@ -1962,7 +1951,7 @@ function sync($mode, $where_type = '', $where_ids = '', $resync_parents = false,
 					$delete_topic_ids[] = $topic_id;
 				}
 
-				delete_topics('topic_id', $delete_topic_ids, false, true, true, true);
+				delete_topics('topic_id', $delete_topic_ids, false);
 				unset($delete_topics, $delete_topic_ids);
 			}
 

@@ -1,11 +1,21 @@
 
 DO SPRING CHANGES:
 1. get most recent phpBB
-2. apply SPRING.patch to it and hope it works (patch -p1 < SPRING.patch)
-3. update SPRING.patch (diff -ruN -x "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "SPRING.patch" phpBB3.stock/ phpBB3.spring/ > SPRING.patch)
-4. copy phpBB.old/mobiquo folder to new phpBB install (or get a more recent one of it)
-5. copy phpBB.old/styles/spring/* folder to new phpBB install
-6. copy phpBB.old/images/smilies/* folder to new phpBB install
+	wget https://www.phpbb.com/files/release/phpBB-3.0.12.tar.bz2
+	tar xifz phpBB-3.0.12.tar.bz2
+2. apply SPRING.patch to it and hope it works:
+	cd phpBB3
+	patch -p1 < phpbb/SPRING.patch)
+3. update SPRING.patch:
+	cd ..
+	diff -ruN -x  "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "SPRING.patch" phpBB3/ phpbb/
+4. copy data files to new phpbb:
+	cp -rv phpbb/mobiqo/ phpBB3/
+	cp -rv phpbb/styles/spring/ phpBB3/styles/spring/
+	cp -rv phpbb/images/smilies/ phpBB3/images/smilies/
+5. use new phpbb:
+	rm -rf phpbb
+	mv phpBB3 phpbb
 
 UPDATE PHP MYSQL DB:
 7. you should have a install folder in your new phpBB install,
