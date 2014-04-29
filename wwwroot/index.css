@@ -1,14 +1,8 @@
 @charset "utf-8";
 
 a:link,
-a:visited {
-	color: #A3BDCF;
-	text-decoration: none;
-}
-a:hover {
-	color: #A3BDCF;
-	text-decoration: underline;
-}
+a:hover   { color: #BBBBFF; text-shadow: #333 2px 2px 3px;}
+a:visited { color: #a0a0ff; text-shadow: #222 2px 2px 2px;}
 
 .title {
 	color: #EEE;

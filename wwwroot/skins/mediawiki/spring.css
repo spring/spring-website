@@ -130,7 +130,7 @@ h1, h2, h3, h4, h5, h6   {color: #eeeeee;
 #mw-content-text h2,
 #mw-content-text h3,
 #mw-content-text h4      {color: #eeeeee; margin-left: 0; margin-bottom: 0.5ex; margin-top: 1ex;}
-#mw-content-text h1      {padding-top:10px; padding-bottom: 7px; margin-right:10px; border-bottom: 1px #eee solid;}
+#mw-content-text h1      {padding-top:10px; margin-right:10px; border-bottom: 1px #eee solid;}
 h1 .mw-headline          {font-size: 20px;}
 h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
 h3 .mw-headline          {font-size: 14.5px; margin-left: 5px}

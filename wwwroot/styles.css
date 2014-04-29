@@ -243,13 +243,13 @@ a.menubar:hover {
 	vertical-align: middle;
 	overflow: hidden;
 }
-a.bottomlink:link,
-a.bottomlink:visited {
-	color: #A3BDCF;
+a:link,
+a:visited {
+//	color: #A3BDCF;
 	text-decoration: none;
 }
-a.bottomlink:hover {
-	color: #A3BDCF;
+a:hover {
+//	color: #A3BDCF;
 	text-decoration: underline;
 }
 a {
