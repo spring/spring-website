@@ -245,11 +245,11 @@ a.menubar:hover {
 }
 a:link,
 a:visited {
-//	color: #A3BDCF;
+/*	color: #A3BDCF; */
 	text-decoration: none;
 }
 a:hover {
-//	color: #A3BDCF;
+/*	color: #A3BDCF; */
 	text-decoration: underline;
 }
 a {
