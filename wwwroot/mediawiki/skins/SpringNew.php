@@ -242,7 +242,7 @@ class SpringNewTemplate extends LegacyTemplate {
 
 	private static function AddToolbarSection( $key, $content )
 	{
-		$s = "\n<td><div class='toolbarsection' id='$key'><h6>" . wfMsg( $key ) . "</h6>$content</td>";
+		$s = "\n<td><div class='toolbarsection' id='$key'><h6>" . wfMsg( $key ) . "</h6>$content</div></td>";
 		return $s;
 	}
 
