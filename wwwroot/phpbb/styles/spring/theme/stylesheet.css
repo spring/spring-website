@@ -356,7 +356,7 @@ td.profile {
 	color: #EEE;
 }
 
-.cat h4 a:link {
+.cat h4 a:link, .cat h4 a:visited {
 	color: inherit;
 	font-size: 16px;
 	font-weight:bold;
