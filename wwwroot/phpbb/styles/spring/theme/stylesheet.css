@@ -690,7 +690,7 @@ pre {
 
 /* restrict size of phpbb quotes */
 .quotecontent, .attachcontent, .codecontent {
-	max-width:  100%;
+	max-width: 787px; /* has to be absolute, else it doesn't restrict width */
 	max-height: 1024px;
 	overflow: auto;
 }
