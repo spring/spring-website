@@ -217,17 +217,17 @@ p.topicdetails {
 }
 
 .postauthor {
-	color: #000000;
+	color: black;
 }
 
 .postdetails {
-	color: #000000;
+	color: black;
 }
 
 .postbody {
-	font-size: 1.2em;
+	font-size: 15px;
 	line-height: 1.4em;
-	color: #000000;
+	color: black;
 }
 
 .postbody li, ol, ul {
@@ -512,9 +512,6 @@ input.radio {
 }
 
 .post {
-	background-color: white;
-	border-style: solid;
-	border-width: 1px;
 }
 
 .btnbbcode {
