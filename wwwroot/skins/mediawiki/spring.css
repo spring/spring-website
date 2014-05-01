@@ -16,6 +16,7 @@ html {
 #content                 {top: 0; margin: 0; padding: 0 0 0 10px; overflow: hidden;
                           background-color: #4C626F;
                           border-left: 1px solid #20292E; border-right: 1px solid #20292E;}
+#editform                {margin-right: 10px;}
 #article                 {/*padding-right: 10px;*/}
 #topbar                  {padding: 0px;}
 #powersearch             {background: #38474e; border: solid 1px #20292E; padding: 5px;}
