@@ -26,6 +26,12 @@ body {
 	margin: 0;
 }
 
+#content {
+	background-color: #C8D2DA;
+	width: auto;
+	border-left: 1px solid #20292E; border-right: 1px solid #20292E;
+}
+
 #wrapheader {
 	height: auto !important;
 	padding: 0;
@@ -288,6 +294,7 @@ p.topicdetails {
 	font-weight: bold;
 	font-size: 1.3em;
 	text-decoration: none;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.102);
 }
 
 .error {
@@ -309,15 +316,18 @@ th {
 	background: -moz-linear-gradient(top, #E33, #911 100%);
 	background: -webkit-linear-gradient(top, #E33, #911 100%);
 	background: -ms-linear-gradient(top, #E33, #911 100%);
- 	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
+	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
 	border: 1px solid rgba(0,0,0,0.2);
 	border-radius: 5px 5px 0 0;
 	white-space: nowrap;
 	padding: 4px 5px;
 }
 
+.tablebg th {
+	text-align: center;
+}
+
 .tablebg:nth-of-type(2) tr:first-child td.cat {
-#	display: none;
 	background: transparent;
 	border: 0;
 	box-shadow: none;
@@ -327,10 +337,6 @@ td {
 }
 td.profile {
 	padding: 4px;
-}
-
-.tablebg {
-#	background-color: #A9B8C2;
 }
 
 .rtl {

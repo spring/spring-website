@@ -45,7 +45,6 @@ class SpringNewTemplate extends LegacyTemplate {
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);
-		$s .= '<tr><td>';
 		$s .= "\n<div id='content'>";
 		$s .= "\n<div id='article'>";
 
@@ -84,7 +83,7 @@ class SpringNewTemplate extends LegacyTemplate {
 				$s .= "</td></tr>";
 			$s .= "</table>\n";
 		$s .= "</div>\n";
-		$s .= '</tr></td>';
+		$s .= "</div>\n";
 		$s .= file_get_contents('../templates/footer.html');
 		return $s;
 	}
