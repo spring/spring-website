@@ -85,7 +85,8 @@ html {
 .mw-content-rtl .mw-content-ltr #toc ul ul {
 	margin: 0 0 0 2.5ex;
 }
-#toc                     {background-color: #38474E;
+#toc                     {margin: 10px;
+                          background-color: #38474E;
                           border-color: #20292E;
                           border-radius: 10px 10px 0 10px;
                           box-shadow: 0 0 2px rgba(0,0,0,0.4);
