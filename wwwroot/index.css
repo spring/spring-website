@@ -221,8 +221,9 @@ a~a>.frontscreenshot {
 	border-left:   1px solid #20292E;
 	border-bottom: 1px solid #20292E;
 
-	width: 100%;
-	height: 93px;
+	height: 92px;
+	line-height: 92px;
+	overflow: hidden;
 
 	text-align: right;
 	vertical-align: middle;
