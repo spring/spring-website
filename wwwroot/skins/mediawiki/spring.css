@@ -111,16 +111,17 @@ hr                       {border-bottom: 1px #eee solid;}
 
 
 /* LINKS */
-a:link,a:visited         {color: #D8EFFF; text-decoration:none;}
-a:hover                  {text-decoration: underline;}
+#toolbar a:link                   {color: #D8EFFF; text-decoration:none;}
+#toolbar a:visited                {color: #7F9FB5; text-decoration:none;}
+#toolbar a:hover                  {text-decoration: underline;}
 #mw-content-text a.new           {color: #f55;}
 #mw-content-text a.new:visited   {color: #ff3030;}
 #mw-content-text a               {color: #bbf; text-shadow: #333 2px 2px 3px;}
 #mw-content-text a:visited       {color: #a0a0ff; text-shadow: #222 2px 2px 2px;}
 a.external               {color: #E9D8FF;}
 a.printable              {text-decoration: underline;}
-a.stub, #quickbar a.stub {color:#772233;}
-a.new, #quickbar a.new   {color: #CC2200;}
+a.stub, #quickbar a.stub, #toolbar a.stub {color: #772233;}
+a.new, #quickbar a.new, #toolbar a.new    {color: #CC2200;}
 
 
 /* HEADERS */

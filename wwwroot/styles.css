@@ -257,6 +257,9 @@ a:hover {
 a {
 	outline: none;
 }
+
+.bottombar a:link, .bottombar a:visited  { color: #bbf; }
+
 #frontrightbuttons {
 	width:100%;
 	max-width:465px;
