@@ -15,15 +15,9 @@
 	padding: 0;
 }
 
-html {
-	font-size: 100%;
-}
-
 body {
 	color: #323D4F;
-	background-color: #FFFFFF;
 	font-size: 12px; /* This sets the default font size to be equivalent to 10px */
-	margin: 0;
 }
 
 #content {
@@ -232,7 +226,7 @@ p.topicdetails {
 
 .postbody {
 	font-size: 15px;
-	line-height: 1.4em;
+	line-height: 140%;
 	color: black;
 }
 
@@ -242,7 +236,7 @@ p.topicdetails {
 
 /* added by Tobi (23/12/07): */
 .postbody img {
-	max-width: 560px;
+	max-width: 600px;
 }
 
 .rtl .postbody li, .rtl ol, .rtl ul {
@@ -414,18 +408,13 @@ hr {
 
 /* CSS spec requires a:link, a:visited, a:hover and a:active rules to be specified in this order. */
 /* See http://www.phpbb.com/bugs/phpbb3/59685 */
-a:link {
+a:link,
+a:visited {
 	color: #006597;
 	text-decoration: none;
 }
 
-a:visited {
-	color: #005784;
-	text-decoration: none;
-}
-
 a:hover {
-	color: #D46400;
 	text-decoration: underline;
 }
 
@@ -435,10 +424,11 @@ a:active {
 }
 
 a.forumlink {
-	color: #069;
 	font-weight: bold;
 	font-size: 1.2em;
 }
+
+a.forumlink:visited { color: #5493B4; }
 
 a.topictitle {
 	margin: 1px 0;
@@ -586,7 +576,7 @@ input.radio {
 	border-style: solid;
 	font-weight: normal;
 	font-size: 1em;
-	line-height: 1.4em;
+	line-height: 140%;
 	background-color: #FAFAFA;
 	color: #4B5C77;
 }
