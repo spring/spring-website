@@ -579,35 +579,21 @@ input.radio {
 	line-height: 140%;
 	background-color: #FAFAFA;
 	color: #4B5C77;
-}
 
-.attachcontent {
-	font-size: 0.85em;
-}
-
-.codetitle {
-	margin: 10px 5px 0 5px;
-	padding: 2px 4px;
-	border-width: 1px 1px 0 1px;
-	border-style: solid;
-	border-color: #A9B8C2;
-	color: #333333;
-	background-color: #A9B8C2;
-	font-size: 0.8em;
+	/* workaround for http://springrts.com/phpbb/viewtopic.php?p=557770#p557770 */
+	/* hides first <br/> after quotes & codes */
+	width: 100%;
+	display: inline-block;
 }
 
 .codecontent {
 	font-family: Monaco, 'Courier New', monospace;
-	direction: ltr;
-	margin: 0 5px 10px 5px;
-	padding: 5px;
-	border-color: #A9B8C2;
-	border-width: 0 1px 1px 1px;
-	border-style: solid;
-	font-weight: normal;
-	color: #006600;
 	font-size: 0.85em;
-	background-color: #FAFAFA;
+	color: #060;
+}
+
+.attachcontent {
+	font-size: 0.85em;
 }
 
 .syntaxbg {
