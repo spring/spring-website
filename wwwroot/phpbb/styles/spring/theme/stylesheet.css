@@ -346,7 +346,7 @@ td.profile {
 	background: -moz-linear-gradient(top, #34414A, #506673 100%);
 	background: -webkit-linear-gradient(top, #34414A, #506673 100%);
 	background: -ms-linear-gradient(top, #34414A, #506673 100%);
- 	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
+	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
 	border-right:  1px solid #20292E;
 	border-left:   1px solid #20292E;
 	border-bottom: 1px solid #20292E;
@@ -552,13 +552,13 @@ input.radio {
 
 /* BBCode
  ------------ */
-.quotetitle, .attachtitle {
+.quotetitle, .attachtitle, .codetitle {
 	margin: 10px 5px 0 5px;
 	padding: 4px;
 	border-width: 1px 1px 0 1px;
 	border-style: solid;
 	border-color: #A9B8C2;
-	color: #333333;
+	color: #333;
 	background-color: #A9B8C2;
 	font-size: 0.85em;
 	font-weight: bold;
@@ -568,7 +568,7 @@ input.radio {
 	font-size: 1em;
 }
 
-.quotecontent, .attachcontent {
+.quotecontent, .attachcontent, .codecontent {
 	margin: 0 5px 10px 5px;
 	padding: 5px;
 	border-color: #A9B8C2;
@@ -581,33 +581,19 @@ input.radio {
 	color: #4B5C77;
 }
 
-.attachcontent {
-	font-size: 0.85em;
-}
-
-.codetitle {
-	margin: 10px 5px 0 5px;
-	padding: 2px 4px;
-	border-width: 1px 1px 0 1px;
-	border-style: solid;
-	border-color: #A9B8C2;
-	color: #333333;
-	background-color: #A9B8C2;
-	font-size: 0.8em;
-}
-
 .codecontent {
 	font-family: Monaco, 'Courier New', monospace;
-	direction: ltr;
-	margin: 0 5px 10px 5px;
-	padding: 5px;
-	border-color: #A9B8C2;
-	border-width: 0 1px 1px 1px;
-	border-style: solid;
-	font-weight: normal;
-	color: #006600;
 	font-size: 0.85em;
-	background-color: #FAFAFA;
+	color: #060;
+}
+
+.quotecontent + br, .codecontent + br {
+	/* HIDE first <br/> directly after the quotes */
+	display: none;
+}
+
+.attachcontent {
+	font-size: 0.85em;
 }
 
 .syntaxbg {
