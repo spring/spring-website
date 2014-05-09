@@ -136,10 +136,10 @@ h1 .mw-headline          {font-size: 20px;}
 h2 .mw-headline          {font-size: 16px;   margin-left: 5px}
 h3 .mw-headline          {font-size: 14.5px; margin-left: 5px}
 h4 .mw-headline          {font-size: 14.5px; margin-left: 5px}
-h1 .mw-headline:before   {content: '';}
-h2 .mw-headline:before   {content: '\25b8';}
-h3 .mw-headline:before   {content: '\25b8\25b8'; }
-h4 .mw-headline:before   {content: '\25b8\25b8\25b8';}
+h1 .mw-headline:before   {font-weight: normal; content: '';}
+h2 .mw-headline:before   {font-weight: normal; content: '\25b8';}
+h3 .mw-headline:before   {font-weight: normal; content: '\25b8\25b8'; }
+h4 .mw-headline:before   {font-weight: normal; content: '\25b8\25b8\25b8';}
 .mw-headline:before      {margin-right: 5px; margin-top:-20px; letter-spacing: -4px; font-size:20px; text-shadow: #111 2px 2px 2px;} 
 .mw-headline             {color: #EEF; text-shadow: #111 2px 2px 2px;}
 .editsection             {margin-right: 5px;}
