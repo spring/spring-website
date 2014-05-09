@@ -65,12 +65,12 @@
 
 
     $videos = array(
-			"http://www.youtube.com/embed/vkZaLLyhEgI?rel=0", #zero-k trailer
-			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0", #spring rts trailer
-			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0", #spring showcase
-			"http://www.youtube.com/embed/e0R2QsMwc98?rel=0", #NOTA trailer
-			"http://www.youtube.com/embed/3F7F7NGDDFU?rel=0", #Evolution RTS trailer
-			"http://www.youtube.com/embed/vuP63IobLps?rel=0", #NOTA "Action Trailer"
+			"http://www.youtube.com/embed/vkZaLLyhEgI?rel=0&autohide=1", #zero-k trailer
+			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0&autohide=1", #spring rts trailer
+			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0&autohide=1", #spring showcase
+			"http://www.youtube.com/embed/e0R2QsMwc98?rel=0&autohide=1", #NOTA trailer
+			"http://www.youtube.com/embed/3F7F7NGDDFU?rel=0&autohide=1", #Evolution RTS trailer
+			"http://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 		);
     $videofile = $videos[array_rand($videos)];
 
@@ -83,8 +83,11 @@
     // Compose the final page
     $headertemplate = file_get_contents('templates/header.html');
     $starttemplate = file_get_contents('templates/pagestart.html');
+    $metatemplate = file_get_contents('templates/meta.html');
 
-    $html = $starttemplate;
+    $html  = $starttemplate;
+    $html .= str_replace('{META}', '<link href="/indexv3.css" rel="stylesheet" type="text/css" />', $metatemplate);
+    $html .= "</head><body>";
     $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0" alt=""/>&nbsp;Home', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');

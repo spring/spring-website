@@ -13,9 +13,7 @@ html {
                           margin: 0; padding: 10px 0 12px 0;
                           color: #eeeeee;}
 #specialform             {display: inline;}
-#content                 {top: 0; margin: 0; padding: 0 0 0 10px; overflow: hidden;
-                          background-color: #4C626F;
-                          border-left: 1px solid #20292E; border-right: 1px solid #20292E;}
+#content                 {padding: 0 0 0 10px;}
 #editform                {margin-right: 10px;}
 #article                 {/*padding-right: 10px;*/}
 #topbar                  {padding: 0px;}
@@ -127,7 +125,7 @@ a.new, #quickbar a.new, #toolbar a.new    {color: #CC2200;}
 
 /* HEADERS */
 h1, h2, h3, h4, h5, h6   {color: #eeeeee;
-                          font-family: Verdana,Arial,sans-serif;
+                          font-family: inherit;
                           margin-bottom: 0.1ex; margin-top: 0.1ex;}
 #mw-content-text h1,
 #mw-content-text h2,

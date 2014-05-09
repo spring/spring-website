@@ -14,23 +14,22 @@ class SkinSpringNew extends SkinLegacy {
 
 	function initPage(OutputPage $out) {
 		parent::initPage($out);
-		$this->skinname = 'springnew';
+		$this->skinname  = 'springnew';
 		$this->stylename = 'springnew';
-		$this->template = 'SpringNewTemplate';
+		$this->template  = 'SpringNewTemplate';
 	}
 
 	function setupSkinUserCss(OutputPage $out) {
 		parent::setupSkinUserCss($out);
-		$out->addStyle('../../skins/mediawiki/spring.css');
+		$meta = file_get_contents('../templates/meta.html');
+		$meta = str_replace('{META}', "<link href='/skins/mediawiki/spring.css' rel='stylesheet' type='text/css' />", $meta);
+		$out->addHeadItem("spring_meta", $meta);
 	}
 };
 
 
 class SpringNewTemplate extends LegacyTemplate {
 
-	function getStylesheet() {
-		return '../../skins/mediawiki/spring.css';
-	}
 	function getSkinName() {
 		return "springnew";
 	}

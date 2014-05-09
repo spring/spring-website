@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" dir="{S_CONTENT_DIRECTION}" lang="{S_USER_LANG}" xml:lang="{S_USER_LANG}">
-<head>
+<!-- INCLUDE ../../../../templates/pagestart.html -->
+<!-- INCLUDE ../../../../templates/meta.html -->
 
 <meta http-equiv="content-type" content="text/html; charset={S_CONTENT_ENCODING}" />
 <meta http-equiv="content-language" content="{S_USER_LANG}" />
@@ -10,8 +9,8 @@
 <meta name="distribution" content="global" />
 <meta name="keywords" content="" />
 <meta name="description" content="" />
-{META}
-<title>{SITENAME} &bull; <!-- IF S_IN_MCP -->{L_MCP} &bull; <!-- ELSEIF S_IN_UCP -->{L_UCP} &bull; <!-- ENDIF -->{PAGE_TITLE}</title>
+
+<title>{SITENAME} <!-- IF S_IN_MCP -->&bull; {L_MCP} <!-- ELSEIF S_IN_UCP -->&bull; {L_UCP} <!-- ENDIF --> <!-- IF PAGE_TITLE -->&bull; {PAGE_TITLE}<!-- ENDIF --></title>
 
 <!-- IF S_ENABLE_FEEDS -->
 	<!-- IF S_ENABLE_FEEDS_OVERALL --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {SITENAME}" href="{U_FEED}" /><!-- ENDIF -->
@@ -23,7 +22,6 @@
 	<!-- IF S_ENABLE_FEEDS_TOPIC and S_TOPIC_ID --><link rel="alternate" type="application/atom+xml" title="{L_FEED} - {L_TOPIC} - {TOPIC_TITLE}" href="{U_FEED}?f={S_FORUM_ID}&amp;t={S_TOPIC_ID}" /><!-- ENDIF -->
 <!-- ENDIF -->
 
-<link rel="stylesheet" href="/stylesv1.css" type="text/css" />
 <link rel="stylesheet" href="{T_STYLESHEET_LINK}" type="text/css" />
 
 <script type="text/javascript">
@@ -139,8 +137,8 @@ function marklist(id, name, state)
 
 // ]]>
 </script>
-</head>
-<body class="{S_CONTENT_DIRECTION}">
+
+</head><body>
 
 <!-- INCLUDE ../../../../templates/header.html -->
 
@@ -149,15 +147,6 @@ function marklist(id, name, state)
 <a name="top"></a>
 
 <div id="wrapheader">
-
-<!--	<div id="logodesc">
-		<table width="100%" cellspacing="0">
-		<tr>
-			<td><a href="{U_INDEX}">{SITE_LOGO_IMG}</a></td>
-			<td width="100%" align="center"><h1>{SITENAME}</h1><span class="gen">{SITE_DESCRIPTION}</span></td>
-		</tr>
-		</table>
-	</div> -->
 
 	<div id="menubar">
 		<table width="100%" cellspacing="0">

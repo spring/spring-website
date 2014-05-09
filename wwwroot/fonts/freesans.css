@@ -1,0 +1,18 @@
+
+@font-face {
+	font-family: 'FreeSans Spring';
+	font-weight: 400;
+	src: url(/fonts/FreeSans.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'FreeSans Spring';
+	font-weight: bold;
+	src: url(/fonts/FreeSansBold.woff) format('woff');
+}
+
+html {
+	-webkit-font-smoothing: subpixel-antialiased;
+	-moz-font-smoothing: antialiased;
+	font-smoothing: always;
+}

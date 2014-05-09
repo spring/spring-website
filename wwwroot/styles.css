@@ -1,8 +1,9 @@
 @charset "utf-8";
 
+
 html {
 	font-size: 16px;
-	font-family: FreeSans, Arial, "DejaVu Sans", sans-serif;
+	font-family: 'FreeSans Spring', 'FreeSans', sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
@@ -20,7 +21,7 @@ html {
 body {
 	margin: 0;
 	text-align:center;
-	background-color: transparent; /* override one of oldshared.css */
+	background-color: transparent;
 }
 
 #wrapper {
@@ -38,6 +39,12 @@ body {
 	box-shadow: 0 0 10px 1px rgba(0,0,0,0.7);
 	width: 100%;
 	background: #4C626F;
+}
+
+#content {
+	top: 0; margin: 0; padding: 0; overflow: hidden;
+	background-color: #4C626F;
+	border-left: 1px solid #20292E; border-right: 1px solid #20292E;
 }
 
 p {
@@ -93,12 +100,6 @@ p {
 	margin-top: 7px;
 	margin-left:1px;
 	border-radius: 10px 0 0 0;
-/*	background-image: linear-gradient(left, rgba(46,58,66,1) 400px, rgba(46,58,66,0) 50%);
-	background-image: -o-linear-gradient(left, rgba(46,58,66,1) 400px, rgba(46,58,66,0) 50%);
-	background-image: -moz-linear-gradient(left, rgba(46,58,66,1) 400px, rgba(46,58,66,0) 50%);
-	background-image: -webkit-linear-gradient(left, rgba(46,58,66,1) 400px, rgba(46,58,66,0) 50%);
-	background-image: -ms-linear-gradient(left, rgba(46,58,66,1) 400px, rgba(46,58,66,0) 50%);*/
-/*	box-shadow: inset 0px 10px 20px rgba(255, 255, 255, 0.3);*/
 	height: 95px;
 	width:  100%;
 	min-width: 200px;
@@ -253,23 +254,6 @@ a         { outline: none; }
 
 .bottombar a:link, .bottombar a:visited  { color: #bbf; }
 
-#frontrightbuttons {
-	width:100%;
-	max-width:465px;
-}
-
-
-#frontmediavideotd {
-	width:200px;
-}
-
-#frontvideomedia .menubar a {
-	padding-left: 8px;
-	padding-right: 8px;
-	line-height: 25px;
-	height: 25px;
-	float:left;
-}
 
 
 
@@ -346,9 +330,6 @@ a         { outline: none; }
 		border-radius: 0;
 	}
 
-	#frontmediavideotd, #frontvideomedia {
-		display:none;
-	}
 }
 
 @media (max-width: 633px), (max-device-width: 633px) {

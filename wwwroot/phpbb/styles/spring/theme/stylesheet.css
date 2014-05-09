@@ -472,7 +472,7 @@ input {
 textarea {
 	font-size: 16px;
 	font-weight: normal;
-	font-family: FreeSans, Arial, "DejaVu Sans", sans-serif;
+	font-family: inherit;
 	background-color: #FAFAFA;
 	color: #000;
 	border: none;

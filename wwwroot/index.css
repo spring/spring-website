@@ -9,11 +9,10 @@ a:visited { color: #a0a0ff; text-shadow: #222 2px 2px 2px;}
 }
 
 
-td.welcome {
+div.welcome {
 	width: 100%;
 	height: 239px;
-	border-right:  1px solid #20292E;
-	border-left:   1px solid #20292E;
+	overflow: hidden;
 	border-bottom: 1px solid #20292E;
 }
 .welcomeimage {
@@ -25,7 +24,7 @@ td.welcome {
 	background-repeat: no-repeat;
 	position: relative;
 	float:left;
-	border-right:  1px solid #20292E;
+	border-right: 1px solid #20292E;
 }
 a~a>.frontscreenshot {
 	border-top: 2px solid #20292E;
@@ -243,6 +242,12 @@ a~a>.frontscreenshot {
 	margin: 0;
 }
 
+/* Video on index page */
+#frontrightbuttons {
+	width: 100%;
+	max-width: 465px;
+}
+
 
 @media (max-width: 1050px), (max-device-width: 1050px) {
 	.frontscreenshot {
@@ -250,5 +255,11 @@ a~a>.frontscreenshot {
 	}
 	.welcomeimage {
 		max-width: 100%;
+	}
+}
+
+@media (max-width: 660px), (max-device-width: 660px) {
+	#frontmediavideotd, #frontvideomedia {
+		display: none;
 	}
 }

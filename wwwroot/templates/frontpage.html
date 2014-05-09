@@ -1,65 +1,53 @@
-  <tr>
-    <td class="welcome">
+<div id="content">
+	<div class="welcome">
+		<!-- Welcome Image & Text -->
+		<div class="welcomeimage" style="background-image: url(#WELCOME#)">
+			<div id="welcometext">
+				<p>Welcome to the Spring Engine website!</p>
+				<p class="welcomesmall">
+					Spring is a free RTS engine developed for
+					<a href="/wiki/Download">Windows</a>,
+					<a href="/wiki/Download">Linux</a> and
+					<a href="/wiki/Download">Mac OS X</a>
+				</p>
+			</div>
+		</div>
 
-      <!-- Welcome Image & Text -->
-      <div class="welcomeimage" style="background-image: url(#WELCOME#)">
-        <div id="welcometext">
-          <p>Welcome to the Spring Engine website!</p>
-          <p class="welcomesmall">
-            Spring is a free RTS engine developed for
-            <a href="/wiki/Download">Windows</a>,
-            <a href="/wiki/Download">Linux</a> and
-            <a href="/wiki/Download">Mac OS X</a>
-          </p>
-        </div>
-      </div>
+		#SCREEN1#
+		#SCREEN2#
+	</div>
 
-      #SCREEN1#
-      #SCREEN2#
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" id="frontmedia" bgcolor="#4C626F" style="padding-left: 7px; padding-top: 15px; margin-right: 0; padding-right: 0; padding-bottom: 0px;">
+	<tr>
+	<td id="frontmediavideotd" valign="top" align="center">
+		<iframe width="363" height="205" src="#VIDEOFILE#" frameborder="0" allowfullscreen></iframe>
+	</td>
+	<td align="right" valign="top" width="469px">
+		<div class="bigbar">
+			<div class="learnmorebar"><a href="/wiki/About">Learn more</a></div>
+			<div class="downloadbar"><a href="/wiki/Download">Download and play</a></div>
+			<div class="gamesbar"><a href="/wiki/Games">See the games</a></div>
+		</div>
+	</td>
+	</tr>
+	</table>
 
-    </td>
-  </tr>
-  <tr>
-    <td style="border-right: 1px solid #20292E; border-left: 1px solid #20292E;">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0"  bgcolor="#4C626F" style="padding-left: 7px; margin-right: 0; padding-right: 0; padding-bottom: 14px;">
-              <tr>
-                <td style="padding-top: 15px;">
-                  <table border="0" cellspacing="0" cellpadding="0" width="100%" id="frontmedia">
-                    <tr>
-                      <td id="frontmediavideotd" valign="top" width="100%" align="center">
-			<iframe width="284" height="205" src="#VIDEOFILE#" frameborder="0" allowfullscreen></iframe>
-                      </td>
-                      <td align="right" valign="top" width="350px">
-
-                        <!-- BigBar -->
-                        <div class="bigbar">
-                          <div class="learnmorebar"><a href="/wiki/About">Learn more</a></div>
-                          <div class="downloadbar"><a href="/wiki/Download">Download and play</a></div>
-                          <div class="gamesbar"><a href="/wiki/Games">See the games</a></div>
-                        </div>
-
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-
-              <tr>
-                <td style="padding-top: 15px;">
-                  <div class="news">
-                    <div class="newsbar">
-                      Latest news
-                    </div>
-                    <div class="cnews">
-                      <div class="newsbar">
-                        Community headlines by <a href="http://springinfo.info">SpringInfo</a>
-                      </div>
-                      #CNEWSITEMS#
-                    </div>
-                    #NEWSITEMS#
-                  </div>
-                </td>
-              </tr>
-            </table>
-    </td>
-  </tr>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0"  bgcolor="#4C626F" style="padding-left: 7px; margin-right: 0; padding-right: 0; padding-bottom: 14px;">
+	<tr>
+	<td style="padding-top: 15px;">
+		<div class="news">
+			<div class="newsbar">
+				Latest news
+			</div>
+			<div class="cnews">
+				<div class="newsbar">
+					Community headlines by <a href="http://springinfo.info">SpringInfo</a>
+				</div>
+				#CNEWSITEMS#
+			</div>
+			#NEWSITEMS#
+		</div>
+	</td>
+	</tr>
+	</table>
+</div>
