@@ -2,13 +2,15 @@
 @font-face {
 	font-family: 'FreeSans Spring';
 	font-weight: 400;
-	src: url(/fonts/FreeSans.woff) format('woff');
+	src: url(/fonts/FreeSansBold.svgz) format('svg'),
+	url(/fonts/FreeSans.woff) format('woff');
 }
 
 @font-face {
 	font-family: 'FreeSans Spring';
 	font-weight: bold;
-	src: url(/fonts/FreeSansBold.woff) format('woff');
+	src: url(/fonts/FreeSansBold.svgz) format('svg'),
+	url(/fonts/FreeSansBold.woff) format('woff');
 }
 
 html {
