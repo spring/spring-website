@@ -21,7 +21,7 @@ if ((window.chrome) && (navigator.appVersion.indexOf("Win") != -1)) {
 	var forceAntiAliasing = function(){/*
 <style>
 html {
-	text-shadow: 0px 0px 0px rgba(0,0,0,0.01);
+	text-shadow: 0px 0px 1px rgba(0,0,0,0.01);
 }
 </style>
 */}.toString().slice(14,-3);

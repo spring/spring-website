@@ -296,7 +296,7 @@ a         { outline: none; }
 	#menu li a {
 		display: inherit;
 		height: auto;
-		line-height: auto;
+		line-height: normal;
 		text-shadow: 0 0 4px rgba(255,255,255,0.5);
 	}
 	#menu li:hover a {
