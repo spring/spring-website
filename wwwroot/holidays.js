@@ -40,7 +40,7 @@ var easter_date = getEaster(currentTime.getFullYear());
 if ((currentTime >= advent_date) || (currentTime < jan7th_date)) {
 	document.write("<link rel=\"stylesheet\" href=\"/style_xmas.css\" type=\"text/css\"/>");
 }
-if (currentTime.getMonth() == 4 && currentTime.getDate() == 17) {
+if (currentTime.getFullYear() >= 2030 && currentTime.getMonth() == 4 && currentTime.getDate() == 17) {
 	document.write("<link rel=\"stylesheet\" href=\"/style_csd.css\" type=\"text/css\"/>");
 }
 if (currentTime.getMonth() == easter_date.getMonth() && currentTime.getDate() == easter_date.getDate() ) {
