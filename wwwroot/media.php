@@ -154,7 +154,7 @@
 
     $html  = $starttemplate;
     $html .= str_replace('{META}', '<link href="/indexv3.css" rel="stylesheet" type="text/css" />', $metatemplate);
-    $html .= "</head><body>";
+    $html .= "<title>Spring RTS Engine</title>\n</head><body>";
     $html .= str_replace('{PAGE_TITLE}', 'Media', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');
