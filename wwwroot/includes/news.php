@@ -31,6 +31,44 @@ function get_news()
 	return $news;
 }
 
+function get_shortnews_from_forum()
+{
+
+	$forums = array(
+		2=>"engine", // hmm, needed?!
+		75=> "tournament",
+		79=> "game",
+		81=> "map",
+	);
+	
+	$list = "";
+	while(list($key, $value) = each($forums)) {
+		if (strlen($list) > 0) {
+			$list .= ", ";
+		}
+		$list .= $key;
+	}
+	$sql = "";
+	$sql .= "SELECT t.forum_id, t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_replies, t.topic_title ";
+	$sql .= "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p ";
+	$sql .= "WHERE t.forum_id in (".$list.") AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
+	$sql .= "ORDER  BY t.topic_time DESC ";
+	$sql .= "LIMIT 15";
+	$res = mysql_query($sql);
+	$newstemplate = file_get_contents('templates/cnewsitem.html');
+	$news = "";
+	$newskeys = array('#HEADLINE#', '#LINK#');
+
+	while ($row = mysql_fetch_array($res))
+	{
+		$title = $forums[$row['forum_id']].': '.htmlspecialchars_decode($row['topic_title']);
+		$newsdata = array($title, sprintf("/phpbb/viewtopic.php?t=%d", $row['topic_id']));
+		$news .= str_replace($newskeys, $newsdata, $newstemplate);
+	}
+
+	return $news;
+}
+
 function get_news_from_feed($feedurl)
 {
 	//downloads + parses a rss 2.0 feed
@@ -73,7 +111,8 @@ function get_news_from_feed($feedurl)
 
 function get_community_news()
 {
-	return get_news_from_feed('http://www.springinfo.info/feed/');
+	#return get_news_from_feed('http://www.springinfo.info/feed/');
+	return get_shortnews_from_forum();
 }
 
 function get_forum_posts()
