@@ -34,24 +34,11 @@ function get_news()
 function get_shortnews_from_forum()
 {
 
-	$forums = array(
-		2=>"engine", // hmm, needed?!
-		75=> "tournament",
-		79=> "game",
-		81=> "map",
-	);
-	
-	$list = "";
-	while(list($key, $value) = each($forums)) {
-		if (strlen($list) > 0) {
-			$list .= ", ";
-		}
-		$list .= $key;
-	}
 	$sql = "";
 	$sql .= "SELECT t.forum_id, t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_replies, t.topic_title ";
 	$sql .= "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p ";
-	$sql .= "WHERE t.forum_id in (".$list.") AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
+	$sql .= "WHERE t.forum_id =38 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
+	$sql .= "AND t.topic_title LIKE '[%] %'";
 	$sql .= "ORDER  BY t.topic_time DESC ";
 	$sql .= "LIMIT 15";
 	$res = mysql_query($sql);
@@ -61,7 +48,9 @@ function get_shortnews_from_forum()
 
 	while ($row = mysql_fetch_array($res))
 	{
-		$title = $forums[$row['forum_id']].': '.htmlspecialchars_decode($row['topic_title']);
+		if (preg_match('/\[(game|map|engine|website|misc)\] (.*)/', $row['topic_title'], $arr) === FALSE)
+			continue;
+		$title = $arr[1] . ": ".htmlspecialchars_decode($arr[2]);
 		$newsdata = array($title, sprintf("/phpbb/viewtopic.php?t=%d", $row['topic_id']));
 		$news .= str_replace($newskeys, $newsdata, $newstemplate);
 	}
