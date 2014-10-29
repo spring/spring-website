@@ -32,7 +32,7 @@
 #       start etherpad lite
 #       enable cron jobs for packages
 #       check /var/spool/cron/crontabs
-#       enable backupscript (mysql dump)
+#       cp /root/etc/cron.daily/backup-dump-mysql /etc/cron.daily/backup-dump-mysql
 
 set -e
 # bandwith limit to use (kb/s)
@@ -68,21 +68,21 @@ done
 
 rsync -av ${EXCLUDE} --bwlimit=${BWLIMIT} --delete --delete-excluded root@94.23.170.70:/home/ /home/
 
-#rsync -av root@94.23.170.70:/etc/cron.daily/backup-dump-mysql.sh /etc/cron.daily/backup-dump-mysql.sh
-
 # copy /etc
-rsync -av root@94.23.170.70:/etc/cron.daily/backup-dump-mysql /root/etc/backup-dump-mysql
-rsync -av root@94.23.170.70:/root/block-tor-iptables/ /root/block-tor-iptables/
-rsync -av root@94.23.170.70:/var/lib/mumble-server/ /var/lib/mumble-server/
-
-cp -v /root/etc/rc.local /etc/rc.local
-cp -v /root/etc/cron.daily/block-tor /etc/cron.daily/block-tor
+rsync -av --delete root@94.23.170.70:/etc/ /root/etc/
+rsync -av --delete root@94.23.170.70:/root/block-tor-iptables/ /root/block-tor-iptables/
+rsync -av --delete root@94.23.170.70:/var/lib/mumble-server/ /var/lib/mumble-server/
 
 # mysql db dumps
 rsync -av root@94.23.170.70:/var/backups/mysql/ /var/backups/mysql/
 
 # rsync crontabs (in the case of one was missed...)
 rsync -av root@94.23.170.70:/var/spool/cron/ /root/cron/
+
+cp -v /root/etc/rc.local /etc/rc.local
+cp -v /root/etc/cron.daily/block-tor /etc/cron.daily/block-tor
+
+
 
 SRC=/var/backups/mysql
 
@@ -94,3 +94,4 @@ done
 
 # upgrade buildbot database
 sudo -u buildbot buildbot upgrade-master /home/buildbot/master
+
