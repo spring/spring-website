@@ -19,7 +19,7 @@
 	 *
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -94,6 +94,11 @@
 		$t_bug_data->target_version = gpc_get_string( 'target_version', '' );
 	}
 
+	# Prevent unauthorized users setting handler when reporting issue
+	if( $t_bug_data->handler_id > 0 ) {
+		access_ensure_project_level( config_get( 'update_bug_assign_threshold' ) );
+	}
+
 	# if a profile was selected then let's use that information
 	if ( 0 != $t_bug_data->profile_id ) {
 		if ( profile_is_global( $t_bug_data->profile_id ) ) {
@@ -134,7 +139,7 @@
 
 	# Allow plugins to pre-process bug data
 	$t_bug_data = event_signal( 'EVENT_REPORT_BUG_DATA', $t_bug_data );
-	
+
 	# Ensure that resolved bugs have a handler
 	if ( $t_bug_data->handler_id == NO_USER && $t_bug_data->status >= config_get( 'bug_resolved_status_threshold' ) ) {
 		$t_bug_data->handler_id = auth_get_current_user_id();
@@ -147,15 +152,12 @@
 	last_visited_issue( $t_bug_id );
 
 	# Handle the file upload
-	for( $i = 0; $i < count( $f_files ); $i++ ) {
-		if( !empty( $f_files['name'][$i] ) ) {
-			$t_file['name']     = $f_files['name'][$i];
-			$t_file['tmp_name'] = $f_files['tmp_name'][$i];
-			$t_file['type']     = $f_files['type'][$i];
-			$t_file['error']    = $f_files['error'][$i];
-			$t_file['size']     = $f_files['size'][$i];
-
-			file_add( $t_bug_id, $t_file, 'bug' );
+	if( !is_null( $f_files ) ) {
+		$t_files = helper_array_transpose( $f_files );
+		foreach( $t_files as $t_file ) {
+			if( !empty( $t_file['name'] ) ) {
+				file_add( $t_bug_id, $t_file, 'bug' );
+			}
 		}
 	}
 
@@ -204,16 +206,16 @@
 		# copy notes from parent
 		if ( $f_copy_notes_from_parent ) {
 
-		    $t_parent_bugnotes = bugnote_get_all_bugnotes( $f_master_bug_id );
+			$t_parent_bugnotes = bugnote_get_all_bugnotes( $f_master_bug_id );
 
-		    foreach ( $t_parent_bugnotes as $t_parent_bugnote ) {
+			foreach ( $t_parent_bugnotes as $t_parent_bugnote ) {
 
-		        $t_private = $t_parent_bugnote->view_state == VS_PRIVATE;
+				$t_private = $t_parent_bugnote->view_state == VS_PRIVATE;
 
-		        bugnote_add( $t_bug_id, $t_parent_bugnote->note, $t_parent_bugnote->time_tracking,
-		            $t_private, $t_parent_bugnote->note_type, $t_parent_bugnote->note_attr,
-		            $t_parent_bugnote->reporter_id, /* send_email */ FALSE , /* log history */ FALSE);
-		    }
+				bugnote_add( $t_bug_id, $t_parent_bugnote->note, $t_parent_bugnote->time_tracking,
+					$t_private, $t_parent_bugnote->note_type, $t_parent_bugnote->note_attr,
+					$t_parent_bugnote->reporter_id, /* send_email */ FALSE , /* log history */ FALSE);
+			}
 		}
 
 		# copy attachments from parent
@@ -228,11 +230,11 @@
 	event_signal( 'EVENT_REPORT_BUG', array( $t_bug_data, $t_bug_id ) );
 
 	email_new_bug( $t_bug_id );
-	
+
 	// log status and resolution changes if they differ from the default
 	if ( $t_bug_data->status != config_get('bug_submit_status') )
 		history_log_event($t_bug_id, 'status', config_get('bug_submit_status') );
-	
+
 	if ( $t_bug_data->resolution != config_get('default_bug_resolution') )
 		history_log_event($t_bug_id, 'resolution', config_get('default_bug_resolution') );
 

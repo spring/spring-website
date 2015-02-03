@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 MantisBT - a PHP based bugtracking system
 Copyright (C) 2000-2002  Kenzaburo Ito - kenito@300baud.org
-Copyright (C) 2002-2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+Copyright (C) 2002-2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 -------------------------------------------------------------------------------
 
 *** Please contact project administrators by sending a message to the
@@ -20,13 +20,8 @@ Developers
 ----------
 
 Damien Regad (dregad)
-Daryn Warriner (daryn, dwarrine)
-David Hicks (dhx)
-Gianluca Sforna (giallu)
-Paul Richards (grangeway, paulr, minimoo, prichards)
 Robert Munteaunu (rombert)
 Roland Becker (atrol)
-Siebrand Mazeland (siebrand)
 
 
 Ex-Administrators
@@ -40,8 +35,13 @@ Kenzaburo Ito (prescience, cluebie, presbert)
 Ex-Developers
 -------------
 
+David Hicks (dhx)
+Daryn Warriner (daryn, dwarrine)
+Gianluca Sforna (giallu)
 Glenn Henshaw (thraxisp)
 John Reese (jreese, nuclear_eclipse)
+Paul Richards (grangeway, paulr, minimoo, prichards)
+Siebrand Mazeland (siebrand)
 
 
 Contributors
@@ -53,22 +53,22 @@ Victor Boctor
 Kenzaburo Ito
 Paul Richards
 Glenn Henshaw
+Damien Regad
 Julian Fitzell
 John Reese
 David Hicks
-Damien Regad
-Jeroen Latour
 Siebrand Mazeland
+Jeroen Latour
 Robert Munteanu
 Gianluca Sforna
 André Eisenbach
 bigbadger
 Lincoln Maskey
 Daryn Warriner
+Roland Becker
 Marcello Scata
 Alexey Chumakov
 beerfrick
-Roland Becker
 Bastian Pfenningschmidt
 Adrian Spinei
 Martin Fuchs
@@ -80,73 +80,78 @@ rufinus
 David Newcomb
 jhuggins
 yarick123
-robertjf
 jotel
+robertjf
 Frank Rodgers
 Johan Guilbaud
-planser
 Chris Fitch
 davidu
-smhanson
+planser
 Franck Villaume
-vwegert
-myplacedk
 Véronique Maginot
-Vincent Sels
+myplacedk
+smhanson
+vwegert
 Daniel Tschinder
-Kirill Krasnov
+Vincent Sels
 Jim Hanley
+Kirill Krasnov
 Stéphane Veyret
 cyclespersecond
 scoates
 torija
-puklos
-Tarik Sedlarevic
-Christian Weiske
 Alexander Menk
+Christian Weiske
+Heiko Schneider-Lange
+Markus Schneider
+Tarik Sedlarevic
+jeckyhl
+puklos
+Andreas Schopper
+Benjamin Renard
+Bill Stidham
+Bob Clough
+Brian Wrightson
+Carlos Proensa
+Cyrille Giquello
+Dan Moore
+Daniel N
+David W. Juntgen
+Dawit Ayalew
+Dominik Blunk
+Edward Rudd
+Jacky Alcine
+Jacob Hoover
+Jonas Nockert
+Karl Wiggisser
+Laszlo Kovacs
+Marco Dings
+Matt McCutchen
+MatthieuR
+Michael Lorer
+Michael Weibel
+Olivier Mengué
+Peter Bruin
+Pier-Luc Duchaine
+Raul Baldner junior
+Rolf Kleef
 Ross Nelson
 SL-Gundam
 Sebastian Kayser
 Sergio Del Franco
-Dominik Blunk
-Jonas Nockert
 Todd Whitesel
 Tomasz Krawczyk
-Dawit Ayalew
-MatthieuR
-Matt McCutchen
 Werner Karl
-David W. Juntgen
-Jacob Hoover
 cybd
-watergad
 davethegr8
 dwethell
 gcompagnon
 greenius
-Daniel N
-Dan Moore
-jeckyll
-Cyrille Giquello
+hazerd
 mbaranski
-Markus Schneider
 petertc
-Carlos Proensa
-Brian Wrightson
-Bill Stidham
-Benjamin Renard
-Andreas Schopper
-Marco Dings
 tfromm
-Karl Wiggisser
-Michael Weibel
-Olivier Mengué
-Jacky Alcine
-Raul Baldner junior
-Pier-Luc Duchaine
-Michael Lorer
-Edward Rudd
-Rolf Kleef
+watergad
 
 
 Other Contributors

@@ -17,7 +17,7 @@
 /**
  * @package MantisBT
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -74,7 +74,7 @@ if ( $t_local_config && file_exists( $t_local_config ) ){
 	require_once( $t_local_config );
 	$t_config_inc_found = true;
 }
-
+unset( $t_local_config );
 
 # Attempt to find the location of the core files.
 $t_core_path = dirname(__FILE__).DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR;
@@ -83,6 +83,7 @@ if (isset($GLOBALS['g_core_path']) && !isset( $HTTP_GET_VARS['g_core_path'] ) &&
 }
 
 $g_core_path = $t_core_path;
+unset( $t_core_path );
 
 /*
  * Set include paths
@@ -111,6 +112,19 @@ require_once( 'mobile_api.php' );
 
 if ( strlen( $GLOBALS['g_mantistouch_url'] ) > 0 && mobile_is_mobile_browser() ) {
 	$t_url = sprintf( $GLOBALS['g_mantistouch_url'], $GLOBALS['g_path'] );
+
+	$t_issue_id = '';
+	if ( strstr( $_SERVER['SCRIPT_NAME'], 'view.php' ) !== false ) {
+		$t_issue_id = (int)$_GET['id'];
+	}
+
+	if ( !empty( $t_issue_id ) )  {
+		if ( strstr( $t_url, 'url=' ) !== false ) {
+			$t_url .= '&issue_id=' . $t_issue_id;
+		} else {
+			$t_url .= '?issue_id=' . $t_issue_id;
+		}
+	}
 
 	if ( OFF == $g_use_iis ) {
 		header( 'Status: 302' );
@@ -160,6 +174,7 @@ if ( ($t_output = ob_get_contents()) != '') {
 	echo var_dump($t_output);
 	die;
 }
+unset( $t_output );
 
 require_once( 'utility_api.php' );
 require_once( 'compress_api.php' );
@@ -167,6 +182,11 @@ require_once( 'compress_api.php' );
 compress_start_handler();
 
 if ( false === $t_config_inc_found ) {
+	if( php_sapi_name() == 'cli' ) {
+		echo "Error: config_inc.php file not found; ensure MantisBT is properly setup.\n";
+		exit(1);
+	}
+
 	# if not found, redirect to the admin page to install the system
 	# this needs to be long form and not replaced by is_page_name as that function isn't loaded yet
 	if ( !( isset( $_SERVER['SCRIPT_NAME'] ) && ( 0 < strpos( $_SERVER['SCRIPT_NAME'], 'admin' ) ) ) ) {
@@ -270,6 +290,7 @@ $t_overrides = dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'custom_functions_inc
 if ( file_exists( $t_overrides ) ) {
 	require_once( $t_overrides );
 }
+unset( $t_overrides );
 
 // set HTTP response headers
 http_all_headers();

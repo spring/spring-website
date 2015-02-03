@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage ProjaxAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -70,7 +70,7 @@ function projax_array_serialize_for_autocomplete( $p_array ) {
 	$t_matches = '<ul>';
 
 	foreach( $p_array as $t_entry ) {
-		$t_matches .= "<li>$t_entry</li>";
+		$t_matches .= '<li>' . string_attribute( $t_entry ) . '</li>';
 	}
 
 	$t_matches .= '</ul>';

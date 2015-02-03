@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -166,10 +166,14 @@
 			$t_subject = '[' . config_get( 'window_title' ) . '] ' . lang_get( 'email_user_updated_subject' );
 			$t_updated_msg = lang_get( 'email_user_updated_msg' );
 			$t_message = $t_updated_msg . "\n\n" . config_get( 'path' ) . 'account_page.php' . "\n\n" . $t_changes;
-			email_store( $t_email, $t_subject, $t_message );
-			log_event( LOG_EMAIL, sprintf( 'Account update notification sent to ' . $f_username . ' (' . $t_email . ')' ) );
-			if ( config_get( 'email_send_using_cronjob' ) == OFF ) {
-				email_send_all();
+
+			if( null === email_store( $t_email, $t_subject, $t_message ) ) {
+				log_event( LOG_EMAIL, sprintf( 'Notification was NOT sent to ' . $f_username ) );
+			} else {
+				log_event( LOG_EMAIL, sprintf( 'Account update notification sent to ' . $f_username . ' (' . $t_email . ')' ) );
+				if ( config_get( 'email_send_using_cronjob' ) == OFF ) {
+					email_send_all();
+				}
 			}
 		}
 		lang_pop();

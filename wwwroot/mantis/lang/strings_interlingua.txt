@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -266,6 +266,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Le plug-in es ja installate.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Pagina de plug-in non trovate.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Le installation del plug-in ha fallite: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Le actualisation del schema de plug-in falleva in le bloco #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Le plug-in "%1$s" debe esser actualisate ante de poter acceder a iste pagina.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Il habeva un error incognite "%1$s" durante le execution del plug-in "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Le campo "%1$s" contine un columna duplicate "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Le campo "%1$s" contine un campo invalide "%2$s".';
@@ -482,7 +483,7 @@ $s_sent_you_this_reminder_about = 'te inviava iste rememoration sur';
 $s_bug_reminder = 'Inviar un rememoration';
 $s_reminder_sent_to = 'Rememoration inviate a';
 $s_reminder_sent_none = 'Nulle rememoration ha potite esser inviate';
-$s_reminder_list_truncated = 'lista de destinatarios truncate; vide le historia de problemas pro le lista complete';
+$s_reminder_list_truncated = 'lista de destinatarios truncate';
 $s_bug_send_button = 'Inviar';
 $s_reminder = 'Rememoration';
 $s_reminder_explain = 'Iste nota essera inviate al destinatarios listate como requestante commentario sur iste problema.';
@@ -567,7 +568,7 @@ $s_secure_session_long = 'Permitter le uso de iste session solmente ab iste adre
 $s_choose_project = 'Selige projecto';
 $s_login_button = 'Aperir session';
 $s_signup_link = 'Crear un nove conto';
-$s_lost_password_link = 'Tu perdeva le contrasigno?';
+$s_lost_password_link = 'Contrasigno perdite?';
 $s_select_project_button = 'Selige projecto';
 $s_lost_password_title = 'Reinitialisar contrasigno';
 $s_lost_password_done_title = 'Message de contrasigno inviate';

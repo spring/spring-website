@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
  *
  * @author Davor Orlic, orlicdavor@hotmail.com
  * @author Dbc334
+ * @author Eleassar
  * @author Matej Rizman, matej.rizman@guest.arnes.si
  */
 
@@ -216,7 +217,7 @@ $s_eta_enum_string = '10:nobeno,20:< 1 dan,30:2-3 dni,40:< 1 teden,50:< 1 mesec,
 $s_new_account_subject = 'Vaš novi uporabniški račun';
 $s_new_account_greeting = 'Pozdravljeni in dobrodošli v Sledilniku zadev.  To so podatki, ki jih potrebujete pri prijavljanju \'%1$s\'. In order to complete your registration, visit the following URL (make sure it is entered as the single line) and set your own access password:';
 $s_new_account_username = 'Uporabniško ime:';
-$s_new_account_message = 'Po tem, ko se boste prijavili na spletno stran, vas prosimo, da spremenite geslo. Bodite pozorni na to, da je vaše geslo shranjeno s pomočjo enosmernega šifriranja. Če boste geslo pozabili, ga boste morali ponastaviti.';
+$s_new_account_message = 'Če registracije niste zahtevali, to sporočilo prezrite in se ne bo nič zgodilo.';
 $s_new_account_do_not_reply = 'Na to sporočilo ne odgovarjajte.';
 $s_new_account_email = 'E-pošta:';
 $s_new_account_IP = 'Oddaljeni IP-naslov:';
@@ -291,8 +292,8 @@ $s_email_bugnote_limit = 'Email Notes Limit';
 $s_language = 'Jezik';
 $s_update_prefs_button = 'Posodobi nastavitve';
 $s_reset_prefs_button = 'Ponastavi nastavitve';
-$s_prefs_reset_msg = 'Nastavitve so bile ponastavljene...';
-$s_prefs_updated_msg = 'Nastavitve so bile posodobljene...';
+$s_prefs_reset_msg = 'Nastavitve so ponastavljene...';
+$s_prefs_updated_msg = 'Nastavitve so posodobljene...';
 $s_profile_added_msg = 'Profil dodan...';
 $s_profile_deleted_msg = 'Profil izbrisan...';
 $s_edit_profile_title = 'Urejanje profila';
@@ -310,6 +311,7 @@ $s_delete_profile = 'Izbriši profil';
 $s_select_profile = 'Izberi profil';
 $s_submit_button = 'Pošlji';
 $s_profile_updated_msg = 'Profil posodobljen...';
+$s_issues_handled = 'Sponzorirani problemi, h katerim ste bili dodeljeni:';
 $s_account_updated_msg = 'Vaš račun je bil uspešno posodobljen...';
 $s_email_updated = 'Elektronski naslov je bil uspešno posodobljen...';
 $s_realname_updated = 'Pravo ime je bilo uspešno posodobljeno';
@@ -673,6 +675,9 @@ $s_relationship_warning_blocking_bugs_not_resolved = 'Niso vsi potomci te zadeve
 $s_relationship_warning_blocking_bugs_not_resolved_2 = '<b>POZOR</b>. Niso vsi potomci te zadeve rešeni ali zaprti. <br /> Pred zaprtjem ali razrešitvijo zadeve morajo biti vsi potomci te zadeve razrešeni ali zaprti.';
 $s_bug_cloned_to = 'Zadeva klonirana';
 $s_bug_created_from = 'Zadeva ustvarjena iz';
+$s_issues = 'Problemi';
+$s_view_private_issues = 'Ogled zasebnih problemov';
+$s_update_readonly_issues = 'Posodobi probleme samo za branje';
 $s_filters = 'Filtri';
 $s_see_email_addresses_of_other_users = 'See email addresses of other users';
 $s_email_notification = 'E-poštna obvestila';
@@ -683,6 +688,8 @@ $s_from_date = 'Od';
 $s_to_date = 'Za';
 $s_on_date = 'zaradi';
 $s_on = 'zaradi';
+$s_tag_related_issues = 'Skupni problemi (%1$s)';
+$s_view_issues_columns_title = 'Stolpci za prikaz problemov';
 $s_month_january = 'januar';
 $s_month_february = 'februar';
 $s_month_march = 'marec';

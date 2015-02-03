@@ -21,7 +21,7 @@
  * @subpackage TagAPI
  * @author John Reese
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -219,7 +219,7 @@ function tag_parse_filters( $p_string ) {
  * @param integer the number of tags to return
  * @param integer the offset of the result
  *
- * @return array Tag rows, sorted by name
+ * @return ADORecordSet|bool Tags sorted by name, or false if the query failed.
  */
 function tag_get_all( $p_name_filter, $p_count, $p_offset) {
 
@@ -236,9 +236,7 @@ function tag_get_all( $p_name_filter, $p_count, $p_offset) {
 	$t_query = "SELECT * FROM $t_tag_table
 		$t_where ORDER BY name";
 
-	$t_result = db_query_bound( $t_query, $t_where_params, $p_count, $p_offset);
-
-	return $t_result;
+	return db_query_bound( $t_query, $t_where_params, $p_count, $p_offset);
 }
 
 /**
@@ -342,7 +340,7 @@ function tag_create( $p_name, $p_user_id = null, $p_description = '' ) {
 	tag_ensure_unique( $p_name );
 
 	if( null == $p_user_id ) {
-		$p_used_id = auth_get_current_user_id();
+		$p_user_id = auth_get_current_user_id();
 	} else {
 		user_ensure_exists( $p_user_id );
 	}
@@ -613,7 +611,7 @@ function tag_bug_attach( $p_tag_id, $p_bug_id, $p_user_id = null ) {
 	}
 
 	if( null == $p_user_id ) {
-		$p_used_id = auth_get_current_user_id();
+		$p_user_id = auth_get_current_user_id();
 	} else {
 		user_ensure_exists( $p_user_id );
 	}

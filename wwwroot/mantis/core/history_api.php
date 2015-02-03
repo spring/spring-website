@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage HistoryAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -155,6 +155,7 @@ function history_get_raw_events_array( $p_bug_id, $p_user_id = null ) {
 	$t_private_bugnote_threshold = config_get( 'private_bugnote_threshold' );
 	$t_private_bugnote_visible = access_has_bug_level( config_get( 'private_bugnote_threshold' ), $p_bug_id, $t_user_id );
 	$t_tag_view_threshold = config_get( 'tag_view_threshold' );
+	$t_view_attachments_threshold = config_get( 'view_attachments_threshold' );
 	$t_show_monitor_list_threshold = config_get( 'show_monitor_list_threshold' );
 	$t_show_handler_threshold = config_get( 'view_handler_threshold' );
 
@@ -220,9 +221,27 @@ function history_get_raw_events_array( $p_bug_id, $p_user_id = null ) {
 			}
 		}
 
+		# attachments
+		if( $v_type == FILE_ADDED || $v_type == FILE_DELETED ) {
+			if( !access_has_bug_level( $t_view_attachments_threshold, $p_bug_id, $t_user_id ) ) {
+				continue;
+			}
+		}
+
 		// monitoring
 		if( $v_type == BUG_MONITOR || $v_type == BUG_UNMONITOR ) {
 			if( !access_has_bug_level( $t_show_monitor_list_threshold, $p_bug_id, $t_user_id ) ) {
+				continue;
+			}
+		}
+
+		# relationships
+		if( $v_type == BUG_ADD_RELATIONSHIP || $v_type == BUG_DEL_RELATIONSHIP || $v_type == BUG_REPLACE_RELATIONSHIP ) {
+			$t_related_bug_id = $v_new_value;
+
+			# If bug doesn't exist, then we don't know whether to expose it or not based on the fact whether it was
+			# accessible to user or not.  This also simplifies client code that is accessing the history log.
+			if( !bug_exists( $t_related_bug_id ) || !access_has_bug_level( VIEWER, $t_related_bug_id, $t_user_id ) ) {
 				continue;
 			}
 		}
@@ -362,9 +381,13 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 			$t_field_localized = lang_get( 'target_version' );
 			break;
 		case 'date_submitted':
+			$p_old_value = date( config_get( 'normal_date_format' ), $p_old_value );
+			$p_new_value = date( config_get( 'normal_date_format' ), $p_new_value );
 			$t_field_localized = lang_get( 'date_submitted' );
 			break;
 		case 'last_updated':
+			$p_old_value = date( config_get( 'normal_date_format' ), $p_old_value );
+			$p_new_value = date( config_get( 'normal_date_format' ), $p_new_value );
 			$t_field_localized = lang_get( 'last_update' );
 			break;
 		case 'os':
@@ -407,6 +430,7 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 					$p_old_value = string_custom_field_value_for_email( $p_old_value, $t_cf_type );
 				}
 				$p_new_value = string_custom_field_value_for_email( $p_new_value, $t_cf_type );
+				$t_field_localized = lang_get_defaulted( $p_field_name );
 			}
 		}
 

@@ -28,7 +28,7 @@
 	 *
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 
@@ -69,9 +69,18 @@
 	$g_db_schema			= '';
 
 	/**
-	 * Defines the database type. The supported default is 'mysql'.
-	 * Supported types: 'mysql' or 'mysqli' for MySQL, 'pgsql' for PostgreSQL,
-	 * 'odbc_mssql', 'mssql' for MS SQL Server, 'oci8' for Oracle, and 'db2' for DB2.
+	 * Defines the database type. Supported types are listed below;
+	 * the corresponding PHP extension must be enabled.
+	 *
+	 * RDBMS           db_type       PHP ext   Comments
+	 * -----           -------       -------   --------
+	 * MySQL           mysql         mysql     default
+	 *                 mysqli        mysqli
+	 * PostgreSQL      pgsql         pgsql
+	 * MS SQL Server   mssqlnative   sqlsrv    experimental
+	 * Oracle          oci8          oci8      experimental
+	 * DB2             db2           ibm-db2   experimental
+	 *
 	 * @global string $g_db_type
 	 */
 	$g_db_type				= 'mysql';
@@ -578,7 +587,7 @@
 	 * String appended to the MantisBT version when displayed to the user
 	 * @global string $g_version_suffix
 	 */
-	$g_version_suffix		= 'master-1.2.x-c4f6493';
+	$g_version_suffix		= '';
 
 	/******************************
 	 * MantisBT Language Settings *
@@ -2021,9 +2030,8 @@
 	 * An array of the fields to show on the bug report page.
 	 *
 	 * The following fields can not be included:
-	 * id, project, date_submitted, last_updated, status,
-	 * resolution, tags, fixed_in_version, projection, eta,
-	 * reporter.
+	 * id, project, date_submitted, last_updated, tags, fixed_in_version,
+	 * projection, eta, reporter.
 	 *
 	 * The following fields must be included:
 	 * category_id, summary, description.
@@ -3959,4 +3967,7 @@
 	 * - 'http://MyOwnMantisTouch.com/'
 	 * - ''
 	 */
-	$g_mantistouch_url = '';
+	$g_mantistouch_url = file_exists( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . "m" ) ? $g_path . 'm/' : '';
+
+	# Temporary variables should not remain defined in global scope
+	unset( $t_protocol, $t_host, $t_hosts, $t_port, $t_self, $t_path, $t_use_iis );

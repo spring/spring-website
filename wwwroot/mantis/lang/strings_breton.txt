@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -269,6 +269,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Staliet dija eo al lugant.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'N\'eo ket bet kavet pajenn al lugant.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'C\'hwitet eo staliadur al lugant : %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Hizivadenn ar brastres evit al lugant zo c\'hwitet er bloc\'had #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Ar vodulenn "%1$s" a rank bezañ hizivaet a-raok gallout diraez ar bajenn-mañ.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Ur fazi dianav « %1$s » zo c\'hoarvezet e-pad ma oa al lugant « %2$s » o vont en-dro.';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Ar vaezienn « %1$s » he deus meur a vann « %2$s ».';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Er vaezienn « %1$s » ez eus ur vaezienn direizh « %2$s ».';
@@ -485,7 +486,7 @@ $s_sent_you_this_reminder_about = 'en deus kaset deoc\'h un notenn derc\'hel so�
 $s_bug_reminder = 'Kas un notenn da zerc\'hel soñj';
 $s_reminder_sent_to = 'Kemenn derc\'hel soñj kaset da:';
 $s_reminder_sent_none = 'N\'eus ket bet gallet kas kemenn derc\'hel soñ ebet';
-$s_reminder_list_truncated = 'troc\'het eo roll an degemererien, sellit ouzh istor ar c\'hudennoù evit kaout ur roll klok';
+$s_reminder_list_truncated = 'troc\'het eo roll an degemererien';
 $s_bug_send_button = 'Kas';
 $s_reminder = 'Notenn da zerc\'hel soñj';
 $s_reminder_explain = 'Kaset e vo an notenn-mañ d\'an degemererien zo oc\'h evezhiañ an draen-mañ.';

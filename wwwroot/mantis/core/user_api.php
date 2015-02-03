@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage UserAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * @uses email_api.php
  * @uses ldap_api.php
@@ -1008,12 +1008,24 @@ function user_get_all_accessible_subprojects( $p_user_id, $p_project_id ) {
 
 function user_get_all_accessible_projects( $p_user_id, $p_project_id ) {
 	if( ALL_PROJECTS == $p_project_id ) {
-		$t_topprojects = $t_project_ids = user_get_accessible_projects( $p_user_id );
-		foreach( $t_topprojects as $t_project ) {
-			$t_project_ids = array_merge( $t_project_ids, user_get_all_accessible_subprojects( $p_user_id, $t_project ) );
+		$t_topprojects = user_get_accessible_projects( $p_user_id );
+
+		# Cover the case for PHP < 5.4 where array_combine() returns
+		# false and triggers warning if arrays are empty (see #16187)
+		if( empty( $t_topprojects ) ) {
+			return array();
 		}
 
-		$t_project_ids = array_unique( $t_project_ids );
+		# Create a combined array where key = value
+		$t_project_ids = array_combine( $t_topprojects, $t_topprojects );
+
+		# Add all subprojects user has access to
+		foreach( $t_topprojects as $t_project ) {
+			$t_subprojects_ids = user_get_all_accessible_subprojects( $p_user_id, $t_project );
+			foreach( $t_subprojects_ids as $t_id ) {
+				$t_project_ids[$t_id] = $t_id;
+			}
+		}
 	} else {
 		access_ensure_project_level( VIEWER, $p_project_id );
 		$t_project_ids = user_get_all_accessible_subprojects( $p_user_id, $p_project_id );
@@ -1361,8 +1373,12 @@ function user_reset_password( $p_user_id, $p_send_email = true ) {
 	#     and user_reset_password() )?
 	if(( ON == config_get( 'send_reset_password' ) ) && ( ON == config_get( 'enable_email_notification' ) ) ) {
 
-		# Create random password
 		$t_email = user_get_field( $p_user_id, 'email' );
+		if( is_blank( $t_email ) ) {
+			trigger_error( ERROR_LOST_PASSWORD_NO_EMAIL_SPECIFIED, ERROR );
+		}
+
+		# Create random password
 		$t_password = auth_generate_random_password( $t_email );
 		$t_password2 = auth_process_plain_password( $t_password );
 

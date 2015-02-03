@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,8 +26,10 @@
  * @file
  *
  * @author 9pagod
+ * @author Baonguyen21022003
  * @author Duongnvm
  * @author Minh Nguyen
+ * @author Tuankiet65
  */
 
 $s_actiongroup_menu_move = 'Di chuyển';
@@ -125,6 +127,8 @@ $s_select_option = '(chọn)';
 $s_bug_actiongroup_access = 'Bạn không có quyền thích hợp để thực hiện hành động đó';
 $s_bug_actiongroup_status = 'Vấn đề là không thể thay đổi trạng thái yêu cầu';
 $s_bug_actiongroup_category = 'Vấn đề là không thể thay đổi để các chuyên mục yêu cầu';
+$s_bug_actiongroup_handler = 'Người dùng được yêu câu không có quyền để xử lí vấn đề này';
+$s_bug_actiongroup_version = 'Các phiên bản được yêu cầu không tồn tại trong dự án này vấn đề';
 $s_close_bugs_conf_msg = 'Bạn có chắc bạn muốn đóng những Issue này?';
 $s_delete_bugs_conf_msg = 'Bạn có chắc bạn muốn xóa các Issue này?';
 $s_move_bugs_conf_msg = 'Di chuyển các Issue đến';
@@ -212,6 +216,7 @@ $MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Đây là một tên trùng
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Ít nhất một dự án vẫn sử dụng trường này.';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Giá trị không hợp lệ cho trường "%1$s".';
 $MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Định nghĩa lĩnh vực tùy chỉnh không hợp lệ.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Lĩnh vực tùy chỉnh không hợp lệ bất động sản ( %1$s ).';
 $MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Xác thực LDAP thất bại';
 $MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Kết nối máy chủ LDAP thất bại';
 $MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Cập nhật hồ sơ LDAP thất bại';
@@ -224,6 +229,7 @@ $MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Tên chuyên mục đã tồn tại';
 $MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Không có hành động sao chép được chỉ ra';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Chuyên mục không tìm thấy';
 $MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Chuyên mục "%1$s" không có đối với dự án "%2$s".';
+$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Thể loại này không thể được xóa bỏ, bởi vì nó được định nghĩa là "Mặc định thể loại cho chuyển".';
 $MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Tên phiên bản đã tồn tại';
 $MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Phiên bản "%1$s" không tìm thấy.';
 $MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'Tên người dùng không hợp lệ. Tên người dùng chỉ có thể chứa chữ cái Latin, số, dấu cách, dấu gạch ngang, dấu chấm, cộng với dấu hiệu và gạch dưới.';
@@ -262,14 +268,16 @@ $MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'Sự kiện "%1$s" chưa được khai 
 $MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'Plugin không được đăng ký với MantisBT';
 $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Plugin đã được cài đặt.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Trang Plugin không tìm thấy';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Không thể cài đặt phần mở rộng: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Nâng cấp lược đồ plugin không thành công trong khối #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Các " %1$s " plugin cần phải được nâng cấp trước khi bạn có thể truy cập trang này.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Có một lỗi không rõ "%1$s" trong quá trình thực hiện của các "%2$s" plugin';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Trường "%1$s" có chứa bản sao cột "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Trường "%1$s" có chứa không hợp lệ trường "%2$s".';
 $MANTIS_ERROR[ERROR_SESSION_HANDLER_INVALID] = 'Phiên xử lý không hợp lệ';
 $MANTIS_ERROR[ERROR_SESSION_VAR_NOT_FOUND] = 'Biến phiên "%1$s" không tìm thấy.';
 $MANTIS_ERROR[ERROR_SESSION_NOT_VALID] = 'Phiên của bạn đã trở thành vô hiệu.';
-$MANTIS_ERROR[ERROR_FORM_TOKEN_INVALID] = 'Hình thức bảo mật mã thông báo không hợp lệ. Bạn gửi mẫu hai lần do tai nạn?';
+$MANTIS_ERROR[ERROR_FORM_TOKEN_INVALID] = 'Hình thức bảo mật không phù hợp. Việc này có thể là do phiên làm việc hết hạn, hay do việc vô ý gửi một biểu mẫu 2 lần.';
 $MANTIS_ERROR[ERROR_INVALID_REQUEST_METHOD] = 'Trang này không thể được truy cập bằng cách sử dụng phương pháp này';
 $MANTIS_ERROR[ERROR_INVALID_SORT_FIELD] = 'Trường sắp xếp không hợp lệ';
 $MANTIS_ERROR[ERROR_INVALID_DATE_FORMAT] = 'Định dạng ngày không hợp lệ.';
@@ -459,8 +467,11 @@ $s_monitor_bug_button = 'Theo dõi';
 $s_unmonitor_bug_button = 'Kết thúc theo dõi';
 $s_file_upload_msg = 'Tập tin tải lên thành công';
 $s_upload_file = 'Tải tập tin lên';
+$s_upload_files = 'Tải tập tin lên';
 $s_select_file = 'Chọn tập tin';
+$s_select_files = 'Chọn tập tin';
 $s_upload_file_button = 'Tải tập tin lên';
+$s_upload_files_button = 'Tải tập tin lên';
 $s_max_file_size = 'Kích thước tối đa';
 $s_bug_reopened_msg = 'Issue được mở trở lại...';
 $s_reopen_add_bugnote_title = 'Thêm ghi chú cho việc mở lại issue';
@@ -474,7 +485,9 @@ $s_from = 'Từ';
 $s_to = 'Đến';
 $s_sent_you_this_reminder_about = 'gửi bạn nhắc nhở này về';
 $s_bug_reminder = 'Gửi một nhắc nhở';
-$s_reminder_sent_to = 'Nhắc nhở gửi đến:';
+$s_reminder_sent_to = 'Nhắc nhở gửi đến';
+$s_reminder_sent_none = 'Không có lời nhắc nào có thể gửi';
+$s_reminder_list_truncated = 'danh sách người nhận cắt ngắn';
 $s_bug_send_button = 'Gửi';
 $s_reminder = 'Nhắc nhở';
 $s_reminder_explain = 'Đây là ghi chú sẽ được gửi đến các người nhận được liệt kê yêu cầu phản hồi về issue này';
@@ -548,7 +561,7 @@ $s_warning_plain_password_authentication = '<strong>Cảnh báo:</strong> Đồn
 $s_warning_default_administrator_account_present = '<strong>Cảnh báo:</strong> Bạn nên vô hiệu hóa tài khoản của \'quản trị\' mặc định hoặc thay đổi mật khẩu của mình.';
 $s_warning_admin_directory_present = '<strong>Cảnh báo:</strong> thư mục Admin nên được loại bỏ.';
 $s_error_database_version_out_of_date_1 = '<strong>Lỗi:</strong> Cấu trúc cơ sở dữ liệu dường như là của ngày (config(databaseversion) là 0 và cũ nâng cấp bảng tồn tại). Phiên bản 1.x của MantisBT giới thiệu một quá trình nâng cấp mới. Bạn dường như được nâng cấp từ một 0. XX Release. Xin vui lòng nâng cấp lên 1.0.8 hoặc 1.1.X, sau đó nâng cấp lên 1.2.';
-$s_error_database_no_schema_version = '<strong>Lỗi:</strong> Cấu trúc cơ sở dữ liệu dường như là của ngày (config(databaseversion) là nâng cấp 0 và cũ bàn không tồn tại). Hãy kiểm tra cơ sở dữ liệu của bạn đang chạy - chúng tôi có thể không truy xuất bản đồ cơ sở dữ liệu. Bảng cấu hìnhe không trở về một phiên bản đồ cơ sở dữ liệu hợp lệ - xin vui lòng yêu cầu hỗ trợ trong danh sách gửi thư mantis-giúp đỡ, nếu cần thiết.';
+$s_error_database_no_schema_version = '<strong>Lỗi:</strong> Cấu trúc cơ sở dữ liệu dường như là của ngày (config(databaseversion) là nâng cấp 0 và cũ bàn không tồn tại). Hãy kiểm tra cơ sở dữ liệu của bạn đang chạy - chúng tôi có thể không truy xuất bản đồ cơ sở dữ liệu. Bảng cấu hình không trở về một phiên bản đồ cơ sở dữ liệu hợp lệ - xin vui lòng yêu cầu hỗ trợ trong danh sách gửi thư mantis-giúp đỡ, nếu cần thiết.';
 $s_error_database_version_out_of_date_2 = '<strong>Cảnh báo:</strong> Các cấu trúc cơ sở dữ liệu có thể được trong ngày. Hãy nâng cấp <a href="admin/install.php">ở đây</a> trước khi đăng nhập';
 $s_error_code_version_out_of_date = '<strong>Cảnh báo:</strong> Cấu trúc cơ sở dữ liệu là up-to-date hơn so với các mã được cài đặt. Xin vui lòng nâng cấp mã.';
 $s_login_page_info = 'Chào mừng đến với Issue Tracker.';
@@ -587,6 +600,7 @@ $s_protected = 'Bảo vệ';
 $s_create_user_button = 'Tạo người dùng';
 $s_hide_disabled = 'Ẩn vô hiệu hóa';
 $s_filter_button = 'Áp dụng bộ lọc';
+$s_default_filter = 'Bộ lọc Mặc định';
 $s_create_filter_link = 'Tạo cố định';
 $s_create_short_link = 'Tạo liên kết ngắn';
 $s_filter_permalink = 'Sau đây là một liên kết thường trực đến hiện cấu hình bộ lọc:';
@@ -609,6 +623,7 @@ $s_1_week_title = '1 tuần';
 $s_never_logged_in_title = 'Không báo giờ Logged In';
 $s_prune_accounts = 'Tài khoản Prune';
 $s_hide_inactive = 'Ẩn hoạt động';
+$s_show_disabled = 'Hiện Vô hiệu hóa';
 $s_manage_accounts_title = 'Quản lý tài khoản';
 $s_date_created = 'Ngày tháng tạo';
 $s_last_visit = 'Viếng thăm cuối';
@@ -681,7 +696,7 @@ $s_plugins_installed = 'Đã cài đặt Plugins';
 $s_plugins_available = 'Plugins có sẵn';
 $s_plugin_description = 'Mô tả';
 $s_plugin_author = 'Tác giả: %1$s';
-$s_plugin_url = 'Website:';
+$s_plugin_url = 'Trang Web:';
 $s_plugin_depends = 'Phụ thuộc';
 $s_plugin_no_depends = 'Không phụ thuộc';
 $s_plugin_priority = 'Ưu tiên';
@@ -760,6 +775,7 @@ $s_accounts_pruned_msg = 'Tất cả các tài khoản mà chưa bao giờ đăn
 $s_prune_accounts_button = 'Prune';
 $s_confirm_account_pruning = 'Bạn có chắc chắn muốn xóa tài khoản cũ mà chưa bao giờ đăng nhập?';
 $s_edit_user_title = 'Hiệu chỉnh người dùng';
+$s_account_unlock_button = 'Mở khóa tài khoản';
 $s_reset_password_button = 'Thiết lập lại mật khẩu';
 $s_delete_user_button = 'Xoá người dùng';
 $s_reset_password_msg = 'Thiết lập lại mật khẩu sẽ gửi các URL xác nhận qua thư điện tử.';
@@ -770,7 +786,8 @@ $s_users_new = 'Mới';
 $s_account_reset_protected_msg = 'Tài khoản được bảo vệ. Không thể đặt lại mật khẩu.';
 $s_account_reset_msg = 'Một yêu cầu xác nhận đã được gửi tới địa chỉ e-mail của người sử dụng lựa chọn. Sử dụng này, người sử dụng sẽ có thể thay đổi mật khẩu của họ.';
 $s_account_reset_msg2 = 'Mật khẩu của tài khoản đã được thiết lập để trống...';
-$s_manage_user_protected_msg = 'Tài khoản được bảo vệ. Truy cập cấp và hiệu lực bảo vệ. Nếu không, tài khoản đã được Cập Nhật...';
+$s_account_unlock_msg = 'Tài khoản đã được mở khóa';
+$s_manage_user_protected_msg = 'Tài khoản được bảo vệ; mục \'Mức độ truy cập\' và \'Kích hoạt\' không thể sửa. Các mục còn lại đã được cập nhật thành công.';
 $s_manage_user_updated_msg = 'Tài khoản cập nhật thành công ...';
 $s_email_user_updated_subject = 'Cập nhật tài khoản';
 $s_email_user_updated_msg = 'Tài khoản của bạn đã được cập nhật bởi một quản trị viên. Một danh sách các thay đổi này được cung cấp dưới đây. Bạn có thể cập nhật chi tiết tài khoản và sở thích của bạn tại bất kỳ thời gian bằng cách truy cập vào URL sau đây:';
@@ -916,6 +933,9 @@ $s_sort = 'Sắp xếp theo';
 $s_issue_id = 'ID issue';
 $s_recently_visited = 'Gần đây đã viếng thăm';
 $s_note_user_id = 'Chú ý:';
+$s_filter_match_type = 'Loại đối sánh';
+$s_filter_match_all = 'Tất cả Điều kiện';
+$s_filter_match_any = 'Bất kỳ Điều kiện';
 $s_none = 'không';
 $s_current = 'hiện tại';
 $s_search = 'Tìm kiếm';
@@ -954,6 +974,7 @@ $s_update_bug_button = 'Chỉnh sửa';
 $s_bug_assign_to_button = 'Phân công cho:';
 $s_bug_status_to_button = 'Thay đổi trạng thái thành:';
 $s_reopen_bug_button = 'Mở lại';
+$s_close_bug_button = 'Đóng';
 $s_move_bug_button = 'Di chuyển';
 $s_attached_files = 'Tập tin đính kèm';
 $s_publish = 'Xuất bản';
@@ -1049,6 +1070,9 @@ $s_relationship_warning_blocking_bugs_not_resolved_2 = '<b>Chú ý:</b> Một v�
 $s_create_child_bug_button = 'Nhân bản';
 $s_bug_cloned_to = 'Vấn đề đã được nhân bản';
 $s_bug_created_from = 'Vấn đề được phát sinh từ';
+$s_copy_from_parent = 'Sao chép dữ liệu kéo dài từ vấn đề phụ huynh';
+$s_copy_notes_from_parent = 'Sao chép ghi chú lỗi';
+$s_copy_attachments_from_parent = 'Sao chép tập tin đính kèm';
 $s_viewing_bug_relationship_graph_title = 'Biểu đồ quan hệ';
 $s_viewing_bug_dependency_graph_title = 'Biểu đồ phụ thuộc';
 $s_relation_graph = 'Biểu đồ quan hệ';
@@ -1087,7 +1111,7 @@ $s_delete_attachments = 'Xóa tập tin đính kèm';
 $s_delete_attachment_button = 'Xóa';
 $s_delete_attachment_sure_msg = 'Bạn có chắc chắn muốn xóa tập tin đính kèm này không?';
 $s_upload_issue_attachments = 'Tải lên tập tin đính kèm của vấn đề';
-$s_filters = 'các bộ lọc';
+$s_filters = 'Các bộ lọc';
 $s_save_filters = 'Lưu bộ lọc';
 $s_save_filters_as_shared = 'Lưu các bộ lọc để dùng chung';
 $s_use_saved_filters = 'Sử dụng bộ lọc đã lưu';
@@ -1109,6 +1133,7 @@ $s_handle_sponsored_issue = 'Xử lý các vấn đề tài trợ';
 $s_others = 'Khác';
 $s_see_email_addresses_of_other_users = 'Xem địa chỉ e-mail của những người dùng khác';
 $s_send_reminders = 'Gửi lời nhắc';
+$s_receive_reminders = 'Nhận lời nhắc';
 $s_add_profiles = 'Thêm hồ sơ';
 $s_notify_of_new_user_created = 'Thông báo về người dùng mới được tạo';
 $s_email_notification = 'E-mail thông báo';
@@ -1160,8 +1185,9 @@ $s_tag_related_issues = 'Các vấn đề dùng chung (%1$s)';
 $s_tag_stats_attached = 'Vấn đề đã được đính kèm: %1$s';
 $s_tag_create = 'Tạo thẻ';
 $s_show_all_tags = 'Tất cả';
-$s_time_tracking_billing_link = 'Thanh toán';
+$s_time_tracking_billing_link = 'Theo dõi Thời gian';
 $s_time_tracking = 'Thời gian theo dõi';
+$s_time_tracking_time_spent = 'Thời gian:';
 $s_time_tracking_get_info_button = 'Lấy thông tin theo dõi thời gian';
 $s_time_tracking_cost_per_hour = 'Chi phí / Giờ';
 $s_time_tracking_cost = 'Chi phí';

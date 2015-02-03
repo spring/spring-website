@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,9 @@
  * @file
  *
  * @author André Sencioles, andre spiritlinux com br
+ * @author Dianakc
  * @author Eduardo.mps
+ * @author Elival
  * @author Felipe Tonioli, tonioli@easyline.com.br
  * @author Fernando Machado, fm-nospam@fmachado.com
  * @author Giro720
@@ -34,9 +36,11 @@
  * @author Jeferson Oliveira, jefersonfoliveira@gmail.com
  * @author Jefersonfoliveira
  * @author Juliano F. Ravasi, dev at juliano info
+ * @author Luckas
  * @author Luckas Blade
  * @author Luigipiccoli
  * @author Pedroca cerebral
+ * @author TheGabrielZaum
  * @author Tuliouel
  * @author 555
  */
@@ -279,6 +283,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'O Plugin já está instalado.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'A página do Plugin não foi encontrada.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Falha na instalação do complemento: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'A atualização do schema do plugin falhou no bloco #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'O plugin "%1$s" precisa ser atualizando antes de você poder acessar esta página.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Ocorreu um erro desconhecido "%1$s" durante a execução do plugin "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Campo "%1$s" contém uma duplicação da coluna "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Campo "%1$s" contém o campo "%2$s" inválido.';
@@ -420,7 +425,7 @@ $s_prefs_reset_msg = 'As preferências foram redefinidas...';
 $s_prefs_updated_msg = 'As preferências foram atualizadas...';
 $s_profile_added_msg = 'Perfil adicionado...';
 $s_profile_deleted_msg = 'Perfil apagado...';
-$s_edit_profile_title = 'Alterar Perfil';
+$s_edit_profile_title = 'Editar perfil';
 $s_platform = 'Plataforma';
 $s_operating_system = 'Sistema Operacional';
 $s_additional_description = 'Descrição Adicional';
@@ -429,7 +434,7 @@ $s_profile_defaulted_msg = 'Perfil padrão atualizado...';
 $s_add_profile_title = 'Adicionar Perfil';
 $s_add_profile_button = 'Adicionar Perfil';
 $s_edit_or_delete_profiles_title = 'Alterar ou Apagar Perfís';
-$s_edit_profile = 'Alterar Perfil';
+$s_edit_profile = 'Editar perfil';
 $s_make_default = 'Tornar Padrão';
 $s_delete_profile = 'Apagar Perfil';
 $s_select_profile = 'Selecionar Perfil';
@@ -475,11 +480,11 @@ $s_delete_bug_button = 'Apagar';
 $s_monitor_bug_button = 'Monitorar';
 $s_unmonitor_bug_button = 'Parar de Monitorar';
 $s_file_upload_msg = 'Arquivo carregado com sucesso';
-$s_upload_file = 'Carregar Arquivo';
+$s_upload_file = 'Enviar arquivo';
 $s_upload_files = 'Enviar arquivos';
 $s_select_file = 'Selecionar Arquivo';
 $s_select_files = 'Selecionar arquivos';
-$s_upload_file_button = 'Carregar Arquivo';
+$s_upload_file_button = 'Enviar arquivo';
 $s_upload_files_button = 'Enviar arquivos';
 $s_max_file_size = 'Tamanho máximo';
 $s_bug_reopened_msg = 'O caso foi reaberto...';
@@ -496,7 +501,7 @@ $s_sent_you_this_reminder_about = 'lhe enviou este lembrete sobre';
 $s_bug_reminder = 'Enviar um lembrete';
 $s_reminder_sent_to = 'Lembrete mandado para';
 $s_reminder_sent_none = 'Nenhum lembrete pôde ser mandado';
-$s_reminder_list_truncated = 'lista de destinatários corrompida, olhe o histórico para lista completa';
+$s_reminder_list_truncated = 'lista de recipientes truncado';
 $s_bug_send_button = 'Enviar';
 $s_reminder = 'Lembrete';
 $s_reminder_explain = 'Esta anotação será enviada aos destinatários listados, solicitando retorno sobre este caso.';
@@ -602,7 +607,7 @@ $s_core_path = 'Caminho do Core';
 $s_plugin_path = 'Caminho do Plugin';
 $s_created_user_part1 = 'Usuário';
 $s_created_user_part2 = 'criado com um nível de acesso de';
-$s_create_new_account_title = 'Criar Nova Conta';
+$s_create_new_account_title = 'Criar nova conta';
 $s_verify_password = 'Redigitar Senha';
 $s_enabled = 'Habilitado';
 $s_protected = 'Protegido';
@@ -624,7 +629,7 @@ $s_manage_threshold_config = 'Limiares do Fluxo de Trabalho';
 $s_manage_email_config = 'Notificações por E-Mail';
 $s_manage_workflow_config = 'Transições de Fluxo de Trabalho';
 $s_manage_tags_link = 'Gerenciar Marcadores';
-$s_create_new_account_link = 'Criar Nova Conta';
+$s_create_new_account_link = 'Criar nova conta';
 $s_projects_link = 'Projetos';
 $s_documentation_link = 'Documentação';
 $s_new_accounts_title = 'Contas Novas';
@@ -729,11 +734,11 @@ $s_delete_category_button = 'Apagar Categoria';
 $s_edit_project_category_title = 'Alterar Categoria do Projeto';
 $s_update_category_button = 'Atualizar Categoria';
 $s_category_updated_msg = 'A categoria foi atualizada com sucesso...';
-$s_add_subproject_title = 'Adicionar Subprojeto';
+$s_add_subproject_title = 'Adicionar subprojeto';
 $s_project_deleted_msg = 'O projeto foi removido com sucesso...';
 $s_project_delete_msg = 'Você tem certeza que deseja apagar este projeto e todos os relatos de casos anexados?';
 $s_project_delete_button = 'Apagar Projeto';
-$s_edit_project_title = 'Alterar Projeto';
+$s_edit_project_title = 'Editar projeto';
 $s_project_name = 'Nome do Projeto';
 $s_view_status = 'Visibilidade';
 $s_public = 'público';
@@ -759,9 +764,9 @@ $s_create_new_subproject_link = 'Criar novo Subprojeto';
 $s_unlink_link = 'Desvincular';
 $s_show_global_users = 'Mostrar Utilizadores com Acesso Global';
 $s_hide_global_users = 'Esconder Utilizadores com Acesso Global';
-$s_add_project_title = 'Adicionar Projeto';
+$s_add_project_title = 'Adicionar projeto';
 $s_upload_file_path = 'Caminho para Carregamento de Arquivos';
-$s_add_project_button = 'Adicionar Projeto';
+$s_add_project_button = 'Adicionar projeto';
 $s_projects_title = 'Projetos';
 $s_name = 'Nome';
 $s_project_updated_msg = 'O projeto foi atualizado com sucesso...';
@@ -840,7 +845,7 @@ $s_select_post = 'Selecionar Notícia';
 $s_news_updated_msg = 'Notícia atualizada...';
 $s_back_link = 'Voltar';
 $s_file_uploaded_msg = 'Arquivo carregado com sucesso';
-$s_upload_file_title = 'Carregar Arquivo';
+$s_upload_file_title = 'Enviar arquivo';
 $s_title = 'Título';
 $s_project_file_deleted_msg = 'Arquivo do projeto apagado';
 $s_confirm_file_delete_msg = 'Você tem certeza que deseja apagar este arquivo?';

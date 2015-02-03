@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@
  * @author KPu3uC B Poccuu
  * @author Kirill
  * @author Mikhail Oleynik (MiTo Team), m.oleynik@gmail.com
+ * @author Okras
  * @author Ole Yves
  * @author Oleg Gashev gashev@zahav.net.il
  * @author Prima klasy4na
@@ -284,6 +285,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Плагин уже устан�
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Страница плагина не найдена.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Не удалось установить плагин: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Обновление схемы плагина привело к сбою в блоке #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Для открытия страницы необходимо обновить плагин «%1$s».';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Во время выполнения плагина "%2$s" возникла неизвестная ошибка "%1$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Поле "%1$s" содержит дублирующийся столбец "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Поле «%1$s» содержит недопустимое поле «%2$s».';
@@ -496,7 +498,9 @@ $s_from = 'От';
 $s_to = 'Кому';
 $s_sent_you_this_reminder_about = 'напоминает вам о инциденте';
 $s_bug_reminder = 'напомнить';
-$s_reminder_sent_to = 'Напоминание отправлено участнику:';
+$s_reminder_sent_to = 'Напоминание отправлено:';
+$s_reminder_sent_none = 'Нет уведомлений';
+$s_reminder_list_truncated = 'список получателей сокращен';
 $s_bug_send_button = 'Отправить';
 $s_reminder = 'Напоминание';
 $s_reminder_explain = 'Указанным адресатам будет отправлено напоминание о желательности реакции на этот инцидент.';

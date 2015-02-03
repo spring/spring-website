@@ -1,6 +1,115 @@
 MantisBT Release Notes
 ======================
 
+1.2.19 Security Release (2015-01-25)
+-------------------------------------------------
+
+MantisBT 1.2.19 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are strongly
+advised to upgrade to this release. Download it from [3].
+
+This release resolves 5 security issues:
+
+- #17938/CVE-2014-9571: XSS in install.php
+- #17939/CVE-2014-9572: Improper Access Control in install.php
+- #17940/CVE-2014-9573: SQL Injection in manage_user_page.php
+- #17984/CVE-2014-9624: CAPTCHA bypass
+- #17997/CVE-2015-1042: URL redirection issue
+
+We would like to thank High Tech Bridge Research Lab, Alejo Popovici an
+Florent Daignière from Matta Consulting for reporting these issues, and their
+cooperation in resolving them.
+
+This release also addresses 2 regression issues introduced in 1.2.18:
+
+- #17993 prevents new users from signing up on systems using CAPTCHA.
+- #17967 which causes a PHP error when reporting issues on systems with
+  checkbox custom fields.
+
+Please refer to the changelog [1] on the MantisBT web site for complete details
+on each of these issues.
+
+
+1.2.18 Security Release (2014-12-06)
+-------------------------------------------------
+
+MantisBT 1.2.18 is an important security update for the stable 1.2.x branch.
+All installations that are currently running any 1.2.x version are strongly
+advised to upgrade to this release. Download it from [3].
+
+This release resolves a total of 43 issues, including fixes for 23 security-
+related bugs and vulnerabilities:
+
+- 7 Cross-Site Scripting (XSS) issues: #17297/CVE-2014-9272,
+  #17583/CVE-2014-9270, #17870/CVE-2014-8987, #17874/CVE-2014-9271,
+  #17876/CVE-2014-9281, #17889/CVE-2014-8986, #17890/CVE-2014-9269
+
+- 2 Code injection issues: #17725/CVE-2014-7146, #17875/CVE-2014-9280
+
+- 2 SQL injection (XSS) issues: #17812/CVE-2014-8554, #17841/CVE-2014-9089
+
+- 5 Information disclosure issues: #9885, #17744, #17877/CVE-2014-9279,
+  #17742/CVE-2014-8988, #17243/CVE-2014-8553
+
+- 7 Other security issues: #10966, #17338, #17640/CVE-2014-6387,
+  #17648/CVE-2014-6316, #17780/CVE-2014-8598, #17811/CVE-2014-9117, #17878
+
+Please refer to the changelog [1] on the MantisBT web site for complete details
+on each of these issues.
+
+We would like to thank the following individuals and organizations for their
+valued contribution in discovering and fixing these issues, in no particular
+order: Mati Aharoni from Offensive Security and their bug bounty program,
+Matthias Karlsson, Matthew Daley, Egidio Romano, Florian Fuchs, Shahee Mirza,
+Oleg K, Alejo Popovici, Edwin Gozeling, Paul Richards, Roland Becker,
+Victor Boctor and Damien Regad.
+
+
+1.2.17 Security Release (2014-03-04)
+-------------------------------------------------
+
+MantisBT 1.2.17 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are strongly advised
+to upgrade to this release. Download it from [3].
+
+An SQL injection vulnerability (CVE-2014-2238) in adm_config_report.php was
+patched. Refer to issue #17055 for detailed information.
+
+This release also includes a few bug fixes for the tracker, including News API
+correction for the regression issue #16940 introduced in 1.2.16, as well as
+updated translations in many languages.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
+1.2.16 Security Release (2014-02-07)
+-------------------------------------------------
+
+MantisBT 1.2.16 is a security update for the stable 1.2.x branch. All
+installations that are currently running any 1.2.x version are strongly advised
+to upgrade to this release. Download it from [3].
+
+The following security issues were resolved:
+
+ - Cross-site scripting (XSS) issue in account_sponsor_page.php, allowing a
+   malicious user with project manager access to execute arbitrary JavaScript
+   code (CVE-2013-4460). Affects MantisBT 1.1.0 and later.
+   Refer to issue #16513 for detailed information.
+
+ - SQL injection attacks through the SOAP API's mc_attachment_get() function
+   (CVE-2014-1608). Affects MantisBT 1.1.0a4 and later.
+   Refer to issue #16879 for detailed information.
+
+ - Additional cases of unsanitized SQL query parameters usage were identified,
+   potentially allowing SQL injection attacks (CVE-2014-1609).
+   Refer to issue #16880 for detailed information.
+
+This release also includes many bug fixes and enhancements to the tracker
+and the SOAP api, as well as updated translations in many languages.
+
+A full changelog for the 1.2.x series can be found on the official site. [1]
+
+
 1.2.15 Security Release (2013-04-12)
 -------------------------------------------------
 
@@ -351,6 +460,10 @@ There have also been many improvements to the codebase beyond adding features:
 
 [1] The changelog is split between multiple releases:
 
+	1.2.19     http://www.mantisbt.org/bugs/changelog_page.php?version_id=238
+	1.2.18     http://www.mantisbt.org/bugs/changelog_page.php?version_id=191
+	1.2.17     http://www.mantisbt.org/bugs/changelog_page.php?version_id=189
+	1.2.16     http://www.mantisbt.org/bugs/changelog_page.php?version_id=183
 	1.2.15     http://www.mantisbt.org/bugs/changelog_page.php?version_id=182
 	1.2.14     http://www.mantisbt.org/bugs/changelog_page.php?version_id=181
 	1.2.13     http://www.mantisbt.org/bugs/changelog_page.php?version_id=180
@@ -377,5 +490,7 @@ There have also been many improvements to the codebase beyond adding features:
 	including the official MantisBT repository and a MantisBT-plugins
 	organisation which is used to host repositories of community plugins.
 
-    https://github.com/mantisbt
-    https://github.com/mantisbt-plugins
+	https://github.com/mantisbt
+	https://github.com/mantisbt-plugins
+
+[3] MantisBT can be downloaded from http://www.mantisbt.org/download.php

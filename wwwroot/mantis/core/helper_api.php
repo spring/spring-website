@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage HelperAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -65,6 +65,31 @@ function helper_alternate_class( $p_index = null, $p_odd_class = 'row-1', $p_eve
 	} else {
 		return "class=\"$p_even_class\"";
 	}
+}
+/**
+ * Transpose a bidimensional array
+ *
+ * e.g. array('a'=>array('k1'=>1,'k2'=>2),'b'=>array('k1'=>3,'k2'=>4))
+ * becomes array('k1'=>array('a'=>1,'b'=>3),'k2'=>array('a'=>2,'b'=>4))
+ *
+ * @param array $p_array
+ * @return array|mixed transposed array or $p_array if not 2-dimensional array
+ */
+function helper_array_transpose( $p_array ) {
+	if( !is_array( $p_array ) ) {
+		return $p_array;
+	}
+	$t_out = array();
+	foreach( $p_array as $key => $sub ) {
+		if( !is_array( $sub ) ) {
+			return $p_array;
+		}
+
+		foreach( $sub as $subkey => $value ) {
+			$t_out[$subkey][$key] = $value;
+		}
+	}
+	return $t_out;
 }
 
 /**
@@ -207,13 +232,13 @@ function helper_get_current_project() {
 			$t_project_id = $t_pref->default_project;
 		} else {
 			$t_project_id = explode( ';', $t_project_id );
-			$t_project_id = $t_project_id[count( $t_project_id ) - 1];
+			$t_project_id = (int)$t_project_id[count( $t_project_id ) - 1];
 		}
 
 		if( !project_exists( $t_project_id ) || ( 0 == project_get_field( $t_project_id, 'enabled' ) ) || !access_has_project_level( VIEWER, $t_project_id ) ) {
 			$t_project_id = ALL_PROJECTS;
 		}
-		$g_cache_current_project = (int) $t_project_id;
+		$g_cache_current_project = $t_project_id;
 	}
 	return $g_cache_current_project;
 }
@@ -247,6 +272,9 @@ function helper_get_current_project_trace() {
 
 	} else {
 		$t_project_id = explode( ';', $t_project_id );
+		foreach( $t_project_id as $t_key => $t_id ) {
+			$t_project_id[$t_key] = (int)$t_id;
+		}
 		$t_bottom = $t_project_id[count( $t_project_id ) - 1];
 	}
 
@@ -360,7 +388,7 @@ function helper_project_specific_where( $p_project_id, $p_user_id = null ) {
 	if( 0 == count( $t_project_ids ) ) {
 		$t_project_filter = ' 1<>1';
 	} else if( 1 == count( $t_project_ids ) ) {
-		$t_project_filter = ' project_id=' . $t_project_ids[0];
+		$t_project_filter = ' project_id=' . reset( $t_project_ids );
 	} else {
 		$t_project_filter = ' project_id IN (' . join( ',', $t_project_ids ) . ')';
 	}

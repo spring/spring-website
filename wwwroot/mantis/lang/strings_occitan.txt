@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ $s_access_level_project = 'Nivèl d\'accès del projècte';
 $s_view_submitted_bug_link = 'Veire lo bòg somés %1$s';
 $s_assigned_projects = 'Projèctes assignats';
 $s_unassigned_projects = 'Projèctes pas assignats';
-$s_print = 'Estampar';
+$s_print = 'Imprimir';
 $s_jump = 'Cercar';
 $s_copy_users = 'Copiar los utilizaires';
 $s_copy_categories_from = 'Copiar las categorias a partir de';
@@ -157,7 +157,7 @@ $s_update_severity_msg = 'Causissètz la severitat del bug';
 $s_update_severity_button = 'Metre a jorn la severitat';
 $s_hide_button = 'Afichar solament los bògues seleccionats';
 $s_printing_preferences_title = 'Causir los camps d\'imprimir';
-$s_printing_options_link = 'Opcions d\'estampatge';
+$s_printing_options_link = 'Opcions d\'impression';
 $s_bugnote_title = 'Autor de la nòta';
 $s_bugnote_date = 'Data de la nòta';
 $s_bugnote_description = 'Descripcion de la nòta';
@@ -267,6 +267,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Lo plugin ja es installat.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'La pagina del plugin es introbabla.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Fracàs de l\'installacion del plugin: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'La mesa a jorn del l\'esquèma pel ligicial antispam a fracassat en blôt #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Lo modul « %1$s » deu èsser mes a jorn abans de poder accedir a aquesta pagina.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Una error desconeguda « %1$s » s\'es produsida durant l\'execucion del logicial « %2$s ».';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Lo camp « %1$s » possedís pas mai d\'una colomna « %2$s ».';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Lo camp « %1$s » possedís una colomna invalida « %2$s »';
@@ -481,7 +482,9 @@ $s_from = 'De';
 $s_to = 'A';
 $s_sent_you_this_reminder_about = 'vos a mandat un rampèl a prepaus de';
 $s_bug_reminder = 'Mandar un rampèl';
-$s_reminder_sent_to = 'Rampèl mandat a :';
+$s_reminder_sent_to = 'Rapèl mandat a';
+$s_reminder_sent_none = 'Cap de rapèl a pas pogut èsser mandat';
+$s_reminder_list_truncated = 'lista dels destinataris troncada';
 $s_bug_send_button = 'Mandar';
 $s_reminder = 'Rampèl';
 $s_reminder_explain = 'Aquesta nòta serà mandada als destinataris que susvelhan aqueste bòg.';
@@ -555,7 +558,7 @@ $s_warning_plain_password_authentication = '<strong>ATENCION :</strong> l\'auten
 $s_warning_default_administrator_account_present = '<strong>ATENCION :</strong> Vos caldriá desactivar lo compte per defaut « administrator » o cambiar son senhal.';
 $s_warning_admin_directory_present = '<strong>ATENCION :</strong> lo repertòri Admin deuriá èsser suprimit.';
 $s_error_database_version_out_of_date_1 = '<strong>ERROR :</strong> L\'estructura de la banca de donadas sembla obsoleta (config(databaseversion) es 0 e las taulas de mesa a jorn ancianas existisson). La version 1.x de MantisBT a apondut un procediment de mesa a jorn novèl. Sembla que sètz a metre a jorn dempuèi la version 0.XX. Metètz a jorn cap a 1.0.8 o 1.1.X d\'en primièr, puèi metètz a jorn cap a 1.2.';
-$s_error_database_no_schema_version = '<strong>ERROR :</strong> L\'estructura de la banca de donadas sembla obsoleta (config(databaseversion) es 0 e las taulas de mesa a jorn ancianas existisson pas). Verificatz que vòstra banca de donadas fonciona - podèm pas trobar la version de l\'esquèma de la banca de donadas. La taula « Config » a pas renviat una version valida de l\'esquèma - demandatz d\'ajuda sus la tièra de difusion mantis-help se fa mestièr.';
+$s_error_database_no_schema_version = '<strong>ERROR :</strong> L\'estructura de la banca de donadas sembla obsoleta (config(databaseversion) es 0 e las taulas de mesa a jorn ancianas existisson pas). Verificatz que vòstra banca de donadas fonciona - podèm pas trobar la version de l\'esquèma de la banca de donadas. La taula « Config » a pas renviat una version valida de l\'esquèma - demandatz d\'ajuda sus la lista de difusion mantis-help se fa mestièr.';
 $s_error_database_version_out_of_date_2 = '<strong>ATENCION :</strong> L\'estructura de la banca de donadas pòt èsser depassada. Metètz a jorn dempuèi <a href="admin/install.php">ici</a> abans de vos identificar.';
 $s_error_code_version_out_of_date = '<strong>ATENCION :</strong> L\'estructura de la banca de donadas es mai recenta que lo logicial installat. Metètz a jorn lo logicial.';
 $s_login_page_info = 'Benvenguda sul sistèma de gestion dels bògues.';
@@ -594,6 +597,7 @@ $s_protected = 'Protegit';
 $s_create_user_button = 'Crear l\'utilizaire';
 $s_hide_disabled = 'Amagar desactivats';
 $s_filter_button = 'Filtrar';
+$s_default_filter = 'Filtre per defaut';
 $s_create_filter_link = 'Crear ligam permanent';
 $s_create_short_link = 'Crear ligam cort';
 $s_filter_permalink = 'Çaijós un ligam permanent cap al filtre actual :';
@@ -1106,7 +1110,7 @@ $s_delete_attachments = 'Suprimir las pèças juntas';
 $s_delete_attachment_button = 'Suprimir';
 $s_delete_attachment_sure_msg = 'Sètz segur(a) que volètz suprimir aquesta pèça junta ?';
 $s_upload_issue_attachments = 'Metre a jorn las pèças juntas d\'un bòg';
-$s_filters = 'filtres';
+$s_filters = 'Filtres';
 $s_save_filters = 'Enregistrar los filtres';
 $s_save_filters_as_shared = 'Enregistrar e partejar los filtres';
 $s_use_saved_filters = 'Utilizar los filtres enregistrats';
@@ -1198,7 +1202,7 @@ $s_manage_columns_config = 'Gerir totas las colomnas';
 $s_all_columns_title = 'Totas las colomnas disponiblas';
 $s_csv_columns_title = 'Colomnas CSV';
 $s_view_issues_columns_title = 'Colomnas per afichatge';
-$s_print_issues_columns_title = 'Colomnas per estampar';
+$s_print_issues_columns_title = 'Colomnas per imprimir';
 $s_excel_columns_title = 'Colomnas Excel';
 $s_update_columns_as_global_default = 'Metre a jorn las colomnas per totes los projèctes';
 $s_update_columns_for_current_project = 'Metre a jorn las colomnas pel projècte actual';

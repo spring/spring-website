@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage StringProcessingAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -242,7 +242,9 @@ function string_sanitize_url( $p_url, $p_return_absolute = false ) {
 	$t_type = 0;
 	if ( preg_match( '@^(?P<path>' . preg_quote( $t_path, '@' ) . ')' . $t_pattern . '$@', $t_url, $t_matches ) ) {
 		$t_type = 1;
-	} else if ( preg_match( '@^(?P<path>' . preg_quote( $t_short_path, '@' ) . ')' . $t_pattern . '$@', $t_url, $t_matches ) ) {
+	} else if ( !empty( $t_short_path )
+			 && preg_match( '@^(?P<path>' . preg_quote( $t_short_path, '@' ) . ')' . $t_pattern . '$@', $t_url, $t_matches )
+	) {
 		$t_type = 2;
 	} else if ( preg_match( '@^(?P<path>)' . $t_pattern . '$@', $t_url, $t_matches ) ) {
 		$t_type = 3;
@@ -250,8 +252,7 @@ function string_sanitize_url( $p_url, $p_return_absolute = false ) {
 
 	# Check for URL's pointing to other domains
 	if ( 0 == $t_type || empty( $t_matches['script'] ) ||
-		3 == $t_type && preg_match( '@(?:[^:]*)?://@', $t_url ) > 0 ) {
-
+		3 == $t_type && preg_match( '@(?:[^:]*)?:/*@', $t_url ) > 0 ) {
 		return ( $p_return_absolute ? $t_path . '/' : '' ) . 'index.php';
 	}
 
@@ -459,13 +460,13 @@ function string_process_bugnote_link( $p_string, $p_include_anchor = true, $p_de
 }
 
 /**
- * Detect URLs and email addresses in the string and replace them with href anchors
+ * Search email addresses and URLs for a few common protocols in the given
+ * string, and replace occurences with href anchors.
  * @param string $p_string
  * @return string
  */
 function string_insert_hrefs( $p_string ) {
 	static $s_url_regex = null;
-	static $s_url_replace = null;
 	static $s_email_regex = null;
 	static $s_anchor_regex = '/(<a[^>]*>.*?<\/a>)/is';
 
@@ -481,8 +482,10 @@ function string_insert_hrefs( $p_string ) {
 
 	# Initialize static variables
 	if ( is_null( $s_url_regex ) ) {
-		# URL regex
-		$t_url_protocol = '(?:[[:alpha:]][-+.[:alnum:]]*):\/\/';
+		# URL protocol. The regex accepts a small subset from the list of valid
+		# IANA permanent and provisional schemes defined in
+		# http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
+		$t_url_protocol = '(?:https?|s?ftp|file|irc[6s]?|ssh|telnet|nntp|git|svn(?:\+ssh)?|cvs):\/\/';
 
 		# %2A notation in url's
 		$t_url_hex = '%[[:digit:]A-Fa-f]{2}';
@@ -497,18 +500,18 @@ function string_insert_hrefs( $p_string ) {
 		$t_url_part1 = "${t_url_chars}";
 		$t_url_part2 = "(?:\(${t_url_chars_in_parens}*\)|\[${t_url_chars_in_brackets}*\]|${t_url_chars2})";
 
-		$s_url_regex = "/(${t_url_protocol}(${t_url_part1}*?${t_url_part2}+))/sue";
-
-		# URL replacement
-		$t_url_href    = "href=\"'.rtrim('\\1','.').'\"";
-		$s_url_replace = "'<a ${t_url_href}>\\1</a> [<a ${t_url_href} target=\"_blank\">^</a>]'";
+		$s_url_regex = "/(${t_url_protocol}(${t_url_part1}*?${t_url_part2}+))/su";
 
 		# e-mail regex
 		$s_email_regex = substr_replace( email_regex_simple(), '(?:mailto:)?', 1, 0 );
 	}
 
 	# Find any URL in a string and replace it by a clickable link
-	$p_string = preg_replace( $s_url_regex, $s_url_replace, $p_string );
+	$t_function = create_function( '$p_match', '
+		$t_url_href = \'href="\' . rtrim( $p_match[1], \'.\' ) . \'"\';
+		return "<a ${t_url_href}>${p_match[1]}</a> [<a ${t_url_href} target=\"_blank\">^</a>]";
+	' );
+	$p_string = preg_replace_callback( $s_url_regex, $t_function, $p_string );
 	if( $t_change_quotes ) {
 		ini_set( 'magic_quotes_sybase', true );
 	}

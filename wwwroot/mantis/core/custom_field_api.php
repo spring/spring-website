@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage CustomFieldAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -57,6 +57,7 @@ $g_custom_field_types[CUSTOM_FIELD_TYPE_DATE] = 'standard';
 foreach( $g_custom_field_types as $type ) {
 	require_once( 'cfdefs' . DIRECTORY_SEPARATOR . 'cfdef_' . $type . '.php' );
 }
+unset( $type );
 
 function custom_field_allow_manage_display( $p_type, $p_display ) {
 	global $g_custom_field_type_definition;
@@ -850,6 +851,22 @@ function custom_field_get_field( $p_field_id, $p_field_name ) {
 		trigger_error( ERROR_DB_FIELD_NOT_FOUND, WARNING );
 		return '';
 	}
+}
+
+/**
+ * Return custom field name including localized name (if available)
+ *
+ * @param string $p_name Custom field's name
+ * @return string CustomFieldName [(LocalizedName)]
+ * @access public
+ */
+function custom_field_get_display_name( $p_name ) {
+	$t_local_name = lang_get_defaulted( $p_name );
+	if( $t_local_name != $p_name ) {
+		$p_name .= " ($t_local_name)";
+	}
+
+	return string_display( $p_name );
 }
 
 /**
