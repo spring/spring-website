@@ -57,4 +57,4 @@
 
 	header("HTTP/1.1 303 See Other");
 	header("Content-Type: $mimetype");
-	header('Location: ' . $_SERVER['SERVER_NAME'] . '/phpbb/download/file.php?id=' . $row['attach_id']);
+	header('Location: ' . '/phpbb/download/file.php?id=' . $row['attach_id']);
