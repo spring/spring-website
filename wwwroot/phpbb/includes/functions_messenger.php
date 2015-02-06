@@ -1674,6 +1674,9 @@ function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 	$collector = new phpbb_error_collector;
 	$collector->install();
 
+	// spring hack, to "force" users to use https
+	$msg = str_replace("http://springrts.com", "https://springrts.com", $msg);
+
 	// On some PHP Versions mail() *may* fail if there are newlines within the subject.
 	// Newlines are used as a delimiter for lines in mail_encode() according to RFC 2045 section 6.8.
 	// Because PHP can't decide what is wanted we revert back to the non-RFC-compliant way of separating by one space (Use '' as parameter to mail_encode() results in SPACE used)
@@ -1685,4 +1688,3 @@ function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 	return $result;
 }
 
-?>
