@@ -1,7 +1,6 @@
 # ahrefsbot produces like ~20% of traffic, dissalow it
 User-agent: AhrefsBot
 Disallow: / 
-
 # all others
 User-agent: *
 # large files
@@ -30,3 +29,5 @@ Disallow: /phpbb/modcp.php
 Disallow: /phpbb/ucp.php 
 Disallow: /phpbb/posting.php 
 Disallow: /phpbb/profile.php
+# api services
+Disallow: /api
