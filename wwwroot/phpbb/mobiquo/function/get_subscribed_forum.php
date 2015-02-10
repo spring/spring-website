@@ -10,8 +10,8 @@ defined('IN_MOBIQUO') or exit;
 
 function get_subscribed_forum_func()
 {
-    global $config, $db, $user, $auth, $mobiquo_config, $phpbb_home;
-    
+    global $config, $db, $user, $auth, $mobiquo_config, $phpbb_home, $request;
+
     $user->setup('ucp');
     
     if (!$user->data['is_registered']) trigger_error('LOGIN_EXPLAIN_UCP');
@@ -55,7 +55,10 @@ function get_subscribed_forum_func()
         }
         else
         {
-            $tracking_topics = (isset($_COOKIE[$config['cookie_name'] . '_track'])) ? ((STRIP) ? stripslashes($_COOKIE[$config['cookie_name'] . '_track']) : $_COOKIE[$config['cookie_name'] . '_track']) : '';
+            $TTcookieName = $config['cookie_name'] . '_track';
+            $tracking_topics = $request->variable($TTcookieName,'',false,\phpbb\request\request_interface::COOKIE);
+            if(isset($tracking_topics)) 
+                $tracking_topics = (STRIP) ? stripslashes($tracking_topics) : $tracking_topics;
             $tracking_topics = ($tracking_topics) ? tracking_unserialize($tracking_topics) : array();
         }
     
@@ -81,29 +84,29 @@ function get_subscribed_forum_func()
             $logo_url = '';
             if (file_exists("./forum_icons/$forum_id.png"))
             {
-                $logo_url = $phpbb_home."mobiquo/forum_icons/$forum_id.png";
+                $logo_url = $phpbb_home.$config['tapatalkdir']."/forum_icons/$forum_id.png";
             }
             else if (file_exists("./forum_icons/$forum_id.jpg"))
             {
-                $logo_url = $phpbb_home."mobiquo/forum_icons/$forum_id.jpg";
+                $logo_url = $phpbb_home.$config['tapatalkdir']."/forum_icons/$forum_id.jpg";
             }
             else if (file_exists("./forum_icons/default.png"))
             {
-                $logo_url = $phpbb_home."mobiquo/forum_icons/default.png";
+                $logo_url = $phpbb_home.$config['tapatalkdir']."/forum_icons/default.png";
             }
             else if ($row['forum_image'])
             {
                 $logo_url = $phpbb_home.$row['forum_image'];
             }
             
-            $xmlrpc_forum = new xmlrpcval(array(
-                'forum_id'      => new xmlrpcval($forum_id),
-                'forum_name'    => new xmlrpcval(html_entity_decode($row['forum_name']), 'base64'),
-                'icon_url'      => new xmlrpcval($logo_url),
-                'is_protected'  => new xmlrpcval($row['forum_password'] ? true : false, 'boolean'),
-                'sub_only'      => new xmlrpcval(($row['forum_type'] == FORUM_POST) ? false : true, 'boolean'),
-                'new_post'      => new xmlrpcval($unread_forum, 'boolean'),
-            ), 'struct');
+            $xmlrpc_forum = array(
+                'forum_id'      => (string)$forum_id,
+                'forum_name'    => html_entity_decode($row['forum_name']),
+                'icon_url'      => $logo_url,
+                'is_protected'  => $row['forum_password'] ? true : false,
+                'sub_only'      => ($row['forum_type'] == FORUM_POST) ? false : true,
+                'new_post'      => $unread_forum,
+            );
     
             $forum_list[] = $xmlrpc_forum;
         }
@@ -112,13 +115,10 @@ function get_subscribed_forum_func()
 
     $forum_num = count($forum_list);
     
-    $response = new xmlrpcval(
-        array(
-            'total_forums_num' => new xmlrpcval($forum_num, 'int'),
-            'forums'    => new xmlrpcval($forum_list, 'array'),
-        ),
-        'struct'
+    $response = array(
+        'total_forums_num' => (int)$forum_num, 
+        'forums'    => $forum_list,
     );
 
-    return new xmlrpcresp($response);
+    return $response;
 }

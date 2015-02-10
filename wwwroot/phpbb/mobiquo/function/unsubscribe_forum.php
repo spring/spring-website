@@ -8,13 +8,13 @@
 
 defined('IN_MOBIQUO') or exit;
 
-function unsubscribe_forum_func($xmlrpc_params)
+function unsubscribe_forum_func()
 {
-    global $db, $user, $config, $auth;
+    global $db, $user, $config, $auth, $request_params;
     
     $user->setup('viewforum');
     
-    $params = php_xmlrpc_decode($xmlrpc_params);
+    $params = $request_param;
     
     $forum_id = intval($params[0]);
     if (!$forum_id) trigger_error('NO_FORUM');
@@ -123,13 +123,10 @@ function unsubscribe_forum_func($xmlrpc_params)
         $s_result = false;
     }
     
-    $response = new xmlrpcval(
-        array(
-            'result'        => new xmlrpcval($s_result, 'boolean'),
-            'result_text'   => new xmlrpcval($s_result ? '' : 'Unsubscribe failed', 'base64'),
-        ),
-        'struct'
+    $response = array(
+            'result'        => (boolean)$s_result,
+            'result_text'   => $s_result ? '' : 'Unsubscribe failed',
     );
     
-    return new xmlrpcresp($response);
+    return $response;
 }

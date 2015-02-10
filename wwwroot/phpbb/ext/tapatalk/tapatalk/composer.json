@@ -1,0 +1,27 @@
+{
+	"name": "tapatalk/tapatalk",
+	"type": "phpbb-extension",
+	"description": "Just a tapatalk demo",
+	"homepage": "https://tapatalk.com",
+	"version": "1.0.2",
+	"time": "2014-12-31",
+	"license": "GPL-2.0",
+	"authors": [{
+			"name": "Tapatalk",
+			"email": "N/A",
+			"homepage": "N/A",
+			"role": "N/A"
+		}],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"require-dev": {
+		"phpbb/epv": "dev-master"
+	},
+	"extra": {
+		"display-name": "Tapatalk Plugin Demo",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.0-RC2,<3.2.*@dev"
+		}
+	}
+}

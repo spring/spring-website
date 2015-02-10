@@ -8,45 +8,42 @@
 
 defined('IN_MOBIQUO') or exit;
 
-function get_forum_func($xmlrpc_params)
+function get_forum_func()
 {
-    global $db, $auth, $user, $config, $mobiquo_config, $phpbb_home;
+    global $db, $auth, $user, $config, $mobiquo_config, $phpbb_home, $request_params;
+    $return_description = (isset($request_params[0]) && intval($request_params[0])!==0) ? boolean($request_params[0]) : false;
+    $root_forum_id = isset($request_params[1]) ? intval($request_params[1]) : 0;
     
-    $params = php_xmlrpc_decode($xmlrpc_params);
-    
-    $return_description = isset($params[0]) ? $params[0] : false;
-    
-    if (isset($params[1]))
+    $user_watch_array = array();
+    if($user->data['is_registered'])
     {
-        $fid = intval($params[1]);
-        $forum_filter = " WHERE f.parent_id = '$fid'";
-        $root_forum_id = $fid;
-    }
-    else
-    {
-        $forum_filter = '';
-        $root_forum_id = 0;
+        $sql = "SELECT notify_status,forum_id FROM " . FORUMS_WATCH_TABLE . " WHERE user_id = '".$user->data['user_id']."'";
+        $result_watch = $db->sql_query($sql);
+        while($row_watch = $db->sql_fetchrow($result_watch))
+        {
+            if(isset($row_watch['notify_status']) && !is_null($row_watch['notify_status']) && $row_watch['notify_status'] !== '')
+            {
+                $user_watch_array[] = $row_watch['forum_id'];
+            }
+        }
     }
     
-    $sql = 'SELECT f.* '. ($user->data['is_registered'] ? ', fw.notify_status' : '') . '
-            FROM ' . FORUMS_TABLE . ' f ' .
-            ($user->data['is_registered'] ? ' LEFT JOIN ' . FORUMS_WATCH_TABLE . ' fw ON (fw.forum_id = f.forum_id AND fw.user_id = ' . $user->data['user_id'] . ')' : '') . 
-            $forum_filter . '
+    $forum_rows = array();
+    $forum_hide_forum_arr = !empty($config['mobiquo_hide_forum_id']) ? explode(',',$config['mobiquo_hide_forum_id']) : array();
+    $sql = 'SELECT f.*  FROM ' . FORUMS_TABLE . ' f ' .  '
             ORDER BY f.left_id ASC';
     $result = $db->sql_query($sql, 600);
     
-    $forum_rows = array();
-    $forum_rows[$root_forum_id] = array('forum_id' => $root_forum_id, 'parent_id' => -1, 'child' => array());
     while ($row = $db->sql_fetchrow($result))
     {
-        $forum_id = $row['forum_id'];
+        $forum_id   = $row['forum_id'];
         
         if ($row['forum_type'] == FORUM_CAT && ($row['left_id'] + 1 == $row['right_id']))
         {
             // Non-postable forum with no subforums, don't display
             continue;
         }
-
+        
         // Skip branch
         if (isset($right_id))
         {
@@ -56,140 +53,82 @@ function get_forum_func($xmlrpc_params)
             }
             unset($right_id);
         }
-
-        if (!$auth->acl_get('f_list', $forum_id) || (isset($mobiquo_config['hide_forum_id']) && in_array($forum_id, $mobiquo_config['hide_forum_id'])))
+        if (!$auth->acl_getf('f_list', $forum_id) || (isset($mobiquo_config['hide_forum_id']) && in_array($forum_id, $mobiquo_config['hide_forum_id'])))
         {
             // if the user does not have permissions to list this forum, skip everything until next branch
             $right_id = $row['right_id'];
             continue;
         }
+        if(in_array($forum_id, $forum_hide_forum_arr))
+        {
+            continue;
+        }
+        if(!$auth->acl_get('f_read', $forum_id))
+        {
+            continue;
+        }
         
-        $row['unread_count'] = 0;
+        $parent_id  = $row['parent_id']; 
+        $forum_type = $forum['forum_link'] ? 'link' : ($forum['forum_type'] != FORUM_POST ? 'category' : 'forum');
+        
+        if ($logo_icon_name = tp_get_forum_icon($forum_id, $forum_type, $forum['forum_status'], $forum['unread_count']))
+            $logo_url = $phpbb_home.$config['tapatalkdir'] .'/forum_icons/'.$logo_icon_name;
+        else if ($forum['forum_image'])
+        {
+            if (preg_match('#^https?://#i', $forum['forum_image']))
+                $logo_url = $forum['forum_image'];
+            else
+                $logo_url = $phpbb_home.$forum['forum_image'];
+        }
+        else $logo_url = '';
+            
+        if ($return_description)
+        {
+            $description = smiley_text($row['forum_desc'], true);
+            $description = generate_text_for_display($description, $row['forum_desc_uid'], $row['forum_desc_bitfield'], $row['forum_desc_options']);
+            $description = basic_clean(preg_replace('/<br *?\/?>/i', "\n", $description));
+        }
+        else $description = '';
         
         if ($user->data['is_registered'] && ($config['email_enable'] || $config['jab_enable']) && $config['allow_forum_notify'] && $row['forum_type'] == FORUM_POST && $auth->acl_get('f_subscribe', $forum_id))
         {
             $row['can_subscribe'] = true;
-            $row['is_subscribed'] = isset($row['notify_status']) && !is_null($row['notify_status']) && $row['notify_status'] !== '' ? true : false;
+            $row['is_subscribed'] = in_array($row['forum_id'], $user_watch_array) ? true : false;
         } else {
             $row['can_subscribe'] = false;
             $row['is_subscribed'] = false;
         }
         
-        $forum_rows[$forum_id] = $row;
-    }
-    $db->sql_freeresult($result);
-    
-    $fids = array(-1);
-    foreach($forum_rows as $id => $value)
-    {
-        if (!in_array($value['parent_id'], $fids))
-            unset($forum_rows[$id]);
-        else
-            $fids[] = $id;
-    }
-    
-    while(empty($forum_rows[$root_forum_id]['child']) && count($forum_rows) > 1)
-    {
-        $current_parent_id = -1;
-        $leaves_forum = array();
-        foreach($forum_rows as $row)
-        {
-            $row_parent_id = $row['parent_id'];
-            
-            if ($row_parent_id != $current_parent_id)
-            {
-                if(isset($leaves_forum[$row_parent_id]))
-                {
-                    $leaves_forum[$row_parent_id] = array();
-                }
-                else
-                {
-                    if(isset($leaves_forum[$forum_rows[$row_parent_id]['parent_id']]))
-                    {
-                        $leaves_forum[$forum_rows[$row_parent_id]['parent_id']] = array();
-                    }
-                    $leaves_forum[$row_parent_id][] = $row['forum_id'];
-                }
-                $current_parent_id = $row_parent_id;
-            }
-            else if ($row_parent_id == $current_parent_id)
-            {
-                if(!empty($leaves_forum[$row_parent_id]))
-                {
-                    $leaves_forum[$row_parent_id][] = $row['forum_id'];
-                }
-            }
-        }
+        $node['forum_id']     = $forum_id;
+        $node['forum_name']   = basic_clean($row['forum_name']);
+        $node['parent_id']    = $row['parent_id'];
+        $node['description']  = $description;
+        $node['logo_url']     = $logo_url;
+        $node['unread_count'] = 0;//undo
+        $node['new_post']     = ($node['unread_count']) ? true : false;
+        $node['is_protected'] = ($row['forum_password']) ? true : false ;
+        $node['is_subscribed']= $row['is_subscribed'];
+        $node['can_subscribe']= $row['can_subscribe'];
+        $node['url']          = $row['forum_link'];
+        $node['sub_only']     = ($row['forum_type'] != FORUM_POST) ? true : false ; 
+        //$node['child']        = array();
         
-        foreach($leaves_forum as $node_forum_id => $leaves)
-        {
-            foreach($leaves as $forum_id)
-            {
-                $forum =& $forum_rows[$forum_id];
-                
-                $logo_url = '';
-                if (file_exists("./forum_icons/$forum_id.png"))
-                {
-                    $logo_url = $phpbb_home."mobiquo/forum_icons/$forum_id.png";
-                }
-                else if (file_exists("./forum_icons/$forum_id.jpg"))
-                {
-                    $logo_url = $phpbb_home."mobiquo/forum_icons/$forum_id.jpg";
-                }
-                else if (file_exists("./forum_icons/default.png"))
-                {
-                    $logo_url = $phpbb_home."mobiquo/forum_icons/default.png";
-                }
-                else if ($forum['forum_image'])
-                {
-                    $logo_url = $phpbb_home.$forum['forum_image'];
-                }
-                
-                if (function_exists('get_unread_topics'))
-                    $unread_count = count(get_unread_topics(false, "AND t.forum_id = $forum_id"));
-                else
-                    $unread_count = count(tt_get_unread_topics(false, "AND t.forum_id = $forum_id"));
-                
-                $forum['unread_count'] += $unread_count;
-                if ($forum['unread_count'])
-                {
-                    $forum_rows[$forum['parent_id']]['unread_count'] += $forum['unread_count'];
-                }
-                
-                $xmlrpc_forum = array(
-                    'forum_id'      => new xmlrpcval($forum_id),
-                    'forum_name'    => new xmlrpcval(basic_clean($forum['forum_name']), 'base64'),
-                    'parent_id'     => new xmlrpcval($node_forum_id),
-                    'logo_url'      => new xmlrpcval($logo_url),
-                    'url'           => new xmlrpcval($forum['forum_link']),
-                );
-                
-                if ($forum['unread_count'])     $xmlrpc_forum['unread_count']       = new xmlrpcval($forum['unread_count'], 'int');
-                if ($forum['unread_count'])     $xmlrpc_forum['new_post']           = new xmlrpcval(true, 'boolean');
-                if ($forum['forum_password'])   $xmlrpc_forum['is_protected']       = new xmlrpcval(true, 'boolean');
-                if ($forum['can_subscribe'])    $xmlrpc_forum['can_subscribe']      = new xmlrpcval(true, 'boolean');
-                if ($forum['is_subscribed'])    $xmlrpc_forum['is_subscribed']      = new xmlrpcval(true, 'boolean');
-                if ($forum['forum_type'] != FORUM_POST) $xmlrpc_forum['sub_only']   = new xmlrpcval(true, 'boolean');
-                
-                if ($return_description)
-                {
-                    $description = smiley_text($forum['forum_desc'], true);
-                    $description = generate_text_for_display($description, $forum['forum_desc_uid'], $forum['forum_desc_bitfield'], $forum['forum_desc_options']);
-                    $description = preg_replace('/<br *?\/?>/i', "\n", $description);
-                    $xmlrpc_forum['description'] = new xmlrpcval(basic_clean($description), 'base64');
-                }
-                
-                if (isset($forum['child'])) {
-                    $xmlrpc_forum['child'] = new xmlrpcval($forum['child'], 'array');
-                }
-                
-                $forum_rows[$node_forum_id]['child'][] = new xmlrpcval($xmlrpc_forum, 'struct');
-                unset($forum_rows[$forum_id]);
-            }
-        }
+        $forum_rows[$parent_id]['child'][] = $node;
+        $count = count($forum_rows[$parent_id]['child']);
+        $forum_rows[$forum_id] = &$forum_rows[$parent_id]['child'][$count-1];
     }
-    
-    $response = new xmlrpcval($forum_rows[$root_forum_id]['child'], 'array');
-    
-    return new xmlrpcresp($response);
+    //print_r($forum_rows);
+    $db->sql_freeresult($result);
+    if($root_forum_id !== 0)
+        return $forum_rows[$root_forum_id];
+    else 
+    {
+        $result = array();
+        foreach($forum_rows['0']['child'] as $key => $value)
+            $result[] = $value;
+        return $result;
+    }
 } // End of get_forum_func
+
+
+

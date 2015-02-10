@@ -2,7 +2,7 @@
 
 defined('IN_MOBIQUO') or exit;
 
-class tapa_user extends user
+class tapa_user extends phpbb\user
 {
     var $time_format = 'Ymd\TH:i:s';
     

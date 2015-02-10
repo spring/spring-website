@@ -8,13 +8,13 @@
 
 defined('IN_MOBIQUO') or exit;
 
-function unsubscribe_topic_func($xmlrpc_params)
+function unsubscribe_topic_func()
 {
-    global $db, $user;
+    global $db, $user, $request_params;
     
     $user->setup('viewtopic');
     
-    $params = php_xmlrpc_decode($xmlrpc_params);
+    $params = $request_params;
     
     // get topic id from parameters
     $topic_id = intval($params[0]);
@@ -44,13 +44,10 @@ function unsubscribe_topic_func($xmlrpc_params)
         }
     }
     
-    $response = new xmlrpcval(
-        array(
-            'result'        => new xmlrpcval($uns_result, 'boolean'),
-            'result_text'   => new xmlrpcval($uns_result ? '' : 'Unsubscribe failed', 'base64'),
-        ),
-        'struct'
+    $response = array(
+            'result'        => (boolean)$uns_result,
+            'result_text'   => $uns_result ? '' : 'Unsubscribe failed',
     );
     
-    return new xmlrpcresp($response);
+    return $response;
 }
