@@ -69,7 +69,6 @@
 			"https://www.youtube.com/embed/2mKhQD2SVqw?rel=0&autohide=1", #spring rts trailer
 			"https://www.youtube.com/embed/GAM_vcVJiL4?rel=0&autohide=1", #spring showcase
 			"https://www.youtube.com/embed/e0R2QsMwc98?rel=0&autohide=1", #NOTA trailer
-			"https://www.youtube.com/embed/3F7F7NGDDFU?rel=0&autohide=1", #Evolution RTS trailer
 			"https://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 		);
     $videofile = $videos[array_rand($videos)];
