@@ -1,0 +1,6 @@
+/* Spring specific PhPBB css changes */
+
+/* Remove the PhPBB header */
+#page-header .headerbar {
+	display: none
+}

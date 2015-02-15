@@ -1,0 +1,12 @@
+/*  phpBB3 Style Sheet
+    --------------------------------------------------------------
+	Style name:			spring
+	Based on style:		prosilver
+    --------------------------------------------------------------
+*/
+
+/* General Spring site css */
+@import url("../../../../styles.css");
+
+/* PhpBB specific Spring css */
+@import url("spring.css");
