@@ -134,11 +134,11 @@ $messages = array(
 
 # Special:Categories
 'categories'         => 'Mekga',
-'categoriespagetext' => 'Wiki e na le mekga ena.
+'categoriespagetext' => 'The following {{PLURAL:$1|category contains|categories contain}} pages or media.
 [[Special:UnusedCategories|Unused categories]] are not shown here.
 Also see [[Special:WantedCategories|wanted categories]].',
 
-# E-mail user
+# Email user
 'emailuser'     => 'Romela motho enwa email',
 'emailfrom'     => 'E tswa ho:',
 'emailto'       => 'Ho:',

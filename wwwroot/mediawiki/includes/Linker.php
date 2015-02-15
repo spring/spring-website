@@ -768,31 +768,31 @@ class Linker {
 	 * Make a "broken" link to an image
 	 *
 	 * @param $title Title object
-	 * @param $html String: link label in htmlescaped text form
+	 * @param $label String: link label (plain text)
 	 * @param $query String: query string
-	 * @param $trail String: link trail (HTML fragment)
-	 * @param $prefix String: link prefix (HTML fragment)
+	 * @param $unused1 Unused parameter kept for b/c
+	 * @param $unused2 Unused parameter kept for b/c
 	 * @param $time Boolean: a file of a certain timestamp was requested
 	 * @return String
 	 */
-	public static function makeBrokenImageLinkObj( $title, $html = '', $query = '', $trail = '', $prefix = '', $time = false ) {
+	public static function makeBrokenImageLinkObj( $title, $label = '', $query = '', $unused1 = '', $unused2 = '', $time = false ) {
 		global $wgEnableUploads, $wgUploadMissingFileUrl, $wgUploadNavigationUrl;
 		if ( ! $title instanceof Title ) {
-			return "<!-- ERROR -->{$prefix}{$html}{$trail}";
+			return "<!-- ERROR -->" . htmlspecialchars( $label );
 		}
 		wfProfileIn( __METHOD__ );
+		if ( $label == '' ) {
+			$label = $title->getPrefixedText();
+		}
+		$encLabel = htmlspecialchars( $label );
 		$currentExists = $time ? ( wfFindFile( $title ) != false ) : false;
-
-		list( $inside, $trail ) = self::splitTrail( $trail );
-		if ( $html == '' )
-			$html = htmlspecialchars( $title->getPrefixedText() );
 
 		if ( ( $wgUploadMissingFileUrl || $wgUploadNavigationUrl || $wgEnableUploads ) && !$currentExists ) {
 			$redir = RepoGroup::singleton()->getLocalRepo()->checkRedirect( $title );
 
 			if ( $redir ) {
 				wfProfileOut( __METHOD__ );
-				return self::linkKnown( $title, "$prefix$html$inside", array(), $query ) . $trail;
+				return self::linkKnown( $title, $encLabel, array(), wfCgiToArray( $query ) );
 			}
 
 			$href = self::getUploadUrl( $title, $query );
@@ -800,10 +800,10 @@ class Linker {
 			wfProfileOut( __METHOD__ );
 			return '<a href="' . htmlspecialchars( $href ) . '" class="new" title="' .
 				htmlspecialchars( $title->getPrefixedText(), ENT_QUOTES ) . '">' .
-				"$prefix$html$inside</a>$trail";
+				$encLabel . '</a>';
 		} else {
 			wfProfileOut( __METHOD__ );
-			return self::linkKnown( $title, "$prefix$html$inside", array(), $query ) . $trail;
+			return self::linkKnown( $title, $encLabel, array(), wfCgiToArray( $query ) );
 		}
 	}
 
@@ -1213,7 +1213,18 @@ class Linker {
 		self::$commentContextTitle = $title;
 		self::$commentLocal = $local;
 		$html = preg_replace_callback(
-			'/\[\[:?(.*?)(\|(.*?))*\]\]([^[]*)/',
+			'/
+				\[\[
+				:? # ignore optional leading colon
+				([^\]|]+) # 1. link target; page names cannot include ] or |
+				(?:\|
+					# 2. a pipe-separated substring; only the last is captured
+					# Stop matching at | and ]] without relying on backtracking.
+					((?:]?[^\]|])*+)
+				)*
+				\]\]
+				([^[]*) # 3. link trail (the text up until the next link)
+			/x',
 			array( 'Linker', 'formatLinksInCommentCallback' ),
 			$comment );
 		self::$commentContextTitle = null;
@@ -1239,8 +1250,8 @@ class Linker {
 		}
 
 		# Handle link renaming [[foo|text]] will show link as "text"
-		if ( $match[3] != "" ) {
-			$text = $match[3];
+		if ( $match[2] != "" ) {
+			$text = $match[2];
 		} else {
 			$text = $match[1];
 		}
@@ -1255,7 +1266,7 @@ class Linker {
 			}
 		} else {
 			# Other kind of link
-			if ( preg_match( $wgContLang->linkTrail(), $match[4], $submatch ) ) {
+			if ( preg_match( $wgContLang->linkTrail(), $match[3], $submatch ) ) {
 				$trail = $submatch[1];
 			} else {
 				$trail = "";

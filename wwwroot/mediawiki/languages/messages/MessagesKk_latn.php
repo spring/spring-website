@@ -1,5 +1,5 @@
 <?php
-/** Kazakh (Latin script) (‪Qazaqşa (latın)‬)
+/** Kazakh (Latin script) (qazaqşa (latın)‎)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -1371,19 +1371,19 @@ bul faýl mölşeri — $2.',
 'largefileserver'             => 'Osı faýldıñ mölşeri serverdiñ qalawınan asıp ketken.',
 'emptyfile'                   => 'Qotarıp berilgen faýlıñız bos sïyaqtı. Faýl atawı qate jazılğan mümkin.
 Bul faýldı qotarıp berwi naqtı talabıñız ekenin tekserip şığıñız.',
-'fileexists'                  => "Bılaý atalğan faýl aldaqaşan bar, eger bunı özgertwge batılıñız joq bolsa '''<tt>[[:$1]]</tt>''' degendi tekserip şığıñız.
-[[$1|thumb]]",
-'filepageexists'              => "Bul faýldıñ sïpattama beti aldaqaşan '''<tt>[[:$1]]</tt>''' degende jasalğan, biraq ağımda bılaý atalğan eş faýl joq.
+'fileexists'                  => 'Bılaý atalğan faýl aldaqaşan bar, eger bunı özgertwge batılıñız joq bolsa <strong>[[:$1]]</strong> degendi tekserip şığıñız.
+[[$1|thumb]]',
+'filepageexists'              => 'Bul faýldıñ sïpattama beti aldaqaşan <strong>[[:$1]]</strong> degende jasalğan, biraq ağımda bılaý atalğan eş faýl joq.
 Engizgen qısqaşa mazmundamañız sïpattaması betinde körsetilmeýdi.
-Qısqaşa mazmundamañız osı arada körsetilw üşin, bunı qolmen öñdemek bolıñız",
-'fileexists-extension'        => "Uqsas atawı bar faýl tabıldı: [[$2|thumb]]
-* Qotarıp beriletin faýl atawı: '''<tt>[[:$1]]</tt>'''
-* Bar bolğan faýl atawı: '''<tt>[[:$2]]</tt>'''
-Özge atawdı tañdañız.",
+Qısqaşa mazmundamañız osı arada körsetilw üşin, bunı qolmen öñdemek bolıñız',
+'fileexists-extension'        => 'Uqsas atawı bar faýl tabıldı: [[$2|thumb]]
+* Qotarıp beriletin faýl atawı: <strong>[[:$1]]</strong>
+* Bar bolğan faýl atawı: <strong>[[:$2]]</strong>
+Özge atawdı tañdañız.',
 'fileexists-thumbnail-yes'    => "Osı faýl — mölşeri kişiritilgen swret ''(nobaý)'' sïyaqtı. [[$1|thumb]]
-Bul '''<tt>[[:$1]]</tt>''' degen faýldı sınap şığıñız.
+Bul <strong>[[:$1]]</strong> degen faýldı sınap şığıñız.
 Eger sınalğan faýl tüpnusqalı mölşeri bar dälme-däl swret bolsa, qosısmşa nobaýdı qotarıp berw keregi joq.",
-'file-thumbnail-no'           => "Faýl atawı '''<tt>$1</tt>''' degenmen bastaladı.
+'file-thumbnail-no'           => "Faýl atawı <strong>$1</strong> degenmen bastaladı.
 Bul — mölşeri kişiritilgen swret ''(nobaý)'' sïyaqtı.
 Eger bul swrettiñ tolıq ajıratılımdığı bolsa, bunı qotarıp beriñiz, äýtpese faýl atawın özgertiñiz.",
 'fileexists-forbidden'        => 'Osılaý atalğan faýl aldaqaşan bar;
@@ -1500,7 +1500,7 @@ Bağannıñ bas jolın nuqığanda surıptawdıñ rettewi özgertiledi.',
 # MIME search
 'mimesearch'         => 'Faýldı MIME türimen izdew',
 'mimesearch-summary' => 'Bul bette faýldardı MIME türimen süzgilewi qosılğan.
-Kirisi: mağlumat_türi/tür_tarawı, mısalı <tt>image/jpeg</tt>.',
+Kirisi: mağlumat_türi/tür_tarawı, mısalı <code>image/jpeg</code>.',
 'mimetype'           => 'MIME türi:',
 'download'           => 'qotarıp alw',
 
@@ -1676,7 +1676,7 @@ Jeke quqıqtar twralı köbirek aqparattı [[{{MediaWiki:Listgrouprights-helppag
 'listgrouprights-helppage' => '{{ns:help}}:Top quqıqtarı',
 'listgrouprights-members'  => '(müşe tizimi)',
 
-# E-mail user
+# Email user
 'mailnologin'     => 'Eş mekenjaý jöneltilgen joq',
 'mailnologintext' => 'Basqa qatıswşığa xat jöneltw üşin [[Special:UserLogin|kirwiñiz]] kerek, jäne [[Special:Preferences|baptawıñızda]] jaramdı e-poşta jaýı bolwı jön.',
 'emailuser'       => 'Qatıswşığa xat jazw',
@@ -2143,7 +2143,7 @@ Soñğı jağdaýda siltemeni de, mısalı «{{{{ns:mediawiki}}:Mainpage}}» bet
 'allmessagesdefault'        => 'Ädepki mätini',
 'allmessagescurrent'        => 'Ağımdıq mätini',
 'allmessagestext'           => 'Mında {{ns:mediawiki}} esim ayasında jetimdi jüýe xabar tizimi beriledi.
-Eger ämbebap MediaWiki jersindirwge üles qosqıñız kelse [//www.mediawiki.org/wiki/Localisation MediaWiki jersindirw betine] jäne [//translatewiki.net translatewiki.net jobasına] barıp şığıñız.',
+Eger ämbebap MediaWiki jersindirwge üles qosqıñız kelse [https://www.mediawiki.org/wiki/Localisation MediaWiki jersindirw betine] jäne [//translatewiki.net translatewiki.net jobasına] barıp şığıñız.',
 'allmessagesnotsupportedDB' => "'''\$wgUseDatabaseMessages''' öşirilgen sebebinen '''{{ns:special}}:AllMessages''' beti qoldanılmaýdı.",
 
 # Thumbnails
@@ -2642,14 +2642,14 @@ Basqaları ädepkiden jasırıladı.
 
 # External editor support
 'edit-externally'      => 'Bul faýldı şettik qondırma arqılı öñdew',
-'edit-externally-help' => 'Köbirek aqparat üşin [//www.mediawiki.org/wiki/Manual:External_editors ornatw nusqamaların] qarañız.',
+'edit-externally-help' => 'Köbirek aqparat üşin [https://www.mediawiki.org/wiki/Manual:External_editors ornatw nusqamaların] qarañız.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'barlıq',
 'namespacesall' => 'barlığı',
 'monthsall'     => 'barlığı',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'E-poşta mekenjaýın quptaw',
 'confirmemail_noemail'     => '[[{{#special:Preferences}}|Paýdalanwşılıq baptalımdarıñızda]] jaramdı e-poşta mekenjaýın qoýmapsız.',
 'confirmemail_text'        => '{{SITENAME}} e-poşta mümkindikterin paýdalanw üşin aldınan e-poşta mekenjaýıñızdıñ jaramdılığın tekserip şığwıñız kerek.

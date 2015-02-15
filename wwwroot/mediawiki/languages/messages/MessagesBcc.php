@@ -7,9 +7,11 @@
  * @ingroup Language
  * @file
  *
+ * @author Ebraminio
  * @author Huji
  * @author Kaganer
  * @author Mostafadaneshvar
+ * @author Reedy
  * @author ZxxZxxZ
  */
 
@@ -738,7 +740,7 @@ $2',
 اگر شما ایء ذخیره کتت، هر تغییری که دهگ بیتء چه ای بازبینی گار بنت.'''",
 'yourdiff'                         => 'تفاوتان',
 'copyrightwarning'                 => "لطفا توجه بیت که کل نوشته یات ته {{SITENAME}}  تحت $2 نشر بنت.(بچار په جزیات$1).
-اگه شما لوٹیت شمی نوشتانک اصلاح و دگه چهاپ مبنت، اچه آیانا ادان مهلیت.<b/>
+اگه شما لوٹیت شمی نوشتانک اصلاح و دگه چهاپ مبنت، اچه آیانا ادان مهلیت.
 شما ما را قول دهیت که وتی چیزا بنویسیت یا چه یک دامین عمومی کپی کتگیت.
 ''' نوشتانکی که کپی رایت دارند بی اجازه ادا هور مکنیت'''",
 'copyrightwarning2'                => "لطفا توجه کنیت که کل مشارکاتن ته {{SITENAME}} شاید اصلاح, عوض و یا توسط دگه شرکت کننده آن حذف بنت.
@@ -1314,9 +1316,9 @@ $1",
 په دیستن یا گشتن پیشگین آپلودی فایلان برو  [[Special:FileList|لیست فایلان آپلودی]], آپلودان و حذفیات هنچو هستن ته [[Special:Log/upload|آمار آپلود]].
 
 په وارد کتن فایل ته یک صفحه ای، چه لینک ته فرم استفاده کن
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></tt>''' په استفاده چه نسخه کامل فایل
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></tt>''' په استفاده چه ۲۰۰ پیکسل پهنات ته یک جعبه ته چپ
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>'''  په مسیری لینک دهگ په فایل بی پیش دارگ فایل",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></code>''' په استفاده چه نسخه کامل فایل
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></code>''' په استفاده چه ۲۰۰ پیکسل پهنات ته یک جعبه ته چپ
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>'''  په مسیری لینک دهگ په فایل بی پیش دارگ فایل",
 'upload-permitted'            => 'مجازین نوع فایل:  $1.',
 'upload-preferred'            => 'ترجیحی نوع فایل:  $1.',
 'upload-prohibited'           => 'غیرمجازین نوع فایل:  $1.',
@@ -1348,19 +1350,19 @@ $1",
 'largefileserver'             => 'ای فایل مزنتر چه حدی انت که سرور تنظیم بوتت په اجازه دهگ.',
 'emptyfile'                   => 'فایلی که شما آپلود کتت هالیک انت. شاید شی په خاطر اشتباه نه نام فایل بیت.
 لطفا کتنرل کنیت که آیا واقعا شما لوٹیت ای فایلء آپلود کنیت.',
-'fileexists'                  => "یک فایل گون ای نام هستنت،لطفا کنترل کن '''<tt>[[:$1]]</tt>''' اگه شما مطمین نهیت اگه لوٹیت نامی آیء عوض کنیت.
-[[$1|thumb]]",
-'filepageexists'              => "صفحه توضیح په ای فایل پیشتر شر بوتت ته '''<tt>[[:$1]]</tt>''', بله هچ فایلی گون ای نام هنو نیست.
+'fileexists'                  => 'یک فایل گون ای نام هستنت،لطفا کنترل کن <strong>[[:$1]]</strong> اگه شما مطمین نهیت اگه لوٹیت نامی آیء عوض کنیت.
+[[$1|thumb]]',
+'filepageexists'              => 'صفحه توضیح په ای فایل پیشتر شر بوتت ته <strong>[[:$1]]</strong>, بله هچ فایلی گون ای نام هنو نیست.
 خلاصه ای که شما وارد کت ته صفحه توضیح ظاهر نه بیت.
-په ظاهر کتن خلاصه ادان شما لازمنت آیء دستی اصلاح کنیت.",
-'fileexists-extension'        => "یک فایلی گون یک دابی نام هستن: [[$2|thumb]]
-* نام فایلی که آپلود بیت: '''<tt>[[:$1]]</tt>'''
-* نام هستین فایل:'''<tt>[[:$2]]</tt>'''
-لطفا دگه نامی بزوریت.",
+په ظاهر کتن خلاصه ادان شما لازمنت آیء دستی اصلاح کنیت.',
+'fileexists-extension'        => 'یک فایلی گون یک دابی نام هستن: [[$2|thumb]]
+* نام فایلی که آپلود بیت: <strong>[[:$1]]</strong>
+* نام هستین فایل:<strong>[[:$2]]</strong>
+لطفا دگه نامی بزوریت.',
 'fileexists-thumbnail-yes'    => "فایل به نظر رسیت که یک عکس هورد بوتگین اندازه انت. ''(پنچی انگشت)''. [[$1|thumb]]
-لطفا فایل کنترل کن '''<tt>[[:$1]]</tt>'''.
+لطفا فایل کنترل کن <strong>[[:$1]]</strong>.
 اگر فایل کنترلی هما عکسنت گون اصلی اندازه لازم نهنت یک پنچ انگشتی گیشین آپلود کنیت.",
-'file-thumbnail-no'           => "نام فایل شروع بیت گون '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "نام فایل شروع بیت گون <strong>$1</strong>.
 جاه کیت که یک هور بوتگین اندازه عکس ایت.''(پینچ انگشت)''.
 اگر شما را ای عکس ته وضوح کامل هست ایء آپلود کنیت یا که نام فایل عوض کنیت لطفا",
 'fileexists-forbidden'        => 'فایل گو ای نام الان هستنت؛و نه توینت سری نویسگ بیتن.
@@ -1512,7 +1514,7 @@ PICT # misc.
 # MIME search
 'mimesearch'         => 'گردگ په مایم',
 'mimesearch-summary' => 'ای صفحه فیلتر کتن فایلان په اساس نوع مایم اش فعال کنت.
-ورودی:متحوانوع/زیرنوع،مثل<tt>image/jpeg</tt>.',
+ورودی:متحوانوع/زیرنوع،مثل<code>image/jpeg</code>.',
 'mimetype'           => 'نوع مایم:',
 'download'           => 'آیرگیزگ',
 
@@ -1695,7 +1697,7 @@ PICT # misc.
 'linksearch-ns'    => 'نام فضا:',
 'linksearch-ok'    => 'گردگ',
 'linksearch-text'  => 'تقریبانی په داب "*.wikipedia.org" شاید استفاده بیت.<br />
-داشتگین پروتوکل: <tt>$1</tt>',
+داشتگین پروتوکل: <code>$1</code>',
 'linksearch-line'  => '$1 لینک بوتت چه $2',
 'linksearch-error' => 'تقریبیان شاید فقط ته اول نام هاست جاه کاینت.',
 
@@ -1734,7 +1736,7 @@ PICT # misc.
 'listgrouprights-addgroup-self-all'    => 'نونیت کل گروهان په وتی حساب هور کنت',
 'listgrouprights-removegroup-self-all' => 'تونیت کل گروه ان چه وتی حساب بزوریت',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'هچ آدرس دیم دهگ',
 'mailnologintext'  => 'شما بایدن [[Special:UserLogin|وارد بیت]] و یک معتبرین آدرس ایمیلی داشته بیت ته وتی [[Special:Preferences|ترجیحات]] په دیم داتن ایمیل په دگه کاربران',
 'emailuser'        => 'په ای کابر ایمیل دیم دی',
@@ -2258,7 +2260,7 @@ $1',
 'allmessagesdefault'            => 'پیش فرضین متن',
 'allmessagescurrent'            => 'هنوکین متن',
 'allmessagestext'               => 'شی یک لیستی چه کوله یان موجود ته نام فضای مدیا وی کی انت.
-لطفا بچاریت  [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] و [//translatewiki.net translatewiki.net] اگر شما لوٹیت ته ملکی کتن مدیا وی کی کمک کنیت.',
+لطفا بچاریت  [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] و [//translatewiki.net translatewiki.net] اگر شما لوٹیت ته ملکی کتن مدیا وی کی کمک کنیت.',
 'allmessagesnotsupportedDB'     => "ای صفحه نه تونیت استفاده بیت په چی که'''\$wgUseDatabaseMessages''' غیر فعالنت.",
 'allmessages-filter-legend'     => 'فیلتر',
 'allmessages-filter'            => 'فیلتر گون حالت دلواهی',
@@ -2843,14 +2845,14 @@ Variants for Chinese language
 
 # External editor support
 'edit-externally'      => 'ای صفحه یا اصلاح کن گون یک درآین برنامه ای',
-'edit-externally-help' => '(په گیشترین اطلاعات بچار[//www.mediawiki.org/wiki/Manual:External_editors setup instructions])',
+'edit-externally-help' => '(په گیشترین اطلاعات بچار[https://www.mediawiki.org/wiki/Manual:External_editors setup instructions])',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'کل',
 'namespacesall' => 'کل',
 'monthsall'     => 'کل',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'آدرس ایمیل تایید کن',
 'confirmemail_noemail'     => 'شما یک معتبرین آدرس ایمیل تنظیم نه کتت نه وتی [[Special:Preferences|ترجیحات کاربر]].',
 'confirmemail_text'        => '{{SITENAME}} لوٹیت که شما وتی آدرس ایمیلء تایید کنید پیش چه شی که سرویسان ایمیلی استفاده کنیت.

@@ -10,6 +10,7 @@
  * @author Hazard-SJ
  * @author Ukabia
  * @author Yocahuna
+ * @author គីមស៊្រុន
  */
 
 $messages = array(
@@ -245,8 +246,8 @@ $1',
 'pool-errorunknown' => 'Anuon era',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'            => 'About {{SITENAME}}',
-'aboutpage'            => 'Project: About',
+'aboutsite'            => 'Habowt {{SITENAME}}',
+'aboutpage'            => 'Project: អំពី',
 'copyright'            => 'Kantent avielobl anda $1.',
 'copyrightpage'        => '{{ns:project}}:Kapirait',
 'currentevents'        => 'Korant ivent',
@@ -736,7 +737,7 @@ Chrai priifix yu kwieri wid ''all:'' fi saach aal kantent (inkluudn taak piej, t
 'powersearch-field'         => 'Saach fi',
 
 # Preferences page
-'preferences'   => 'Prefrans',
+'preferences'   => 'Prefrens',
 'mypreferences' => 'Mi prefrans',
 
 # Groups
@@ -768,7 +769,7 @@ Chrai priifix yu kwieri wid ''all:'' fi saach aal kantent (inkluudn taak piej, t
 'hide'                           => 'Aid',
 'show'                           => 'Shuo',
 'minoreditletter'                => 'm',
-'newpageletter'                  => 'Nyuu',
+'newpageletter'                  => 'N',
 'boteditletter'                  => 'b',
 'rc-enhanced-expand'             => 'Shuo ditiel (rikwaya JavaScript)',
 'rc-enhanced-hide'               => 'Aid ditiel',
@@ -840,7 +841,7 @@ Piej pahn [[Special:Watchlist|yu wachlis]] dem '''buol'''.",
 # Special:ListGroupRights
 'listgrouprights-members' => '(lis a memba)',
 
-# E-mail user
+# Email user
 'emailuser' => 'E-miel dis yuuza',
 
 # Watchlist
@@ -991,6 +992,10 @@ Begyu moerj dem manyuali.'''",
 # Thumbnails
 'thumbnail-more' => 'Inlaaj',
 
+# Special:Import
+'import'         => 'Himpuot piejdem',
+'import-comment' => 'Kament:',
+
 # Tooltip help for the actions
 'tooltip-pt-userpage'             => 'Yu yuuza piej',
 'tooltip-pt-mytalk'               => 'Yu taak piej',
@@ -1087,7 +1092,7 @@ Ada wandem wi aid bai difaalt.
 
 # External editor support
 'edit-externally'      => 'Yuuz extoernal aplikieshan fi edit dis fail',
-'edit-externally-help' => '(Si di [//www.mediawiki.org/wiki/Manual:External_editors setop inschrokshan] fi muo infamieshan)',
+'edit-externally-help' => '(Si di [https://www.mediawiki.org/wiki/Manual:External_editors setop inschrokshan] fi muo infamieshan)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'aal',

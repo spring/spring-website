@@ -3,6 +3,249 @@
 Security reminder: MediaWiki does not require PHP's register_globals
 setting since version 1.2.0. If you have it on, turn it '''off''' if you can.
 
+== MediaWiki 1.19.23 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.22 ===
+
+* (bug T76686) [SECURITY] thumb.php outputs wikitext message as raw HTML, which
+  could lead to xss. Permission to edit MediaWiki namespace is required to
+  exploit this.
+* (bug T74222) The original patch for T74222 was reverted as unnecessary.
+* Add missing $ in front of variable in OutputPage.php
+
+== MediaWiki 1.19.22 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.21 ===
+
+* (bugs 66776, 71478) SECURITY:  User PleaseStand reported a way to inject code
+  into API clients that used format=php to process pages that underwent flash
+  policy mangling. This was fixed along with improving how the mangling was done
+  for format=json, and allowing sites to disable the mangling using
+  $wgMangleFlashPolicy.
+* (bug 72222) SECURITY: Do not show log action when the entry is revdeleted with
+  DELETED_ACTION. NOTICE: this may be reverted in a future release pending a
+  public RFC about the desired functionality. This issue was reported by user
+  Bawolff.
+* (bug 71621) Make allowing site-wide styles on restricted special pages a
+  config option.
+* $wgMangleFlashPolicy was added to make MediaWiki's mangling of anything that
+  might be a flash policy directive configurable.
+
+== MediaWiki 1.19.21 ==
+
+This is a maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.20 ===
+
+* (bug 67440) Allow classes to be registered properly from installer.
+* (bug 47281) Fixed a dumpBackup.php error with --uploads --include-files
+  options: Unable to find the wrapper "mwstore".
+  System administrators are encouraged to upgrade to this release or 1.22+
+  and produce a full data dump.
+  https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Backing_up_a_wiki
+* (bug 63049) Removed anonymous functions from ApiFormatBase, added in
+  1.19.13 as part of the fix for bug 61362, for PHP 5.2 compatibility.
+
+== MediaWiki 1.19.20 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.19 ===
+* (bug 70672) SECURITY: OutputPage: Remove separation of css and js module
+  allowance.
+
+== MediaWiki 1.19.19 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.18 ===
+* (bug 69008) SECURITY: Enhance CSS filtering in SVG files. Filter <style>
+  elements; normalize style elements and attributes before filtering; add
+  checks for attributes that contain css; add unit tests for html5sec and
+  reported bugs.
+
+== MediaWiki 1.19.18 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.17 ===
+
+* (bug 68187) SECURITY: Prepend jsonp callback with comment.
+* (bug 65778) SECURITY: Copy prevent-clickjacking between OutputPage and
+  ParserOutput.
+
+== MediaWiki 1.19.17 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.16 ===
+
+* (bug 65839) SECURITY: Prevent external resources in SVG files.
+* (bug 66428) MimeMagic: Don't seek before BOF. This has weird side effects
+  like only extracting the tail of the file partially or not at all.
+
+== MediaWiki 1.19.16 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.15 ===
+
+* (bug 65501) SECURITY: Don't parse usernames as wikitext on
+  Special:PasswordReset.
+
+== MediaWiki 1.19.15 ==
+
+This is a maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.14 ===
+
+* Fixed resetting passwords.
+* (bug 58640) Fixed a compatibility issue with PCRE 8.34 that caused pages
+  to appear blank or with missing text.
+
+== MediaWiki 1.19.14 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.13 ===
+
+* (bug 62497) SECURITY: Add CSRF token on Special:ChangePassword.
+* (bug 62467) Set a title for the context during import on the cli.
+
+== MediaWiki 1.19.13 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.12 ===
+
+* (bug 61362) SECURITY: API: Don't find links in the middle of api.php links.
+* Use the correct branch of the extensions' git repositories.
+
+== MediaWiki 1.19.12 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.11 ===
+
+* (bug 60771) SECURITY: Disallow uploading SVG files using non-whitelisted
+  namespaces files. Also disallow iframe elements. User will get an error
+  including the namespace name if they use a non- whitelisted namespace.
+* (bug 61346) SECURITY: Make token comparison use constant time. It seems like
+  our token comparison would be vulnerable to timing attacks. This will take
+  constant time.
+
+== MediaWiki 1.19.11 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.10 ===
+* (bug 60339) SECURITY: Sanitize shell arguments to DjVu files, and other media formats
+
+== MediaWiki 1.19.10 ==
+
+This is a security release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.9 ===
+* (bug 57550) SECURITY: Disallow stylesheets in SVG Uploads
+* (bug 58088) SECURITY: Don't normalize U+FF3C to \ in CSS Checks
+* (bug 58472) SECURITY: Disallow -o-link in styles
+* (bug 58553) SECURITY: Return error on invalid XML for SVG Uploads
+* (bug 58699) SECURITY: Fix RevDel log entry information leaks
+
+== MediaWiki 1.19.9 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.8 ===
+* (bug 53032) SECURITY: Don't cache when a call could autocreate
+* (bug 55332) SECURITY: Improve css javascript detection
+* (bug 49717) Fix behaviour $wgVerifyMimeType = false; in Upload
+* Translations
+
+== MediaWiki 1.19.8 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch.
+
+=== Changes since 1.19.7 ===
+* SECURITY: Sanitize ResourceLoader exception messages
+* SECURITY: Token-getting functions will fail when using jsonp callbacks.
+* SECURITY: Fix extension detection with 2 .'s
+* Allow a string other than '*' as condition for DatabaseBase::delete()
+* Purge upstream caches when deleting file assets.
+* jquery.tablesorter: Add missing dependency on jquery.mwExtension
+
+== MediaWiki 1.19.7 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.6 ===
+* (bug 48306) SECURITY: Run file validation checks on  chunked uploads, and chunks
+  of upload, during the upload process.
+
+== MediaWiki 1.19.6 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.5 ===
+* (bug 47304) SECURITY: Check SVG xml encoding against whitelist
+* (bug 46590) Added AbortChangePassword hook to allow extensions to abort password
+  changes from Special:ChangePassword
+* Localisation updates from http://translatewiki.net.
+* mwdocgen.php: Implement --version option.
+* Remove svnstat stuff used in Doxygen generation
+* E_USER_DEPRECATED undefined prior to php 5.3
+
+== MediaWiki 1.19.5 ==
+
+This is a security and maintenance release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.4 ===
+* (bug 47251) SECURITY: Disable external entities in Import
+* (bug 46859) SECURITY: Disable external entities in XMLReader
+* (bug 46084) SECURITY: Sanitize $limitReport before outputting
+* (bug 43594) Fix notices displayed on PHP 5.4
+* (bug 40585) Don't drop 'step="any"' in HTML input fields.
+
+== MediaWiki 1.19.4 ==
+
+This is a maintenance release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.3 ===
+* New preference type - 'api'. Preferences of this type are not shown on
+  Special:Preferences, but are still available via the action=options API.
+* (bug 44010) Context is passed to UserGetLanguageObject.
+* The recursion guard on RequestContext::getLanguage() was weakened.
+* (bug 44135/42441) Pass '2' instead of 'true' to CURLOPT_SSL_VERIFYHOST
+* (bug 43518) API action=unblock should return the user name, not the full
+  user object
+
+== MediaWiki 1.19.3 ==
+
+This is a security release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.2 ===
+* (bug 40995) Prevent session fixation in Special:UserLogin (CVE-2012-5391)
+* (bug 41400) Prevent linker regex from exceeding PCRE backtrack limit
+* Increase permitted runtime for testParserTest (only used for continuous
+  integration).
+* Updated messages translations from http://translatewiki.net/
+
+== MediaWiki 1.19.2 ==
+
+This is a security release of the MediaWiki 1.19 branch
+
+=== Changes since 1.19.1 ===
+* (bug 39700) File: link to non-existing file can inject html
+* (bug 39823) Hidden block text leaking to admins
+* (bug 39184) LDAP password leakage
+* (bug 39180) Disallow framing of api results
+* (bug 37587) Enforce language codes to be html safe
+* (bug 39824) Check global blocks on account creation
+
 == MediaWiki 1.19 ==
 
 MediaWiki 1.19 is a large release that contains many new features and bug
@@ -12,6 +255,11 @@ this version.
 
 Our thanks go to everyone who helped to improve MediaWiki by testing the beta
 release and submitting bug reports.
+
+=== Changes since 1.19.1 ===
+* (bug 38406) Properly quote table names in DatabaseBase::tableName()
+* (bug 38249) Parser will throw an exception instead of outputting gibberish if
+  PCRE is compiled without support for unicode properties.
 
 === Changes since 1.19.0 ===
 * (bug 36568) Fixed "Illegal string offset 'LIMIT'" warnings in updater
@@ -35,14 +283,14 @@ release and submitting bug reports.
   "movepage-moved"
 * (bug 34841) Edit links are no longer displayed when display old page versions
 * (bug 34889) User name should be normalized on Special:Contributions
-* (bug 35051) If heading has a trailing space after == then its name is not 
+* (bug 35051) If heading has a trailing space after == then its name is not
   preloaded into edit summary on section edit
 * (bug 31417) New ID mw-content-text around the actual page text, without categories,
   contentSub, ... The same div often also contains the class mw-content-ltr/rtl.
 * (bug 35303) Proxy and DNS blacklist blocking works again
-* (bug 22555) Remove or skip strip markers from tag hooks like &lt;nowiki&gt; in 
+* (bug 22555) Remove or skip strip markers from tag hooks like &lt;nowiki&gt; in
   core parser functions which operate on strings, such as padleft.
-* (bug 18295) Don't expose strip markers when a tag appears inside a link 
+* (bug 18295) Don't expose strip markers when a tag appears inside a link
   inside a heading.
 * (bug 34212) ApiBlock/ApiUnblock allow action to take place without a token
   parameter present.
@@ -143,7 +391,7 @@ release and submitting bug reports.
 * Extensions can use the 'Language::getMessagesFileName' hook to define new
   languages using messages files outside of core.
 * (bug 32512) Add 'Associated namespace' checkbox to Special:Contributions.
-* Added $wgSend404Code, true by default, which can be set to false to send a 
+* Added $wgSend404Code, true by default, which can be set to false to send a
   200 status code instead of 404 for nonexistent articles.
 * (bug 33447) Link to the broken image tracking category from Special:Wantedfiles.
 * (bug 27724) Add timestamp to job queue.
@@ -256,7 +504,7 @@ release and submitting bug reports.
   cssText after DOM insertion.
 * (bug 30711) When adding a new section to a page with section=new, the text is
   now always added to the current version of the page.
-* (bug 31719) Fix uploads of SVGs exported by Adobe Illustrator by expanding 
+* (bug 31719) Fix uploads of SVGs exported by Adobe Illustrator by expanding
   XML entities correctly.
 * (bug 30914) Embeddable ResourceLoader modules (user.options, user.tokens)
   should be loaded in <head> for proper dependency resolution.
@@ -302,7 +550,7 @@ release and submitting bug reports.
    on Windows
 * (bug 25095) Special:Categories should also include the first relevant item
    when "from" is filled.
-* (bug 34972) An error occurred while changing your watchlist settings for 
+* (bug 34972) An error occurred while changing your watchlist settings for
   [[Special:WhatLinksHere/Example]]
 
 === API changes in 1.19 ===

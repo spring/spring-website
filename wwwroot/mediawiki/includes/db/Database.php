@@ -1973,7 +1973,9 @@ abstract class DatabaseBase implements DatabaseType {
 
 		# Quote the $database and $table and apply the prefix if not quoted.
 		if ( isset( $database ) ) {
-			$database = ( $format == 'quoted' || $this->isQuotedIdentifier( $database ) ? $database : $this->addIdentifierQuotes( $database ) );
+			if ( $format == 'quoted' && !$this->isQuotedIdentifier( $database ) ) {
+				$database = $this->addIdentifierQuotes( $database );
+			}
 		}
 
 		$table = "{$prefix}{$table}";
@@ -2512,7 +2514,10 @@ abstract class DatabaseBase implements DatabaseType {
 		$sql = "DELETE FROM $table";
 
 		if ( $conds != '*' ) {
-			$sql .= ' WHERE ' . $this->makeList( $conds, LIST_AND );
+			if ( is_array( $conds ) ) {
+				$conds = $this->makeList( $conds, LIST_AND );
+			}
+			$sql .= ' WHERE ' . $conds;
 		}
 
 		return $this->query( $sql, $fname );

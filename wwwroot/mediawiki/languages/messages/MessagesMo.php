@@ -1,5 +1,5 @@
 <?php
-/** Moldavian (Молдовеняскэ)
+/** Moldavian (молдовеняскэ)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -372,7 +372,7 @@ $messages = array(
 # Special:ListGroupRights
 'listgrouprights-members' => '(листэ де мембрь)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Тримите прин поштэ електроникэ ун месаж ачестуй утилизатор',
 
 # Watchlist

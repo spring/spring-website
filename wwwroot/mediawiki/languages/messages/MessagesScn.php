@@ -1,5 +1,5 @@
 <?php
-/** Sicilian (Sicilianu)
+/** Sicilian (sicilianu)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -10,6 +10,7 @@
  * @author Aushulz
  * @author Gmelfi
  * @author Kaganer
+ * @author Markos90
  * @author Melos
  * @author Omnipaedista
  * @author Santu
@@ -168,7 +169,7 @@ $messages = array(
 'tog-oldsig'                  => 'Firma attuali:',
 'tog-fancysig'                => 'Interpitra li cumanna wiki nâ firma (senza liami automaticu)',
 'tog-externaleditor'          => 'Usa di default nu editor esternu (sulu pi li esperti, abbisognanu mpustazzioni particulari pô tò computer. [//www.mediawiki.org/wiki/Manual:External_editors More information.])',
-'tog-externaldiff'            => 'Usa di default un prugramma di diff sternu',
+'tog-externaldiff'            => "Usa di default un prugramma di diff sternu (sulu pi utilizzatura sperti, addumanna l'usu di mpustazzioni particulari supra lu sò computer. [//www.mediawiki.org/wiki/Manual:External_editors Pi cchiossai nfurmazzioni.])",
 'tog-showjumplinks'           => "Attiva li culligamenti accissìbbili 'và a'",
 'tog-uselivepreview'          => "Attiva la funzioni ''Live preview'' (richiedi JavaScript; spirimintali)",
 'tog-forceeditsummary'        => "Chiedi cunferma siddu l'uggettu dû canciamentu è vacanti",
@@ -186,7 +187,7 @@ $messages = array(
 
 'underline-always'  => 'sempri',
 'underline-never'   => 'mai',
-'underline-default' => 'manteni li mpustazzioni dû browser',
+'underline-default' => 'manteni li mpustazzioni dû browser o dû tema',
 
 # Font style option in Special:Preferences
 'editfont-style'     => 'Stili da casedda di canciamentu:',
@@ -271,7 +272,7 @@ $messages = array(
 'newwindow'     => '(grapi na finestra nova)',
 'cancel'        => 'annulla',
 'moredotdotdot' => 'Àutru...',
-'mypage'        => 'La mè pàggina',
+'mypage'        => 'Pàggina',
 'mytalk'        => 'la mè pàggina di discussioni',
 'anontalk'      => 'Discussione pi stu IP',
 'navigation'    => 'Navigazzioni',
@@ -295,7 +296,7 @@ $messages = array(
 'vector-action-protect'          => 'Pruteggi',
 'vector-action-undelete'         => 'Riprìstina',
 'vector-action-unprotect'        => 'Cancia la prutizzioni',
-'vector-simplesearch-preference' => 'Abbilita li suggirimenti pâ ricerca avanzata',
+'vector-simplesearch-preference' => 'Abbilita la barra pâ ricerca simprificata (sulu pi la skin Vector)',
 'vector-view-create'             => 'Crea',
 'vector-view-edit'               => 'Cancia',
 'vector-view-history'            => 'Talìa a storia',
@@ -309,7 +310,7 @@ $messages = array(
 'returnto'          => 'Ritorna a $1.',
 'tagline'           => 'Di {{SITENAME}}',
 'help'              => 'Aiutu',
-'search'            => 'Trova',
+'search'            => 'Arriscedi',
 'searchbutton'      => "Va' cerca",
 'go'                => 'Trova',
 'searcharticle'     => 'Vai',
@@ -327,6 +328,7 @@ $messages = array(
 'delete'            => 'elìmina',
 'deletethispage'    => 'Elìmina sta pàggina',
 'undelete_short'    => 'Ricùpira {{PLURAL:$1|na rivisioni|$1 rivisioni}}',
+'viewdeleted_short' => 'Talìa {{PLURAL:$1|nu canciamentu scancillatu|$1 canciamenti scancillati}}',
 'protect'           => 'Pruteggi',
 'protect_change'    => 'cancia',
 'protectthispage'   => 'Pruteggi sta pàggina',
@@ -502,7 +504,8 @@ Query: $2',
 'actionthrottledtext'  => "Comu misura di sicurezza contru lu spam, l'esecuzioni di alcuni azzionu è limitata a nu nùmmuru massimu di voti ni nu determinatu piriudu du tempu, limiti ca ni stu casu fu supiratu. Si prega di ripruvari tra qualchi minutu.",
 'protectedpagetext'    => 'Sta pàggina fu bluccata pi privèniri li canciamenti.',
 'viewsourcetext'       => 'È pussìbbili visualizzari e cupiari lu còdici surgenti di sta pàggina:',
-'protectedinterface'   => "Sta pàggina cunteni un elementu ca fà parti dâ nterfaccia utenti dû software; è quinni prutetta p'evitari pussìbbili abbusi.",
+'viewyourtext'         => "È pussibbili visualizzarei cupiari lu còdici surgenti dî '''tò canciamenti''' nti sta pàggina:",
+'protectedinterface'   => "Sta pàggina cunteni un elementu ca fà parti dâ nterfaccia utenti dû software eggh'è  prutetta p'evitari pussìbbili abbusi. Pi jùnciri o canciari li traduzzioni pi tutti li wiki usari [//translatewiki.net/translatewiki.net] lu pruggettu di lucalizzazzioni di Mediawiki.",
 'editinginterface'     => "'''Accura:''' Lu testu di sta pàggina fà parti dî interfaccia utenti dû situ. Tutti li canciamenti appurtati a sta pàggina si riflèttinu supra li missaggi visualizzati pi tutti l'utenti. Pi li traduzioni, cunsidira â pussibilità di usari [//translatewiki.net/wiki/Main_Page?setlang=scn translatewiki.net], u prugettu di localizzazioni MediaWiki.",
 'sqlhidden'            => '(la query SQL hà statu ammucciata)',
 'cascadeprotected'     => 'Supra sta pàggina nun è pussìbbili effittuari canciamenti pirchì veni nclusa nt{{PLURAL:$1|â pàggina siquenti, ca fu prutetta|ê pàggini siquenti, ca foru prutetti}} silizziunannu la prutizzioni "ricursiva":
@@ -528,7 +531,8 @@ L'account hà statu criatu currettamenti. Nun ti scurdari di pirsunalizzari li [
 'yourname'                   => "Lu tò nomu d'utenti (''user name'')",
 'yourpassword'               => "La tò ''password''",
 'yourpasswordagain'          => "Scrivi la password n'àutra vota",
-'remembermypassword'         => "Ricòrdami la mè ''password'' duranti li sissioni (for a maximum of $1 {{PLURAL:$1|day|days}})",
+'remembermypassword'         => 'Arricorda la password supra stu computer (pi ô massimu $1 {{PLURAL:$1|jornu|jorna}})',
+'securelogin-stick-https'    => 'Resta cunnittutu cu HTTPS doppu la trasuta',
 'yourdomainname'             => 'Lu tò dominiu',
 'externaldberror'            => "S'havi virificatu n'erruri cû server d'autinticazzioni sternu, oppuru nun si disponi di l'auturizzazzioni nicissari p'aggiurnari lu propiu accessu sternu.",
 'login'                      => 'Trasi',
@@ -544,6 +548,7 @@ L'account hà statu criatu currettamenti. Nun ti scurdari di pirsunalizzari li [
 'createaccount'              => 'Criati un cuntu novu',
 'gotaccount'                 => "Hai già nu cuntu? '''$1'''.",
 'gotaccountlink'             => 'Trasi',
+'userlogin-resetlink'        => "T'ascurdasti li dittagli pâ trasuta?",
 'createaccountmail'          => 'via e-mail',
 'createaccountreason'        => 'Mutivu:',
 'badretype'                  => "La ''password'' chi mittisti nun è bona.",
@@ -564,7 +569,7 @@ Virificari lu nomu nziritu o [[Special:UserLogin/signup|criari un novu accessu]]
 'wrongpassword'              => "La ''password'' chi mittisti nun è giusta. Prova n'àutra vota.",
 'wrongpasswordempty'         => 'Nun hà statu nzirita arcuna password. Ripruvari.',
 'passwordtooshort'           => 'La tò password è troppu curta. Havi a cuntèniri armenu {{PLURAL:$1|1 caràttiri|$1 caràttiri}}.',
-'password-name-match'        => 'La tou password havi a essiri diversa dô tou nnomu utenti.',
+'password-name-match'        => "La tò password havi a essiri diversa dû tò nomu d'utilizzaturi.",
 'mailmypassword'             => "Mànnimi n'àutra password",
 'passwordremindertitle'      => 'Sirvizziu Password Reminder di {{SITENAME}}',
 'passwordremindertext'       => 'Quarchidunu (prubbabbirmenti tu, cu nnirizzu IP $1) addumannau d\'aviri mannata na password d\'accessu nova a {{SITENAME}} ($4). La password pi l\'utenti "$2" vinni mpustata a "$3".
@@ -585,6 +590,7 @@ Pirciò, li utenti ca usunu stu ndirizzu IP nun ponu pi lu mumentu criari novi a
 'emailconfirmlink'           => 'Cunfirmari lu tò ndrizzu imeil',
 'invalidemailaddress'        => 'Lu nnirizzu email nun pò èssiri accittatu ca ci hà un furmatu nun vàlidu.
 Pi favuri nziriti nu nnirizzu vàlidu o svacantati la casella.',
+'cannotchangeemail'          => 'Li nnirizzi e-mail nun ponnu essiri canciati nti stu wiki.',
 'accountcreated'             => 'Cuntu criatu',
 'accountcreatedtext'         => "Fu criatu n'accessu pi l'utenti $1.",
 'createaccount-title'        => "Criazzioni di n'accessu a {{SITENAME}}",
@@ -594,6 +600,7 @@ Si l\'accessu fu criatu pi sbagghiu, si può gnurari stu missaggiu.',
 'usernamehasherror'          => "Lu nomu di l'utenti nun pò cuntèniri caràttiri hash",
 'login-throttled'            => "Facisti troppi tintativi.
 Aspetta tanticchia prima di pruvari  n'àutra vota.",
+'login-abort-generic'        => 'La trasuta nun arriniscìu - Annullata',
 'loginlanguagelabel'         => 'Lingua: $1',
 'suspicious-userlogout'      => 'La tò dumanna di discunnissioni fu niàta prichì pari ca veni di nu browser nun funziunanti o nu proxy di caching.',
 
@@ -614,6 +621,12 @@ Aspetta tanticchia prima di pruvari  n'àutra vota.",
 'resetpass-wrong-oldpass'   => "La password timpurrània nun è giusta.
 Pò èssiri ca ggià canciasti cu successu la tò password o c'addumannasti na nova password timpurrània.",
 'resetpass-temp-password'   => 'Password timpurrània:',
+
+# Special:PasswordReset
+'passwordreset' => 'Resetta la password',
+
+# Special:ChangeEmail
+'changeemail-submit' => 'Cancia e-mail',
 
 # Edit page toolbar
 'bold_sample'     => 'Grassettu',
@@ -704,8 +717,10 @@ Si agghicasti ccà pi sbagghiu, clicca lu buttuni ''''n arreri (back)''' dû tò
 P’idintificàrilu è pirciò nicissariu usari lu nùmmiru di lu sò nnirizzu IP.
 Li nnirizzi IP ponnu pirò èssiri spartuti di cchiù utenti.
 Siddu sî n’utenti anònimu e riteni ca li cummenti prisenti nta sta pàggina nun si rifirìscinu a tia, [[Special:UserLogin/signup|crea n’accessu novu]] o [[Special:UserLogin|trasi]] cu chiddu ca già hai p’evitari d’èssiri cunfusu cu àutri utenti anònimi ‘n futuru.''",
-'noarticletext'                    => "Nta stu mumentu la pàggina addumannata è vacanti. È pussìbbili [[Special:Search/{{PAGENAME}}|circari stu tìtulu]] nta l'àutri pàggini dû situ oppuru [{{fullurl:{{FULLPAGENAME}}|action=edit}} canciari la pàggina ora].",
+'noarticletext'                    => 'Nta stu mumentu la pàggina addumannata è vacanti. È pussìbbili [[Special:Search/{{PAGENAME}}|circari stu tìtulu]] nta l\'àutri pàggini dû situ oppuru <span class="plainlinks">[{{fullurl:{{#Special:Log}}|action=edit}} circari ntê riggistra culligati] oppuru [{{fullurl:{{FULLPAGENAME}}|action=edit}} canciari la pàggina ora]</span>.',
+'noarticletext-nopermission'       => 'Nta stu mumentu la pàggina addumannata è vacanti. È pussibbili [[Special:Search/{{PAGENAME}}|circari stu titulu]] nti àutri pàggini dû situ oppuru <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} circari ntê riggistra currilati]</span>.',
 'userpage-userdoesnotexist'        => 'L\'account "<nowiki>$1</nowiki>" nun currispunni a n\'utenti riggistratu. Virificari si si voli criari o canciari sta pàggina.',
+'blocked-notice-logextract'        => "Stu utenti è attualmenti bluccatu. L'ùrtimu elimentu dû riggistru dî blocca è ripurtatu ccà pi nfurnazzioni:",
 'clearyourcache'                   => "'''Nota:''' doppu aviri sarvatu è nicissariu puliri la cache dû propiu browser pi vìdiri li canciamenti. Pi '''Mozilla / Firefox / Safari''': fari clic supra ''Ricarica'' tinnennu primutu lu tastu dî maiùsculi, oppuru prèmiri ''Ctrl-Maiusc-R'' (''Cmd-Maiusc-R'' supra Mac); pi '''Internet Explorer:''' mantèniri primutu lu tastu ''Ctrl'' mentri si premi lu pulsanti ''Aggiorna'' o prèmiri ''Ctrl-F5''; pi '''Konqueror''': prèmiri lu pulsanti ''Ricarica'' o lu tastu ''F5''; pi '''Opera''' pò èssiri nicissariu svacantari cumpletamenti la cache dû menu ''Strumenti → Preferenze''.",
 'usercssyoucanpreview'             => "'''Suggirimentu:''' Usa lu tastu 'Visualizza antiprima' pi pruvari li novi css/js prima di sarvàrili.",
 'userjsyoucanpreview'              => "'''Suggirimentu:''' Usa lu tastu 'Visualizza antiprima' pi pruvari li novi css/js prima di sarvàrili.",
@@ -715,7 +730,8 @@ Siddu sî n’utenti anònimu e riteni ca li cummenti prisenti nta sta pàggina 
 'userinvalidcssjstitle'            => "'''Accura:''' Nun esisti arcuna skin cu nomu \"\$1\". S'arricorda ca li pàggini pi li .css e .js pirsunalizzati hannu la nizziali dû tìtulu minùscula, p'asempiu {{ns:user}}:Asempiu/vector.js e nun {{ns:user}}:Asempiu/Vector.css.",
 'updated'                          => '(Aggiurnatu)',
 'note'                             => "'''Accura:'''",
-'previewnote'                      => "'''Ricurdàtivi ca chista è sulu n'antiprima, e ca nun hà statu ancora sarvata!'''",
+'previewnote'                      => "'''Ricurdàtivi ca chista è sulu n'antiprima.'''
+Li canci nun foru ancora sarvati!'''",
 'previewconflict'                  => "L'antiprima currispunni a lu testu prisenti ntâ casella di canciamentu supiriuri e rapprisenta la pàggina comu appari siddu si scegghi di prèmiri 'Sarva' 'n stu mumentu.",
 'session_fail_preview'             => "'''Purtroppu nun hà statu pussìbbili sarvari li tò canciamenti pirchì li dati dâ sissioni hannu jutu pirduti. Pi favuri, riprova. Siddu arricevi stu missaggiu d'erruri cchiù voti, prova a sculligàriti e a culligàriti novamenti.'''",
 'session_fail_preview_html'        => "'''Semu spiacenti, nun hà statu pussìbbili elabburari lu canciamentu pirchì hannu jutu pirduti li dati rilativi â sissioni.'''
@@ -750,7 +766,7 @@ L'amministraturi ca bluccau lu database lu fici pi stu mutivu: $1",
 'semiprotectedpagewarning'         => "'''ACCURA:''' Sta pàggina hà statu bluccata n modu ca sulu li utenti riggistrati ponnu canciàrila.",
 'cascadeprotectedwarning'          => "'''Accura:''' Sta pàggina havi stata bluccata n modu ca sulu li utenti cu privileggi di amministraturi ponnu mudificàrila, pirchì veni nclusa {{PLURAL:\$1|nta siquente pàggina ca hà stata prutiggiuta|ntê siquenti pàggini ca hannu stati prutiggiuti}} silizziunannu la prutizzioni \"ricursiva\":",
 'titleprotectedwarning'            => "'''ATTENZIONI:  Sta pàggina fu bluccata n modu tali ca sianu nicissari [[Special:ListGroupRights|diritti spicifici]] pi criarla.'''",
-'templatesused'                    => "Template utilizzati 'n sta pàggina:",
+'templatesused'                    => '{{PLURAL:$1|Template utilizzatu|Template utilizzati}} nti sta pàggina:',
 'templatesusedpreview'             => "Template utilizzati 'n st'antiprima:",
 'templatesusedsection'             => "Template utilizzati 'n sta sezzioni:",
 'template-protected'               => '(prutettu)',
@@ -821,6 +837,7 @@ Lu mutivu è ''$2''",
 'page_last'              => 'ùrtima',
 'histlegend'             => "Cunfrontu tra virsioni: silizziunari li caselli currispunnenti ê virsioni addisiati e prèmiri Mannu o lu pulsanti a basciu.<br /> Liggenna: (curr) = diffirenzi cu la virsioni attuali, (pric) = diffirenzi cu la virsioni pricidenti, '''m''' = canciamentu nicu",
 'history-fieldset-title' => 'Scurri ntâ crunuluggìa',
+'history-show-deleted'   => 'Sulu chiddi scancillati',
 'histfirst'              => 'Prima',
 'histlast'               => 'Ùrtima',
 'historysize'            => '({{PLURAL:$1|1 byte|$1 byte}})',
@@ -893,6 +910,8 @@ $1",
 'logdelete-failure'           => "'''La visibilità dû eventu nun po essiri impustata:'''
 $1",
 'revdel-restore'              => 'Cancia la visibbilità',
+'revdel-restore-deleted'      => 'rivisioni scancillati',
+'revdel-restore-visible'      => 'rivisioni visibbili',
 'pagehist'                    => 'Storia dâ pàggina',
 'deletedhist'                 => 'Storia cancillata',
 'revdelete-hide-current'      => "Impussibili ammucciari l'oggettu cu la data $1 $2 in quantu è la rivisoni currenti.",
@@ -940,13 +959,13 @@ S'havi accirtari ca la cuntinuità storica di la pàggina nun veni altirata.",
 'mergelogpagetext'   => "Appressu veni ammustrata na lista dî operazioni cchiù ricenti di unioni dâ storia di na pàggina ni n'autra.",
 
 # Diffs
-'history-title'            => 'Crunoluggìa dî canciamenti di "$1"',
+'history-title'            => '$1: crunoluggìa dî canciamenti',
 'difference'               => '(Diffirenzi tra li rivisioni)',
 'lineno'                   => 'Lìnia $1:',
 'compareselectedversions'  => 'Fari lu paraguni',
 'showhideselectedversions' => 'Ammustra/ammuccia virsioni silizziunati',
 'editundo'                 => 'annulla',
-'diff-multi'               => '({{PLURAL:$1|Na rivisioni ntirmèdia nun ammustrata|$1 rivisioni ntirmedi nun ammustrati}}.)',
+'diff-multi'               => '({{PLURAL:$1|Na rivisioni ntirmèdia|$1 rivisioni ntirmedi}} di {{PLURAL:$2|nu utenti|$2 utenti}} nun {{PLURAL:$1|ammusciata|ammusciati}}.)',
 
 # Search results
 'searchresults'                    => 'Risurtati dâ circata',
@@ -971,7 +990,7 @@ S'havi accirtari ca la cuntinuità storica di la pàggina nun veni altirata.",
 'searchhelp-url'                   => 'Help:Cuntinuti',
 'searchmenu-prefix'                => '[[Special:PrefixIndex/$1|Visualizza li pàggini cu stu prifissu]]',
 'searchprofile-articles'           => 'Pàggini di cuntinutu',
-'searchprofile-project'            => "Pàggini d'aiutu e dô pruggettu",
+'searchprofile-project'            => "Pàggini d'ajutu e dô pruggettu",
 'searchprofile-images'             => 'Multimedia',
 'searchprofile-everything'         => 'Tuttu',
 'searchprofile-advanced'           => 'Avanzata',
@@ -981,6 +1000,7 @@ S'havi accirtari ca la cuntinuità storica di la pàggina nun veni altirata.",
 'searchprofile-everything-tooltip' => 'Cerca unnegghiè (puru ntî pàggini di discussioni)',
 'searchprofile-advanced-tooltip'   => 'Cerca ntê namespace pirsunalizzati',
 'search-result-size'               => '$1 ({{PLURAL:$2|na parola|$2 paroli}})',
+'search-result-category-size'      => '{{PLURAL:$1|1 utenti|$1 utenti}} ({{PLURAL:$2|1 suttacatigurìa|$2 suttacatigurìi}}, {{PLURAL:$3|1 file|$3 files}})',
 'search-result-score'              => 'Rilivanza: $1%',
 'search-redirect'                  => '(redirect $1)',
 'search-section'                   => '(sizzioni $1)',
@@ -1109,7 +1129,8 @@ L'operazioni nun pò èssiri annullata.",
 'prefs-help-gender'             => "Opzionali: cunsenti di adattari li missaggi dô software in funzioni dô generi d'utenti. Sta nfurmazioni sarà pubblica.",
 'email'                         => 'Nnirizzu email',
 'prefs-help-realname'           => '* Nomu veru (upziunali): siddu scegghi di furnìrilu veni usatu pi dàriti crèditu dû tò travagghiu.',
-'prefs-help-email'              => "* Imeil (opziunali): abbìlita l'àutri utenti a cuntattàriti attraversu la tò pàggina d'utenti o di discussioni, senza pi chissu rivilari la tò idintitati.",
+'prefs-help-email'              => 'Lu nnirizzu e-mail è facurtativu, ma è abbisugnatu pi risittari la password, ntô casu n cui è scurdata.',
+'prefs-help-email-others'       => "Putiti videmma scegghiri di pirmèttiri ca l'autri ti cuntattanu pi posta elittronica cu nu culligamentu di la tò pàggina d'utilizzaturi o di discussioni. Lu tò nnirizzu nun veni rivilatu quannu l'àutri utilizzatura ti cuntattanu.",
 'prefs-help-email-required'     => 'Lu nnirizzu email è nicissariu.',
 'prefs-info'                    => 'Informazzioni di basi',
 'prefs-i18n'                    => 'Internazionalizzazioni',
@@ -1324,9 +1345,9 @@ L'operazioni nun pò èssiri annullata.",
 riggistrati [[Special:Log/delete|ccà]].
 
 Pi nziriri nu file nta na pàggina, fai nu lijami accussì:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>''' p'usari la virsioni ntera dû file
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|testu altirnativu]]</nowiki></tt>''' p'usari na virsioni làrica 200 pixel nziruta nta nu box, alliniata a manu manca e cu 'testu altirnativu' comu didascalìa
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' pi culligari direttamenti a lu file senza vidìrilu.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>''' p'usari la virsioni ntera dû file
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|testu altirnativu]]</nowiki></code>''' p'usari na virsioni làrica 200 pixel nziruta nta nu box, alliniata a manu manca e cu 'testu altirnativu' comu didascalìa
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' pi culligari direttamenti a lu file senza vidìrilu.",
 'upload-permitted'            => 'Tipi di file cunzintiti: $1.',
 'upload-preferred'            => 'Tipi di file cunsigghiati: $1.',
 'upload-prohibited'           => 'Tipi di file pruibbiti: $1.',
@@ -1354,17 +1375,17 @@ Pi nziriri nu file nta na pàggina, fai nu lijami accussì:
 'large-file'                  => 'Si raccumanna di nun supirari li diminzioni di $1 pi ognunu file; stu file è granni $2.',
 'largefileserver'             => 'Lu file sùpira li diminzioni cunzintiti dâ cunfigurazzioni dû server.',
 'emptyfile'                   => "Lu file appena carricatu pari èssiri vacanti. Chistu putissi èssiri duvutu a n'erruri ntô nomu dû file. Virificari ca si ntenni riarmenti carricari stu file.",
-'fileexists'                  => "Nu file cu stu nomu asisti già, pi favuri cuntrolla '''<tt>[[:$1]]</tt>''' siddu nun sî sicuru di vulìrilu suvrascrìviri.
-[[$1|thumb]]",
-'filepageexists'              => "La pàggina di discrizzioni di stu file fu ggià criata nnû nnirizzu '''<tt>[[:$1]]</tt>''', macari si ancora non c'è nu file cu stu nomu. La discrizzioni di l'uggettu ca fu misa ntô mentri dû caricamentu non si vidi supra a la pàggina di discussioni. Pi fàrila cumpàriri ntâ pàggina di discussioni, c'è la nicissitati di mudificàrila a manu",
+'fileexists'                  => 'Nu file cu stu nomu asisti già, pi favuri cuntrolla <strong>[[:$1]]</strong> siddu nun sî sicuru di vulìrilu suvrascrìviri.
+[[$1|thumb]]',
+'filepageexists'              => "La pàggina di discrizzioni di stu file fu ggià criata nnû nnirizzu <strong>[[:$1]]</strong>, macari si ancora non c'è nu file cu stu nomu. La discrizzioni di l'uggettu ca fu misa ntô mentri dû caricamentu non si vidi supra a la pàggina di discussioni. Pi fàrila cumpàriri ntâ pàggina di discussioni, c'è la nicissitati di mudificàrila a manu",
 'fileexists-extension'        => "Nu file cu nu nomu simili a chistu esisti già; l'unica diffirenza è l'usu dê maiusculi nte l'estensioni: [[$2|thumb]]
-* Nomu dû file carricatu: '''<tt>[[:$1]]</tt>'''
-* Nome dû file esistenti: '''<tt>[[:$2]]</tt>'''
+* Nomu dû file carricatu: <strong>[[:$1]]</strong>
+* Nomu dû file esistenti: <strong>[[:$2]]</strong>
 Pi favuri scegghiti n'àutru nomu.",
 'fileexists-thumbnail-yes'    => "Lu file carricato sembra èssiri lu risurtatu di n'antiprima ''(thumbnail)''. [[$1|thumb]]
-Virificari, pi cunfruntu, lu file '''<tt>[[:$1]]</tt>'''.
+Virificari, pi cunfruntu, lu file <strong>[[:$1]]</strong>.
 Siduu si tratta dâ stissa mmagini, nte dimenzioni urigginali, nun è nicissariu carricara àutri antiprimi.",
-'file-thumbnail-no'           => "Lu nomu dô file accumenza cu '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "Lu nomu dô file accumenza cu <strong>$1</strong>.
 Pari quinni èssiri lu risurtatu di n'antiprima ''(thumbnail)''.
 Siddu si disponi dâ mmàggini ntâ risuluzzioni urigginali, si prega di carricàrila. 'N casu cuntrariu, si prega di canciari lu nomu dô file.",
 'fileexists-forbidden'        => "Nu file cu stu nomu asisti già e nun pò essiri sovrascrittu. Turnari n'arreri e canciari lu nomu cu lu quali carricari lu file. [[File:$1|thumb|center|$1]]",
@@ -1423,6 +1444,7 @@ PICT # arcuni
 'upload-curl-error28-text' => 'Lu situ rimotu hà mpiegatu troppu tempu a arrispùnniri. Virificari ca lu situ è attivu, attènniri quarchi minutu e pruvari di novu, eventuarmenti nta un mumentu di tràfficu nicu.',
 
 'license'            => "Licenza d'usu:",
+'license-header'     => "Licenza d'usu:",
 'nolicense'          => 'Nudda silizzioni',
 'license-nopreview'  => '(Antiprima nun disponibbili)',
 'upload_source_url'  => '(na URL curretta e accissìbbili)',
@@ -1459,7 +1481,7 @@ Pi canciari l'urdinamentu, fari clic supra a la ntistazzioni dâ culonna scigghi
 'filehist-filesize'         => 'Dimensioni dû file',
 'filehist-comment'          => 'Oggettu',
 'filehist-missing'          => 'File mancanti',
-'imagelinks'                => "Pàggini c'ùsanu sta mmàggini",
+'imagelinks'                => 'Usu dû file',
 'linkstoimage'              => '{{PLURAL:$1|La pàggina siquenti richiàma|Li $1 pàggini siquenti richiàmanu}} sta mmàggini:',
 'linkstoimage-more'         => 'Chiossai di $1 {{PLURAL:$1|pàggina punta|pàggini pùntanu}} a stu file.
 Di sècutu sunnu alincati sulu {{PLURAL:$1|la prima pàggina ca punta|li primi $1 pàggini ca pùntanu}} a stu file.
@@ -1508,7 +1530,7 @@ Appressu veni ammustrata la discrizioni prisenti nâ [$2 paggina di discrizzioni
 
 # MIME search
 'mimesearch'         => "Circata 'n basi a lu tipu MIME",
-'mimesearch-summary' => "Sta pàggina cunzenti di filtrari li file 'n basi a lu tipu MIME. Nziriri la stringa di ricerca ntâ forma tipu/suttatipu, p'asempiu <tt>image/jpeg</tt>.",
+'mimesearch-summary' => "Sta pàggina cunzenti di filtrari li file 'n basi a lu tipu MIME. Nziriri la stringa di ricerca ntâ forma tipu/suttatipu, p'asempiu <code>image/jpeg</code>.",
 'mimetype'           => 'Tipu MIME:',
 'download'           => 'scarica',
 
@@ -1620,7 +1642,7 @@ Li redirect <del>cancillati</del> furunu curretti.',
 'listusers-editsonly'     => 'Ammustra sulu utenti cu cuntribbuti',
 'listusers-creationsort'  => 'Ordina pi data di criazioni',
 'usereditcount'           => '$1 {{PLURAL:$1|cuntribbutu|cuntribbuti}}',
-'usercreated'             => 'Creatu lu $1 ê $2',
+'usercreated'             => '{{GENDER:$3|Criatu/a}} lu $1 ê $2',
 'newpages'                => 'pàggini cchiù ricenti',
 'newpages-username'       => 'Utenti:',
 'ancientpages'            => 'pàggini cchiù vecchi',
@@ -1689,9 +1711,9 @@ Talìa macari li [[Special:WantedCategories|catigurìi addumannati]].',
 'linksearch'       => 'Lijami di fora',
 'linksearch-pat'   => 'Mudellu di circata:',
 'linksearch-ns'    => 'Namespace:',
-'linksearch-ok'    => 'Cerca',
+'linksearch-ok'    => 'Arriscedi',
 'linksearch-text'  => 'C\'è la pussibbilitati di fari usu di metacaràttiri, p\'asèmpiu "*.wikipedia.org".<br />
-Protucolli suppurtati: <tt>$1</tt>',
+Protucolli suppurtati: <code>$1</code>',
 'linksearch-line'  => '$1 prisenti ntâ pàggina $2',
 'linksearch-error' => 'Li metacaràttiri si ponnu usari sulu a lu princìpiu dû nnirizzu.',
 
@@ -1703,7 +1725,7 @@ Protucolli suppurtati: <tt>$1</tt>',
 
 # Special:ActiveUsers
 'activeusers'            => 'Lista dî utenti attivi',
-'activeusers-count'      => '$1 recent {{PLURAL:$1|canciamento|canciamenti ricenti}}',
+'activeusers-count'      => "$1 {{PLURAL:$1|canciamentu|canciamenti}} nti {{PLURAL:$3|l'ùrtimu jornu| nti l'ùrtimi $3 jorna}}",
 'activeusers-from'       => 'Ammustra li utenti a pàrtiri da:',
 'activeusers-hidebots'   => 'Bot ammucciati',
 'activeusers-hidesysops' => 'Amministratura ammucciati',
@@ -1731,7 +1753,7 @@ Protucolli suppurtati: <tt>$1</tt>',
 'listgrouprights-addgroup-self-all'    => 'Junci tutti li gruppa ô propriu account',
 'listgrouprights-removegroup-self-all' => 'Può livari tutti li gruppi dô propriu account',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'Nuddu ndirizzu cui mannari lu missaggiu',
 'mailnologintext'  => 'Hai a fari lu [[Special:UserLogin|login]] e aver riggistratu na casella e-mail vàlida ntê tò [[Special:Preferences|prifirenzi]] pi mannari posta alittrònica a àutri Utenti.',
 'emailuser'        => "Manna n'imail a stu utenti",
@@ -1756,8 +1778,9 @@ Protucolli suppurtati: <tt>$1</tt>',
 'emailuserfooter'  => 'Sta e-mail fu mannata di $1 a $2 attraversu la funzionu "Manna nu missàggiu e-mail a l\'utenti" supra {{SITENAME}}.',
 
 # Watchlist
-'watchlist'            => 'Lista taliata mia',
+'watchlist'            => 'Taliati spiciali',
 'mywatchlist'          => 'Lista taliata mia',
+'watchlistfor2'        => 'Pi $1, $2',
 'nowatchlist'          => "Nun hai innicatu pàggini a tèniri d'occhiu.",
 'watchlistanontext'    => "Pi visualizzari e canciari l'alencu di l'ossirvati spiciali è nicissariu $1.",
 'watchnologin'         => 'Nun hai effittuatu lu login',
@@ -1969,17 +1992,18 @@ $1',
 'undelete-show-file-submit'    => 'Si',
 
 # Namespace form on various pages
-'namespace'      => 'Tipu di pàggina:',
-'invert'         => 'scancia la silizzioni',
-'blanknamespace' => '(Principali)',
+'namespace'             => 'Tipu di pàggina:',
+'invert'                => 'scancia la silizzioni',
+'namespace_association' => 'Namespace assuciatu',
+'blanknamespace'        => '(Principali)',
 
 # Contributions
 'contributions'       => 'cuntribbuti',
 'contributions-title' => 'Cuntribbuti di $1',
-'mycontris'           => 'Li mei cuntribbuti',
+'mycontris'           => 'Li mè cuntribbuti',
 'contribsub2'         => 'Pi $1 ($2)',
 'nocontribs'          => 'Secunnu sti criteri nun ci sunnu canci o cuntribbuti.',
-'uctop'               => '(ùrtima pi la pàggina)',
+'uctop'               => '(attuali)',
 'month'               => 'A pàrtiri dô mese (e pricidenti):',
 'year'                => "A pàrtiri di l'annu (e pricidenti):",
 
@@ -1988,12 +2012,14 @@ $1',
 'sp-contributions-newbies-title' => "Cuntribbuti di l'utenti novi",
 'sp-contributions-blocklog'      => 'log dî blocchi',
 'sp-contributions-deleted'       => 'cuntribbuti utenti scancillati',
+'sp-contributions-uploads'       => 'file carricati',
 'sp-contributions-logs'          => 'riggistri',
 'sp-contributions-talk'          => 'discussioni',
 'sp-contributions-userrights'    => 'gistioni dî dritti utenti',
 'sp-contributions-search'        => 'Ricerca cuntribbuti',
 'sp-contributions-username'      => 'Nnirizzu IP o nomu utenti:',
-'sp-contributions-submit'        => 'Ricerca',
+'sp-contributions-toponly'       => "Ammuccia sulu li cuntribbuta ca sunnu l'ùrtimi rivisioni pâ pàggina",
+'sp-contributions-submit'        => 'Risciduta',
 
 # What links here
 'whatlinkshere'            => 'Chi punta ccà',
@@ -2004,14 +2030,14 @@ $1',
 'nolinkshere-ns'           => "Nun ci sugnu pàggini chi puntano a '''[[:$1]]''' ntô namespace silizziunatu.",
 'isredirect'               => 'pàggina di rinnirizzamentu',
 'istemplate'               => 'nchiusioni',
-'isimage'                  => 'link mmàggini',
+'isimage'                  => 'liami dû file',
 'whatlinkshere-prev'       => '{{PLURAL:$1|pricidenti|pricidenti $1}}',
 'whatlinkshere-next'       => '{{PLURAL:$1|succissivu|succissivi $1}}',
 'whatlinkshere-links'      => '← liami',
 'whatlinkshere-hideredirs' => '$1 redirect',
 'whatlinkshere-hidetrans'  => '$1 nclusioni',
 'whatlinkshere-hidelinks'  => '$1 link',
-'whatlinkshere-hideimages' => '$1 link di mmàggini',
+'whatlinkshere-hideimages' => '$1 liami di files',
 'whatlinkshere-filters'    => 'Filtri',
 
 # Block/unblock
@@ -2040,6 +2066,7 @@ $1',
 'ipbotherreason'                  => 'Àutri mutivi/dittagghi:',
 'ipbhidename'                     => 'Ammuccia lu nomu utenti dê canciamenti e dê listi',
 'ipbwatchuser'                    => "Talìa li pàggini e li discussioni utenti di st'utenti",
+'ipb-disableusertalk'             => 'Nun pirmettiri a stu utilizzaturi di canciari la sò pàggina di discussioni na mentri ca è bluccatu',
 'ipb-change-block'                => "Ri-blocca l'utilizzaturi cu sti mpustazzioni",
 'badipaddress'                    => 'Ndirizzu IP nun vàlidu.',
 'blockipsuccesssub'               => 'Bloccu esiquitu',
@@ -2055,9 +2082,9 @@ Pi maggiuri nfurmazzioni, talìa la [[Special:BlockList|lista di l'IP bluccati]]
 'ipusubmit'                       => 'Leva stu bloccu',
 'unblocked'                       => "L'utenti [[User:$1|$1]] hà statu sbluccatu",
 'unblocked-id'                    => 'Lu bloccu $1 hà statu cacciatu',
-'ipblocklist'                     => 'Utenti e nnirizzi IP bluccati',
+'ipblocklist'                     => 'Utiloizzatura bluccati',
 'ipblocklist-legend'              => "Atrova n'utenti bluccatu",
-'ipblocklist-submit'              => 'Ricerca',
+'ipblocklist-submit'              => 'Risciduta',
 'infiniteblock'                   => 'nfinitu',
 'expiringblock'                   => 'scadi lu $1 ê $2',
 'anononlyblock'                   => 'sulu anònimi',
@@ -2126,6 +2153,14 @@ Pi maggiuri nfurmazzioni, talìa la [[Special:BlockList|lista di l'IP bluccati]]
 'movepagetext'                 => "Usannu lu mòdulu ccà sutta vui canciati lu nomu dâ pàggina, e spustati tutta la sò storia versu la pàggina nova. Lu tìtulu vecchiu addiventa na pàggina di ''redirect'' versu lu tìtulu novu.
 Li liami â pàggina vecchia nun càncianu.
 Assicuràtivi ca lu spustamentu nun havi criatu [[Special:DoubleRedirects|redirect duppi]] o [[Special:BrokenRedirects|redirect rumputi]]. Vui siti rispunzàbbili dî liami chi avìssiru a puntari â pàggina giusta.
+
+La pàggina '''nun''' è spustata siddu cc'è già na pàggina cu lu tìtulu novu, tranni chi la pàggina 'n chistioni è vacanti o è na pàggina di ''redirect'' e nun havi n'archiviu di canciamenti.
+Chistu signìfica chi vui putiti rinuminari la pàggina cu lu nomu vecchiu si aviti sbagghiatu, e chi nun putiti suprascrìviri nta na pàggina chi esisti già.
+
+'''Accura!'''
+Chistu pò èssiri nu canciamentu dràsticu pi na pàggina pupulari; aviti a èssiri sicuri di capiri li cunziquenzi prima di cuntinuari.",
+'movepagetext-noredirectfixer' => "Usannu lu mòdulu ccà sutta vui canciati lu nomu dâ pàggina, e spustati tutta la sò storia versu la pàggina nova. Lu tìtulu vecchiu addiventa na pàggina di rinnirizzamentu versu lu tìtulu novu. 
+Assicuràtivi ca lu spustamentu nun criau [[Special:DoubleRedirects|redirect duppi]] o [[Special:BrokenRedirects|redirect rumputi]]. Vui siti rispunzàbbili dî liami chi avìssiru a puntari â pàggina giusta.
 
 La pàggina '''nun''' è spustata siddu cc'è già na pàggina cu lu tìtulu novu, tranni chi la pàggina 'n chistioni è vacanti o è na pàggina di ''redirect'' e nun havi n'archiviu di canciamenti.
 Chistu signìfica chi vui putiti rinuminari la pàggina cu lu nomu vecchiu si aviti sbagghiatu, e chi nun putiti suprascrìviri nta na pàggina chi esisti già.
@@ -2213,7 +2248,7 @@ Nta st'ùrtimu casu si pò macari utilizzari un culligamentu, p'asempiu [[{{#Spe
 'allmessagesdefault'            => 'Testu pridifinitu',
 'allmessagescurrent'            => 'Testu attuali',
 'allmessagestext'               => "Chista è na lista di missaggi di sistema chi s'attròvanu sutta MediaWiki:''nomu''.
-Visita [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] e [//translatewiki.net translatewiki.net] si voi cuntribbuiri â localizzazioni generica di MediaWiki.",
+Visita [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] e [//translatewiki.net translatewiki.net] si voi cuntribbuiri â localizzazioni generica di MediaWiki.",
 'allmessagesnotsupportedDB'     => "'''{{ns:special}}:Allmessages''' nun è suppurtatu pirchì lu flag '''\$wgUseDatabaseMessages''' nun è attivu.",
 'allmessages-filter-legend'     => 'Filtru',
 'allmessages-filter'            => 'Filtru pi statu di canciamentu:',
@@ -2302,8 +2337,8 @@ Visita [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] e [//trans
 'tooltip-ca-watch'                => 'Agghiunci sta pàggina â tò lista di ossirvati spiciali',
 'tooltip-ca-unwatch'              => 'Elìmina sta pàggina dâ tò lista di ossirvati spiciali',
 'tooltip-search'                  => "Cerca 'n {{SITENAME}}",
-'tooltip-search-go'               => 'Vai a na pàggina cu chistu nomu esattu si asisti',
-'tooltip-search-fulltext'         => 'Attrova pàggini pi chistu testu',
+'tooltip-search-go'               => 'Vai a na pàggina cu chistu nomu esattu siddu asisti',
+'tooltip-search-fulltext'         => 'Arriscedi pàggini pi chistu testu',
 'tooltip-p-logo'                  => 'Pàggina principali',
 'tooltip-n-mainpage'              => 'Vìsita la pàggina principali',
 'tooltip-n-mainpage-description'  => 'Talìa la pàggina principali',
@@ -2343,6 +2378,7 @@ Visita [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] e [//trans
 'tooltip-rollback'                => '"Rollback" annulla li canci di l\'ùrtinu cuntribbuturi â sta pâggina cu nu sulu clic.',
 'tooltip-undo'                    => '"Annulla" pirmetti di annullari sta mudìfica e grapi lu mòdulu di mudifica ntâ mudalità di antiprima. Pirmetti di nsiriri na mutivazziopni nti l\'uggettu dâ mudifica.',
 'tooltip-preferences-save'        => 'Sarva prifirenzi',
+'tooltip-summary'                 => 'Nsiriri na sintisi curta',
 
 # Stylesheets
 'common.css'   => "/* Li stili CSS nziriti ccà s'àpplicanu a tutti li skin */",
@@ -2450,7 +2486,7 @@ Li lijami succissivi, supra la stissa riga, sunnu cunzidirati comu eccizzioni (p
 'metadata-help'     => 'Stu file cunteni nfurmazzioni agghiuntivi, prubbabbirmenti junti dâ fotucàmira o dû scanner usati pi criàrila o diggitalizzàrila. Siddu lu file hà statu canciatu, arcuni dittagghi putìssiru nun currispùnniri â rialitati.',
 'metadata-expand'   => 'Ammustra dittagghi',
 'metadata-collapse' => 'Ammuccia dittagghi',
-'metadata-fields'   => "Li campi rilativi a li metadati EXIF alincati 'n stu missaggiu vèninu ammustrati supra la pàggina dâ mmàggini quannu la tabbella dî metadati è prisintata ntâ forma brivi. Pi mpustazzioni pridifinita, l'àutri campi vèninu ammucciati.
+'metadata-fields'   => "Li campi rilativi a li metadati di la mmàggini alincati 'n stu missaggiu vèninu ammustrati supra la pàggina dâ mmàggini quannu la tabbella dî metadati è prisintata ntâ forma brivi. Pi mpustazzioni pridifinita, l'àutri campi vèninu ammucciati.
 * make
 * model
 * datetimeoriginal
@@ -2733,14 +2769,14 @@ Li lijami succissivi, supra la stissa riga, sunnu cunzidirati comu eccizzioni (p
 
 # External editor support
 'edit-externally'      => 'Cancia stu file usannu un prugramma sternu',
-'edit-externally-help' => "Pi chiossai nfurmazzioni cunzurtari l'[//www.mediawiki.org/wiki/Manual:External_editors istruzzioni] ('n ngrisi)",
+'edit-externally-help' => "Pi chiossai nfurmazzioni cunzurtari l'[https://www.mediawiki.org/wiki/Manual:External_editors istruzzioni] ('n ngrisi)",
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tutti',
 'namespacesall' => 'Tutti',
 'monthsall'     => 'tutti',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'Cunferma ndirizzu e-mail',
 'confirmemail_noemail'     => 'Nun hà statu ndicatu un ndirizzu e-mail vàlidu ntê propi [[Special:Preferences|prifirenzi]].',
 'confirmemail_text'        => "Stu situ richiedi la virìfica di l ndirizzu e-mail prima di putiri usari li funzioni cunnessi a l'email. Prèmiri lu pulsanti ccà sutta pi mannari na richiesta di cunferma a lu propiu ndirizzu; ntô missaggiu è prisenti un culligamenti ca cunteni un còdici. Visitari lu culligamentu cu lu propiu browser pi cunfirmari ca lu ndirizzu e-mail è vàlidu.",
@@ -2933,7 +2969,7 @@ Mèttiri lu nomu dû file senza lu prifissu "{{ns:file}}:"',
 'tags-description-header' => 'Discrizzioni cumpleta dô significatu',
 'tags-hitcount-header'    => 'Canciamenti che hanno tag',
 'tags-edit'               => 'cancia',
-'tags-hitcount'           => '1 {{PLURAL:$1|canciamento|canciamenti}}',
+'tags-hitcount'           => '$1 {{PLURAL:$1|canciamentu|canciamenti}}',
 
 # Database error messages
 'dberr-header'      => 'Sta wiki havi nu prublema',
@@ -2951,13 +2987,26 @@ Mèttiri lu nomu dû file senza lu prifissu "{{ns:file}}:"',
 'htmlform-float-invalid'       => "Lu valuri c'hai spicificatu nun è nu nnummuru.",
 'htmlform-int-toolow'          => 'Lu valori spicificatu è sutta lu minimu di $1',
 'htmlform-int-toohigh'         => 'Lu valori spicificatu è supra lu minimu di $1',
-'htmlform-submit'              => 'Invia',
-'htmlform-reset'               => 'Annulla canciamenti',
-'htmlform-selectorother-other' => 'Autri',
+'htmlform-required'            => 'Stu valuri è addumannatu',
+'htmlform-submit'              => 'Mànna',
+'htmlform-reset'               => 'Annulla li canciamenti',
+'htmlform-selectorother-other' => 'Àutru',
 
 # New logging system
-'revdelete-restricted'   => 'ristrizzioni ai suli amministratura attivate',
-'revdelete-unrestricted' => 'ristrizzioni pi suli amministraturi rimossi',
-'newuserlog-byemail'     => 'password mannata via mail',
+'logentry-delete-delete'   => '$1 cancillau la pàggina $3',
+'revdelete-restricted'     => 'ristrizzioni ai suli amministratura attivate',
+'revdelete-unrestricted'   => 'ristrizzioni pi suli amministraturi rimossi',
+'logentry-move-move'       => '$1 spustau la pàggina $3 a $4',
+'logentry-newusers-create' => '$1 criau na utenza',
+'newuserlog-byemail'       => 'password mannata via mail',
+
+# API errors
+'api-error-nomodule'     => 'Erruri nternu: nun fu mpustatu lu mòdulu di carricamentu',
+'api-error-ok-but-empty' => 'Erruri ntenru: nudda risposta dû server',
+'api-error-overwrite'    => 'Suprascriviri nu file ca nun esisti nun è cunsitutu',
+'api-error-stashfailed'  => 'Erruri nternu: lu server nun arrinisciu a mimurizzari lu ducumentu timpuraniu',
+'api-error-timeout'      => 'Lu server nun arrispunniu ntô tempu privistu',
+'api-error-unclassified' => "S'avvirificau n'erruri scanusciutu",
+'api-error-unknown-code' => 'Erruri scanusciuti: "$1$".',
 
 );

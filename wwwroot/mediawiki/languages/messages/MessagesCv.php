@@ -11,7 +11,9 @@
  * @author Chavash
  * @author FLAGELLVM DEI
  * @author PCode
+ * @author Salam
  * @author Александр Сигачёв
+ * @author Блокнот
  */
 
 $fallback = 'ru';
@@ -70,6 +72,7 @@ $messages = array(
 'tog-enotifminoredits'        => 'Пĕчĕк улшăнусене те эл. почта урлă пĕлтермелле',
 'tog-enotifrevealaddr'        => 'Асăрхаттару пĕлтерĕвĕсенче ман эл. адреса кăтартмалла',
 'tog-shownumberswatching'     => 'Страницăна миçе хутшăнакан сăнав списокне кĕртнине кăтартмалла',
+'tog-oldsig'                  => 'Хальхи алӑ пусни:',
 'tog-fancysig'                => 'Хăвăр тунă алă пуснин вики-паллисем',
 'tog-externaleditor'          => 'Палăртман чухне тулашри редактора усă курмалла',
 'tog-externaldiff'            => 'Палăртман чухне версисене танлаштарма тулашри программăна усă курмалла',
@@ -155,7 +158,7 @@ $messages = array(
 'category-file-count-limited'    => 'Ку категоринче $1 файл.',
 'listingcontinuesabbrev'         => '(малалли)',
 
-'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff«"]+)$/sD',
+'linkprefix' => '/^((?>.*(?<![a-zA-Z\\\\x80-\\\\xff«"])))(.+)$/sD',
 
 'about'         => 'Ăнлантаркăч',
 'article'       => 'Статья',
@@ -188,6 +191,7 @@ $messages = array(
 'vector-view-edit'         => 'Тӳрлет',
 'vector-view-history'      => 'Кун-çул',
 'vector-view-view'         => 'Вула',
+'vector-view-viewsource'   => 'пуçламăш текста пăх',
 
 'errorpagetitle'    => 'Йăнăш',
 'returnto'          => '$1 страницăна таврăн.',
@@ -211,18 +215,18 @@ $messages = array(
 'deletethispage'    => 'Хурат ăна',
 'undelete_short'    => '$1 тӳрлетӳсене каялла тавăр',
 'protect'           => 'хӳтĕле',
-'protect_change'    => 'хӳтĕлĕве улăштар',
+'protect_change'    => 'улăштар',
 'protectthispage'   => 'Хӳтĕле',
 'unprotect'         => 'Хӳтĕлеве пăрахăçла',
 'unprotectthispage' => 'Хӳтĕлеве пăрахăçла',
 'newpage'           => 'Çĕнĕ статья',
 'talkpage'          => 'Сӳтсе явасси',
-'talkpagelinktext'  => 'Сӳтсе яв',
+'talkpagelinktext'  => 'Сӳтсе явни',
 'specialpage'       => 'Ятарлă страницă',
 'personaltools'     => 'Ман хатĕрсем',
 'postcomment'       => 'Хуравла',
 'articlepage'       => 'Статьяна пăх',
-'talk'              => 'Сӳтсе явасси',
+'talk'              => 'Сӳтсе явни',
 'views'             => 'Пурĕ пăхнă',
 'toolbox'           => 'Ĕç хатĕрĕсем',
 'userpage'          => 'Хутшăнакан страницине пăх',
@@ -580,16 +584,17 @@ $1 хутшăнакан патне, е ытти [[{{MediaWiki:Grouppage-sysop}}|
 'editundo'   => 'пăрахăçла',
 
 # Search results
-'searchresults'      => 'Тупрăмăр',
-'notitlematches'     => 'Статьясен ячĕсем пĕр пек мар',
-'textmatches'        => 'Статьясенчи текст пĕрпеклĕхĕ',
-'prevn'              => 'малтанхи {{PLURAL:$1|$1}}',
-'nextn'              => 'малалли {{PLURAL:$1|$1}}',
-'searchhelp-url'     => 'Help:Пулăшу',
-'search-result-size' => '$1 ({{PLURAL:$2|1 сăмах|$2 сăмах}})',
-'showingresults'     => 'Аяларах эсир <b>#$2</b> пуçласа кăтартнă <b>$1</b> йĕркене куратăр.',
-'powersearch'        => 'Анлă шырав',
-'powersearch-legend' => 'Анлă шырав',
+'searchresults'        => 'Тупрăмăр',
+'notitlematches'       => 'Статьясен ячĕсем пĕр пек мар',
+'textmatches'          => 'Статьясенчи текст пĕрпеклĕхĕ',
+'prevn'                => 'малтанхи {{PLURAL:$1|$1}}',
+'nextn'                => 'малалли {{PLURAL:$1|$1}}',
+'searchhelp-url'       => 'Help:Пулăшу',
+'search-result-size'   => '$1 ({{PLURAL:$2|1 сăмах|$2 сăмах}})',
+'showingresults'       => 'Аяларах эсир <b>#$2</b> пуçласа кăтартнă <b>$1</b> йĕркене куратăр.',
+'showingresultsheader' => "{{PLURAL:$5|Результат '''$1'''  '''$3''' хушшинчен|Результатсем'''$1 - $2''' '''$3''' хушшинчен}}  '''$4''' валли",
+'powersearch'          => 'Анлă шырав',
+'powersearch-legend'   => 'Анлă шырав',
 
 # Quickbar
 'qbsettings' => 'Навигаци хăми',
@@ -752,9 +757,13 @@ $1 хутшăнакан патне, е ытти [[{{MediaWiki:Grouppage-sysop}}|
 'file-anchor-link'          => 'Файл',
 'filehist'                  => 'Файл историйĕ',
 'filehist-current'          => 'хальхи',
+'filehist-datetime'         => 'Дата/Вăхăт',
+'filehist-thumb'            => 'Миниатюра',
+'filehist-thumbtext'        => '$1 версийĕн миниатюра ӳкерчĕкĕ',
 'filehist-user'             => 'Хутшăнакан',
+'filehist-dimensions'       => 'Пысăкăш',
 'filehist-comment'          => 'Асăрхав',
-'imagelinks'                => 'Файл çине каçасем',
+'imagelinks'                => 'Файла усă курни',
 'linkstoimage'              => 'Çак страницăсем ку файл çине кăтартаççĕ:',
 'nolinkstoimage'            => 'Ку файл çине кăтартакан страницăсем çук.',
 'uploadnewversion-linktext' => 'Ку файлăн çĕнĕ версине кĕрт',
@@ -889,7 +898,7 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'listgrouprights-group'    => 'Ушкăн',
 'listgrouprights-helppage' => 'Help:Ушкăн прависем',
 
-# E-mail user
+# Email user
 'emailuser'       => 'Хутшăнакана çыру яр... (Письмо участнику)',
 'usermailererror' => 'Электронлă почта урлă пĕлтерӳ янă чухне йăнăш тухрĕ:',
 'noemailtitle'    => 'Электронлă почта адресĕ çук',
@@ -964,6 +973,7 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'viewdeletedpage'        => 'Кăларса пăрахнă страницăсене пăх',
 'undeleterevisions'      => 'Архивра пурĕ $1 верси',
 'undeletebtn'            => 'Каялла тавăр!',
+'undeleteviewlink'       => 'пăх',
 'undeletereset'          => 'Тасат',
 'undeletedrevisions'     => '$1 кăларса пăрахнă тӳрлетӳсене каялла тавăрнă',
 'undelete-search-box'    => 'Кăларса пăрахнă страницăсен хушшинчи шырав',
@@ -1067,22 +1077,29 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'import-logentry-upload' => '«[[$1]]» — файлтан импортла',
 
 # Tooltip help for the actions
-'tooltip-pt-userpage'    => 'Пользователь страници',
-'tooltip-pt-mytalk'      => 'Ман канашлу страници',
-'tooltip-pt-preferences' => 'Сирĕн ĕнерлевсем',
-'tooltip-ca-talk'        => 'Статьяна сӳтсе явасси',
-'tooltip-ca-edit'        => 'Эсир ку страницӑна тӳрлетме пултаратӑр. Тархасшӑн ҫырса хӑваричен страницӑ мӗнле пулассине пӑхӑр.',
-'tooltip-ca-addsection'  => 'Кӗске ӑнлантару хушма пултаратӑр.',
-'tooltip-ca-viewsource'  => 'Ку страницӑна эсир улӑштарма пултараймастӑр. Ӑна мӗнле ҫырнине кӑна пӑхма пултаратӑр.',
-'tooltip-ca-protect'     => 'Улӑшратусенчен сыхласси',
-'tooltip-ca-delete'      => 'Страницӑна кӑларса пӑрахмалли',
-'tooltip-ca-move'        => 'Страницӑна урӑх ҫӗре куҫарасси',
-'tooltip-ca-watch'       => 'Ку страницӑ хыҫҫӑн сӑнама пуҫласси',
-'tooltip-ca-unwatch'     => 'Ку страницӑ хыҫҫӑн урӑх сӑнамалла мар',
-'tooltip-search'         => 'Шырав',
-'tooltip-p-logo'         => 'Тӗп страницӑ',
-'tooltip-save'           => 'Тӳрлетӳсене астуса хăвармалла',
-'tooltip-watch'          => 'Çак страницăна пăхса тăмаллисем шутне хуш',
+'tooltip-pt-userpage'       => 'Сирĕн хутшăнакан страници',
+'tooltip-pt-mytalk'         => 'Сирĕн канашлу страници',
+'tooltip-pt-preferences'    => 'Сирĕн ĕнерлевсем',
+'tooltip-pt-watchlist'      => 'Эсир пăхакан страницисем',
+'tooltip-pt-logout'         => 'Сайтран тух',
+'tooltip-ca-talk'           => 'Статьяна сӳтсе явасси',
+'tooltip-ca-edit'           => 'Эсир ку страницӑна тӳрлетме пултаратӑр. Тархасшӑн ҫырса хӑваричен страницӑ мӗнле пулассине пӑхӑр.',
+'tooltip-ca-addsection'     => 'Çĕнĕ пай ту',
+'tooltip-ca-viewsource'     => 'Ку страницӑна эсир улӑштарма пултараймастӑр. Ӑна мӗнле ҫырнине кӑна пӑхма пултаратӑр.',
+'tooltip-ca-protect'        => 'Улӑшратусенчен сыхласси',
+'tooltip-ca-delete'         => 'Страницӑна кӑларса пӑрахмалли',
+'tooltip-ca-move'           => 'Страницӑна урӑх ҫӗре куҫарасси',
+'tooltip-ca-watch'          => 'Ку страницӑ хыҫҫӑн сӑнама пуҫласси',
+'tooltip-ca-unwatch'        => 'Ку страницӑ хыҫҫӑн урӑх сӑнамалла мар',
+'tooltip-search'            => 'Шырав',
+'tooltip-p-logo'            => 'Тӗп страницӑ',
+'tooltip-feed-atom'         => 'Ку страницăн Atom куçару',
+'tooltip-ca-nstab-image'    => 'Файлăн страници',
+'tooltip-ca-nstab-template' => 'Шаблонăн страници',
+'tooltip-ca-nstab-category' => 'Категори страницине уç',
+'tooltip-save'              => 'Тӳрлетӳсене астуса хăвармалла',
+'tooltip-watch'             => 'Çак страницăна пăхса тăмаллисем шутне хуш',
+'tooltip-summary'           => 'Кĕскĕн ăнлантарса парăр',
 
 # Attribution
 'anonymous'        => '{{GRAMMAR:genitive|{{SITENAME}}}} анонимлă хутшăнакансем',
@@ -1119,6 +1136,9 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'ilsubmit'          => 'Шырамалла',
 'bydate'            => 'дата тăрăх',
 
+# Metadata
+'metadata' => 'Метаданнăйсем:',
+
 # EXIF tags
 'exif-exifversion'     => 'Exif версийĕ',
 'exif-flashpixversion' => 'Ĕçлеме пултаракан FlashPix версийĕ',
@@ -1138,7 +1158,7 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'watchlistall2' => 'пурте',
 'namespacesall' => 'пурте',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail_sent'     => 'Çирĕплетмелли ыйтуллă çырăва ятăмăр.',
 'confirmemail_success'  => 'Сирĕн электронлă почтăн адресне çирĕплентĕ.',
 'confirmemail_loggedin' => 'Сирĕн электронлă почтăн адресне çирĕплетрĕмĕр.',

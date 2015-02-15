@@ -949,7 +949,7 @@ Papira ini [[Special:Watchlist|yu Tan Luku réy]] '''fatu'''.",
 'listusers-submit'   => 'Libi si',
 'listusers-noresult' => 'No masyin dyaso.',
 
-# E-mail user
+# Email user
 'mailnologin'     => 'No stiradresi',
 'emailuser'       => 'E-mail a kebroikiman disi',
 'emailpage'       => 'Mayin e-mail',
@@ -1211,7 +1211,7 @@ Trawan o kibri.
 
 # External editor support
 'edit-externally'      => 'Kenki a file disi ini wan dorosey wrokosani.',
-'edit-externally-help' => 'Luku ini a [//www.mediawiki.org/wiki/Manual:External_editors skorobuku fu den seti] gi moro yepi.',
+'edit-externally-help' => 'Luku ini a [https://www.mediawiki.org/wiki/Manual:External_editors skorobuku fu den seti] gi moro yepi.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'ala',

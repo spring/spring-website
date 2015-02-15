@@ -46,13 +46,13 @@
          * Auth Plug-in
          *
          */
-        require_once './includes/AuthPlugin.php';
+        require_once   dirname( __FILE__ )  . '/../includes/AuthPlugin.php';
 
         /**
          * Auth Plug-in Interface
          *
          */
-        require_once './extensions/iAuthPlugin.php';
+        require_once  dirname( __FILE__ ) .  '/../extensions/iAuthPlugin.php';
 
     }
 
@@ -71,7 +71,7 @@
          *      http://www.openwall.com/phpass/
          *
          */
-        require_once './extensions/PasswordHash.php';
+        require_once  dirname( __FILE__ ) . '/../extensions/PasswordHash.php';
     }
 
     /**

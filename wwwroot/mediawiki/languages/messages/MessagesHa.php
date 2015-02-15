@@ -1,5 +1,5 @@
 <?php
-/** Hausa (هَوُسَ)
+/** Hausa (Hausa)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -493,7 +493,7 @@ Ku gwada tare da amfani da \"all:\" don bincikar duka shafunan (har da shafunan 
 # Special:ListGroupRights
 'listgrouprights-members' => '(jerin mambobi)',
 
-# E-mail user
+# Email user
 'emailuser' => "Aika wa wannan ma'aikaci imel",
 
 # Watchlist
@@ -755,7 +755,7 @@ Idan an sauya fayil kin, to wasu bayannan na ainahi ba za su fito ba sosai a cik
 
 # External editor support
 'edit-externally'      => 'Gyara wannan fayil da wani safuwai daban',
-'edit-externally-help' => '(Duba [//www.mediawiki.org/wiki/Manual:External_editors bayannan shimfiɗawa] don ƙarin bayani)',
+'edit-externally-help' => '(Duba [https://www.mediawiki.org/wiki/Manual:External_editors bayannan shimfiɗawa] don ƙarin bayani)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'duka',

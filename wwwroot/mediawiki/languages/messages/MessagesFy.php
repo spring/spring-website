@@ -7,10 +7,12 @@
  * @ingroup Language
  * @file
  *
+ * @author Geitost
  * @author Maartenvdbent
  * @author Purodha
  * @author Pyt
  * @author SK-luuut
+ * @author Shirayuki
  * @author Snakesteuben
  * @author Urhixidur
  * @author לערי ריינהארט
@@ -523,7 +525,7 @@ Ferjit net se oan jo foarkar oan te passen.',
 'logout'                     => 'Ofmelde',
 'userlogout'                 => 'Ofmelde',
 'notloggedin'                => 'Net oanmelde',
-'nologin'                    => "Noch net oanmelden as meidogger? '''$1'''.",
+'nologin'                    => 'Noch net oanmelden as meidogger? $1.',
 'nologinlink'                => 'Meitsje in brûker oan',
 'createaccount'              => 'Nije ynstellings oanmeitsje',
 'gotaccount'                 => "Hawwe jo jo al as meidogger oanmelde? '''$1'''.",
@@ -1261,9 +1263,9 @@ Jo kinne ek oaren de mûglikheid jaan kontakt mei jo op te nimmen troch in ferwi
 Wat oanbean en wat wiske wurdt, wurdt delskreaun yn it [[Special:Log/upload|lochboek]].
 
 Om de triem yn in side op te nimmen, meitsje jo dêr sa'n keppeling:
-*'''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:jo_foto.jpg]]</nowiki></tt>''', foar grutte ferzje,
-*'''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:jo_logo.png|omskriuwing]]</nowiki></tt>''' foar 200 in piksel ferzje, mei 'alternative tekst' as beskriuwing, of
-*'''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:jo_lûd.ogg]]</nowiki></tt>''', foar direkt keppeling nei de triem (sûnder byld).",
+*'''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:jo_foto.jpg]]</nowiki></code>''', foar grutte ferzje,
+*'''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:jo_logo.png|omskriuwing]]</nowiki></code>''' foar 200 in piksel ferzje, mei 'alternative tekst' as beskriuwing, of
+*'''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:jo_lûd.ogg]]</nowiki></code>''', foar direkt keppeling nei de triem (sûnder byld).",
 'upload-permitted'            => 'Talitten triemtypen: $1.',
 'upload-preferred'            => 'Oanwiisde triemtypen: $1.',
 'upload-prohibited'           => 'Ferbeane triemtypen: $1.',
@@ -1295,20 +1297,20 @@ Jou de triem in oare namme en besykje him dan op\'e nij heech te laden.',
 'emptyfile'                   => "De triem dy jo heechladen hawwe liket leech te wêzen.
 Dat soe komme kinne fan in typflater yn 'e triemnamme.
 Gean nei oft jo dizze triem wier bedoelden heech te laden.",
-'fileexists'                  => "Der bestiet al in triem mei dizze namme.
-Kontrolearje '''<tt>[[:$1]]</tt>''' as jo net wis binne oft jo de besteande triem oerskriuwe wolle.
-[[$1|thumb]]",
-'filepageexists'              => "De beskriuwingsside foar dizze triem bestiet al op '''<tt>[[:$1]]</tt>''', mar der bestiet gjin triem mei dizze namme.
+'fileexists'                  => 'Der bestiet al in triem mei dizze namme.
+Kontrolearje <strong>[[:$1]]</strong> as jo net wis binne oft jo de besteande triem oerskriuwe wolle.
+[[$1|thumb]]',
+'filepageexists'              => "De beskriuwingsside foar dizze triem bestiet al op <strong>[[:$1]]</strong>, mar der bestiet gjin triem mei dizze namme.
 De gearfetting dy't jo opjûn hawwe sil net op 'e beskriuwingsside ferskine.
 Bewurkje de side mei de hân om de beskriuwing dêr wer te jaan.",
 'fileexists-extension'        => "In triem mei deselde namme bestiet al: [[$2|thumb]]
-* Namme fan 'e heechladene triem: '''<tt>[[:$1]]</tt>'''
-* Namme fan 'e besteande triem: '''<tt>[[:$2]]</tt>'''
+* Namme fan 'e heechladene triem: <strong>[[:$1]]</strong>
+* Namme fan 'e besteande triem: <strong>[[:$2]]</strong>
 Kies in oare namme.",
 'fileexists-thumbnail-yes'    => "De triem liket in ferlytse ferzje te wêzen ''(miniatuerôfbylding)''. [[$1|thumb]]
-Kontrolearje de triem '''<tt>[[:$1]]</tt>'''.
+Kontrolearje de triem <strong>[[:$1]]</strong>.
 As de kontrolearre triem deselde ôfbylding fan deselde grutte is, dan hoecht net in ekstra miniatuerôfbylding oanbean te wurden.",
-'file-thumbnail-no'           => "De triemnamme begjint mei '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "De triemnamme begjint mei <strong>$1</strong>.
 It liket in ferlytse ôfbylding te wêzen ''(miniatuerôfbylding)''.
 As jo dy ôfbylding yn folsleine resolúsje hawwe, bied him dan oan.
 Feroarje oars de triemnamme.",
@@ -1357,12 +1359,12 @@ PICT # ferskaat
 'upload-proto-error-text' => "Oanbieden mei dizze metoade freget URL's dy't begjinne mei <code>http://</code> of <code>ftp://</code>.",
 'upload-file-error'       => 'Ynterne fout',
 'upload-file-error-text'  => "Der wie in ynterne fout doe't in tydlike triem op'e server oanmakke waard.
-Nim kontakt op mei in [[Special:ListUsers/sysop|systeembehearder]].",
+Nim kontakt op mei in [[Special:ListUsers/sysop|behearder]].",
 'upload-misc-error'       => 'Unbekende oanbiedfout',
 'upload-misc-error-text'  => 'Der is by it oanbieden in ûnbekende fout optreden.
 Kontrolearje of de URL krekt en beskikber is en besykje it nochris.
 As it probleem oanhâldt, nim dan kontakt op mei in
-[[Special:ListUsers/sysop|systeembehearder]].',
+[[Special:ListUsers/sysop|behearder]].',
 'upload-unknown-size'     => 'Unbekinde grutte',
 
 # Some likely curl errors. More could be added from <http://curl.haxx.se/libcurl/c/libcurl-errors.html>
@@ -1457,7 +1459,7 @@ Der is ek in [[Special:WhatLinksHere/$2|folsleine list]].',
 # MIME search
 'mimesearch'         => 'Sykje op MIME-type',
 'mimesearch-summary' => 'Dizze side makket it filterjen mûglik fan triemmen foar it MIME-type.
-Ynfier: contenttype/subtype, bygelyks <tt>image/jpeg</tt>.',
+Ynfier: contenttype/subtype, bygelyks <code>image/jpeg</code>.',
 'mimetype'           => 'MIME-type:',
 'download'           => 'oanbiede',
 
@@ -1638,7 +1640,7 @@ Sjuch ek [[Special:WantedCategories|net-besteande kategoryen mei ferwizings]].',
 'linksearch-ns'    => 'Nammerûmte:',
 'linksearch-ok'    => 'Sykje',
 'linksearch-text'  => 'Wildcards lykas "*.wikipedia.org" of "*.org" binne tastien.<br />
-Stipe protokollen: <tt>$1</tt>',
+Stipe protokollen: <code>$1</code>',
 'linksearch-line'  => '$1 hat in ferwizing yn $2',
 'linksearch-error' => 'Wildcards binne allinne tastien oan it begjin fan in hostnamme.',
 
@@ -1669,7 +1671,7 @@ Der kin [[{{MediaWiki:Listgrouprights-helppage}}|ekstra ynformaasje]] oer yndivi
 'listgrouprights-addgroup-all'    => 'Kin brûkers oan alle groepen tafoegje',
 'listgrouprights-removegroup-all' => 'Kin brûkers út alle groepen fuorthelje',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'Gjin adres beskikber',
 'mailnologintext'  => 'Jo moatte [[Special:UserLogin|oanmelden]] wêze, en in jildich e-postadres [[Special:Preferences|ynsteld]] hawwe, om oan oare meidoggers e-post stjoere te kinnen.',
 'emailuser'        => 'Skriuw meidogger',
@@ -2032,7 +2034,7 @@ De doelside "[[:$1]]" is der al. Moat dy wiske wurde om plak te meitsjen foar it
 'allmessagesdefault' => 'Standerttekst',
 'allmessagescurrent' => 'Tekst yn de nijste ferzje',
 'allmessagestext'    => 'Dit is in list fan alle systeemberjochten beskikber yn de MediaWiki-nammeromte.
-Sjoch: [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation], [//translatewiki.net translatewiki.net].',
+Sjoch: [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation], [//translatewiki.net translatewiki.net].',
 
 # Thumbnails
 'thumbnail-more'           => 'Fergrutsje',
@@ -2242,14 +2244,14 @@ Alle folgjende links dy't op deselde rigel steane, wurde behannele as útsûnder
 
 # External editor support
 'edit-externally'      => 'Wizigje dizze triem mei in ekstern programma',
-'edit-externally-help' => 'Sjoch de [//www.mediawiki.org/wiki/Manual:External_editors ynstel-hantlieding] foar mear ynformaasje.',
+'edit-externally-help' => 'Sjoch de [https://www.mediawiki.org/wiki/Manual:External_editors ynstel-hantlieding] foar mear ynformaasje.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'alles',
 'namespacesall' => 'alles',
 'monthsall'     => 'alle',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'            => 'Befêstigjen netpostadres',
 'confirmemail_text'       => '{{SITENAME}} freget dat jo jo netpostadres befêstigje eart jo hjir netpost brûke. Brûk de knop hjirûnder om josels in befêstigingskoade ta te stjoeren op it adres dat jo opjûn hawwe. Iepenje de koade dan yn jo blêder om te befêstigjen dat jo netpostadres jildich is.',
 'confirmemail_send'       => 'Stjoer in befêstigingskoade',

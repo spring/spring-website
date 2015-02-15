@@ -8,7 +8,10 @@
  * @file
  *
  * @author Abastillas
+ * @author Dosmiin Barsbold
+ * @author Harvzsf
  * @author Jordz
+ * @author Mirzali
  * @author Palang hernan
  * @author Reedy
  * @author לערי ריינהארט
@@ -415,6 +418,7 @@ Dili karon dayon ma-refresh ang data dinhi.',
 Function: $1<br />
 Query: $2',
 'viewsource'           => 'Tan-awa ang ginikanan',
+'viewsource-title'     => 'Tan-awa ang ginikanan para sa $1',
 'actionthrottled'      => 'Na-throttle ang lihok',
 'actionthrottledtext'  => "Isip anti-spam, gilimitahan ka sa sinagunson nga paghimo niining lihok sa mubong panahon lang, ikaw misobra na sa maong limit.
 Palihog sulayi'g usab sa pipila ka minutos.",
@@ -455,7 +459,7 @@ Ayaw kalimot sa pag-usab sa imong [[Special:Preferences|{{SITENAME}} mga prepere
 'loginprompt'             => 'Kinahanglang naka-enable ang mga koki aron ikaw maka-log-in sa {{SITENAME}}.',
 'userlogin'               => 'Rehistro / Dayon',
 'logout'                  => 'Biya',
-'userlogout'              => 'Biya',
+'userlogout'              => 'Bıveciye',
 'notloggedin'             => 'Wala ka pa masulod',
 'nologin'                 => "Wala pay akawnt? '''$1'''.",
 'nologinlink'             => 'Paghimo og akawnt',
@@ -714,6 +718,7 @@ Hinumdomi nga ang paggamit sa mga sumpay sa nabigasyon mo-reset sa column.',
 'nextn'                     => 'sunod {{PLURAL:$1|$1}}',
 'viewprevnext'              => 'Tan-awa sa ($1 {{int:pipe-separator}} $2) ($3)',
 'searchhelp-url'            => 'Help:Mga sulod',
+'searchprofile-everything'  => 'Tanan ng bagay',
 'search-result-size'        => '$1 ({{PLURAL:$2|1 pulong|$2 ka mga pulong}})',
 'search-redirect'           => '(redirek $1)',
 'search-section'            => '(bahin $1)',
@@ -912,10 +917,14 @@ Ang mga panid sa [[Special:Watchlist|imong gibantayan]] '''nakalugom'''.",
 'uploadlogpage' => 'Log sa upload',
 'uploadedimage' => 'na-upload ang "[[$1]]"',
 
+'license'        => 'Paglilisensya:',
+'license-header' => 'Paglilisensya',
+
 # File description page
 'file-anchor-link'          => 'Payl',
 'filehist'                  => 'Kaagi sa payl',
 'filehist-help'             => 'I-klik ang petsa/oras aron makit-an ang hulagway sa payl niadtong panahona.',
+'filehist-revert'           => 'i-revert',
 'filehist-current'          => 'kasamtangan',
 'filehist-datetime'         => 'Petsa/Takna',
 'filehist-thumb'            => 'Thumbnail',
@@ -978,12 +987,13 @@ Also see [[Special:WantedCategories|wanted categories]].',
 # Special:ListGroupRights
 'listgrouprights-members' => '(talaan sa mga miyembro)',
 
-# E-mail user
+# Email user
 'emailuser' => 'I-email kaning gumagamit',
 
 # Watchlist
 'watchlist'         => 'Akong gibantayan',
 'mywatchlist'       => 'Akong gibantayan',
+'watchlistfor2'     => 'Para sa $1 $2',
 'addedwatchtext'    => "Ang panid \"[[:\$1]]\" nadugang na sa imong [[Special:Watchlist|gibantayan]].
 Ang mga pag-usab puhon sa kining panid ug ang kaubang panid sa hisgot dinhi maitala, ug ang panid mopakita nga '''nakalugom''' sa [[Special:RecentChanges|talaan sa mga bag-ong pag-usab]] aron dali kini pilion.",
 'removedwatchtext'  => 'Ang panid nga "[[:$1]]" natangtang na sa imong [[Special:Watchlist|gibantayan]].',
@@ -1003,6 +1013,7 @@ Ang mga pag-usab puhon sa kining panid ug ang kaubang panid sa hisgot dinhi mait
 'confirmdeletetext'     => 'Imo nang papason ang panid kauban ang tanang kaagi niini.
 Palihog ikompirma nga imo gyud ni buhaton, nga nakasabot ka sa mga puyde idangat niini, ug imo kini gibuhat sumala sa [[{{MediaWiki:Policy-url}}|palisiya]].',
 'actioncomplete'        => 'Nahuman na ang lihok',
+'actionfailed'          => 'Di humana ang galaw',
 'deletedtext'           => 'Ang "$1" napapas na.
 Tan-awa ang $2 para sa rekord sa mga bag-ong napapas.',
 'dellogpage'            => 'Log sa pagtangtang',
@@ -1068,7 +1079,7 @@ Puyde nimo usbon ang level sa proteksyon ning panid, pero dili kini makaapekto s
 'linkshere'                => "Ang mosunod nga mga panid misumpay sa '''[[:$1]]''':",
 'isredirect'               => 'panid sa redirekta',
 'istemplate'               => 'transklusyon',
-'isimage'                  => 'sumpay nga imahen',
+'isimage'                  => 'sumpay sa payl',
 'whatlinkshere-prev'       => '{{PLURAL:$1|miaging|miaging $1}}',
 'whatlinkshere-next'       => '{{PLURAL:$1|sunod|sunod $1}}',
 'whatlinkshere-links'      => '← mga sumpay',
@@ -1152,6 +1163,7 @@ Pwede nimong tan-awon ang ginikanan.',
 'tooltip-search'                  => 'Pangitaa {{SITENAME}}',
 'tooltip-search-go'               => 'Moadto sa panid nga may saktong ngalan kon anaa kini',
 'tooltip-search-fulltext'         => 'Mangita sa mga panid kabahin niining teksto',
+'tooltip-p-logo'                  => 'Bisitaha ang Unang Panid',
 'tooltip-n-mainpage'              => 'Bisitaha ang Unang Panid',
 'tooltip-n-mainpage-description'  => 'Bisitaha ang Unang Panid',
 'tooltip-n-portal'                => 'Kabahin sa proyekto, unsay imong mahimo, asa mangita sa mga impormasyon',
@@ -1227,7 +1239,7 @@ Ang uban default nga nakatago.
 
 # External editor support
 'edit-externally'      => 'Usba kining payl gamit ang eksternal nga aplikasyon',
-'edit-externally-help' => '(Tan-awa ang [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] para sa dugang nga impormasyon)',
+'edit-externally-help' => '(Tan-awa ang [https://www.mediawiki.org/wiki/Manual:External_editors setup instructions] para sa dugang nga impormasyon)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tanan',

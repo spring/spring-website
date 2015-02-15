@@ -238,7 +238,7 @@ fn: {
 	doAction : function( context, action, source ) {
 		// Verify that this has been called from a source that's within the toolbar
 		// 'trackAction' defined in click tracking
-		if ( mw.config.get( 'wgWikiEditorToolbarClickTracking' ) && $.trackAction !== undefined && source.closest( '.wikiEditor-ui-toolbar' ).size() ) {
+		if ( $.trackAction !== undefined && source.closest( '.wikiEditor-ui-toolbar' ).size() ) {
 			// Build a unique id for this action by tracking the parent rel attributes up to the toolbar level
 			var rels = [];
 			var step = source;
@@ -337,9 +337,8 @@ fn: {
 						$.wikiEditor.imgPath + 'toolbar/'
 					);
 					if ( typeof offsetOrIcon == 'object' ) {
-						$button = $( '<a/>' )
+						$button = $( '<span/>' )
 							.attr( {
-								'href' : '#',
 								'alt' : label,
 								'title' : label,
 								'rel' : id,
@@ -462,7 +461,7 @@ fn: {
 					{ expires: 30, path: '/' }
 				);
 				// Click tracking
-				if ( mw.config.get( 'wgWikiEditorToolbarClickTracking' ) && $.trackAction !== undefined ) {
+				if ( $.trackAction !== undefined){
 					$.trackAction(section + '.' + $(this).attr('rel'));
 				}
 				context.fn.restoreCursorAndScrollTop();
@@ -501,11 +500,6 @@ fn: {
 				}
 				if ( 'direction' in page ) {
 					$characters.attr( 'dir', page.direction );
-				} else {
-					// By default it should be explicit ltr for all scripts.
-					// Without this some conjoined ltr characters look
-					// weird in rtl wikis.
-					$characters.attr( 'dir', 'ltr' );
 				}
 				if ( 'characters' in page ) {
 					html = '';
@@ -646,7 +640,7 @@ fn: {
 							} );
 					}
 					// Click tracking
-					if ( mw.config.get( 'wgWikiEditorToolbarClickTracking' ) && $.trackAction !== undefined ) {
+					if ( $.trackAction !== undefined ) {
 						$.trackAction( $section.attr('rel') + '.' + ( show ? 'show': 'hide' )  );
 					}
 					// Save the currently visible section

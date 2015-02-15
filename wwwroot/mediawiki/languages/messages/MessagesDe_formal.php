@@ -1,5 +1,5 @@
 <?php
-/** German (formal address) (‪Deutsch (Sie-Form)‬)
+/** German (formal address) (Deutsch (Sie-Form)‎)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -39,7 +39,7 @@ Bitte warten Sie einige Minuten, bevor Sie es noch einmal versuchen.
 
 $1',
 
-'badaccess-group0' => 'Sie haben nicht die erforderliche Berechtigung für diese Aktion.',
+'badaccess-group0' => 'Sie haben nicht die erforderlichen Benutzerrechte für diese Aktion.',
 
 'youhavenewmessages'      => 'Sie haben $1 ($2).',
 'youhavenewmessagesmulti' => 'Sie haben neue Nachrichten: $1',
@@ -58,12 +58,14 @@ Falls dies nicht der Fall ist, haben Sie eventuell einen Fehler in der Software 
 Bitte versuchen Sie es in ein paar Minuten erneut.',
 'viewsourcetext'      => 'Sie können den Quelltext dieser Seite betrachten und kopieren:',
 'viewyourtext'        => "Sie können den Quelltext '''Ihrer Bearbeitung''' dieser Seite betrachten und kopieren:",
+'protectedinterface'  => 'Diese Seite enthält Text für die Benutzeroberfläche der Software auf diesem Wiki und ist geschützt, um Missbrauch vorzubeugen.
+Nutzen Sie bitte [//translatewiki.net/ translatewiki.net], das Lokalisierungsprojekt von MediaWiki, um Übersetzungen für alle Wikis hinzuzufügen oder zu ändern.',
 'editinginterface'    => "'''Warnung:''' Diese Seite enthält von der MediaWiki-Software genutzten Text.
-Änderungen auf dieser Seite wirken sich auf die Benutzeroberfläche aus.
-Ziehen Sie bitte im Fall von Übersetzungen in Betracht, diese bei [//translatewiki.net/wiki/Main_Page?setlang=de-formal translatewiki.net], der Lokalisierungsplattform für MediaWiki, durchzuführen.",
+Änderungen auf dieser Seite wirken sich auf die Benutzeroberfläche dieses Wikis aus.
+Nutzen Sie bitte [//translatewiki.net/ translatewiki.net], das Lokalisierungsprojekt von MediaWiki, um Übersetzungen für alle Wikis hinzuzufügen oder zu ändern.",
 'namespaceprotected'  => "Sie haben nicht die erforderliche Berechtigung, um Seiten im Namensraum '''$1''' bearbeiten zu können.",
 'customcssprotected'  => 'Sie haben nicht die Berechtigung diese CSS enthaltende Seite zu bearbeiten, da sie die persönlichen Einstellungen eines anderen Benutzers enthält.',
-'customjsprotected'   => 'Sie haben nicht die Berechtigung diese JavaScript enthaltende Seite zu bearbeiten, da sie die persönlichen Einstellungen eines anderen Benutzers enthält.',
+'customjsprotected'   => 'Sie haben nicht die Berechtigung, diese JavaScript enthaltende Seite zu bearbeiten, da es sich hierbei um die persönlichen Einstellungen eines anderen Benutzers handelt.',
 
 # Login and logout pages
 'logouttext'                 => "'''Sie sind nun abgemeldet.'''
@@ -72,8 +74,8 @@ Sie können {{SITENAME}} jetzt anonym weiternutzen, oder sich erneut unter demse
 Beachten Sie, dass einige Seiten noch anzeigen können, dass Sie angemeldet sind, solange Sie nicht Ihren Browsercache geleert haben.",
 'welcomecreation'            => '== Willkommen, $1! ==
 
-Ihr Benutzerkonto wurde eingerichtet.
-Vergessen Sie nicht, Ihre [[Special:Preferences|{{SITENAME}}-Einstellungen]] anzupassen.',
+Ihr Benutzerkonto wurde soeben eingerichtet.
+Vergessen Sie nicht, Ihre [[Special:Preferences|Einstellungen]] anzupassen.',
 'yourdomainname'             => 'Ihre Domain:',
 'externaldberror'            => 'Entweder es liegt ein Fehler bei der externen Authentifizierung vor oder Sie dürfen Ihr externes Benutzerkonto nicht aktualisieren.',
 'nologin'                    => "Sie haben kein Benutzerkonto? '''$1'''.",
@@ -119,7 +121,7 @@ Besucher, die diese IP-Adresse verwenden, können momentan keine Benutzerkonten 
 
 Falls das Benutzerkonto irrtümlich angelegt wurde, können Sie diese Nachricht ignorieren.',
 'login-throttled'            => 'Sie haben zu oft versucht, sich anzumelden.
-Bitte warten Sie, bevor Sie es erneut probierst.',
+Bitte warten Sie, bevor Sie es erneut probieren.',
 
 # Change password dialog
 'resetpass_announce'      => 'Anmeldung mit dem per E-Mail zugesandten Code. Um die Anmeldung abzuschließen, müssen Sie jetzt ein neues Passwort wählen.',
@@ -130,15 +132,21 @@ Bitte warten Sie, bevor Sie es erneut probierst.',
 Möglicherweise haben Sie Ihr Passwort bereits erfolgreich geändert oder ein neues temporäres Passwort beantragt.',
 
 # Special:PasswordReset
-'passwordreset-text'           => 'Bitte dieses Formular ausfüllen, um per E-Mail eine Erinnerung zu den Anmeldeinformationen Ihres Benutzerkontos zu erhalten.',
-'passwordreset-capture-help'   => 'Sofern Sie dieses Kästchen ankreuzen, wird die E-Mail-Nachricht mit dem temporären Passwort, sowohl Ihnen angezeigt, als auch dem Benutzer zugesandt.',
-'passwordreset-emailtext-ip'   => 'Jemand mit der IP-Adresse $1, wahrscheinlich Sie selbst, hat eine Erinnerung an Ihre Benutzerkonteninformationen für {{SITENAME}} angefordert ($4). {{PLURAL:$3|Das folgende Benutzerkonto ist|Die folgenden Benutzerkonten sind}} mit dieser E-Mail-Adresse verknüpft:
+'passwordreset-text'           => 'Bitte dieses Formular ausfüllen, um Ihr Passwort zurückzusetzen.',
+'passwordreset-pretext'        => '{{PLURAL:$1||Geben Sie eines der folgenden Daten ein.}}',
+'passwordreset-capture-help'   => 'Wenn Sie dieses Kästchen ankreuzen, wird die E-Mail-Nachricht mit dem temporären Passwort sowohl Ihnen angezeigt als auch dem Benutzer zugesandt.',
+'passwordreset-emailtext-ip'   => 'Jemand mit der IP-Adresse $1, wahrscheinlich Sie selbst, hat eine Zurücksetzung Ihres
+Passworts bei {{SITENAME}} angefordert ($4). {{PLURAL:$3|Das folgende Benutzerkonto ist|Die folgenden Benutzerkonten sind}}
+mit dieser E-Mail-Adresse verknüpft:
 
 $2
 
 {{PLURAL:$3|Dieses temporäre Passwort läuft|Diese temporären Passwörter laufen}} innerhalb von {{PLURAL:$5|einem Tag|$5 Tagen}} ab.
-Sie sollten sich anmelden und ein neues Passwort vergeben. Falls jemand anderes diese Anfrage getätigt hat oder Sie sich wieder an Ihr ursprüngliches Passwort erinnern können und es nicht länger ändern möchten, können Sie diese Nachricht ignorieren und weiterhin Ihr altes Passwort benutzen.',
-'passwordreset-emailtext-user' => 'Benutzer $1 auf {{SITENAME}} hat eine Erinnerung an Ihre Benutzerkonteninformationen für {{SITENAME}} angefordert ($4). {{PLURAL:$3|Das folgende Benutzerkonto ist|Die folgenden Benutzerkonten sind}} mit dieser E-Mail-Adresse verknüpft:
+Sie sollten sich anmelden und ein neues Passwort vergeben. Falls jemand anderes diese
+Anfrage getätigt hat oder Sie sich wieder an Ihr ursprüngliches Passwort erinnern können und es nicht länger
+ändern möchten, können Sie diese Nachricht ignorieren und weiterhin Ihr altes
+Passwort benutzen.',
+'passwordreset-emailtext-user' => 'Benutzer $1 bei {{SITENAME}} hat eine Zurücksetzung Ihres Passworts bei {{SITENAME}} angefordert ($4). {{PLURAL:$3|Das folgende Benutzerkonto ist|Die folgenden Benutzerkonten sind}} mit dieser E-Mail-Adresse verknüpft:
 
 $2
 
@@ -152,13 +160,13 @@ $2
 'sig_tip' => 'Ihre Signatur mit Zeitstempel',
 
 # Edit pages
-'anoneditwarning'                  => "Sie bearbeiten diese Seite unangemeldet. Wenn Sie speichern, wird Ihre aktuelle IP-Adresse in der Versionsgeschichte aufgezeichnet und ist damit unwiderruflich '''öffentlich''' einsehbar.",
+'anoneditwarning'                  => "Sie bearbeiten diese Seite unangemeldet. Wenn Sie sie abspeichern, wird Ihre aktuelle IP-Adresse in der Versionsgeschichte aufgezeichnet und ist damit unwiderruflich '''öffentlich''' einsehbar.",
 'missingsummary'                   => "'''Hinweis:''' Sie haben keine Zusammenfassung angegeben. Wenn Sie erneut auf „{{int:savearticle}}“ klicken, wird Ihre Änderung ohne Zusammenfassung übernommen.",
 'missingcommenttext'               => 'Ihr Abschnitt enthält keinen Text.',
 'missingcommentheader'             => "'''Achtung:''' Sie haben kein Betreff/Überschrift eingegeben. Wenn Sie erneut auf „{{int:savearticle}}“ klicken, wird Ihre Bearbeitung ohne Überschrift gespeichert.",
 'blockedtext'                      => "'''Ihr Benutzername oder Ihre IP-Adresse wurde gesperrt.'''
 
-Die Sperrung wurde von $1 durchgeführt.
+Die Sperrung wurde vom Administrator $1 durchgeführt.
 Als Grund wurde ''$2'' angegeben.
 
 * Beginn der Sperre: $8
@@ -166,8 +174,8 @@ Als Grund wurde ''$2'' angegeben.
 * Sperre betrifft: $7
 
 Sie könnten $1 oder einen der anderen [[{{MediaWiki:Grouppage-sysop}}|Administratoren]] kontaktieren, um über die Sperre zu diskutieren.
-Sie können die „E-Mail an diesen Benutzer“-Funktion nicht nutzen, solange keine gültige E-Mail-Adresse in Ihren [[Special:Preferences|Benutzerkonto-Einstellungen]] eingetragen ist, oder diese Funktion für Sie gesperrt wurde.
-Ihre aktuelle IP-Adresse ist $3, und die Sperr-ID ist $5.
+Sie können die „E-Mail an diesen Benutzer“-Funktion nicht nutzen, solange keine gültige E-Mail-Adresse in Ihren [[Special:Preferences|Benutzerkonto-Einstellungen]] eingetragen ist oder diese Funktion für Sie gesperrt wurde.
+Ihre aktuelle IP-Adresse ist $3 und die Sperrkennung lautet $5.
 Bitte fügen Sie alle Informationen jeder Anfrage hinzu, die Sie stellen.",
 'autoblockedtext'                  => "Ihre IP-Adresse wurde automatisch gesperrt, da sie von einem anderen Benutzer genutzt wurde, der von $1 gesperrt wurde.
 Als Grund wurde angegeben:
@@ -180,7 +188,7 @@ Als Grund wurde angegeben:
 
 Sie können $1 oder einen der anderen [[{{MediaWiki:Grouppage-sysop}}|Administratoren]] kontaktieren, um über die Sperre zu diskutieren.
 
-Sie können die „E-Mail an diesen Benutzer“-Funktion nicht nutzen, solange keine gültige E-Mail-Adresse in Ihren [[Special:Preferences|Benutzerkonto-Einstellungen]] eingetragen ist, oder diese Funktion für Sie gesperrt wurde.
+Sie können die „E-Mail an diesen Benutzer“-Funktion nicht nutzen, solange keine gültige E-Mail-Adresse in Ihren [[Special:Preferences|Benutzerkonto-Einstellungen]] eingetragen ist oder diese Funktion für Sie gesperrt wurde.
 
 Ihre aktuelle IP-Adresse ist $3, und die Sperr-ID ist $5.
 Bitte fügen Sie alle Informationen jeder Anfrage hinzu, die Sie stellen.",
@@ -204,8 +212,7 @@ oder in den zugehörigen <span class="plainlinks">[{{fullurl:{{#special:Log}}|pa
 * '''Firefox/Safari:''' ''Umschalttaste'' drücken und gleichzeitig ''Aktualisieren'' anklicken oder entweder ''Strg+F5'' oder ''Strg+R'' (''⌘+R'' auf dem Mac) drücken
 * '''Google Chrome:''' ''Umschalttaste+Strg+R'' (''⌘+Umschalttaste+R'' auf dem Mac) drücken
 * '''Internet Explorer:''' ''Strg+F5'' drücken oder ''Strg'' drücken und gleichzeitig ''Aktualisieren'' anklicken
-* '''Opera:''' ''Extras → Internetspuren löschen … → Individuelle Auswahl → Den kompletten Cache löschen''
-* '''Konqueror:''' ''Aktualisieren'' anklicken oder ''F5'' drücken",
+* '''Opera:''' ''Extras → Internetspuren löschen … → Individuelle Auswahl → Den kompletten Cache löschen''",
 'usercssyoucanpreview'             => "'''Tipp:''' Benutzen Sie den „{{int:showpreview}}“-Button, um Ihr neues CSS vor dem Speichern zu testen.",
 'userjsyoucanpreview'              => "'''Tipp:''' Benutzen Sie den „{{int:showpreview}}“-Button, um Ihr neues JavaScript vor dem Speichern zu testen.",
 'usercsspreview'                   => "'''Beachten Sie, dass Sie nur eine Vorschau Ihres Benutzer-CSS betrachten.'''
@@ -230,7 +237,7 @@ Sollte das Problem bestehen bleiben, [[Special:UserLogout|melden Sie sich ab]] u
 'token_suffix_mismatch'            => "'''Ihre Bearbeitung wurde zurückgewiesen, da Ihr Browser Zeichen im Bearbeiten-Token verstümmelt hat.
 Eine Speicherung kann den Seiteninhalt zerstören. Dies geschieht bisweilen durch die Benutzung eines anonymen Proxy-Dienstes, der fehlerhaft arbeitet.'''",
 'edit_form_incomplete'             => "'''Der Inhalt des Bearbeitungsformulars hat den Server nicht vollständig erreicht. Bitte prüfen Sie Ihre Bearbeitungen auf Vollständigkeit und versuchen Sie es erneut.'''",
-'explainconflict'                  => "Jemand anders hat diese Seite geändert, nachdem Sie angefangen haben sie zu bearbeiten.
+'explainconflict'                  => "Jemand anders hat diese Seite geändert, nachdem Sie angefangen haben, sie zu bearbeiten.
 Das obere Textfeld enthält den aktuellen Bearbeitungsstand der Seite.
 Das untere Textfeld enthält Ihre Änderungen.
 Bitte fügen Sie Ihre Änderungen in das obere Textfeld ein.
@@ -240,12 +247,12 @@ Bitte fügen Sie Ihre Änderungen in das obere Textfeld ein.
 'editingold'                       => "'''Achtung: Sie bearbeiten eine alte Version dieser Seite. Sofern Sie sie speichern, werden alle neueren Versionen überschrieben.'''",
 'copyrightwarning'                 => "'''Bitte kopieren Sie keine Webseiten, die nicht Ihre eigenen sind, benutzen Sie keine urheberrechtlich geschützten Werke ohne Erlaubnis des Urhebers!'''<br />
 Sie geben uns hiermit Ihre Zusage, dass Sie den Text '''selbst verfasst''' haben, dass der Text Allgemeingut '''(public domain)''' ist, oder dass der '''Urheber''' seine '''Zustimmung''' gegeben hat. Falls dieser Text bereits woanders veröffentlicht wurde, weisen Sie bitte auf der Diskussionsseite darauf hin.
-<i>Bitte beachten Sie, dass alle {{SITENAME}}-Beiträge automatisch unter der „$2“ stehen (siehe $1 für Details). Falls Sie nicht möchten, dass Ihre Arbeit hier von anderen verändert und verbreitet wird, dann drücken Sie nicht auf „Seite speichern“.</i>",
+<i>Bitte beachten Sie, dass alle {{SITENAME}}-Beiträge automatisch unter der „$2“ stehen (siehe $1 für Einzelheiten). Falls Sie nicht möchten, dass Ihre Arbeit hier von anderen verändert und verbreitet wird, dann klicken Sie nicht auf „Seite speichern“.</i>",
 'copyrightwarning2'                => "Bitte beachten Sie, dass alle Beiträge zu {{SITENAME}} von anderen Mitwirkenden bearbeitet, geändert oder gelöscht werden können.
 Reichen Sie keine Texte ein, falls Sie nicht wollen, dass diese ohne Einschränkung geändert werden können.
 
 Sie bestätigen hiermit auch, dass Sie diese Texte selbst geschrieben haben oder diese von einer gemeinfreien Quelle kopiert haben
-(siehe $1 für weitere Details). '''ÜBERTRAGEN SIE OHNE GENEHMIGUNG KEINE URHEBERRECHTLICH GESCHÜTZTEN INHALTE!'''",
+(siehe $1 für weitere Einzelheiten). '''ÜBERTRAGEN SIE OHNE GENEHMIGUNG KEINE URHEBERRECHTLICH GESCHÜTZTEN INHALTE!'''",
 'longpageerror'                    => "'''Fehler: Der Text, den Sie zu speichern versuchen, ist {{PLURAL:$1|ein Kilobyte|$1 Kilobyte}} groß. Dies ist größer als das erlaubte Maximum von {{PLURAL:$2|ein Kilobyte|$2 Kilobyte}}.'''
 Er kann nicht gespeichert werden.",
 'readonlywarning'                  => "'''Achtung: Die Datenbank wurde für Wartungsarbeiten gesperrt, so dass Ihre Änderungen derzeit nicht gespeichert werden können.
@@ -265,7 +272,7 @@ Zu Ihrer Information folgt das Lösch- und Verschiebungs-Logbuch mit der Begrün
 
 # "Undo" feature
 'undo-success' => 'Die Bearbeitung kann rückgängig gemacht werden.
-Bitte prüfen Sie den Vergleich unten um sicherzustellen, dass Sie dies tun möchten, und speicheren Sie dann unten Ihre Änderungen, um die Bearbeitung rückgängig zu machen.',
+Bitte prüfen Sie den Vergleich unten, um sicherzustellen, dass Sie dies tun möchten, und speichern Sie dann unten Ihre Änderungen, um die Bearbeitung rückgängig zu machen.',
 
 # Revision feed
 'history-feed-empty' => 'Die angeforderte Seite existiert nicht. Vielleicht wurde sie gelöscht oder verschoben. [[Special:Search|Durchsuchen Sie]] {{SITENAME}} nach passenden neuen Seiten.',
@@ -334,8 +341,9 @@ Dies kann nicht mehr rückgängig gemacht werden.',
 'prefs-help-email-others'    => 'Mit anderen Benutzern können Sie auch über die Benutzerdiskussionsseiten Kontakt aufnehmen, ohne dass Sie Ihre Identität offenlegen müssen.',
 
 # User rights
-'userrights-groups-help'      => 'Sie können die Gruppenzugehörigkeit dieses Benutzer ändern.
+'userrights-groups-help'      => 'Sie können die Gruppenzugehörigkeit dieses Benutzers ändern:
 * Ein markiertes Kästchen bedeutet, dass der Benutzer Mitglied dieser Gruppe ist.
+* Ein nichtmarkiertes Kästchen bedeutet, dass der Benutzer nicht Mitglied dieser Gruppe ist.
 * Ein * bedeutet, dass Sie das Benutzerrecht nach Erteilung nicht wieder zurücknehmen können (oder umgekehrt).',
 'userrights-no-interwiki'     => 'Sie haben nicht die erforderliche Berechtigung, um Benutzerrechte in anderen Wikis ändern zu können.',
 'userrights-nologin'          => 'Sie müssen sich mit einem Administrator-Benutzerkonto [[Special:UserLogin|anmelden]], um Benutzerrechte zu ändern.',
@@ -358,27 +366,26 @@ Seiten auf Ihrer [[Special:Watchlist|Beobachtungsliste]] sind '''fett''' dargest
 Gehen Sie zu der [[Special:FileList|Liste hochgeladener Dateien]], um vorhandene Dateien zu suchen und anzuzeigen. Siehe auch das [[Special:Log/upload|Datei-]] und [[Special:Log/delete|Lösch-Logbuch]].
 
 Um ein '''Bild''' in einer Seite zu verwenden, nutzen Sie einen Link in der folgenden Form:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Datei.jpg]]</nowiki></tt>''' – für ein Vollbild
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Datei.png|200px|thumb|left|Alternativer Text]]</nowiki></tt>''' – für ein 200px breites Bild innerhalb einer Box, mit „Alternativer Text“ als Bildbeschreibung
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Datei.ogg]]</nowiki></tt>''' – für einen direkten Link auf die Datei, ohne Darstellung der Datei",
-'illegalfilename'             => 'Der Dateiname „$1“ enthält mindestens ein nicht erlaubtes Zeichen. Bitte benennen Sie die Datei um und versuchen Sie sie erneut hochzuladen.',
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Datei.jpg]]</nowiki></code>''' – für ein Vollbild
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Datei.png|200px|thumb|left|Alternativer Text]]</nowiki></code>''' – für ein 200px breites Bild innerhalb einer Box, mit „Alternativer Text“ als Bildbeschreibung
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Datei.ogg]]</nowiki></code>''' – für einen direkten Link auf die Datei, ohne Darstellung der Datei",
+'illegalfilename'             => 'Der Dateiname „$1“ enthält mindestens ein nicht erlaubtes Zeichen. Bitte benennen Sie die Datei um und versuchen Sie, sie erneut hochzuladen.',
+'empty-file'                  => 'Die von Ihnen übertragene Datei hat keinen Inhalt.',
 'emptyfile'                   => 'Die hochgeladene Datei ist leer. Der Grund kann ein Tippfehler im Dateinamen sein. Bitte kontrollieren Sie, ob Sie die Datei wirklich hochladen wollen.',
-'fileexists'                  => "Eine Datei mit diesem Namen existiert bereits.
-Wenn Sie auf „Datei speichern“ klicken, wird die Datei überschrieben.
-Bitte prüfen Sie '''<tt>[[:$1]]</tt>''', wenn Sie sich nicht sicher sind.
-[[$1|thumb]]",
-'filepageexists'              => "Eine Beschreibungsseite wurde bereits als '''<tt>[[:$1]]</tt>''' erstellt, es ist aber keine Datei mit diesem Namen vorhanden.
+'fileexists'                  => 'Eine Datei dieses Namens ist bereits vorhanden. Bitte prüfen Sie <strong>[[:$1]]</strong>, sofern Sie sich nicht sicher sind, ob Sie sie ändern möchten.
+[[$1|thumb]]',
+'filepageexists'              => 'Eine Beschreibungsseite wurde bereits als <strong>[[:$1]]</strong> erstellt, es ist aber keine Datei mit diesem Namen vorhanden.
 Die eingegebene Beschreibung wird nicht auf die Beschreibungsseite übernommen.
 Die Beschreibungsseite müssen Sie nach dem Hochladen der Datei noch manuell bearbeiten.
-[[$1|thumb]]",
-'fileexists-extension'        => "Eine Datei mit ähnlichem Namen existiert bereits: [[$2|thumb]]
-* Name der hochzuladenden Datei: '''<tt>[[:$1]]</tt>'''
-* Name der vorhandenen Datei: '''<tt>[[:$2]]</tt>'''
-Bitte wählen Sie einen anderen Namen.",
-'fileexists-thumbnail-yes'    => "Bei der Datei scheint es sich um ein Bild verringerter Größe ''(thumbnail)'' zu handeln. [[$1|thumb]]
-Bitte prüfen Sie die Datei '''<tt>[[:$1]]</tt>'''.
+[[$1|thumb]]',
+'fileexists-extension'        => 'Eine Datei ähnlichen Namens ist bereits vorhanden: [[$2|thumb]]
+* Name der hochzuladenden Datei: <strong>[[:$1]]</strong>
+* Name der vorhandenen Datei: <strong>[[:$2]]</strong>
+Bitte wählen Sie einen anderen Namen.',
+'fileexists-thumbnail-yes'    => "Bei der Datei scheint es sich um ein Bild verringerter Größe ''(Minitatur)'' zu handeln. [[$1|thumb]]
+Bitte prüfen Sie die Datei <strong>[[:$1]]</strong>.
 Wenn es sich um das Bild in Originalgröße handelt, so braucht kein separates Vorschaubild hochgeladen zu werden.",
-'file-thumbnail-no'           => "Der Dateiname beginnt mit '''<tt>$1</tt>'''. Dies deutet auf ein Bild verringerter Größe ''(thumbnail)'' hin.
+'file-thumbnail-no'           => "Der Dateiname beginnt mit <strong>$1</strong>. Dies deutet auf ein Bild verringerter Größe ''(Miniatur)'' hin.
 Bitte prüfen Sie, ob Sie das Bild in voller Auflösung vorliegen haben und laden dieses unter dem Originalnamen hoch.",
 'fileexists-forbidden'        => 'Unter diesem Namen existiert bereits eine Datei und sie kann nicht überschrieben werden. Bitte gehen Sie zurück und laden Sie die Datei unter einem anderen Namen hoch. [[File:$1|thumb|center|$1]]',
 'fileexists-shared-forbidden' => 'Unter diesem Namen existiert bereits eine Datei im zentralen Medienarchiv.
@@ -399,6 +406,9 @@ Bitte informieren Sie einen [[Special:ListUsers/sysop|System-Administrator]].',
 Prüfen Sie die URL auf Fehler, den Online-Status der Seite und versuchem Sie erneut.
 Wenn das Problem weiter besteht, informieren Sie einen [[Special:ListUsers/sysop|System-Administrator]].',
 
+# Special:UploadStash
+'uploadstash-badtoken' => 'Das Entfernen der vorab gespeicherten Dateien war erfolglos, vielleicht weil Ihre Sitzungsdaten abgelaufen sind. Bitte versuchen Sie es erneut.',
+
 # img_auth script messages
 'img-auth-nopathinfo' => 'PATH_INFO fehlt.
 Ihr Server ist nicht dafür eingerichtet, diese Information weiterzugeben.
@@ -410,13 +420,13 @@ Nur Dateizugriff ist erlaubt.',
 
 # Some likely curl errors. More could be added from <http://curl.haxx.se/libcurl/c/libcurl-errors.html>
 'upload-curl-error6-text'  => 'Die angegebene URL ist nicht erreichbar. Prüfen Sie sowohl die URL auf Fehler als auch den Online-Status der Seite.',
-'upload-curl-error28-text' => 'Die Seite braucht zu lange für eine Antwort. Prüfen Sie, ob die Seite online ist, warten Sie einen kurzen Moment und versuchen es dann erneut. Es kann sinnvoll sein, einen erneuten Versuch zu einem anderen Zeitpunkt zu probieren.',
+'upload-curl-error28-text' => 'Die Seite braucht zu lange, um zu antworten. Prüfen Sie, ob die Seite online ist, warten Sie einen kurzen Moment und versuchen Sie es dann erneut. Es kann sinnvoll sein, es zu einem anderen Zeitpunkt erneut zu versuchen.',
 
 'upload_source_file' => ' (eine Datei auf Ihrem Computer)',
 
 # File description page
 'filehist-help'        => 'Klicken Sie auf einen Zeitpunkt, um diese Version zu laden.',
-'filepage-nofile-link' => 'Es existiert keine Datei mit diesem Namen, aber Sie können [$1 diese Datei hochladen].',
+'filepage-nofile-link' => 'Es ist keine Datei dieses Namens vorhanden. Sie können jedoch [$1 diese Datei hochladen].',
 
 # File reversion
 'filerevert-intro' => "Sie setzen die Datei '''[[Media:$1|$1]]''' auf die [$4 Version vom $2, $3 Uhr] zurück.",
@@ -437,10 +447,10 @@ Nur Dateizugriff ist erlaubt.',
 'booksources-invalid-isbn' => 'Vermutlich ist die ISBN ungültig.
 Bitte prüfen Sie, ob sie korrekt von der Quelle übertragen wurde.',
 
-# E-mail user
+# Email user
 'mailnologintext' => 'Sie müssen [[Special:UserLogin|angemeldet sein]] und eine bestätigte E-Mail-Adresse in Ihren [[Special:Preferences|Einstellungen]] eingetragen haben, um anderen Benutzern E-Mails schicken zu können.',
-'emailpagetext'   => 'Sie könnent dem Benutzer mit dem unten stehenden Formular eine E-Mail senden.
-Als Absender wird die E-Mail-Adresse aus ihren [[Special:Preferences|Einstellungen]] eingetragen, damit der Benutzer Ihnen antworten kann.',
+'emailpagetext'   => 'Sie können {{GENDER:$1|dem Benutzer|der Benutzerin}} mit dem unten stehenden Formular eine E-Mail senden.
+Als Absender wird die E-Mail-Adresse aus Ihren [[Special:Preferences|Einstellungen]] eingetragen, damit {{GENDER:$1|der Benutzer|die Benutzerin}} Ihnen direkt antworten kann.',
 'emailccsubject'  => 'Kopie Ihrer Nachricht an $1: $2',
 'emailsenttext'   => 'Ihre E-Mail wurde verschickt.',
 
@@ -451,8 +461,7 @@ Als Absender wird die E-Mail-Adresse aus ihren [[Special:Preferences|Einstellung
 'watchnologintext'  => 'Sie müssen [[Special:UserLogin|angemeldet]] sein, um Ihre Beobachtungsliste bearbeiten zu können.',
 'addedwatchtext'    => 'Die Seite „[[:$1]]“ wurde zu Ihrer [[Special:Watchlist|Beobachtungsliste]] hinzugefügt.
 
-Spätere Änderungen an dieser Seite und der dazugehörigen Diskussionsseite werden dort gelistet und
-in der Übersicht der [[Special:RecentChanges|letzten Änderungen]] in Fettschrift dargestellt.',
+Spätere Änderungen an dieser Seite und der dazugehörigen Diskussionsseite werden dort gelistet.',
 'removedwatchtext'  => 'Die Seite „[[:$1]]“ wurde von Ihrer [[Special:Watchlist|Beobachtungsliste]] entfernt.',
 'watchnochange'     => 'Keine der von Ihnen beobachteten Seiten wurde während des angezeigten Zeitraums bearbeitet.',
 'watchlist-details' => 'Sie beobachten {{PLURAL:$1|1 Seite|$1 Seiten}}.',
@@ -472,16 +481,16 @@ Kontakt zum Bearbeiter:
 E-Mail: $PAGEEDITOR_EMAIL
 Wiki: $PAGEEDITOR_WIKI
 
-Es werden Ihnen solange keine weiteren Benachrichtigungs-E-Mails gesendet, bis Sie die Seite wieder besucht haben. Auf Ihrer Beobachtungsliste können Sie alle Benachrichtigungsmarkierungen zusammen zurücksetzen.
+Bei weiterer Aktivität auf der Seite werden Ihnen so lange keine weiteren Benachrichtigungs-E-Mails gesendet, bis Sie die Seite wieder besucht haben. Auf Ihrer Beobachtungsliste können Sie alle Benachrichtigungsmarkierungen zusammen zurücksetzen.
 
-             Das freundliche {{SITENAME}}-Benachrichtigungssystem
+Ihr freundliches {{SITENAME}}-Benachrichtigungssystem
 
 --
-Um die Einstellungen der E-Mail-Benachrichtigung anzupassen, besuchen Sie {{canonicalurl:{{#special:Preferences}}}}
+Um die Einstellungen der E-Mail-Benachrichtigung anzupassen, besuchen Sie {{canonicalurl:{{#special:Preferences}}}}.
 
-Um die Einstellungen Ihrer Beobachtungsliste anzupassen, besuchen Sie {{canonicalurl:{{#special:EditWatchlist}}}}
+Um die Einstellungen Ihrer Beobachtungsliste anzupassen, besuchen Sie {{canonicalurl:{{#special:EditWatchlist}}}}.
 
-Um diese Seite von Ihrer Beobachtungsliste zu entfernen, besuchen Sie $UNWATCHURL
+Um diese Seite von Ihrer Beobachtungsliste zu entfernen, besuchen Sie $UNWATCHURL.
 
 Rückmeldungen und weitere Hilfe: {{canonicalurl:{{MediaWiki:Helppage}}}}',
 
@@ -491,9 +500,9 @@ Rückmeldungen und weitere Hilfe: {{canonicalurl:{{MediaWiki:Helppage}}}}',
 'deletedtext'       => '„$1“ wurde gelöscht. Im $2 finden Sie eine Liste der letzten Löschungen.',
 
 # Edit tokens
-'sessionfailure' => 'Es gab ein Problem mit der Übertragung Ihrer Benutzerdaten.
+'sessionfailure' => 'Es gab ein Problem bei der Übertragung Ihrer Benutzerdaten.
 Diese Aktion wurde daher sicherheitshalber abgebrochen, um eine falsche Zuordnung Ihrer Änderungen zu einem anderen Benutzer zu verhindern.
-Bitte gehen Sie zurück und versuchen Sie den Vorgang erneut auszuführen.',
+Bitte gehen Sie zurück zur vorherigen Seite, laden Sie sie erneut und versuchen Sie, den Vorgang erneut auszuführen.',
 
 # Protect
 'protect-text'           => 'Hier können Sie den Schutzstatus der Seite „$1“ einsehen und ändern.',
@@ -522,7 +531,7 @@ Im [[Special:Log/delete|Lösch-Logbuch]] finden Sie eine Übersicht der gelösch
 Dies sollte nur erfolgen, um Vandalismus zu verhindern und in Übereinstimmung mit den [[{{MediaWiki:Policy-url}}|Richtlinien]].
 Bitte geben Sie den Grund für die Sperre an.',
 'ipb-blockingself'         => 'Sie sind gerade dabei, sich selbst zu sperren! Möchten Sie das wirklich tun?',
-'ipb-confirmhideuser'      => 'Sie sind gerade dabei einen Benutzer im Modus „Benutzer verstecken“ zu sperren. Dies führt dazu, dass der Benutzername in allen Listen und Logbüchern unterdrückt wird. Möchten Sie das wirklich tun?',
+'ipb-confirmhideuser'      => 'Sie sind gerade dabei, einen Benutzer im Modus „Benutzer verstecken“ zu sperren. Dies führt dazu, dass der Benutzername in allen Listen und Logbüchern unterdrückt wird. Möchten Sie das wirklich tun?',
 'unblockiptext'            => 'Mit diesem Formular können Sie eine IP-Adresse oder einen Benutzer freigeben.',
 'autoblocker'              => 'Automatische Sperre, da Sie eine gemeinsame IP-Adresse mit [[User:$1|$1]] benutzen. Grund der Benutzersperre: „$2“.',
 'ipb-needreblock'          => '„$1“ ist bereits gesperrt. Möchten Sie die Sperrparameter ändern?',
@@ -540,22 +549,22 @@ Bitte geben Sie den Grund für die Sperre an.',
 'movepagetext'                 => "Mit untenstehendem Formular können Sie eine Seite umbenennen, indem Sie sie mitsamt allen Versionen auf einen neuen Titel verschieben.
 Der alte Titel wird danach zum neuen weiterleiten.
 Sie können Weiterleitungen, die auf den Originaltitel verlinken, automatisch korrigieren lassen.
-Stellen Sie sicher, dass Sie im Anschluss alle [[Special:DoubleRedirects|doppelten]] oder [[Special:BrokenRedirects|kaputten Weiterleitungen]] überprüfen.
+Stellen Sie sicher, dass Sie im Anschluss alle [[Special:DoubleRedirects|doppelten]] oder [[Special:BrokenRedirects|defekten Weiterleitungen]] überprüfen.
 Sie sind dafür verantwortlich, dass Links weiterhin auf das korrekte Ziel verweisen.
 
-Die Seite wird '''nicht''' verschoben, sofern es bereits eine Seite mit dem vorgesehenen Titel gibt, es sei denn, diese ist leer oder eine Weiterleitung ohne Versionsgeschichte.
-Dies bedeutet, dass Sie die Umbenennung rückgängig machen können, sofern Sie einen Fehler gemacht haben. Sie können hingegen keine Seite überschreiben.
+Die Seite wird '''nicht''' verschoben, sofern es bereits eine Seite mit dem vorgesehenen Titel gibt, es sei denn, letztere ist eine Weiterleitung ohne Versionsgeschichte.
+Dies bedeutet, dass Sie die Umbenennung rückgängig machen können, sofern Sie einen Fehler gemacht haben. Sie können hingegen keine existierende Seite überschreiben.
 
 '''Warnung!'''
 Die Verschiebung kann weitreichende und unerwartete Folgen für häufig besuchte Seiten haben.
 Sie sollten daher die Konsequenzen verstanden haben, bevor Sie jetzt fortfahren.",
 'movepagetext-noredirectfixer' => "Mit untenstehendem Formular können Sie eine Seite umbenennen, indem Sie sie mitsamt allen Versionen auf einen neuen Titel verschieben.
 Der alte Titel wird danach zum neuen weiterleiten.
-Stellen Sie sicher, dass Sie im Anschluss alle [[Special:DoubleRedirects|doppelten]] oder [[Special:BrokenRedirects|kaputten Weiterleitungen]] überprüfen.
+Stellen Sie sicher, dass Sie im Anschluss alle [[Special:DoubleRedirects|doppelten]] oder [[Special:BrokenRedirects|defekten Weiterleitungen]] überprüfen.
 Sie sind dafür verantwortlich, dass Links weiterhin auf das korrekte Ziel verweisen.
 
-Die Seite wird '''nicht''' verschoben, sofern es bereits eine Seite mit dem vorgesehenen Titel gibt, es sei denn, diese ist leer oder eine Weiterleitung ohne Versionsgeschichte.
-Dies bedeutet, dass Sie die Umbenennung rückgängig machen können, sofern Sie einen Fehler gemacht haben. Sie können hingegen keine Seite überschreiben.
+Die Seite wird '''nicht''' verschoben, sofern es bereits eine Seite mit dem vorgesehenen Titel gibt, es sei denn, diese ist eine Weiterleitung ohne Versionsgeschichte.
+Dies bedeutet, dass Sie die Umbenennung rückgängig machen können, sofern Sie einen Fehler gemacht haben. Sie können hingegen keine existierende Seite überschreiben.
 
 '''Warnung!'''
 Die Verschiebung kann weitreichende und unerwartete Folgen für häufig besuchte Seiten haben.
@@ -603,7 +612,8 @@ Alle Transwiki-Import-Aktionen werden im [[Special:Log/import|Import-Logbuch]] p
 'import-error-create'   => 'Die Seite „$1“ wurde nicht importiert, da Sie nicht berechtigt sind, sie zu erstellen.',
 
 # JavaScriptTest
-'javascripttest-pagetext-skins' => 'Wählen Sie eine Benutzeroberfläche zur Durchführung der Tests aus:',
+'javascripttest-pagetext-frameworks' => 'Bitte wählen Sie eine der folgenden Prüfumgebungen aus: $1',
+'javascripttest-pagetext-skins'      => 'Wählen Sie eine Benutzeroberfläche zur Durchführung der Tests aus:',
 
 # Tooltip help for the actions
 'tooltip-pt-userpage'            => 'Ihre Benutzerseite',
@@ -630,7 +640,7 @@ Das liegt wahrscheinlich an einem Link auf eine externe Seite.',
 'mediawarning' => "'''Warnung:''' Dieser Dateityp kann böswilligen Programmcode enthalten.
 Durch das Herunterladen und Öffnen der Datei kann Ihr Computer beschädigt werden.",
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail_noemail'    => 'Sie haben keine gültige E-Mail-Adresse in Ihren [[Special:Preferences|persönlichen Einstellungen]] eingetragen.',
 'confirmemail_text'       => '{{SITENAME}} erfordert, dass Sie Ihre E-Mail-Adresse bestätigen (authentifizieren), bevor Sie die erweiterten E-Mail-Funktionen benutzen können. Klicken Sie bitte auf die unten stehende, mit „Bestätigungscode zuschicken“ beschriftete Schaltfläche, damit eine automatisch erstellte E-Mail an die angegebene Adresse geschickt wird. Diese E-Mail enthält eine Web-Adresse mit einem Bestätigungscode. Indem Sie diese Webseite in Ihrem Webbrowser öffnen, bestätigen Sie, dass die angegebene E-Mail-Adresse korrekt und gültig ist.',
 'confirmemail_pending'    => 'Es wurde Ihnen bereits ein Bestätigungscode per E-Mail zugeschickt.
@@ -647,20 +657,18 @@ Rückmeldung des Mailservers: $1',
 'confirmemail_error'      => 'Es gab einen Fehler bei der Bestätigung Ihrer E-Mail-Adresse.',
 'confirmemail_body'       => 'Hallo,
 
-jemand mit der IP-Adresse $1, wahrscheinlich Sie selbst, hat das Benutzerkonto „$2“ in {{SITENAME}} registriert.
+jemand mit der IP-Adresse $1, wahrscheinlich Sie selbst, hat das Benutzerkonto „$2“ bei {{SITENAME}} registriert.
 
-Um die E-Mail-Funktion von {{SITENAME}} (wieder) zu aktivieren und um zu bestätigen,
-dass dieses Benutzerkonto wirklich zu Ihrer E-Mail-Adresse und damit zu Ihnen gehört, öffnen Sie bitte die folgende Web-Adresse:
+Um die E-Mail-Funktionen von {{SITENAME}} (wieder) zu aktivieren und um zu bestätigen,
+dass dieses Benutzerkonto wirklich zu Ihrer E-Mail-Adresse und damit zu Ihnen gehört, öffnen Sie bitte folgenden Link in Ihrem Browser:
 
 $3
-
-Sollte die vorstehende Adresse in Ihrem E-Mail-Programm über mehrere Zeilen gehen, müssen Sie diese eventuell per Hand in die Adresszeile Ihres Web-Browsers einfügen.
 
 Wenn Sie das genannte Benutzerkonto *nicht* registriert haben, folgen Sie diesem Link, um den Bestätigungsprozess abzubrechen:
 
 $5
 
-Dieser Bestätigungscode ist gültig bis $6, $7 Uhr.',
+Dieser Bestätigungscode ist gültig bis zum $6, $7 Uhr.',
 'confirmemail_body_set'   => 'Jemand mit der IP-Adresse $1, wahrscheinlich Sie selbst,
 hat die E-Mail-Adresse des Benutzerkontos „$2“ auf {{SITENAME}} zu dieser E-Mail-Adresse abgeändert.
 
@@ -683,6 +691,10 @@ Wenn Sie die Seite speichern, wird sie neu angelegt.',
 'confirmrecreate'     => "Benutzer [[User:$1|$1]] ([[User talk:$1|Diskussion]]) hat diese Seite gelöscht, nachdem Sie angefangen haben, sie zu bearbeiten. Die Begründung lautete:
 : ''$2''
 Bitte bestätigen Sie, dass Sie diese Seite wirklich neu erstellen möchten.",
+
+# Live preview
+'livepreview-failed' => 'Die Vorschau kann nicht sofort angezeigt werden!
+Bitte nutzen Sie die reguläre Vorschau.',
 
 # Watchlist editor
 'watchlistedit-numitems'       => 'Ihre Beobachtungsliste enthält {{PLURAL:$1|einen Eintrag|$1 Einträge}}. Die Diskussionsseiten wurden dabei nicht mitgezählt.',
