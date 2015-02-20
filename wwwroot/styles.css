@@ -247,10 +247,13 @@ a.menubar:hover {
 	text-align: right;
 	overflow: hidden;
 }
+
+/*
 a:link    { color: #bbf; text-decoration: none; }
 a:visited { color: #a0a0ff; text-decoration: none; }
 a:hover   { text-decoration: underline; }
 a         { outline: none; }
+*/
 
 .bottombar a:link, .bottombar a:visited  { color: #bbf; }
 
