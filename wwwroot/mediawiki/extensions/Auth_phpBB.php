@@ -46,13 +46,13 @@
          * Auth Plug-in
          *
          */
-        require_once './includes/AuthPlugin.php';
+        require_once   dirname( __FILE__ )  . '/../includes/AuthPlugin.php';
 
         /**
          * Auth Plug-in Interface
          *
          */
-        require_once './extensions/iAuthPlugin.php';
+        require_once  dirname( __FILE__ ) .  '/../extensions/iAuthPlugin.php';
 
     }
 
@@ -71,7 +71,7 @@
          *      http://www.openwall.com/phpass/
          *
          */
-        require_once './extensions/PasswordHash.php';
+        require_once  dirname( __FILE__ ) . '/../extensions/PasswordHash.php';
     }
 
     /**
@@ -328,13 +328,13 @@
     		                   WHERE `username_clean` = '%s'
                                LIMIT 1",
                                $this->_UserTB,
-                               mysql_real_escape_string($username, $fresMySQLConnection));
+                               mysqli_real_escape_string($fresMySQLConnection, $username));
 
     		// Query Database.
-            $fresMySQLResult = mysql_query($fstrMySQLQuery, $fresMySQLConnection)
+            $fresMySQLResult = mysqli_query($fresMySQLConnection, $fstrMySQLQuery)
                 or die($this->mySQLError('Unable to view external table'));
 
-            while($faryMySQLResult = mysql_fetch_assoc($fresMySQLResult))
+            while($faryMySQLResult = mysqli_fetch_assoc($fresMySQLResult))
             {
                 // Use new phpass class
                 $PasswordHasher = new PasswordHash(8, TRUE);
@@ -417,31 +417,23 @@
             if ($this->_UseExtDatabase == true)
             {
                 // Connect to database. I supress the error here.
-                $fresMySQLConnection = @mysql_connect($this->_MySQL_Host,
+                $fresMySQLConnection = @mysqli_connect($this->_MySQL_Host,
                                                       $this->_MySQL_Username,
-                                                      $this->_MySQL_Password, true);
+                                                      $this->_MySQL_Password,
+							$this->_MySQL_Database
+							);
 
                 // Check if we are connected to the database.
                 if (!$fresMySQLConnection)
                 {
                     $this->mySQLError('There was a problem when connecting to the phpBB database.<br />' .
                                       'Check your Host, Username, and Password settings.<br />');
-                }
-
-                // Select Database
-                $db_selected = mysql_select_db($this->_MySQL_Database, $fresMySQLConnection);
-
-                // Check if we were able to select the database.
-                if (!$db_selected)
-                {
-                    $this->mySQLError('There was a problem when connecting to the phpBB database.<br />' .
-                                      'The database ' . $this->_MySQL_Database . ' was not found.<br />');
                 }
             }
             else
             {
                 // Connect to database.
-                $fresMySQLConnection = mysql_connect($GLOBALS['wgDBserver'], $GLOBALS['wgDBuser'], $GLOBALS['wgDBpassword'], true);
+                $fresMySQLConnection = mysqli_connect($GLOBALS['wgDBserver'], $GLOBALS['wgDBuser'], $GLOBALS['wgDBpassword'], $GLOBALS['wgDBname']);
 
                 // Check if we are connected to the database.
                 if (!$fresMySQLConnection)
@@ -449,20 +441,10 @@
                     $this->mySQLError('There was a problem when connecting to the phpBB database.<br />' .
                                       'Check your Host, Username, and Password settings.<br />');
                 }
-
-                // Select Database: This assumes the wiki and phpbb are in the same database.
-                $db_selected = mysql_select_db($GLOBALS['wgDBname']);
-
-                // Check if we were able to select the database.
-                if (!$db_selected)
-                {
-                    $this->mySQLError('There was a problem when connecting to the phpBB database.<br />' .
-                                      'The database ' . $GLOBALS['wgDBname'] . ' was not found.<br />');
-                }
             }
 
-            $this->_MySQL_Version = substr(mysql_get_server_info(), 0, 3); // Get the mysql version.
-            mysql_query("SET NAMES 'utf8'", $fresMySQLConnection); // This is so utf8 usernames work. Needed for MySQL 4.1
+            $this->_MySQL_Version = substr(mysqli_get_server_info(), 0, 3); // Get the mysql version.
+            mysqli_query($fresMySQLConnection, "SET NAMES 'utf8'"); // This is so utf8 usernames work. Needed for MySQL 4.1
 
             return $fresMySQLConnection;
         }
@@ -498,13 +480,13 @@
     		                   WHERE `username_clean` = '%s'
                                LIMIT 1",
                                $this->_UserTB,
-                               mysql_real_escape_string($username, $fresMySQLConnection));
+                               mysqli_real_escape_string($fresMySQLConnection, $username));
 
     		// Query Database.
-            $fresMySQLResult = mysql_query($fstrMySQLQuery, $fresMySQLConnection)
+            $fresMySQLResult = mysqli_query($fresMySQLConnection, $fstrMySQLQuery)
                 or die($this->mySQLError('Unable to view external table'));
 
-            while($faryMySQLResult = mysql_fetch_assoc($fresMySQLResult))
+            while($faryMySQLResult = mysqli_fetch_assoc($fresMySQLResult))
             {
                 return ucfirst($faryMySQLResult['username_clean']);
             }
@@ -541,14 +523,14 @@
     		                   WHERE `username_clean` = '%s'
                                LIMIT 1",
                                $this->_UserTB,
-                               mysql_real_escape_string($username, $fresMySQLConnection));
+                               mysqli_real_escape_string($fresMySQLConnection, $username));
 
 
     		// Query Database.
-            $fresMySQLResult = mysql_query($fstrMySQLQuery, $fresMySQLConnection)
+            $fresMySQLResult = mysqli_query($fresMySQLConnection, $fstrMySQLQuery)
                 or die($this->mySQLError('Unable to view external table'));
 
-            while($faryMySQLResult = mysql_fetch_array($fresMySQLResult))
+            while($faryMySQLResult = mysqli_fetch_array($fresMySQLResult))
             {
                 $user->mEmail       = $faryMySQLResult['user_email']; // Set Email Address.
                 $user->mRealName    = 'I need to Update My Profile';  // Set Real Name.
@@ -577,7 +559,7 @@
             // Connect to the database.
     		$fresMySQLConnection = $this->connect();
     	    $username = $this->utf8($username); // Convert to UTF8
-    	    $username = mysql_real_escape_string($username, $fresMySQLConnection); // Clean username.
+    	    $username = mysqli_real_escape_string($fresMySQLConnection, $username); // Clean username.
 
     	    // If not an array make this an array.
     	    if (!is_array($this->_WikiGroupName))
@@ -596,29 +578,29 @@
                  */
 
                 // Get UserId
-                mysql_query('SELECT @userId := `user_id` FROM `' . $this->_UserTB .
-                            '` WHERE `username_clean` = \'' . $username . '\';', $fresMySQLConnection)
+                mysqli_query($fresMySQLConnection, 'SELECT @userId := `user_id` FROM `' . $this->_UserTB .
+                            '` WHERE `username_clean` = \'' . $username . '\';')
                             or die($this->mySQLError('Unable to get userID.'));
 
                 // Get WikiId
-                mysql_query('SELECT @wikiId := `group_id` FROM `' . $this->_GroupsTB .
-                            '` WHERE `group_name` = \'' . $WikiGrpName . '\';', $fresMySQLConnection)
+                mysqli_query($fresMySQLConnection, 'SELECT @wikiId := `group_id` FROM `' . $this->_GroupsTB .
+                            '` WHERE `group_name` = \'' . $WikiGrpName . '\';')
                             or die($this->mySQLError('Unable to get wikiID.'));
 
                 // Check UserId and WikiId
-                mysql_query('SELECT @isThere := COUNT( * ) FROM `' . $this->_User_GroupTB .
-                            '` WHERE `user_id` = @userId AND `group_id` = @wikiId and `user_pending` = 0;', $fresMySQLConnection)
+                mysqli_query($fresMySQLConnection, 'SELECT @isThere := COUNT( * ) FROM `' . $this->_User_GroupTB .
+                            '` WHERE `user_id` = @userId AND `group_id` = @wikiId and `user_pending` = 0;')
                             or die($this->mySQLError('Unable to get validate user group.'));
 
                 // Return Result.
                 $fstrMySQLQuery = 'SELECT IF(@isThere > 0, \'true\', \'false\') AS `result`;';
 
                 // Query Database.
-                $fresMySQLResult = mysql_query($fstrMySQLQuery, $fresMySQLConnection)
+                $fresMySQLResult = mysqli_query($fresMySQLConnection, $fstrMySQLQuery)
                     or die($this->mySQLError('Unable to view external table'));
 
                 // Check for a true or false response.
-                while($faryMySQLResult = mysql_fetch_array($fresMySQLResult))
+                while($faryMySQLResult = mysqli_fetch_array($fresMySQLResult))
                 {
                     if ($faryMySQLResult['result'] == 'true')
                     {
@@ -696,7 +678,7 @@
     	 */
     	private function mySQLError( $message )
     	{
-    	    throw new Exception($message . '<br />' . 'MySQL Error Number: ' . mysql_errno() . '<br />' . 'MySQL Error Message: ' . mysql_error() . '<br /><br />');
+    	    throw new Exception($message . '<br />' . 'MySQL Error Number: ' . mysqli_errno() . '<br />' . 'MySQL Error Message: ' . mysqli_error() . '<br /><br />');
     	}
 
 
@@ -881,13 +863,13 @@
     		                   WHERE `username_clean` = '%s'
                                LIMIT 1",
                                $this->_UserTB,
-                               mysql_real_escape_string($username, $fresMySQLConnection));
+                               mysqli_real_escape_string($fresMySQLConnection, $username));
 
     		// Query Database.
-            $fresMySQLResult = mysql_query($fstrMySQLQuery, $fresMySQLConnection)
+            $fresMySQLResult = mysqli_query($fresMySQLConnection, $fstrMySQLQuery)
                 or die($this->mySQLError('Unable to view external table'));
 
-            while($faryMySQLResult = mysql_fetch_array($fresMySQLResult))
+            while($faryMySQLResult = mysqli_fetch_array($fresMySQLResult))
             {
 
                 // If debug is on print the username entered by the user and the one from the datebase to the screen.

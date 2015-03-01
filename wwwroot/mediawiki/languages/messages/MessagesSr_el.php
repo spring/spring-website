@@ -1,5 +1,5 @@
 <?php
-/** Serbian (Latin script) (‪Srpski (latinica)‬)
+/** Serbian (Latin script) (srpski (latinica)‎)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -8,10 +8,12 @@
  * @file
  *
  * @author FriedrickMILBarbarossa
+ * @author Geitost
  * @author Kaganer
  * @author Liangent
  * @author Meno25
  * @author Michaello
+ * @author Milicevic01
  * @author Rancher
  * @author Red Baron
  * @author Reedy
@@ -311,25 +313,25 @@ $messages = array(
 'tog-hidepatrolled'           => 'Sakrij pregledane izmene u spisku skorašnjih izmena',
 'tog-newpageshidepatrolled'   => 'Sakrij pregledane stranice sa spiska novih stranica',
 'tog-extendwatchlist'         => 'Proširi spisak nadgledanja za prikaz svih izmena, ne samo skorašnjih',
-'tog-usenewrc'                => 'Poboljšani spisak skorašnjih izmena (javaskript)',
+'tog-usenewrc'                => 'Promene u grupi po stranici u spisku skorašnjih izmena i nadgledanih stranica',
 'tog-numberheadings'          => 'Samostalno numeriši podnaslove',
-'tog-showtoolbar'             => 'Traka s alatkama za uređivanje (javaskript)',
-'tog-editondblclick'          => 'Uređivanje stranica dvostrukim klikom (javaskript)',
+'tog-showtoolbar'             => 'Prikaži traku s alatkama za uređivanje',
+'tog-editondblclick'          => 'Uređivanje stranica dvostrukim klikom',
 'tog-editsection'             => 'Veze za uređivanje pojedinačnih odeljaka',
-'tog-editsectiononrightclick' => 'Uređivanje odeljaka desnim klikom na njihove naslove (javaskript)',
+'tog-editsectiononrightclick' => 'Uređivanje odeljaka desnim klikom na njihove naslove',
 'tog-showtoc'                 => 'Prikaži sadržaj stranica koje imaju više od tri podnaslova',
-'tog-rememberpassword'        => 'Zapamti me na ovom pregledaču (najduže $1 {{PLURAL:$1|dan|dana|dana}})',
-'tog-watchcreations'          => 'Dodaj stranice koje napravim u spisak nadgledanja',
-'tog-watchdefault'            => 'Dodaj stranice koje izmenim u spisak nadgledanja',
-'tog-watchmoves'              => 'Dodaj stranice koje premestim u spisak nadgledanja',
-'tog-watchdeletion'           => 'Dodaj stranice koje obrišem u spisak nadgledanja',
+'tog-rememberpassword'        => 'Zapamti me na ovom pregledaču (najduže $1 {{PLURAL:$1|dan|dana}})',
+'tog-watchcreations'          => 'Dodaj stranice koje napravim i datoteke koje pošaljem u spisak nadgledanja',
+'tog-watchdefault'            => 'Dodaj stranice i datoteke koje izmenim u spisak nadgledanja',
+'tog-watchmoves'              => 'Dodaj stranice i datoteke koje premestim u spisak nadgledanja',
+'tog-watchdeletion'           => 'Dodaj stranice i datoteke koje obrišem u spisak nadgledanja',
 'tog-minordefault'            => 'Označavaj sve izmene kao manje',
 'tog-previewontop'            => 'Prikaži pregled pre okvira za uređivanje',
 'tog-previewonfirst'          => 'Prikaži pregled na prvoj izmeni',
 'tog-nocache'                 => 'Onemogući privremeno memorisanje stranica',
-'tog-enotifwatchlistpages'    => 'Pošalji mi e-poruku kada se promeni stranica koju nadgledam',
+'tog-enotifwatchlistpages'    => 'Pošalji mi e-poruku kada se promeni stranica ili datoteka koju nadgledam',
 'tog-enotifusertalkpages'     => 'Pošalji mi e-poruku kada se promeni moja stranica za razgovor',
-'tog-enotifminoredits'        => 'Pošalji mi e-poruku i za manje izmene',
+'tog-enotifminoredits'        => 'Pošalji mi e-poruku i za manje izmene u stranicama i datotekama',
 'tog-enotifrevealaddr'        => 'Otkrij moju e-adresu u porukama obaveštenja',
 'tog-shownumberswatching'     => 'Prikaži broj korisnika koji nadgledaju',
 'tog-oldsig'                  => 'Tekući potpis:',
@@ -337,8 +339,8 @@ $messages = array(
 'tog-externaleditor'          => 'Uvek koristi spoljni uređivač (samo za napredne — potrebne su posebne postavke na računaru)',
 'tog-externaldiff'            => 'Uvek koristi spoljni program za upoređivanje (samo za napredne — potrebne su posebne postavke na računaru)',
 'tog-showjumplinks'           => 'Omogući pomoćne veze „Idi na“',
-'tog-uselivepreview'          => 'Koristi trenutan pregled (javaskript, probna mogućnost)',
-'tog-forceeditsummary'        => 'Opomeni me pri unosu praznog opisa',
+'tog-uselivepreview'          => 'Koristi trenutan pregled (eksperimentalno)',
+'tog-forceeditsummary'        => 'Upozori me kada ne unesem opis izmene',
 'tog-watchlisthideown'        => 'Sakrij moje izmene sa spiska nadgledanja',
 'tog-watchlisthidebots'       => 'Sakrij izmene botova sa spiska nadgledanja',
 'tog-watchlisthideminor'      => 'Sakrij manje izmene sa spiska nadgledanja',
@@ -354,7 +356,7 @@ $messages = array(
 
 'underline-always'  => 'uvek podvlači',
 'underline-never'   => 'nikad ne podvlači',
-'underline-default' => 'po postavkama pregledača',
+'underline-default' => 'prema temi ili pregledaču',
 
 # Font style option in Special:Preferences
 'editfont-style'     => 'Izgled fonta u uređivačkom okviru:',
@@ -420,7 +422,7 @@ $messages = array(
 'category_header'                => 'Stranice u kategoriji „$1“',
 'subcategories'                  => 'Potkategorije',
 'category-media-header'          => 'Datoteke u kategoriji „$1“',
-'category-empty'                 => "''Ova kategorija trenutno ne sadrži stranice ili datoteke.''",
+'category-empty'                 => "<div style=\"margin:2em 1em 0 1em; padding:0.5em; border:1px solid #AAA; text-align:center;\">''Ova kategorija trenutno ne sadrži stranice ili datoteke.''</div>",
 'hidden-categories'              => '{{PLURAL:$1|Sakrivena kategorija|Sakrivene kategorije}}',
 'hidden-category-category'       => 'Sakrivene kategorije',
 'category-subcat-count'          => '{{PLURAL:$2|Ova kategorija sadrži samo sledeću potkategoriju.|Ova kategorija ima {{PLURAL:$1|sledeću potkategoriju|sledeće $1 potkategorije|sledećih $1 potkategorija}}, od ukupno $2.}}',
@@ -434,14 +436,14 @@ $messages = array(
 'noindex-category'               => 'Nepopisane stranice',
 'broken-file-category'           => 'Stranice s neispravnim vezama do datoteka',
 
-'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
+'linkprefix' => '/^((?>.*(?<![a-zA-Z\\\\x80-\\\\xff])))(.+)$/sD',
 
 'about'         => 'O nama',
 'article'       => 'Stranica sa sadržajem',
 'newwindow'     => '(otvara u novom prozoru)',
 'cancel'        => 'Otkaži',
 'moredotdotdot' => 'Više…',
-'mypage'        => 'Moja stranica',
+'mypage'        => 'Stranica',
 'mytalk'        => 'Razgovor',
 'anontalk'      => 'Razgovor za ovu IP adresu',
 'navigation'    => 'Navigacija',
@@ -465,12 +467,12 @@ $messages = array(
 'vector-action-protect'          => 'Zaštiti',
 'vector-action-undelete'         => 'Vrati',
 'vector-action-unprotect'        => 'Promeni zaštitu',
-'vector-simplesearch-preference' => 'Poboljšani predlozi pretrage (samo za temu „Vektorsko“)',
+'vector-simplesearch-preference' => 'Uprošćeno polje za pretragu (samo za temu „Vektorsko“)',
 'vector-view-create'             => 'Napravi',
 'vector-view-edit'               => 'Uredi',
 'vector-view-history'            => 'Istorija',
 'vector-view-view'               => 'Čitaj',
-'vector-view-viewsource'         => 'Izvornik',
+'vector-view-viewsource'         => 'Izvorni kod',
 'actions'                        => 'Radnje',
 'namespaces'                     => 'Imenski prostori',
 'variants'                       => 'Varijante',
@@ -486,7 +488,7 @@ $messages = array(
 'history'           => 'Istorija stranice',
 'history_short'     => 'Istorija',
 'updatedmarker'     => 'ažurirano od moje poslednje posete',
-'printableversion'  => 'Izdanje za štampu',
+'printableversion'  => 'Verzija za štampu',
 'permalink'         => 'Trajna veza',
 'print'             => 'Štampaj',
 'view'              => 'Pogledaj',
@@ -542,10 +544,10 @@ $1',
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'O projektu {{SITENAME}}',
 'aboutpage'            => 'Project:O nama',
-'copyright'            => 'Sadržaj je dostupan pod licencom $1.',
+'copyright'            => 'Sadržaj je dostupan pod licencom $1 osim ako je drugačije navedeno.',
 'copyrightpage'        => '{{ns:project}}:Autorska prava',
 'currentevents'        => 'Aktuelnosti',
-'currentevents-url'    => 'Project:Novosti',
+'currentevents-url'    => 'Project:Aktuelnosti',
 'disclaimers'          => 'Odricanje odgovornosti',
 'disclaimerpage'       => 'Project:Odricanje odgovornosti',
 'edithelp'             => 'Pomoć pri uređivanju',
@@ -574,12 +576,12 @@ Pogledajte stranicu za [[Special:Version|izdanje]].',
 'retrievedfrom'           => 'Preuzeto iz „$1“',
 'youhavenewmessages'      => 'Imate $1 ($2).',
 'newmessageslink'         => 'novih poruka',
-'newmessagesdifflink'     => 'poslednja izmena',
+'newmessagesdifflink'     => 'poslednju izmenu',
 'youhavenewmessagesmulti' => 'Imate novih poruka na $1',
 'editsection'             => 'uredi',
 'editsection-brackets'    => '[$1]',
 'editold'                 => 'uredi',
-'viewsourceold'           => 'izvornik',
+'viewsourceold'           => 'izvorni kod',
 'editlink'                => 'uredi',
 'viewsourcelink'          => 'Izvor',
 'editsectionhint'         => 'Uredite odeljak „$1“',
@@ -629,13 +631,13 @@ Spisak svih posebnih stranica nalazi se [[Special:SpecialPages|ovde]].',
 # General errors
 'error'                => 'Greška',
 'databaseerror'        => 'Greška u bazi podataka',
-'dberrortext'          => 'Došlo je do sintaksne greške u bazi.
+'dberrortext'          => 'Došlo je do sintaktičke greške u bazi.
 Možda se radi o grešci u softveru.
 Poslednji pokušaj upita je glasio:
-<blockquote><tt>$1</tt></blockquote>
-unutar funkcije „<tt>$2</tt>“.
-Baza podataka je prijavila grešku „<tt>$3: $4</tt>“.',
-'dberrortextcl'        => 'Došlo je do sintaksne greške u bazi.
+<blockquote><code>$1</code></blockquote>
+unutar funkcije „<code>$2</code>“.
+Baza podataka je prijavila grešku „<samp>$3: $4</samp>“.',
+'dberrortextcl'        => 'Došlo je do sintaktičke greške u bazi.
 Poslednji pokušaj upita je glasio:
 „$1“
 unutar funkcije „$2“.
@@ -681,17 +683,18 @@ Podaci koji se ovde nalaze mogu biti zastareli.',
 'wrong_wfQuery_params' => 'Neispravni parametri za wfQuery()<br />
 Funkcija: $1<br />
 Upit: $2',
-'viewsource'           => 'Izvornik',
+'viewsource'           => 'Izvorni kod',
 'viewsource-title'     => 'Prikaz izvora stranice $1',
 'actionthrottled'      => 'Radnja je usporena',
 'actionthrottledtext'  => 'U cilju borbe protiv nepoželjnih poruka, ograničene su vam izmene u određenom vremenu, a upravo ste prešli to ograničenje. Pokušajte ponovo za nekoliko minuta.',
-'protectedpagetext'    => 'Ova stranica je zaključana za uređivanja.',
+'protectedpagetext'    => 'Ova stranica je zaključana za izmene i druge radnje.',
 'viewsourcetext'       => 'Možete da pogledate i umnožite izvorni tekst ove stranice:',
 'viewyourtext'         => "Možete da pogledate i umnožite izvor '''vaših izmena''' na ovoj stranici:",
-'protectedinterface'   => 'Ova stranica je zaštićena jer sadrži tekst korisničkog sučelja programa.',
+'protectedinterface'   => 'Ova stranica sadrži tekst korisničkog okruženja za softver na ovom vikiju i zaštićena je radi sprečavanja zloupotrebe.
+Da biste dodali ili izmenili prevode svih vikija, posetite [//translatewiki.net/ Translejtviki], projekat za lokalizaciju Medijavikija.',
 'editinginterface'     => "'''Upozorenje:''' uređujete stranicu koja se koristi za prikazivanje teksta korisničkog okruženja.
-Izmene na ovoj stranici će uticati na sve korisnike.
-Posetite [//translatewiki.net/wiki/Main_Page?setlang=sr_ec Translejtviki], projekat namenjen za prevođenje Medijavikija.",
+Izmene na ovoj stranici će uticati na sve korisnike ovog vikija.
+Da biste dodali ili izmenili prevode svih vikija, posetite [//translatewiki.net/wiki/Main_Page?setlang=sr_ec Translejtviki], projekat za lokalizaciju Medijavikija.",
 'sqlhidden'            => '(SQL upit je sakriven)',
 'cascadeprotected'     => 'Ova stranica je zaključana jer sadrži {{PLURAL:$1|sledeću stranicu koja je zaštićena|sledeće stranice koje su zaštićene}} „prenosivom“ zaštitom:
 $2',
@@ -699,8 +702,7 @@ $2',
 'customcssprotected'   => 'Nemate dozvolu da menjate ovu CSS stranicu jer sadrži lične postavke drugog korisnika.',
 'customjsprotected'    => 'Nemate dozvolu da menjate ovu stranicu javaskripta jer sadrži lične postavke drugog korisnika.',
 'ns-specialprotected'  => 'Posebne stranice se ne mogu uređivati.',
-'titleprotected'       => "Ovaj naslov je {{GENDER:$1|zaštitio korisnik|zaštitila korisnica|zaštitio korisnik}} [[User:$1|$1]].
-Navedeni razlog: ''$2''.",
+'titleprotected'       => "Ovaj naziv je [[User:$1|$1]] zaštitio od pravljenja. Razlog: ''$2''.",
 
 # Virus scanner
 'virus-badscanner'     => "Neispravna postavka: nepoznati skener za viruse: ''$1''",
@@ -731,7 +733,7 @@ Ne zaboravite da prilagodite svoja [[Special:Preferences|podešavanja]].',
 'logout'                     => 'Odjava',
 'userlogout'                 => 'Odjavi me',
 'notloggedin'                => 'Niste prijavljeni',
-'nologin'                    => 'Nemate nalog? Idite na stranicu „$1“.',
+'nologin'                    => 'Nemate nalog? Idite na stranicu $1.',
 'nologinlink'                => 'Otvaranje naloga',
 'createaccount'              => 'Otvori nalog',
 'gotaccount'                 => 'Već imate nalog? Idite na stranicu „$1“.',
@@ -795,7 +797,7 @@ Poruke neće biti poslate ni za jednu od sledećih mogućnosti.',
 Unesite ispravnu adresu ili ostavite prazno polje.',
 'cannotchangeemail'          => 'Na ovom vikiju ne možete promeniti e-adresu naloga.',
 'accountcreated'             => 'Nalog je otvoren',
-'accountcreatedtext'         => 'Nalog {{GENDER:$1|korisnika|korisnice|korisnika}} $1 je otvoren.',
+'accountcreatedtext'         => 'Korisnički nalog [[{{ns:User}}:$1|$1]] ([[{{ns:User talk}}:$1|talk]]) je otvoren.',
 'createaccount-title'        => 'Otvaranje korisničkog naloga za {{SITENAME}}',
 'createaccount-text'         => 'Neko je otvorio nalog s vašom e-adresom na {{SITENAME}} ($4) pod imenom $2 i lozinkom $3.
 Prijavite se i promenite svoju lozinku.
@@ -808,7 +810,7 @@ Sačekajte nekoliko minuta i pokušajte ponovo.',
 'loginlanguagelabel'         => 'Jezik: $1',
 'suspicious-userlogout'      => 'Vaš zahtev za odjavu je odbijen jer je poslat od strane neispravnog pregledača ili posrednika.',
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => 'Nepoznata greška u funkciji PHP mail().',
 'user-mail-no-addy'      => 'Pokušali ste da pošaljete poruku bez e-adrese.',
 
@@ -902,7 +904,7 @@ Privremena lozinka: $2',
 'watchthis'                        => 'nadgledaj ovu stranicu',
 'savearticle'                      => 'Sačuvaj stranicu',
 'preview'                          => 'Pregled',
-'showpreview'                      => 'Prikaži pregled',
+'showpreview'                      => 'Prikaži pretpregled',
 'showlivepreview'                  => 'Trenutni pregled',
 'showdiff'                         => 'Prikaži izmene',
 'anoneditwarning'                  => "'''Upozorenje:''' niste prijavljeni.
@@ -918,14 +920,14 @@ Ako ponovo kliknete na „{{int:savearticle}}“, vaša izmena će biti sačuvan
 'blockedtitle'                     => 'Korisnik je blokiran',
 'blockedtext'                      => "'''Vaše korisničko ime ili IP adresa je blokirana.'''
 
-Blokiranje je {{GENDER:$1|izvršio|izvršila|izvršio}} $1.
+Blokiranje je {{GENDER:$4|izvršio|izvršila|izvršio}} $1.
 Razlog: ''$2''.
 
 * Datum blokiranja: $8
 * Blokiranje ističe: $6
 * Ime korisnika: $7
 
-Obratite se {{GENDER:$1|korisniku|korisnici|korisniku}} $1 ili [[{{MediaWiki:Grouppage-sysop}}|administratoru]] da razjasnite stvar.
+Obratite se {{GENDER:$4|korisniku|korisnici|korisniku}} $1 ili [[{{MediaWiki:Grouppage-sysop}}|administratoru]] da razjasnite stvar.
 Ne možete koristiti mogućnost „Pošalji poruku ovom korisniku“ ako niste uneli ispravnu e-adresu u [[Special:Preferences|podešavanjima]].
 Vaša blokirana IP adresa je $3, a IB $5.
 Navedite sve podatke iznad pri stvaranja bilo kakvih upita.",
@@ -955,9 +957,7 @@ Možda je premešten ili obrisan dok ste pregledali stranicu.',
 'loginreqlink'                     => 'prijavljeni',
 'loginreqpagetext'                 => 'Morate biti $1 da biste videli druge stranice.',
 'accmailtitle'                     => 'Lozinka je poslata.',
-'accmailtext'                      => 'Lozinka za {{GENDER:$1|korisnika|korisnicu|korisnika}} [[User talk:$1|$1]] je poslata na $2.
-
-Nakon prijave, lozinka se može promeniti [[Special:ChangePassword|ovde]].',
+'accmailtext'                      => 'Lozika za {{GENDER:$1|korisnika|korisnicu}} [[User talk:$1|$1]] je poslata na $2. Nakon prijave, lozinka se može promeniti [[Special:ChangePassword|ovde]].',
 'newarticle'                       => '(novi)',
 'newarticletext'                   => 'Došli ste na stranicu koja još ne postoji.
 Da biste je napravili, počnite kucati u prozor ispod ovog teksta (pogledajte [[{{MediaWiki:Helppage}}|stranicu za pomoć]]).
@@ -980,7 +980,6 @@ Izveštaj o poslednjem blokiranju možete pogledati ispod:',
 *'''Fajerfoks i Safari:''' držite ''Shift'' i kliknite na ''Osveži'', ili pritisnite ''Ctrl-F5'' ili Ctrl-R (''⌘-R'' na Makintošu)
 *'''Gugl kroum:''' pritisnite ''Ctrl-Shift-R'' (''⌘-Shift-R'' na Makintošu)
 *'''Internet eksplorer: '''držite ''Ctrl'' i kliknite na ''Osveži'', ili pritisnite ''Ctrl-F5''
-*'''K-osvajač: '''kliknite na ''Osveži'' ili pritisnite ''F5''
 *'''Opera:''' očistite privremenu memoriju preko menija ''Alatke → Postavke''.",
 'usercssyoucanpreview'             => "'''Savet:''' korisitite dugme „{{int:showpreview}}“ da isprobate svoj novi CSS pre nego što ga sačuvate.",
 'userjsyoucanpreview'              => "'''Savet:''' korisitite dugme „{{int:showpreview}}“ da isprobate svoj novi javaskript pre nego što ga sačuvate.",
@@ -996,8 +995,8 @@ Izveštaj o poslednjem blokiranju možete pogledati ispod:',
 Prilagođene stranice CSS i javaskript počinju malim slovom, npr. {{ns:user}}:Foo/vector.css, a ne {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(Ažurirano)',
 'note'                             => "'''Napomena:'''",
-'previewnote'                      => "'''Ovo je samo pregled.'''
-Stranica još nije sačuvana!",
+'previewnote'                      => "'''Imajte u vidu da je ovo samo pregled.'''
+Vaše izmene još nisu sačuvane!",
 'previewconflict'                  => 'Ovaj pregled oslikava kako će tekst u tekstualnom okviru izgledati.',
 'session_fail_preview'             => "'''Nismo mogli da obradimo vašu izmenu zbog gubitka podataka sesije.'''
 Pokušajte ponovo.
@@ -1061,9 +1060,9 @@ Možete se vratiti i urediti postojeću stranicu, ili se [[Special:UserLogin|pri
 'nocreate-loggedin'                => 'Nemate dozvolu da pravite nove stranice.',
 'sectioneditnotsupported-title'    => 'Uređivanje odeljka nije podržano',
 'sectioneditnotsupported-text'     => 'Uređivanje odeljka nije podržano na ovoj stranici.',
-'permissionserrors'                => 'Greške u dozvolama',
+'permissionserrors'                => 'Greška u dozvoli',
 'permissionserrorstext'            => 'Nemate ovlašćenje za tu radnju iz {{PLURAL:$1|sledećeg|sledećih}} razloga:',
-'permissionserrorstext-withaction' => 'Nemate ovlašćenja za $2 zbog {{PLURAL:$1|sledećeg|sledećih}} razloga:',
+'permissionserrorstext-withaction' => 'Nemate dozvolu za $2 iz {{PLURAL:$1|sledećeg|sledećih}} razloga:',
 'recreate-moveddeleted-warn'       => "'''Upozorenje: ponovo pravite stranicu koja je prethodno obrisana.'''
 
 Razmotrite da li je prikladno da nastavite s uređivanjem ove stranice.
@@ -1071,8 +1070,8 @@ Ovde je navedena istorija brisanja i premeštanja s obrazloženjem:",
 'moveddeleted-notice'              => 'Ova stranica je obrisana.
 Istorija njenog brisanja i premeštanja nalazi se ispod:',
 'log-fulllog'                      => 'Pogledaj celu istoriju',
-'edit-hook-aborted'                => 'Izmena je prekinuta kukom.
-Obrazloženje nije ponuđeno.',
+'edit-hook-aborted'                => 'Izmenu je prekinula kuka.
+Nije dato nikakvo obrazloženje.',
 'edit-gone-missing'                => 'Ne mogu da ažuriram stranicu.
 Izgleda da je obrisana.',
 'edit-conflict'                    => 'Sukob izmena.',
@@ -1100,7 +1099,7 @@ Ovakve argumente bi trebalo izbegavati.",
 Proverite razlike ispod, pa sačuvajte izmene.',
 'undo-failure' => 'Ne mogu da vratim izmenu zbog postojanja sukobljenih međuizmena.',
 'undo-norev'   => 'Ne mogu da vratim izmenu jer ne postoji ili je obrisana.',
-'undo-summary' => 'Vraćena izmena $1 od {{GENDER:$2|korisnika|korisnice|korisnika}} [[Special:Contributions/$2|$2]] ([[User talk:$2|razgovor]])',
+'undo-summary' => 'Poništena izmena $1 {{GENDER:$2|korisnika|korisnice}} [[Special:Contributions/$2|$2]] ([[User talk:$2|razgovor]])',
 
 # Account creation failure
 'cantcreateaccounttitle' => 'Ne mogu da otvorim nalog',
@@ -1120,7 +1119,7 @@ Razlog koji je naveo {{GENDER:$3|korisnik|korisnica|korisnik}} $3 je ''$2''",
 'currentrevisionlink'    => 'Tekuća izmena',
 'cur'                    => 'tren',
 'next'                   => 'sled',
-'last'                   => 'preth',
+'last'                   => 'razl',
 'page_first'             => 'prva',
 'page_last'              => 'poslednja',
 'histlegend'             => "Izbor razlika: izaberite kutijice izmena za upoređivanje i pritisnite enter ili dugme na dnu.<br />
@@ -1135,7 +1134,7 @@ Objašnjenje: '''({{int:cur}})''' – razlika s trenutnom izmenom,
 
 # Revision feed
 'history-feed-title'          => 'Istorija izmena',
-'history-feed-description'    => 'Istorija izmena ove stranice',
+'history-feed-description'    => 'Istorija izmena ove stranice na vikiju',
 'history-feed-item-nocomment' => '$1 u $2',
 'history-feed-empty'          => 'Tražena stranica ne postoji.
 Moguće da je obrisana s vikija ili je preimenovana.
@@ -1230,7 +1229,8 @@ Pogledajte istoriju.',
 'revdelete-only-restricted'   => 'Greška pri sakrivanju stavke od $1, $2: ne možete sakriti stavke od administratora bez izbora drugih mogućnosti vidljivosti.',
 'revdelete-reason-dropdown'   => '*Uobičajeni razlozi za brisanje
 ** Kršenje autorskog prava
-** Neodgovarajući lični podaci
+** Neprikladan komentar ili lični podaci
+** Neprikladno korisničko ime
 ** Uvredljivi podaci',
 'revdelete-otherreason'       => 'Drugi/dodatni razlog:',
 'revdelete-reasonotherlist'   => 'Drugi razlog',
@@ -1239,7 +1239,7 @@ Pogledajte istoriju.',
 
 # Suppression log
 'suppressionlog'     => 'Istorija sakrivanja',
-'suppressionlogtext' => 'Ispod se nalazi spisak brisanja i blokiranja koji uključuje sadržaj sakriven od administratora. Pogledajte [[Special:BlockList|spisak blokiranih IP adresa]] za pregled važećih zabrana i blokiranja.',
+'suppressionlogtext' => 'Ispod se nalazi spisak brisanja i blokiranja koji uključuje sadržaj sakriven od administratora. Tekuće zabrane i blokiranja možete naći [[Special:BlockList|ovde]].',
 
 # History merging
 'mergehistory'                     => 'Spoji istorije stranica',
@@ -1270,10 +1270,10 @@ Korišćenje navigacionih veza će poništiti ovu kolonu.',
 'mergelog'           => 'Dnevnik spajanja',
 'pagemerge-logentry' => 'stranica [[$1]] je spojena u [[$2]] (sve do izmene $3)',
 'revertmerge'        => 'rastavi',
-'mergelogpagetext'   => 'Ispod se nalazi spisak skorašnjih spajanja istorija stranica.',
+'mergelogpagetext'   => 'Ispod je spisak najskorijih spajanja istorija dveju stranica.',
 
 # Diffs
-'history-title'            => 'Istorija izmena za „$1“',
+'history-title'            => 'Istorija izmena stranice „$1“',
 'difference'               => '(razlike između izmena)',
 'difference-multipage'     => '(razlike između stranica)',
 'lineno'                   => 'Red $1:',
@@ -1285,7 +1285,7 @@ Korišćenje navigacionih veza će poništiti ovu kolonu.',
 
 # Search results
 'searchresults'                    => 'Rezultati pretrage',
-'searchresults-title'              => 'Rezultati pretrage za „$1”',
+'searchresults-title'              => 'Rezultati pretrage za „$1“',
 'searchresulttext'                 => 'Za više informacija o pretraživanju projekta {{SITENAME}} pogledajte [[{{MediaWiki:Helppage}}|{{int:help}}]].',
 'searchsubtitle'                   => "Tražili ste '''[[:$1]]''' ([[Special:Prefixindex/$1|sve stranice koje počinju sa „$1“]]{{int:pipe-separator}}[[Special:WhatLinksHere/$1|sve stranice koje vode do „$1“]])",
 'searchsubtitleinvalid'            => "Tražili ste '''$1'''",
@@ -1327,7 +1327,7 @@ Korišćenje navigacionih veza će poništiti ovu kolonu.',
 'search-mwsuggest-enabled'         => 'sa predlozima',
 'search-mwsuggest-disabled'        => 'bez predloga',
 'search-relatedarticle'            => 'Povezano',
-'mwsuggest-disable'                => 'Onemogući predloge AJAX',
+'mwsuggest-disable'                => 'Onemogući predloge pri pretraživanju',
 'searcheverything-enable'          => 'svi imenski prostori',
 'searchrelated'                    => 'povezano',
 'searchall'                        => 'sve',
@@ -1388,7 +1388,7 @@ Upamtite da njegovi popisi ovog vikija mogu biti zastareli.',
 'prefs-rendering'               => 'Izgled',
 'saveprefs'                     => 'Sačuvaj',
 'resetprefs'                    => 'Očisti nesačuvane izmene',
-'restoreprefs'                  => 'Vrati sve na podrazumevano',
+'restoreprefs'                  => 'Vrati sve na podrazumevano (u svim odeljcima)',
 'prefs-editing'                 => 'Uređivanje',
 'prefs-edit-boxsize'            => 'Veličina okvira za uređivanje.',
 'rows'                          => 'Redova:',
@@ -1437,8 +1437,8 @@ Ova radnja se ne može vratiti.',
 'prefs-textboxsize'             => 'Veličina okvira za uređivanje',
 'youremail'                     => 'E-adresa:',
 'username'                      => 'Korisničko ime:',
-'uid'                           => 'Korisnički IB:',
-'prefs-memberingroups'          => 'Član {{PLURAL:$1|grupe|grupâ}}:',
+'uid'                           => 'Korisnički ID:',
+'prefs-memberingroups'          => 'Član {{PLURAL:$1|grupe|grupa}}:',
 'prefs-memberingroups-type'     => '$1',
 'prefs-registration'            => 'Vreme upisa:',
 'prefs-registration-date-time'  => '$1',
@@ -1452,10 +1452,10 @@ Ova radnja se ne može vratiti.',
 Proverite oznake HTML.',
 'badsiglength'                  => 'Vaš potpis je predugačak.
 Ne sme biti duži od $1 {{PLURAL:$1|znaka|znaka|znakova}}.',
-'yourgender'                    => 'Pol:',
-'gender-unknown'                => 'nenaznačen',
-'gender-male'                   => 'muški',
-'gender-female'                 => 'ženski',
+'yourgender'                    => 'Kako želite da se predstavite?',
+'gender-unknown'                => 'Ne želim da se predstavim',
+'gender-male'                   => 'On uređuje viki stranice',
+'gender-female'                 => 'Ona uređuje viki stranice',
 'prefs-help-gender'             => 'Neobavezno: koristi se za ispravno obraćanje softvera korisnicima, zavisno od njihovog pola.
 Ovaj podatak će biti javan.',
 'email'                         => 'E-adresa',
@@ -1468,8 +1468,8 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'prefs-i18n'                    => 'Internacionalizacija',
 'prefs-signature'               => 'Potpis',
 'prefs-dateformat'              => 'Format datuma',
-'prefs-timeoffset'              => 'Vremensko odstupanje',
-'prefs-advancedediting'         => 'Napredne postavke',
+'prefs-timeoffset'              => 'Vremenska razlika',
+'prefs-advancedediting'         => 'Glavna podešavanja',
 'prefs-advancedrc'              => 'Napredne postavke',
 'prefs-advancedrendering'       => 'Napredne postavke',
 'prefs-advancedsearchoptions'   => 'Napredne postavke',
@@ -1479,7 +1479,7 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'prefs-displaywatchlist'        => 'Postavke prikaza',
 'prefs-diffs'                   => 'Razlike',
 
-# User preference: e-mail validation using jQuery
+# User preference: email validation using jQuery
 'email-address-validity-valid'   => 'E-adresa je ispravna',
 'email-address-validity-invalid' => 'Unesite ispravnu e-adresu',
 
@@ -1519,8 +1519,8 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'group-user-member'          => '{{GENDER:$1|korisnik|korisnica|korisnik}}',
 'group-autoconfirmed-member' => '{{GENDER:$1|automatski potvrđen korisnik|automatski potvrđena korisnica|automatski potvrđen korisnik}}',
 'group-bot-member'           => '{{GENDER:$1|bot}}',
-'group-sysop-member'         => '{{GENDER:$1|administrator|administratorka|administrator}}',
-'group-bureaucrat-member'    => '{{GENDER:$1|birokrata|birokratkinja|birokrata}}',
+'group-sysop-member'         => '{{GENDER:$1|administrator|administratorka}}',
+'group-bureaucrat-member'    => '{{GENDER:$1|birokrata|birokratkinja}}',
 'group-suppress-member'      => '{{GENDER:$1|revizor|revizorka|revizor}}',
 
 'grouppage-user'          => '{{ns:project}}:Korisnici',
@@ -1535,7 +1535,7 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'right-edit'                  => 'uređivanje stranica',
 'right-createpage'            => 'pravljenje stranica (izuzev stranica za razgovor)',
 'right-createtalk'            => 'pravljenje stranica za razgovor',
-'right-createaccount'         => 'pravljenje novih korisničkih naloga',
+'right-createaccount'         => 'otvaranje novih korisničkih naloga',
 'right-minoredit'             => 'označavanje izmena kao manje',
 'right-move'                  => 'premeštanje stranica',
 'right-move-subpages'         => 'premeštanje stranica s njihovim podstranicama',
@@ -1548,7 +1548,7 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'right-reupload-shared'       => 'menjanje datoteka na deljenom skladištu multimedije',
 'right-upload_by_url'         => 'otpremanje datoteka sa veb adrese',
 'right-purge'                 => 'čišćenje keš memorije stranice bez potvrde',
-'right-autoconfirmed'         => 'uređivanje poluzaštićenih stranica',
+'right-autoconfirmed'         => 'Not be affected by IP-based rate limits',
 'right-bot'                   => 'smatranje izmena kao automatski proces',
 'right-nominornewtalk'        => 'neposedovanje malih izmena na stranicama za razgovor otvara prozor za nove poruke',
 'right-apihighlimits'         => 'korišćenje viših granica za upite iz API-ja',
@@ -1563,12 +1563,12 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'right-suppressrevision'      => 'pregledanje i vraćanje izmena koje su sakrivene od strane administratora',
 'right-suppressionlog'        => 'gledanje privatnih dnevnika',
 'right-block'                 => 'blokiranje daljih izmena drugih korisnika',
-'right-blockemail'            => 'blokiranje korisnika da šalju e-poruke',
+'right-blockemail'            => 'onemogućavanje korisnicima da šalju e-poruke',
 'right-hideuser'              => 'blokiranje korisničkog imena i njegovo sakrivanje od javnosti',
 'right-ipblock-exempt'        => 'zaobilaženje blokiranja IP adrese, samoblokiranja i blokiranja opsega',
 'right-proxyunbannable'       => 'zaobilaženje samoblokiranja posrednika',
-'right-unblockself'           => 'deblokiranje samog sebe',
-'right-protect'               => 'menjanje zaštićenih stranica i stepena zaštite',
+'right-unblockself'           => 'Odblokiraj samog sebe',
+'right-protect'               => 'Promeni nivoe zaštite i uredi kaskadno zaštićene stranice',
 'right-editprotected'         => 'uređivanje zaštićenih stranica (s prenosivom zaštitom)',
 'right-editinterface'         => 'uređivanje korisničkog sučelja',
 'right-editusercssjs'         => 'uređivanje tuđih CSS i javaskript datoteka',
@@ -1603,7 +1603,7 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'action-edit'                 => 'uređivanje ove stranice',
 'action-createpage'           => 'pravljenje stranica',
 'action-createtalk'           => 'pravljenje stranica za razgovor',
-'action-createaccount'        => 'pravljenje ovog korisničkog naloga',
+'action-createaccount'        => 'otvaranje ovog korisničkog naloga',
 'action-minoredit'            => 'označavanje ove izmene kao manje',
 'action-move'                 => 'premeštanje ove stranice',
 'action-move-subpages'        => 'premeštanje ove stranice i njenih podstranica',
@@ -1658,7 +1658,7 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'diff'                              => 'razl',
 'hist'                              => 'ist',
 'hide'                              => 'sakrij',
-'show'                              => 'prikaži',
+'show'                              => 'Prikaži',
 'minoreditletter'                   => ' m',
 'newpageletter'                     => 'N',
 'boteditletter'                     => 'b',
@@ -1669,8 +1669,9 @@ Ako izaberete da ga unesete, ono će biti korišćeno za pripisivanje vašeg rad
 'rc-change-size'                    => '$1',
 'rc-change-size-new'                => '$1 {{PLURAL:$1|bajt|bajta|bajtova}} posle izmene',
 'newsectionsummary'                 => '/* $1 */ novi odeljak',
-'rc-enhanced-expand'                => 'Prikaži detalje (javaskript)',
+'rc-enhanced-expand'                => 'Prikaži detalje',
 'rc-enhanced-hide'                  => 'Sakrij detalje',
+'rc-old-title'                      => 'prvobitno napravljeno kao „$1“',
 
 # Recent changes linked
 'recentchangeslinked'          => 'Srodne izmene',
@@ -1700,9 +1701,9 @@ Istorija brisanja i premeštanja se nalazi ispod:",
 Za pregled ili pretragu postojećih datoteka, pogledajte [[Special:FileList|spisak otpremljenih datoteka]], ponovna otpremanja su navedena u [[Special:Log/upload|dnevniku otpremanja]], a brisanja u [[Special:Log/delete|dnevniku brisanja]].
 
 Datoteku dodajete na željenu stranicu koristeći sledeće obrasce:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Slika.jpg]]</nowiki></tt>''' za verziju slike u punoj veličini
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Slika.png|200p|mini|levo|opis]]</nowiki></tt>''' za verziju slike s veličinom od 200 piksela koja je prikazana u zasebnom okviru, zajedno s opisom.
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Datoteka.ogg]]</nowiki></tt>''' za direktno povezivanje s datotekom bez njenog prikazivanja",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Slika.jpg]]</nowiki></code>''' za verziju slike u punoj veličini
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Slika.png|200p|mini|levo|opis]]</nowiki></code>''' za verziju slike s veličinom od 200 piksela koja je prikazana u zasebnom okviru, zajedno s opisom.
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Datoteka.ogg]]</nowiki></code>''' za direktno povezivanje s datotekom bez njenog prikazivanja",
 'upload-permitted'            => 'Dozvoljene vrste datoteka: $1.',
 'upload-preferred'            => 'Poželjne vrste datoteka: $1.',
 'upload-prohibited'           => 'Zabranjene vrste datoteka: $1.',
@@ -1749,21 +1750,21 @@ Promenite naziv datoteke i ponovo je pošaljite.',
 Uzrok može biti greška u nazivu datoteke.
 Proverite da li zaista želite da je pošaljete.',
 'windows-nonascii-filename'   => 'Ovaj viki ne podržava nazive datoteka s posebnim znacima.',
-'fileexists'                  => "Datoteka s ovim nazivom već postoji. Pogledajte '''<tt>[[:$1]]</tt>''' ako niste sigurni da li želite da je promenite.
-[[$1|thumb]]",
-'filepageexists'              => "Stranica s opisom ove datoteke je već napravljena ovde '''<tt>[[:$1]]</tt>''', iako datoteka ne postoji.
+'fileexists'                  => 'Datoteka s ovim nazivom već postoji. Pogledajte <strong>[[:$1]]</strong> ako niste sigurni da li želite da je promenite.
+[[$1|thumb]]',
+'filepageexists'              => 'Stranica s opisom ove datoteke je već napravljena ovde <strong>[[:$1]]</strong>, iako datoteka ne postoji.
 Opis koji ste naveli se neće pojaviti na stranici s opisom.
 Da bi se vaš opis ovde našao, potrebno je da ga ručno izmenite.
-[[$1|thumb]]",
-'fileexists-extension'        => "Datoteka sa sličnim nazivom već postoji: [[$2|thumb]]
-* Naziv datoteke koju šaljete: '''<tt>[[:$1]]</tt>'''
-* Naziv postojeće datoteke: '''<tt>[[:$2]]</tt>'''
-Izaberite drugačiji naziv.",
+[[$1|thumb]]',
+'fileexists-extension'        => 'Datoteka sa sličnim nazivom već postoji: [[$2|thumb]]
+* Naziv datoteke koju šaljete: <strong>[[:$1]]</strong>
+* Naziv postojeće datoteke: <strong>[[:$2]]</strong>
+Izaberite drugačiji naziv.',
 'fileexists-thumbnail-yes'    => "Izgleda da je datoteka umanjeno izdanje slike ''(thumbnail)''.
 [[$1|thumb]]
-Proverite datoteku '''<tt>[[:$1]]</tt>'''.
+Proverite datoteku <strong>[[:$1]]</strong>.
 Ako je proverena datoteka ista slika originalne veličine, nije potrebno slati dodatnu sliku.",
-'file-thumbnail-no'           => "Datoteka počinje sa '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "Datoteka počinje sa <strong>$1</strong>.
 Izgleda da se radi o umanjenoj slici ''(thumbnail)''.
 Ukoliko imate ovu sliku u punoj veličini, pošaljite je, a ako nemate, promenite naziv datoteke.",
 'fileexists-forbidden'        => 'Datoteka s ovim nazivom već postoji i ne može se zameniti.
@@ -1779,7 +1780,7 @@ Pogledajte istoriju brisanja pre ponovnog slanja.',
 'uploadwarning-text'          => 'Izmenite opis datoteke i pokušajte ponovo.',
 'savefile'                    => 'Sačuvaj datoteku',
 'uploadedimage'               => '{{GENDER:|je poslao|je poslala|je poslao}} „[[$1]]“',
-'overwroteimage'              => '{{GENDER:|je poslao|je poslala|je poslao}} novo izdanje „[[$1]]“',
+'overwroteimage'              => '{{GENDER:|je poslao|je poslala}} novu verziju datoteke „[[$1]]“',
 'uploaddisabled'              => 'Otpremanje je onemogućeno.',
 'copyuploaddisabled'          => 'Slanje putem URL adrese je onemogućeno.',
 'uploadfromurl-queued'        => 'Slanje je stavljeno na spisak čekanja.',
@@ -1855,7 +1856,7 @@ Ako se problem ne reši, kontaktirajte [[Special:ListUsers/sysop|administratora]
 'backend-fail-writetemp'     => 'Ne mogu da pišem u privremenoj datoteci.',
 'backend-fail-closetemp'     => 'Ne mogu da zatvorim privremenu datoteku.',
 'backend-fail-read'          => 'Ne mogu da pročitam datoteku $1.',
-'backend-fail-create'        => 'Ne mogu da napravim datoteku $1.',
+'backend-fail-create'        => 'Ne mogu da zapišem datoteku $1.',
 'backend-fail-readonly'      => 'Skladišna osnova „$1“ trenutno ne može da se zapisuje. Navedeni razlog glasi: „$2“',
 'backend-fail-synced'        => 'Datoteka „$1“ je nedosledna između unutrašnjih skladišnih osnova',
 'backend-fail-connect'       => 'Ne mogu da se povežem sa skladišnom osnovom „$1“.',
@@ -1938,12 +1939,11 @@ Probajte kasnije kada bude manje opterećenje.',
 'upload_source_file' => ' (datoteka na vašem računaru)',
 
 # Special:ListFiles
-'listfiles-summary'     => 'Ova posebna stranica prikazuje sve poslate datoteke.
-Kad je poređano po korisniku, popis prikazuje samo one datoteke čije je poslednje izdanje postavio taj korisnik.',
+'listfiles-summary'     => 'Ova posebna stranica prikazuje sve poslate datoteke.',
 'listfiles_search_for'  => 'Naziv datoteke:',
 'imgfile'               => 'datoteka',
 'listfiles'             => 'Spisak datoteka',
-'listfiles_thumb'       => 'Umanjeni prikaz',
+'listfiles_thumb'       => 'Minijatura',
 'listfiles_date'        => 'Datum',
 'listfiles_name'        => 'Naziv',
 'listfiles_user'        => 'Korisnik',
@@ -1954,7 +1954,7 @@ Kad je poređano po korisniku, popis prikazuje samo one datoteke čije je posled
 # File description page
 'file-anchor-link'                  => 'Datoteka',
 'filehist'                          => 'Istorija datoteke',
-'filehist-help'                     => 'Kliknite na datum/vreme da vidite tadašnje izdanje datoteke.',
+'filehist-help'                     => 'Kliknite na datum/vreme da vidite tadašnju verziju datoteke.',
 'filehist-deleteall'                => 'obriši sve',
 'filehist-deleteone'                => 'obriši',
 'filehist-revert'                   => 'vrati',
@@ -1980,8 +1980,8 @@ Dostupan je i [[Special:WhatLinksHere/$2|potpuni spisak]].',
 'sharedupload'                      => 'Ova datoteka se nalazi na $1 i može se koristiti i na drugim projektima.',
 'sharedupload-desc-there'           => 'Ova datoteka se nalazi na $1 i može se koristiti i na drugim projektima.
 Pogledajte [$2 stranicu za opis datoteke] za više detalja o njoj.',
-'sharedupload-desc-here'            => 'Ova datoteka se nalazi na $1 i može se koristiti i na drugim projektima.
-Opis na [$2 stranici datoteke] je prikazan ispod.',
+'sharedupload-desc-here'            => 'Ova datoteka se nalazi na $1 i može da se koristi na drugim projektima.
+Opis njene [$2 stranice za opis] je prikazan ispod.',
 'filepage-nofile'                   => 'Ne postoji datoteka s ovim nazivom.',
 'filepage-nofile-link'              => 'Ne postoji datoteka s ovim nazivom, ali je možete [$1 poslati].',
 'uploadnewversion-linktext'         => 'Pošalji novo izdanje ove datoteke',
@@ -1995,7 +1995,7 @@ Opis na [$2 stranici datoteke] je prikazan ispod.',
 'filerevert-legend'         => 'Vrati datoteku',
 'filerevert-intro'          => "Vraćate datoteku '''[[Media:$1|$1]]''' na [$4 izdanje od $2; $3].",
 'filerevert-comment'        => 'Razlog:',
-'filerevert-defaultcomment' => 'Vraćeno na izdanje od $1; $2',
+'filerevert-defaultcomment' => 'Vraćeno na verziju od $2, $1',
 'filerevert-submit'         => 'Vrati',
 'filerevert-success'        => "Datoteka '''[[Media:$1|$1]]''' je vraćena na [$4 izdanje od $2; $3].",
 'filerevert-badversion'     => 'Ne postoji ranije lokalno izdanje datoteke s navedenim vremenskim podacima.',
@@ -2004,7 +2004,7 @@ Opis na [$2 stranici datoteke] je prikazan ispod.',
 'filedelete'                   => 'Obriši $1',
 'filedelete-legend'            => 'Obriši datoteku',
 'filedelete-intro'             => "Brišete datoteku '''[[Media:$1|$1]]''' zajedno s njenom istorijom.",
-'filedelete-intro-old'         => "Brišete izdanje datoteke '''[[Media:$1|$1]]''' od [$4 $2; $3].",
+'filedelete-intro-old'         => "Brišete verziju datoteke '''[[Media:$1|$1]]''' od [$4 $2; $3].",
 'filedelete-comment'           => 'Razlog:',
 'filedelete-submit'            => 'Obriši',
 'filedelete-success'           => "Datoteka '''$1''' je obrisana.",
@@ -2023,7 +2023,7 @@ Opis na [$2 stranici datoteke] je prikazan ispod.',
 # MIME search
 'mimesearch'         => 'MIME pretraga',
 'mimesearch-summary' => 'Ova stranica omogućava filtriranje datoteka prema njihovim vrstama MIME.
-Ulazni podaci: contenttype/subtype, npr. <tt>image/jpeg</tt>.',
+Ulazni podaci: contenttype/subtype, npr. <code>image/jpeg</code>.',
 'mimetype'           => 'MIME vrsta:',
 'download'           => 'preuzmi',
 
@@ -2070,9 +2070,9 @@ Pre brisanja proverite da li druge stranice vode do tih šablona.',
 
 'disambiguations'      => 'Stranice do višeznačnih odrednica',
 'disambiguationspage'  => 'Template:Višeznačna odrednica',
-'disambiguations-text' => "Sledeće stranice su povezane s '''višeznačnom odrednicom'''.
-One bi trebalo biti upućene ka odgovarajućem članku.
-Stranica se smatra višeznačnom odrednicom ako koristi šablon koji je povezan sa spiskom [[MediaWiki:Disambiguationspage]].",
+'disambiguations-text' => "Sledeće stranice sadrže bar jednu vezu do '''višeznačne odrednice'''.
+Umesto toga, valjalo bi da vode do odgovarajuće teme.
+Stranica se smatra višeznačnom odrednicom ako koristi šablon koji vodi od [[MediaWiki:Disambiguationspage]].",
 
 'doubleredirects'                   => 'Dvostruka preusmerenja',
 'doubleredirectstext'               => 'Ova stranica prikazuje stranice koje preusmeravaju na druga preusmerenja.
@@ -2151,7 +2151,7 @@ Sada je preusmerenje na [[$2]].',
 'ancientpages'            => 'Najstarije stranice',
 'move'                    => 'premesti',
 'movethispage'            => 'Premesti ovu stranicu',
-'unusedimagestext'        => 'Sledeće datoteke postoje, ali nisu ugrađene ni u jednu stranicu.
+'unusedimagestext'        => 'Sledeće datoteke postoje, ali ne koriste se ni u jednoj stranici.
 Druge veb stranice mogu koristiti sliku preko direktne adrese, tako da i pored toga mogu biti prikazane ovde pored aktivne upotrebe.',
 'unusedcategoriestext'    => 'Sledeće stranice kategorija postoje iako ih nijedan drugi članak ili kategorija ne koriste.',
 'notargettitle'           => 'Nema odredišta',
@@ -2220,7 +2220,7 @@ Pogledajte i [[Special:WantedCategories|tražene kategorije]].',
 'linksearch-ok'    => 'Pretraži',
 'linksearch-text'  => 'Mogu se koristiti džokeri poput „*.wikipedia.org“.<br />
 Potreban je najviši domen, kao „*.org“.<br />
-Podržani protokoli: <tt>$1</tt> (ne stavljajte u pretragu)',
+Podržani protokoli: <code>$1</code> (zadaje http:// ako ne navedete protokol).',
 'linksearch-line'  => '$1 veza u $2',
 'linksearch-error' => 'Džokeri se mogu pojaviti samo na početku adrese.',
 
@@ -2247,14 +2247,15 @@ Podržani protokoli: <tt>$1</tt> (ne stavljajte u pretragu)',
 'listgrouprights'                      => 'Prava korisničkih grupa',
 'listgrouprights-summary'              => 'Sledi spisak korisničkih grupa na ovom vikiju, zajedno s pravima pristupa.
 Pogledajte [[{{MediaWiki:Listgrouprights-helppage}}|više detalja]] o pojedinačnim pravima.',
-'listgrouprights-key'                  => '* <span class="listgrouprights-granted">Dodeljeno pravo</span>
+'listgrouprights-key'                  => 'Legenda:
+* <span class="listgrouprights-granted">Dodeljeno pravo</span>
 * <span class="listgrouprights-revoked">Ukinuto pravo</span>',
 'listgrouprights-group'                => 'Grupa',
 'listgrouprights-rights'               => 'Prava',
 'listgrouprights-helppage'             => 'Help:Prava grupe',
 'listgrouprights-members'              => '(spisak članova)',
-'listgrouprights-right-display'        => '<span class="listgrouprights-granted">$1 <tt>($2)</tt></span>',
-'listgrouprights-right-revoked'        => '<span class="listgrouprights-revoked">$1 <tt>($2)</tt></span>',
+'listgrouprights-right-display'        => '<span class="listgrouprights-granted">$1 <code>($2)</code></span>',
+'listgrouprights-right-revoked'        => '<span class="listgrouprights-revoked">$1 <code>($2)</code></span>',
 'listgrouprights-addgroup'             => 'dodaje {{PLURAL:$2|sledeću grupu|sledeće grupe}}: $1',
 'listgrouprights-removegroup'          => 'briše {{PLURAL:$2|sledeću grupu|sledeće grupe}}: $1',
 'listgrouprights-addgroup-all'         => 'dodavanje svih grupa',
@@ -2264,13 +2265,13 @@ Pogledajte [[{{MediaWiki:Listgrouprights-helppage}}|više detalja]] o pojedinač
 'listgrouprights-addgroup-self-all'    => 'Dodaj sve grupe na sopstveni nalog',
 'listgrouprights-removegroup-self-all' => 'Ukloni sve grupe sa sopstvenog naloga',
 
-# E-mail user
+# Email user
 'mailnologin'          => 'Nema adrese za slanje',
 'mailnologintext'      => 'Morate biti [[Special:UserLogin|prijavljeni]] i imati ispravnu e-adresu u [[Special:Preferences|podešavanjima]] da biste slali e-poruke drugim korisnicima.',
 'emailuser'            => 'Pošalji e-poruku',
 'emailpage'            => 'Slanje e-poruka',
-'emailpagetext'        => 'Koristite ovaj obrazac da pošaljete e-poruku ovom korisniku.
-E-adresa koju ste uneli u [[Special:Preferences|podešavanjima]] će biti prikazana kao adresa pošiljaoca, tako da će primalac poruke moći da vam odgovori.',
+'emailpagetext'        => 'Možete da koristite donji obrazac da pošaljete e-poruku {{GENDER:$1|ovom korisniku|ovoj korisnici|ovom korisniku|}}.
+E-adresa koju ste uneli u vašim [[Special:Preferences|podešavanjima]] će se prikazati u polju „Od“, tako da će primalac moći da vam odgovori direktno.',
 'usermailererror'      => 'Došlo je do greške pri slanju poruke:',
 'defemailsubject'      => '{{SITENAME}} e-adresa {{GENDER:$1|korisnika|korisnice|korisnika}} $1',
 'usermaildisabled'     => 'Korisnička e-pošta je onemogućena',
@@ -2310,9 +2311,7 @@ E-adresa koju ste uneli u [[Special:Preferences|podešavanjima]] će biti prikaz
 'watchnologintext'     => 'Morate biti [[Special:UserLogin|prijavljeni]] da biste menjali spisak nadgledanja.',
 'addwatch'             => 'Dodaj na spisak nadgledanja',
 'addedwatchtext'       => 'Stranica „[[:$1]]“ je dodata na vaš [[Special:Watchlist|spisak nadgledanja]].
-Buduće izmene ove stranice i njene stranice za razgovor biće navedene ovde, a stranica će biti <b>podebljana</b> u [[Special:RecentChanges|spisku skorašnjih izmena]] da bi se lakše uočila.
-
-Ukoliko budete želeli da uklonite stranicu sa spiska nadgledanja, kliknite opet na zvezdicu u gornjoj paleti.',
+Buduće izmene ove stranice i njene stranice za razgovor biće navedene tamo.',
 'removewatch'          => 'Ukloni sa spiska nadgledanja',
 'removedwatchtext'     => 'Stranica „[[:$1]]“ je uklonjena s vašeg [[Special:Watchlist|spiska nadgledanja]].',
 'watch'                => 'Nadgledaj',
@@ -2323,7 +2322,7 @@ Ukoliko budete želeli da uklonite stranicu sa spiska nadgledanja, kliknite opet
 'notvisiblerev'        => 'Izmena je obrisana',
 'watchnochange'        => 'Ništa što nadgledate nije promenjeno u prikazanom vremenu.',
 'watchlist-details'    => '{{PLURAL:$1|$1 stranica|$1 stranice|$1 stranica}} na vašem spisku nadgledanja, ne računajući stranice za razgovor.',
-'wlheader-enotif'      => '* E-obaveštenje je omogućeno.',
+'wlheader-enotif'      => '* Obaveštenje e-porukom je omogućeno.',
 'wlheader-showupdated' => "* Stranice koje su izmenjene otkad ste ih poslednji put posetili su '''podebljane'''",
 'watchmethod-recent'   => 'proverava se da li ima nadgledanih stranica u skorašnjim izmenama',
 'watchmethod-list'     => 'proverava se da li ima skorašnjih izmena u nadgledanim stranicama',
@@ -2383,7 +2382,7 @@ Podrška i dalja pomoć:
 'deletepage'             => 'Obriši stranicu',
 'confirm'                => 'Potvrdi',
 'excontent'              => 'sadržaj je bio: „$1“',
-'excontentauthor'        => 'sadržaj je bio: „$1“ (jedinu izmenu {{GENDER:|napravio je|napravila je|napravio je}} [[Special:Contributions/$2|$2]])',
+'excontentauthor'        => 'sadržaj je bio: „$1“ (a jedini urednik je bio „[[Special:Contributions/$2|$2]]“)',
 'exbeforeblank'          => 'sadržaj pre brisanja je bio: „$1“',
 'exblank'                => 'stranica je bila prazna',
 'delete-confirm'         => 'Brisanje stranice „$1“',
@@ -2397,12 +2396,13 @@ Potvrdite svoju nameru, da razumete posledice i da ovo radite u skladu s [[{{Med
 Pogledajte ''$2'' za više detalja.",
 'dellogpage'             => 'Dnevnik brisanja',
 'dellogpagetext'         => 'Ispod je spisak poslednjih brisanja.',
-'deletionlog'            => 'istorija brisanja',
+'deletionlog'            => 'dnevnik brisanja',
 'reverted'               => 'Vraćeno na raniju izmenu',
 'deletecomment'          => 'Razlog:',
 'deleteotherreason'      => 'Drugi/dodatni razlog:',
 'deletereasonotherlist'  => 'Drugi razlog',
 'deletereason-dropdown'  => '*Najčešći razlozi za brisanje
+** Spam
 ** Zahtev autora
 ** Kršenje autorskih prava
 ** Vandalizam',
@@ -2423,8 +2423,8 @@ Poslednji autor je ujedno i jedini.',
 
 Poslednju izmenu je {{GENDER:$3|napravio|napravila|napravio}} [[User:$3|$3]] ([[User talk:$3|razgovor]]{{int:pipe-separator}}[[Special:Contributions/$3|{{int:contribslink}}]]).',
 'editcomment'       => "Opis izmene: \"''\$1''\".",
-'revertpage'        => 'Vraćene su izmene {{GENDER:$2|korisnika|korisnice|korisnika}} [[Special:Contributions/$2|$2]] ([[User talk:$2|razgovor]]) na poslednju izmenu člana [[User:$1|$1]]',
-'revertpage-nouser' => 'Vraćene su izmene korisnika (korisničko ime je uklonjeno) na poslednju izmenu člana [[User:$1|$1]]',
+'revertpage'        => 'Vraćene izmene [[Special:Contributions/$2|$2]] ([[User talk:$2|razgovor]]) na poslednju izmenu korisnika [[User:$1|$1]]',
+'revertpage-nouser' => 'Vraćene su izmene skrivenog korisnika na poslednju izmenu {{GENDER:$1|korisnika|korisnice}} [[User:$1|$1]]',
 'rollback-success'  => 'Vraćene su izmene {{GENDER:$1|korisnika|korisnice|korisnika}} $1
 na poslednju izmenu {{GENDER:$2|korisnika|korisnice|korisnika}} $2.',
 
@@ -2463,13 +2463,13 @@ Ovo su trenutne postavke stranice '''$1''':",
 'protect-cascadeon'           => 'Ova stranica je trenutno zaštićena jer se nalazi na {{PLURAL:$1|stranici koja ima|stranicama koje imaju}} prenosivu zaštitu.
 Možete da promenite stepen zaštite, ali to neće uticati na prenosivu zaštitu.',
 'protect-default'             => 'Dozvoli svim korisnicima',
-'protect-fallback'            => 'Potrebno je imati ovlašćenja „$1“',
-'protect-level-autoconfirmed' => 'Blokiraj nove i anonimne korisnike',
-'protect-level-sysop'         => 'Samo administratori',
+'protect-fallback'            => 'Dozvoljeno samo korisnicima sa dozvolom „$1“',
+'protect-level-autoconfirmed' => 'Dopušteno samo automatski potvrđenim korisnicima',
+'protect-level-sysop'         => 'Dopušteno samo administratorima',
 'protect-summary-cascade'     => 'prenosiva zaštita',
 'protect-expiring'            => 'ističe $1 (UTC)',
 'protect-expiring-local'      => 'ističe $1',
-'protect-expiry-indefinite'   => 'nikada',
+'protect-expiry-indefinite'   => 'neodređeno',
 'protect-cascade'             => 'Zaštiti sve stranice koje su uključene u ovu (prenosiva zaštita)',
 'protect-cantedit'            => 'Ne možete menjati stepene zaštite ove stranice jer nemate ovlašćenja za uređivanje.',
 'protect-othertime'           => 'Drugo vreme:',
@@ -2483,7 +2483,7 @@ Možete da promenite stepen zaštite, ali to neće uticati na prenosivu zaštitu
 ** Neproduktivni rat izmena
 ** Stranica velikog prometa',
 'protect-edit-reasonlist'     => 'Uredi razloge zaštićivanja',
-'protect-expiry-options'      => '1 sat:1 hour,1 dan:1 day,1 nedelja:1 week,2 nedelje:2 weeks,1 mesec:1 month,3 meseca:3 months,6 meseci:6 months,1 godina:1 year,beskonačno:infinite',
+'protect-expiry-options'      => '1 sat:1 hour,1 dan:1 day,1 nedelja:1 week,2 nedelje:2 weeks,1 mesec:1 month,3 meseca:3 months,6 meseci:6 months,1 godina:1 year,trajno:infinite',
 'restriction-type'            => 'Dozvola:',
 'restriction-level'           => 'Stepen ograničenja:',
 'minimum-size'                => 'Najmanja veličina',
@@ -2512,8 +2512,8 @@ Arhiva se povremeno čisti od ovakvih stranica.',
 'undeleteextrahelp'            => "Da biste vratili celu istoriju stranice, ostavite sve kućice neoznačene i kliknite na dugme '''''{{int:undeletebtn}}'''''.
 Ako želite da vratite određene izmene, označite ih i kliknite na '''''{{int:undeletebtn}}'''''.",
 'undeleterevisions'            => '$1 {{PLURAL:$1|izmena je arhivirana|izmene su arhivirane|izmena je arhivirano}}',
-'undeletehistory'              => 'Ako vratite stranicu, sve izmene će biti vraćene njenoj istoriji.
-Ako je u međuvremenu napravljena nova stranica s istim nazivom, vraćene izmene će se pojaviti u ranijom istoriji.',
+'undeletehistory'              => 'Ako vratite stranicu, sve revizije će biti vraćene njenoj istoriji.
+Ako je u međuvremenu napravljena nova stranica s istim nazivom, vraćene izmene će se pojaviti u njenoj ranijoj istoriji.',
 'undeleterevdel'               => 'Vraćanje neće biti izvršeno ako je rezultat toga delimično brisanje poslednje izmene.
 U takvim slučajevima morate isključiti ili otkriti najnovije obrisane izmene.',
 'undeletehistorynoadmin'       => 'Ova stranica je obrisana.
@@ -2569,7 +2569,7 @@ $1',
 'mycontris'           => 'Doprinosi',
 'contribsub2'         => 'Za $1 ($2)',
 'nocontribs'          => 'Izmene koje odgovaraju ovim uslovima nisu pronađene.',
-'uctop'               => '(vrh)',
+'uctop'               => '(poslednja)',
 'month'               => 'od meseca (i ranije):',
 'year'                => 'od godine (i ranije):',
 
@@ -2591,7 +2591,7 @@ Izveštaj o blokiranim korisnicima se nalazi ispod:',
 'sp-contributions-submit'              => 'Pretraži',
 
 # What links here
-'whatlinkshere'            => 'Šta je povezano ovde',
+'whatlinkshere'            => 'Šta vodi ovde',
 'whatlinkshere-title'      => 'Stranice koje su povezane sa „$1“',
 'whatlinkshere-page'       => 'Stranica:',
 'linkshere'                => "Sledeće stranice imaju vezu do '''[[:$1]]''':",
@@ -2606,7 +2606,7 @@ Izveštaj o blokiranim korisnicima se nalazi ispod:',
 'whatlinkshere-hideredirs' => '$1 preusmerenja',
 'whatlinkshere-hidetrans'  => '$1 uključivanja',
 'whatlinkshere-hidelinks'  => '$1 veze',
-'whatlinkshere-hideimages' => '$1 veze do slika',
+'whatlinkshere-hideimages' => '$1 veze do datoteke',
 'whatlinkshere-filters'    => 'Filteri',
 
 # Block/unblock
@@ -2633,11 +2633,11 @@ Izaberite konkretan razlog ispod (primer: navođenje konkretnih stranica koje su
 ** Neprihvatljivo korisničko ime',
 'ipb-hardblock'                   => 'Zabrani prijavljenim korisnicima da uređuju s ove IP adrese',
 'ipbcreateaccount'                => 'Onemogući otvaranje naloga',
-'ipbemailban'                     => 'Zabrani članu slanje e-poruka',
+'ipbemailban'                     => 'Onemogući korisniku da šalje e-poruke',
 'ipbenableautoblock'              => 'Automatski blokiraj poslednju IP adresu ovog korisnika i sve daljnje adrese s kojih pokuša da uređuje',
 'ipbsubmit'                       => 'Blokiraj ovog korisnika',
 'ipbother'                        => 'Drugo vreme:',
-'ipboptions'                      => '2 sata:2 hours,1 dan:1 day,3 dana:3 days,1 nedelja:1 week,2 nedelje:2 weeks,1 mesec:1 month,3 meseca:3 months,6 meseci:6 months,1 godina:1 year,beskonačno:infinite',
+'ipboptions'                      => '2 sata:2 hours,1 dan:1 day,3 dana:3 days,1 nedelja:1 week,2 nedelje:2 weeks,1 mesec:1 month,3 meseca:3 months,6 meseci:6 months,1 godina:1 year,trajno:infinite',
 'ipbotheroption'                  => 'drugo',
 'ipbotherreason'                  => 'Drugi/dodatni razlog:',
 'ipbhidename'                     => 'Sakrij korisničko ime sa izmena i spiskova',
@@ -2648,7 +2648,7 @@ Izaberite konkretan razlog ispod (primer: navođenje konkretnih stranica koje su
 'badipaddress'                    => 'Neispravna IP adresa',
 'blockipsuccesssub'               => 'Blokiranje je uspelo',
 'blockipsuccesstext'              => '[[Special:Contributions/$1|$1]] je {{GENDER:$1|blokiran|blokirana|blokiran}}.<br />
-Pogledajte [[Special:BlockList|spisak blokiranih IP adresa]] za pregled blokiranja.',
+Blokiranja možete da pogledate [[Special:BlockList|ovde]].',
 'ipb-blockingself'                => 'Ovom radnjom ćete blokirati sebe! Jeste li sigurni da to želite?',
 'ipb-confirmhideuser'             => 'Upravo ćete blokirati korisnika s uključenom mogućnošću „sakrij korisnika“. Ovim će korisničko ime biti sakriveno u svim spiskovima i izveštajima. Želite li to da uradite?',
 'ipb-edit-dropdown'               => 'Uredi razloge blokiranja',
@@ -2703,7 +2703,7 @@ Istorija sakrivanja se nalazi ispod:',
 'reblock-logentry'                => '{{GENDER:|je promenio|je promenila|je promenio}} podešavanja za blokiranje {{GENDER:$1|korisnika|korisnice|korisnika}} [[$1]] s rokom isteka od $2 ($3)',
 'blocklogtext'                    => 'Ovo je dnevnik blokiranja i deblokiranja korisnika.
 Automatski blokirane IP adrese nisu navedene.
-Pogledajte [[Special:BlockList|spisak blokiranih IP adresa]].',
+Tekuće zabrane i blokiranja možete naći [[Special:BlockList|ovde]].',
 'unblocklogentry'                 => '{{GENDER:|je deblokirao|je deblokirala|je deblokirao}} „$1“',
 'block-log-flags-anononly'        => 'samo anonimni korisnici',
 'block-log-flags-nocreate'        => 'onemogućeno otvaranje naloga',
@@ -2886,7 +2886,7 @@ U drugom slučaju, možete koristiti i vezu, na primer [[{{#Special:Export}}/{{M
 'allmessagesdefault'            => 'Podrazumevani tekst',
 'allmessagescurrent'            => 'Tekst poruke',
 'allmessagestext'               => 'Ovo je spisak svih sistemskih poruka koje su dostupne u imenskom prostoru „Medijaviki“.
-Posetite [//www.mediawiki.org/wiki/Localisation Medijaviki lokalizaciju] i [//translatewiki.net Translejtviki] ako želite da pomognete u prevođenju.',
+Posetite [https://www.mediawiki.org/wiki/Localisation Medijaviki lokalizaciju] i [//translatewiki.net Translejtviki] ako želite da pomognete u prevođenju.',
 'allmessagesnotsupportedDB'     => "Ova stranica ne može da se koristi jer je '''\$wgUseDatabaseMessages''' onemogućen.",
 'allmessages-filter-legend'     => 'Filter',
 'allmessages-filter'            => 'Filtriraj po stanju:',
@@ -2899,7 +2899,7 @@ Posetite [//www.mediawiki.org/wiki/Localisation Medijaviki lokalizaciju] i [//tr
 
 # Thumbnails
 'thumbnail-more'           => 'Povećaj',
-'filemissing'              => 'Datoteka nedostaje',
+'filemissing'              => 'Nedostaje datoteka',
 'thumbnail_error'          => 'Greška pri stvaranju minijature: $1',
 'djvu_page_error'          => 'DjVu stranica je nedostupna',
 'djvu_no_xml'              => 'Ne mogu da preuzmem XML za datoteku DjVu.',
@@ -2969,7 +2969,7 @@ Pokušajte ponovo.',
 
 # JavaScriptTest
 'javascripttest'                           => 'Javaskript test',
-'javascripttest-disabled'                  => 'Ova funkcija je onemogućena.',
+'javascripttest-disabled'                  => 'Ova funkcija nije omogućena na ovom vikiju.',
 'javascripttest-title'                     => 'Izvršavanje testova za $1',
 'javascripttest-pagetext-noframework'      => 'Ova stranica je rezervisana za izvršavanje javaskript testova.',
 'javascripttest-pagetext-unknownframework' => 'Nepoznati radni okvir „$1“.',
@@ -2993,7 +2993,7 @@ Pokušajte ponovo.',
 'tooltip-ca-edit'                     => 'Možete da uređujete ovu stranicu. Koristite pretpregled pre snimanja',
 'tooltip-ca-addsection'               => 'Započnite novi odeljak',
 'tooltip-ca-viewsource'               => 'Ova stranica je zaključana. Možete da vidite izvorni kod.',
-'tooltip-ca-history'                  => 'Prethodna izdanja ove stranice',
+'tooltip-ca-history'                  => 'Prethodne verzije ove stranice',
 'tooltip-ca-protect'                  => 'Zaštitite ovu stranicu',
 'tooltip-ca-unprotect'                => 'Promeni zaštitu ove stranice',
 'tooltip-ca-delete'                   => 'Obrišite ovu stranicu',
@@ -3042,7 +3042,7 @@ Pokušajte ponovo.',
 'tooltip-watchlistedit-raw-submit'    => 'Ažuriraj spisak',
 'tooltip-recreate'                    => 'Ponovo napravite stranicu iako je obrisana',
 'tooltip-upload'                      => 'Započnite otpremanje',
-'tooltip-rollback'                    => '„Vrati“ poništava poslednju izmenu ove stranice s jednim klikom',
+'tooltip-rollback'                    => 'Opcija „Vrati“ vraća izmene poslednjeg korisnika',
 'tooltip-undo'                        => 'Vraća ovu izmenu i otvara obrazac za uređivanje.',
 'tooltip-preferences-save'            => 'Sačuvaj postavke',
 'tooltip-summary'                     => 'Unesite kratak opis',
@@ -3104,18 +3104,18 @@ Ovo je verovatno izazvano vezom do spoljašnjeg sajta koji se nalazi na crnoj li
 'spamprotectionmatch' => 'Sledeći tekst je izazvao naš filter za nepoželjne poruke: $1',
 'spambot_username'    => 'Čišćenje nepoželjnih poruka u Medijavikiji',
 'spam_reverting'      => 'Vraćam na poslednju izmenu koja ne sadrži veze do $1',
-'spam_blanking'       => 'Sve izmene koje sadrže veze do $1, brišem',
+'spam_blanking'       => 'Sve izmene sadrže veze do $1. Čistim',
 
 # Info page
 'pageinfo-title'            => 'Podaci o „$1“',
-'pageinfo-header-edits'     => 'Izmena',
+'pageinfo-header-edits'     => 'Istorija izmena',
 'pageinfo-header-watchlist' => 'Spisak nadgledanja',
 'pageinfo-header-views'     => 'Pregleda',
 'pageinfo-subjectpage'      => 'Stranica',
 'pageinfo-talkpage'         => 'Stranica za razgovor',
-'pageinfo-watchers'         => 'Broj pregledača',
+'pageinfo-watchers'         => 'Broj nadgledača stranica',
 'pageinfo-edits'            => 'Broj izmena',
-'pageinfo-authors'          => 'Broj različitih autora',
+'pageinfo-authors'          => 'Broj zasebnih autora',
 'pageinfo-views'            => 'Broj pregleda',
 'pageinfo-viewsperedit'     => 'Pregleda po izmeni',
 
@@ -3143,7 +3143,7 @@ Ovo je verovatno izazvano vezom do spoljašnjeg sajta koji se nalazi na crnoj li
 
 # Patrol log
 'patrol-log-page'      => 'Dnevnik patroliranja',
-'patrol-log-header'    => 'Ovo je istorija pregledanih izmena.',
+'patrol-log-header'    => 'Ovo je dnevnik patroliranih izmena.',
 'log-show-hide-patrol' => '$1 dnevnik patroliranja',
 
 # Image deletion
@@ -3168,8 +3168,8 @@ Ako ga pokrenete, vaš računar može biti ugrožen.",
 'thumbsize'              => 'Veličina minijature:',
 'widthheight'            => '$1 × $2',
 'widthheightpage'        => '$1 × $2, $3 {{PLURAL:$3|stranica|stranice|stranica}}',
-'file-info'              => 'veličina: $1, MIME vrsta: $2',
-'file-info-size'         => '$1 × $2 piksela, veličina: $3, MIME vrsta: $4',
+'file-info'              => 'veličina datoteke: $1, MIME tip: $2',
+'file-info-size'         => '$1 × $2 piksela, veličina datoteke: $3, MIME tip: $4',
 'file-info-size-pages'   => '$1 × $2 piksela, veličina: $3, MIME vrsta: $4, $5 {{PLURAL:$5|stranica|stranice|stranica}}',
 'file-nohires'           => 'Veća rezolucija nije dostupna.',
 'svg-long-desc'          => 'SVG datoteka, nominalno $1 × $2 piksela, veličina: $3',
@@ -3271,7 +3271,7 @@ Variants for Chinese language
 
 # Metadata
 'metadata'                  => 'Metapodaci',
-'metadata-help'             => 'Ova datoteka sadrži dodatne podatke koji verovatno dolaze od digigalnih fotoaparata ili skenera.
+'metadata-help'             => 'Ova datoteka sadrži dodatne podatke koji verovatno dolaze od digitalnog fotoaparata ili skenera.
 Ako je prvobitno stanje datoteke promenjeno, moguće je da neki detalji ne opisuju izmenjenu datoteku.',
 'metadata-expand'           => 'Prikaži detalje',
 'metadata-collapse'         => 'Sakrij detalje',
@@ -3442,7 +3442,7 @@ Ako je prvobitno stanje datoteke promenjeno, moguće je da neki detalji ne opisu
 'exif-datetimeexpires'             => 'Ne koristi nakon',
 'exif-datetimereleased'            => 'Objavljeno',
 'exif-originaltransmissionref'     => 'Izvorni prenos kôda lokacije',
-'exif-identifier'                  => 'Oznaka',
+'exif-identifier'                  => 'Naznaka',
 'exif-lens'                        => 'Korišćeni objektiv',
 'exif-serialnumber'                => 'Serijski broj kamere',
 'exif-cameraownername'             => 'Vlasnik kamere',
@@ -3499,7 +3499,7 @@ $8',
 'exif-compression-34712' => 'JPEG2000',
 
 'exif-copyrighted-true'  => 'Zaštićeno autorskim pravom',
-'exif-copyrighted-false' => 'Javno vlasništvo',
+'exif-copyrighted-false' => 'Status autorskih prava nije podešen',
 
 'exif-photometricinterpretation-2' => 'RGB',
 'exif-photometricinterpretation-6' => 'YCbCr',
@@ -3724,7 +3724,7 @@ $8',
 
 # External editor support
 'edit-externally'      => 'Izmeni ovu datoteku koristeći spoljašnji program',
-'edit-externally-help' => '(Pogledajte [//www.mediawiki.org/wiki/Manual:External_editors uputstvo za podešavanje] za više informacija)',
+'edit-externally-help' => '(Pogledajte [https://www.mediawiki.org/wiki/Manual:External_editors uputstvo za podešavanje] za više informacija)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'sve',
@@ -3732,7 +3732,7 @@ $8',
 'monthsall'     => 'sve',
 'limitall'      => 'sve',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'              => 'Potvrda e-adrese',
 'confirmemail_noemail'      => 'Niste uneli ispravnu e-adresu u [[Special:Preferences|podešavanjima]].',
 'confirmemail_text'         => '{{SITENAME}} zahteva da potvrdite e-adresu pre nego što počnete da koristite mogućnosti e-pošte.
@@ -3779,9 +3779,9 @@ Ako nalog *ne* pripada vama, pratite sledeću vezu da otkažete potvrdu e-adrese
 $5
 
 Ovaj potvrdni kod ističe $6 u $7.',
-'confirmemail_body_set'     => 'Neko, verovatno vi, sa IP adrese $1 je promenio e-adresu naloga „$2“ u ovu adresu na vikiju {{SITENAME}}.
+'confirmemail_body_set'     => 'Neko, verovatno vi, sa IP adrese $1 je promenio e-adresu naloga „$2“ u ovu adresu na {{SITENAME}}.
 
-Da biste potvrdili da ovaj nalog stvarno pripada vama i ponovo aktivirali mogućnosti e-pošte, otvorite sledeću vezu u pregledaču:
+Da bismo potvrdili da ovaj nalog stvarno pripada vama i ponovo aktivirali mogućnosti e-pošte na {{SITENAME}}, otvorite sledeću vezu u pregledaču:
 
 $3
 
@@ -3789,7 +3789,7 @@ Ako nalog *ne* pripada vama, pratite sledeću vezu da otkažete potvrdu e-adrese
 
 $5
 
-Ovaj potvrdni kod ističe $6 u $7.',
+Ovaj potvrdni kod ističe $4.',
 'confirmemail_invalidated'  => 'Potvrda e-pošte je otkazana',
 'invalidateemail'           => 'Otkazivanje potvrde e-pošte',
 
@@ -3800,7 +3800,7 @@ Ovaj potvrdni kod ističe $6 u $7.',
 
 # Delete conflict
 'deletedwhileediting'      => "'''Upozorenje''': ova stranica je obrisana nakon što ste počeli s uređivanjem!",
-'confirmrecreate'          => "[[User:$1|$1]] ([[User talk:$1|razgovor]]) {{GENDER:$1|je obrisao|je obrisala|obrisa}} ovu stranicu nakon što ste počeli da je uređujete, sa sledećim razlogom:
+'confirmrecreate'          => "[[User:$1|$1]] ([[User talk:$1|razgovor]]) {{GENDER:$1|je obrisao|je obrisala|je obrisao}} ovu stranicu nakon što ste počeli da je uređujete iz sledećeg razloga:
 : ''$2''
 Potvrdite da stvarno želite da napravite stranicu.",
 'confirmrecreate-noreason' => 'Korisnik [[User:$1|$1]] ([[User talk:$1|razgovor]]) je obrisao ovu stranicu nakon što ste počeli da ga uređujete. Potvrdite da stvarno želite da ponovo napravite ovu stranicu.',
@@ -3849,10 +3849,10 @@ Potvrdite da stvarno želite da napravite stranicu.",
 'table_pager_empty'        => 'Nema rezultata',
 
 # Auto-summaries
-'autosumm-blank'   => 'Potpuno obrisana stranica',
-'autosumm-replace' => 'Zamena sadržaja sa „$1“',
+'autosumm-blank'   => 'Uklonjen celokupan sadržaj stranice',
+'autosumm-replace' => 'Zamena sadržaja stranice sa „$1“',
 'autoredircomment' => 'Preusmerenje na [[$1]]',
-'autosumm-new'     => 'Napravljena stranica sa: „$1“',
+'autosumm-new'     => 'Nova stranica: $1',
 
 # Size units
 'size-bytes'     => '$1 B',
@@ -3985,11 +3985,11 @@ Možete da [[Special:EditWatchlist|koristite i običan uređivač]].',
 'version-version'               => '(izdanje $1)',
 'version-svn-revision'          => '(izm. $2)',
 'version-license'               => 'Licenca',
-'version-poweredby-credits'     => "Ovaj viki pokreće '''[//www.mediawiki.org/ Medijaviki]''', autorska prava © 2001-$1 $2.",
+'version-poweredby-credits'     => "Ovaj viki pokreće '''[https://www.mediawiki.org/ Medijaviki]''', autorska prava © 2001-$1 $2.",
 'version-poweredby-others'      => 'ostali',
-'version-license-info'          => 'Medijaviki je slobodan softver; možete ga raspodeljivati i menjati pod uslovima GNU-ove opšte javne licence (OJL) koju je objavila Zadužbina za slobodan softver, bilo da je u pitanju drugo ili novije izdanje licence.
+'version-license-info'          => 'Medijaviki je slobodan softver možete ga redistribuirati i/ili modifikovati pod uslovima GNU-ove opšte javne licence verzija 2 ili svake sledeće koju objavi Zadužbina za slobodan softver.
 
-Medijaviki se nudi u nadi da će biti od koristi, ali BEZ IKAKVE GARANCIJE; čak i bez podrazumevane garancije o PRODAJNOJ VREDNOSTI ili POGODNOSTI ZA ODREĐENE NAMENE. Pogledajte GNU-ovu opštu javnu licencu za više informacija.
+Medijaviki se redistribuirati u nadi da će biti od koristi, ali BEZ IKAKVE GARANCIJE čak i bez PODRAZUMEVANE GARANCIJE FUNKCIONALNOSTI ili PRIKLADNOSTI ZA ODREĐENEU NAMENU. Pogledajte GNU-ovu opštu javnu licencu za više informacija.
 
 Trebalo bi da ste primili [{{SERVER}}{{SCRIPTPATH}}/COPYING primerak GNU-ove opšte javne licence] zajedno s ovim programom. Ako niste, pišite na Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301, USA ili [//www.gnu.org/licenses/old-licenses/gpl-2.0.html pročitajte ovde].',
 'version-software'              => 'Instalirani softver',
@@ -4022,14 +4022,14 @@ Slike su prikazane u punoj veličini, a druge vrste datoteka se pokreću pomoću
 * <span class="mw-specialpagecached">privremeno memorisane posebne stranice</span>',
 'specialpages-group-maintenance' => 'Izveštaji održavanja',
 'specialpages-group-other'       => 'Ostale posebne stranice',
-'specialpages-group-login'       => 'Otvaranje naloga i prijavljivanje',
+'specialpages-group-login'       => 'Prijava/registracija',
 'specialpages-group-changes'     => 'Skorašnje izmene i dnevnici',
 'specialpages-group-media'       => 'Izveštaji o multimedijalnom sadržaju i otpremanja',
 'specialpages-group-users'       => 'Korisnici i korisnička prava',
 'specialpages-group-highuse'     => 'Najčešće korišćene stranice',
 'specialpages-group-pages'       => 'Spiskovi stranica',
 'specialpages-group-pagetools'   => 'Alatke',
-'specialpages-group-wiki'        => 'Podaci i alati enciklopedije',
+'specialpages-group-wiki'        => 'Podaci i alati',
 'specialpages-group-redirects'   => 'Preusmeravanje posebnih stranica',
 'specialpages-group-spam'        => 'Alatke protiv nepoželjnih poruka',
 
@@ -4098,17 +4098,17 @@ Slike su prikazane u punoj veličini, a druge vrste datoteka se pokreću pomoću
 'sqlite-no-fts'  => '$1 bez podrške pretrage celog teksta',
 
 # New logging system
-'logentry-delete-delete'              => '$1 je obrisao stranicu $3',
-'logentry-delete-restore'             => '$1 je vratio stranicu $3',
-'logentry-delete-event'               => '$1 je promenio vidljivost {{PLURAL:$5|događaja u istoriji|$5 događaja u istoriji|$5 događaja u istoriji}} na $3: $4',
-'logentry-delete-revision'            => '$1 je promenio vidljivost {{PLURAL:$5|izmene|$5 izmene|$5 izmena}} na stranici $3: $4',
-'logentry-delete-event-legacy'        => '$1 je promenio vidljivost događajâ u istoriji na $3',
-'logentry-delete-revision-legacy'     => '$1 je promenio vidljivost izmenâ na stranici $3',
-'logentry-suppress-delete'            => '$1 je potisnuo stranicu $3',
-'logentry-suppress-event'             => '$1 je potajno promenio vidljivost {{PLURAL:$5|događaja u istoriji|$5 događaja u istoriji|$5 događaja u istoriji}} na $3: $4',
-'logentry-suppress-revision'          => '$1 je potajno promenio vidljivost {{PLURAL:$5|izmene|$5 izmene|$5 izmena}} na stranici $3: $4',
-'logentry-suppress-event-legacy'      => '$1 je potajno promenio vidljivost događajâ u istoriji na $3',
-'logentry-suppress-revision-legacy'   => '$1 je potajno promenio vidljivost izmenâ na stranici $3',
+'logentry-delete-delete'              => '$1 {{GENDER:|je obrisao|je obrisala|je obrisao}} $3',
+'logentry-delete-restore'             => '$1 {{GENDER:|je vratio|je vratila|je vratio}} stranicu $3',
+'logentry-delete-event'               => '$1 {{GENDER:$2|je promenio|je promenila|je promenio}} vidljivost {{PLURAL:$5|događaja|$5 događaja|$5 događaja}} u dnevniku na $3: $4',
+'logentry-delete-revision'            => '$1 {{GENDER:|je promenio|je promenila|je promenio}} vidljivost {{PLURAL:$5|izmene|$5 izmene|$5 izmena}} na stranici $3: $4',
+'logentry-delete-event-legacy'        => '$1 {{GENDER:|je promenio|je promenila|je promenio}} vidljivost događajâ u dnevniku na $3',
+'logentry-delete-revision-legacy'     => '$1 {{GENDER:|je promenio|je promenila|je promenio}} vidljivost izmenâ na stranici $3',
+'logentry-suppress-delete'            => '$1 {{GENDER:|je potisnuo|je potisnula|je potisnuo}} stranicu $3',
+'logentry-suppress-event'             => '$1 je potajno {{GENDER:|promenio|promenila|promenio}} vidljivost {{PLURAL:$5|događaja|$5 događaja|$5 događaja}} u dnevniku na $3: $4',
+'logentry-suppress-revision'          => '$1 je potajno {{GENDER:|promenio|promenila|promenio}} vidljivost {{PLURAL:$5|izmene|$5 izmene|$5 izmena}} na stranici $3: $4',
+'logentry-suppress-event-legacy'      => '$1 je potajno {{GENDER:|promenio|promenila|promenio}} vidljivost događajâ u dnevniku na $3',
+'logentry-suppress-revision-legacy'   => '$1 je potajno {{GENDER:|promenio|promenila|promenio}} vidljivost izmenâ na stranici $3',
 'revdelete-content-hid'               => 'sadržaj je sakriven',
 'revdelete-summary-hid'               => 'opis izmene je sakriven',
 'revdelete-uname-hid'                 => 'korisničko ime je sakriveno',
@@ -4119,13 +4119,13 @@ Slike su prikazane u punoj veličini, a druge vrste datoteka se pokreću pomoću
 'revdelete-unrestricted'              => 'uklonjena ograničenja za administratore',
 'logentry-move-move'                  => '$1 je premestio stranicu $3 na $4',
 'logentry-move-move-noredirect'       => '$1 je premestio stranicu $3 na $4 bez ostavljanja preusmerenja',
-'logentry-move-move_redir'            => '$1 je premestio stranicu $3 na $4 preko preusmerenja',
-'logentry-move-move_redir-noredirect' => '$1 je premestio stranicu $3 na $4 preko preusmerenja bez ostavljanja preusmerenja',
-'logentry-patrol-patrol'              => '$1 je označio izmenu $4 stranice $3 kao pregledanu',
-'logentry-patrol-patrol-auto'         => '$1 je samostalno označio izmenu $4 stranice $3 kao pregledanu',
-'logentry-newusers-newusers'          => '$1 je otvorio korisnički nalog',
-'logentry-newusers-create'            => '$1 je otvorio korisnički nalog',
-'logentry-newusers-create2'           => '$1 je otvorio korisnički nalog $3',
+'logentry-move-move_redir'            => '$1 {{GENDER:|je premestio|je premestila|je premestio}} stranicu $3 na $4 preko preusmerenja',
+'logentry-move-move_redir-noredirect' => '$1 {{GENDER:|je premestio|je premestila|je premestio}} stranicu $3 na $4 preko preusmerenja bez ostavljanja preusmerenja',
+'logentry-patrol-patrol'              => '$1 {{GENDER:|je označio|je označila|je označio}} izmenu $4 stranice $3 kao patroliranu',
+'logentry-patrol-patrol-auto'         => '$1 je automatski označio izmenu $4 stranice $3 kao pregledanu',
+'logentry-newusers-newusers'          => 'Korisnički nalog $1 je otvoren',
+'logentry-newusers-create'            => 'Korisnički nalog $1 je otvoren',
+'logentry-newusers-create2'           => '$1 je {{GENDER:$2|otvorio|otvorila}} korisnički nalog $3',
 'logentry-newusers-autocreate'        => 'Nalog $1 je samostalno otvoren',
 'newuserlog-byemail'                  => 'lozinka je poslata e-poštom',
 

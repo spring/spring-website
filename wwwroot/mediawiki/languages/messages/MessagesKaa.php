@@ -268,7 +268,7 @@ $messages = array(
 'category-file-count-limited'    => "Usı kategoriyada to'mendegi {{PLURAL:$1|fayl|$1 fayl}} bar.",
 'listingcontinuesabbrev'         => 'dawamı',
 
-'linkprefix' => '/^(.*?)([a-zıA-Zİ\\x80-\\xff]+)$/sDu',
+'linkprefix' => '/^((?>.*(?<![a-zıA-Zİ\\\\x80-\\\\xff])))(.+)$/sDu',
 
 'about'         => 'Haqqında',
 'article'       => "Mag'lıwmat beti",
@@ -745,7 +745,7 @@ $3 keltirilgen sebebi: ''$2''",
 'last'                   => 'aqır.',
 'page_first'             => 'birinshi',
 'page_last'              => "aqırg'ı",
-'histlegend'             => "Tu'sindirme: salıstırajaq nusqaların'ızdı saylan' ha'mde <Enter> knopkasın yamasa to'mendegi knopkani basın'.<br />
+'histlegend'             => "Tu'sindirme: salıstırajaq nusqaların'ızdı saylan' ha'mde Enter knopkasın yamasa to'mendegi knopkani basın'.<br />
 Sha'rtli belgiler: (ha'z.) = ha'zirgi nusqasi menen parqı,
 (aqır.) = aldıng'ı nusqasi menen parqı, k = kishi o'zgeris",
 'history-fieldset-title' => 'Tariyxınan izlew',
@@ -1390,7 +1390,7 @@ Ja'nede [[Special:WantedCategories|kerekli kategoriyalardı]] qarap ko'rin'.",
 'listgrouprights-addgroup-all'    => "Barlıq toparlardı qosıwı mu'mkin",
 'listgrouprights-removegroup-all' => "Barlıq toparlardı o'shiriwi mu'mkin",
 
-# E-mail user
+# Email user
 'mailnologin'     => 'Jiberiwge adres tabılmadı',
 'emailuser'       => 'Xat jiberiw',
 'emailpage'       => "Paydalanıwshıg'a e-mail jiberiw",
@@ -1691,7 +1691,7 @@ Basqa atama saylan'",
 'allmessagesdefault' => 'Defolt tekst',
 'allmessagescurrent' => "Ha'zirgi tekst",
 'allmessagestext'    => "Bul {{ns:mediawiki}} isimler ko'pligindegi bar bolg'an sistema xabarları dizimi.
-Please visit [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] and [//translatewiki.net translatewiki.net] if you wish to contribute to the generic MediaWiki localisation.",
+Please visit [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] and [//translatewiki.net translatewiki.net] if you wish to contribute to the generic MediaWiki localisation.",
 
 # Thumbnails
 'thumbnail-more'           => "U'lkeytiw",
@@ -1851,14 +1851,14 @@ Eger fayl jaratılg'anınan keyin o'zgertilgen bolsa, geybir parametrleri o'zger
 
 # External editor support
 'edit-externally'      => "Bul fayldı sırtqı bag'darlama arqalı o'zgertiw",
-'edit-externally-help' => "(Ko'birek mag'lıwmat ushın [//www.mediawiki.org/wiki/Manual:External_editors ornatıw jolların] qaran')",
+'edit-externally-help' => "(Ko'birek mag'lıwmat ushın [https://www.mediawiki.org/wiki/Manual:External_editors ornatıw jolların] qaran')",
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => "ha'mmesin",
 'namespacesall' => "ha'mmesi",
 'monthsall'     => "ha'mme",
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'            => 'E-mail adresin tastıyıqlaw',
 'confirmemail_send'       => 'Tastıyıqlaw kodın jiberiw',
 'confirmemail_sent'       => 'Tastıyıqlaw xatı jiberildi.',

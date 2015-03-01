@@ -1,5 +1,5 @@
 <?php
-/** Kashubian (Kaszëbsczi)
+/** Kashubian (kaszëbsczi)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -770,9 +770,9 @@ Starnë z [[Special:Watchlist|lëstë ùzérónëch artiklów]] są '''pògrëbi
 Jeżlë chcesz przezdrzec abò szëkac w dotenczas wladowónëch lopkach, biéj do [[Special:FileList|lësta lopków]]. Kòżdi wladënk je registrowóny w [[Special:Log/upload|registrze wladënkù]], a rëmniãcé w [[Special:Log/delete|registrze rëmaniô]].
 
 Abë dodac lopk do starnë, ùżëjë ùniższegò lënka wedle nôslédnëch mùstrów:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.jpg]]</nowiki></tt>''' wëskrzëni całi lopk
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.png|200px|thumb|left|pòdpisënk òbrôzka]]</nowiki></tt>''' wëskrzëni z lewi starnë, przë ùbrzégù, miniaturkã w szérzë 200 pikslów w ramie, z nôdpisã 'pòdpisënk òbrôzka'
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Lopk.ogg]]</nowiki></tt>''' òtemknie prosti lënk do lopka bez wëskrzënianiô sómegò lopka",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.jpg]]</nowiki></code>''' wëskrzëni całi lopk
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Lopk.png|200px|thumb|left|pòdpisënk òbrôzka]]</nowiki></code>''' wëskrzëni z lewi starnë, przë ùbrzégù, miniaturkã w szérzë 200 pikslów w ramie, z nôdpisã 'pòdpisënk òbrôzka'
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Lopk.ogg]]</nowiki></code>''' òtemknie prosti lënk do lopka bez wëskrzënianiô sómegò lopka",
 'uploadlog'           => 'Lësta wladënków',
 'uploadlogpage'       => 'Dołączoné',
 'uploadlogpagetext'   => 'Hewò je lësta slédno wladowónëch lopków.
@@ -899,7 +899,7 @@ Mòżesz zawãżëc wëszłosc przez wëbranié ôrtu registru, miona brëkòwni
 # Special:ListGroupRights
 'listgrouprights-members' => '(lësta nôlëżników karna)',
 
-# E-mail user
+# Email user
 'emailuser'       => 'Wëslë e-maila do negò brëkòwnika',
 'emailpage'       => 'Sélajë e-mail do brëkòwnika',
 'defemailsubject' => 'E-mail òd {{SITENAME}}',
@@ -1110,7 +1110,7 @@ W taczich przëtrôfkach zamkłosc diskùsëji mòże przeniesc blós rãczno.',
 'allmessagesdefault'        => 'Domëslny tekst',
 'allmessagescurrent'        => 'Aktualny tekst',
 'allmessagestext'           => 'To je zestôwk systemòwëch ògłosów przistãpnëch w rumie mionów MediaWiki.
-Proszã zazdrzë na [//www.mediawiki.org/wiki/Localisation Lokalizacëjô MediaWiki] ë [//translatewiki.net translatewiki.net] jeżlë chcesz dolmaczëc softwôrã MediaWiki.',
+Proszã zazdrzë na [https://www.mediawiki.org/wiki/Localisation Lokalizacëjô MediaWiki] ë [//translatewiki.net translatewiki.net] jeżlë chcesz dolmaczëc softwôrã MediaWiki.',
 'allmessagesnotsupportedDB' => "'''{{ns:special}}:Allmessages''' nie mòże bëc brëkòwónô, temù że '''\$wgUseDatabaseMessages''' je wëłączony.",
 
 # Thumbnails
@@ -1244,7 +1244,7 @@ Jinszé pòla bãdą domëslno zataconé.
 
 # External editor support
 'edit-externally'      => 'Editëjë nen lopk brëkùjąc bùtnowi aplikacëji',
-'edit-externally-help' => '(Zdrzë na [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] dlô dobëcô wicy wëdowiédzë).',
+'edit-externally-help' => '(Zdrzë na [https://www.mediawiki.org/wiki/Manual:External_editors setup instructions] dlô dobëcô wicy wëdowiédzë).',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'wszëtczé',
@@ -1252,7 +1252,7 @@ Jinszé pòla bãdą domëslno zataconé.
 'monthsall'     => 'wszëtczé',
 'limitall'      => 'wszëtczé',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail_loggedin' => 'Twòjô adresa e-mail òsta pòcwierdzona.',
 
 # action=purge

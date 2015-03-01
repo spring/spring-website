@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Amire80
  * @author Ashishanchinhar
  * @author Dhirendra.maithili
  * @author Ggajendra
@@ -15,8 +16,11 @@
  * @author Kumariprity
  * @author Manojberma77
  * @author Meno25
+ * @author Nemo bis
  * @author Priyanka.rachna.jha
  * @author Rajesh
+ * @author Reedy
+ * @author Rillke
  * @author Umeshberma
  * @author Vinitutpal
  */
@@ -159,7 +163,7 @@ $messages = array(
 'cancel'        => 'समाप्त',
 'moredotdotdot' => 'आर...',
 'mypage'        => 'हमर पन्ना',
-'mytalk'        => 'हमर वार्त्ता',
+'mytalk'        => 'वार्त्ता',
 'anontalk'      => 'ऐ अनिकेत पता लेल विमर्श',
 'navigation'    => 'संचार',
 'and'           => '&#32;आर',
@@ -337,7 +341,7 @@ $1',
 अहाँ सार्वत्रिक विभव संकेतक गलत टंकण केने हएब, वा कोनो गलत लिंकक पाछाँ गेल हएब।
 ई {{अन्तर्जाल}} प्रयोक्ता द्वारा प्रयुक्त तंत्रांशमे स्थित कोनो दोषक संकेत सेहो कऽ सकैए।',
 'nosuchspecialpage' => 'एहेन कोनो विशेष पन्ना नै',
-'nospecialpagetext' => '<गाढ़> अहाँ एकटा अमान्य पन्नाक आग्रह केने छी। </गाढ़>
+'nospecialpagetext' => '<strong> अहाँ एकटा अमान्य पन्नाक आग्रह केने छी। </strong>
 मान्य विशेष पन्नाक सूची एतए अछि [[Special:SpecialPages|{{int:specialpages}}]]।',
 
 # General errors
@@ -465,7 +469,7 @@ $2',
 ई दृढ़ करू जे ज्ञापक सक्रिय अछि, ऐ पन्नाकेँ फेरसँ भारित करू आ फेरसँ प्रयास करू।',
 'noname'                     => 'अहाँ वैध प्रयोक्तानाम नै देने छी।',
 'loginsuccesstitle'          => 'सम्प्रवेश सफल',
-'loginsuccess'               => "'''अहाँ सम्प्रवेश केलहुँ {{अन्तर्जाल-पता}} \"\$1\".'''क रूपमे।",
+'loginsuccess'               => "'''अहाँ सम्प्रवेश केलहुँ {{SITENAME}} \"\$1\".'''क रूपमे।",
 'nosuchuser'                 => '"$1" नामसँ कोनो प्रयोक्ता नै अछि।
 प्रयोक्तानाम ब्रह्मक्षर-लघ्वक्षर भेद युक्त अछि।
 अपन ह्रिजै जाँचू, वा [[Special:UserLogin/signup|नव खाता बनाउ]] ।',
@@ -516,7 +520,7 @@ $2',
 'loginlanguagelabel'         => 'भाषा : $1',
 'suspicious-userlogout'      => 'अहाँक निष्क्रमणक अनुरोध नै मानल गेल कारण ई लागल जे ई पुरान गवेषकक लागि वा दोसराइत उपस्मृति द्वारा पठाओल गेल छल।',
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => 'पी.एच.पी.क संदेश कार्य() मे अज्ञात दोष',
 'user-mail-no-addy'      => 'बिन ई-पत्र संकेतक ई-पत्र पठेबाक प्रयास',
 
@@ -1055,7 +1059,7 @@ $3 द्वारा देल कारण अछि ''$2''",
 
 # Preferences page
 'preferences'                   => 'विकल्प',
-'mypreferences'                 => 'हमर खासमखास',
+'mypreferences'                 => 'खासमखास',
 'prefs-edits'                   => 'सम्पादनक संख्या',
 'prefsnologin'                  => 'सम्प्रवेशित नै',
 'prefsnologintext'              => 'अहाँ <span class="plainlinks">[{{fullurl:{{#Special:UserLogin}}|returnto=$1}} logged in]</span> प्रयोक्ता विकल्प निर्धारण लेल प्रयोग करू।',
@@ -1174,7 +1178,7 @@ $3 द्वारा देल कारण अछि ''$2''",
 'prefs-displaywatchlist'        => 'दृश्य विकल्प सभ',
 'prefs-diffs'                   => 'अन्तर निर्धारक सभ',
 
-# User preference: e-mail validation using jQuery
+# User preference: email validation using jQuery
 'email-address-validity-valid'   => 'ई-पत्र संकेत मान्य बुझाइत अछि',
 'email-address-validity-invalid' => 'एकटा मान्य ई-पत्र संकेत लिखू',
 
@@ -1391,9 +1395,9 @@ $3 द्वारा देल कारण अछि ''$2''",
 'uploadtext'                  => "निचुक्का पत्र संचिका उपारोपित करबा लेल प्रयोग करू।
 पहिलुका उपारोपित संचिका देखबा वा तकबा लेल जाउ [[Special:FileList|उपारोपित संचिका सभक सूची]], (पुनः) उपारोपित सेहो सम्प्रवेशित अछि [[Special:Log/upload|उपारोपित वृत्तलेख]] मे, मेटाएल सभ [[Special:Log/delete|मेटाएल वृत्तलेख]] मे।
 पन्नमे एकटा संचिका देबा लेल, ऐ पत्र सभमेसँ कोनो लागिक प्रयोग करू:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>''' संचिकाक पूर्ण संस्करण देखबा लेल
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></tt>'''  २०० चित्राणु चाकर प्रकटन एकटा बक्शामे \"वैकल्पिक पाठ\" वामा कात वर्णनक रूपमे लिखल प्रयोग करू
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' बिना संचिका देखेने सोझे संचिकाक लागि देब",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>''' संचिकाक पूर्ण संस्करण देखबा लेल
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|alt text]]</nowiki></code>'''  २०० चित्राणु चाकर प्रकटन एकटा बक्शामे \"वैकल्पिक पाठ\" वामा कात वर्णनक रूपमे लिखल प्रयोग करू
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' बिना संचिका देखेने सोझे संचिकाक लागि देब",
 'upload-permitted'            => 'मान्य संचिका प्रकार:$1 ।',
 'upload-preferred'            => 'मोनपसिन्न संचिका प्रकार:$1 ।',
 'upload-prohibited'           => 'प्रतिबन्धित संचिका प्रकार:$1 ।',
@@ -1441,21 +1445,21 @@ $3 द्वारा देल कारण अछि ''$2''",
 ई संचिकानाममे गलत तंकणक कारण सम्भवतः भेल हएत।
 कृपा कऽ जाँचू जे की अहाँ ऐ संचिकाकेँ ठीके उपारोपित करए चाहै छी।',
 'windows-nonascii-filename'   => 'ई विकी संचिकानाममे विशेष अक्षरक प्रयोग निषेध करैत अछि।',
-'fileexists'                  => "ऐ नाम्ना एकटा संचिका पहिनहियेसँ अछि, कृपा कऽ जाँचू '''<tt>[[:$1]]</tt>''' जँ अहाँ दुविधामे छी जे अहाँ एकरा बदलऽ चाहै छी वा नै।
-[[$1|thumb]]",
-'filepageexists'              => "ऐ संचिकाक वर्णन पन्ना पहिनहिये '''<tt>[[:$1]]</tt>''' पर बना देल गेल, मुदा ऐ नामसँ कोनो संचिका अखन नै अछि।
+'fileexists'                  => 'ऐ नाम्ना एकटा संचिका पहिनहियेसँ अछि, कृपा कऽ जाँचू <strong>[[:$1]]</strong> जँ अहाँ दुविधामे छी जे अहाँ एकरा बदलऽ चाहै छी वा नै।
+[[$1|thumb]]',
+'filepageexists'              => 'ऐ संचिकाक वर्णन पन्ना पहिनहिये <strong>[[:$1]]</strong> पर बना देल गेल, मुदा ऐ नामसँ कोनो संचिका अखन नै अछि।
 जे संक्षेप अहाँ दऽ रहल छी से वर्णन पन्नापर नै आएत।
 अहाँक संक्षेप ओतए आबए तै लेल अहाँकेँ ओकरा अपनेसँ सम्पादित करए पड़त।
-[[$1|thumb]]",
-'fileexists-extension'        => "ऐ नामसँ एकटा संचिका पहिनहियेसँ अछि:[[$2|thumb]]
-* उपारोपित संचिकाक नाम: '''<tt>[[:$1]]</tt>'''
-* अखन स्थित फाइलक नाम: '''<tt>[[:$2]]</tt>'''
-कृपा कऽ दोसर नाम चुनू।",
+[[$1|thumb]]',
+'fileexists-extension'        => 'ऐ नामसँ एकटा संचिका पहिनहियेसँ अछि:[[$2|thumb]]
+* उपारोपित संचिकाक नाम: <strong>[[:$1]]</strong>
+* अखन स्थित फाइलक नाम: <strong>[[:$2]]</strong>
+कृपा कऽ दोसर नाम चुनू।',
 'fileexists-thumbnail-yes'    => "ई संचिका लगैए जे ''(लघुचित्र)'' क छोट आकारक चित्र अछि।
 [[$1|thumb]]
-कृपा कऽ ऐ संचिकाकेँ जाँचू '''<tt>[[:$1]]</tt>''' ।
+कृपा कऽ ऐ संचिकाकेँ जाँचू <strong>[[:$1]]</strong> ।
 जँ जाँचल संचिका मूल संचिकाक वएह चित्र छी तँ एकटा दोसर लघुचित्र उपारोपित करबाक आवश्यकता नै अछि।",
-'file-thumbnail-no'           => "संचिकानाम शुरू होइए '''<tt>$1</tt>''' सँ।
+'file-thumbnail-no'           => "संचिकानाम शुरू होइए <strong>$1</strong> सँ।
 लगैए जे ई छोट आकारक ''(लघुचित्र)'' क चित्र अछि।
 जँ अहाँ लग पूर्ण आनन्तर्यक चित्र अछि तँ से उपारोपित करू, नै तँ संचिकानाम बदलू।",
 'fileexists-forbidden'        => 'ऐ नामक एकटा संचिका पहिनहियेसँ अछि, आ फेरसँ ओ पुनर्लेखित नै कएल जा सकैए।
@@ -1663,7 +1667,7 @@ $1',
 # MIME search
 'mimesearch'         => 'माइम खोज',
 'mimesearch-summary' => 'ई पन्ना माइम प्रकारक संचिकाकेँ अलग करब सम्भव बनबैत अछि।
-निवेशन: पाठ प्रकार/ उपप्रकार, जेना <tt>image/jpeg</tt> ।',
+निवेशन: पाठ प्रकार/ उपप्रकार, जेना <code>image/jpeg</code> ।',
 'mimetype'           => 'माइम प्रकार:',
 'download'           => 'अवारोपन',
 
@@ -1855,7 +1859,7 @@ $1',
 'linksearch-ns'    => 'नामस्थान :',
 'linksearch-ok'    => 'ताकू',
 'linksearch-text'  => 'ब्रह्मास्त्र जेना "*.wikipedia.org" प्रयोग कएल जा सकैए।
-सहायक संविद:<tt>$1</tt> (खोजमे ऐमेसँ कोनो नै जोड़ू)।',
+सहायक संविद:<code>$1</code> (खोजमे ऐमेसँ कोनो नै जोड़ू)।',
 'linksearch-line'  => '$2 सँ $1 क लागि अछि।',
 'linksearch-error' => 'निमंत्रकनामक प्रारम्भमे ब्रह्मास्त्र आबि सकैए।',
 
@@ -1897,7 +1901,7 @@ $1',
 'listgrouprights-addgroup-self-all'    => 'सभटा वर्गकेँ अपन खातामे जोड़ू',
 'listgrouprights-removegroup-self-all' => 'सभटा वर्गकेँ अपन खातासँ निकालू',
 
-# E-mail user
+# Email user
 'mailnologin'          => 'कोनो पठेबाक पता नै',
 'mailnologintext'      => 'अहाँ [[Special:UserLogin|सम्प्रवेशित]] हेबाक चाही आ अहाँक विकल्प [[Special:Preferences|preferences]]  मे एकटा मान्य ई-पत्र संकेत दोसर प्रयोक्ताकेँ पठेबा लेल हेबाक चाही।',
 'emailuser'            => 'ऐ प्रयोक्ताकेँ ई-पत्र पठाउ',
@@ -1934,8 +1938,8 @@ $1',
 'usermessage-template' => 'मीडियाविकी:प्रयोक्ता संदेश',
 
 # Watchlist
-'watchlist'            => 'हमर साकांक्षसूची',
-'mywatchlist'          => 'हमर साकांक्ष-सूची',
+'watchlist'            => 'साकांक्षसूची',
+'mywatchlist'          => 'साकांक्ष-सूची',
 'watchlistfor2'        => '$1 $2 लेल',
 'nowatchlist'          => 'अहाँक साकांक्ष-सूचीमे कोनो बौस्तु नै अछि।',
 'watchlistanontext'    => 'कृपा कऽ $1 अहाँक साकांक्ष-सूचीकेँ देखबा वा सम्पादित करबा लेल।',
@@ -2194,7 +2198,7 @@ $1',
 # Contributions
 'contributions'       => 'प्रयोक्ताक योगदान सभ',
 'contributions-title' => '$1 लेल प्रयोक्ताक अवदान',
-'mycontris'           => 'हमर योगदान',
+'mycontris'           => 'योगदान',
 'contribsub2'         => '$1 ($2) लेल',
 'nocontribs'          => 'कोनो परिवर्तन ऐ सँ मेल नै खाइए।',
 'uctop'               => '(शिखर)',
@@ -2235,7 +2239,7 @@ $1',
 'whatlinkshere-hideredirs' => '$1 घुरबैए',
 'whatlinkshere-hidetrans'  => '$1 परागत',
 'whatlinkshere-hidelinks'  => '$1 सम्बन्ध सभ',
-'whatlinkshere-hideimages' => '$1 चित्रक लागि सभ',
+'whatlinkshere-hideimages' => '$1 फाइल लागि सभ',
 'whatlinkshere-filters'    => 'चलनी सभ',
 
 # Block/unblock
@@ -2513,7 +2517,7 @@ $1 एकर प्रतिबन्धक कारण अछि : "$2"',
 'allmessagesdefault'            => 'पूर्वनिर्धारित संदेश पाठ',
 'allmessagescurrent'            => 'अखुनका संदेश पाठ',
 'allmessagestext'               => 'ई मीडियाविकी नामस्थानमे उपलब्ध संस्थागत संदेशक सूची छी।
-कृपा कऽ देखू [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] आ [//translatewiki.net translatewiki.net] जँ अहाँ मीडियाविकीक स्थानिकीकरणक मूलक अनुवादमे योगदान करए चाहै छी।',
+कृपा कऽ देखू [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] आ [//translatewiki.net translatewiki.net] जँ अहाँ मीडियाविकीक स्थानिकीकरणक मूलक अनुवादमे योगदान करए चाहै छी।',
 'allmessagesnotsupportedDB'     => "ई पन्ना प्रयोगमे नै आनल जा सकैए कारण '''\$wgUseDatabaseMessages''' अशक्त कएल अछि।",
 'allmessages-filter-legend'     => 'चलनी',
 'allmessages-filter'            => 'अपन हिसाबे अनुकूलित कऽ छाँटू:',
@@ -2741,7 +2745,7 @@ $1',
 'file-info'              => 'संचिका आकार: $1, माइम प्रकार: $2',
 'file-info-size'         => '$1 × $2 चित्राणु, फाइल आकार: $3, माइम प्रकार: $4',
 'file-info-size-pages'   => '$1 × $2 चित्रकण, संचिका आकार : $3, माइम प्रकार: $4, $5 {{PLURAL:$5|पन्ना|पन्ना सभ}}',
-'file-nohires'           => '<छोट>ऐसँ बेशी आनन्तर्य उपलब्ध नै अछि।</छोट>',
+'file-nohires'           => 'ऐसँ बेशी आनन्तर्य उपलब्ध नै अछि।',
 'svg-long-desc'          => 'एस.वी.जी. फाइल, मामूली रूपमे $1 × $2 चित्रकण, फाइलक आकार: $3',
 'show-big-image'         => 'पूर्ण आनन्तर्य',
 'show-big-image-preview' => 'ऐ पूर्वदृश्यक आकार: $1.',
@@ -3214,7 +3218,7 @@ Variants for Chinese language
 
 # External editor support
 'edit-externally'      => 'ऐ फाइलकेँ बाहरी अनुप्रयोगसँ हटाउ',
-'edit-externally-help' => '(देखू [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] विषेष जानकारी लेल)',
+'edit-externally-help' => '(देखू [https://www.mediawiki.org/wiki/Manual:External_editors setup instructions] विषेष जानकारी लेल)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'सभ',
@@ -3222,7 +3226,7 @@ Variants for Chinese language
 'monthsall'     => 'सभ',
 'limitall'      => 'सभटा',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'              => ' ई-पत्र सत्यापित करू',
 'confirmemail_noemail'      => 'अहाँ लग कोनो मान्य ई-पत्र संकेत नै अछि एतए [[Special:Preferences|प्रयोक्ताक पसिन्न सभ]] देबा लेल।',
 'confirmemail_text'         => '{{जालस्थल}}  चाहैए जे अहाँ अपन ई-पत्र सुविधा प्रयोग करबासँ पहिने अपन ई-पत्र संकेतक सत्यापन करू।
@@ -3401,7 +3405,7 @@ $5
 'version-hook-subscribedby'     => 'ई सदस्यता लेलनि',
 'version-version'               => '(संस्करण $1)',
 'version-license'               => 'अधिकार',
-'version-poweredby-credits'     => "ई विकी चालित अछि '''[//www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2",
+'version-poweredby-credits'     => "ई विकी चालित अछि '''[https://www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2",
 'version-poweredby-others'      => 'आन',
 'version-license-info'          => 'मीडियाविकी एकटा मंगनीक तंत्रांश अछि; अहाँ एकरा बाँटि सकै छी आ/ वा संशोधित कऽ सकै छीगी.एन.यू. सामान्य जन लाइसेन्सक अन्तर्गत जेना फ्री सॉफ्टवेयर फाउन्डेशन एकरा प्रकाशित केने अछि; चाहे तँ लाइसेन्सक संस्करण २, वा (अहाँक विकल्पपर) कोनो बादक दोसर संस्करणक अन्तर्गत।
 
@@ -3490,8 +3494,7 @@ $5
 
 # Database error messages
 'dberr-header'      => 'ऐ विकीमे एकटा समस्या अछि',
-'dberr-problems'    => 'दुखी छी!
-ई जालस्थल तकनीकी समस्या अनुभव कऽ अछि।',
+'dberr-problems'    => 'दुखी छी! ई जालस्थल तकनीकी समस्या अनुभव कऽ अछि।',
 'dberr-again'       => 'किछु काल बाट ताकू आ फेरसँ भारित करू।',
 'dberr-info'        => '(दत्तनिधि वितरककेँ सम्पर्क नै कऽ सकल: $1)',
 'dberr-usegoogle'   => 'ऐ बीचमे अहाँ गूगलसँ खोज कऽ सकै छी।',
@@ -3538,8 +3541,8 @@ $5
 'logentry-move-move-noredirect'       => '$1 {{लिंग:$2|हटाएल}} पन्ना $3 सँ $4 घुमौआकेँ बिना छोड़ने',
 'logentry-move-move_redir'            => '$1 {{लिंग:$2|हटाएल}} पन्ना $3 सँ $4 घुमौआक अतिरिक्त',
 'logentry-move-move_redir-noredirect' => '$1 {{लिंग:$2|हटाएल}} पन्ना $3 सँ $4 घुमौआक अतितिक्त घुमौआकेँ बिना छोड़ने',
-'logentry-patrol-patrol'              => '$1 {{लिंग:$2|चिन्हित}} संशोधन $4 $3 पन्नाक निरीक्षित',
-'logentry-patrol-patrol-auto'         => '$1 स्वतः {{लिंग:$2|चिन्हित}} संशोधन $4 $3 पन्नाक निरीक्षित',
+'logentry-patrol-patrol'              => '$1 {{GENDER:$2|चिन्हित}} संशोधन $4 $3 पन्नाक निरीक्षित',
+'logentry-patrol-patrol-auto'         => '$1 स्वतः {{GENDER:$2|चिन्हित}} संशोधन $4 $3 पन्नाक निरीक्षित',
 'logentry-newusers-newusers'          => '$1 {{लिंग:$2|बनाएल}} एकटा प्रयोक्ता खाता',
 'logentry-newusers-create'            => '$1 {{लिंग:$2|बनाएल}} एकटा प्रयोक्ता खाता',
 'logentry-newusers-create2'           => '$1 {{लिंग:$2|बनाएल}} {{लिंग:$4|एकटा प्रयोक्ता खाता}} $3',

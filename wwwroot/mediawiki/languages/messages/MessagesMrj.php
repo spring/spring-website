@@ -1,5 +1,5 @@
 <?php
-/** Hill Mari (Кырык мары)
+/** Hill Mari (кырык мары)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -490,7 +490,7 @@ $messages = array(
 # Special:ListGroupRights
 'listgrouprights-members' => '(группын списокшы)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Сирӹшӹлӓн сирмӓш',
 
 # Watchlist
@@ -720,7 +720,7 @@ $messages = array(
 
 # External editor support
 'edit-externally'      => 'Тӱнӹш программым кычылт, ти файлым тӧрлӓш',
-'edit-externally-help' => '(шукыракым анжал: [//www.mediawiki.org/wiki/Manual:External_editors установкын правилывлӓжӹ])',
+'edit-externally-help' => '(шукыракым анжал: [https://www.mediawiki.org/wiki/Manual:External_editors установкын правилывлӓжӹ])',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'цилӓ',

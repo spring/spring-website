@@ -700,7 +700,7 @@ di uplodezi media.',
 'listusers-submit'   => 'Kamukile',
 'listusers-noresult' => 'Ni-di sebelu.',
 
-# E-mail user
+# Email user
 'emailuser'       => 'Imeli bye sebelu',
 'emailpage'       => 'Imeli sebelu',
 'defemailsubject' => '{{SITENAME}} meli',
@@ -900,7 +900,7 @@ Teri yaki, a nyanganyisize.",
 'allmessagesdefault' => 'Selt orge',
 'allmessagescurrent' => 'Selt nca',
 'allmessagestext'    => 'Bye mukoloko sa mukoloko di mulumiwani di MediaWiki poo.
-Please visit [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] and [//translatewiki.net translatewiki.net] if you wish to contribute to the generic MediaWiki localisation.',
+Please visit [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] and [//translatewiki.net translatewiki.net] if you wish to contribute to the generic MediaWiki localisation.',
 
 # Thumbnails
 'thumbnail-more'  => 'Pusize',
@@ -1030,7 +1030,7 @@ Xete ling'ki kwa lina sa konsidisize desepo. Petulo dimedi inlinenikusize.",
 
 # External editor support
 'edit-externally'      => 'Kenki imegi sebilize pagini lakusi',
-'edit-externally-help' => 'Boniselelize [//www.mediawiki.org/wiki/Manual:External_editors instruksi setup] kwa informasi.',
+'edit-externally-help' => 'Boniselelize [https://www.mediawiki.org/wiki/Manual:External_editors instruksi setup] kwa informasi.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'xeti',

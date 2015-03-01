@@ -7,10 +7,12 @@
  * @ingroup Language
  * @file
  *
+ * @author Bulaisen
  * @author Kalani
  * @author Kolonahe
  * @author Node ue
  * @author Singularity
+ * @author Xqt
  */
 
 $namespaceNames = array(
@@ -253,7 +255,7 @@ $messages = array(
 'jumptosearch'     => 'huli',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
-'aboutsite'            => 'No {{SITENAME}}',
+'aboutsite'            => 'E pili ana iā {{SITENAME}}',
 'aboutpage'            => 'Project:E pili ana',
 'copyrightpage'        => '{{ns:project}}:Palapala ho‘okuleana',
 'currentevents'        => 'Ka nū hou',
@@ -263,7 +265,7 @@ $messages = array(
 'edithelp'             => 'Kōkua me ka ho‘ololi ‘ana',
 'edithelppage'         => 'Help:Ho‘ololi',
 'helppage'             => 'Help:Papa kuhikuhi',
-'mainpage'             => 'Papa kinohi',
+'mainpage'             => "Kahua pa'a",
 'mainpage-description' => 'Ka papa kinohi',
 'policy-url'           => 'Project:Palapala',
 'portal'               => 'Ka hui kaiaulu',
@@ -298,7 +300,7 @@ $messages = array(
 'red-link-title'          => '$1 (ʻaʻole i kākau ʻia)',
 
 # Short words for each namespace, by default used in the namespace tab in monobook
-'nstab-main'      => 'ʻaoʻao',
+'nstab-main'      => 'ʻAoʻao',
 'nstab-user'      => 'Inoa mea ho‘ohana',
 'nstab-media'     => 'Pāpaho',
 'nstab-special'   => 'Papa nui',
@@ -589,6 +591,8 @@ E ʻoluʻolu, e hōʻoia i ka hoʻokūkū ʻana i lalo, a laila, e mālama i nā
 # Statistics
 'statistics' => 'Papa helu',
 
+'disambiguationspage' => 'Template:Huaʻōlelo puana like',
+
 'brokenredirects-edit'   => 'e ho‘ololi',
 'brokenredirects-delete' => 'e kāpae',
 
@@ -644,7 +648,7 @@ E ʻoluʻolu, e hōʻoia i ka hoʻokūkū ʻana i lalo, a laila, e mālama i nā
 # Special:ListGroupRights
 'listgrouprights-members' => '(papa o nā lālā)',
 
-# E-mail user
+# Email user
 'emailuser'    => 'E leka uila i kēia mea ho‘ohana',
 'emailmessage' => 'Memo:',
 
@@ -824,7 +828,7 @@ Hiki iā ʻoe ke ʻikena i kāna molekumu.',
 'ilsubmit' => 'Huli',
 
 # External editor support
-'edit-externally-help' => '(E ʻike i nā [//www.mediawiki.org/wiki/Manual:External_editors aʻo palapala no ka hoʻokuene ʻana])',
+'edit-externally-help' => '(E ʻike i nā [https://www.mediawiki.org/wiki/Manual:External_editors aʻo palapala no ka hoʻokuene ʻana])',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'apau',

@@ -606,7 +606,7 @@ Pa pòte atansyon pou mesaj sa si kont sa kreye pa erè.',
 'loginlanguagelabel'         => 'Lang : $1',
 'suspicious-userlogout'      => 'Demand ou te fè pou dekonekte w te refize paske sanble li te voye pa yon navigatè ki fè erè oubyen li soti nan yon proksi pou kach.',
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => 'Erè nou pa konnen nan fonksyon mail() PHP a.',
 
 # Change password dialog
@@ -1110,7 +1110,7 @@ Gade tou [[Special:WantedCategories|kategori moun mande]].',
 # Special:ListGroupRights
 'listgrouprights-members' => '(lis manm yo)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Voye yon mesaj (imèl) pou itilizatè sa a',
 
 # Watchlist
@@ -1371,7 +1371,7 @@ Nenpòt lòt lyen nan menm liy nan konsidere kòm yon eksèpsyon, i.e. paj kote 
 
 # External editor support
 'edit-externally'      => 'Modifye fichye sa a nan aplikasyon pa ou (ki pa nan sistèm an, sou machin ou pa egzanp).',
-'edit-externally-help' => '(Gade [//www.mediawiki.org/wiki/Manual:External_editors komand ak enstriksyon yo] pou plis enfòmasyon oubyen pou konnen plis)',
+'edit-externally-help' => '(Gade [https://www.mediawiki.org/wiki/Manual:External_editors komand ak enstriksyon yo] pou plis enfòmasyon oubyen pou konnen plis)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tout',

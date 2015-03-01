@@ -7,13 +7,17 @@
  * @ingroup Language
  * @file
  *
+ * @author Anson2812
  * @author Horacewai2
+ * @author Justincheng12345
  * @author Kaganer
  * @author KaiesTse
  * @author Mark85296341
+ * @author Simon Shek
  * @author Waihorace
  * @author William915
  * @author Wong128hk
+ * @author Yfdyh000
  */
 
 $namespaceNames = array(
@@ -639,6 +643,7 @@ $1',
 'createaccount'              => '開戶口',
 'gotaccount'                 => '已經有戶口？ $1。',
 'gotaccountlink'             => '登入',
+'userlogin-resetlink'        => '唔記得簽到資料？',
 'createaccountmail'          => '用電郵',
 'createaccountreason'        => '原因：',
 'badretype'                  => '你入嘅密碼唔一致。',
@@ -679,7 +684,7 @@ $1',
 'passwordsent'               => '新嘅密碼已經寄咗畀呢位用戶 "$1" 嘅電郵地址。收到之後請重新登入。',
 'blocked-mailpassword'       => '你嘅IP地址被鎖住，唔可以用密碼復原功能以防止濫用。',
 'eauthentsent'               => '確認電郵已經傳送到指定嘅電郵地址。喺其它嘅郵件傳送到呢個戶口之前，你需要按電郵嘅指示，嚟確認呢個戶口真係屬於你嘅。',
-'throttled-mailpassword'     => '一個密碼提醒已經響$1個鐘頭之前發送咗。為咗防止濫用，響$1個鐘頭之內只可以發送一個密碼提醒。',
+'throttled-mailpassword'     => '一個密碼提醒已經響$1{{PLURAL:$1|個鐘頭}}之前發送咗。為咗防止濫用，響$1{{PLURAL:$1|個鐘頭}}之內只可以發送一個密碼提醒。',
 'mailerror'                  => '傳送電郵錯誤： $1',
 'acct_creation_throttle_hit' => '利用你呢個IP地址嘅訪客響上一日已經開咗 $1 個戶口，係響呢段時間嘅上限。
 結果，利用呢個IP地址嘅訪客唔可以響呢段時間再開多個戶口。',
@@ -699,7 +704,7 @@ $1',
 'loginlanguagelabel'         => '語言：$1',
 'suspicious-userlogout'      => '你去登出嘅要求已經拒絕咗，因為佢可能由壞咗嘅瀏覽器或者快取代理傳送。',
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => '響 PHP 嘅 mail() 參數度出現咗未知嘅錯誤',
 
 # Change password dialog
@@ -831,7 +836,7 @@ $1',
 '''佢嘅內容重未儲存！'''",
 'userinvalidcssjstitle'            => "'''警告：''' 無叫做 \"\$1\" 嘅畫面。請記住自訂介面的 .css 和 .js 頁面時應使用細楷，例如：{{ns:user}}:Foo/vector.css 而唔係 {{ns:user}}:Foo/Vector.css 。",
 'updated'                          => '(己更新)',
-'note'                             => "'''留意:'''",
+'note'                             => "'''留意：'''",
 'previewnote'                      => "'''請記住呢個只係預覽。'''
 更改嘅内容重未儲存！",
 'previewconflict'                  => '呢個預覽係反映如果你選擇儲存嘅話，嘅上面嘅文字編輯區裏面嘅字會儲存落嚟。',
@@ -898,7 +903,7 @@ $1',
 
 你應該要考慮吓繼續編輯呢一版係唔係適合嘅。
 為咗方便起見，呢一版嘅刪除同搬版記錄已經響下面提供:",
-'moveddeleted-notice'              => '呢一版已經刪除咗。
+'moveddeleted-notice'              => '呢一版已經刪咗。
 呢版嘅刪除同搬版日誌響下面提供咗以便參考。',
 'log-fulllog'                      => '睇成個日誌',
 'edit-hook-aborted'                => '編輯由鈎取消咗。
@@ -1097,7 +1102,7 @@ $1",
 'mergelogpagetext'   => '下面係一個最近由一版嘅修訂記錄合併到另一個嘅一覽。',
 
 # Diffs
-'history-title'            => '"$1"嘅修訂歷史',
+'history-title'            => '「$1」嘅修訂歷史',
 'difference'               => '（修訂之間嘅差異）',
 'difference-multipage'     => '（版之間嘅差異）',
 'lineno'                   => '第$1行：',
@@ -1181,7 +1186,7 @@ $1",
 
 # Preferences page
 'preferences'                   => '喜好設定',
-'mypreferences'                 => '安排與架生',
+'mypreferences'                 => '自訂喜好',
 'prefs-edits'                   => '編輯數:',
 'prefsnologin'                  => '重未登入',
 'prefsnologintext'              => '你一定要去<span class="plainlinks">[{{fullurl:{{#Special:UserLogin}}|returnto=$1}} 登入]</span>設定好用戶喜好值先。',
@@ -1208,7 +1213,7 @@ $1",
 'resetprefs'                    => '清除未保存嘅更改',
 'restoreprefs'                  => '恢復全部預設設定',
 'prefs-editing'                 => '編輯中',
-'prefs-edit-boxsize'            => '編輯框大細',
+'prefs-edit-boxsize'            => '編寫框大細',
 'rows'                          => '列：',
 'columns'                       => '行：',
 'searchresultshead'             => '搵嘢',
@@ -1251,7 +1256,7 @@ $1",
 'prefs-common-css-js'           => '共有嘅CSS同埋JavaScript畀所有畫面用：',
 'prefs-reset-intro'             => '你可以用呢版去重設你嘅喜好設定到網站預設值。呢個動作無得番轉頭。',
 'prefs-emailconfirm-label'      => '電郵確認:',
-'prefs-textboxsize'             => '編輯窗大細',
+'prefs-textboxsize'             => '編寫框大細',
 'youremail'                     => '電郵:',
 'username'                      => '用戶名:',
 'uid'                           => '用戶 ID:',
@@ -1291,7 +1296,7 @@ $1",
 'prefs-displaywatchlist'        => '顯示選項',
 'prefs-diffs'                   => '差異',
 
-# User preference: e-mail validation using jQuery
+# User preference: email validation using jQuery
 'email-address-validity-valid'   => '電郵地址睇嚟有效',
 'email-address-validity-invalid' => '請打一個有效嘅電郵地址',
 
@@ -1504,9 +1509,9 @@ $1",
 要睇或者搵嘢之前上載嘅圖像請去[[Special:FileList|已上載檔案一覽]]，（再）上載嘅動作會喺[[Special:Log/upload|上載日誌]]裏面記錄落嚟，而刪除嘅動作會喺[[Special:Log/delete|刪除日誌]]裏面記錄落嚟。
 
 如果要喺頁面度引入呢張圖像，可以使用以下其中一種方式嘅連結：
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}:file.jpg<nowiki>]]</nowiki></tt>'''去用檔案嘅完整版
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}:file.png|200px|thumb|left|替代文字<nowiki>]]</nowiki></tt>'''去用200像素比例闊，靠左邊加盒，響描述度加'替代文字'
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}:file.ogg<nowiki>]]</nowiki></tt>''' 直接連結到檔案而唔顯示個檔案。",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}:file.jpg<nowiki>]]</nowiki></code>'''去用檔案嘅完整版
+* '''<code><nowiki>[[</nowiki>{{ns:file}}:file.png|200px|thumb|left|替代文字<nowiki>]]</nowiki></code>'''去用200像素比例闊，靠左邊加盒，響描述度加'替代文字'
+* '''<code><nowiki>[[</nowiki>{{ns:media}}:file.ogg<nowiki>]]</nowiki></code>''' 直接連結到檔案而唔顯示個檔案。",
 'upload-permitted'            => '准許嘅檔案類型: $1。',
 'upload-preferred'            => '建議嘅檔案類型: $1。',
 'upload-prohibited'           => '禁止嘅檔案類型: $1。',
@@ -1548,17 +1553,17 @@ $1",
 'large-file'                  => '建議檔案嘅大細唔好大過$1 bytes，呢個檔案有$2 bytes',
 'largefileserver'             => '呢個檔案超過咗伺服器設定允許嘅大細。',
 'emptyfile'                   => '你上載嘅檔案似乎係空嘅。噉樣可能係因為你打錯咗個檔名。請檢查吓你係唔係真係要上載呢個檔案。',
-'fileexists'                  => "呢個檔名已經存在，如果你唔肯定係唔係要更改'''<tt>[[:$1]]</tt>'''，請先檢查佢。 [[$1|thumb]]",
-'filepageexists'              => "呢個檔嘅描述頁已經響'''<tt>[[:$1]]</tt>'''開咗，但係呢個名嘅檔案重未存在。你輸入咗嘅摘要係唔會顯示響個描述頁度。要令到個摘要響嗰度出現，你就要手動噉去改佢。
-[[$1|thumb]]",
-'fileexists-extension'        => "一個相似檔名嘅檔案已經存在: [[$2|thumb]]
-* 上載檔案嘅檔名: '''<tt>[[:$1]]</tt>'''
-* 現有檔案嘅檔名: '''<tt>[[:$2]]</tt>'''
-請揀一個唔同嘅名。",
+'fileexists'                  => '呢個檔名已經存在，如果你唔肯定係唔係要更改<strong>[[:$1]]</strong>，請先檢查佢。 [[$1|thumb]]',
+'filepageexists'              => '呢個檔嘅描述頁已經響<strong>[[:$1]]</strong>開咗，但係呢個名嘅檔案重未存在。你輸入咗嘅摘要係唔會顯示響個描述頁度。要令到個摘要響嗰度出現，你就要手動噉去改佢。
+[[$1|thumb]]',
+'fileexists-extension'        => '一個相似檔名嘅檔案已經存在: [[$2|thumb]]
+* 上載檔案嘅檔名: <strong>[[:$1]]</strong>
+* 現有檔案嘅檔名: <strong>[[:$2]]</strong>
+請揀一個唔同嘅名。',
 'fileexists-thumbnail-yes'    => "呢個檔案好似係一幅圖像縮細咗嘅版本''（縮圖）''。 [[$1|thumb]]
-請檢查清楚個檔案'''<tt>[[:$1]]</tt>'''。
+請檢查清楚個檔案<strong>[[:$1]]</strong>。
 如果檢查咗嘅檔案係同原本幅圖個大細係一樣嘅話，就唔使再上載多一幅縮圖。",
-'file-thumbnail-no'           => "個檔名係以'''<tt>$1</tt>'''開始。佢好似係一幅圖像嘅縮細版本''（縮圖）''。
+'file-thumbnail-no'           => "個檔名係以<strong>$1</strong>開始。佢好似係一幅圖像嘅縮細版本''（縮圖）''。
 如果你有呢幅圖像嘅完整大細，唔係嘅話請再改過個檔名。",
 'fileexists-forbidden'        => '呢個檔案嘅名已經存在，唔可以覆蓋；麻煩返轉去用第二個名嚟上載呢個檔案。[[File:$1|thumb|center|$1]]',
 'fileexists-shared-forbidden' => '共享檔案庫入面已經有一個同名嘅檔案。
@@ -1699,7 +1704,7 @@ $1',
 'filehist-filesize'         => '檔案大細',
 'filehist-comment'          => '註解',
 'filehist-missing'          => '檔案遺失',
-'imagelinks'                => '檔案連結',
+'imagelinks'                => '檔案用途',
 'linkstoimage'              => '以下嘅$1個頁面連結到呢個檔案：',
 'linkstoimage-more'         => '多過$1版連過去呢個檔案。
 下面嘅表只係列示咗連去呢個檔案嘅最頭$1版。
@@ -1750,7 +1755,7 @@ $1',
 
 # MIME search
 'mimesearch'         => 'MIME 搜尋',
-'mimesearch-summary' => '呢一版可以過濾有關檔案嘅MIME類型。輸入方法：contenttype/subtype，例如 <tt>image/jpeg</tt>。',
+'mimesearch-summary' => '呢一版可以過濾有關檔案嘅MIME類型。輸入方法：contenttype/subtype，例如 <code>image/jpeg</code>。',
 'mimetype'           => 'MIME 類型：',
 'download'           => '下載',
 
@@ -1865,7 +1870,7 @@ Template:搞清楚',
 'listusers-editsonly'     => '只顯示有編輯嘅用戶',
 'listusers-creationsort'  => '按建立日期排序',
 'usereditcount'           => '$1次編輯',
-'usercreated'             => '響$1 $2建立',
+'usercreated'             => '響$1 $2{{GENDER:$3|建立}}',
 'newpages'                => '新頁',
 'newpages-username'       => '用戶名：',
 'ancientpages'            => '舊頁面',
@@ -1936,7 +1941,7 @@ Template:搞清楚',
 'linksearch-ns'    => '空間名',
 'linksearch-ok'    => '搵',
 'linksearch-text'  => '可以用類似"*.wikipedia.org"嘅萬用字元。<br />
-支援嘅協議: <tt>$1</tt>',
+支援嘅協議: <code>$1</code>',
 'linksearch-line'  => '$1 連自 $2',
 'linksearch-error' => '萬用字元只可以響主機名嘅開頭度用。',
 
@@ -1978,7 +1983,7 @@ Template:搞清楚',
 'listgrouprights-addgroup-self-all'    => '加入全部組到自己嘅戶口度',
 'listgrouprights-removegroup-self-all' => '響自己嘅戶口度可以拎走全部組',
 
-# E-mail user
+# Email user
 'mailnologin'          => '冇傳送地址',
 'mailnologintext'      => '你一定要[[Special:UserLogin|登入咗]]同埋喺你嘅[[Special:Preferences|喜好設定]]度有個有效嘅電郵地址先可以傳送電郵畀其他用戶。',
 'emailuser'            => '發電郵畀呢位用戶',
@@ -2329,7 +2334,7 @@ $1',
 'ipusubmit'                       => '拎走呢個封鎖',
 'unblocked'                       => '"[[User:$1|$1]]"已經解封',
 'unblocked-id'                    => '$1嘅封鎖已經拎走咗',
-'ipblocklist'                     => 'IP地址同用戶名阻止名單',
+'ipblocklist'                     => '封咗嘅用戶',
 'ipblocklist-legend'              => '搵一位封咗嘅用戶',
 'ipblocklist-submit'              => '搵',
 'ipblocklist-localblock'          => '本地封鎖',
@@ -2518,7 +2523,7 @@ $1',
 'allmessagesdefault'            => '預設訊息文字',
 'allmessagescurrent'            => '現時訊息文字',
 'allmessagestext'               => '以下係 MediaWiki 空間名入邊現有系統信息嘅清單。
-如果想貢獻正宗嘅MediaWiki本地化嘅話，請參閱[//www.mediawiki.org/wiki/Localisation MediaWiki本地化]同埋[//translatewiki.net translatewiki.net]。',
+如果想貢獻正宗嘅MediaWiki本地化嘅話，請參閱[https://www.mediawiki.org/wiki/Localisation MediaWiki本地化]同埋[//translatewiki.net translatewiki.net]。',
 'allmessagesnotsupportedDB'     => "呢一版唔可以用，因為'''\$wgUseDatabaseMessages'''已經閂咗。",
 'allmessages-filter-legend'     => '過濾',
 'allmessages-filter'            => '以自定狀況過濾：',
@@ -2776,6 +2781,9 @@ $1',
 'bydate'                => '以時間',
 'sp-newimages-showfrom' => '顯示由$1 $2嘅新檔',
 
+# Video information, used by Language::formatTimePeriod() to format lengths in the above messages
+'hours' => '$1{{PLURAL:$1|個鐘}}',
+
 # Bad image list
 'bad_image_list' => '請根據下面嘅格式去寫:
 
@@ -2816,7 +2824,7 @@ Variants for Chinese language
 'metadata-help'     => '呢個檔案有額外嘅資料。佢應該係數碼相機或者掃描器整出來嘅。如果佢整咗之後畀人改過，裏面嘅資料未必同改過之後相符。',
 'metadata-expand'   => '打開詳細資料',
 'metadata-collapse' => '收埋詳細資料',
-'metadata-fields'   => '響呢個信息列出嘅 EXIF 元數據項目會喺圖像頁中包含起嚟，而且個元數據表除咗喺下面列出嘅項目之外，其它嘅項目預設會被隱藏。
+'metadata-fields'   => '響呢個信息列出嘅EXIF元數據項目會喺圖像頁中包含起嚟，而且個元數據表除咗喺下面列出嘅項目之外，其它嘅項目預設會隱藏。
 * make
 * model
 * datetimeoriginal
@@ -3082,7 +3090,7 @@ Variants for Chinese language
 'exif-gpsmeasuremode-3' => '三維量度',
 
 # Pseudotags used for GPSSpeedRef
-'exif-gpsspeed-k' => '千米/小時',
+'exif-gpsspeed-k' => '公里/小時',
 'exif-gpsspeed-m' => '英里/小時',
 'exif-gpsspeed-n' => '浬/小時',
 
@@ -3097,7 +3105,7 @@ Variants for Chinese language
 
 # External editor support
 'edit-externally'      => '用外面程式來改呢個檔案',
-'edit-externally-help' => '(去[//www.mediawiki.org/wiki/Manual:External_editors setup instructions] 睇多啲資料)',
+'edit-externally-help' => '(去[https://www.mediawiki.org/wiki/Manual:External_editors setup instructions] 睇多啲資料)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => '全部',
@@ -3105,7 +3113,7 @@ Variants for Chinese language
 'monthsall'     => '全部',
 'limitall'      => '全部',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'              => '確認電郵地址',
 'confirmemail_noemail'      => '你唔需要響你嘅[[Special:Preferences|用戶喜好設定]]度設定一個有效嘅電郵地址。',
 'confirmemail_text'         => '{{SITENAME}}需要你喺使用電郵功能之前驗證吓你嘅電郵地址。啟用下邊個掣嚟發封確認信去你個地址度。封信入面會附帶一條包含代碼嘅連結；喺你個瀏覽器度打開條連結嚟確認你嘅電郵地址係有效嘅。',
@@ -3264,7 +3272,7 @@ $5
 'version-hook-subscribedby'     => '利用於',
 'version-version'               => '(版本 $1)',
 'version-license'               => '牌照',
-'version-poweredby-credits'     => "呢個 Wiki 係由 '''[//www.mediawiki.org/ MediaWiki]''' 驅動，版權所有 © 2001-$1 $2。",
+'version-poweredby-credits'     => "呢個 Wiki 係由 '''[https://www.mediawiki.org/ MediaWiki]''' 驅動，版權所有 © 2001-$1 $2。",
 'version-poweredby-others'      => '其他',
 'version-license-info'          => 'MediaWiki係自由軟件；你可以根據Free Software Foundation所發表嘅GNU General Public License條款規定，就本程式再發佈同／或修改；無論你根據嘅係呢個牌照嘅第二版或（任你揀）任一日之後發行嘅版本。
 
@@ -3348,8 +3356,7 @@ MediaWiki是基於使用目的而加以發佈，但係就唔會負上任何嘅�
 
 # Database error messages
 'dberr-header'      => '呢個 wiki 出咗問題',
-'dberr-problems'    => '對唔住！
-呢一版出現咗一啲技術性問題。',
+'dberr-problems'    => '對唔住！呢一版出現咗一啲技術性問題。',
 'dberr-again'       => '試吓等多幾分種然後開試。',
 'dberr-info'        => '(唔能夠連繫個資料伺服器: $1)',
 'dberr-usegoogle'   => '響現階段你可以用 Google 去搵嘢。',

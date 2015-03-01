@@ -1,5 +1,5 @@
 <?php
-/** Tatar (Latin script) (Tatarça)
+/** Tatar (Latin script) (tatarça)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -221,7 +221,7 @@ $messages = array(
 'index-category'                 => 'İndekslanğan bitlär',
 'noindex-category'               => 'İndekslanmağan bitlär',
 
-'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
+'linkprefix' => '/^((?>.*(?<![a-zA-Z\\\\x80-\\\\xff])))(.+)$/sD',
 
 'about'         => 'Taswirlama',
 'article'       => 'Mäqälä',
@@ -1191,9 +1191,9 @@ Ul $1 {{PLURAL:$1|xäreftän}} kübräk bulırğa tieş tügel.',
 'uploadtext'                 => "Bu formanı qullanıp serverğa fayllar yökli alasız. Elegräk yöklänelgän fayllarnı qaraw öçen [[Special:FileList|Yöklänelgän fayllar isemlegenä]] märäcäğät itegez. Şulay uq ul [[Special:Log/upload|yöklänmälär isemlegenä]] häm [[Special:Log/delete|beterelgän fayllar]] isemlegenä dä yazıla.
 
 Faylnı mäqälägä yökläw öçen Sez menä bu ürnäklärne qullana alasız:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.jpg]]</nowiki></tt>''' faylnıñ tulı yuramasın quyu öçen;
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.png|200px|thumb|left|taswirlaması]]</nowiki></tt>'''  200 pikselğa qädär kiñlektäge  häm tekstnıñ sul yağında, taswirlaması belän;
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>'''bittä faylnı sürätlämiçä, barı tik sıltamasın ğına quyu.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.jpg]]</nowiki></code>''' faylnıñ tulı yuramasın quyu öçen;
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Räsem.png|200px|thumb|left|taswirlaması]]</nowiki></code>'''  200 pikselğa qädär kiñlektäge  häm tekstnıñ sul yağında, taswirlaması belän;
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>'''bittä faylnı sürätlämiçä, barı tik sıltamasın ğına quyu.",
 'upload-permitted'           => 'Röxsät itelgän fayl törläre:$1',
 'upload-preferred'           => 'Mömkin bulğan fayl törläre:$1',
 'upload-prohibited'          => 'Tıyılğan fayl törläre:$1',
@@ -1484,7 +1484,7 @@ Asta [[Special:UnusedCategories|qullanılmağan törkemnär]] kärsätelgän.
 'listgrouprights-helppage' => 'Help:Törkemnärneñ xoquqları',
 'listgrouprights-members'  => '(törkem isemlege)',
 
-# E-mail user
+# Email user
 'emailuser'       => 'Bu qullanuçığa xat',
 'emailpage'       => 'Qullanuçığa xat cibärü',
 'defemailsubject' => '{{SITENAME}}: xat',
@@ -1803,7 +1803,7 @@ Zinhar başqa isem saylağız.',
 'allmessagesdefault'            => 'Töpcay yazma',
 'allmessagescurrent'            => 'Eligi yazma',
 'allmessagestext'               => 'Bu isemlek MediaWiki isemnär mäydanında bulğan sistema xäbärläreneñ isemlege.
-Ğomumi MediaWiki lokalizatsiäsendä qatnaşırğa teläsägez, zinhar [//www.mediawiki.org/wiki/Localisation MediaWiki Lokalizatsiäse] häm [//translatewiki.net translatewiki.net] säxifälärne qullanığız.',
+Ğomumi MediaWiki lokalizatsiäsendä qatnaşırğa teläsägez, zinhar [https://www.mediawiki.org/wiki/Localisation MediaWiki Lokalizatsiäse] häm [//translatewiki.net translatewiki.net] säxifälärne qullanığız.',
 'allmessages-filter-legend'     => 'Filtr',
 'allmessages-filter-unmodified' => 'Üzgärtelmägän',
 'allmessages-filter-all'        => 'Barısı',
@@ -2093,7 +2093,7 @@ Yulnıñ berençe sıltaması quyma öçen tıyılğan räsemgä sıltama bulır
 
 # External editor support
 'edit-externally'      => 'Bu faylnı tışqı quşımtanı qullanıp üzgärtü',
-'edit-externally-help' => '(tulıraq mäğlümat öçen [//www.mediawiki.org/wiki/Manual:External_editors setup instructions] biten qarağız)',
+'edit-externally-help' => '(tulıraq mäğlümat öçen [https://www.mediawiki.org/wiki/Manual:External_editors setup instructions] biten qarağız)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'barlıq',

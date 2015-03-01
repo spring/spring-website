@@ -8,6 +8,7 @@
  * @file
  *
  * @author Als-Holder
+ * @author Geitost
  * @author Jens Liebenau
  * @author Jonny84
  * @author Kaganer
@@ -383,7 +384,7 @@ Vergiss nä, denne [[Special:Preferences|{{SITENAME}}-Eistellunga]] oazupoassa.'
 'logout'                     => 'Oabmelda',
 'userlogout'                 => 'Oabmelda',
 'notloggedin'                => 'Nä oangemeldet',
-'nologin'                    => "Du hast keen Benutzerkonto? '''$1'''.",
+'nologin'                    => 'Du hast keen Benutzerkonto? $1.',
 'nologinlink'                => 'Neues Benutzerkonto oanleega',
 'createaccount'              => 'Benutzerkonto oanlega',
 'gotaccount'                 => "Du hast bereits a Benutzerkonto? '''$1'''.",
@@ -1078,10 +1079,10 @@ Stelle sicher, doaß de Versionsgeschichte anner Seite historisch korrekt ies.',
 'large-file'                 => 'De Dateigriße sullte noach Meeglichkeet $1 ne ieberschreita. Diese Datei ies $2 gruß.',
 'largefileserver'            => 'De Datei ies grißer ols de vum Server eengestallte Maximalgriße.',
 'emptyfile'                  => 'De huchgeloadene Datei ies laar. Dar Grund koan a Tippfahler eim Dateinoama sei. Bitte kontrolliere, ob du de Datei wirklich huchloada wielst.',
-'fileexists'                 => "Anne Datei miet diesem Noama existiert bereits.
-Bitte priefe '''<tt>[[:$1]]</tt>''', wenn du dir ne secher biest, ob du se ändern wielst.
-[[$1|thumb]]",
-'file-thumbnail-no'          => "Dar Dateinoame beginnt miet '''<tt>$1</tt>'''. Dies deutet uff a Bild verringerter Griße ''(thumbnail)'' hin.
+'fileexists'                 => 'Anne Datei miet diesem Noama existiert bereits.
+Bitte priefe <strong>[[:$1]]</strong>, wenn du dir ne secher biest, ob du se ändern wielst.
+[[$1|thumb]]',
+'file-thumbnail-no'          => "Dar Dateinoame beginnt miet <strong>$1</strong>. Dies deutet uff a Bild verringerter Griße ''(thumbnail)'' hin.
 Bitte priefe, ob du doas Bild ei voller Ufflesung vorliegen host und loade dieses under damm Originalnoama huch.",
 'file-exists-duplicate'      => 'Diese Datei ies a Duplikat dar fulgenda {{PLURAL:$1|Datei|$1 Dateien}}:',
 'file-deleted-duplicate'     => 'Anne identische Datei dieser Datei ([[:$1]]) wurde frieher geläscht. Ieberpriefe doas Läsch-Logbuch, bevor du se huchlädst.',
@@ -1103,11 +1104,11 @@ Bitte gieb dar Datei an'n Noama, dar dann Inhalt besser beschreibt.",
 'upload-proto-error'        => 'Foalsches Protokoll',
 'upload-proto-error-text'   => 'De URL muuß miet <code>http://</code> oder <code>ftp://</code> beginna.',
 'upload-file-error-text'    => "Bei dar Erstellung a'r temporären Datei uff'd Server ies a interner Fahler uffgetreta.
-Bitte informiere an'n [[Special:ListUsers/sysop|System-Administrator]].",
+Bitte informiere an'n [[Special:ListUsers/sysop|Administrator]].",
 'upload-misc-error'         => 'Unbekennter Fahler beim Huchloada',
 'upload-misc-error-text'    => "Beim Huchloada ies a unbekennter Fahler uffgetreta.
 Priefe de URL uff Fahler, dann Online-Status der Seite und versuche 's erneut.
-Wenn doas Problem wetter bestieht, informiere anna [[Special:ListUsers/sysop|System-Administrator]].",
+Wenn doas Problem wetter bestieht, informiere anna [[Special:ListUsers/sysop|Administrator]].",
 'upload-too-many-redirects' => 'De URL beinhaltete zu viele Wetterleitunga',
 'upload-unknown-size'       => 'Unbekennte Grieße',
 'upload-http-error'         => 'A HTTP-Fahler ies uffgetreta: $1',
@@ -1194,7 +1195,7 @@ Anne [[Special:WhatLinksHere/$2|vullständige Liste]] ies verfiegbar.',
 
 # MIME search
 'mimesearch'         => 'Suche noach MIME-Typ',
-'mimesearch-summary' => 'Uff dieser Spezialseyte kinna de Dateien noach damm MIME-Typ gefiltert waan. Die Eingabe muuß emmer dann Medien- und Subtyp beinhalten: <tt>image/jpeg</tt> (siehe Dateibeschreibungsseyte).',
+'mimesearch-summary' => 'Uff dieser Spezialseyte kinna de Dateien noach damm MIME-Typ gefiltert waan. Die Eingabe muuß emmer dann Medien- und Subtyp beinhalten: <code>image/jpeg</code> (siehe Dateibeschreibungsseyte).',
 'download'           => 'Herunderloada',
 
 # Unwatched pages
@@ -1358,7 +1359,7 @@ Siehe au de Liste der [[Special:WantedCategories|gewinschta Kategorien]].',
 # Special:LinkSearch
 'linksearch-ns'    => 'Noamensraum:',
 'linksearch-ok'    => 'Sucha',
-'linksearch-text'  => 'Diese Spezialseite ermeegliecht de Suche noach Seita, ei denen bestimmte Weblinks enthaala sein. Dabei kinna Wildcards wie beispielsweise <tt>*.example.com</tt> benutzt waan.<br />Understitzte Protokolle: <tt>$1</tt>',
+'linksearch-text'  => 'Diese Spezialseite ermeegliecht de Suche noach Seita, ei denen bestimmte Weblinks enthaala sein. Dabei kinna Wildcards wie beispielsweise <code>*.example.com</code> benutzt waan.<br />Understitzte Protokolle: <code>$1</code>',
 'linksearch-line'  => '$1 ies verlinkt vun $2',
 'linksearch-error' => 'Wildcards kinna ock oam Oanfang dar URL verwendet waan.',
 
@@ -1384,7 +1385,7 @@ Zusätzliche Informationen ieber einzelne Rechte kinna [[{{MediaWiki:Listgroupri
 'listgrouprights-addgroup-all'    => 'Nutzer zu olla Gruppa hinzufiega',
 'listgrouprights-removegroup-all' => 'Nutzer aus olla Gruppa entferna',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'Fahler beim E-Mail-Versand',
 'mailnologintext'  => 'Du mußt [[Special:UserLogin|oagemeldet sei]] und anne bestätigte E-Mail-Atresse ei denn [[Special:Preferences|Einstellunga]] eingetraga hoan, im andern Nutzern E-Mails schicka zu kinna.',
 'emailuser'        => 'E-Mail oa diesa Benutzer',
@@ -1842,7 +1843,7 @@ Alternativ ies der Export au miet der Syntax [[{{#Special:Export}}/{{MediaWiki:M
 'allmessagesname'           => 'Noame',
 'allmessagesdefault'        => 'Standardtext',
 'allmessagestext'           => 'Dies ies anne Liste dar MediaWiki-Systemtexte.
-Besiche de Seyta [//www.mediawiki.org/wiki/Localisation MediaWiki-Lokalisierung] und [//translatewiki.net translatewiki.net], wenn du diech oa dar Lokalisierung vu MediaWiki beteiliga mechtest.',
+Besiche de Seyta [https://www.mediawiki.org/wiki/Localisation MediaWiki-Lokalisierung] und [//translatewiki.net translatewiki.net], wenn du diech oa dar Lokalisierung vu MediaWiki beteiliga mechtest.',
 'allmessagesnotsupportedDB' => 'Diese Spezialseyte stieht ne zur Verfigung, do se ieber dann Parameter <tt>$wgUseDatabaseMessages</tt> deaktiviert wurde.',
 'allmessages-filter-all'    => 'Olle',
 'allmessages-language'      => 'Sproache:',
@@ -2181,7 +2182,7 @@ Weitere werden standardmäßig nicht angezeigt.
 
 # External editor support
 'edit-externally'      => 'Diese Datei mit annem externen Programm bearbta',
-'edit-externally-help' => '(Siehe de [//www.mediawiki.org/wiki/Manual:External_editors Installationsoaweisunga] fier weitere Informationen)',
+'edit-externally-help' => '(Siehe de [https://www.mediawiki.org/wiki/Manual:External_editors Installationsoaweisunga] fier weitere Informationen)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'olle',
@@ -2189,7 +2190,7 @@ Weitere werden standardmäßig nicht angezeigt.
 'monthsall'     => 'olle',
 'limitall'      => 'olle',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'E-Mail-Atresse bestätiga (Authentifizierung)',
 'confirmemail_noemail'     => 'Du host kenne giltige E-Mail-Atresse ei denn [[Special:Preferences|persenlicha Eenstallunga]] eengetraga.',
 'confirmemail_text'        => "{{SITENAME}} erfordert, doß du denne E-Mail-Atresse bestätigst (authentifizieren), bevor du de erweiterten E-Mail-Funksjonna benutza koast. Klicke bitte uff de unda stehende, miet „Bestätigungscode zuschicka“ beschriftete Schaltfläche, damit anne automatisch erstellte E-Mail oa de oagegahne Atresse geschickt werd. Diese E-Mail enthält anne Web-Adresse miet a'm Bestätigungscode. Indem du diese Webseyte ei demm Webbrowser effnest, bestätigst du, doß de oagegahne E-Mail-Atresse korrekt und giltig ies.",

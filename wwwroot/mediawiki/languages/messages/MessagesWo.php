@@ -1255,14 +1255,14 @@ Saytul [[Special:NewFiles| gaaraluwaayu dencukaay yu yees yi]] ngir gis bu gën 
 'large-file'                  => 'Li gën mooy dayoo dencukaay bi bañ a romb $1; bii dencukaay $2 la.',
 'largefileserver'             => 'Dayoo dencukaay bi romb na kem bu joxekaay bi attan.',
 'emptyfile'                   => 'dencukaay bi nga bëgg a yeb dafa mel ni amul dara. Xéj-na ag njuumte ci turu dencukaay bi moo ko waral. Seetal bu baax ndax dëgg-dëgg bëgg nga yeb bii dencukaay.',
-'fileexists'                  => "Am na dencukaay bu tudd nii ba noppi.
-Saytul '''<tt>[[:$1]]</tt>''' su dee wóoru la ne bëgg nga koo soppi.
-[[$1|thumb]]",
-'filepageexists'              => "Xëtu faramfacce bu dencukaay bi sos nañ ko ba noppi ci bii màkkaan '''<tt>[[:$1]]</tt>''', waaye amagul dencukaay bu ni tudd nii-nii. Faramfacceg xët wi nga dugal ci diirub yeb gi du feeñ ci xëtu waxtaanuwaay wi. Ngir faramfacce gi feeñ ci xëtu waxtaanuwaay wi faaw nga soppi ko ak sa loxo.",
-'fileexists-extension'        => "Am na dencukaay bu ni tudd ba noppi: [[$2|thumb]]
-* Turu dencukaay bi ngay yeb : '''<tt>[[:$1]]</tt>'''
-* Turu dencukaay bi fi am : '''<tt>[[:$2]]</tt>'''
-Tànnal weneen tur.",
+'fileexists'                  => 'Am na dencukaay bu tudd nii ba noppi.
+Saytul <strong>[[:$1]]</strong> su dee wóoru la ne bëgg nga koo soppi.
+[[$1|thumb]]',
+'filepageexists'              => 'Xëtu faramfacce bu dencukaay bi sos nañ ko ba noppi ci bii màkkaan <strong>[[:$1]]</strong>, waaye amagul dencukaay bu ni tudd nii-nii. Faramfacceg xët wi nga dugal ci diirub yeb gi du feeñ ci xëtu waxtaanuwaay wi. Ngir faramfacce gi feeñ ci xëtu waxtaanuwaay wi faaw nga soppi ko ak sa loxo.',
+'fileexists-extension'        => 'Am na dencukaay bu ni tudd ba noppi: [[$2|thumb]]
+* Turu dencukaay bi ngay yeb : <strong>[[:$1]]</strong>
+* Turu dencukaay bi fi am : <strong>[[:$2]]</strong>
+Tànnal weneen tur.',
 'fileexists-forbidden'        => 'Am na ŋara wu ni tudd ba noppi te mano koo war; Dellul ginnaaw ngir yeb ŋara wi ak weneen tur
 [[File:$1|thumb|center|$1]]',
 'fileexists-shared-forbidden' => 'Am na ŋara wu ni tudd ba noppi ci dencuwaayu ŋara bi ñuy bokk; Dellul ginnaaw ngir yeb ŋara wi ak weneen tur. [[File:$1|thumb|center|$1]]',
@@ -1360,7 +1360,7 @@ Faramfacce gi ci [$2 xëtu faramfaccewaayu xët wi] lañuy wone ci suuf .',
 # MIME search
 'mimesearch'         => 'Seet ci xeeti ëmbiit yii di MIME',
 'mimesearch-summary' => "Xët wii dina la may nga man segg xeeti dencukaay yu MIME.
-Duggalal baat bi ci pax mi  ''xeet/''ron-xeet'', ci misaal <tt>image/jpeg</tt>.",
+Duggalal baat bi ci pax mi  ''xeet/''ron-xeet'', ci misaal <code>image/jpeg</code>.",
 'mimetype'           => 'Xeet wu MIME :',
 'download'           => 'yebbi',
 
@@ -1576,7 +1576,7 @@ Man ngaa fee gis itam [[{{MediaWiki:Listgrouprights-helppage}}|yeneen xibaar]] �
 'listgrouprights-addgroup-self-all'    => 'Man ngaa yokk mbooloo yépp ci sa sàq',
 'listgrouprights-removegroup-self-all' => 'Man ngaa far mbooloo yépp ci sa sàq',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'Amul benn mákkaan boo man a yónne bataaxal bi',
 'mailnologintext'  => 'Ngir man a yónney bataaxal laaj na nga [[Special:UserLogin|dugg]] te it am ab màkkaanub m-bataaxal bu baax ci say [[Special:Preferences|tànneef]].',
 'emailuser'        => 'Bind bii jëfandikukat',
@@ -2158,14 +2158,14 @@ Lëkkalekaay yiy toftal, ci wenn rëdd wi, dees leen di jàppee nikiy sette, maa
 
 # External editor support
 'edit-externally'      => 'Soppi xët wii ak ab tëriin bu biti',
-'edit-externally-help' => 'Xoolal [//www.mediawiki.org/wiki/Manual:External_editors tegtali camp gi] ngir yeneeni xamle',
+'edit-externally-help' => 'Xoolal [https://www.mediawiki.org/wiki/Manual:External_editors tegtali camp gi] ngir yeneeni xamle',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'yépp',
 'namespacesall' => 'Yépp',
 'monthsall'     => 'Yépp',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'         => 'Dëggalal sa m-bataaxal',
 'confirmemail_noemail' => 'Jooxewoo ab m-bataaxal bu baax ci say [[Special:Preferences|tànneef]].',
 

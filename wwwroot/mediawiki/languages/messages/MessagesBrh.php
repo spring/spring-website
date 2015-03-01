@@ -8,6 +8,7 @@
  * @file
  *
  * @author Imdadb
+ * @author Southparkfan
  */
 
 $messages = array(
@@ -113,6 +114,7 @@ $messages = array(
 'delete'           => 'Mesa',
 'protect'          => 'Rakk',
 'protect_change'   => 'badal kar',
+'protectthispage'  => '',
 'newpage'          => 'Púskuno panna',
 'talkpage'         => 'Dá panna ná bárav aŧ ítgap kabo',
 'talkpagelinktext' => 'Ítgap',
@@ -443,7 +445,7 @@ Ná radbadal ák deskáne atíko matano.",
 # Special:ListGroupRights
 'listgrouprights-members' => '(básk átá ridoband)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Dá kárband e girokŧapál as mon et',
 
 # Watchlist
@@ -626,7 +628,7 @@ Dáná bumpad e unning kesa',
 'metadata-collapse' => 'Vaddíko hál e đakka',
 
 # External editor support
-'edit-externally-help' => '(Pen cáindárí kin [//www.mediawiki.org/wiki/Manual:External_editors joŕ kanning ná sarsoj] e ur)',
+'edit-externally-help' => '(Pen cáindárí kin [https://www.mediawiki.org/wiki/Manual:External_editors joŕ kanning ná sarsoj] e ur)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'ģuŧŧ',

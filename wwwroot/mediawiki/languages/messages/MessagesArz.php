@@ -9,6 +9,7 @@
  *
  * @author Alnokta
  * @author Dudi
+ * @author Ebraminio
  * @author Ghaly
  * @author Meno25
  * @author Ouda
@@ -317,7 +318,7 @@ $messages = array(
 'tog-editsectiononrightclick' => 'اسمح بـ تعديل الاجزاء لما تعمل right-click بـ الماوس على عناوين الاجزاء (بيحتاج JavaScript)',
 'tog-showtoc'                 => 'بين جدول المحتويات (بتاع الصفح اللى فيها اكتر من 3 عناوين)',
 'tog-rememberpassword'        => ' (لمدة   $1 {{PLURAL:$1|يوم|يوم}})خليك فاكر دخولى على الكمبيوتر دا',
-'tog-watchcreations'          => 'زوّد الصفح اللى ابتديتها على ليستة الصفح اللى باراقبها',
+'tog-watchcreations'          => 'زوّد الصفح اللى ابتديتها على ليستة الصفح اللى باراقبها.',
 'tog-watchdefault'            => 'زوّد الصفح اللى باعدلها على ليستة الصفح اللى باراقبها',
 'tog-watchmoves'              => 'زوّد الصفح اللى بانقلها على ليستة الصفح اللى باراقبها',
 'tog-watchdeletion'           => 'زوّد الصفح اللى بامسحها على ليستة الصفح اللى باراقبها',
@@ -325,15 +326,16 @@ $messages = array(
 'tog-previewontop'            => 'بين الپروڤه قبل علبة التعديل',
 'tog-previewonfirst'          => 'بين البروفة عند أول تعديل',
 'tog-nocache'                 => 'عطّل تخزين البراوزر للصفحه',
-'tog-enotifwatchlistpages'    => 'ابعت لى ايميل لما تتغير صفحه فى لستة الصفحات اللى باراقبها',
+'tog-enotifwatchlistpages'    => '
+ابعت لى ايميل لما تتغير صفحه فى لستة الصفحات اللى باراقبها',
 'tog-enotifusertalkpages'     => 'ابعتلى ايميل لما صفحة مناقشتى تتغيير',
-'tog-enotifminoredits'        => 'ابعتلى ايميل للتعديلات الصغيره للصفحات',
+'tog-enotifminoredits'        => 'ابعتلى ايميل  عن التعديلات الصغيره للصفحات',
 'tog-enotifrevealaddr'        => 'بين الايميل بتاعى فى ايميلات الاعلام',
 'tog-shownumberswatching'     => 'بين عدد اليوزرز المراقبين',
-'tog-oldsig'                  => 'بروفه للامضا الحاليه',
+'tog-oldsig'                  => 'الامضا دلوقتى:',
 'tog-fancysig'                => 'امضا خام (من غير لينك أوتوماتيك)',
-'tog-externaleditor'          => 'استعمل محرر خارجى افتراضيا',
-'tog-externaldiff'            => 'استعمل فرق خارجى افتراضيا',
+'tog-externaleditor'          => 'استخدم محرر خارجى بشكل افتراضى (للخبرا بس، يحتاج إعدادات خاصة على كومبيوترك) ([//www.mediawiki.org/wiki/Manual:External_editors لمزيد من المعلومات].)',
+'tog-externaldiff'            => 'استخدم فرق خارجى بشكل افتراضى (للخبرا بس، يحتاج إعدادات خاصة على كومبيوترك) ([//www.mediawiki.org/wiki/Manual:External_editors لمعلومات اكتر].)',
 'tog-showjumplinks'           => 'خلى وصلات "روح لـ" تكون شغالة.',
 'tog-uselivepreview'          => 'استخدم البروفة السريعة (جافاسكريبت) (تجريبي)',
 'tog-forceeditsummary'        => 'نبهنى عند تدخيل ملخص للتعديل  فاضي',
@@ -436,8 +438,8 @@ $messages = array(
 'newwindow'     => '(بتفتح ويندو جديده)',
 'cancel'        => 'كانسل',
 'moredotdotdot' => 'اكتر...',
-'mypage'        => 'صفحتى',
-'mytalk'        => 'مناقشاتى',
+'mypage'        => 'صفحه',
+'mytalk'        => 'كلام',
 'anontalk'      => 'المناقشة مع عنوان الأيبى دا',
 'navigation'    => 'استكشاف',
 'and'           => '&#32;و',
@@ -459,7 +461,7 @@ $messages = array(
 'vector-action-move'       => 'نقل',
 'vector-action-protect'    => 'حمايه',
 'vector-action-undelete'   => 'الغى المسح',
-'vector-action-unprotect'  => 'الغى الحمايه',
+'vector-action-unprotect'  => 'غير الحمايه',
 'vector-view-create'       => 'اعمل',
 'vector-view-edit'         => 'تعديل',
 'vector-view-history'      => 'استعراض التاريخ',
@@ -493,8 +495,8 @@ $messages = array(
 'protect'           => 'حمايه',
 'protect_change'    => 'غيّر',
 'protectthispage'   => 'احمى الصفحه دى',
-'unprotect'         => 'الغى الحماية',
-'unprotectthispage' => 'شيل حماية الصفحه دى',
+'unprotect'         => 'غير الحمايه',
+'unprotectthispage' => 'غير حماية الصفحه دى',
 'newpage'           => 'صفحه جديده',
 'talkpage'          => 'ناقش الصفحه دى',
 'talkpagelinktext'  => 'مناقشه',
@@ -519,7 +521,7 @@ $messages = array(
 'lastmodifiedat'    => 'الصفحه دى اتعدلت اخر مره فى $1,‏ $2.',
 'viewcount'         => 'الصفحة دى اتدخل عليها{{PLURAL:$1|مرة واحدة|مرتين|$1 مرات|$1 مرة}}.',
 'protectedpage'     => 'صفحه محميه',
-'jumpto'            => 'نُط على:',
+'jumpto'            => 'روح على:',
 'jumptonavigation'  => 'استكشاف',
 'jumptosearch'      => 'تدوير',
 'view-pool-error'   => 'متأسفين, السيرفرات عليها حمل كبير دلوقتى.
@@ -527,6 +529,9 @@ $messages = array(
 لو سمحت تستنا شويه قبل ما تحاول تستعرض الصفحه دى من تانى.
 
 $1',
+'pool-timeout'      => 'انتهاء الانتظار للقفل',
+'pool-queuefull'    => 'طابور الانتخاب مليان',
+'pool-errorunknown' => 'غلط مش معروف',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'عن {{SITENAME}}',
@@ -705,11 +710,12 @@ $2',
 'createaccount'              => 'افتح حساب',
 'gotaccount'                 => "عندك حساب؟ '''$1'''.",
 'gotaccountlink'             => 'دخول',
+'userlogin-resetlink'        => 'نسيت تفاصيل الدخول؟',
 'createaccountmail'          => 'بـ الايميل',
 'createaccountreason'        => 'السبب:',
 'badretype'                  => 'كلمتين السر اللى  كتبتهم مش  زى بعضهم',
-'userexists'                 => 'اسم اليوزر اللى دخلته بيستعمله يوزر غيرك.
-دخل اسم تانى.',
+'userexists'                 => 'اسم اليوزر اللى كتبته بيستعمله يوزر غيرك.
+اكتت اسم يوزر تانى.',
 'loginerror'                 => 'غلط فى الدخول',
 'createaccounterror'         => 'مش قادر يعمل الحساب: $1',
 'nocookiesnew'               => 'اليوزر خلاص اتفتح له حساب، بس انت لسة ما سجلتش دخولك.
@@ -763,7 +769,7 @@ $2',
 'invalidemailaddress'        => 'مش ممكن نقبل عنوان الايميل لانه مش مظبوط.
 دخل ايميل مظبوط او امسحه من الخانة.',
 'accountcreated'             => 'الحساب اتفتح',
-'accountcreatedtext'         => 'اتفتح حساب لليوزر ب$1.',
+'accountcreatedtext'         => 'حساب اليوزر  [[{{ns:User}}:$1|$1]] ([[{{ns:User talk}}:$1|talk]])اتفتح .',
 'createaccount-title'        => 'فتح حساب فى {{SITENAME}}',
 'createaccount-text'         => 'فى واحد فتح حساب باسم الايمل بتاعك على {{SITENAME}} ($4) بالاسم "$2"، وبباسورد "$3". لازم تسجل دخولك دلوقتى و تغير الباسورد بتاعتك.
 
@@ -902,8 +908,8 @@ $2',
 افتكر أن ملفات ال.css و ال.js بتستخدم حروف صغيرة فى العنوان ، مثلا {{ns:user}}:Foo/vector.css و مش {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(متحدثة)',
 'note'                             => "'''ملحوظه:'''",
-'previewnote'                      => "''' دى بروفه للصفحه بس،
-ولسه ما تسييفتش!'''",
+'previewnote'                      => "'''دى بروفه للصفحه بس.'''
+ولسه ما تسييفتش! ،",
 'previewconflict'                  => 'البروفة دى بتبينلك فوق إزاى ح يكون شكل النص لو انت دوست على حفظ',
 'session_fail_preview'             => "'''ما قدرناش  نحفظ التعديلات اللى قمت بيها نتيجة لضياع بيانات  الجلسه.
 الرجاء المحاولة مرة تانيه.
@@ -970,12 +976,12 @@ $2',
 'permissionserrorstext-withaction' => 'أنت ما عندكش الصلاحيات علشان $2، لل{{PLURAL:$1|سبب|أسباب}} ده:',
 'recreate-moveddeleted-warn'       => "'''تحذير: انت بتعيد انشاء صفحه اتمسحت قبل كده.'''
 لازم تتأكد من ان الاستمرار فى تحرير الصفحه دى ملائم.
-سجلات الحذف و النقل بتوع الصفحه دى معروضه هنا:",
+سجلات المسح  و النقل بتوع الصفحه دى معروضه هنا:",
 'moveddeleted-notice'              => 'الصفحة دى اتمسحت. سجل المسح و سجل النقل بتوع الصفحة معروضين تحت علشان ترجعلهم.',
 'log-fulllog'                      => 'استعراض السجل بالكامل',
 'edit-hook-aborted'                => 'الخطاف ساب التعديل من غير مايدى تفسير.',
-'edit-gone-missing'                => 'لم يمكن تحديث الصفحة.
-يبدو أنه تم حذفها.',
+'edit-gone-missing'                => 'مش ممكن تعديل الصفحه.
+يظهر انها إتمسحت.',
 'edit-conflict'                    => 'تضارب تحريرى.',
 'edit-no-change'                   => 'تعديلك تم تجاهله، لأن ما حصلش أى تعديل للنص.',
 'edit-already-exists'              => 'لم يمكن إنشاء صفحة جديدة.
@@ -1066,7 +1072,7 @@ $2',
 ممكن تكون فيه تفاصيل فى [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} سجل التخبيه].
 كسيسوب ممكن [$1 تشوف الفرق ده] لو إنت عايز تكمل.",
 'rev-deleted-diff-view'       => "واحده من نسخ الفرق ده '''اتمسحت'''.
-كسيسوب ممكن تشوف الفرق ده؛ ممكن تكون فيه تفاصيل فى [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} سجل الحذف].",
+كسيسوب ممكن تشوف الفرق ده؛ ممكن تكون فيه تفاصيل فى [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} سجل المسح].",
 'rev-suppressed-diff-view'    => "واحده من نسخ الفرق ده '''اتخبت'''.
 كسيسوب ممكن تشوف الفرق ده؛ ممكن تكون فيه تفاصيل فى [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} سجل التخبيه].",
 'rev-delundel'                => 'عرض/تخبيه',
@@ -1110,6 +1116,8 @@ $1",
 'logdelete-failure'           => "'''مانفعش اعادة ظبط عرض السجل:'''
 $1",
 'revdel-restore'              => 'تغيير الشوف',
+'revdel-restore-deleted'      => 'مراجعات ممسوحه',
+'revdel-restore-visible'      => 'مراجعات ممكن تتشاف',
 'pagehist'                    => 'تاريخ الصفحة',
 'deletedhist'                 => 'التاريخ الممسوح',
 'revdelete-hide-current'      => 'حصل غلط فى تخبية البند اللى بتاريخ $2, الساعه$1: دى هى النسخه بتاعة دلوقتى.
@@ -1169,13 +1177,15 @@ $1",
 'mergelogpagetext'   => 'فى تحت لستة بأحدث عمليات الدمج لتاريخ صفحة فى التانية.',
 
 # Diffs
-'history-title'            => 'تاريخ تعديل "$1"',
+'history-title'            => ' «$1»: تاريخ التعديل',
 'difference'               => '(الفرق بين النسخ)',
+'difference-multipage'     => '(الفرق بين الصفحتين)',
 'lineno'                   => 'سطر $1:',
 'compareselectedversions'  => 'قارن بين النسختين المختارتين',
 'showhideselectedversions' => 'عرض/تخبية المراجعات المختاره.',
 'editundo'                 => 'استرجاع',
 'diff-multi'               => '({{PLURAL:$1|نسخه واحده متوسطه|$1 نسخ متوسطه}} by {{PLURAL:$2|يوزر واحد |$2 يوزرات}}  مش معروضه)',
+'diff-multi-manyusers'     => '({{PLURAL:$1|نسخه واحده متوسطه|$1 نسخ متوسطه}} by {{PLURAL:$2|يوزر واحد |$2 يوزرات}}  مش معروضه)',
 
 # Search results
 'searchresults'                    => 'نتايج التدوير',
@@ -1210,6 +1220,7 @@ $1",
 'searchprofile-everything-tooltip' => 'دور فى  كل المحتوى (شامل صفحات النقاش)',
 'searchprofile-advanced-tooltip'   => 'دور فى النطاقات المخصصة',
 'search-result-size'               => '$1 ({{PLURAL:$2|1 كلمه|$2 كلام}})',
+'search-result-category-size'      => '{{PLURAL:$1|لا أعضاء|عضو واحد|عضوين|$1 أعضاء|$1 عضوًا|$1 عضو}} ({{PLURAL:$2|لا تصانيف فرعية|تصنيف فرعى واحد|تصنيفين فرعيين|$2 تصنيفات فرعية|$2 تصنيف فرعى|$2 تصنيف فرعى}} و{{PLURAL:$3|لا ملفات|ملف واحد|ملفين|$3 ملفات|$3 ملف|$3 ملف}})',
 'search-result-score'              => 'الارتباط: $1%',
 'search-redirect'                  => '(تحويله $1)',
 'search-section'                   => '(جزء $1)',
@@ -1346,8 +1357,8 @@ $1",
 'email'                         => 'الإيميل',
 'prefs-help-realname'           => 'الاسم الحقيقى اختيارى.
 لو إخترت تكتبه, حيستعمل بس علشان شغلك يتنسب لإسمك.',
-'prefs-help-email'              => 'الإيميل اختيارى, بس لازم علشان لو نسيت الپاسوورد.
-ممكن بردو تختار انك تخلّى اليوزرات تبعتلك إيميل من صفحة اليوزر او المناقشه بتاعتك من غير ما تبقى شخصيتك معروفه.',
+'prefs-help-email'              => 'عنوان اللإيميل اختيارى ، بس لازم علشان لو نسيت الپاسوورد..',
+'prefs-help-email-others'       => 'ممكن بردو تختار انك تخلّى اليوزرات تبعتلك إيميل من صفحة اليوزر او المناقشه بتاعتك من غير ما تبقى شخصيتك معروفه.',
 'prefs-help-email-required'     => 'عنوان الإيميل مطلوب.',
 'prefs-info'                    => 'معلومات اساسيه',
 'prefs-i18n'                    => 'التدويل',
@@ -1363,6 +1374,10 @@ $1",
 'prefs-displaysearchoptions'    => 'اختيارات العرض',
 'prefs-displaywatchlist'        => 'اختيارات العرض',
 'prefs-diffs'                   => 'التغيير',
+
+# User preference: email validation using jQuery
+'email-address-validity-valid'   => 'عنوان الإيميل صح',
+'email-address-validity-invalid' => 'عنوان الإيميل غلط',
 
 # User rights
 'userrights'                   => 'إدارة الحقوق بتاعة اليوزر',
@@ -1447,6 +1462,7 @@ $1",
 'right-hideuser'              => 'منع اسم يوزر، و خبيه عن الناس',
 'right-ipblock-exempt'        => 'إتفادى عمليات منع الأيبي، المنع الأوتوماتيكى ومنع النطاق.',
 'right-proxyunbannable'       => 'إتفادى عمليات المنع الأوتوماتيكية للبروكسيهات',
+'right-unblockself'           => 'رفع المنع عن نفسهم',
 'right-protect'               => 'تغيير مستويات الحماية وتعديل الصفحات المحمية',
 'right-editprotected'         => 'تعديل الصفحات المحمية (من غير الحماية المتضمنة)',
 'right-editinterface'         => 'تعديل الواجهة بتاعة اليوزر',
@@ -1570,9 +1586,9 @@ $1",
 لعرض أو البحث ف الملفات المتحملة سابقا، راجع عمليات المسح [[Special:Log/delete|deletion log]] [[Special:FileList|لستة الملفات المتحملة]]، عمليات التحميل  موجودة فى [[Special:Log/upload|سجل التحميل]].
 
 علشان تحط صورة فى صفحة، استخدم الوصلات فى الصيغ التالية:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>''' علشان استخدام النسخة الكاملة لملف
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|نص بديل]]</nowiki></tt>''' لاستخدام صورة عرضها 200 بكسل فى صندوق فى الجانب الأيسر مع 'نص بديل' كوصف
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' للوصل للملف مباشرة بدون عرض الملف.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>''' علشان استخدام النسخة الكاملة لملف
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|نص بديل]]</nowiki></code>''' لاستخدام صورة عرضها 200 بكسل فى صندوق فى الجانب الأيسر مع 'نص بديل' كوصف
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' للوصل للملف مباشرة بدون عرض الملف.",
 'upload-permitted'            => 'أنواع الملفات المسموحة: $1.',
 'upload-preferred'            => 'أنواع الملفات المفضلة: $1.',
 'upload-prohibited'           => 'أنواع الملفات الممنوعة: $1.',
@@ -1600,25 +1616,27 @@ $1",
 'filetype-banned-type'        => "'''\".\$1\"''' مش نوع ملف مسموح بيه.
 {{PLURAL:\$3|نوع الملف المسموح بيه هو|أنواع الملفات المسموح بيها هي}} \$2.",
 'filetype-missing'            => 'الملف مالوش امتدا(مثلا ".jpg").',
+'file-too-large'              => 'الملف كان كبير جدا.',
+'filetype-banned'             => 'نوع الملف ده ممنوع.',
 'large-file'                  => 'ينصح ان الملفات ماتكونش أكبر من $1؛ الملف ده حجمه $2.',
 'largefileserver'             => 'حجم الملف ده أكبر من المسموح بيه على السيرڨر ده .',
 'emptyfile'                   => 'الظاهر ان الملف اللى انت حملته طلع فاضي.
 يمكن يكون السبب هوه كتابة الاسم غلط.
 لو سمحت تتاكد من إنك فعلا عايز تحمل الملف دا..',
-'fileexists'                  => "فيه  ملف موجود بالاسم ده  الرجاء التأكد من الملف ده باتباع الوصلة التالية '''<tt>[[:$1]]</tt>''' قبل ما تغيره.
-[[$1|thumb]]",
-'filepageexists'              => "صفحة الوصف بتاعة المف دا خلاص اتعملها انشاء فى '''<tt>[[:$1]]</tt>'''، بس مافيش ملف بالاسم دا دلوقتى.
+'fileexists'                  => 'فيه  ملف موجود بالاسم ده  الرجاء التأكد من الملف ده باتباع الوصلة التالية <strong>[[:$1]]</strong> قبل ما تغيره.
+[[$1|thumb]]',
+'filepageexists'              => 'صفحة الوصف بتاعة المف دا خلاص اتعملها انشاء فى <strong>[[:$1]]</strong>، بس مافيش ملف بالاسم دا دلوقتى.
 الملخص اللى ح تكتبه  مش ح يظهر على صفحة الوصف.
 علشان تخلى الملف يظهر هناك، ح تحتاج تعدله يدوي.
-[[$1|thumb]]",
-'fileexists-extension'        => "فى ملف موجود باسم قريب: [[$2|thumb]]
-* اسم الملف اللى انت عايز تحمله: '''<tt>[[:$1]]</tt>'''
-* اسم الملف الموجود: '''<tt>[[:$2]]</tt>'''
-لو سمحت تختار اسم تاني.",
+[[$1|thumb]]',
+'fileexists-extension'        => 'فى ملف موجود باسم قريب: [[$2|thumb]]
+* اسم الملف اللى انت عايز تحمله: <strong>[[:$1]]</strong>
+* اسم الملف الموجود: <strong>[[:$2]]</strong>
+لو سمحت تختار اسم تاني.',
 'fileexists-thumbnail-yes'    => "الظاهر ان الملف دا عبارة عن صورة متصغرة ''(تصغير)''. [[$1|thumb]]
-لو سمحت تشيك على الملف '''<tt>[[:$1]]</tt>'''.
+لو سمحت تشيك على الملف <strong>[[:$1]]</strong>.
 لو كان الملف هو نفس الصورة بالحجم الاصلي، ف مافيش داعى تحمله مرة تانية",
-'file-thumbnail-no'           => "يبدأ الملف ب '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "يبدأ الملف ب <strong>$1</strong>.
 يبدو أن الملف مصتغر لحجم أعلى ''(تصغير)''.
 إذا كان عندك الصورة فى درجة دقة كامله حملها، أو غير اسم الملف من فضلك.",
 'fileexists-forbidden'        => 'فى ملف بنفس الاسم موجود, و ماينفعش يتكتب عليه.
@@ -1755,7 +1773,7 @@ PICT # misc.
 'filehist-filesize'                 => 'حجم الفايل',
 'filehist-comment'                  => 'تعليق',
 'filehist-missing'                  => 'ملف مش  موجود',
-'imagelinks'                        => 'لينكات الفايل',
+'imagelinks'                        => 'استخدام الفايل',
 'linkstoimage'                      => '{{PLURAL:$1|الصفحة|ال$1 صفحة}} دى فيها وصله للفايل ده:',
 'linkstoimage-more'                 => 'أكتر من $1 {{PLURAL:$1|صفحة تصل|صفحة تصل}} للملف ده .
 القائمة التالية تعرض {{PLURAL:$1|أول وصلة صفحة|أول $1 وصلة صفحة}} للملف ده بس.
@@ -1809,7 +1827,7 @@ PICT # misc.
 'mimesearch'         => 'تدوير MIME',
 'mimesearch-summary' => 'الصفحة دى مهمتها فلترة الملفات على حسب نوعها.
 المدخل: نوع المحتوى/النوع الفرعي، يعنى مثلا
-<tt>image/jpeg</tt>.',
+<code>image/jpeg</code>.',
 'mimetype'           => 'نوع الملف:',
 'download'           => 'تنزيل',
 
@@ -1923,7 +1941,7 @@ PICT # misc.
 'listusers-editsonly'     => 'عرض اليوزرز اللى قاموا بتعديلات فقط',
 'listusers-creationsort'  => 'رتب على حسب تاريخ الإنشاء',
 'usereditcount'           => '$1 {{PLURAL:$1|تعديل|تعديل}}',
-'usercreated'             => 'اتعملت فى $1 الساعه $2',
+'usercreated'             => '{{GENDER:$3|إتعملت|إتعملت}}  يوم $1 الساعه $2',
 'newpages'                => 'صفحات جديده',
 'newpages-username'       => 'اسم اليوزر:',
 'ancientpages'            => 'اقدم الصفحات',
@@ -1995,7 +2013,7 @@ PICT # misc.
 'linksearch-ns'    => 'النطاق:',
 'linksearch-ok'    => 'تدوير',
 'linksearch-text'  => 'الكروت الخاصة زى "*.wikipedia.org" ممكن تستعمل.<br />
-البروتوكولات المدعومة: <tt>$1</tt>',
+البروتوكولات المدعومة: <code>$1</code>',
 'linksearch-line'  => '$1 موصوله من $2',
 'linksearch-error' => 'الكروت الخاصة ممكن تبان بس  فى بداية اسم المضيف',
 
@@ -2037,7 +2055,7 @@ PICT # misc.
 'listgrouprights-addgroup-self-all'    => 'اضافة كل المجموعات للحساب بتاعى',
 'listgrouprights-removegroup-self-all' => 'مسح كل المجموعات من الحساب بتاعى',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'مافيش عنوان نبعت عليه',
 'mailnologintext'  => 'لازم تعمل [[Special:UserLogin|تسجيل الدخول]] و تدخل ايميل صحيح فى صفحة [[Special:Preferences|التفضيلات]] علشان تقدر تبعت ايميلات لليوزرز التانيين.',
 'emailuser'        => 'ابعت ايميل لليوزر دا',
@@ -2065,6 +2083,7 @@ PICT # misc.
 # Watchlist
 'watchlist'            => 'لستة الصفحات اللى باراقبها',
 'mywatchlist'          => 'لستة  الصفح اللى باراقبها',
+'watchlistfor2'        => 'لليوزر $1 ($2)',
 'nowatchlist'          => 'مافيش حاجة فى لستة مراقبتك.',
 'watchlistanontext'    => 'لو سمحت $1 لعرض أو تعديل الصفحات فى لستة مراقبتك.',
 'watchnologin'         => 'مش متسجل',
@@ -2144,7 +2163,7 @@ $UNWATCHURL
 'delete-legend'          => 'مسح',
 'historywarning'         => "'''تحذير:''' الصفحه اللى ها  تمسحها ليها تاريخ فيه تقريبا $1 {{PLURAL:$1|مراجعة|مراجعة}}:",
 'confirmdeletetext'      => 'انت على وشك انك تمسح صفحه أو صوره و كل تاريخها.
-من فضلك  اتأكد انك عايز المسح وبأنك فاهم نتايج  العمليه  دى. عمليات الحذف لازم تتم بناء على [[{{MediaWiki:Policy-url}}|القواعد المتفق عليها]].',
+من فضلك  اتأكد انك عايز المسح وبأنك فاهم نتايج  العمليه  دى. عمليات المسح لازم تتم بناء على [[{{MediaWiki:Policy-url}}|القواعد المتفق عليها]].',
 'actioncomplete'         => 'العمليه خلصت',
 'actionfailed'           => 'الفعل فشل',
 'deletedtext'            => '"$1" اتمسحت.
@@ -2317,7 +2336,7 @@ $1',
 'mycontris'           => 'تعديلاتى',
 'contribsub2'         => 'لليوزر $1 ($2)',
 'nocontribs'          => 'مالقيناش   تغييرات تطابق المحددات دي.',
-'uctop'               => '(فوق)',
+'uctop'               => '(آخر تعديل)',
 'month'               => 'من شهر (واللى قبل كده):',
 'year'                => 'من سنة (واللى قبل كده):',
 
@@ -2326,6 +2345,7 @@ $1',
 'sp-contributions-newbies-title'  => 'مساهمات  اليوزر للحسابات الجديدة',
 'sp-contributions-blocklog'       => 'سجل المنع',
 'sp-contributions-deleted'        => 'تعديلات اليوزر الممسوحه',
+'sp-contributions-uploads'        => 'مرفوعات',
 'sp-contributions-logs'           => 'السجلات',
 'sp-contributions-talk'           => 'مناقشه',
 'sp-contributions-userrights'     => 'ادارة حقوق اليوزر',
@@ -2333,6 +2353,7 @@ $1',
 آخر عمليه منع في السجل موجوده تحت كمرجع:',
 'sp-contributions-search'         => 'دور على مساهمات',
 'sp-contributions-username'       => 'عنوان أيبى أو اسم يوزر:',
+'sp-contributions-toponly'        => 'اظهر اختير تعديل  بس',
 'sp-contributions-submit'         => 'تدوير',
 
 # What links here
@@ -2344,7 +2365,7 @@ $1',
 'nolinkshere-ns'           => "مافيش صفحات بتوصل لـ '''[[:$1]]''' فى النطاق اللى انت اختارته.",
 'isredirect'               => 'صفحة تحويل',
 'istemplate'               => 'متضمن',
-'isimage'                  => 'لينك صورة',
+'isimage'                  => 'وصلة ملف',
 'whatlinkshere-prev'       => '{{PLURAL:$1|اللى قبل كده|الـ $1 اللى قبل كده}}',
 'whatlinkshere-next'       => '{{PLURAL:$1|اللى بعد كده|الـ $1 اللى بعد كده}}',
 'whatlinkshere-links'      => '← وصلات',
@@ -2399,7 +2420,7 @@ $1',
 'ipusubmit'                       => 'ارفع المنع دا',
 'unblocked'                       => 'المنع اترفع عن [[User:$1|$1]]',
 'unblocked-id'                    => 'منع $1 اترفع',
-'ipblocklist'                     => 'لستة عناوين الااى بى واسامى اليوزر الممنوعه',
+'ipblocklist'                     => 'يوزرات ممنوعين',
 'ipblocklist-legend'              => 'دور على يوزر ممنوع',
 'ipblocklist-submit'              => 'تدوير',
 'ipblocklist-localblock'          => 'منع محلى',
@@ -2588,7 +2609,7 @@ $1',
 'allmessagesdefault'            => 'النص الاوتوماتيكي',
 'allmessagescurrent'            => 'النص دلوقتى',
 'allmessagestext'               => 'دى لستة برسايل النظام المتوفرة فى نطاق ميدياويكي.
-لو سمحت تزور[//www.mediawiki.org/wiki/Localisation ترجمة ميدياويكي] و [//translatewiki.net بيتاويكي] لو كنت عايز تساهم فى ترجمة ميدياويكى الاصلية.',
+لو سمحت تزور[https://www.mediawiki.org/wiki/Localisation ترجمة ميدياويكي] و [//translatewiki.net بيتاويكي] لو كنت عايز تساهم فى ترجمة ميدياويكى الاصلية.',
 'allmessagesnotsupportedDB'     => "الصفحة دى مش يمكن حد يستعملها علشان'''\$wgUseDatabaseMessages''' متعطل.",
 'allmessages-filter-legend'     => 'فيلتر',
 'allmessages-filter'            => 'فلتره بحالة التهيئه:',
@@ -2688,7 +2709,7 @@ $1',
 'tooltip-search'                  => 'دور فى {{SITENAME}}',
 'tooltip-search-go'               => 'روح لصفحه بالاسم دا بالظبط لو موجوده',
 'tooltip-search-fulltext'         => 'دور فى الصفحات على النَص دا',
-'tooltip-p-logo'                  => 'الصفحه الرئيسيه',
+'tooltip-p-logo'                  => 'زور الصفحه الرئيسيه',
 'tooltip-n-mainpage'              => 'زور الصفحه الرئيسيه',
 'tooltip-n-mainpage-description'  => 'زور الصفحه الرئيسيه',
 'tooltip-n-portal'                => 'عن المشروع, ممكن تعمل ايه, و فين تلاقى اللى بتدور عليه',
@@ -2726,6 +2747,7 @@ $1',
 'tooltip-upload'                  => 'ابتدى التحميل',
 'tooltip-rollback'                => "\"'''ترجيع'''\" بيرجع بدوسه واحده التعديل (التعديلات) فى الصفحه دى لاخر واحد عدل الصفحه.",
 'tooltip-undo'                    => '"رجوع" بترجع  التعديل دا وبتفتح استمارة التعديل فى شكل البروفة. بتسمح بإضافة سبب فى الملخص.',
+'tooltip-summary'                 => 'اكتب ملخص قصير',
 
 # Stylesheets
 'common.css'      => '/* الأنماط المتراصة CSS المعروضة هنا ستؤثر على كل الواجهات */',
@@ -2863,7 +2885,8 @@ $1',
 إذا كان الملف اتعدل عن حالته الأصلية، فبعض التفاصيل مش ها تعبر عن الملف المعدل.',
 'metadata-expand'   => 'عرض التفاصيل الاضافيه',
 'metadata-collapse' => 'تخبية التفاصيل الاضافيه',
-'metadata-fields'   => 'حقول معطيات الميتا EXIF الموجوده فى الرساله دى هاتتعرض فى صفحة الصوره لما يكون جدول معطيات الميتا مضغوط. الحقول التانيه هاتكون مخفيه افتراضيا.
+'metadata-fields'   => 'معطيات الميتا الموجوده فى الرساله دى هاتتعرض فى صفحة الصوره لما يكون جدول معطيات الميتا مضغوط.
+المعطيات التانيه هاتكون مخفيه .
 * make
 * model
 * datetimeoriginal
@@ -3149,7 +3172,7 @@ $1',
 
 # External editor support
 'edit-externally'      => 'استعمل تطبيق من بره علشان تعدل الملف دا',
-'edit-externally-help' => '(بص على [//www.mediawiki.org/wiki/Manual:External_editors  تعليمات الاعداد] علشان معلومات اكتر.)',
+'edit-externally-help' => '(بص على [https://www.mediawiki.org/wiki/Manual:External_editors  تعليمات الاعداد] علشان معلومات اكتر.)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'الكل',
@@ -3157,7 +3180,7 @@ $1',
 'monthsall'     => 'الكل',
 'limitall'      => 'الكل',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'اعمل تأكيد للأيميل بتاعك',
 'confirmemail_noemail'     => 'إنت ما عندكش ايميل صحيح متسجل فى [[Special:Preferences|تفضيلاتك]].',
 'confirmemail_text'        => '{{SITENAME}} بيطلب انك تعمل تأكيد للأيميل قبل ما تستعمل الخصايص المرتبطة بالايميل.
