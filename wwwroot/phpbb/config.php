@@ -9,7 +9,7 @@ $dbpasswd = $spring_dbpass;
 
 $dbms = 'phpbb\\db\\driver\\mysqli';
 $dbport = '';
-$table_prefix = 'phpbb_';
+$table_prefix = 'phpbb3_';
 $phpbb_adm_relative_path = 'adm/';
 $acm_type = 'phpbb\\cache\\driver\\file';
 
