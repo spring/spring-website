@@ -3,7 +3,7 @@
 
 html {
 	font-size: 16px;
-	font-family: 'FreeSans Spring', 'FreeSans', sans-serif;
+	font-family: Verdana,Helvetica,Arial,sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
@@ -248,12 +248,11 @@ a.menubar:hover {
 	overflow: hidden;
 }
 
-/*
-a:link    { color: #bbf; text-decoration: none; }
-a:visited { color: #a0a0ff; text-decoration: none; }
-a:hover   { text-decoration: underline; }
-a         { outline: none; }
-*/
+/* MediaWiki Links */
+#article a:link    { color: #bbf; text-decoration: none; }
+#article a:visited { color: #a0a0ff; text-decoration: none; }
+#article a:hover   { text-decoration: underline; }
+#article a         { outline: none; }
 
 .bottombar a:link, .bottombar a:visited  { color: #bbf; }
 
