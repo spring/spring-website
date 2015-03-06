@@ -5,8 +5,5 @@
     --------------------------------------------------------------
 */
 
-/* General Spring site css */
-@import url("../../../../styles.css");
-
 /* PhpBB specific Spring css */
 @import url("spring.css");
