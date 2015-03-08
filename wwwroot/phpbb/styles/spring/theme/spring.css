@@ -21,3 +21,9 @@ html, body {
 #maincontentwrapper .navbar {
 	background-color: #a8b2ba
 }
+
+/* No border-radius around the forum */
+#wrap {
+	border-radius: 0px;
+}
+
