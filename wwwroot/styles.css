@@ -247,13 +247,13 @@ a.menubar:hover {
 	overflow: hidden;
 }
 
-/* MediaWiki Links */
-#article a:link    { color: #bbf; text-decoration: none; }
-#article a:visited { color: #a0a0ff; text-decoration: none; }
-#article a:hover   { text-decoration: underline; }
-#article a         { outline: none; }
+/* Links except for those in PhpBB */
+#content a:link    { color: #bbf; text-decoration: none; }
+#content a:visited { color: #a0a0ff; text-decoration: none; }
+#content a:hover   { text-decoration: underline; }
+#content a         { outline: none; }
 
-.bottombar a:link, .bottombar a:visited  { color: #bbf; }
+.bottombar a:link, .bottombar a:visited  { color: #bbf; text-decoration: none; }
 
 
 

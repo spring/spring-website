@@ -161,4 +161,3 @@
     $html .= file_get_contents('templates/pageend.html');
 
     print($html);
-?>
