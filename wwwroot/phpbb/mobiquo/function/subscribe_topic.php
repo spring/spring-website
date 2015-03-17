@@ -8,13 +8,13 @@
 
 defined('IN_MOBIQUO') or exit;
 
-function subscribe_topic_func($xmlrpc_params)
+function subscribe_topic_func()
 {
-    global $db, $user;
+    global $db, $user, $request_params;
     
     $user->setup('viewtopic');
     
-    $params = php_xmlrpc_decode($xmlrpc_params);
+    $params = $request_params;
     
     // get topic id from parameters
     $topic_id = intval($params[0]);
@@ -54,13 +54,10 @@ function subscribe_topic_func($xmlrpc_params)
         }
     }
     
-    $response = new xmlrpcval(
-        array(
-            'result'        => new xmlrpcval($s_result, 'boolean'),
-            'result_text'   => new xmlrpcval($s_result ? '' : 'Subscribe failed', 'base64'),
-        ),
-        'struct'
+    $response = array(
+            'result'        => (boolean)$s_result,
+            'result_text'   => $s_result ? '' : 'Subscribe failed',
     );
     
-    return new xmlrpcresp($response);
+    return $response;
 }

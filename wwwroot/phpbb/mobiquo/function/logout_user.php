@@ -13,6 +13,9 @@ function logout_user_func()
     global $user;
     
     $user->session_kill();
-
-    return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
+    $result = array(
+        'result' => (boolean)1,
+        'result_text' => '',
+    );
+    return $result;
 } // End of logout_user_func

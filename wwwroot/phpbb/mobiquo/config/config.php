@@ -13,6 +13,10 @@ foreach($_COOKIE as $key => $value) $_REQUEST[$key] = $value;
 $mobiquo_config = get_mobiquo_config();
 $phpEx = $mobiquo_config['php_extension'];
 $phpbb_root_path = dirname(dirname(dirname(__FILE__))).'/';
+$mobiquo_root_path = dirname(dirname(__FILE__)).'/';
+
+define('PHPBB_ROOT_PATH',$phpbb_root_path);
+define('MOBIQUO_ROOT_PATH',$mobiquo_root_path);
 
 function get_mobiquo_config() 
 {
@@ -39,6 +43,14 @@ function get_mobiquo_config()
         if ($key == 'hide_forum_id')
         {
             $value = preg_split('/\s*,\s*/', $value, -1, PREG_SPLIT_NO_EMPTY);
+            if (is_array($value))
+            {
+                $_value = array();
+                foreach($value as $v)
+                    $_value[] = (int)$v;
+                $value = $_value;
+            }
+            else $value = (int)$value;
             count($value) and $mobiquo_config[$key] = $value;
         }
         else
@@ -46,6 +58,7 @@ function get_mobiquo_config()
             strlen($value) and $mobiquo_config[$key] = $value;
         }
     }
+    
     
     return $mobiquo_config;
 }

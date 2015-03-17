@@ -1,9 +1,8 @@
 @charset "utf-8";
 
-
 html {
 	font-size: 16px;
-	font-family: 'FreeSans Spring', 'FreeSans', sans-serif;
+	font-family: Verdana,Helvetica,Arial,sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
 	background-color: #38464F;
@@ -247,12 +246,14 @@ a.menubar:hover {
 	text-align: right;
 	overflow: hidden;
 }
-a:link    { color: #bbf; text-decoration: none; }
-a:visited { color: #a0a0ff; text-decoration: none; }
-a:hover   { text-decoration: underline; }
-a         { outline: none; }
 
-.bottombar a:link, .bottombar a:visited  { color: #bbf; }
+/* Links except for those in PhpBB */
+#content a:link    { color: #bbf; text-decoration: none; }
+#content a:visited { color: #a0a0ff; text-decoration: none; }
+#content a:hover   { text-decoration: underline; }
+#content a         { outline: none; }
+
+.bottombar a:link, .bottombar a:visited  { color: #bbf; text-decoration: none; }
 
 
 

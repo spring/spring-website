@@ -16,12 +16,11 @@ function link_replace($str)
 
 function get_news()
 {
-	$sql = "";
-	$sql .= "SELECT t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_replies, t.topic_title ";
-	$sql .= "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p ";
-	$sql .= "WHERE t.forum_id = 2 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
-	$sql .= "ORDER  BY t.topic_time DESC ";
-	$sql .= "LIMIT 3";
+	$sql = "SELECT t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_posts_approved, t.topic_title\n"
+	     . "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p\n"
+	     . "WHERE t.forum_id = 2 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time\n"
+	     . "ORDER BY t.topic_time DESC\n"
+	     . "LIMIT 3";
 
 	$res = mysql_query($sql);
 	$newstemplate = file_get_contents('templates/newsitem.html');
@@ -34,7 +33,7 @@ function get_news()
 #		$newstext = $_SERVER['HTTPS'];
 		$poster = '<a href="/phpbb/memberlist.php?mode=viewprofile&amp;u=' . $row['topic_poster'] . '">' . $row['username'] . '</a>';
 		$postdate = date("Y-m-d H:i", $row['topic_time']);
-		$comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . $row['topic_replies'] . ' comments</a>.';
+		$comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . $row['topic_posts_approved'] . ' comments</a>.';
 		$newsdata = array($row['topic_title'], $newstext, $poster, $postdate, $comments);
 		$news .= str_replace($newskeys, $newsdata, $newstemplate);
 	}
@@ -44,15 +43,14 @@ function get_news()
 
 function get_shortnews_from_forum()
 {
+	$sql = "SELECT t.forum_id, t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_posts_approved, t.topic_title\n"
+	     . "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p\n"
+	     . "WHERE t.forum_id =38 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time\n"
+	     . "AND t.topic_title LIKE '[%] %'\n"
+	     . "ORDER BY t.topic_time DESC\n"
+	     . "LIMIT 15";
 
-	$sql = "";
-	$sql .= "SELECT t.forum_id, t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_replies, t.topic_title ";
-	$sql .= "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p ";
-	$sql .= "WHERE t.forum_id =38 AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time ";
-	$sql .= "AND t.topic_title LIKE '[%] %'";
-	$sql .= "ORDER  BY t.topic_time DESC ";
-	$sql .= "LIMIT 15";
-	$res = mysql_query($sql);
+	$res 	= mysql_query($sql);
 	$newstemplate = file_get_contents('templates/cnewsitem.html');
 	$news = "";
 	$newskeys = array('#HEADLINE#', '#LINK#');
@@ -119,6 +117,3 @@ function get_forum_posts()
 {
 	return get_news_from_feed('http://' . $_SERVER['SERVER_NAME'] . '/phpbb/newposts.php');
 }
-
-?>
-
