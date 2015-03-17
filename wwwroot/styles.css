@@ -26,8 +26,8 @@ body {
 #wrapper {
 	text-align:left;
 	margin:0 auto;
-	width: 1000px;
-	max-width:100%;
+	width: 100%;
+	max-width:1000px;
 	margin-bottom: 18px;
 }
 
@@ -318,10 +318,6 @@ a.menubar:hover {
 
 	.topbannershadow {
 		border-radius: 0;
-	}
-	#wrapper {
-		width:     100%;
-		max-width: 100%;
 	}
 	#frontrightbuttons {
 		width:100%;
