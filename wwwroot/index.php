@@ -85,7 +85,7 @@
     $metatemplate = file_get_contents('templates/meta.html');
 
     $html  = $starttemplate;
-    $html .= str_replace('{META}', '<link href="/indexv3.css" rel="stylesheet" type="text/css" />', $metatemplate);
+    $html .= str_replace('{META}', '<link href="/index.css?v=1" rel="stylesheet" type="text/css" />', $metatemplate);
     $html .= "<title>Spring RTS Engine</title>\n</head><body>";
     $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0" alt=""/>&nbsp;Home', $headertemplate);
     $html .= $fp;
