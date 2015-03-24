@@ -443,7 +443,7 @@
                 }
             }
 
-            $this->_MySQL_Version = substr(mysqli_get_server_info(), 0, 3); // Get the mysql version.
+            $this->_MySQL_Version = substr(mysqli_get_server_info($fresMySQLConnection), 0, 3); // Get the mysql version.
             mysqli_query($fresMySQLConnection, "SET NAMES 'utf8'"); // This is so utf8 usernames work. Needed for MySQL 4.1
 
             return $fresMySQLConnection;
