@@ -850,6 +850,10 @@ table.fixed-width-table {
 
 /* Important is bad mmmk? Unfortunately a lot of these require it and in this particular case it's not so terrible of a sin, but try not to use important unless you really really have to (says the guy who uses important like it's going out of style below */
 
+#wrap {
+	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
+}
+	
 @media screen and (max-width: 700px) {
 	dd.topics {
 		display: none !important;
