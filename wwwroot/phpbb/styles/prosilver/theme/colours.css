@@ -59,12 +59,38 @@ hr {
 
 .forabg {
 	background-color: #0076b1;
-	background-image: url("./images/bg_list.gif");
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	);
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
 }
 
 .forumbg {
 	background-color: #12A3EB;
-	background-image: url("./images/bg_header.gif");
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	);
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
 }
 
 .panel {
