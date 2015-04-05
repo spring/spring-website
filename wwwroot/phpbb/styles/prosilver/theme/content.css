@@ -847,8 +847,10 @@ table.fixed-width-table {
 }
 
 /* Responsive fixes */
-/* Responsive fixes */
-@media screen and (max-width: 550px) {
+
+/* Important is bad mmmk? Unfortunately a lot of these require it and in this particular case it's not so terrible of a sin, but try not to use important unless you really really have to (says the guy who uses important like it's going out of style below */
+
+@media screen and (max-width: 700px) {
 	dd.topics {
 		display: none !important;
 	}
@@ -875,5 +877,15 @@ table.fixed-width-table {
 	}
 	div.list-inner {
 		margin: 0 !important;
+	}
+	.search-box {
+		float: right !important;
+	}
+}
+
+@media screen and (max-width: 375px) {
+	.search-box {
+		clear: both;
+		float: none !important;
 	}
 }
