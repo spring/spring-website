@@ -845,3 +845,13 @@ table.fixed-width-table {
 	background: rgba(0, 0, 0, .3);
 	border-radius: 3px;
 }
+
+/* Responsive fixes */
+@media screen and (max-width: 550px) {
+	dd.topics {
+		display: none !important;
+	}
+	dd.posts {
+		display: none !important;
+	}
+}
