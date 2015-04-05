@@ -847,11 +847,33 @@ table.fixed-width-table {
 }
 
 /* Responsive fixes */
+/* Responsive fixes */
 @media screen and (max-width: 550px) {
 	dd.topics {
 		display: none !important;
 	}
 	dd.posts {
 		display: none !important;
+	}
+	dd.views {
+		display: none !important;
+	}
+	dd.lastpost {
+		display: none !important;
+	}
+	dt {
+		float: none !important;
+		width: 100%;
+	}
+	dd.posts {
+		float: none !important;
+		width: 100%;
+	}
+	dd.views {
+		float:  none !important;
+		width: 100%;
+	}
+	div.list-inner {
+		margin: 0 !important;
 	}
 }
