@@ -341,7 +341,18 @@ Colours and backgrounds for content.css
 
 ul.forums {
 	background-color: #eef5f9;
-	background-image: url("./images/gradient.gif");
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #D2E0EB),
+		color-stop(1, #EEF5F9)
+	);
+	background-image: -o-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: -moz-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: -webkit-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: -ms-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: linear-gradient(to bottom, #D2E0EB 0%, #EEF5F9 100%);
 }
 
 ul.topiclist li {
@@ -367,7 +378,7 @@ ul.topiclist li.row dt a.subforum.unread {
 
 li.row {
 	border-top-color:  #FFFFFF;
-	border-bottom-color: #00608F;
+	border-bottom-color: #a8b2ba;
 }
 
 li.row strong {
