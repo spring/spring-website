@@ -893,3 +893,40 @@ table.fixed-width-table {
 		float: none !important;
 	}
 }
+
+/* Fix posting box responsiveness -- important because too tired to deal with phpbb's crap tonight */
+fieldset.fields1 dd {
+    margin-left: 0px;
+}
+
+#message-box {
+  width: 99.2%;
+}
+
+#smiley-box {
+   float: none;
+    width: 100%;
+}
+
+#message-box textarea {
+    width: 99.2%
+}
+
+	/* This fixes the ucp pm box */
+	@media screen and (max-width: 375px) {
+		#cp-main .panel div.column2 {
+			float: none;
+		}
+	}
+	
+/* End Posting box fixes */
+
+/* Fix avatars responsive */
+@media screen and (max-width: 700px) {
+	.postprofile {
+		float: none;
+	}
+	.postbody {
+		width: 100%;
+	}
+}
