@@ -929,4 +929,7 @@ fieldset.fields1 dd {
 	.postbody {
 		width: 100% !important;
 	}
+	.postprofile dd, .postprofile dt {
+		margin-left: 8px !important;
+	}
 }
