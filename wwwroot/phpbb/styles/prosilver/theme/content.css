@@ -896,26 +896,26 @@ table.fixed-width-table {
 
 /* Fix posting box responsiveness -- important because too tired to deal with phpbb's crap tonight */
 fieldset.fields1 dd {
-    margin-left: 0px;
+    margin-left: 0px !important;
 }
 
 #message-box {
-  width: 99.2%;
+  width: 99.2% !important;
 }
 
 #smiley-box {
-   float: none;
-    width: 100%;
+   float: none !important;
+    width: 100% !important;
 }
 
 #message-box textarea {
-    width: 99.2%
+    width: 99.2% !important;
 }
 
 	/* This fixes the ucp pm box */
 	@media screen and (max-width: 375px) {
 		#cp-main .panel div.column2 {
-			float: none;
+			float: none !important;
 		}
 	}
 	
@@ -924,9 +924,9 @@ fieldset.fields1 dd {
 /* Fix avatars responsive */
 @media screen and (max-width: 700px) {
 	.postprofile {
-		float: none;
+		float: none !important;
 	}
 	.postbody {
-		width: 100%;
+		width: 100% !important;
 	}
 }
