@@ -84,4 +84,21 @@ fieldset.fields1 dd {
 	.postprofile dd, .postprofile dt {
 		margin-left: 0px !important;
 	}
+	.post .postprofile {
+		display: block !important;
+		padding-bottom: 0px !important;
+		border-bottom: 1px solid #fff !important;
+	}
+}
+
+/* Sexy Additions */
+
+.postbody img.postimage {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 5px;
+	max-width: 99% !important;
+	background-color: rgba(255,255,255,1);
+	border: 1px dashed #999;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
