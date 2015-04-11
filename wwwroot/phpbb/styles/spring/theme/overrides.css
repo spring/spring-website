@@ -1,0 +1,87 @@
+/* Responsive fixes */
+
+/* Important is bad mmmk? Unfortunately a lot of these require it and in this particular case it's not so terrible of a sin, but try not to use important unless you really really have to (says the guy who uses important like it's going out of style below */
+
+#wrap {
+	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
+}
+	
+@media screen and (max-width: 700px) {
+	dd.topics {
+		display: none !important;
+	}
+	dd.posts {
+		display: none !important;
+	}
+	dd.views {
+		display: none !important;
+	}
+	dd.lastpost {
+		display: none !important;
+	}
+	dt {
+		float: none !important;
+		width: 100%;
+	}
+	dd.posts {
+		float: none !important;
+		width: 100%;
+	}
+	dd.views {
+		float:  none !important;
+		width: 100%;
+	}
+	div.list-inner {
+		margin: 0 !important;
+	}
+	.search-box {
+		float: right !important;
+	}
+}
+
+@media screen and (max-width: 375px) {
+	.search-box {
+		clear: both;
+		float: none !important;
+	}
+}
+
+/* Fix posting box responsiveness -- important because too tired to deal with phpbb's crap tonight */
+fieldset.fields1 dd {
+    margin-left: 0px !important;
+}
+
+#message-box {
+  width: 99.2% !important;
+}
+
+#smiley-box {
+   float: none !important;
+    width: 100% !important;
+}
+
+#message-box textarea {
+    width: 99.2% !important;
+}
+
+	/* This fixes the ucp pm box */
+	@media screen and (max-width: 375px) {
+		#cp-main .panel div.column2 {
+			float: none !important;
+		}
+	}
+	
+/* End Posting box fixes */
+
+/* Fix avatars responsive */
+@media screen and (max-width: 700px) {
+	.postprofile {
+		float: none !important;
+	}
+	.postbody {
+		width: 100% !important;
+	}
+	.postprofile dd, .postprofile dt {
+		margin-left: 8px !important;
+	}
+}
