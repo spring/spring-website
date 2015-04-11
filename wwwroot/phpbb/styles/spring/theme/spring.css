@@ -2,28 +2,27 @@
 
 /* Remove the PhPBB header */
 #page-header .headerbar {
-	display: none
+	display: none;
 }
 
 /* Overwriting stuff from prosilver to fix background and padding at top of page */
 html, body {
 	padding: inherit;
 	background-color: transparent;
-	height: inherit
+	height: inherit;
 }
 
 /* PhpBB background color */
 #maincontentwrapper #wrap {
-	background-color: #c8d2da
+	background-color: #c8d2da;
 }
 
 /* Change the navbar background color to separate it from the background */
 #maincontentwrapper .navbar {
-	background-color: #a8b2ba
+	background-color: #a8b2ba;
 }
 
 /* No border-radius around the forum */
 #wrap {
 	border-radius: 0px;
 }
-
