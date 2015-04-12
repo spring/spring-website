@@ -5,6 +5,16 @@
 #wrap {
 	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
 }
+
+ul.linklist > li.rightside, p.rightside, a.rightside {
+	  text-align: center !important;
+}
+
+@media screen and (max-width: 500px) {
+	p.responsive-center {
+		width: 100% !important;
+	}
+}
 	
 @media screen and (max-width: 700px) {
 	dd.topics {
