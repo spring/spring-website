@@ -5,6 +5,16 @@
 #wrap {
 	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
 }
+
+ul.linklist > li.rightside, p.rightside, a.rightside {
+	  text-align: center !important;
+}
+
+@media screen and (max-width: 500px) {
+	p.responsive-center {
+		width: 100% !important;
+	}
+}
 	
 @media screen and (max-width: 700px) {
 	dd.topics {
@@ -102,3 +112,37 @@ fieldset.fields1 dd {
 	border: 1px dashed #999;
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
+
+/* FontAwesome Overrides -- Proof of concept */
+/*
+dl.icon.forum_unread:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 20%;
+    left: 0.7%;
+    font-size: 18px;
+    content: "\f1ea";
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 500px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.forum_unread {
+    background-image: none;
+}
+*/
