@@ -434,8 +434,8 @@ Indi pagkalimtan nga islan ang imo [[Special:Preferences|mga uyon mo sa {{SITENA
 'gotaccountlink'          => 'Magsulod',
 'createaccountmail'       => 'Paagi sa email',
 'badretype'               => 'Wala gasanto ang password nga imo ginsulod',
-'userexists'              => 'May nagagamit na sang mina nga ngalan sang manug-usar.
-Magpili sang iban nga pangalan.',
+'userexists'              => 'May naga-usar na sang ginpasulod nga ngalan manug-usar.
+Magpili sang iban nga ngalan.',
 'loginerror'              => 'Sala sa pagsulod',
 'createaccounterror'      => 'Indi mahimo ang acount nga: $1',
 'noname'                  => 'Wala mo nahatag ang tsakto nga ngalan sang manug-usar.',
@@ -728,7 +728,7 @@ Ang paglarawan nga yara sa ibabaw sang [$2 pahina sang paglarawan sang akta] sin
 # Special:ListGroupRights
 'listgrouprights-members' => '(lista sang mga myembro)',
 
-# E-mail user
+# Email user
 'emailuser' => 'I-email mini nga naga-usar',
 
 # Watchlist
@@ -978,7 +978,7 @@ Ang iban ay pagataguon sang default.
 
 # External editor support
 'edit-externally'      => 'Islan ang mini nga file gamit ang panluwas nga aplikasyon',
-'edit-externally-help' => '(Tan-awa ang [//www.mediawiki.org/wiki/Manual:External_editors mga pama-agi sa paghanda kag pag-ayos] para sa mga dugang nga impormasyon)',
+'edit-externally-help' => '(Tan-awa ang [https://www.mediawiki.org/wiki/Manual:External_editors mga pama-agi sa paghanda kag pag-ayos] para sa mga dugang nga impormasyon)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tanan',

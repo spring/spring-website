@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
  * @author Orentet
  * @author Rotemliss
  * @author YaronSh
+ * @author Yona b
  */
 
 $s_directionality = 'rtl';
@@ -271,6 +272,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'התוסף כבר מותקן.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'דף תוסף לא נמצא.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'התקנת תוסף נכשלה: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'שדרוג הַסְּכֵמָה של התוסף נכשל בבלוק #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'נדרש לעדכן את מודול "%1$s" לפני שניתן יהיה לגשת לדף זה';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'אירעה שגיאה לא ידועה „%1$s” במהלך ביצוע התוסף „%2$s”.';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'השדה „%1$s” מכיל עמודה כפולה „%2$s”.';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'שדה „%1$s” מכיל שדה לא תקין „%2$s”.';
@@ -487,7 +489,7 @@ $s_sent_you_this_reminder_about = 'שלח/ה אליך תזכורת זו בנוג
 $s_bug_reminder = 'שליחת תזכורת';
 $s_reminder_sent_to = 'תזכורת נשלחה אל';
 $s_reminder_sent_none = 'לא ניתן היה לשלוח את התזכורות';
-$s_reminder_list_truncated = 'רשימת המקבלים נחתכה, נא לפנות להיסטוריה לרשימה המלאה';
+$s_reminder_list_truncated = 'רשימת המקבלים נחתכה';
 $s_bug_send_button = 'שליחה';
 $s_reminder = 'תזכורת';
 $s_reminder_explain = 'תזכורת זו תשלח אל הנמענים המסומנים.';

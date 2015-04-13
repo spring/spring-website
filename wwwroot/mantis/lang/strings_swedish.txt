@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
  * @file
  *
  * @author Fader
+ * @author Jopparn
  * @author Lokal Profil
  * @author McDutchie
  * @author Najami
@@ -95,10 +96,10 @@ $s_bugnote_view_state = 'Meddelandets visningsstatus';
 $s_bug_monitor = 'Ärendet bevakas';
 $s_bug_end_monitor = 'Ärendet bevakas ej';
 $s_announcement = 'Tillkännagivande';
-$s_stays_on_top = 'Stannar högt upp';
+$s_stays_on_top = 'Stannar överst';
 $s_bugnote_link_title = 'Direktlänk till anteckning';
-$s_delete_bugnote_button = 'Ta bort meddelande';
-$s_delete_bugnote_sure_msg = 'Är du säker på att du vill ta bort detta meddelande?';
+$s_delete_bugnote_button = 'Ta bort anteckning';
+$s_delete_bugnote_sure_msg = 'Är du säker på att du vill ta bort denna anteckning?';
 $s_bug_relationships = 'Samband';
 $s_empty_password_sure_msg = 'Användaren har ett tomt lösenord.  Är du säker på att detta är vad du vill?';
 $s_empty_password_button = 'Använd tomt lösenord';
@@ -110,21 +111,21 @@ $s_inherit = 'Ärv kategorier';
 $s_inherit_global = 'Ärv globala kategorier';
 $s_inherit_parent = 'Ärv föräldrakategorier';
 $s_update_subproject_inheritance = 'Uppdatera arv för underprojekt';
-$s_duplicate_of = 'kopia av %id';
-$s_has_duplicate = 'har kopia %id';
-$s_related_to = 'relaterad till %id';
+$s_duplicate_of = 'kopia av';
+$s_has_duplicate = 'har en kopia';
+$s_related_to = 'relaterad till';
 $s_dependant_on = 'beroende av %id';
 $s_blocks = 'blockerar %id';
 $s_new_bug = 'Nytt ärende';
 $s_bugnote_added = 'Meddelande tillagt';
 $s_bugnote_edited = 'Meddelandet har ändrats';
 $s_bugnote_deleted = 'Meddelande har tagits bort';
-$s_summary_updated = 'Sammanfattning ändrad';
-$s_description_updated = 'Beskrivning ändrad';
-$s_additional_information_updated = 'Ytterligare information ändrad';
-$s_steps_to_reproduce_updated = 'Steg för att reproducera har ändrats';
-$s_file_added = 'Lagt till fil:';
-$s_file_deleted = 'Raderat fil:';
+$s_summary_updated = 'Sammanfattning uppdaterad';
+$s_description_updated = 'Beskrivning uppdaterad';
+$s_additional_information_updated = 'Ytterligare information uppdaterad';
+$s_steps_to_reproduce_updated = 'Steg för att reproducera är uppdaterad';
+$s_file_added = 'Lagt till fil';
+$s_file_deleted = 'Raderat fil';
 $s_bug_deleted = 'Ärendet har raderats';
 $s_make_private = 'Gör privat';
 $s_make_public = 'Gör publik';
@@ -277,6 +278,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Insticksprogrammet är redan in
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Sidan för insticksprogrammet kunde inte hittas.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Plugin-installation misslyckades: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Uppgraderingen av insticksprogrammets schema misslyckades i block #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Plugin "%1$s" behöver uppgraderas innan du kan få tillgång till den här sidan.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Okänt fel "%1$s" vid exekvering av insticksprogrammet "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Fält "%1$s" innehåller duplicerade kolumner "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Fält "%1$s" innehåller ogiltigt fält "%2$s".';
@@ -493,7 +495,7 @@ $s_sent_you_this_reminder_about = 'har skickat denna påminnelse till dig angåe
 $s_bug_reminder = 'Skicka en påminnelse';
 $s_reminder_sent_to = 'Påminnelse skickad till';
 $s_reminder_sent_none = 'Inga påminnelser kunde skickas';
-$s_reminder_list_truncated = 'mottagarlistan trunkerad, se Ärendehistorik för fullständig lista';
+$s_reminder_list_truncated = 'mottagarlistan trunkerad';
 $s_bug_send_button = 'Skicka';
 $s_reminder = 'Påminnelse';
 $s_reminder_explain = 'Meddelandet kommer att skickas till mottagare som begärt återkoppling till detta ärende.';
@@ -888,8 +890,8 @@ $s_password_emailed_msg = 'Grattis. Du blivit registrerad. Du kommer nu att bli 
 $s_no_reponse_msg = 'Du har sju dagar på dig att bekräfta ditt konto; om så inte skulle vara fallet kan konton komma att tas bort.';
 $s_signup_captcha_request = 'Mata in koden som den visas i rutan till höger';
 $s_signup_info = 'När du kompletterat detta formulär och dina svar kontrollerats, kommer du att bli tillsänd en bekräftelse via e-post till e-postadressen du angett.<br />Med detta e-postmeddelande kan du aktivera ditt konto. Om du inte bekräftar ditt konto inom sju dagar, så kan konton komma att tas bort.<br />Du måste alltså ange en giltig e-postadress för att kunna få bekräftelsemeddelandet.';
-$s_signup_title = 'Skapa ett användarkonto';
-$s_signup_button = 'Skapa kontot';
+$s_signup_title = 'Skapa ett konto';
+$s_signup_button = 'Skapa ett konto';
 $s_no_password_request = 'Ditt lösenord hanteras i ett annat system. Kontakta systemadministratören.';
 $s_edit_site_settings_title = 'Redigera globala inställningar';
 $s_save_settings_button = 'Spara inställningar';

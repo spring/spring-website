@@ -1,5 +1,5 @@
 <?php
-/** Latgalian (Latgaļu)
+/** Latgalian (latgaļu)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -105,7 +105,7 @@ $messages = array(
 'category-article-count'   => '{{PLURAL:$2|Itymā kategorejā ir vīn dūtuo puslopa.|{{PLURAL:$1|Paruodeita $1 puslopa|Paruodeitys $1 puslopys}} nu $2.}}',
 'listingcontinuesabbrev'   => '(tuoļuojums)',
 
-'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
+'linkprefix' => '/^((?>.*(?<![a-zA-Z\\\\x80-\\\\xff])))(.+)$/sD',
 
 'about'         => 'Aproksts',
 'article'       => 'Rakstīņs',
@@ -599,7 +599,7 @@ Lopys, kas ir tovā [[Special:Watchlist|puorraugamūs rokstu sarokstā]] ir '''r
 'listgrouprights-members'  => '(dalinīku saroksts)',
 'listgrouprights-addgroup' => 'Dalikt {{PLURAL:$2|grupu|grupys}}: $1',
 
-# E-mail user
+# Email user
 'emailuser'    => 'Syuteit e-postu itam lītuotuojam',
 'emailmessage' => 'Viestejums:',
 
@@ -874,7 +874,7 @@ Puorejī lauki, piec nūklusiejuma, byus nūglobuoti.
 
 # External editor support
 'edit-externally'      => 'Izmaineit itū failu ar uoreju programu',
-'edit-externally-help' => '(Verīs [//www.mediawiki.org/wiki/Manual:External_editors instrukcijas] Mediawiki.org, kab dabuotu vaira informacejis).',
+'edit-externally-help' => '(Verīs [https://www.mediawiki.org/wiki/Manual:External_editors instrukcijas] Mediawiki.org, kab dabuotu vaira informacejis).',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'vysys',

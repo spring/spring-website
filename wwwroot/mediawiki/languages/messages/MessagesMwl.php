@@ -251,7 +251,7 @@ $messages = array(
 'articlepage'       => 'Ber páigina de cuntenido',
 'talk'              => 'Çcusson',
 'views'             => 'Besitas',
-'toolbox'           => 'Caixa de Ferramientas',
+'toolbox'           => 'Ferramientas',
 'userpage'          => 'Ber páigina de outelizador',
 'imagepage'         => 'Ber páigina de fexeiro',
 'mediawikipage'     => 'Ber páigina de mensaiges',
@@ -481,7 +481,8 @@ Tu puodes [[Special:Search/{{PAGENAME}}|percurar pul títalo desta páigina]] no
 <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} percurar ls registros que téngan a ber],
 ó [{{fullurl:{{FULLPAGENAME}}|action=edit}} eiditar esta páigina]</span>.',
 'note'                             => "'''Abiso:'''",
-'previewnote'                      => "'''Esto ye solo ua amostra; las altaraçones inda nun fúrun grabadas!'''",
+'previewnote'                      => "'''Lhembra-te qu'esto ye solo ua amostra.'''
+Las altaraçones inda nun fúrun grabadas!",
 'editing'                          => 'A eiditar $1',
 'editingsection'                   => 'A eiditar $1 (cacho)',
 'yourtext'                         => 'L tou testo',
@@ -857,7 +858,7 @@ Páiginas que steian ne ls [[Special:Watchlist|tous begiados]] son amostradas an
 'listgrouprights-rights'  => 'Dreitos',
 'listgrouprights-members' => '(lista de nembros)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Ambiar carta eiletrónica a este outelizador',
 'emailfrom' => 'De:',
 'emailto'   => 'Para:',
@@ -1171,7 +1172,7 @@ Causo l fexeiro tenga sido demudado a partir de l sou stado oureginal, alguns de
 
 # External editor support
 'edit-externally'      => 'Eiditar este fexeiro outelizando ua aplicaçon sterna',
-'edit-externally-help' => '(Bei las [//www.mediawiki.org/wiki/Manual:External_editors anstruçones de anstalaçon] pa mais anformaçon).',
+'edit-externally-help' => '(Bei las [https://www.mediawiki.org/wiki/Manual:External_editors anstruçones de anstalaçon] pa mais anformaçon).',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'todas',

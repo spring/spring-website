@@ -1006,16 +1006,16 @@ usà inveci
 'largefileserver'             => 'Lu file supara li misuri cunsintiddi da la cunfigurazioni di lu server.',
 'emptyfile'                   => "Lu file appena cariggaddu pari assé bioddu. Lu chi pudia assé dubuddu a un'errori i' l'innòmmu di lu file. Verifiggà chi s'aggia avveru gana di cariggà chisthu file.",
 'fileexists'                  => "Un file cu' chisth'innòmmu isisthi già.
-Verifiggà primma '''<tt>[[:$1]]</tt>''' si nò s'è sigguri di vurellu sobbraschribì.
+Verifiggà primma <strong>[[:$1]]</strong> si nò s'è sigguri di vurellu sobbraschribì.
 [[$1|thumb]]",
 'fileexists-extension'        => "Un file cu'un'innòmmu sìmmiri isisthi già; la sora diffarènzia è l'usu di li maiuschini i' l'esthensioni: [[$2|thumb]]
-* Innòmmu di lu file cariggaddu: '''<tt>[[:$1]]</tt>'''
-* Innòmmu di lu file esisthenti: '''<tt>[[:$2]]</tt>'''
+* Innòmmu di lu file cariggaddu: <strong>[[:$1]]</strong>
+* Innòmmu di lu file esisthenti: <strong>[[:$2]]</strong>
 Verifiggà ch'i dui file nò siani lu matessi o sciubarà un'innòmmu diffarènti pa lu file da carriggà.",
 'fileexists-thumbnail-yes'    => "Lu file carriggaddu pari assé lu risulthaddu d'un'antiprimma ''(thumbnail)''. [[$1|thumb]]
-Verifiggà, pa cunfrontu, lu file '''<tt>[[:$1]]</tt>'''.
+Verifiggà, pa cunfrontu, lu file <strong>[[:$1]]</strong>.
 S'è la matessi immàgina, i' li misuri originari, nò è nezzessàriu carriggà althri antiprimmi.",
-'file-thumbnail-no'           => "L'innòmmu di lu file ischumenza cun '''<tt>$1</tt>'''. Pari assé lu risulthaddu d'un'antiprimma ''(thumbnail)''.
+'file-thumbnail-no'           => "L'innòmmu di lu file ischumenza cun <strong>$1</strong>. Pari assé lu risulthaddu d'un'antiprimma ''(thumbnail)''.
 Si si diponi di l'immàgina i' la risoruzioni originari, pa piazeri carriggalla. A l'invessu, pa piazeri ciambà l'innòmmu di lu file.",
 'fileexists-forbidden'        => "Un file cun chisthu innòmmu isisthi già. Turrà indareddu e mudìfiggà l'innòmmu cu' lu quari carriggà lu file. [[File:$1|thumb|center|$1]]",
 'fileexists-shared-forbidden' => "Un file cun chisthu innòmmu isisthi già i l'archìbiu di li risuzzi mùrthimediari cundibisi. Turrà indareddu e mudìfiggà l'innòmmu cu' lu quari carriggà lu file. [[File:$1|thumb|center|$1]]",
@@ -1108,7 +1108,7 @@ Si si diponi di l'immàgina i' la risoruzioni originari, pa piazeri carriggalla.
 
 # MIME search
 'mimesearch'         => 'Zercha sigundu a lu tipu MIME',
-'mimesearch-summary' => 'Chistha pàgina cunsenti di filthrà li file sigundu lu tipu MIME. Insirì li paràuri zirchaddi cumenti tipu/sottutipu e.g. <tt>image/jpeg</tt>.',
+'mimesearch-summary' => 'Chistha pàgina cunsenti di filthrà li file sigundu lu tipu MIME. Insirì li paràuri zirchaddi cumenti tipu/sottutipu e.g. <code>image/jpeg</code>.',
 'mimetype'           => 'Tipu MIME:',
 'download'           => 'ischarriggamentu',
 
@@ -1257,7 +1257,7 @@ Also see [[Special:WantedCategories|wanted categories]].",
 # Special:ListGroupRights
 'listgrouprights-members' => '(erencu di li membri)',
 
-# E-mail user
+# Email user
 'mailnologin'     => "Nisciun indirizzu a lu quari invià l'imbasciadda.",
 'mailnologintext' => "Pa invià imbasciaddi di postha erettrònica è nezzessàriu [[Special:UserLogin|intrà]] e abé registhraddu un'indirizzu variddu i' li propri [[Special:Preferences|prifirenzi]].",
 'emailuser'       => "Ischribì a l'utenti",
@@ -1645,7 +1645,7 @@ In chisth'ulthimu casu si pó utilizzà puru un cullegamentu, pa esempiu [[{{#Sp
 'allmessagesdefault'            => 'Testhu pridifiniddu',
 'allmessagescurrent'            => 'Testhu attuari',
 'allmessagestext'               => "Chistha è la listha di tutti l'imbasciaddi di sisthema dipunìbiri i' lu tipu di pàgina MediaWiki.
-Pa piazeri utirizà [//www.mediawiki.org/wiki/Localisation MediaWiki Lucarizazioni] e [//translatewiki.net translatewiki.net] pa l'althri traduzioni.",
+Pa piazeri utirizà [https://www.mediawiki.org/wiki/Localisation MediaWiki Lucarizazioni] e [//translatewiki.net translatewiki.net] pa l'althri traduzioni.",
 'allmessagesnotsupportedDB'     => "Chistha pàgina nò è supporthadda parchí l'indicadori '''\$wgUseDatabaseMessages''' nò è attibuu.",
 'allmessages-filter-unmodified' => 'Nò mudifiggaddi',
 'allmessages-filter-all'        => 'Tutti',
@@ -1919,14 +1919,14 @@ So cunsidaraddi soru l'erenchi puntaddi (righi ch'ischumenzani cu' lu caràtteri
 
 # External editor support
 'edit-externally'      => 'Mudìfigga chistu file usendi un prugramma esthernu',
-'edit-externally-help' => "Pa maggiori infuimmazioni cunsulthà l'[//www.mediawiki.org/wiki/Manual:External_editors isthruzioni] (in ingresu).",
+'edit-externally-help' => "Pa maggiori infuimmazioni cunsulthà l'[https://www.mediawiki.org/wiki/Manual:External_editors isthruzioni] (in ingresu).",
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tutti',
 'namespacesall' => 'Tutti',
 'monthsall'     => 'tutti',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'            => 'Cunfèimma indirizzu di postha erettrònica',
 'confirmemail_noemail'    => "Nò è isthaddu indicaddu un'indirizzu postha erettrònica vàriddu i' li pròpri [[Special:Preferences|prifirenzi]].",
 'confirmemail_text'       => "{{SITENAME}} dumanda la verifigga di l'indirizzu di postha erettrònica primma di pudé l'usà. Incalchà lu buttoni in giossu pa invià una prigonta di cunfèimma a lu propriu indirizzu; i' l'imbasciadda è prisenti un cullegamentu chi cunteni un còdizi. Visità lu cullegamentu cu' lu proprio nabiggadori pa cunfèimmà chi l'indirizzu è vàriddu.",

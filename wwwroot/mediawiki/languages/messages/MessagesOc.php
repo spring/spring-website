@@ -1,5 +1,5 @@
 <?php
-/** Occitan (Occitan)
+/** Occitan (occitan)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -13,6 +13,7 @@
  * @author Fryed-peach
  * @author Jfblanc
  * @author Kaganer
+ * @author McDutchie
  * @author Spacebirdy
  * @author Горан Анђелковић
  * @author לערי ריינהארט
@@ -299,39 +300,39 @@ $messages = array(
 'tog-hidepatrolled'           => 'Amagar las modificacions susvelhadas dels darrièrs cambiaments',
 'tog-newpageshidepatrolled'   => 'Amagar las paginas susvelhadas de la lista de las paginas novèlas',
 'tog-extendwatchlist'         => 'Espandir la lista de seguiment per afichar totas las modificacions e non pas solament las mai recentas',
-'tog-usenewrc'                => 'Utilizar los darrièrs cambiaments melhorats (necessita JavaScript)',
+'tog-usenewrc'                => 'Agropar los cambiaments per pagina dins los darrièrs cambiaments e la lista de seguiment',
 'tog-numberheadings'          => 'Numerotar automaticament los títols',
-'tog-showtoolbar'             => 'Far veire la barra de menut de modificacion (JavaScript)',
-'tog-editondblclick'          => 'Modificar una pagina amb un clic doble (JavaScript)',
+'tog-showtoolbar'             => 'Far veire la barra de menú',
+'tog-editondblclick'          => 'Modificar las paginas amb un clic doble',
 'tog-editsection'             => 'Modificar una seccion via los ligams [modificar]',
-'tog-editsectiononrightclick' => 'Modificar una seccion en fasent un clic drech sus son títol (JavaScript)',
+'tog-editsectiononrightclick' => 'Modificar una seccion en fasent un clic drech suls títols de seccion',
 'tog-showtoc'                 => "Afichar l'ensenhador (per las paginas de mai de 3 seccions)",
 'tog-rememberpassword'        => 'Se remembrar de mon senhal sus aqueste ordinator (al mai $1 {{PLURAL:$1|jorn|jorns}})',
-'tog-watchcreations'          => 'Apondre las paginas que creï a ma lista de seguiment',
-'tog-watchdefault'            => 'Apondre las paginas que modifiqui a ma lista de seguiment',
-'tog-watchmoves'              => 'Apondre las paginas que tòrni nomenar a ma lista de seguiment',
-'tog-watchdeletion'           => 'Apondre las paginas que suprimissi de ma lista de seguiment',
+'tog-watchcreations'          => "Apondre las paginas que creï e los fichièrs qu'impòrti a ma lista de seguiment",
+'tog-watchdefault'            => "Apondre las paginas que modifiqui e los fichièrs qu'impòrti a ma lista de seguiment",
+'tog-watchmoves'              => 'Apondre las paginas e los fichièrs que tòrni nomenar a ma lista de seguiment',
+'tog-watchdeletion'           => 'Apondre las paginas e los fichièrs que suprimissi de ma lista de seguiment',
 'tog-minordefault'            => 'Considerar mas modificacions coma menoras per defaut',
 'tog-previewontop'            => 'Far veire la previsualizacion al dessús de la zòna de modificacion',
 'tog-previewonfirst'          => 'Far veire la previsualizacion al moment de la primièra edicion',
-'tog-nocache'                 => "Desactivar l'amagatal de paginas",
-'tog-enotifwatchlistpages'    => 'M’avertir per corrièr electronic quand una pagina de ma lista de seguiment es modificada',
+'tog-nocache'                 => "Desactivar l'escondedor de las paginas pel navigador",
+'tog-enotifwatchlistpages'    => 'M’avertir per corrièr electronic quand una pagina o un fichièr de ma lista de seguiment es modificat',
 'tog-enotifusertalkpages'     => 'M’avertir per corrièr electronic en cas de modificacion de ma pagina de discussion',
-'tog-enotifminoredits'        => 'M’avertir per corrièr electronic quitament en cas de modificacions menoras',
+'tog-enotifminoredits'        => 'M’avertir per corrièr electronic quitament en cas de modificacions menoras de las paginas o dels fichièrs',
 'tog-enotifrevealaddr'        => 'Afichar mon adreça electronica dins la los corrièrs electronics d’avertiment',
 'tog-shownumberswatching'     => "Afichar lo nombre d'utilizaires que seguisson aquesta pagina",
 'tog-oldsig'                  => 'Apercebut de la signatura existenta :',
 'tog-fancysig'                => 'Tractar la signatura coma de wikitèxte (sens ligam automatic)',
 'tog-externaleditor'          => 'Utilizar un editor extèrne per defaut (pels utilizaires avançats, necessita una configuracion especiala sus vòstre ordinator)',
-'tog-externaldiff'            => 'Utilizar un comparator extèrne per defaut (pels utilizaires avançats, necessita una configuracion especiala sus vòstre ordenador)',
+'tog-externaldiff'            => "Utilizar un comparador extèrne per defaut (pels utilizaires avançats, necessita una configuracion especiala sus vòstre ordenador, [//www.mediawiki.org/wiki/Manual:External_editors/fr mai d'informacions]).",
 'tog-showjumplinks'           => 'Activar los ligams « navigacion » e « recèrca » en naut de pagina (aparéncias Myskin e autres)',
-'tog-uselivepreview'          => 'Utilizar l’apercebut rapid (JavaScript) (experimental)',
+'tog-uselivepreview'          => 'Utilizar l’apercebut rapid (experimental)',
 'tog-forceeditsummary'        => "M'avertir quand ai pas completat lo contengut de la bóstia de comentaris",
 'tog-watchlisthideown'        => 'Amagar mas pròprias modificacions dins la lista de seguiment',
 'tog-watchlisthidebots'       => 'Amagar los cambiaments faches pels bòts dins la lista de seguiment',
 'tog-watchlisthideminor'      => 'Amagar las modificacions menoras dins la lista de seguiment',
-'tog-watchlisthideliu'        => 'Amaga, de la tièra, las modificacions pels utilizaires connectats',
-'tog-watchlisthideanons'      => 'Amaga, de la tièra, las modificacions anonimas',
+'tog-watchlisthideliu'        => 'Amaga, de la lista, las modificacions pels utilizaires connectats',
+'tog-watchlisthideanons'      => 'Amaga, de la lista, las modificacions anonimas',
 'tog-watchlisthidepatrolled'  => 'Amagar las modificacions susvelhadas de la lista de seguiment',
 'tog-nolangconversion'        => 'Desactivar la conversion de las variantas de lenga',
 'tog-ccmeonemails'            => 'Me mandar una còpia dels corrièrs electronics que mandi als autres utilizaires',
@@ -342,7 +343,7 @@ $messages = array(
 
 'underline-always'  => 'Totjorn',
 'underline-never'   => 'Pas jamai',
-'underline-default' => 'Segon lo navigador',
+'underline-default' => 'Valor per defaut del navigador o del tèma',
 
 # Font style option in Special:Preferences
 'editfont-style'     => "Estil de poliça de la zòna d'edicion :",
@@ -427,8 +428,8 @@ $messages = array(
 'newwindow'     => '(dobrís una fenèstra novèla)',
 'cancel'        => 'Anullar',
 'moredotdotdot' => 'E mai...',
-'mypage'        => 'Ma pagina',
-'mytalk'        => 'Ma pagina de discussion',
+'mypage'        => 'Pagina',
+'mytalk'        => 'Discussion',
 'anontalk'      => 'Discussion amb aquesta adreça IP',
 'navigation'    => 'Navigacion',
 'and'           => '&#32;e',
@@ -445,20 +446,21 @@ $messages = array(
 'faqpage'        => 'Project:FAQ',
 
 # Vector skin
-'vector-action-addsection' => 'Apondre un subjècte',
-'vector-action-delete'     => 'Suprimir',
-'vector-action-move'       => 'Tornar nomenar',
-'vector-action-protect'    => 'Protegir',
-'vector-action-undelete'   => 'Restablir',
-'vector-action-unprotect'  => 'Suprimir la proteccion',
-'vector-view-create'       => 'Crear',
-'vector-view-edit'         => 'Modificar',
-'vector-view-history'      => "Veire l'istoric",
-'vector-view-view'         => 'Legir',
-'vector-view-viewsource'   => 'Veire la font',
-'actions'                  => 'Accions',
-'namespaces'               => 'Espacis de noms',
-'variants'                 => 'Variantas',
+'vector-action-addsection'       => 'Apondre un subjècte',
+'vector-action-delete'           => 'Suprimir',
+'vector-action-move'             => 'Tornar nomenar',
+'vector-action-protect'          => 'Protegir',
+'vector-action-undelete'         => 'Restablir',
+'vector-action-unprotect'        => 'Suprimir la proteccion',
+'vector-simplesearch-preference' => "Activar la barra de recèrca simplificada (solament per l'abilhatge Vector)",
+'vector-view-create'             => 'Crear',
+'vector-view-edit'               => 'Modificar',
+'vector-view-history'            => "Veire l'istoric",
+'vector-view-view'               => 'Legir',
+'vector-view-viewsource'         => 'Veire la font',
+'actions'                        => 'Accions',
+'namespaces'                     => 'Espacis de noms',
+'variants'                       => 'Variantas',
 
 'errorpagetitle'    => 'Error de títol',
 'returnto'          => 'Tornar a la pagina $1.',
@@ -497,7 +499,7 @@ $messages = array(
 'articlepage'       => "Vejatz l'article",
 'talk'              => 'Discussion',
 'views'             => 'Afichatges',
-'toolbox'           => "Bóstia d'espleches",
+'toolbox'           => 'Aisinas',
 'userpage'          => "Pagina d'utilizaire",
 'projectpage'       => 'Pagina meta',
 'imagepage'         => 'Veire la pagina del fichièr',
@@ -520,12 +522,14 @@ Tròp d’utilizaires cercan a accedir a aquesta pagina.
 Esperatz un moment abans d'ensajar d’accedir a aquesta pagina.
 
 $1",
+'pool-timeout'      => "Relambi depassat pendent l'espèra del varrolh",
+'pool-queuefull'    => 'La fila de trabalh es plena',
 'pool-errorunknown' => 'Error desconeguda',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => 'A prepaus de {{SITENAME}}',
 'aboutpage'            => 'Project:A prepaus',
-'copyright'            => 'Lo contengut es disponible segon los tèrmes de la licéncia $1.',
+'copyright'            => 'Lo contengut es disponible jos licéncia $1 levat mencion contrària.',
 'copyrightpage'        => '{{ns:project}}:Copyright',
 'currentevents'        => 'Actualitats',
 'currentevents-url'    => 'Project:Actualitats',
@@ -646,21 +650,25 @@ Informatz-ne un [[Special:ListUsers/sysop|administrator]] aprèp aver notada l�
 'badarticleerror'      => 'Aquesta accion pòt pas èsser efectuada sus aquesta pagina.',
 'cannotdelete'         => 'Impossible de suprimir la pagina o lo fichièr « $1 ».
 Benlèu la supression ja es estada efectuada per qualqu’un mai.',
+'cannotdelete-title'   => 'Impossible de suprimir la pagina "$1"',
 'badtitle'             => 'Títol marrit',
 'badtitletext'         => 'Lo títol de la pagina demandada es invalid, void o s’agís d’un títol interlenga o interprojècte mal ligat. Benlèu conten un o maites caractèrs que pòdon pas èsser utilizats dins los títols.',
-'perfcached'           => 'Aquò es una version en amagatal e es benlèu pas a jorn. A maximum of {{PLURAL:$1|one result is|$1 results are}} available in the cache.',
-'perfcachedts'         => "Las donadas que segon son dins l'amagatal, son doncas pas forçadament a jorn. La darrièra actualizacion data del $1. A maximum of {{PLURAL:$4|one result is|$4 results are}} available in the cache.",
+'perfcached'           => "Las donadas seguendas son en escondedor e benlèu, son pas a jorn. Un maximum de {{PLURAL:$1|un resultat|$1 resultats}} es disponible dins l'escondedor.",
+'perfcachedts'         => "Las donadas seguendas son en escondedor e benlèu, son pas a jorn. Un maximum de {{PLURAL:$1|un resultat|$1 resultats}} es disponible dins l'escondedor.",
 'querypage-no-updates' => 'Las mesas a jorn per aquesta pagina son actualamnt desactivadas. Las donadas çaijós son pas mesas a jorn.',
 'wrong_wfQuery_params' => 'Paramètres incorrèctes sus wfQuery()<br />
 Foncion : $1<br />
 Requèsta : $2',
 'viewsource'           => 'Vejatz lo tèxte font',
+'viewsource-title'     => 'Veire la font de $1',
 'actionthrottled'      => 'Accion limitada',
 'actionthrottledtext'  => "Per luchar contra lo spam, l’utilizacion d'aquesta accion es limitada a un cèrt nombre de còps dins una sosta pro corta. S'avèra qu'avètz depassat aqueste limit. Ensajatz tornamai dins qualques minutas.",
-'protectedpagetext'    => 'Aquesta pagina es estada protegida per empachar sa modificacion.',
+'protectedpagetext'    => "Aquesta pagina es estada protegida per empachar sa modificacion o d'autras accions.",
 'viewsourcetext'       => 'Podètz veire e copiar lo contengut de l’article per poder trabalhar dessús :',
-'protectedinterface'   => 'Aquesta pagina provesís de tèxte d’interfàcia pel logicial e es protegida per evitar los abuses.',
-'editinginterface'     => "'''Atencion :''' sètz a editar una pagina utilizada per crear lo tèxte de l’interfàcia del logicial. Los cambiaments se repercutaràn, segon lo contèxte, sus totas o d'unas paginas visiblas pels autres utilizaires. Per las traduccions, vos convidam a utilizar lo projècte MediaWiki d'internacionalizacion dels messatges [//translatewiki.net/wiki/Main_Page?setlang=oc translatewiki.net].",
+'viewyourtext'         => "Podètz veire e copiar lo contengut de '''vòstras modificacions''' a aquesta pagina :",
+'protectedinterface'   => 'Aquesta pagina provesís de tèxte d’interfàcia pel logicial susaqueste wiki, e es protegida per evitar los abuses.
+Per apondre o modificar de traduccions sus totes los wikis, utilizatz [//translatewiki.net/ translatewiki.net], lo projècte de localizacion de MediaWiki.',
+'editinginterface'     => "'''Atencion :''' sètz a mand de modificar una pagina utilizada per crear lo tèxte de l’interfàcia del logicial. Los cambiaments sus aquesta pagina se repercutaràn sus l'aparéncia de l'interfàcia d'utilizaire pels autres utilizaires d'aqueste wiki. Per apondre o modificar de traduccions per totes los wikis, utilizatz [//translatewiki.net/translatewiki.net], lo projècte MediaWiki d'internacionalizacion dels messatges .",
 'sqlhidden'            => '(Requèsta SQL amagada)',
 'cascadeprotected'     => "Aquesta pagina es actualament protegida perque es inclusa dins {{PLURAL:$1|la pagina seguenta|las paginas seguentas}}, {{PLURAL:$1|qu'es estada protegida|que son estadas protegidas}} amb l’opcion « proteccion en cascada » activada :
 $2",
@@ -684,10 +692,11 @@ Notatz que d'unas paginas pòdon èsser encara afichadas coma s'eratz encara con
 'welcomecreation'            => "== Benvenguda, $1 ! ==
 Vòstre compte d'utilizaire es estat creat.
 Doblidetz pas de personalizar vòstras [[Special:Preferences|{{SITENAME}} preferéncias]].",
-'yourname'                   => "Vòstre nom d'utilizaire :",
+'yourname'                   => "Nom d'utilizaire :",
 'yourpassword'               => 'Vòstre senhal :',
-'yourpasswordagain'          => 'Picatz vòstre senhal tornarmai :',
+'yourpasswordagain'          => 'Confirmar lo senhal :',
 'remembermypassword'         => 'Me reconnectar automaticament a las visitas venentas (al maximum $1 {{PLURAL:$1|jorn|jorns}})',
+'securelogin-stick-https'    => 'Demorar connectat en HTTPS aprèp la connexion',
 'yourdomainname'             => 'Vòstre domeni',
 'externaldberror'            => 'Siá una error s’es producha amb la banca de donadas d’autentificacion extèrna, siá sètz pas autorizat a metre a jorn vòstre compte extèrne.',
 'login'                      => 'Identificacion',
@@ -703,7 +712,7 @@ Doblidetz pas de personalizar vòstras [[Special:Preferences|{{SITENAME}} prefer
 'createaccount'              => 'Crear un compte novèl',
 'gotaccount'                 => "Ja avètz un compte ? '''$1'''.",
 'gotaccountlink'             => 'Identificatz-vos',
-'userlogin-resetlink'        => 'Vos doblidèretz las informacions de conneccion?',
+'userlogin-resetlink'        => 'Avètz doblidat vòstres detalhs de connexion ?',
 'createaccountmail'          => 'per corrièr electronic',
 'createaccountreason'        => 'Motiu :',
 'badretype'                  => "Los senhals qu'avètz picats son pas identics.",
@@ -713,6 +722,8 @@ Causissètz-ne un autre.",
 'createaccounterror'         => 'Impossible de crear lo compte : $1',
 'nocookiesnew'               => "Lo compte d'utilizaire es estat creat, mas sètz pas connectat. {{SITENAME}} utiliza de cookies per la connexion mas los avètz desactivats. Activatz-los e reconnectatz-vos amb lo meteis nom e lo meteis senhal.",
 'nocookieslogin'             => '{{SITENAME}} utiliza de cookies per la connexion mas avètz los cookies desactivats. Activatz-los e reconnectatz-vos.',
+'nocookiesfornew'            => "Lo compte d'utilizaire es pas estat creat, perque avèm pas pogut identificar son origina.
+Verificatz qu'avètz activat los cookies, recargatz la pagina e tornatz ensajar.",
 'noname'                     => "Avètz pas picat de nom d'utilizaire valid.",
 'loginsuccesstitle'          => 'Identificacion capitada.',
 'loginsuccess'               => 'Sètz actualament connectat(ada) sus {{SITENAME}} en tant que « $1 ».',
@@ -744,19 +755,20 @@ podètz ignorar aqueste messatge e contunhar d'utilizar vòstre senhal ancian.",
 Identificatz-vos tre que l'aurètz recebut.",
 'blocked-mailpassword'       => 'Vòstra adreça IP es blocada en edicion, la foncion de rapèl del senhal es doncas desactivada per evitar los abuses.',
 'eauthentsent'               => 'Un corrièr de confirmacion es estat mandat a l’adreça indicada.
-Abans qu’un autre corrièr sià mandat a aqueste compte, vos caldrà seguir las instruccions donadas dins lo messatge per confirmar que sètz plan lo titular.',
-'throttled-mailpassword'     => 'Un corrièr electronic de rapèl de vòstre senhal ja es estat mandat durant {{PLURAL:$1|la darrièra ora|las $1 darrièras oras}}. Per evitar los abuses, un sol corrièr de rapèl serà mandat per {{PLURAL:$1|ora|interval de $1 oras}}.',
+Abans qu’un autre corrièr sià mandat a aqueste compte, vos caldrà seguir las instruccions donadas dins lo messatge per confirmar que lo compte es plan vòstre.',
+'throttled-mailpassword'     => 'Un corrièr electronic de reïnicializacion de vòstre senhal es ja estat mandat durant {{PLURAL:$1|la darrièra ora|las $1 darrièras oras}}. Per evitar los abuses, un sol corrièr de reïnicializacion de vòstre senhal serà pas mandat per {{PLURAL:$1|ora|interval de $1 oras}}.',
 'mailerror'                  => 'Error en mandant lo corrièr electronic : $1',
 'acct_creation_throttle_hit' => "De visitors d'aqueste wiki qu'utilizan vòstra adreça IP an creat $1 {{PLURAL:$1|compte|comptes}} lo jorn darrièr, aquò es lo limit maximum autorizat pendent aqueste periòde.
 Atal los visitors qu'utilizan aquesta adreça IP pòdon pas crear mai de compte novèl pel moment.",
-'emailauthenticated'         => 'Vòstra adreça de corrièr electronic es estada autentificada lo $2 a $3.',
-'emailnotauthenticated'      => 'Vòstra adreça de corrièr electronic es <strong>pas encara autentificada</strong>. Cap corrièr serà pas mandat per caduna de las foncions seguentas.',
+'emailauthenticated'         => 'Vòstra adreça de corrièr electronic es estada confirmada lo $2 a $3.',
+'emailnotauthenticated'      => 'Vòstra adreça de corrièr electronic es pas encara confirmada. Cap de corrièr serà pas mandat per caduna de las foncions seguentas.',
 'noemailprefs'               => "Cap d'adreça electronica es pas estada indicada, las foncions seguentas seràn pas disponiblas.",
 'emailconfirmlink'           => 'Confirmatz vòstra adreça de corrièr electronic',
 'invalidemailaddress'        => "Aquesta adreça de corrièr electronic pòt pas èsser acceptada perque sembla qu'a un format incorrècte.
 Picatz una adreça plan formatada o daissatz aqueste camp void.",
+'cannotchangeemail'          => 'Las adreças de corrièr electronic dels comptes pòdon pas èsser modificadas sus aqueste wiki.',
 'accountcreated'             => 'Compte creat.',
-'accountcreatedtext'         => "Lo compte d'utilizaire de $1 es estat creat.",
+'accountcreatedtext'         => "Lo compte d'utilizaire per [[{{ns:User}}:$1|$1]] ([[{{ns:User talk}}:$1|discussion]]) es estat creat.",
 'createaccount-title'        => "Creacion d'un compte per {{SITENAME}}",
 'createaccount-text'         => "Qualqu'un a creat un compte per vòstra adreça de corrièr electronic sus {{SITENAME}} ($4) intitolat « $2 », amb per senhal « $3 ». Deuriaz dobrir una sessilha e cambiar, tre ara, aqueste senhal.
 
@@ -764,8 +776,13 @@ Ignoratz aqueste messatge se aqueste compte es estat creat per error.",
 'usernamehasherror'          => "Lo nom d'utilizaire pòt pas conténer de caractèrs de hachage",
 'login-throttled'            => 'Avètz ensajat tròp de temptativas de connexion darrièrament.
 Esperatz abans d’ensajar tornamai.',
+'login-abort-generic'        => 'Vòstra temptativa de connexion a fracassat',
 'loginlanguagelabel'         => 'Lenga: $1',
 'suspicious-userlogout'      => 'Vòstra demanda de desconnexion es estada refusada perque sembla qu’es estada mandada per un navigador copat o la mesa en escondedor d’un proxy.',
+
+# Email sending
+'php-mail-error-unknown' => 'Error desconeguda dins la foncion mail() de PHP.',
+'user-mail-no-addy'      => 'Ensajat de mandar un corrièr electronic sens adreça',
 
 # Change password dialog
 'resetpass'                 => 'Cambiar lo senhal del compte',
@@ -775,8 +792,10 @@ Esperatz abans d’ensajar tornamai.',
 'oldpassword'               => 'Senhal ancian :',
 'newpassword'               => 'Senhal novèl :',
 'retypenew'                 => 'Confirmar lo senhal novèl :',
+'resetpass-abort-generic'   => 'La modificacion del senhal es estada anulada per una extension.',
 'resetpass_submit'          => 'Cambiar lo senhal e s’enregistrar',
-'resetpass_success'         => 'Vòstre senhal es estat cambiat amb succès ! Enregistrament en cors...',
+'resetpass_success'         => 'Vòstre senhal es estat modificat corrèctament  !
+Ara, anatz èsser connectat…',
 'resetpass_forbidden'       => 'Los senhals pòdon pas èsser cambiats',
 'resetpass-no-info'         => 'Vos cal èsser connectat per aver accès a aquesta pagina.',
 'resetpass-submit-loggedin' => 'Modificar lo senhal',
@@ -786,18 +805,36 @@ Benlèu ja avètz modificat vòstre senhal o demandat un senhal temporari novèl
 'resetpass-temp-password'   => 'Senhal temporari :',
 
 # Special:PasswordReset
-'passwordreset'              => 'Remesa a zèro del senhal',
-'passwordreset-legend'       => 'Reïnicializar lo senhal',
-'passwordreset-username'     => "Nom d'utilizaire :",
-'passwordreset-domain'       => 'Domeni:',
-'passwordreset-email'        => 'Adreça de corrièr electronic :',
-'passwordreset-emailtitle'   => "Detailhs d'un compte per {{SITENAME}}",
-'passwordreset-emailelement' => 'Utilizaire: $1
+'passwordreset'                   => 'Remesa a zèro del senhal',
+'passwordreset-text'              => 'Emplenatz aqueste formulari per reïnicializar vòstre senhal.',
+'passwordreset-legend'            => 'Reïnicializar lo senhal',
+'passwordreset-disabled'          => 'La reïnicializacion dels senhals es estada desactivada sus aqueste wiki.',
+'passwordreset-pretext'           => '{{PLURAL:$1||Entratz un element de donadas çaijós}}',
+'passwordreset-username'          => "Nom d'utilizaire :",
+'passwordreset-domain'            => 'Domeni:',
+'passwordreset-capture'           => 'Veire lo corrièl resultant ?',
+'passwordreset-capture-help'      => "Se marcatz aquesta casa, lo corrièr electronic (amb lo senhal temporari) vos serà afichat al meteis temps que serà mandat a l'utilizaire.",
+'passwordreset-email'             => 'Adreça de corrièr electronic :',
+'passwordreset-emailtitle'        => "Detailhs d'un compte per {{SITENAME}}",
+'passwordreset-emailtext-ip'      => "Qualqu'un (probablament vos, dempuèi l'adreça IP $1) a demandat una reïnicializacion de vòstre senhal per {{SITENAME}} ($4). {{PLURAL:$3|Lo compte d'utilizaire seguent es associat|Los comptes d'utilizaires seguents son associats}} a aquesta adreça de corrièr electronic :
+
+$2
+
+{{PLURAL:$3|Aqueste senhal temporari expirarà|Aquestes senhals temporaris expiraràn}} dins {{PLURAL:$5|un jorn|$5 jorns}}. Ara, vos cal vos connectar e causir un senhal novèl. Se aquesta demanda proven pas de vos, o que vos sètz remembrat de vòstre senhal inicial, e que volètz pas mai lo modificar, podètz ignorar aqueste messatge e contunhar d'utilizar vòstre ancian senhal.",
+'passwordreset-emailtext-user'    => "L'utilizaire $1 sus {{SITENAME}} a demandat una reïnicializacion de vòstre senhal per {{SITENAME}} ($4). {{PLURAL:$3|Lo compte d'utilizaire seguent es associat|Los comptes d'utilizaires seguents son associats}} a aquesta adreça de corrièr electronic :
+
+$2
+
+{{PLURAL:$3|Aqueste senhal temporari expirarà|Aquestes senhals temporaris expiraràn}} dins {{PLURAL:$5|un jorn|$5 jorns}}. Ara, vos cal vos connectar e causir un senhal novèl. Se aquesta demanda proven pas de vos, o que vos sètz remembrat de vòstre senhal inicial, e que lo volètz pas mai modificar, podètz ignorar aqueste messatge e contunhar d'utilizar vòstre ancian senhal.",
+'passwordreset-emailelement'      => 'Utilizaire: $1
 Senhal temporari: $2',
+'passwordreset-emailsent'         => 'Un corrièr electronic de reïnicializacion de senhal es estat mandat.',
+'passwordreset-emailsent-capture' => "Un corrièr electronic de reïnicializacion senhal es estat mandat, qu'es afichat çaijós.",
 
 # Special:ChangeEmail
 'changeemail'          => "Cambiar l'adreça electronica:",
 'changeemail-header'   => "Cambiar l'adreça electronica del compte",
+'changeemail-text'     => 'Emplenatz aqueste formulari per cambiar vòstra adreça de corrièr electronic. Vos cal entrar vòstre senhal per confirmar aqueste cambiament.',
 'changeemail-no-info'  => 'Vos cal èsser connectat per aver accès a aquesta pagina.',
 'changeemail-oldemail' => 'Adreça electronica actuala:',
 'changeemail-newemail' => 'Novela adreça electronica:',
@@ -882,8 +919,8 @@ Benlèu qu'es estada desplaçada o suprimida dempuèi qu'avètz legida aquesta p
 'loginreqlink'                     => 'connectar',
 'loginreqpagetext'                 => 'Vos cal vos $1 per veire las autras paginas.',
 'accmailtitle'                     => 'Senhal mandat.',
-'accmailtext'                      => "Un senhal generit aleatòriament per [[User talk:$1|$1]] es estat mandat a $2.
-Lo senhal per aqueste compte novèl pòt èsser cambiat sus la pagina ''[[Special:ChangePassword|de cambiament de senhal]]'' aprèp s'èsser connectat.",
+'accmailtext'                      => "Un senhal generat aleatòriament per [[User talk:$1|$1]] es estat mandat a $2.
+Lo senhal per aqueste compte novèl pòt èsser cambiat sus la pagina ''[[Special:ChangePassword|Cambiament de senhal]]'' aprèp s'èsser connectat.",
 'newarticle'                       => '(Novèl)',
 'newarticletext'                   => "Avètz seguit un ligam cap a una pagina qu’existís pas encara o qu'es estada [{{fullurl:Special:Log|type=delete&page={{FULLPAGENAMEE}}}} escafada].
 Per crear aquesta pagina, picatz vòstre tèxte dins la bóstia çaijós (podètz consultar [[{{MediaWiki:Helppage}}|la pagina d’ajuda]] per mai d’entresenhas).
@@ -901,7 +938,11 @@ o <span class="plainlinks">[{{fullurl:{{#Special:Log}}|page={{FULLPAGENAMEE}}}} 
 'userpage-userdoesnotexist-view'   => "Lo compte d'utilizaire « $1 » es pas enregistrat.",
 'blocked-notice-logextract'        => 'Aqueste utilizaire es actualament blocat.
 La darrièra entrada del jornal dels blocatges es indicada çaijós a títol d’informacion :',
-'clearyourcache'                   => "'''Nòta :''' Aprèp aver publicat la pagina, vos cal forçar son recargament complet tot ignorant lo contengut actual de l'amagatal de vòstre navigador per veire los cambiaments : '''Mozilla / Firefox / Konqueror / Safari :''' mantenètz la tòca ''Majuscula'' (''Shift'') en clicant lo boton ''Actualizar'' (''Reload,'') o quichatz sus ''Maj-Ctrl-R'' (''Maj-Cmd-R'' sus Apple) ; '''Internet Explorer / Opera :''' mantenètz la tòca ''Ctrl'' en clicant lo boton ''Actualizar'' o quichatz sus ''Ctrl-F5''.",
+'clearyourcache'                   => "'''Nòta :''' Aprèp aver enregistrat vòstras modificacions, es possible que vos calga forçar lo recargament complet de l'escondedor de vòstre navigador per veire los cambiaments : 
+*'''Firefox / Safari :''' mantenètz la tòca ''Majuscula'' (''Shift'') en clicant lo boton ''Actualizar'' (''Reload,'') o quichatz sus ''Ctrl-F5'' o ''Ctrl-R''  (''⌘-R'' sus un Mac)
+* '''Google Chrome:''' Quichatz sus ''Ctrl-Shift-R'' (''⌘-Shift-R'' sus un Mac) 
+* '''Internet Explorer:''' Mantenètz la tòca ''Ctrl'' en clicant sul boton ''Actualizar'', o quichatz ''Ctrl-F5'' 
+* '''Opera:''' Voidatz l'escondedor dins ''Aisinas → Preferéncias''",
 'usercssyoucanpreview'             => "'''Astúcia :''' Utilizatz lo boton 'Previsualizacion' per testar vòstre fuèlh css/js novèl abans de l'enregistrar.",
 'userjsyoucanpreview'              => "'''Astúcia :''' Utilizatz lo boton 'Previsualizacion' per testar vòstre fuèlh css/js novèl abans de l'enregistrar.",
 'usercsspreview'                   => "'''Remembratz-vos que sètz a previsualizar vòstre pròpri fuèlh CSS !'''
@@ -913,7 +954,8 @@ La darrièra entrada del jornal dels blocatges es indicada çaijós a títol d�
 'userinvalidcssjstitle'            => "'''Atencion :''' existís pas d'estil « $1 ». Remembratz-vos que las paginas personalas amb extensions .css e .js utilizan de títols en minusculas, per exemple, {{ns:user}}:Foo/vector.css e non pas {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(Mes a jorn)',
 'note'                             => "'''Nòta :'''",
-'previewnote'                      => "'''Atencion, aqueste tèxte es sonque una previsualizacion e es pas encara estat salvat !'''",
+'previewnote'                      => "'''Remembratz-vos qu'es pas qu'una previsualizacion.'''
+Vòstras modificacions son pas encara estadas enregistradas !",
 'previewconflict'                  => 'Aquesta previsualizacion fa veire lo tèxte de la bóstia de modificacion superiora coma apareisserà se causissètz de lo salvar.',
 'session_fail_preview'             => "'''Podèm pas enregistrar vòstra modificacion a causa d’una pèrda d’informacions concernent vòstra sesilha.
 Ensajatz tornarmai.
@@ -925,6 +967,7 @@ S'aquò fracassa encara, [[Special:UserLogout|desconnectatz-vos]], puèi connect
 '''Se la temptativa de modificacion èra legitima, ensajatz encara.
 S'aquò capita pas un còp de mai, [[Special:UserLogout|desconnectatz-vos]], puèi connectatz-vos tornamai.'''",
 'token_suffix_mismatch'            => "'''Vòstra modificacion es pas estada acceptada perque vòstre navigador a mesclat los caractèrs de ponctuacion dins l’identificant d’edicion. La modificacion es estada regetada per empachar la corrupcion del tèxte de l’article. Aqueste problèma se produtz quand utilizatz un mandatari (proxy) anonim problematic.'''",
+'edit_form_incomplete'             => "'''D'unas partidas del formulari de modificacion an pas atench lo servidor, verificatz que vòstras modificacions son intactas e ensajatz tornarmai.'''",
 'editing'                          => 'Modificacion de $1',
 'editingsection'                   => 'Modificacion de $1 (seccion)',
 'editingcomment'                   => 'Modificacion de $1 (seccion novèla)',
@@ -941,9 +984,9 @@ Vos va caler aportar vòstras modificacions al tèxte existent.
 'yourdiff'                         => 'Diferéncias',
 'copyrightwarning'                 => "Totas las contribucions a {{SITENAME}} son consideradas coma publicadas jols tèrmes de la $2 (vejatz $1 per mai de detalhs). Se desiratz pas que vòstres escriches sián modificats e distribuits a volontat, mercés de los sometre pas aicí.<br /> Nos prometètz tanben qu'avètz escrich aquò vos-meteis, o que l’avètz copiat d’una font provenent del domeni public, o d’una ressorsa liura.'''UTILIZETZ PAS DE TRABALHS JOS COPYRIGHT SENS AUTORIZACION EXPRÈSSA !'''",
 'copyrightwarning2'                => "Totas las contribucions a {{SITENAME}} pòdon èsser modificadas o suprimidas per d’autres utilizaires. Se desiratz pas que vòstres escriches sián modificats e distribuits a volontat, mercés de los sometre pas aicí.<br /> Tanben nos prometètz qu'avètz escrich aquò vos-meteis, o que l’avètz copiat d’una font provenent del domeni public, o d’una ressorsa liura. (vejatz $1 per mai de detalhs). '''UTILIZETZ PAS DE TRABALHS JOS COPYRIGHT SENS AUTORIZACION EXPRÈSSA !'''",
-'longpageerror'                    => "'''ERROR : Lo tèxte qu'avètz mandat fa $1 Ko, que depassa doncas lo limit autorizat dels $2 Ko. Pòt pas èsser salvat.'''",
-'readonlywarning'                  => "'''AVERTIMENT : La banca de donadas es estada varrolhada per mantenença, doncas poiretz pas salvar vòstras modificacions ara.
-Podètz copiar lo tèxte dins un fichièr de tèxte e lo salvar per mai tard.'''
+'longpageerror'                    => "'''ERROR : Lo tèxte qu'avètz somés fa {{PLURAL:$1|un Kio|$1 Kio}}, çò que depassa lo limit fixat a {{PLURAL:$2|un Kio|$2 Kio}}.'''. Pòt pas èsser salvat.",
+'readonlywarning'                  => "'''AVERTIMENT : La banca de donadas es estada varrolhada per d'operacions de mantenença. Doncas, poiretz pas publicar vòstras modificacions pel moment.'''
+Podètz copiar e pegar vòstre tèxte dins un fichièr de tèxte e lo salvar per mai tard.
 
 L’administrator qu'a varrolhat la banca de donadas a balhat l’explicacion seguenta : $1",
 'protectedpagewarning'             => "'''AVERTIMENT : Aquesta pagina es protegida. Sols los utilizaires qu'an l'estatut d'administrator la p�don modificar. ''' La darri�ra entrada del jornal es afichada �aij�s per refer�ncia :",
@@ -964,7 +1007,7 @@ Podètz tonar en rèire e modificar una pagina existenta, [[Special:UserLogin|vo
 'nocreate-loggedin'                => 'Avètz pas la permission de crear de paginas novèlas.',
 'sectioneditnotsupported-title'    => 'Modificacion de seccion pas presa en carga',
 'sectioneditnotsupported-text'     => "La modificacion d'una seccion es pas suportada dins aquesta pagina de modificacion.",
-'permissionserrors'                => 'Error de permissions',
+'permissionserrors'                => 'Error de permission',
 'permissionserrorstext'            => 'Avètz pas la permission d’efectuar l’operacion demandada per {{PLURAL:$1|la rason seguenta|las rasons seguentas}} :',
 'permissionserrorstext-withaction' => 'Sètz pas autorizat(ada) a $2, per {{PLURAL:$1|la rason seguenta|las rasons seguentas}} :',
 'recreate-moveddeleted-warn'       => "'''Atencion : sètz a tornar crear una pagina qu'es estada suprimida precedentament.'''
@@ -1028,8 +1071,8 @@ La rason balhada per $3 èra ''$2''.",
 ({{MediaWiki:Last}}) = diferéncia amb la version precedenta, <b>m</b> = cambiament menor',
 'history-fieldset-title' => "Percórrer l'istoric",
 'history-show-deleted'   => 'Suprimits solament',
-'histfirst'              => 'Primièras contribucions',
-'histlast'               => 'Darrièras contribucions',
+'histfirst'              => 'Las mai ancianas',
+'histlast'               => 'Las mai recentas',
 'historysize'            => '({{PLURAL:$1|1 octet|$1 octets}})',
 'historyempty'           => '(void)',
 
@@ -1055,22 +1098,22 @@ Coma administrator, podètz encara [$1 veire aquesta version] s'o volètz.",
 I pòt aver mai de detalhs dins [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} lo jornal de las supressions].
 Coma administrator, podètz encara [$1 veire aquesta version] s'o volètz.",
 'rev-deleted-text-view'       => "Aquesta version de la pagina es estada '''escafada'''.
-En tant qu’administrator, la podètz visualizar ; i pòt aver de detalhs dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal dels escafaments].",
+La podètz visualizar ; de detalhs son disponibles dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal dels escafaments].",
 'rev-suppressed-text-view'    => "Aquesta version de la pagina es estada '''suprimida'''.
-En tant qu’administrator, la podètz visualizar ; i pòt aver de detalhs dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal de las supressions].",
+La podètz visualizar ; de detalhs son disponibles dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal de las supressions].",
 'rev-deleted-no-diff'         => "Podètz pas veire aquesta dif per que una de las versions es estada '''escafada'''.
 I pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal dels escafaments].",
 'rev-suppressed-no-diff'      => "Pod�tz pas veire aquesta difer�ncia perque una de las revisions es estada '''suprimida'''.",
 'rev-deleted-unhide-diff'     => "Una de las revisions d'aquesta diferéncia es estada '''escafada'''.
-I pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal dels escafaments].
-En tant qu'administrator, podètz encara [$1 veire aquesta diferéncia] se volètz.",
+De detalhs son disponibles dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal dels escafaments].
+Podètz totjorn [$1 veire aquesta diferéncia] se lo volètz.",
 'rev-suppressed-unhide-diff'  => "Una de las revisions d'aqueste diff es estada '''suprimida'''.
-I pòt aver de detalhs dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal de las supressions].
-En tant qu'administrator, podètz totjorn [$1 veire aqueste diff] se volètz contunhar.",
+De detalhs son disponibles dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal de las supressions].
+Podètz totjorn [$1 veire aqueste diff] se volètz contunhar.",
 'rev-deleted-diff-view'       => "Una de las revisions d'aquesta diff es estada '''suprimida'''.
-En tant qu'administrator podètz veire aquesta diff ; i pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal de las supressions].",
+Podètz veire aquesta diff ; i pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/delete|page={{FULLPAGENAMEE}}}} jornal de las supressions].",
 'rev-suppressed-diff-view'    => "Una de las revisions d'aquesta diff es estada '''escafada'''.
-En tant qu'administrator podètz veire aquesta diff ; i pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal dels escafaments].",
+Podètz veire aquesta diff ; i pòt aver mai de detalhs dins lo [{{fullurl:{{#Special:Log}}/suppress|page={{FULLPAGENAMEE}}}} jornal dels escafaments].",
 'rev-delundel'                => 'afichar/amagar',
 'rev-showdeleted'             => 'afichar',
 'revisiondelete'              => 'Suprimir/Restablir de versions',
@@ -1089,18 +1132,19 @@ En tant qu'administrator podètz veire aquesta diff ; i pòt aver mai de detalhs
 D’autres administrators sus {{SITENAME}} poiràn totjorn accedir al contengut amagat e lo restablir tornamai a travèrs d'aquesta meteissa interfàcia, a mens qu’una restriccion suplementària siá mesa en plaça pels operators del site.",
 'revdelete-confirm'           => "Confirmatz que volètz efectuar aquesta accion, que ne comprenètz las consequéncias, e qu'o fasètz en acòrd amb [[{{MediaWiki:Policy-url}}|las règlas]].",
 'revdelete-suppress-text'     => "La supression deu èsser utilizada '''sonque''' dins los cases seguents :
+* Informacions potencialament difamatòrias
 * Informacions personalas inapropriadas
 *: ''adreça, numèro de telefòn, numèro de seguretat sociala, ...''",
 'revdelete-legend'            => 'Metre en plaça de restriccions de version :',
-'revdelete-hide-text'         => 'Amagar lo tèxte de la version',
+'revdelete-hide-text'         => 'Tèxte de la revision',
 'revdelete-hide-image'        => 'Amagar lo contengut del fichièr',
 'revdelete-hide-name'         => 'Amagar l’accion e la cibla',
-'revdelete-hide-comment'      => 'Amagar lo comentari de modificacion',
-'revdelete-hide-user'         => 'Amagar lo pseudonim o l’adreça IP del contributor.',
+'revdelete-hide-comment'      => 'Modificar lo resumit',
+'revdelete-hide-user'         => 'Nom d’utilizaire/Adreça IP de l’editor',
 'revdelete-hide-restricted'   => 'Suprimir aquestas donadas als administrators e mai als autres',
 'revdelete-radio-same'        => '(cambiar pas)',
-'revdelete-radio-set'         => 'Òc',
-'revdelete-radio-unset'       => 'Non',
+'revdelete-radio-set'         => 'Amagat',
+'revdelete-radio-unset'       => 'Visible',
 'revdelete-suppress'          => 'Suprimir las donadas dels administrators e tanben dels autres utilizaires',
 'revdelete-unsuppress'        => 'Levar las restriccions sus las versions restablidas',
 'revdelete-log'               => 'Motiu :',
@@ -1129,7 +1173,9 @@ Verificatz los jornals.",
 'revdelete-only-restricted'   => "Error al moment de la supression de l'entrada datada del $1 a $2 : podètz pas suprimir aqueles elements als administrators sens seleccionar tanben d'opcions de supression mai.",
 'revdelete-reason-dropdown'   => "* Rasons correntas de supression
 ** Violacion dels dreches d'autors
-** Entresenhas personalas inapropriadas",
+** Entresenhas personalas inapropriadas
+** Nom d'utilizaire inapropriat
+** Informacions potencialament difamatòrias.",
 'revdelete-otherreason'       => 'Autra rason / rason suplementària :',
 'revdelete-reasonotherlist'   => 'Autra rason',
 'revdelete-edit-reasonlist'   => 'Modifica los motius de la supression',
@@ -1137,7 +1183,7 @@ Verificatz los jornals.",
 
 # Suppression log
 'suppressionlog'     => 'Jornal de las supressions',
-'suppressionlogtext' => 'Çaijós, se tròba la tièra de las supressions e dels blocatges que comprenon las revisions amagadas als administrators. Vejatz [[Special:IPBlockList|la lista dels blocatges de las IP]] per la lista dels fòrabandiments e dels blocatges operacionals.',
+'suppressionlogtext' => 'Çaijós, se tròba la lista de las supressions e dels blocatges que comprenon las revisions amagadas als administrators. Vejatz [[Special:BlockList|la lista dels blocatges de las IP]] per la lista dels fòrabandiments e dels blocatges operacionals.',
 
 # History merging
 'mergehistory'                     => "Fusion dels istorics d'una pagina",
@@ -1169,7 +1215,7 @@ Asseguratz-vos qu'aqueste cambiament pòsca conservar la continuitat de l'istori
 'mergelogpagetext'   => "Vaquí, çaijós, la lista de las fusions las mai recentas de l'istoric d'una pagina amb una autra.",
 
 # Diffs
-'history-title'            => 'Istoric de las versions de « $1 »',
+'history-title'            => '$1 : Istoric de las versions',
 'difference'               => '(Diferéncias entre las versions)',
 'difference-multipage'     => '(Diferéncias entre las paginas)',
 'lineno'                   => 'Linha $1 :',
@@ -1223,7 +1269,7 @@ Asseguratz-vos qu'aqueste cambiament pòsca conservar la continuitat de l'istori
 'search-mwsuggest-enabled'         => 'amb suggestions',
 'search-mwsuggest-disabled'        => 'sens suggestion',
 'search-relatedarticle'            => 'Relatat',
-'mwsuggest-disable'                => 'Desactivar las suggestions AJAX',
+'mwsuggest-disable'                => 'Desactivar las suggestions de recèrca',
 'searcheverything-enable'          => 'Recercar dins totes los espacis de noms',
 'searchrelated'                    => 'relatat',
 'searchall'                        => 'Totes',
@@ -1247,16 +1293,17 @@ En esperant la reactivacion, podètz efectuar una recèrca via Google.
 Atencion, lor indexacion de contengut {{SITENAME}} benlèu es pas a jorn.',
 
 # Quickbar
-'qbsettings'               => "Barra d'espleches",
-'qbsettings-none'          => 'Cap',
-'qbsettings-fixedleft'     => 'Esquèrra',
-'qbsettings-fixedright'    => 'Drecha',
-'qbsettings-floatingleft'  => 'Flotanta a esquèrra',
-'qbsettings-floatingright' => 'Flotanta a drecha',
+'qbsettings'                => "Barra d'aisinas",
+'qbsettings-none'           => 'Pas cap',
+'qbsettings-fixedleft'      => 'Esquèrra',
+'qbsettings-fixedright'     => 'Drecha',
+'qbsettings-floatingleft'   => 'Flotanta a esquèrra',
+'qbsettings-floatingright'  => 'Flotanta a drecha',
+'qbsettings-directionality' => "Fixat, en foncion de la directivitat d'escritura de vòstra lenga",
 
 # Preferences page
 'preferences'                   => 'Preferéncias',
-'mypreferences'                 => 'Mas preferéncias',
+'mypreferences'                 => 'Preferéncias',
 'prefs-edits'                   => 'Nombre d’edicions :',
 'prefsnologin'                  => 'Vos sètz pas identificat(ada)',
 'prefsnologintext'              => 'Vos cal èsser <span class="plainlinks">[{{fullurl:{{#Special:UserLogin}}|returnto=$1}} connectat(ada)]</span> per modificar vòstras preferéncias d’utilizaire.',
@@ -1271,7 +1318,7 @@ Atencion, lor indexacion de contengut {{SITENAME}} benlèu es pas a jorn.',
 'prefs-rc'                      => 'Darrièrs cambiaments',
 'prefs-watchlist'               => 'Lista de seguiment',
 'prefs-watchlist-days'          => "Nombre de jorns d'afichar dins la lista de seguiment :",
-'prefs-watchlist-days-max'      => 'Maximum $1 {{PLURAL:$1|day|days}}',
+'prefs-watchlist-days-max'      => '(maximum $1 jorn{{PLURAL:$1||s}})',
 'prefs-watchlist-edits'         => "Nombre de modificacions d'afichar dins la lista de seguiment espandida :",
 'prefs-watchlist-edits-max'     => 'Nombre maximum : 1000',
 'prefs-watchlist-token'         => 'Geton per la lista de seguiment :',
@@ -1283,7 +1330,7 @@ Atencion, lor indexacion de contengut {{SITENAME}} benlèu es pas a jorn.',
 'prefs-rendering'               => 'Aparéncia',
 'saveprefs'                     => 'Enregistrar las preferéncias',
 'resetprefs'                    => 'Restablir las preferéncias',
-'restoreprefs'                  => 'Restablir totas las valors per defaut',
+'restoreprefs'                  => 'Restablir totes los paramètres per defaut (dins totas las seccions)',
 'prefs-editing'                 => 'Fenèstra de modificacion',
 'prefs-edit-boxsize'            => 'Talha de la fenèstra de modificacion.',
 'rows'                          => 'Rengadas :',
@@ -1318,7 +1365,7 @@ Vaquí una valor generada aleatòriament que podètz utilizar : $1',
 'timezoneregion-indian'         => 'Ocean Indian',
 'timezoneregion-pacific'        => 'Ocean Pacific',
 'allowemail'                    => 'Autorizar lo mandadís de corrièr electronic venent d’autres utilizaires',
-'prefs-searchoptions'           => 'Opcions de recèrca',
+'prefs-searchoptions'           => 'Recèrca',
 'prefs-namespaces'              => 'Noms d’espacis',
 'defaultns'                     => 'Autrament recercar dins aquestes espacis de noms :',
 'default'                       => 'defaut',
@@ -1337,27 +1384,31 @@ Vaquí una valor generada aleatòriament que podètz utilizar : $1',
 'yourrealname'                  => 'Nom vertadièr :',
 'yourlanguage'                  => "Lenga de l'interfàcia :",
 'yourvariant'                   => 'Varianta lingüistica :',
+'prefs-help-variant'            => "Vòstra varianta o ortografia preferida dins la quala cal afichar las paginas de contengut d'aqueste wiki.",
 'yournick'                      => 'Signatura per las discussions :',
 'prefs-help-signature'          => 'Los comentaris sus las paginas de discussion devon èsser signats amb « <nowiki>~~~~</nowiki> », que serà convertit en vòstra signatura e un orodatament.',
 'badsig'                        => 'Signatura bruta incorrècta, verificatz vòstras balisas HTML.',
 'badsiglength'                  => 'Vòstra signatura es tròp longa.
 Deu aver, al maximum $1 caractèr{{PLURAL:$1||s}}.',
-'yourgender'                    => 'Sèxe :',
-'gender-unknown'                => 'Pas entresenhat',
-'gender-male'                   => 'Masculin',
-'gender-female'                 => 'Femenin',
-'prefs-help-gender'             => "Opcional : utilizat pels acòrdis dins l'interfàcia del logicial. Aquesta informacion serà publica.",
+'yourgender'                    => 'Cossí vos agrada mai èsser descrich ?',
+'gender-unknown'                => "M'agrada mai sens detalh",
+'gender-male'                   => 'Modifica de pagina del wiki',
+'gender-female'                 => 'Modifica de paginas del wiki',
+'prefs-help-gender'             => 'Definir aquesta preferéncia es facultatiu.
+Aqueste logicial utiliza sa valor per s’adreçar a vos e vos mencionar als autres en utilizant lo bon genre gramatical.
+Aquesta informacion serà publica.',
 'email'                         => 'Corrièr electronic',
 'prefs-help-realname'           => "(facultatiu) : se l'especificatz, serà utilizat per vos atribuir vòstras contribucions.",
 'prefs-help-email'              => 'L’adreça de corrièr electronic es facultativa mas vos permet de reçaupre lo senhal se lo doblidatz.
 Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagina d’utilizaire o la de discussion sens sofracha de desvelar vòstra idenditat.',
+'prefs-help-email-others'       => "Tanben podètz causir de daissar los autres vos contactar sus vòstra pagina de discussion d'utilizaire sens que siá necessari de revelar vòstra identitat.",
 'prefs-help-email-required'     => 'Una adreça de corrièr electronic es requesa.',
 'prefs-info'                    => 'Informacion de basa',
 'prefs-i18n'                    => 'Internationalizacion',
 'prefs-signature'               => 'Signatura',
 'prefs-dateformat'              => 'Format de las datas',
 'prefs-timeoffset'              => 'Descalatge orari',
-'prefs-advancedediting'         => 'Opcions avançadas',
+'prefs-advancedediting'         => 'Opcions generalas',
 'prefs-advancedrc'              => 'Opcions avançadas',
 'prefs-advancedrendering'       => 'Opcions avançadas',
 'prefs-advancedsearchoptions'   => 'Opcions avançadas',
@@ -1367,7 +1418,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'prefs-displaywatchlist'        => "Opcions d'afichatge",
 'prefs-diffs'                   => 'Diferéncias',
 
-# User preference: e-mail validation using jQuery
+# User preference: email validation using jQuery
 'email-address-validity-valid'   => "L'adreça electronica sembla bona",
 'email-address-validity-invalid' => 'entrar una adreça electronica valida',
 
@@ -1376,7 +1427,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'userrights-lookup-user'       => "Gestion dels dreches d'utilizaire",
 'userrights-user-editname'     => 'Entrar un nom d’utilizaire :',
 'editusergroup'                => "Modificacion dels gropes d'utilizaires",
-'editinguser'                  => "Cambiament dels dreches de l'utilizaire '''[[User:$1|$1]]''' ([[User talk:$1|{{int:talkpagelinktext}}]]{{int:pipe-separator}}[[Special:Contributions/$1|{{int:contribslink}}]])",
+'editinguser'                  => "Modificacion dels dreches de l'{{GENDER:$1|utilizaire|utilizaire}} '''[[User:$1|$1]]''' $2",
 'userrights-editusergroup'     => 'Modificar los gropes de l’utilizaire',
 'saveusergroups'               => "Salvar los gropes d'utilizaires",
 'userrights-groupsmember'      => 'Membre de :',
@@ -1389,7 +1440,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'userrights-no-interwiki'      => "Sètz pas abilitat per modificar los dreches dels utilizaires sus d'autres wikis.",
 'userrights-nodatabase'        => 'La banca de donadas « $1 » existís pas o es pas en local.',
 'userrights-nologin'           => "Vos cal [[Special:UserLogin|vos connectar]] amb un compte d'administrator per balhar los dreches d'utilizaire.",
-'userrights-notallowed'        => "Al vòstre compte li es pas permés de modificar de dreches d'utilizaire.",
+'userrights-notallowed'        => "Avètz pas la permission d'apondre o suprimir de dreches d'utilizaire.",
 'userrights-changeable-col'    => 'Los gropes que podètz cambiar',
 'userrights-unchangeable-col'  => 'Los gropes que podètz pas cambiar',
 
@@ -1435,7 +1486,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'right-reupload-shared'       => 'Espotir localament un fichièr present sus un depaus partejat',
 'right-upload_by_url'         => 'Importar un fichièr dempuèi una adreça URL',
 'right-purge'                 => "Purgar l'amagatal de las paginas sens l'aver de confirmar",
-'right-autoconfirmed'         => 'Modificar las paginas semiprotegidas',
+'right-autoconfirmed'         => 'Èsser pas afectat per las limitacions de debit ligadas a las adreças IP',
 'right-bot'                   => 'Èsser tractat coma un procediment automatizat',
 'right-nominornewtalk'        => 'Desenclavar pas lo bendèl "Avètz de messatges novèls" al moment d\'un cambiament menor sus una pagina de discussion d\'un utilizaire',
 'right-apihighlimits'         => "Utilizar de limits superiors dins las requèstas l'API",
@@ -1454,8 +1505,8 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'right-hideuser'              => 'Blocar un utilizaire en amagant son nom al public',
 'right-ipblock-exempt'        => "Èsser pas afectat per las IP blocadas, los blocatges automatics e los blocatges de plajas d'IP",
 'right-proxyunbannable'       => 'Èsser pas afectat pels blocatges automatics de servidors mandataris',
-'right-unblockself'           => 'Se desblocar eles meteisses',
-'right-protect'               => 'Modificar lo nivèl de proteccion de las paginas e modificar las paginas protegidas',
+'right-unblockself'           => 'Se desblocar se-meteis',
+'right-protect'               => 'Modificar los nivèls de proteccion e modificar las paginas protegidas en cascada',
 'right-editprotected'         => 'Modificar las paginas protegidas (sens proteccion en cascada)',
 'right-editinterface'         => "Modificar l'interfàcia d'utilizaire",
 'right-editusercssjs'         => "Modificar los fichièrs CSS e JS d'autres utilizaires",
@@ -1469,14 +1520,14 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'right-patrol'                => 'Marcar de cambiaments coma verificats',
 'right-autopatrol'            => 'Aver sos cambiaments marcats automaticament coma verificats',
 'right-patrolmarks'           => 'Utilizar las foncionalitats de la patrolha dels darrièrs cambiaments',
-'right-unwatchedpages'        => 'Veire la tièra de las paginas pas seguidas',
+'right-unwatchedpages'        => 'Veire la lista de las paginas pas seguidas',
 'right-mergehistory'          => 'Fusionar los istorics de las paginas',
 'right-userrights'            => "Modificar totes los dreches d'un utilizaire",
 'right-userrights-interwiki'  => "Modificar los dreches d'utilizaires que son sus un autre wiki",
 'right-siteadmin'             => 'Varrolhar e desvarrolhar la banca de donadas',
 'right-override-export-depth' => 'Exportar las paginas en incluent las paginas ligadas fins a una prigondor de 5 nivèls',
 'right-sendemail'             => 'Mandar un corrièl als autres utilizaires',
-'right-passwordreset'         => 'Tòrna inicializar lo senhal d’un utilizaire ([[Special:PasswordReset|pagina especiala]])',
+'right-passwordreset'         => 'Veire los corrièrs electronics de reïnicializacion dels senhals',
 
 # User rights log
 'rightslog'      => "Istoric de las modificacions d'estatut",
@@ -1509,8 +1560,9 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'action-suppressionlog'       => 'veire aqueste jornal privat',
 'action-block'                => 'blocar aqueste utilizaire a l’edicion',
 'action-protect'              => 'modificar los nivèls de proteccion per aquesta pagina',
-'action-import'               => 'importar aquesta pagina a partir d’un autre wiki',
-'action-importupload'         => 'importar aquesta pagina e partir de l’impòrt d’un fichièr',
+'action-rollback'             => "anullar rapidament las modificacions del darrièr utilizaire qu'a modificat una pagina donada",
+'action-import'               => 'importar de paginas dempuèi un autre wiki',
+'action-importupload'         => 'importar de paginas dempuèi un fichièr telecargat',
 'action-patrol'               => 'marcar la modificacion dels autres coma patrolhada',
 'action-autopatrol'           => 'aver vòstra modificacion marcada coma patrolhada',
 'action-unwatchedpages'       => 'veire la lista de las paginas pas susvelhadas',
@@ -1518,6 +1570,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'action-userrights'           => 'modificar totes los dreches d’utilizaire',
 'action-userrights-interwiki' => 'modificar los dreches d’utilizaire e los sus d’autres wikis',
 'action-siteadmin'            => 'varrolhar o desvarrolhar la banca de donadas',
+'action-sendemail'            => 'mandar corrièrs electronics',
 
 # Recent changes
 'nchanges'                          => '$1 {{PLURAL:$1|cambiament|cambiaments}}',
@@ -1549,9 +1602,11 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'number_of_watching_users_pageview' => '[$1 {{PLURAL:$1|utilizaire seguent|utilizaires seguents}}]',
 'rc_categories'                     => 'Limit de las categorias (separacion amb « | »)',
 'rc_categories_any'                 => 'Totas',
+'rc-change-size-new'                => '$1 {{PLURAL:$1|octet|octets}} aprèp cambiament',
 'newsectionsummary'                 => '/* $1 */ seccion novèla',
-'rc-enhanced-expand'                => 'Vejatz los detalhs (necessita JavaScript)',
+'rc-enhanced-expand'                => 'Vejatz los detalhs',
 'rc-enhanced-hide'                  => 'Amagar los detalhs',
+'rc-old-title'                      => 'creat amb lo títol « $1 »',
 
 # Recent changes linked
 'recentchangeslinked'          => 'Seguit dels ligams',
@@ -1559,7 +1614,7 @@ Tanben podètz causir de permetre a d’autres de vos contactar per vòstra pagi
 'recentchangeslinked-toolbox'  => 'Seguit dels ligams',
 'recentchangeslinked-title'    => 'Seguit dels ligams associats a "$1"',
 'recentchangeslinked-noresult' => 'Cap de cambiament sus las paginas ligadas pendent lo periòde causit.',
-'recentchangeslinked-summary'  => "Aquesta pagina especiala fa veire los darrièrs cambiaments sus las paginas que son ligadas. Las paginas de [[Special:Watchlist|vòstra tièra de seguit]] son '''en gras'''.",
+'recentchangeslinked-summary'  => "Aquesta pagina especiala fa veire los darrièrs cambiaments sus las paginas que son ligadas. Las paginas de [[Special:Watchlist|vòstra lista de seguimznt]] son '''en gras'''.",
 'recentchangeslinked-page'     => 'Nom de la pagina :',
 'recentchangeslinked-to'       => 'Afichar los cambiaments cap a las paginas ligadas al luòc de la pagina donada',
 
@@ -1578,18 +1633,18 @@ per copiar de fichièrs sul servidor.',
 
 Lo jornal de las supressions e lo dels desplaçaments d'aquesta pagina son afichats aicí per informacion :",
 'uploadtext'                  => "Utilizatz lo formulari çaijós per importar de fichièrs sul servidor.
-Per veire o recercar d'imatges mandats precedentament, consultatz [[Special:FileList|la tièra dels imatges]]. Las còpias e las supressions tanben son enregistradas dins l'[[Special:Log/upload|istoric dels impòrts]], las supressions dins l’[[Special:Log/delete|istoric de las supressions]].
+Per veire o recercar d'imatges mandats precedentament, consultatz [[Special:FileList|la lista dels imatges]]. Las còpias e las supressions tanben son enregistradas dins l'[[Special:Log/upload|istoric dels impòrts]], las supressions dins l’[[Special:Log/delete|istoric de las supressions]].
 
 Per inclure un imatge dins una pagina, utilizatz un ligam de la forma
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:fichièr.jpg]]</nowiki></tt>''',
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:fichièr.png|200px|thumb|left|tèxte descriptiu]]</nowiki></tt>''' per utilizar una miniatura de 200 pixèls de larg dins una bóstia a esquèrra amb 'tèxte descriptiu' coma descripcion
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:fichièr.ogg]]</nowiki></tt>''' per ligar dirèctament cap al fichièr sens l'afichar.",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:fichièr.jpg]]</nowiki></code>''',
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:fichièr.png|200px|thumb|left|tèxte descriptiu]]</nowiki></code>''' per utilizar una miniatura de 200 pixèls de larg dins una bóstia a esquèrra amb 'tèxte descriptiu' coma descripcion
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:fichièr.ogg]]</nowiki></code>''' per ligar dirèctament cap al fichièr sens l'afichar.",
 'upload-permitted'            => 'Formats de fichièrs autorizats : $1.',
 'upload-preferred'            => 'Formats de fichièrs preferits : $1.',
 'upload-prohibited'           => 'Formats de fichièrs interdiches : $1.',
 'uploadlog'                   => 'Istoric de las importacions',
 'uploadlogpage'               => 'Istoric de las importacions de fichièrs multimèdia',
-'uploadlogpagetext'           => 'Vaquí la tièra dels darrièrs fichièrs copiats sul servidor.
+'uploadlogpagetext'           => 'Aquí la lista dels darrièrs fichièrs copiats sul servidor.
 Vejatz la [[Special:NewFiles|galariá dels imatges novèls]] per una presentacion mai visuala.',
 'filename'                    => 'Nom del fichièr',
 'filedesc'                    => 'Descripcion',
@@ -1602,14 +1657,15 @@ Vejatz la [[Special:NewFiles|galariá dels imatges novèls]] per una presentacio
 'ignorewarnings'              => 'Ignorar los avertiments al moment de l’impòrt',
 'minlength1'                  => 'Los noms de fichièrs devon comprendre almens una letra.',
 'illegalfilename'             => 'Lo nom de fichièr « $1 » conten de caractèrs interdiches dins los títols de paginas. Mercé de lo tornar nomenar e de lo copiar tornarmai.',
+'filename-toolong'            => 'Lo nom del fichièr pòt pas depassar 240 octets.',
 'badfilename'                 => "L'imatge es estat renomenat « $1 ».",
-'filetype-mime-mismatch'      => 'L’extension del fichier correspond pas al tipe MIME.',
+'filetype-mime-mismatch'      => "L'extension del fichièr « .$1 » correspond pas al tipe MIME detectat del fichièr ($2).",
 'filetype-badmime'            => 'Los fichièrs del tipe MIME « $1 » pòdon pas èsser importats.',
 'filetype-bad-ie-mime'        => 'Lo fichièr pòt pas èsser importat perque serià detectat coma « $1 » per Internet Explorer, tipe de fichièr interdich perque potencialament dangierós.',
 'filetype-unwanted-type'      => "«.$1»''' es un format de fichièr pas desirat.
 {{PLURAL:$3|Lo tipe de fichièr preconizat es|Los tipes de fichièrs preconizats son}} $2.",
-'filetype-banned-type'        => "'''\".\$1\"''' es dins un format pas admes.
-{{PLURAL:\$3|Lo qu'es acceptat es|Los que son acceptats son}} \$2.",
+'filetype-banned-type'        => "''' « .$1 » '''{{PLURAL:$4|es pas un tipe de fichièr autorizat|son pas de tipes de fichièrs autorizats}}. 
+{{PLURAL:$3|Lo tipe de fichièr autorizat es|Los tipes de fichièrs autorizats son}} $2.",
 'filetype-missing'            => "Lo fichièr a pas cap d'extension (coma « .jpg » per exemple).",
 'empty-file'                  => "Lo fichièr qu'avètz somés èra void.",
 'file-too-large'              => "Lo fichièr qu'avètz somés èra tròp grand.",
@@ -1625,20 +1681,21 @@ Vejatz la [[Special:NewFiles|galariá dels imatges novèls]] per una presentacio
 'large-file'                  => 'Los fichièrs importats deurián pas èsser mai gros que $1 ; aqueste fichièr fa $2.',
 'largefileserver'             => "La talha d'aqueste fichièr es superiora al maximum autorizat.",
 'emptyfile'                   => 'Lo fichièr que volètz importar sembla void. Aquò pòt èsser degut a una error dins lo nom del fichièr. Verificatz que desiratz vertadièrament copiar aqueste fichièr.',
-'fileexists'                  => "Un fichièr amb aqueste nom existís ja.
-Mercé de verificar '''<tt>[[:$1]]</tt>'''.
-Sètz segur de voler modificar aqueste fichièr ? [[$1|thumb]]",
-'filepageexists'              => "La pagina de descripcion per aqueste fichièr ja es estada creada aicí '''<tt>[[:$1]]</tt>''', mas cap de fichièr existís pas actualament jos aqueste nom.
+'windows-nonascii-filename'   => 'Aqueste wiki supòrta pas los noms de fichièrs amb de caractèrs especials.',
+'fileexists'                  => 'Un fichièr amb aqueste nom existís ja.
+Mercé de verificar <strong>[[:$1]]</strong>.
+Sètz segur de voler modificar aqueste fichièr ? [[$1|thumb]]',
+'filepageexists'              => "La pagina de descripcion per aqueste fichièr ja es estada creada aicí <strong>[[:$1]]</strong>, mas cap de fichièr existís pas actualament jos aqueste nom.
 Lo resumit qu'anatz especificar apareisserà pas sus la pagina de descripcion.
 Per o far, vos caldrà modificar la pagina manualament. [[$1|vinheta]]",
 'fileexists-extension'        => "Un fichièr amb un nom pròchi existís ja : [[$2|thumb]]
-* Nom del fichièr d'importar : '''<tt>[[:$1]]</tt>'''
-* Nom del fichièr existent : '''<tt>[[:$2]]</tt>'''
+* Nom del fichièr d'importar : <strong>[[:$1]]</strong>
+* Nom del fichièr existent : <strong>[[:$2]]</strong>
 Causissètz-ne un autre.",
 'fileexists-thumbnail-yes'    => "Lo fichièr sembla èsser un imatge en talha reducha ''(thumbnail)''. [[$1|thumb]]
-Verificatz lo fichièr '''<tt>[[:$1]]</tt>'''.
+Verificatz lo fichièr <strong>[[:$1]]</strong>.
 Se lo fichièr verificat es lo meteis imatge (dins una resolucion melhora), es pas de besonh d’importar una version reducha.",
-'file-thumbnail-no'           => "Lo nom del fichièr comença per '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "Lo nom del fichièr comença per <strong>$1</strong>.
 Es possible que s’agisca d’una version reducha ''(miniatura)''.
 Se dispausatz del fichièr en resolucion nauta, importatz-lo, si que non cambiatz lo nom del fichièr.",
 'fileexists-forbidden'        => "Un fichièr amb aqueste nom existís ja e pòt pas èsser espotit.
@@ -1659,6 +1716,8 @@ S'o volètz importar tornamai, tornatz en rèire e importatz-lo jos un autre nom
 'php-uploaddisabledtext'      => "Lo telecargament de fichièrs es estat desactivat dins PHP. Verificatz l'opcion de configuracion file_uploads.",
 'uploadscripted'              => "Aqueste fichièr conten de còde HTML o un escript que poiriá èsser interpretat d'un biais incorrècte per un navigador Internet.",
 'uploadvirus'                 => 'Aqueste fichièr conten un virús ! Per mai de detalhs, consultatz : $1',
+'uploadjava'                  => 'Es un fichièr ZIP que conten un fichièr Java .class.
+Lo telecargament de fichièrs Java es pas autorizat, perque pòdon contornar de restriccions de seguretat.',
 'upload-source'               => 'Fichièr font',
 'sourcefilename'              => 'Nom del fichièr font :',
 'sourceurl'                   => 'URL font :',
@@ -1684,10 +1743,11 @@ MGP # Pentax
 PICT # misc.
  #</pre> <!-- daissatz aquesta linha coma es -->',
 'upload-success-subj'         => 'Importacion capitada',
-'upload-success-msg'          => 'Çò mandat es disponible aicí : [[:{{ns:file}}:$1]]',
+'upload-success-msg'          => 'Vòstre impòrt dempuèi [$2] a capitat. Es disponible aicí : [[:{{ns:file}}:$1]]',
 'upload-failure-subj'         => 'Problèma de mandadís',
 'upload-failure-msg'          => 'I a agut un problèma amb vòstre mandadís [$2]: $1',
 'upload-warning-subj'         => 'Avertiment al moment del telecargament',
+'upload-warning-msg'          => "Un problèma s'es produch al moment de l'impòrt dempuèi [$2]. Podètz tornar al [[Special:Upload/stash/$1|formulari d'impòrt]] per lo resòlvre.",
 
 'upload-proto-error'        => 'Protocòl incorrècte',
 'upload-proto-error-text'   => "L’impòrt requerís d'URLs començant per <code>http://</code> o <code>ftp://</code>.",
@@ -1701,23 +1761,73 @@ Se lo problèma persistís, contactatz un [[Special:ListUsers/sysop|administrato
 'upload-unknown-size'       => 'Talha desconeguda',
 'upload-http-error'         => 'Una error HTTP es intervenguda : $1',
 
+# File backend
+'backend-fail-stream'        => 'Impossible de legir lo fichièr $1.',
+'backend-fail-backup'        => 'Impossible de salvar lo fichièr $1.',
+'backend-fail-notexists'     => 'Lo fichièr $1 existís pas.',
+'backend-fail-hashes'        => "Impossible d'obténer lis hashatges del fichièr per comparason.",
+'backend-fail-notsame'       => 'Un fichièr diferent existís ja per $1 .',
+'backend-fail-invalidpath'   => "$1 es pas un camin d'emmagazinatge valid.",
+'backend-fail-delete'        => 'Impossible de suprimir lo fichièr « $1 ».',
+'backend-fail-alreadyexists' => 'Lo fichièr $1 existís ja.',
+'backend-fail-store'         => "Impossible d'emmagazinar lo fichièr « $1 » dins « $2 ».",
+'backend-fail-copy'          => 'Impossible de copiar lo fichièr « $1 » dins « $2 ».',
+'backend-fail-move'          => 'Impossible de desplaçar lo fichièr « $1 » cap a « $2 ».',
+'backend-fail-opentemp'      => 'Impossible de dobrir lo fichièr temporari.',
+'backend-fail-writetemp'     => "Impossible d'escriure dins lo fichièr temporari.",
+'backend-fail-closetemp'     => 'Impossible de tampar lo fichièr temporari.',
+'backend-fail-read'          => 'Impossible de legir lo fichièr $1.',
+'backend-fail-create'        => "Impossible d'escriure lo fichièr $1.",
+'backend-fail-readonly'      => 'Lo supòrt d\'emmagazinatge "$1" es actualament en lectura sola. La rason indicada es : "$2"',
+'backend-fail-synced'        => 'Lo fichièr "$1" es dins un estat incoerent dins los supòrts d\'emmagazinatge intèrnes',
+'backend-fail-connect'       => 'Impossible de se connectar al supòrt d\'emmagazinatge "$1".',
+'backend-fail-internal'      => 'Una error desconeguda s\'es producha dins lo supòrt d\'emmagazinatge "$1".',
+'backend-fail-contenttype'   => 'Impossible de determinar lo tipe de contengut del fichièr d\'emmagazinar en "$1".',
+'backend-fail-batchsize'     => "Lo supòrt d'emmagazinatge a provesit un lòt de $1 {{PLURAL:$1|operacion|operacions}} de fichièr ; lo limit es de $2 {{PLURAL:$2|operacion|operacions}}.",
+
+# Lock manager
+'lockmanager-notlocked'        => 'Impossible de desvarrolhar « $1 » ; es pas varrolhada.',
+'lockmanager-fail-closelock'   => 'Impossible de tampar lo fichièr de varrolh per « $1 ».',
+'lockmanager-fail-deletelock'  => 'Impossible de suprimir lo fichièr de varrolh per « $1 ».',
+'lockmanager-fail-acquirelock' => "Impossible d'obténer lo fichièr de varrolh per « $1 ».",
+'lockmanager-fail-openlock'    => 'Impossible de dobrir lo fichièr de varrolh per « $1 ».',
+'lockmanager-fail-releaselock' => 'Impossible de daissar anar lo fichièr de varrolh per « $1 ».',
+'lockmanager-fail-db-bucket'   => 'Impossible de contactar pro de bancas de donadas de varrolhatge dins lo godet $1.',
+'lockmanager-fail-db-release'  => 'Impossible de daissar anar los varrolhs sus la banca de donadas $1.',
+'lockmanager-fail-svr-release' => 'Impossible de daissar anar los varrolhs sul servidor $1.',
+
+# ZipDirectoryReader
+'zip-file-open-error' => "Una error s'es producha al moment de la dobertura del fichièr ZIP per contraròtle.",
+'zip-wrong-format'    => 'Lo fichièr especificat es pas un archiu ZIP.',
+'zip-bad'             => 'Lo fichièr es un archiu ZIP corromput o illegible.
+Pòt pas èsser verificat corrèctament per la seguretat.',
+'zip-unsupported'     => "Lo fichièr es un archiu ZIP qu'utiliza de caracteristicas pas suportadas per MediaWiki. 
+Sa seguretat pòt pas èsser verificada corrèctament.",
+
+# Special:UploadStash
+'uploadstash'          => "Escondedor d'impòrt",
+'uploadstash-clear'    => 'Escafar los fichièrs en escondedor',
+'uploadstash-nofiles'  => "Avètz pas de fichièrs en escondedor d'impòrt.",
+'uploadstash-errclear' => "L'escafament dels fichièrs a fracassat.",
+'uploadstash-refresh'  => 'Actualizar la lista dels fichièrs',
+'invalid-chunk-offset' => 'Offset de segment invalid',
+
 # img_auth script messages
-'img-auth-accessdenied' => 'Accès refusat',
-'img-auth-nopathinfo'   => 'PATH_INFO mancant.
-Vòstre servidor es pas parametrat per passar aquesta informacion.
-Benlèu que fonciona en CGI e supòrta pas img_atuh.
-Consultatz https://www.mediawiki.org/wiki/Manual:Image_Authorization.',
-'img-auth-notindir'     => 'Lo camin demandat es pas lo repertòri de telecargament configurat.',
-'img-auth-badtitle'     => 'Impossible de construire un títol valid a partir de « $1 ».',
-'img-auth-nologinnWL'   => 'Sètz pas connectat e « $1 » es pas dins la lista blanca.',
-'img-auth-nofile'       => 'Lo fichièr « $1 » existís pas.',
-'img-auth-isdir'        => "Ensajatz d'accedir al repertòri « $1 ».
+'img-auth-accessdenied'     => 'Accès refusat',
+'img-auth-nopathinfo'       => 'PATH_INFO mancant. Vòstre servidor es pas parametrat per passar aquesta informacion.
+Benlèu que fonciona en CGI e supòrta pas img_atuh. Consultatz https://www.mediawiki.org/wiki/Manual:Image_Authorization.',
+'img-auth-notindir'         => 'Lo camin demandat es pas lo repertòri de telecargament configurat.',
+'img-auth-badtitle'         => 'Impossible de construire un títol valid a partir de « $1 ».',
+'img-auth-nologinnWL'       => 'Sètz pas connectat e « $1 » es pas dins la lista blanca.',
+'img-auth-nofile'           => 'Lo fichièr « $1 » existís pas.',
+'img-auth-isdir'            => "Ensajatz d'accedir al repertòri « $1 ».
 Sol l'accès als fichièrs es permesa.",
-'img-auth-streaming'    => 'Lectura en continú de « $1 ».',
-'img-auth-public'       => "La foncion d'img_auth.php es d'afichar de fichièrs d'un wiki privat.
+'img-auth-streaming'        => 'Lectura en continú de « $1 ».',
+'img-auth-public'           => "La foncion d'img_auth.php es d'afichar de fichièrs d'un wiki privat.
 Aqueste wiki es configurat coma un wiki public.
 Per una seguretat optimala, img_auth.php es desactivat.",
-'img-auth-noread'       => "L'utilizaire a pas lo drech en lectura sus « $1 ».",
+'img-auth-noread'           => "L'utilizaire a pas lo drech en lectura sus « $1 ».",
+'img-auth-bad-query-string' => "L'URL a una cadena de requèsta invalida.",
 
 # HTTP errors
 'http-invalid-url'      => 'URL incorrècta : $1',
@@ -1743,9 +1853,7 @@ Per una seguretat optimala, img_auth.php es desactivat.",
 'upload_source_file' => ' (un fichièr sus vòstre ordenador)',
 
 # Special:ListFiles
-'listfiles-summary'     => 'Aquesta pagina especiala fa veire totes los fichièrs importats.
-Per defaut, las darrièrs fichièrs importats son afichats en naut de la lista.
-Un clic en tèsta de colomna càmbia l’òrdre d’afichatge.',
+'listfiles-summary'     => 'Aquesta pagina especiala permet de far la lista de totes los fichièrs importats.',
 'listfiles_search_for'  => 'Recèrca del mèdia nomenat :',
 'imgfile'               => 'fichièr',
 'listfiles'             => 'Lista dels imatges',
@@ -1777,10 +1885,11 @@ Un clic en tèsta de colomna càmbia l’òrdre d’afichatge.',
 'imagelinks'                => 'Paginas que contenon lo fichièr',
 'linkstoimage'              => '{{PLURAL:$1|La pagina çaijós compòrta|Las paginas çaijós compòrtan}} aqueste imatge :',
 'linkstoimage-more'         => 'Mai {{PLURAL:$1|d’un ligam de pagina|de $1 ligams de paginas}} cap a aqueste fichièr.
-La tièra seguenta aficha {{PLURAL:$1|lo primièr ligam de pagina|los $1 primièrs ligams de pagina}} unicament cap a aqueste fichièr.
-Una [[Special:WhatLinksHere/$2|tièra completa]] es disponibla.',
+La lista seguenta aficha {{PLURAL:$1|lo primièr ligam de pagina|los $1 primièrs ligams de pagina}} unicament cap a aqueste fichièr.
+Una [[Special:WhatLinksHere/$2|lista completa]] es disponibla.',
 'nolinkstoimage'            => 'Cap de pagina compòrta pas de ligam cap a aqueste imatge.',
 'morelinkstoimage'          => 'Vejatz [[Special:WhatLinksHere/$1|mai de ligams]] cap a aqueste imatge.',
+'linkstoimage-redirect'     => '$1 (redireccion de fichièr) $2',
 'duplicatesoffile'          => "{{PLURAL:$1|Lo fichièr seguent es un duplicata|Los fichièrs seguents son de duplicatas}} d'aqueste fichièr ([[Special:FileDuplicateSearch/$2|mai de detalhs]]):",
 'sharedupload'              => 'Aqueste fichièr proven de $1 e pòt èsser utilizat per d’autres projèctes.',
 'sharedupload-desc-there'   => "Aqueste fichièr proven de $1 e pòt èsser utilizat per d'autres projèctes. Vejatz [$2 sa pagina de descripcion] per mai d'entresenhas.",
@@ -1802,27 +1911,28 @@ Una [[Special:WhatLinksHere/$2|tièra completa]] es disponibla.',
 'filerevert-badversion'     => 'I a pas de version mai anciana del fichièr amb lo Timestamp donat.',
 
 # File deletion
-'filedelete'                  => 'Suprimir $1',
-'filedelete-legend'           => 'Suprimir lo fichièr',
-'filedelete-intro'            => "Sètz a suprimir '''[[Media:$1|$1]]''' amb tot son istoric.",
-'filedelete-intro-old'        => "Sètz a escafar la version de '''[[Media:$1|$1]]''' del [$4 $2 a $3].",
-'filedelete-comment'          => 'Motiu :',
-'filedelete-submit'           => 'Suprimir',
-'filedelete-success'          => "'''$1''' es estat suprimit.",
-'filedelete-success-old'      => "La version de '''[[Media:$1|$1]]''' del $2 a $3 es estada suprimida.",
-'filedelete-nofile'           => "'''$1''' existís pas.",
-'filedelete-nofile-old'       => "Existís pas cap de version archivada de '''$1''' amb los atributs indicats.",
-'filedelete-otherreason'      => 'Rason diferenta/suplementària :',
-'filedelete-reason-otherlist' => 'Autra rason',
-'filedelete-reason-dropdown'  => '*Motius de supression costumièrs
+'filedelete'                   => 'Suprimir $1',
+'filedelete-legend'            => 'Suprimir lo fichièr',
+'filedelete-intro'             => "Sètz a suprimir '''[[Media:$1|$1]]''' amb tot son istoric.",
+'filedelete-intro-old'         => "Sètz a escafar la version de '''[[Media:$1|$1]]''' del [$4 $2 a $3].",
+'filedelete-comment'           => 'Motiu :',
+'filedelete-submit'            => 'Suprimir',
+'filedelete-success'           => "'''$1''' es estat suprimit.",
+'filedelete-success-old'       => "La version de '''[[Media:$1|$1]]''' del $2 a $3 es estada suprimida.",
+'filedelete-nofile'            => "'''$1''' existís pas.",
+'filedelete-nofile-old'        => "Existís pas cap de version archivada de '''$1''' amb los atributs indicats.",
+'filedelete-otherreason'       => 'Rason diferenta/suplementària :',
+'filedelete-reason-otherlist'  => 'Autra rason',
+'filedelete-reason-dropdown'   => '*Motius de supression costumièrs
 ** Violacion de drech d’autor
 ** Fichièr duplicat',
-'filedelete-edit-reasonlist'  => 'Modifica los motius de la supression',
-'filedelete-maintenance'      => 'La supression e lo restabliment de fichièrs es temporàriament desactivada pendent la mantenença.',
+'filedelete-edit-reasonlist'   => 'Modifica los motius de la supression',
+'filedelete-maintenance'       => 'La supression e lo restabliment de fichièrs es temporàriament desactivada pendent la mantenença.',
+'filedelete-maintenance-title' => 'Impossible de suprimir lo fichièr',
 
 # MIME search
 'mimesearch'         => 'Recèrca per tipe MIME',
-'mimesearch-summary' => 'Aquesta pagina especiala permet de cercar de fichièrs en foncion de lor tipe MIME. Entrada : tipe/sostipe, per exemple <tt>image/jpeg</tt>.',
+'mimesearch-summary' => 'Aquesta pagina especiala permet de cercar de fichièrs en foncion de lor tipe MIME. Entrada : tipe/sostipe, per exemple <code>image/jpeg</code>.',
 'mimetype'           => 'Tipe MIME :',
 'download'           => 'telecargament',
 
@@ -1860,24 +1970,26 @@ Doblidetz pas de verificar se i a pas d’autre ligam cap als modèls abans de l
 'statistics-edits'             => 'Modificacions de paginas dempuèi que {{SITENAME}} foguèt installat',
 'statistics-edits-average'     => 'Modificacions mejanas per pagina',
 'statistics-views-total'       => 'Visitas totalas',
+'statistics-views-total-desc'  => 'Las vistas de las paginas non existentas e de las paginas especialas son pas inclusas',
 'statistics-views-peredit'     => 'Visitas per modificacions',
 'statistics-users'             => '[[Special:ListUsers|Utilizaires]] enregistrats',
 'statistics-users-active'      => 'Utilizaires actius',
 'statistics-users-active-desc' => "Utilizaires qu'an fach al mens una accion durant {{PLURAL:$1|lo darrièr jorn|los $1 darrièrs jorns}}",
 'statistics-mostpopular'       => 'Paginas mai consultadas',
 
-'disambiguations'      => "Paginas d'omonimia",
+'disambiguations'      => "Paginas qu'an de ligams cap a de paginas d'omonimia",
 'disambiguationspage'  => 'Template:Omonimia',
-'disambiguations-text' => "Las paginas seguentas puntan cap a una '''pagina d’omonimia'''.
-Deurián puslèu puntar cap a una pagina apropriada.<br />
-Una pagina es tractada coma una pagina d’omonimia s'utiliza un modèl qu'es ligat a partir de [[MediaWiki:Disambiguationspage]]",
+'disambiguations-text' => "Las paginas seguentas compòrtan al mens un ligam cap a una '''pagina d’omonimia'''.
+Deurián puslèu puntar cap al bon article.<br />
+Una pagina es considerada coma una pagina d’omonimia s'utiliza un modèl qu'es ligat a partir de [[MediaWiki:Disambiguationspage]]",
 
-'doubleredirects'            => 'Redireccions doblas',
-'doubleredirectstext'        => 'Vaquí una lista de las paginas que redirigisson cap a de paginas que son elas-meteissas de paginas de redireccion.
+'doubleredirects'                   => 'Redireccions doblas',
+'doubleredirectstext'               => 'Vaquí una lista de las paginas que redirigisson cap a de paginas que son elas-meteissas de paginas de redireccion.
 Cada entrada conten de ligams cap a la primièra e la segonda redireccions, e mai la primièra linha de tèxte de la segonda pagina, çò que provesís, de costuma, la « vertadièra » pagina cibla, cap a la quala la primièra redireccion deuriá redirigir.
 Las entradas <del>barradas</del> son estadas resolgudas.',
-'double-redirect-fixed-move' => '[[$1]] es estat renomenat, aquò es ara una redireccion cap a [[$2]]',
-'double-redirect-fixer'      => 'Corrector de redireccion',
+'double-redirect-fixed-move'        => '[[$1]] es estat renomenat, aquò es ara una redireccion cap a [[$2]]',
+'double-redirect-fixed-maintenance' => 'Correccion de  la doble redireccion de [[$1]] a [[$2]]',
+'double-redirect-fixer'             => 'Corrector de redireccion',
 
 'brokenredirects'        => 'Redireccions copadas',
 'brokenredirectstext'    => "Aquestas redireccions mènan cap a de paginas qu'existisson pas :",
@@ -1922,6 +2034,7 @@ Las entradas <del>barradas</del> son estadas resolgudas.',
 'mostimages'              => 'Fichièrs mai utilizats',
 'mostrevisions'           => 'Articles mai modificats',
 'prefixindex'             => 'Totas las paginas que començan per…',
+'prefixindex-namespace'   => 'Totas las paginas amb prefix (espaci de noms $1)',
 'shortpages'              => 'Paginas brèvas',
 'longpages'               => 'Paginas longas',
 'deadendpages'            => "Paginas sul camin d'enlòc",
@@ -1938,7 +2051,7 @@ Las entradas <del>barradas</del> son estadas resolgudas.',
 'listusers-editsonly'     => "Far veire sonque los utilizaires qu'an al mens una contribucion",
 'listusers-creationsort'  => 'Triar per data de creacion',
 'usereditcount'           => '$1 {{PLURAL:$1|cambiament|cambiaments}}',
-'usercreated'             => 'Creat lo $1 a $2',
+'usercreated'             => '{{GENDER:$3|Creat}} lo $1 a $2',
 'newpages'                => 'Paginas novèlas',
 'newpages-username'       => "Nom d'utilizaire :",
 'ancientpages'            => 'Articles mai ancians',
@@ -1954,6 +2067,7 @@ Notatz que d’autres sites pòdon aver un ligam dirècte cap a un fichièr, e d
 'pager-newer-n'           => '{{PLURAL:$1|1 mai recenta|$1 mai recentas}}',
 'pager-older-n'           => '{{PLURAL:$1|1 mai anciana|$1 mai ancianas}}',
 'suppress'                => 'Supervisor',
+'querypage-disabled'      => 'Aquesta pagina especiala es desactivada per de rasons de performàncias.',
 
 # Book sources
 'booksources'               => 'Obratges de referéncia',
@@ -1964,8 +2078,8 @@ Notatz que d’autres sites pòdon aver un ligam dirècte cap a un fichièr, e d
 'booksources-invalid-isbn'  => "Lo numèro ISBN balhat sembla pas èsser valid ; verificatz s'avètz fach una error al moment de la còpia dempuèi la font.",
 
 # Special:Log
-'specialloguserlabel'  => 'Utilizaire :',
-'speciallogtitlelabel' => 'Títol :',
+'specialloguserlabel'  => 'Autor :',
+'speciallogtitlelabel' => 'Cibla (títol o utilizaire):',
 'log'                  => 'Jornals',
 'all-logs-page'        => 'Totas las operacions publicas',
 'alllogstext'          => 'Afichatge combinat de totes los jornals de {{SITENAME}}.
@@ -2005,11 +2119,11 @@ Vejatz tanben [[Special:WantedCategories|las categorias demandadas]].',
 'sp-deletedcontributions-contribs' => 'contribucions',
 
 # Special:LinkSearch
-'linksearch'       => 'Ligams extèrnes',
+'linksearch'       => 'Recèrca de ligams extèrnes',
 'linksearch-pat'   => 'Recercar l’expression :',
 'linksearch-ns'    => 'Espacis de noms :',
 'linksearch-ok'    => 'Recercar',
-'linksearch-text'  => 'De caractèrs « joker » pòdon èsser utilizats, per exemple <code>*.wikipedia.org</code>.<br />Protocòls reconeguts : <tt>$1</tt>.',
+'linksearch-text'  => 'De caractèrs « joker » pòdon èsser utilizats, per exemple <code>*.wikipedia.org</code>.<br />Protocòls reconeguts : <code>$1</code>.',
 'linksearch-line'  => '$1 amb un ligam a partir de $2',
 'linksearch-error' => 'Los caractèrs « joker » pòdon pas èsser utilizats qu’al començament del nom de domeni.',
 
@@ -2022,7 +2136,7 @@ Vejatz tanben [[Special:WantedCategories|las categorias demandadas]].',
 # Special:ActiveUsers
 'activeusers'            => 'Lista dels utilizaires actius',
 'activeusers-intro'      => "Aquò es una lista dels utilizaires qu'an exerçat una activitat quina que siá al cors {{PLURAL:$1|de la darrièra jornada|dels $1 darrièrs jorns}}.",
-'activeusers-count'      => '$1 {{PLURAL:$1|modificacion recenta|modificacions recentas}} dins {{PLURAL:$3|lo darrièr jorn|los $3 darrièrs jorns}}',
+'activeusers-count'      => '$1 {{PLURAL:$1|accion|accions}} al moment {{PLURAL:$3|del darrièr jorn|dels $3 darrièrs jorns}}',
 'activeusers-from'       => 'Afichar los utilizaires dempuèi :',
 'activeusers-hidebots'   => 'Amagar los robòts',
 'activeusers-hidesysops' => 'Amagar los administrators',
@@ -2034,9 +2148,10 @@ Vejatz tanben [[Special:WantedCategories|las categorias demandadas]].',
 
 # Special:ListGroupRights
 'listgrouprights'                      => "Dreches dels gropes d'utilizaires",
-'listgrouprights-summary'              => "Aquesta pagina conten una tièra de gropes definits sus aqueste wiki e mai los dreches d'accès qu'i son associats.
+'listgrouprights-summary'              => "Aquesta pagina conten una lista de gropes definits sus aqueste wiki e mai los dreches d'accès qu'i son associats.
 I pòt aver [[{{MediaWiki:Listgrouprights-helppage}}|d'entresenhas complementàrias]] a prepaus dels dreches.",
-'listgrouprights-key'                  => '*<span class="listgrouprights-granted">Drech autrejat</span>
+'listgrouprights-key'                  => 'Legenda :
+*<span class="listgrouprights-granted">Drech autrejat</span>
 *<span class="listgrouprights-revoked">Drech revocat</span>',
 'listgrouprights-group'                => 'Grop',
 'listgrouprights-rights'               => 'Dreches associats',
@@ -2051,23 +2166,25 @@ I pòt aver [[{{MediaWiki:Listgrouprights-helppage}}|d'entresenhas complementàr
 'listgrouprights-addgroup-self-all'    => 'Se pòt apondre totes los gropes a son compte pròpri',
 'listgrouprights-removegroup-self-all' => 'Se pòt levar totes los gropes de son compte pròpri',
 
-# E-mail user
+# Email user
 'mailnologin'          => "Pas d'adreça",
 'mailnologintext'      => 'Vos cal èsser [[Special:UserLogin|connectat(ada)]]
 e aver indicat una adreça electronica valida dins vòstras [[Special:Preferences|preferéncias]]
 per poder mandar un messatge a un autre utilizaire.',
 'emailuser'            => 'Mandar un messatge a aqueste utilizaire',
 'emailpage'            => 'Mandar un corrièr electronic a l’utilizaire',
-'emailpagetext'        => "Podètz utilizar lo formulari çaijós per mandar un corrièr electronic a aqueste utilizaire.
+'emailpagetext'        => "Podètz utilizar lo formulari çaijós per mandar un corrièr electronic a {{GENDER:$1|aqueste utilizaire|aquesta utilizaira}}.
 L'adreça electronica qu'avètz indicada dins [[Special:Preferences|vòstras preferéncias]] apareisserà dins lo camp « Expeditor » de vòstre messatge. E mai, lo destinatari vos poirà respondre dirèctament.",
 'usermailererror'      => 'Error dins lo subjècte del corrièr electronic :',
-'defemailsubject'      => 'Corrièr electronic mandat dempuèi {{SITENAME}}',
+'defemailsubject'      => "{{SITENAME}} Corrièl de l'utilizaire « $1 »",
 'usermaildisabled'     => 'Lo mandadís de corrièrs electronics entre utilizairers es desactivat',
 'usermaildisabledtext' => "Podètz pas mandar de corrièrs electronics a d'autres utilizaires sur aquel wiki",
 'noemailtitle'         => "Pas d'adreça electronica",
 'noemailtext'          => "Aqueste utilizaire a pas especificat d'adreça electronica valida.",
 'nowikiemailtitle'     => 'Pas de corrièr electronic autorizat',
 'nowikiemailtext'      => "Aqueste utilizaire a causit de recebre pas de corrièr electronic de la part d'autres utilizaires.",
+'emailnotarget'        => "Nom d'utilizaire del destinatari inexistent o invalid.",
+'emailtarget'          => "Entratz lo nom d'utilizaire del destinatari",
 'emailusername'        => "Nom d'utilizaire :",
 'emailusernamesubmit'  => 'Sometre',
 'email-legend'         => 'Mandar un corrièr electronic a un autre utilizaire de {{SITENAME}}',
@@ -2087,7 +2204,7 @@ L'adreça electronica qu'avètz indicada dins [[Special:Preferences|vòstras pre
 'usermessage-editor'  => 'Messatgièr del sistèma',
 
 # Watchlist
-'watchlist'            => 'Ma lista de seguiment',
+'watchlist'            => 'Lista de seguiment',
 'mywatchlist'          => 'Lista de seguiment',
 'watchlistfor2'        => 'Per $1 ($2)',
 'nowatchlist'          => "Vòstra lista de seguiment conten pas cap d'article.",
@@ -2095,8 +2212,9 @@ L'adreça electronica qu'avètz indicada dins [[Special:Preferences|vòstras pre
 'watchnologin'         => 'Vos sètz pas identificat(ada)',
 'watchnologintext'     => 'Vos cal èsser [[Special:UserLogin|connectat(ada)]]
 per modificar vòstra lista de seguiment.',
-'addedwatchtext'       => 'La pagina "[[:$1]]" es estada aponduda a vòstra [[Special:Watchlist|lista de seguiment]].
-Las modificacions venentas d\'aquesta pagina e de la pagina de discussion associada seràn repertoriadas aicí, e la pagina apareisserà <b>en gras</b> dins la [[Special:RecentChanges|tièra dels darrièrs cambiaments]] per èsser localizada mai aisidament.',
+'addwatch'             => 'Ajustar a la lista de seguiment',
+'addedwatchtext'       => "La pagina « [[:$1]] » es estada aponduda a vòstra [[Special:Watchlist|lista de seguiment]]. Las modificacions venentas d'aquesta pagina e de la pagina de discussion associada i seràn repertoriadas.",
+'removewatch'          => 'Suprimir de la lista de seguiment',
 'removedwatchtext'     => 'La pagina « [[:$1]] » es estada levada de vòstra [[Special:Watchlist|lista de seguiment]].',
 'watch'                => 'Seguir',
 'watchthispage'        => 'Seguir aquesta pagina',
@@ -2112,13 +2230,14 @@ Las modificacions venentas d\'aquesta pagina e de la pagina de discussion associ
 'watchmethod-list'     => 'verificacion de las paginas seguidas per de modificacions recentas',
 'watchlistcontains'    => 'Vòstra lista de seguiment conten $1 {{PLURAL:$1|pagina|paginas}}.',
 'iteminvalidname'      => "Problèma amb l'article « $1 » : lo nom es invalid...",
-'wlnote'               => 'Çaijós se {{PLURAL:$1|tròba la darrièra modificacion|tròban las $1 darrièras modificacions}} dempuèi {{PLURAL:$2|la darrièra ora|las <b>$2</b> darrièras oras}}.',
+'wlnote'               => "Çaijós {{PLURAL:$1|se tròba la darrièra modificacion efectuada|se tròban las $1 darrièras modificacions efectuadas}} pendent {{PLURAL:$2|la darrièra ora|las '''$2''' darrièras oras}} dempuèi $3, $4.",
 'wlshowlast'           => 'Far veire las darrièras $1 oras, los darrièrs $2 jorns, o $3.',
 'watchlist-options'    => 'Opcions de la lista de seguiment',
 
 # Displayed when you click the "watch" button and it is in the process of watching
-'watching'   => 'Seguit...',
-'unwatching' => 'Fin del seguit...',
+'watching'       => 'Seguit...',
+'unwatching'     => 'Fin del seguit...',
+'watcherrortext' => "Una error s'es producha al moment de la modificacion dels paramètres de vòstra lista de seguiment per « $1 ».",
 
 'enotif_mailer'                => 'Sistèma d’expedicion de notificacion de {{SITENAME}}',
 'enotif_reset'                 => 'Marcar totas las paginas coma visitadas',
@@ -2180,10 +2299,12 @@ Vejatz $2 per una lista de las supressions recentas.',
 'deletecomment'          => 'Motiu :',
 'deleteotherreason'      => 'Motius suplementaris o autres :',
 'deletereasonotherlist'  => 'Autre motiu',
-'deletereason-dropdown'  => "*Motius de supression mai corrents
-** Demanda de l'autor
-** Violacion dels dreches d'autor
-** Vandalisme",
+'deletereason-dropdown'  => '* Motius de supression los mai corrents
+** Corrièrs indesirables
+** Vandalisme
+** Violacion dels dreches d’autor
+** Demanda de l’autor
+** Redireccion copada',
 'delete-edit-reasonlist' => 'Modifica los motius de la supression',
 'delete-toobig'          => "Aquesta pagina dispausa d'un istoric important, depassant {{PLURAL:$1|revision|revisions}}.
 La supression de talas paginas es estada limitada per evitar de perturbacions accidentalas de {{SITENAME}}.",
@@ -2203,7 +2324,7 @@ qualqu’un mai ja a modificat o revocat la pagina.
 La darrièra modificacion es estada efectuada per [[User:$3|$3]] ([[User talk:$3|Discutir]]{{int:pipe-separator}}[[Special:Contributions/$3|{{int:contribslink}}]]).",
 'editcomment'       => "Lo resumit de la modificacion èra : « ''$1'' ».",
 'revertpage'        => 'Anullacion de las modificacions de [[Special:Contributions/$2|$2]] ([[User talk:$2|Discussion]]) cap a la darrièra version de [[User:$1|$1]]',
-'revertpage-nouser' => 'Revocacion de las modificacions per (nom d’utilizaire suprimit) a la darrièra version per [[User:$1|$1]]',
+'revertpage-nouser' => 'Revocacion de las modificacions per un utilizaire amagat a la darrièra version per {{GENDER:$1|[[User:$1|$1]]}}',
 'rollback-success'  => 'Anullacion de las modificacions de $1 ; retorn a la version de $2.',
 
 # Edit tokens
@@ -2214,13 +2335,17 @@ Clicatz sus « Precedent » e tornatz cargar la pagina d’ont venètz, puèi en
 
 # Protect
 'protectlogpage'              => 'Istoric de las proteccions',
-'protectlogtext'              => 'Vejatz las [[Special:ProtectedPages|directivas]] per mai d’informacion.',
+'protectlogtext'              => 'Aquí una lista de las modificacions de las proteccions de paginas.
+Consultatz la [[Special:ProtectedPages|lista de las paginas protegidas]] per la lista de las proteccions actualament operacionalas.',
 'protectedarticle'            => 'a protegit « [[$1]] »',
 'modifiedarticleprotection'   => 'a modificat lo nivèl de proteccion de « [[$1]] »',
-'unprotectedarticle'          => 'a desprotegit « [[$1]] »',
+'unprotectedarticle'          => 'a suprimit la proteccion de « [[$1]] »',
 'movedarticleprotection'      => 'a desplaçat los paramètres de proteccion dempuèi « [[$2]] » cap a « [[$1]] »',
 'protect-title'               => 'Cambiar lo nivèl de proteccion de « $1 »',
+'protect-title-notallowed'    => 'Veire lo nivèl de proteccion de « $1 »',
 'prot_1movedto2'              => 'a renomenat [[$1]] en [[$2]]',
+'protect-badnamespace-title'  => 'Espaci de noms pas protegible',
+'protect-badnamespace-text'   => 'Las paginas dins aqueste espaci de noms pòdon pas èsser protegidas.',
 'protect-legend'              => 'Confirmar la proteccion',
 'protectcomment'              => 'Rason :',
 'protectexpiry'               => 'Expiracion (expira pas per defaut)',
@@ -2233,9 +2358,9 @@ Clicatz sus « Precedent » e tornatz cargar la pagina d’ont venètz, puèi en
 'protect-locked-access'       => "Avètz pas los dreches necessaris per modificar la proteccion de la pagina. Vaquí los reglatges actuals de la pagina '''$1''' :",
 'protect-cascadeon'           => "Aquesta pagina es actualament protegida perque es inclusa dins {{PLURAL:$1|la pagina seguenta|las paginas seguentas}}, {{PLURAL:$1|qu'es estada protegida|que son estadas protegidas}} amb l’opcion « proteccion en cascada » activada. Podètz cambiar lo nivèl de proteccion d'aquesta pagina sens qu'aquò afècte la proteccion en cascada.",
 'protect-default'             => 'Autorizar totes los utilizaires',
-'protect-fallback'            => 'Necessita l’abilitacion «$1»',
-'protect-level-autoconfirmed' => 'Blocar los utilizaires novèls e los utilizaires anonims',
-'protect-level-sysop'         => 'Administrators unicament',
+'protect-fallback'            => 'Autorizar unicament los utilizaires amb lo drech « $1 »',
+'protect-level-autoconfirmed' => 'Autorizar unicament los utilizaires autoconfirmats',
+'protect-level-sysop'         => 'Autorizar unicament los administrators',
 'protect-summary-cascade'     => 'proteccion en cascada',
 'protect-expiring'            => 'expira lo $1',
 'protect-expiring-local'      => 'expira lo $1',
@@ -2280,8 +2405,7 @@ Clicatz sus « Precedent » e tornatz cargar la pagina d’ont venètz, puèi en
 L'archiu pòt èsser escafat periodicament.",
 'undelete-fieldset-title'      => 'Restablir las versions',
 'undeleteextrahelp'            => "Per restablir l'istoric complet d'aquesta pagina, daissatz vèrjas totas las casas de marcar, puèi clicatz sus '''''Restablir'''''.
-Per restablir pas que d'unas versions, marcatz las casas que correspondon a las versions que son de restablir, puèi clicatz sus '''''Restablir'''''.
-En clicant sul boton '''''Reïnicializar''''', la bóstia de resumit e las casas marcadas seràn remesas a zèro.",
+Per efectuar un restabliment parcial, marcatz las casas que correspondon a las versions que son de restablir, puèi clicatz sus '''''Restablir'''''.",
 'undeleterevisions'            => '$1 {{PLURAL:$1|revision archivada|revisions archivadas}}',
 'undeletehistory'              => "Se restablissètz la pagina, totas las revisions seràn plaçadas tornamai dins l'istoric.
 
@@ -2305,6 +2429,7 @@ S'una pagina novèla amb lo meteis nom es estada creada dempuèi la supression, 
 
 Consultatz l’[[Special:Log/delete|istoric de las supressions]] per veire las paginas recentament suprimidas e restablidas.",
 'undelete-header'              => 'Consultatz l’[[Special:Log/delete|istoric de las supressions]] per veire las paginas recentament suprimidas.',
+'undelete-search-title'        => 'Recercar las paginas suprimidas',
 'undelete-search-box'          => 'Cercar una pagina suprimida',
 'undelete-search-prefix'       => 'Far veire las paginas que començan per :',
 'undelete-search-submit'       => 'Cercar',
@@ -2313,6 +2438,7 @@ Consultatz l’[[Special:Log/delete|istoric de las supressions]] per veire las p
 'undelete-bad-store-key'       => 'Impossible de restablir lo fichièr datat del $1 : lo fichièr èra absent abans la supression.',
 'undelete-cleanup-error'       => 'Error al moment de la supression de l’archiu inutilizada « $1 ».',
 'undelete-missing-filearchive' => 'Impossible de restablir lo fichièr amb l’ID $1 perque es pas dins la banca de donadas. Benlèu ja i es estat restablit.',
+'undelete-error'               => "Pagina d'error d'anullacion",
 'undelete-error-short'         => 'Error al moment del restabliment del fichièr : $1',
 'undelete-error-long'          => "D'errors son estadas rencontradas al moment del restabliment del fichièr :
 
@@ -2328,11 +2454,11 @@ $1",
 
 # Contributions
 'contributions'       => "Contribucions d'aqueste contributor",
-'contributions-title' => 'Tièra de las contribucions de l’utilizaire $1',
-'mycontris'           => 'Mas contribucions',
+'contributions-title' => 'Lista de las contribucions de l’utilizaire $1',
+'mycontris'           => 'Contribucions',
 'contribsub2'         => 'Lista de las contribucions de $1 ($2). Las paginas que son estadas escafadas son pas afichadas.',
 'nocontribs'          => 'Cap de modificacion correspondenta a aquestes critèris es pas estada trobada.',
-'uctop'               => '(darrièra)',
+'uctop'               => '(actual)',
 'month'               => 'A partir del mes (e precedents) :',
 'year'                => 'A partir de l’annada (e precedentas) :',
 
@@ -2369,10 +2495,11 @@ La darrièra intrada del jornal dels blocatges es indicada çaijós a títol d�
 'whatlinkshere-hideredirs' => '$1 redireccions',
 'whatlinkshere-hidetrans'  => '$1 transclusions',
 'whatlinkshere-hidelinks'  => '$1 ligams',
-'whatlinkshere-hideimages' => '$1 ligams de fichièrs',
+'whatlinkshere-hideimages' => '$1 los fichièrs ligats',
 'whatlinkshere-filters'    => 'Filtres',
 
 # Block/unblock
+'autoblockid'                     => 'Blocatge automatic #$1',
 'block'                           => 'Blocar un utilizaire',
 'unblock'                         => 'Desblocar un utilizaire',
 'blockip'                         => 'Blocar en escritura',
@@ -2394,6 +2521,7 @@ Donatz çaijós un motiu precís (per exemple en citant las paginas que son esta
 ** Temptativa d’intimidacion o agarriment
 ** Abús d’utilizacion de comptes multiples
 ** Nom d’utilizaire inacceptable, injuriós o difamant',
+'ipb-hardblock'                   => 'Empachar los utilizaires connectats de modificar en utilizant aquesta adreça IP',
 'ipbcreateaccount'                => 'Empachar la creacion de compte',
 'ipbemailban'                     => 'Empachar l’utilizaire de mandar de corrièrs electronics',
 'ipbenableautoblock'              => 'Blocar automaticament las adreças IP utilizadas per aqueste utilizaire',
@@ -2404,11 +2532,12 @@ Donatz çaijós un motiu precís (per exemple en citant las paginas que son esta
 'ipbotherreason'                  => 'Motiu diferent o suplementari',
 'ipbhidename'                     => 'Amagar lo nom d’utilizaire de las modificacions e de las listas',
 'ipbwatchuser'                    => "Seguir las paginas d'utilizaire e de discussion d'aqueste utilizaire",
+'ipb-disableusertalk'             => "Empachar l'utilizaire de modificar sa pagina de discussion pendent lo blocatge",
 'ipb-change-block'                => 'Tornar blocar aqueste utilizaire amb aquestes paramètres',
 'ipb-confirm'                     => 'Confirmar lo blocatge',
 'badipaddress'                    => "L'adreça IP es incorrècta",
 'blockipsuccesssub'               => 'Blocatge capitat',
-'blockipsuccesstext'              => '[[Special:Contributions/$1|$1]] es estat blocat.<br />
+'blockipsuccesstext'              => '[[Special:Contributions/$1|$1]] es esta{{GENDER:||t|(da)}} bloca{{GENDER:||t|(da)}}.<br />
 Podètz consultar la [[Special:BlockList|lista dels comptes e de las adreças IP blocats]].',
 'ipb-edit-dropdown'               => 'Modificar los motius de blocatge per defaut',
 'ipb-unblock-addr'                => 'Desblocar $1',
@@ -2420,10 +2549,21 @@ Podètz consultar la [[Special:BlockList|lista dels comptes e de las adreças IP
 a partir d'una adreça IP precedentament blocada.",
 'ipusubmit'                       => 'Suprimir aqueste blocatge',
 'unblocked'                       => '[[User:$1|$1]] es estat desblocat',
+'unblocked-range'                 => '$1 es estat desblocat',
 'unblocked-id'                    => 'Lo blocatge $1 es estat levat',
 'blocklist'                       => 'Utilizaires o adreças IP blocats',
 'ipblocklist'                     => 'Utilizaires o adreças IP blocats',
 'ipblocklist-legend'              => 'Cercar un utilizaire blocat',
+'blocklist-userblocks'            => 'Amagar los blocatges de comptes',
+'blocklist-tempblocks'            => 'Amagar los blocatges temporaris',
+'blocklist-addressblocks'         => "Amagar los blocatges d'adreças IP unicas",
+'blocklist-rangeblocks'           => 'Amagar los blòts de portada',
+'blocklist-timestamp'             => 'Data e ora',
+'blocklist-target'                => 'Cibla',
+'blocklist-expiry'                => "Data d'expiracion",
+'blocklist-by'                    => "Administrator qu'a efectuat lo blocatge",
+'blocklist-params'                => 'Paramètres de blocatge',
+'blocklist-reason'                => 'Motiu',
 'ipblocklist-submit'              => 'Recercar',
 'ipblocklist-localblock'          => 'Blocatge local',
 'ipblocklist-otherblocks'         => '{{PLURAL:$1|Autre blocatge|Autres blocatges}}',
@@ -2448,7 +2588,9 @@ La rason balhada per $1 es : « $2 ».',
 'blocklog-showsuppresslog'        => 'Aqueste utilizaire es estat blocat e amagat precedentament. Lo jornal de las supressions es disponible çaijós :',
 'blocklogentry'                   => 'a blocat « [[$1]] » - durada : $2 $3',
 'reblock-logentry'                => 'a modificat los parametratge de blocatge per [[$1]] amb una durada d’expiracion de $2 $3',
-'blocklogtext'                    => "Aquò es l'istoric dels blocatges e desblocatges dels utilizaires. Las adreças IP automaticament blocadas son pas listadas. Consultatz la [[Special:BlockList|lista dels utilizaires blocats]] per veire qui es actualament efectivament blocat.",
+'blocklogtext'                    => "Aquò es l'istoric dels blocatges e desblocatges dels utilizaires.
+Las adreças IP automaticament blocadas son pas listadas.
+Consultatz la [[Special:BlockList|lista dels utilizaires blocats]] per veire los bandiments e blocatges actualament en cors.",
 'unblocklogentry'                 => 'a desblocat « $1 »',
 'block-log-flags-anononly'        => 'utilizaires anonims solament',
 'block-log-flags-nocreate'        => 'creacion de compte interdicha',
@@ -2501,15 +2643,17 @@ Doblidetz pas de la desvarrolhar quand auretz acabat vòstra operacion de manten
 'unlockdbsuccesstext' => 'La banca de donadas de {{SITENAME}} es desvarrolhada.',
 'lockfilenotwritable' => 'Lo fichièr de blocatge de la banca de donadas es pas inscriptible. Per blocar o desblocar la banca de donadas, vos cal poder escriure sul servidor web.',
 'databasenotlocked'   => 'La banca de donadas es pas varrolhada.',
+'lockedbyandtime'     => '(per $1 lo $2 a $3)',
 
 # Move page
 'move-page'                    => 'Tornar nomenar $1',
 'move-page-legend'             => 'Tornar nomenar una pagina',
-'movepagetext'                 => "Utilizatz lo formulari çaijós per tornar nomenar una pagina, en desplaçant tot son istoric cap al nom novèl. Lo títol ancian vendrà una pagina de redireccion cap al títol novèl. Los ligams cap al títol de la pagina anciana seràn pas cambiats ; verificatz qu'aqueste desplaçament a pas creat de [[Special:DoubleRedirects|redireccion dobla]] o de [[Special:BrokenRedirects|redireccion copada]].
+'movepagetext'                 => "Utilizatz lo formulari çaijós per tornar nomenar una pagina, en desplaçant tot son istoric cap al nom novèl. Lo títol ancian vendrà una pagina de redireccion cap al títol novèl. Podètz metre a jorn automaticament las redireccions actualas que puntan cap al títol original. Se causissètz de lo far pas, asseguratz-vos de verificar tota [[Special:DoubleRedirects|redireccion dobla]] o [[Special:BrokenRedirects|redireccion copada]]. Avètz la responsabilitat de vos assegurar que los ligams contunhen de puntar cap a lor destinacion supausada.
 
-Avètz la responsabilitat de vos assegurar que los ligams contunhen de puntar cap a lor destinacion supausada. Una pagina serà pas desplaçada se la pagina del títol novèl existís ja, a mens qu'aquesta darrièra siá voida o en redireccion, e qu’aja pas d’istoric. Aquò vòl dire que podètz tornar nomenar una pagina cap a sa posicion d’origina s'avètz fach una error, mas que podètz pas escafar una pagina qu'existís ja amb aqueste procediment.
+Notatz que la pagina serà '''pas''' renomada s'existís ja una pagina amb lo novèl títol, levat se aquesta darrièra a un istoric de modificacions verge e es una simpla redireccion. Aquò permet de renomenar una pagina cap a sa posicion d'origina se lo desplaçament s'avera erronèu.
 
-'''ATENCION !''' Aquò pòt provocar un cambiament radical e imprevist per una pagina consultada frequentament. Asseguratz-vos de n'aver comprés las consequéncias abans de contunhar.",
+'''ATENCION !'''
+Aquò pòt provocar un cambiament radical e imprevist per una pagina consultada frequentament ; asseguratz-vos de n'aver comprés las consequéncias abans de contunhar.",
 'movepagetalktext'             => "La pagina de discussion associada, se presenta, serà automaticament desplaçada amb ''' levat se :'''
 *Desplaçatz una pagina cap a un autre espaci,
 *Una pagina de discussion ja existís amb lo nom novèl, o
@@ -2558,7 +2702,7 @@ jol nom novèl. Se vos plai, fusionatz-las manualament.",
 L’article de destinacion « [[:$1]] » existís ja.
 Lo volètz suprimir per permetre lo cambiament de nom ?',
 'delete_and_move_confirm'      => 'Òc, accèpti de suprimir la pagina de destinacion per permetre lo cambiament de nom.',
-'delete_and_move_reason'       => 'Pagina suprimida per permetre un cambiament de nom',
+'delete_and_move_reason'       => 'Pagina suprimida per permetre lo cambiament de nom dempuèi « [[$1]] »',
 'selfmove'                     => 'Los títols d’origina e de destinacion son los meteisses : impossible de tornar nomenar una pagina sus ela-meteissa.',
 'immobile-source-namespace'    => "Podètz pas tornar nomenar de paginas dins l'espaci de noms « $1 »",
 'immobile-target-namespace'    => "Podètz pas desplaçar de paginas cap a l'espaci de noms « $1 »",
@@ -2566,6 +2710,7 @@ Lo volètz suprimir per permetre lo cambiament de nom ?',
 'immobile-source-page'         => 'Aquesta pagina se pòt pas tornar nomenar.',
 'immobile-target-page'         => 'Es pas possible de desplaçar la pagina cap a aqueste títol.',
 'imagenocrossnamespace'        => 'Pòt pas desplaçar un imatge cap a un espaci de nomenatge que siá pas un imatge.',
+'nonfile-cannot-move-to-file'  => "Impossible de renomenar quicòm mai qu'un fichièr cap a l'espaci de noms fichièr.",
 'imagetypemismatch'            => "L'extension novèla d'aqueste fichièr reconeis pas aqueste format.",
 'imageinvalidfilename'         => 'Lo nom del fichièr cibla es incorrècte',
 'fix-double-redirects'         => 'Metre a jorn las redireccions que puntant cap al títol ancian',
@@ -2584,9 +2729,11 @@ Causissètz un autre nom.',
 Per exportar de paginas, entratz lors títols dins la bóstia de tèxte çaijós, un títol per linha, e seleccionatz s'o desiratz o pas la version actuala amb totas las versions ancianas, amb la pagina d’istoric, o simplament la pagina actuala amb d'informacions sus la darrièra modificacion.
 
 Dins aqueste darrièr cas, podètz tanben utilizar un ligam, coma [[{{#Special:Export}}/{{MediaWiki:Mainpage}}]] per la pagina [[{{MediaWiki:Mainpage}}]].",
+'exportall'         => 'Exportar totas las paginas',
 'exportcuronly'     => 'Exportar unicament la version correnta sens l’istoric complet',
 'exportnohistory'   => "----
 '''Nòta :''' l’exportacion completa de l’istoric de las paginas amb l’ajuda d'aqueste formulari es estada desactivada per de rasons de performàncias.",
+'exportlistauthors' => 'Inclure una lista completa dels contributors per cada pagina',
 'export-submit'     => 'Exportar',
 'export-addcattext' => 'Apondre las paginas de la categoria :',
 'export-addcat'     => 'Apondre',
@@ -2602,7 +2749,7 @@ Dins aqueste darrièr cas, podètz tanben utilizar un ligam, coma [[{{#Special:E
 'allmessagesdefault'            => 'Messatge per defaut',
 'allmessagescurrent'            => 'Messatge actual',
 'allmessagestext'               => 'Aquò es la lista de totes los messatges disponibles dins l’espaci MediaWiki.
-Visitatz la [//www.mediawiki.org/wiki/Localisation Localizacion MediaWiki] e [//translatewiki.net translatewiki.net] se desiratz contribuir a la localizacion MediaWiki generica.',
+Visitatz la [https://www.mediawiki.org/wiki/Localisation Localizacion MediaWiki] e [//translatewiki.net translatewiki.net] se desiratz contribuir a la localizacion MediaWiki generica.',
 'allmessagesnotsupportedDB'     => "'''{{ns:special}}:Allmessages''' es pas disponible perque '''\$wgUseDatabaseMessages''' es desactivat.",
 'allmessages-filter-legend'     => 'Filtre',
 'allmessages-filter'            => 'Filtrar per estat de modificacion :',
@@ -2619,6 +2766,8 @@ Visitatz la [//www.mediawiki.org/wiki/Localisation Localizacion MediaWiki] e [//
 'thumbnail_error'          => 'Error al moment de la creacion de la miniatura : $1',
 'djvu_page_error'          => 'Pagina DjVu fòra limits',
 'djvu_no_xml'              => "Impossible d’obténer l'XML pel fichièr DjVu",
+'thumbnail-temp-create'    => 'Impossible de crear lo fichièr de vinheta temporari',
+'thumbnail-dest-create'    => "Impossible d'enregistrar la vinheta sus la destinacion",
 'thumbnail_invalid_params' => 'Paramètres de la miniatura invalids',
 'thumbnail_dest_directory' => 'Impossible de crear lo repertòri de destinacion',
 'thumbnail_image-type'     => 'Tipe d’imatge pas suportat',
@@ -2638,7 +2787,8 @@ Totas las accions d’importacion interwiki son conservadas dins lo [[Special:Lo
 'import-interwiki-namespace' => 'Espaci de noms de destinacion :',
 'import-upload-filename'     => 'Nom del fichièr :',
 'import-comment'             => 'Comentari :',
-'importtext'                 => 'Exportatz lo fichièr dempuèi lo wiki d’origina en utilizant l’esplech Special:Export, salvatz-lo sus vòstre disc dur e copiatz-lo aicí.',
+'importtext'                 => "Exportatz lo fichièr dempuèi lo wiki d’origina en utilizant [[Special:Export|aisina d'exportacion]].
+Salvatz-lo sus vòstre disc dur puèi importatz-lo aicí.",
 'importstart'                => 'Impòrt de las paginas...',
 'import-revision-count'      => '$1 {{PLURAL:$1|version|versions}}',
 'importnopages'              => "Cap de pagina d'importar.",
@@ -2662,6 +2812,9 @@ Totas las accions d’importacion interwiki son conservadas dins lo [[Special:Lo
 'import-upload'              => "Impòrt d'un fichier XML",
 'import-token-mismatch'      => 'Pèrda de las donadas de sesilha. Tornatz ensajar.',
 'import-invalid-interwiki'   => "Impossible d'importar dempuèi lo wiki especificat.",
+'import-error-edit'          => 'La pagina « $1 » es pas estada importada perque sètz pas autorizat a la modificar.',
+'import-error-create'        => 'La pagina « $1 » es pas estada importada perque sètz pas autorizat a la crear.',
+'import-error-invalid'       => 'Pagina « $1 » es pas importada perque son nom es pas valid.',
 
 # Import log
 'importlogpage'                    => 'Istoric de las importacions de paginas',
@@ -2671,72 +2824,85 @@ Totas las accions d’importacion interwiki son conservadas dins lo [[Special:Lo
 'import-logentry-interwiki'        => 'a importat (transwiki) $1',
 'import-logentry-interwiki-detail' => '$1 {{PLURAL:$1|version|versions}} dempuèi $2',
 
+# JavaScriptTest
+'javascripttest'                           => 'Tèst de JavaScript',
+'javascripttest-disabled'                  => 'Aquesta foncion es pas estada activada sus aqueste wiki.',
+'javascripttest-title'                     => 'Execucion dels tèsts $1',
+'javascripttest-pagetext-noframework'      => "Aquesta pagina es reservada per l'execucion dels tèsts JavaScript.",
+'javascripttest-pagetext-unknownframework' => 'Estructura « $1 » desconeguda.',
+'javascripttest-pagetext-frameworks'       => 'Causissètz una de las estructuras de tèst seguentas : $1',
+'javascripttest-pagetext-skins'            => 'Causissètz un abilhatge amb lo qual cal aviar los tèsts :',
+'javascripttest-qunit-intro'               => 'Veire [$1 la documentacion de tèst] sus mediawiki.org.',
+'javascripttest-qunit-heading'             => 'Seguida de tèst QUnit de JavaScript sus MediaWiki',
+
 # Tooltip help for the actions
-'tooltip-pt-userpage'             => "Vòstra pagina d'utilizaire",
-'tooltip-pt-anonuserpage'         => "La pagina d'utilizare de l’IP amb la quala contribuissètz",
-'tooltip-pt-mytalk'               => 'Vòstra pagina de discussion',
-'tooltip-pt-anontalk'             => 'La pagina de discussion per aquesta adreça IP',
-'tooltip-pt-preferences'          => 'Mas preferéncias',
-'tooltip-pt-watchlist'            => 'La lista de las paginas que seguissètz',
-'tooltip-pt-mycontris'            => 'Lista de vòstras contribucions',
-'tooltip-pt-login'                => 'Sètz convidat(ada) a vos identificar, mas es pas obligatòri.',
-'tooltip-pt-anonlogin'            => 'Sètz convidat(ada) a vos identificar, mas es pas obligatòri.',
-'tooltip-pt-logout'               => 'Se desconnectar',
-'tooltip-ca-talk'                 => "Discussion a prepaus d'aquesta pagina",
-'tooltip-ca-edit'                 => 'Podètz modificar aquesta pagina. Mercé de previsualizar abans d’enregistrar.',
-'tooltip-ca-addsection'           => 'Començar una seccion novèla',
-'tooltip-ca-viewsource'           => 'Aquesta pagina es protegida. Çaquelà, ne podètz veire lo contengut.',
-'tooltip-ca-history'              => "Los autors e versions precedentas d'aquesta pagina.",
-'tooltip-ca-protect'              => 'Protegir aquesta pagina',
-'tooltip-ca-unprotect'            => 'Desprotegir aquesta pagina',
-'tooltip-ca-delete'               => 'Suprimir aquesta pagina',
-'tooltip-ca-undelete'             => 'Restablir aquesta pagina',
-'tooltip-ca-move'                 => 'Tornar nomenar aquesta pagina',
-'tooltip-ca-watch'                => 'Apondètz aquesta pagina a vòstra lista de seguiment',
-'tooltip-ca-unwatch'              => 'Levatz aquesta pagina de vòstra lista de seguiment',
-'tooltip-search'                  => 'Cercar dins {{SITENAME}}',
-'tooltip-search-go'               => 'Anar cap a una pagina que pòrta exactament aqueste nom se existís.',
-'tooltip-search-fulltext'         => 'Recercar las paginas que compòrtan aqueste tèxte.',
-'tooltip-p-logo'                  => 'Pagina principala',
-'tooltip-n-mainpage'              => 'Visitatz la pagina principala',
-'tooltip-n-mainpage-description'  => 'Anar a l’acuèlh',
-'tooltip-n-portal'                => 'A prepaus del projècte',
-'tooltip-n-currentevents'         => "Trobar d'entresenhas suls eveniments actuals",
-'tooltip-n-recentchanges'         => 'Lista dels darrièrs cambiaments sul wiki.',
-'tooltip-n-randompage'            => "Afichar una pagina a l'azard",
-'tooltip-n-help'                  => "L'endrech per s'assabentar.",
-'tooltip-t-whatlinkshere'         => 'Lista de las paginas ligadas a aquesta',
-'tooltip-t-recentchangeslinked'   => 'Lista dels darrièrs cambiaments de las paginas ligadas a aquesta',
-'tooltip-feed-rss'                => 'Flux RSS per aquesta pagina',
-'tooltip-feed-atom'               => 'Flux Atom per aquesta pagina',
-'tooltip-t-contributions'         => "Veire la lista de las contribucions d'aqueste utilizaire",
-'tooltip-t-emailuser'             => 'Mandar un corrièr electronic a aqueste utilizaire',
-'tooltip-t-upload'                => 'Mandar un imatge o fichièr mèdia sul servidor',
-'tooltip-t-specialpages'          => 'Lista de totas las paginas especialas',
-'tooltip-t-print'                 => "Version imprimibla d'aquesta pagina",
-'tooltip-t-permalink'             => 'Ligam permanent cap a aquesta version de la pagina',
-'tooltip-ca-nstab-main'           => 'Veire l’article',
-'tooltip-ca-nstab-user'           => "Veire la pagina d'utilizaire",
-'tooltip-ca-nstab-media'          => 'Veire la pagina del mèdia',
-'tooltip-ca-nstab-special'        => 'Aquò es una pagina especiala, la podètz pas modificar.',
-'tooltip-ca-nstab-project'        => 'Veire la pagina del projècte',
-'tooltip-ca-nstab-image'          => 'Veire la pagina del fichièr',
-'tooltip-ca-nstab-mediawiki'      => 'Vejatz lo messatge del sistèma',
-'tooltip-ca-nstab-template'       => 'Vejatz lo modèl',
-'tooltip-ca-nstab-help'           => 'Vejatz la pagina d’ajuda',
-'tooltip-ca-nstab-category'       => 'Vejatz la pagina de la categoria',
-'tooltip-minoredit'               => 'Marcar mas modificacions coma un cambiament menor',
-'tooltip-save'                    => 'Salvar vòstras modificacions',
-'tooltip-preview'                 => 'Mercé de previsualizar vòstras modificacions abans de salvar!',
-'tooltip-diff'                    => "Permet de visualizar los cambiaments qu'avètz efectuats",
-'tooltip-compareselectedversions' => "Afichar las diferéncias entre doas versions d'aquesta pagina",
-'tooltip-watch'                   => 'Apondre aquesta pagina a vòstra lista de seguiment',
-'tooltip-recreate'                => 'Tornar crear la pagina, quitament se es estada escafada',
-'tooltip-upload'                  => 'Amodar lo mandadís',
-'tooltip-rollback'                => '"Revocar" anulla en un clic la o las edicion(s) sus aquesta pagina del darrièr contributor.',
-'tooltip-undo'                    => '"Desfar" revòca aquesta edicion e dobrís la fenèstra d’edicion en mòde previsualizacion. Permet d’apondre una rason dins la bóstia de resumit.',
-'tooltip-preferences-save'        => 'Salvar las preferéncias',
-'tooltip-summary'                 => 'Apondètz un brèu resumit',
+'tooltip-pt-userpage'                 => "Vòstra pagina d'utilizaire",
+'tooltip-pt-anonuserpage'             => "La pagina d'utilizare de l’IP amb la quala contribuissètz",
+'tooltip-pt-mytalk'                   => 'Vòstra pagina de discussion',
+'tooltip-pt-anontalk'                 => 'La pagina de discussion per aquesta adreça IP',
+'tooltip-pt-preferences'              => 'Mas preferéncias',
+'tooltip-pt-watchlist'                => 'La lista de las paginas que seguissètz',
+'tooltip-pt-mycontris'                => 'Lista de vòstras contribucions',
+'tooltip-pt-login'                    => 'Sètz convidat(ada) a vos identificar, mas es pas obligatòri.',
+'tooltip-pt-anonlogin'                => 'Sètz convidat(ada) a vos identificar, mas es pas obligatòri.',
+'tooltip-pt-logout'                   => 'Se desconnectar',
+'tooltip-ca-talk'                     => "Discussion a prepaus d'aquesta pagina",
+'tooltip-ca-edit'                     => 'Podètz modificar aquesta pagina. Mercé de previsualizar abans d’enregistrar.',
+'tooltip-ca-addsection'               => 'Començar una seccion novèla',
+'tooltip-ca-viewsource'               => 'Aquesta pagina es protegida. Çaquelà, ne podètz veire lo contengut.',
+'tooltip-ca-history'                  => "Los autors e versions precedentas d'aquesta pagina.",
+'tooltip-ca-protect'                  => 'Protegir aquesta pagina',
+'tooltip-ca-unprotect'                => "Cambiar la proteccion d'aquesta pagina",
+'tooltip-ca-delete'                   => 'Suprimir aquesta pagina',
+'tooltip-ca-undelete'                 => 'Restablir aquesta pagina',
+'tooltip-ca-move'                     => 'Tornar nomenar aquesta pagina',
+'tooltip-ca-watch'                    => 'Apondètz aquesta pagina a vòstra lista de seguiment',
+'tooltip-ca-unwatch'                  => 'Levatz aquesta pagina de vòstra lista de seguiment',
+'tooltip-search'                      => 'Cercar dins {{SITENAME}}',
+'tooltip-search-go'                   => 'Anar cap a una pagina que pòrta exactament aqueste nom se existís.',
+'tooltip-search-fulltext'             => 'Recercar las paginas que compòrtan aqueste tèxte.',
+'tooltip-p-logo'                      => 'Pagina principala',
+'tooltip-n-mainpage'                  => 'Visitatz la pagina principala',
+'tooltip-n-mainpage-description'      => 'Anar a l’acuèlh',
+'tooltip-n-portal'                    => 'A prepaus del projècte',
+'tooltip-n-currentevents'             => "Trobar d'entresenhas suls eveniments actuals",
+'tooltip-n-recentchanges'             => 'Lista dels darrièrs cambiaments sul wiki.',
+'tooltip-n-randompage'                => "Afichar una pagina a l'azard",
+'tooltip-n-help'                      => "L'endrech per s'assabentar.",
+'tooltip-t-whatlinkshere'             => 'Lista de las paginas ligadas a aquesta',
+'tooltip-t-recentchangeslinked'       => 'Lista dels darrièrs cambiaments de las paginas ligadas a aquesta',
+'tooltip-feed-rss'                    => 'Flux RSS per aquesta pagina',
+'tooltip-feed-atom'                   => 'Flux Atom per aquesta pagina',
+'tooltip-t-contributions'             => "Veire la lista de las contribucions d'aqueste utilizaire",
+'tooltip-t-emailuser'                 => 'Mandar un corrièr electronic a aqueste utilizaire',
+'tooltip-t-upload'                    => 'Mandar un imatge o fichièr mèdia sul servidor',
+'tooltip-t-specialpages'              => 'Lista de totas las paginas especialas',
+'tooltip-t-print'                     => "Version imprimibla d'aquesta pagina",
+'tooltip-t-permalink'                 => 'Ligam permanent cap a aquesta version de la pagina',
+'tooltip-ca-nstab-main'               => 'Veire l’article',
+'tooltip-ca-nstab-user'               => "Veire la pagina d'utilizaire",
+'tooltip-ca-nstab-media'              => 'Veire la pagina del mèdia',
+'tooltip-ca-nstab-special'            => 'Aquò es una pagina especiala, la podètz pas modificar.',
+'tooltip-ca-nstab-project'            => 'Veire la pagina del projècte',
+'tooltip-ca-nstab-image'              => 'Veire la pagina del fichièr',
+'tooltip-ca-nstab-mediawiki'          => 'Vejatz lo messatge del sistèma',
+'tooltip-ca-nstab-template'           => 'Vejatz lo modèl',
+'tooltip-ca-nstab-help'               => 'Vejatz la pagina d’ajuda',
+'tooltip-ca-nstab-category'           => 'Vejatz la pagina de la categoria',
+'tooltip-minoredit'                   => 'Marcar mas modificacions coma un cambiament menor',
+'tooltip-save'                        => 'Salvar vòstras modificacions',
+'tooltip-preview'                     => 'Mercé de previsualizar vòstras modificacions abans de salvar!',
+'tooltip-diff'                        => "Permet de visualizar los cambiaments qu'avètz efectuats",
+'tooltip-compareselectedversions'     => "Afichar las diferéncias entre doas versions d'aquesta pagina",
+'tooltip-watch'                       => 'Apondre aquesta pagina a vòstra lista de seguiment',
+'tooltip-watchlistedit-normal-submit' => 'Levar los títols',
+'tooltip-watchlistedit-raw-submit'    => 'Mesa a jorn de la lista de seguiment',
+'tooltip-recreate'                    => 'Tornar crear la pagina, quitament se es estada escafada',
+'tooltip-upload'                      => 'Amodar lo mandadís',
+'tooltip-rollback'                    => '"Revocar" anulla en un clic la o las edicion(s) sus aquesta pagina del darrièr contributor.',
+'tooltip-undo'                        => '"Desfar" revòca aquesta edicion e dobrís la fenèstra d’edicion en mòde previsualizacion. Permet d’apondre una rason dins la bóstia de resumit.',
+'tooltip-preferences-save'            => 'Salvar las preferéncias',
+'tooltip-summary'                     => 'Apondètz un brèu resumit',
 
 # Stylesheets
 'common.css'      => '/** Lo CSS plaçat aicí serà aplicat a totas las aparéncias. */',
@@ -2788,6 +2954,19 @@ Aquò es probablament causat per un ligam sus lista negra que punta cap a un sit
 'spam_reverting'      => 'Restabliment de la darrièra version que conten pas de ligam cap a $1',
 'spam_blanking'       => 'Totas las versions que contenon de ligams cap a $1 son blanquidas',
 
+# Info page
+'pageinfo-title'            => 'Informacions per « $1 »',
+'pageinfo-header-edits'     => 'Istoric de las modificacions',
+'pageinfo-header-watchlist' => 'Lista de seguiment',
+'pageinfo-header-views'     => 'Vistas',
+'pageinfo-subjectpage'      => 'Pagina',
+'pageinfo-talkpage'         => 'Pagina de discussion',
+'pageinfo-watchers'         => "Nombre de contributors qu'an la pagina dins lor lista de seguiment",
+'pageinfo-edits'            => "Nombre d'edicions",
+'pageinfo-authors'          => "Nombre total d'autors distinctes",
+'pageinfo-views'            => 'Nombre de vistas',
+'pageinfo-viewsperedit'     => 'Visitas per modificacions',
+
 # Skin names
 'skinname-standard'    => 'Estandard',
 'skinname-nostalgia'   => 'Nostalgia',
@@ -2830,18 +3009,25 @@ $1",
 'nextdiff'     => 'Cambiament seguent →',
 
 # Media information
-'mediawarning'         => "'''Atencion :''' Aqueste fichièr pòt conténer de còde malvolent.
+'mediawarning'           => "'''Atencion :''' Aqueste fichièr pòt conténer de còde malvolent.
 Se l'executatz, vòstre sistèma pòt èsser compromés.",
-'imagemaxsize'         => "Format maximal dels imatges :<br />''(per las paginas de descripcion d’imatges)''",
-'thumbsize'            => 'Talha de la miniatura :',
-'widthheightpage'      => '$1 × $2, $3 {{PLURAL:$3|pagina|paginas}}',
-'file-info'            => 'Talha del fichièr: $1, tipe MIME: $2',
-'file-info-size'       => '$1 × $2 pixèl, talha del fichièr: $3, tipe MIME: $4',
-'file-nohires'         => 'Pas de resolucion mai nauta disponibla.',
-'svg-long-desc'        => 'Fichièr SVG, resolucion de $1 × $2 pixèls, talha : $3',
-'show-big-image'       => 'Imatge en resolucion mai nauta',
-'file-info-gif-looped' => 'en bocla',
-'file-info-gif-frames' => '$1 {{PLURAL:$1|imatge|imatges}}',
+'imagemaxsize'           => "Format maximal dels imatges :<br />''(per las paginas de descripcion d’imatges)''",
+'thumbsize'              => 'Talha de la miniatura :',
+'widthheightpage'        => '$1 × $2, $3 {{PLURAL:$3|pagina|paginas}}',
+'file-info'              => 'Talha del fichièr: $1, tipe MIME: $2',
+'file-info-size'         => '$1 × $2 pixèl, talha del fichièr: $3, tipe MIME: $4',
+'file-info-size-pages'   => '$1 × $2 pixèls, talha de fichièr: $3, tipe MIME: $4, $5 {{PLURAL:$5|pagina|paginas}}',
+'file-nohires'           => 'Pas de resolucion mai nauta disponibla.',
+'svg-long-desc'          => 'Fichièr SVG, resolucion de $1 × $2 pixèls, talha : $3',
+'show-big-image'         => "Fichièr d'origina",
+'show-big-image-preview' => "Talha d'aqueste apercebut : $1.",
+'show-big-image-other'   => '{{PLURAL:$2|Autra resolucion|Autras resolucions}} : $1.',
+'show-big-image-size'    => '$1 × $2 pixèls',
+'file-info-gif-looped'   => 'en bocla',
+'file-info-gif-frames'   => '$1 {{PLURAL:$1|imatge|imatges}}',
+'file-info-png-looped'   => 'en bocla',
+'file-info-png-repeat'   => 'jogat $1 {{PLURAL:$1|còp|còps}}',
+'file-info-png-frames'   => '$1 {{PLURAL:$1|imatge|imatges}}',
 
 # Special:NewFiles
 'newimages'             => 'Galariá dels fichièrs novèls',
@@ -2854,6 +3040,13 @@ Se l'executatz, vòstre sistèma pòt èsser compromés.",
 'ilsubmit'              => 'Cercar',
 'bydate'                => 'per data',
 'sp-newimages-showfrom' => 'Afichar los imatges novèls importats dempuèi lo $2, $1',
+
+# Video information, used by Language::formatTimePeriod() to format lengths in the above messages
+'seconds' => '{{PLURAL:$1|$1 segonda|$1 segondas}}',
+'minutes' => '{{PLURAL:$1|$1 minuta|$1 minutas}}',
+'hours'   => '{{PLURAL:$1|$1 ora|$1 oras}}',
+'days'    => '{{PLURAL:$1|$1 jorn|$1 jorns}}',
+'ago'     => 'I a $1',
 
 # Bad image list
 'bad_image_list' => "Lo format es lo seguent :
@@ -2921,8 +3114,8 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-colorspace'                  => 'Espaci colorimetric',
 'exif-componentsconfiguration'     => 'Significacion de cada compausanta',
 'exif-compressedbitsperpixel'      => 'Mòde de compression de l’imatge',
-'exif-pixelydimension'             => 'Largor d’imatge valida',
-'exif-pixelxdimension'             => 'Nautor d’imatge valida',
+'exif-pixelydimension'             => 'Largor de l’imatge',
+'exif-pixelxdimension'             => 'Nautor de l’imatge',
 'exif-usercomment'                 => "Comentaris de l'utilizaire",
 'exif-relatedsoundfile'            => 'Fichièr àudio associat',
 'exif-datetimeoriginal'            => 'Data e ora de la generacion de donadas',
@@ -2936,9 +3129,9 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-exposureprogram'             => 'Programa d’exposicion',
 'exif-spectralsensitivity'         => 'Sensibilitat espectrala',
 'exif-isospeedratings'             => 'Sensibilitat ISO',
-'exif-shutterspeedvalue'           => 'Velocitat d’obturacion',
-'exif-aperturevalue'               => 'Dobertura',
-'exif-brightnessvalue'             => 'Luminositat',
+'exif-shutterspeedvalue'           => "velocitat d’obturacion de l'APEX",
+'exif-aperturevalue'               => "Dobertura de l'APEX",
+'exif-brightnessvalue'             => 'Luminança APEX',
 'exif-exposurebiasvalue'           => 'Correccion d’exposicion',
 'exif-maxaperturevalue'            => 'Camp de dobertura maximal',
 'exif-subjectdistance'             => 'Distància del subjècte',
@@ -3000,9 +3193,79 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-gpsareainformation'          => 'Nom de la zòna GPS',
 'exif-gpsdatestamp'                => 'Data GPS',
 'exif-gpsdifferential'             => 'Correccion diferenciala GPS',
+'exif-jpegfilecomment'             => 'Comentari de fichièr JPEG',
+'exif-keywords'                    => 'Mots claus',
+'exif-worldregioncreated'          => 'Region del mond dins la quala la fòto es estada presa',
+'exif-countrycreated'              => 'País dins lo qual la fòto es estada presa',
+'exif-countrycodecreated'          => 'Còde del país dins lo qual la fòto es estada presa',
+'exif-provinceorstatecreated'      => 'Província o Estat dins lo qual la fòto es estada presa',
+'exif-citycreated'                 => 'Vila dins la quala la fòto es estada presa',
+'exif-sublocationcreated'          => 'Partida de la vila dins la quala la fòto es estada presa',
+'exif-worldregiondest'             => 'Region del mond representada',
+'exif-countrydest'                 => 'País representat',
+'exif-countrycodedest'             => 'Còde del país representat',
+'exif-provinceorstatedest'         => 'Província o Estat representat',
+'exif-citydest'                    => 'Vila representada',
+'exif-sublocationdest'             => 'Partida de la vila representada',
+'exif-objectname'                  => 'Títol cort',
+'exif-specialinstructions'         => 'Instruccions especialas',
+'exif-headline'                    => 'Títol',
+'exif-credit'                      => 'Credit / provesidor',
+'exif-source'                      => 'Font',
+'exif-editstatus'                  => "Estatut editorial de l'imatge",
+'exif-urgency'                     => 'Urgéncia',
+'exif-fixtureidentifier'           => 'Nom element recurrent',
+'exif-locationdest'                => 'Luòc representat',
+'exif-locationdestcode'            => 'Còde del luòc representat',
+'exif-objectcycle'                 => 'Moment de la jornada al qual aqueste mèdia es destinat',
+'exif-contact'                     => 'Informacions de contacte',
+'exif-writer'                      => 'Autor',
+'exif-languagecode'                => 'Lenga',
+'exif-iimversion'                  => 'version IIM',
+'exif-iimcategory'                 => 'Categoria',
+'exif-iimsupplementalcategory'     => 'Categorias suplementàrias',
+'exif-datetimeexpires'             => 'Utilizar pas aprèp',
+'exif-datetimereleased'            => 'Paregut lo',
+'exif-originaltransmissionref'     => 'Còde de localizacion de la transmission originala',
+'exif-identifier'                  => 'Identificant',
+'exif-lens'                        => 'Lentilha utilizada',
+'exif-serialnumber'                => "Numèro de seria de l'aparelh de fòto",
+'exif-cameraownername'             => "Proprietari de l'aparelh de fòto",
+'exif-label'                       => 'Libellat',
+'exif-datetimemetadata'            => 'Data de la darrièra modificacion de las metadonadas',
+'exif-nickname'                    => "Nom informal de l'imatge",
+'exif-rating'                      => 'Nòta (sus 5)',
+'exif-rightscertificate'           => 'Certificat de gestion dels dreches',
+'exif-copyrighted'                 => "Estatut del drech d'autor",
+'exif-copyrightowner'              => "Detentor del drech d'autor",
+'exif-usageterms'                  => "Condicions d'utilizacion",
+'exif-webstatement'                => "Declaracion de dreches d'autor en linha",
+'exif-originaldocumentid'          => 'Identificant unic del document original',
+'exif-licenseurl'                  => 'URL de la licéncia',
+'exif-morepermissionsurl'          => 'Informacions sus las licéncias alternativas',
+'exif-attributionurl'              => "Al moment de la reütilizacion d'aqueste trabalh, ligatz a",
+'exif-preferredattributionname'    => "Al moment de la reütilizacion d'aqueste trabalh, creditatz",
+'exif-pngfilecomment'              => 'Comentari de fichièr JPEG',
+'exif-disclaimer'                  => 'Desistiment',
+'exif-contentwarning'              => 'Avertiment sul contengut',
+'exif-giffilecomment'              => 'Comentari de fichièr GIF',
+'exif-intellectualgenre'           => "Tipe d'element",
+'exif-subjectnewscode'             => 'Còde del subjècte',
+'exif-scenecode'                   => 'Còde de scèna IPTC',
+'exif-event'                       => 'Eveniment representat',
+'exif-organisationinimage'         => 'Organizacion representada',
+'exif-personinimage'               => 'Persona representada',
+'exif-originalimageheight'         => "Nautor de l'imatge abans d'èsser requadrada",
+'exif-originalimagewidth'          => "Largor de l'imatge abans d'èsser requadrada",
 
 # EXIF attributes
 'exif-compression-1' => 'Sens compression',
+'exif-compression-2' => "CCITT Grop 3 Longor de l'encodatge Huffman modificat de dimension 1",
+'exif-compression-3' => 'CCITT Grop 3 encodatge del fax',
+'exif-compression-4' => 'CCITT Grop 4 encodatge del fax',
+
+'exif-copyrighted-true'  => "Somés al drech d'autor",
+'exif-copyrighted-false' => 'Estat dels dreches d’autor pas definit',
 
 'exif-unknowndate' => 'Data desconeguda',
 
@@ -3011,9 +3274,9 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-orientation-3' => 'Virada de 180°',
 'exif-orientation-4' => 'Inversada verticalament',
 'exif-orientation-5' => 'Virada de 90° dins lo sens antiorari e inversada verticalament',
-'exif-orientation-6' => 'Virada de 90° dins lo sens orari',
+'exif-orientation-6' => 'Virada de 90° dins lo sens antiorari',
 'exif-orientation-7' => 'Virada de 90° dins lo sens orari e inversada verticalament',
-'exif-orientation-8' => 'Virada de 90° dins lo sens antiorari',
+'exif-orientation-8' => 'Virada de 90° dins lo sens orari',
 
 'exif-planarconfiguration-1' => 'Donadas atenentas',
 'exif-planarconfiguration-2' => 'Donadas separadas',
@@ -3084,7 +3347,7 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-sensingmethod-7' => 'Captador trilinear',
 'exif-sensingmethod-8' => 'Captador de color linear sequencial',
 
-'exif-filesource-3' => 'Aparelh fotografic numeric',
+'exif-filesource-3' => 'Aparelh de fòto numeric',
 
 'exif-scenetype-1' => 'Imatge dirèctament fotografiat',
 
@@ -3134,6 +3397,10 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-gpslongitude-e' => 'Longitud Èst',
 'exif-gpslongitude-w' => 'Longitud Oèst',
 
+# Pseudotags used for GPSAltitudeRef
+'exif-gpsaltitude-above-sealevel' => '$1 {{PLURAL:$1|mètre|mètres}} en dessús del nivèl de la mar',
+'exif-gpsaltitude-below-sealevel' => '$1 {{PLURAL:$1|mètre|mètres}} en dejós del nivèl de la mar',
+
 'exif-gpsstatus-a' => 'Mesura en cors',
 'exif-gpsstatus-v' => 'Interoperabilitat de la mesura',
 
@@ -3150,22 +3417,62 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'exif-gpsdestdistance-m' => 'Milas anglesas',
 'exif-gpsdestdistance-n' => 'Milas nauticas',
 
+'exif-gpsdop-excellent' => 'Excellenta ($1)',
+'exif-gpsdop-good'      => 'Bona ($1)',
+'exif-gpsdop-moderate'  => 'Mejana ($1)',
+'exif-gpsdop-fair'      => 'Passable ($1)',
+'exif-gpsdop-poor'      => 'Marrida ($1)',
+
+'exif-objectcycle-a' => 'Matin solament',
+'exif-objectcycle-p' => 'Serada solament',
+'exif-objectcycle-b' => 'Matin e ser',
+
 # Pseudotags used for GPSTrackRef, GPSImgDirectionRef and GPSDestBearingRef
 'exif-gpsdirection-t' => 'Direccion vertadièra',
 'exif-gpsdirection-m' => 'Nòrd magnetic',
 
+'exif-ycbcrpositioning-1' => 'Centrat',
+'exif-ycbcrpositioning-2' => 'Cosituat',
+
+'exif-dc-contributor' => 'Contributors',
+'exif-dc-coverage'    => 'Portada espaciala o temporala del mèdia',
+'exif-dc-date'        => 'Data(s)',
+'exif-dc-publisher'   => 'Editor',
+'exif-dc-relation'    => 'Mèdias connèxes',
+'exif-dc-rights'      => 'dreches',
+'exif-dc-source'      => 'Mèdia font',
+'exif-dc-type'        => 'Tipe de mèdia',
+
+'exif-rating-rejected' => 'Regetat',
+
+'exif-isospeedratings-overflow' => 'Mai grand que 65535',
+
+'exif-iimcategory-ace' => 'Arts, cultura e lésers',
+'exif-iimcategory-clj' => 'Crime e drech',
+'exif-iimcategory-dis' => 'Catastròfas e accidents',
+'exif-iimcategory-fin' => 'Economia e afars',
 'exif-iimcategory-edu' => 'Educacion',
+'exif-iimcategory-evn' => 'Environament',
 'exif-iimcategory-hth' => 'Santat',
+'exif-iimcategory-hum' => 'Interès uman',
 'exif-iimcategory-lab' => 'Tribailh',
+'exif-iimcategory-lif' => 'Mòde de vida e de lésers',
 'exif-iimcategory-pol' => 'Politic',
 'exif-iimcategory-rel' => 'Religion e cresenças',
 'exif-iimcategory-sci' => 'Sciéncia e tecnologia',
+'exif-iimcategory-soi' => 'Questions socialas',
 'exif-iimcategory-spo' => 'Espòrts',
 'exif-iimcategory-war' => 'Guèrra, conflictes',
+'exif-iimcategory-wea' => 'Metèo',
+
+'exif-urgency-normal' => 'Normala ($1)',
+'exif-urgency-low'    => 'Febla ($1)',
+'exif-urgency-high'   => 'Nauta ($1)',
+'exif-urgency-other'  => "Urgéncia definida per l'utilizaire ($1)",
 
 # External editor support
 'edit-externally'      => 'Modificar aqueste fichièr en utilizant una aplicacion extèrna',
-'edit-externally-help' => "(Consultatz [//www.mediawiki.org/wiki/Manual:External_editors/oc las instruccions d'installacion] per mai d’entresenhas)",
+'edit-externally-help' => "(Consultatz [https://www.mediawiki.org/wiki/Manual:External_editors/oc las instruccions d'installacion] per mai d’entresenhas)",
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tot',
@@ -3173,7 +3480,7 @@ Los autres ligams sus la meteissa linha son considerats coma d'excepcions, per e
 'monthsall'     => 'totes',
 'limitall'      => 'totes',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'              => "Confirmar l'adreça de corrièr electronic",
 'confirmemail_noemail'      => 'L’adreça de corrièr electronic configurada dins vòstras [[Special:Preferences|preferéncias]] es pas valida.',
 'confirmemail_text'         => '{{SITENAME}} necessita la verificacion de vòstra adreça de corrièr electronic abans de poder utilizar tota foncion de messatjariá. Utilizatz lo boton çaijós per mandar un corrièr electronic de confirmacion a vòstra adreça. Lo corrièr contendrà un ligam contenent un còde, cargatz aqueste ligam dins vòstre navigador per validar vòstra adreça.',
@@ -3221,6 +3528,17 @@ confirmacion de vòstra adreça de corrièl :
 $5
 
 Aqueste còde de confirmacion expirarà lo $4.",
+'confirmemail_body_set'     => "Qualqu’un, probablament vos, dempuèi l’adreça IP $1, a modificat l'adreça de corrièr electronic del compte « $2 » amb aquesta sul site {{SITENAME}}.
+
+Per confirmar qu'aqueste compte vos aparten vertadièrament e reactivar las foncions de messatjariá sus {{SITENAME}}, seguissètz lo ligam çaijós dins vòstre navigador :
+
+$3
+
+Aqueste còde de confirmacion expirarà lo $4.
+
+Se s’agís *pas* de vòstre compte, seguissètz aqueste ligam per anullar la confirmacion de l'adreça de corrièr electronic :
+
+$5",
 'confirmemail_invalidated'  => 'Confirmacion de l’adreça de corrièr electronic anullada',
 'invalidateemail'           => 'Anullar la confirmacion del corrièr electronic',
 
@@ -3265,6 +3583,7 @@ Confirmatz que desiratz tornar crear aqueste article.",
 'table_pager_first'        => 'Primièra pagina',
 'table_pager_last'         => 'Darrièra pagina',
 'table_pager_limit'        => 'Far veire $1 elements per pagina',
+'table_pager_limit_label'  => 'Elements per pagina:',
 'table_pager_limit_submit' => 'Accedir',
 'table_pager_empty'        => 'Cap de resultat',
 
@@ -3289,8 +3608,8 @@ Ensajatz la previsualizacion normala.',
 Ensajatz la previsualizacion normala.',
 
 # Friendlier slave lag warnings
-'lag-warn-normal' => 'Los cambiaments que datan de mens de $1 {{PLURAL:$1|segonda|segondas}} pòdon aparéisser pas dins aquesta tièra.',
-'lag-warn-high'   => 'En rason d’una fòrta carga de las bancas de donadas, los cambiaments que datan de mens de $1 {{PLURAL:$1|segonda|segondas}} pòdon aparéisser pas dins aquesta tièra.',
+'lag-warn-normal' => 'Los cambiaments que datan de mens de $1 {{PLURAL:$1|segonda|segondas}} pòdon aparéisser pas dins aquesta lista.',
+'lag-warn-high'   => 'En rason d’una fòrta carga de las bancas de donadas, los cambiaments que datan de mens de $1 {{PLURAL:$1|segonda|segondas}} pòdon aparéisser pas dins aquesta lista.',
 
 # Watchlist editor
 'watchlistedit-numitems'       => 'Vòstra lista de seguiment conten {{PLURAL:$1|una pagina|$1 paginas}}, sens comptar las paginas de discussion',
@@ -3314,6 +3633,9 @@ Ensajatz la previsualizacion normala.',
 'watchlisttools-edit' => 'Veire e modificar la lista de seguiment',
 'watchlisttools-raw'  => 'Modificar la lista (mòde brut)',
 
+# Signatures
+'signature' => '[[{{ns:user}}:$1|$2]] ([[{{ns:user_talk}}:$1|discussion]])',
+
 # Core parser functions
 'unknown_extension_tag' => "Balisa d'extension « $1 » desconeguda",
 'duplicate-defaultsort' => 'Atencion : La clau de triada per defaut « $2 » espotís la mai recenta « $1 ».',
@@ -3324,6 +3646,7 @@ Ensajatz la previsualizacion normala.',
 'version-specialpages'          => 'Paginas especialas',
 'version-parserhooks'           => 'Extensions del parser',
 'version-variables'             => 'Variablas',
+'version-antispam'              => 'Prevencion del spam',
 'version-skins'                 => 'Abilhatges',
 'version-other'                 => 'Divèrs',
 'version-mediahandlers'         => 'Supòrts mèdia',
@@ -3335,6 +3658,7 @@ Ensajatz la previsualizacion normala.',
 'version-hook-subscribedby'     => 'Definit per',
 'version-version'               => '(Version $1)',
 'version-license'               => 'Licéncia',
+'version-poweredby-credits'     => "Aqueste wiki fonciona gràcias a '''[https://www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2.",
 'version-poweredby-others'      => 'autres',
 'version-software'              => 'Logicial installat',
 'version-software-product'      => 'Produch',
@@ -3344,35 +3668,36 @@ Ensajatz la previsualizacion normala.',
 'filepath'         => "Camin d'accès d'un fichièr",
 'filepath-page'    => 'Fichièr :',
 'filepath-submit'  => 'Validar',
-'filepath-summary' => "Aquesta pagina especiala balha lo camin d'accès complet d’un fichièr ; los imatges son mostrats en nauta resolucion, los fichièrs audiò e vidèo s’executan amb lor programa associat.
-
-Picatz lo nom del fichièr sens lo prefix « {{ns:file}}: »",
+'filepath-summary' => "Aquesta pagina especiala retorna lo camin d'accès complet d’un fichièr.
+Los imatges son afichats en nauta resolucion, los fichièrs àudio e vidèo son cargats e aviats dirèctament amb lor programa associat.",
 
 # Special:FileDuplicateSearch
-'fileduplicatesearch'          => 'Recèrca dels fichièrs en doble',
-'fileduplicatesearch-summary'  => 'Recèrca per de fichièrs en doble sus la banca de valors fragmentàrias.',
-'fileduplicatesearch-legend'   => 'Recèrca d’un doble',
-'fileduplicatesearch-filename' => 'Nom del fichièr :',
-'fileduplicatesearch-submit'   => 'Recercar',
-'fileduplicatesearch-info'     => '$1 × $2 pixèls<br />Talha del fichièr : $3<br />MIME type : $4',
-'fileduplicatesearch-result-1' => 'Lo fichièr « $1 » a pas de doble identic.',
-'fileduplicatesearch-result-n' => 'Lo fichièr « $1 » a {{PLURAL:$2|1 doble identic|$2 dobles identics}}.',
+'fileduplicatesearch'           => 'Recèrca dels fichièrs en doble',
+'fileduplicatesearch-summary'   => 'Recèrca per de fichièrs en doble sus la banca de valors fragmentàrias.',
+'fileduplicatesearch-legend'    => 'Recèrca d’un doble',
+'fileduplicatesearch-filename'  => 'Nom del fichièr :',
+'fileduplicatesearch-submit'    => 'Recercar',
+'fileduplicatesearch-info'      => '$1 × $2 pixèls<br />Talha del fichièr : $3<br />MIME type : $4',
+'fileduplicatesearch-result-1'  => 'Lo fichièr « $1 » a pas de doble identic.',
+'fileduplicatesearch-result-n'  => 'Lo fichièr « $1 » a {{PLURAL:$2|1 doble identic|$2 dobles identics}}.',
+'fileduplicatesearch-noresults' => 'Cap de fichièr nomenat « $1 » es pas estat trobat.',
 
 # Special:SpecialPages
 'specialpages'                   => 'Paginas especialas',
 'specialpages-note'              => '----
-* Las paginas especialas
-* <strong class="mw-specialpagerestricted">en gras</strong> son restrenhudas.',
+* Paginas especialas normalas.
+* <span class="mw-specialpagerestricted">Paginas especialas restrenchas.</span>
+* <span class="mw-specialpagecached">Paginas especialas solament en escondedor (poirián èsser obsolètas).</span>',
 'specialpages-group-maintenance' => 'Rapòrts de mantenença',
 'specialpages-group-other'       => 'Autras paginas especialas',
-'specialpages-group-login'       => 'Se connectar / s’enregistrar',
+'specialpages-group-login'       => "S'identificar / s'inscriure",
 'specialpages-group-changes'     => 'Darrièrs cambiaments e jornals',
 'specialpages-group-media'       => 'Rapòrts dels fichièrs de mèdias e dels impòrts',
 'specialpages-group-users'       => 'Utilizaires e dreches estacats',
 'specialpages-group-highuse'     => 'Utilizacion intensa de las paginas',
 'specialpages-group-pages'       => 'Listas de paginas',
 'specialpages-group-pagetools'   => 'Aisinas per las paginas',
-'specialpages-group-wiki'        => 'Donadas del wiki e aisinas',
+'specialpages-group-wiki'        => 'Donadas e aisinas',
 'specialpages-group-redirects'   => 'Redireccions',
 'specialpages-group-spam'        => 'Aisinas antispam',
 
@@ -3404,8 +3729,16 @@ Picatz lo nom del fichièr sens lo prefix « {{ns:file}}: »",
 'tags-hitcount'           => '$1 {{PLURAL:$1|cambiament|cambiaments}}',
 
 # Special:ComparePages
-'compare-page1' => 'Pagina 1',
-'compare-page2' => 'Pagina 2',
+'comparepages'                => 'Comparar de paginas',
+'compare-selector'            => 'Comparar las versions de las paginas',
+'compare-page1'               => 'Pagina 1',
+'compare-page2'               => 'Pagina 2',
+'compare-rev1'                => 'Version 1',
+'compare-rev2'                => 'Version 2',
+'compare-submit'              => 'Comparar',
+'compare-invalid-title'       => "Lo títol qu'avètz especificat es incorrècte.",
+'compare-title-not-exists'    => "Lo títol qu'avètz especificat existís pas",
+'compare-revision-not-exists' => "La revision qu'avètz especificada existís pas.",
 
 # Database error messages
 'dberr-header'      => 'Aqueste wiki a un problèma',
@@ -3428,9 +3761,81 @@ Picatz lo nom del fichièr sens lo prefix « {{ns:file}}: »",
 'htmlform-reset'               => 'Desfar las modificacions',
 'htmlform-selectorother-other' => 'Autre',
 
+# SQLite database support
+'sqlite-has-fts' => '$1 amb recèrca en tèxte integral suportada',
+'sqlite-no-fts'  => '$1 sens recèrca en tèxte integral suportada',
+
 # New logging system
-'revdelete-restricted'   => 'aplicar las restriccions als administrators',
-'revdelete-unrestricted' => 'restriccions levadas pels administrators',
-'newuserlog-byemail'     => 'senhal mandat per corrièr electronic',
+'logentry-delete-delete'              => '$1 a suprimit la pagina $3',
+'logentry-delete-restore'             => '$1 a restablit la pagina $3',
+'logentry-suppress-delete'            => '$1 a suprimit la pagina $3',
+'revdelete-content-hid'               => 'contengut amagat',
+'revdelete-summary-hid'               => 'resumit de modificacion amagat',
+'revdelete-uname-hid'                 => 'nom d’utilizaire amagat',
+'revdelete-content-unhid'             => 'contengut afichat',
+'revdelete-summary-unhid'             => 'resumit de modificacion afichat',
+'revdelete-uname-unhid'               => 'nom d’utilizaire afichat',
+'revdelete-restricted'                => 'aplicar las restriccions als administrators',
+'revdelete-unrestricted'              => 'restriccions levadas pels administrators',
+'logentry-move-move'                  => '$1 a deplaçat la pagina $3 cap a $4',
+'logentry-move-move-noredirect'       => '$1 a deplaçat la pagina $3 cap a $4 sens daissar cap de redireccion',
+'logentry-move-move_redir'            => '$1 a deplaçat la pagina $3 cap a $4 per dessús una redireccion',
+'logentry-move-move_redir-noredirect' => '$1 a deplaçat la pagina $3 cap a $4 per dessús una redireccion sens daissar cap de redireccion',
+'logentry-newusers-newusers'          => "Lo compte d'utilizaire $1 es estat creat",
+'logentry-newusers-create'            => "Lo compte d'utilizaire $1 es estat creat",
+'logentry-newusers-create2'           => "Lo compte d'utilizaire $3 es estat creat per $1",
+'logentry-newusers-autocreate'        => 'Lo compte $1 es estat creat automaticament',
+'newuserlog-byemail'                  => 'senhal mandat per corrièr electronic',
+
+# Feedback
+'feedback-subject'  => 'Subjècte :',
+'feedback-message'  => 'Messatge :',
+'feedback-cancel'   => 'Anullar',
+'feedback-submit'   => 'Mandar vòstres comentaris',
+'feedback-adding'   => 'Apondon de vòstres comentaris a la pagina...',
+'feedback-error1'   => "Error : Resultat de l'IPA pas reconegut",
+'feedback-error2'   => 'Error : la modificacion a fracassat',
+'feedback-error3'   => "Error : pas cap de responsa de l'API",
+'feedback-thanks'   => 'Mercé ! Vòstre comentari es estat publicat sus la pagina "[$2 $1]".',
+'feedback-close'    => 'Fach',
+'feedback-bugcheck' => "Remirable ! Verificatz simplament qu'es pas un dels [$1 bugs ja coneguts].",
+'feedback-bugnew'   => 'Ai verificat. Senhalar un bug novèl',
+
+# API errors
+'api-error-badaccess-groups'              => 'Sètz pas autorizat a cargar de fichièrs sus aqueste wiki.',
+'api-error-badtoken'                      => 'Error intèrna : marrit « geton ».',
+'api-error-copyuploaddisabled'            => 'Los cargaments via URL son desactivats sus aqueste servidor.',
+'api-error-duplicate'                     => "I a ja {{PLURAL:$1|[$2 un autre fichièr present]|[$2 d'autres fichièrs presents]}} sul site amb lo meteis contengut.",
+'api-error-duplicate-archive'             => "I aviá ja {{PLURAL:$1|[$2 un autre fichièr present]|[$2 d'autres fichièrs presents]}} sul site amb lo meteis contengut, mas {{PLURAL:$1|es estat suprimit|son estats suprimits}}.",
+'api-error-duplicate-archive-popup-title' => 'Duplicar {{PLURAL:$1|lo fichièr|los fichièrs}} que {{PLURAL:$1|ja es estat suprimit|je son estats suprimits}}',
+'api-error-duplicate-popup-title'         => '{{PLURAL:$1|fichièr|fichièrs}} en doble',
+'api-error-empty-file'                    => "Lo fichièr qu'avètz somés èra void.",
+'api-error-emptypage'                     => 'Creacion de paginas voidas pas autorizada.',
+'api-error-fetchfileerror'                => "Error intèrna : Quicòm s'es mal passat al moment de la recuperacion del fichièr.",
+'api-error-file-too-large'                => "Lo fichièr qu'avètz somés èra tròp grand.",
+'api-error-filename-tooshort'             => 'Lo nom del fichièr es tròp cort.',
+'api-error-filetype-banned'               => 'Aqueste tipe de fichièr es interdich',
+'api-error-filetype-missing'              => "L'extension del fichièr es mancanta.",
+'api-error-hookaborted'                   => "La modificacion qu'avètz ensajat de realizar es estada anullada per una extension.",
+'api-error-http'                          => 'Error intèrna : se pòt pas connectar al servidor.',
+'api-error-illegal-filename'              => 'Lo nom del fichièr es pas autorizat.',
+'api-error-internal-error'                => "Error intèrna : Quicòm s'es mal passat al moment del tractament de vòstre impòrt sul wiki.",
+'api-error-invalid-file-key'              => "Error intèrna : cap de fichièr pas trobat dins l'emmagazinatge temporari.",
+'api-error-missingparam'                  => 'Error intèrna : Manca de paramètres dins la requèsta.',
+'api-error-missingresult'                 => 'Error intèrna : Avèm pas pogut determinar se la còpia aviá capitat.',
+'api-error-mustbeloggedin'                => 'Vos cal èsser connectat per telecargar de fichièrs.',
+'api-error-mustbeposted'                  => 'Error intèrna : aquesta requèsta necessita lo metòde HTTP POST.',
+'api-error-nomodule'                      => 'Error intèrna : cap de modul de versament pas definit.',
+'api-error-ok-but-empty'                  => 'Error intèrna : Lo servidor a pas respondut.',
+'api-error-overwrite'                     => 'Espotir un fichièr existent es pas autorizat.',
+'api-error-stashfailed'                   => 'Error intèrna : lo servidor a pas pogut enregistrar lo fichièr temporari.',
+'api-error-timeout'                       => 'Lo servidor a pas respondut dins lo relambi pervist.',
+'api-error-unclassified'                  => "Una error desconeguda s'es producha.",
+'api-error-unknown-code'                  => 'Error desconeguda : « $1 »',
+'api-error-unknown-error'                 => 'Error intèrna : Quicòm a mal virat al moment del mandadís de vòstre fichièr.',
+'api-error-unknown-warning'               => 'Avertiment desconegut : $1',
+'api-error-unknownerror'                  => 'Error desconeguda : « $1 »',
+'api-error-uploaddisabled'                => 'Lo cargament es desactivat sus aqueste wiki.',
+'api-error-verification-error'            => 'Aqueste fichièr pòt èsser corromput, o son extension es incorrècta.',
 
 );

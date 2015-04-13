@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -105,9 +105,9 @@
         ' WHERE bug_id in ('.implode(',', $t_bug).') and '.
             '( (type='.NORMAL_TYPE.' and field_name=\'category\') or '.
                 '(type='.NORMAL_TYPE.' and field_name=\'status\') or type='.NEW_BUG.' ) and '.
-                'date_modified >= \''. $t_start .'\''.
+		'date_modified >= ' . db_param() .
             ' order by date_modified DESC';
-    $t_result = db_query( $t_select );
+	$t_result = db_query_bound( $t_select, array( $t_start ) );
 	$row = db_fetch_array( $t_result );
 
 	for ($t_now = time() - $t_incr; $t_now >= $t_start; $t_now -= $t_incr) {

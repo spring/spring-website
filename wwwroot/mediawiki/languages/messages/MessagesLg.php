@@ -503,7 +503,7 @@ Sooka olindeko akaseera okuddamu n'ate.",
 'suspicious-userlogout'      => "Sisitemu ezize ekiragiro kyo eky'okugivaamu kubanga kirabise nga ekivudde mu kalambulanetti enfu<br />
 oba mu puloguramu etereka n'eddamu okuyisa ebiragiro ebivudde awalala.",
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => "Wazzewo kiremya atategeerese mu mukolo mail() ogw'omu PHP",
 
 # Change password dialog
@@ -1030,7 +1030,7 @@ W'owandikira by'onoonya bw'osoosawo akagambo ''all:'', okunoonya kubuna Wikipedi
 # Special:ListGroupRights
 'listgrouprights-members' => '(lukalala lwa bamemba)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Memba ono musindikire e-mail',
 
 # Watchlist
@@ -1216,7 +1216,7 @@ Yogera nange gwe olina okugyegattira ku eyo esangidwawo.'''",
 'allmessagescurrent'            => 'Ebiriwo kakano',
 'allmessagestext'               => "Luno lwe lukalala olw'obubaka obwa sisitemu obw'omu kkuŋŋaanizo erya MediaWiki.
 
-Ob'oyagala okuyamba ku kuvvuunula eby'omu MediaWiki yonna, kebera ku [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] ne [//translatewiki.net translatewiki.net].",
+Ob'oyagala okuyamba ku kuvvuunula eby'omu MediaWiki yonna, kebera ku [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] ne [//translatewiki.net translatewiki.net].",
 'allmessages-filter-legend'     => 'Ensunsula',
 'allmessages-filter'            => 'Londamu:',
 'allmessages-filter-unmodified' => 'Ebitannakyusibwamu',
@@ -1335,7 +1335,7 @@ Ebirala biyinza butalabika okujjako ng'okiragidde.
 
 # External editor support
 'edit-externally'      => 'Fayiro eno gikolereko mu pulogulamu endala',
-'edit-externally-help' => '[//www.mediawiki.org/wiki/Manual:External_editors Nyiga wano] okuyiga ebisingawo ku kukozesa pulogulamu endala okukola enkyukakyuka.',
+'edit-externally-help' => '[https://www.mediawiki.org/wiki/Manual:External_editors Nyiga wano] okuyiga ebisingawo ku kukozesa pulogulamu endala okukola enkyukakyuka.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'Zonna',

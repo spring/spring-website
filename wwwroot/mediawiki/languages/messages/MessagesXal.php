@@ -1,5 +1,5 @@
 <?php
-/** Kalmyk (Хальмг)
+/** Kalmyk (хальмг)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -867,7 +867,7 @@ $1',
 # Special:ListGroupRights
 'listgrouprights-members' => '(мөчүдин сеткүл)',
 
-# E-mail user
+# Email user
 'emailuser' => 'Энд E-mail йовулх',
 
 # Watchlist
@@ -1196,7 +1196,7 @@ $2 шидрә һарһлһна төлә хәләтн.',
 
 # External editor support
 'edit-externally'      => 'Эн боомгиг һаза заклһар чиклх',
-'edit-externally-help' => '([//www.mediawiki.org/wiki/Manual:External_editors Тәвллһнә заалт]  икәр өггцнә төлә хәләтн)',
+'edit-externally-help' => '([https://www.mediawiki.org/wiki/Manual:External_editors Тәвллһнә заалт]  икәр өггцнә төлә хәләтн)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'цуг',

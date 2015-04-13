@@ -1,6 +1,6 @@
 <?php
 # MantisBT - a php based bugtracking system
-# Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+# Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
@@ -13,6 +13,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+
+access_ensure_project_level( plugin_config_get( 'import_threshold' ) );
 
 auth_reauthenticate( );
 

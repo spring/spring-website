@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage CurrentUserAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -26,6 +26,30 @@
  * requires filter_api
  */
 require_once( 'filter_api.php' );
+
+/**
+ * Sets the current user
+ *
+ * @param integer $p_user_id Id to set as current user
+ * @return Old current user id
+ * @access public
+ */
+function current_user_set( $p_user_id ) {
+	global $g_cache_current_user_id;
+	global $g_cache_current_user_pref;
+
+	if( $p_user_id == $g_cache_current_user_id ) {
+		return $p_user_id;
+	}
+
+	$t_old_current = $g_cache_current_user_id;
+	$g_cache_current_user_id = $p_user_id;
+
+	# Clear current user preferences cache
+	$g_cache_current_user_pref = array();
+
+	return $t_old_current;
+}
 
 # ## Current User API ###
 # Wrappers around the User API that pass in the logged-in user for you
@@ -203,7 +227,7 @@ function current_user_get_bug_filter( $p_project_id = null ) {
 				$t_filter = unserialize( $t_token );
 			}
 		} else {
-			$t_filter = unserialize( $f_filter_string );
+			return false;
 		}
 	} else if( !filter_is_cookie_valid() ) {
 		return false;

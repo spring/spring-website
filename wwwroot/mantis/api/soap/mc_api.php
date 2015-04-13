@@ -1,6 +1,6 @@
 <?php
 # MantisConnect - A webservice interface to Mantis Bug Tracker
-# Copyright (C) 2004-2013  Victor Boctor - vboctor@users.sourceforge.net
+# Copyright (C) 2004-2014  Victor Boctor - vboctor@users.sourceforge.net
 # This program is distributed under dual licensing.  These include
 # GPL and a commercial licenses.  Victor Boctor reserves the right to
 # change the license of future releases.
@@ -227,7 +227,6 @@ function mci_get_project_view_state_id( $p_view_state ) {
 }
 
 function mci_get_user_id( $p_user ) {
-
 	$p_user = SoapObjectsFactory::unwrapObject( $p_user );
 	
 	$t_user_id = 0;

@@ -1,5 +1,5 @@
 <?php
-/** Jutish (Jysk)
+/** Jutish (jysk)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -7,6 +7,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Geitost
  * @author Huslåke
  * @author Urhixidur
  * @author Ælsån
@@ -315,7 +316,7 @@ Førespørgsel: $2',
 'userlogin'               => 'Åpret æ konto æller loĝ på',
 'logout'                  => 'Loĝ åf',
 'userlogout'              => 'Loĝ åf',
-'nologin'                 => "Du har engen brugerkonto? '''$1'''.",
+'nologin'                 => 'Du har engen brugerkonto? $1.',
 'nologinlink'             => 'Åpret ny brugerkonto',
 'createaccount'           => 'Åpret en ny konto',
 'gotaccount'              => "Du har ålerede en brugerkonto? '''$1'''.",
@@ -604,7 +605,7 @@ hersenenge, (førge) = førskel til den førge hersenenge, l = lile til mendre �
 'linksearch-pat'   => 'Søĝ æfter links til:',
 'linksearch-ns'    => 'Navnerum:',
 'linksearch-ok'    => 'Søĝ',
-'linksearch-text'  => 'Wildkårter søm "*.wikipedia.org" ken benyttes.<br />Understøttede pråtåkoller: <tt>$1</tt>',
+'linksearch-text'  => 'Wildkårter søm "*.wikipedia.org" ken benyttes.<br />Understøttede pråtåkoller: <code>$1</code>',
 'linksearch-line'  => '$2 linker til $1',
 'linksearch-error' => "Wildkårter må ken benyttes i'n stårt åf håstnavnet.",
 
@@ -612,7 +613,7 @@ hersenenge, (førge) = førskel til den førge hersenenge, l = lile til mendre �
 'newuserlogpage'     => 'Brugeråprettelseslog',
 'newuserlogpagetext' => "Dett'er en log åver de senest åprettede brugere.",
 
-# E-mail user
+# Email user
 'emailuser' => 'E-mail til denne bruger',
 
 # Watchlist
@@ -838,7 +839,7 @@ Kun endholtet åf æ liste (lenjer startende ve *) bliver brugt. Den første hen
 
 # External editor support
 'edit-externally'      => "Redigær denne gøret ve'n utsende redigærstøme",
-'edit-externally-help' => 'Se [//www.mediawiki.org/wiki/Manual:External_editors setup hjælpje] før mære informasje.',
+'edit-externally-help' => 'Se [https://www.mediawiki.org/wiki/Manual:External_editors setup hjælpje] før mære informasje.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'åle',

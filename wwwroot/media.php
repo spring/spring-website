@@ -150,12 +150,14 @@
     // Compose the final page
     $headertemplate = file_get_contents('templates/header.html');
     $starttemplate = file_get_contents('templates/pagestart.html');
+    $metatemplate = file_get_contents('templates/meta.html');
 
-    $html = $starttemplate;
+    $html  = $starttemplate;
+    $html .= str_replace('{META}', '<link href="/index.css?v=1" rel="stylesheet" type="text/css" />', $metatemplate);
+    $html .= "<title>Spring RTS Engine</title>\n</head><body>";
     $html .= str_replace('{PAGE_TITLE}', 'Media', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');
     $html .= file_get_contents('templates/pageend.html');
 
     print($html);
-?>

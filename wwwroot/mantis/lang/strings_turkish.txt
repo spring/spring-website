@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,16 +27,20 @@
  *
  * @author Emperyan
  * @author Erdemaslancan
+ * @author Gorizon
  * @author Hedda Gabler
  * @author Incelemeelemani
  * @author Joseph
  * @author Karduelis
  * @author Khutuck
  * @author Korayal
+ * @author Meelo
  * @author Oktay Altunergil - oktay@bellatlantic.net
  * @author Thinkfast
+ * @author Trockya
  */
 
+$s_directionality = 'soldan sağa';
 $s_actiongroup_menu_move = 'Taşı';
 $s_actiongroup_menu_copy = 'Kopyala';
 $s_actiongroup_menu_assign = 'Ata';
@@ -93,13 +97,13 @@ $s_bugnote_view_state = 'Not Görünüm Durumu';
 $s_bug_monitor = 'Sorun İzleniyor';
 $s_bug_end_monitor = 'Sorun İzleme İptal Edildi';
 $s_announcement = 'Duyuru';
-$s_stays_on_top = 'Üstte Kalır.';
+$s_stays_on_top = 'Üstte Kalır';
 $s_bugnote_link_title = 'Nota doğrudan bağlantı';
 $s_delete_bugnote_button = 'Notu Sil';
 $s_delete_bugnote_sure_msg = 'Bu notu silmek istediğinizden emin misiniz?';
 $s_bug_relationships = 'İlişkiler';
 $s_empty_password_sure_msg = 'Kullanıcı, boş bir parolaya sahip. Bunu istediğinizden emin misiniz?';
-$s_empty_password_button = 'Boş parola kullan';
+$s_empty_password_button = 'Boş Parola Kullan';
 $s_reauthenticate_title = 'Kimlik doğrulaması';
 $s_reauthenticate_message = 'Güvenli bir sayfa ziyaret ediyorsunuz, ve güvenli oturumunuz sona erdi. Lütfen devam etmek için kimlik doğrulamanızı yapınız.';
 $s_no_category = '(Kategori Yok)';
@@ -275,6 +279,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Eklenti zaten yüklü.';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Eklenti sayfası bulunamadı.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Eklenti kurulumu başarısız oldu: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = '#%1$s bloğundaki eklenti şeması yükseltmesi başarısız.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = '" %1$s " Eklentisi bu sayfaya erişebilmek için önce yükseltilmeleri gerekiyor.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = '"%2$s" çalıştırılması sonucu bilinmeyen bir %1$s hatası oluştu.';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = '"%1$s" alanı birden fazla "%2$s" sütunu içeriyor.';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = '"%1$s" alanı geçersiz geçersiz "%2$s" alanı içeriyor.';
@@ -491,7 +496,7 @@ $s_sent_you_this_reminder_about = 'Bu hatırlatmanın gönderilme sebebi';
 $s_bug_reminder = 'Hatırlatma gönder';
 $s_reminder_sent_to = 'Hatırlatıcı gönderildi';
 $s_reminder_sent_none = 'Hiç bir hatırlatıcı gönderilemedi.';
-$s_reminder_list_truncated = 'alıcı listesi boş, tam liste için Sorun Geçmişine bakınız.';
+$s_reminder_list_truncated = 'alıcılar listesi kısaltıldı';
 $s_bug_send_button = 'Gönder';
 $s_reminder = 'Hatırlatma';
 $s_reminder_explain = 'Bu not, bu sorunda geribildirim isteyerek listelenen alıcılara gönderilecektir.';

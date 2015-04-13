@@ -1,6 +1,6 @@
 <?php
 # MantisConnect - A webservice interface to Mantis Bug Tracker
-# Copyright (C) 2004-2013  Victor Boctor - vboctor@users.sourceforge.net
+# Copyright (C) 2004-2014  Victor Boctor - vboctor@users.sourceforge.net
 # This program is distributed under dual licensing.  These include
 # GPL and a commercial licenses.  Victor Boctor reserves the right to
 # change the license of future releases.
@@ -54,4 +54,4 @@ $g_mc_version_when_not_found = '';
  * maintained to work with recent versions on PHP. When the extension is not available 
  * MantisBT falls back to using nusoap.</p>
  */
-$g_mc_use_nusoap = extension_loaded('soap') ? OFF : ON;
+$g_mc_use_nusoap = extension_loaded('soap') && defined('SOAP_USE_XSI_ARRAY_TYPE') ? OFF : ON;

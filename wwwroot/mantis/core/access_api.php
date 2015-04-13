@@ -18,7 +18,7 @@
  * Access Api
  *
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  * @package CoreAPI
  * @subpackage AccessAPI
@@ -193,7 +193,7 @@ function access_cache_matrix_user( $p_user_id ) {
 /**
  * Check the a user's access against the given "threshold" and return true
  * if the user can access, false otherwise.
- * $p_access_level may be a single value, or an array. If it is a single
+ * $p_threshold may be a single value, or an array. If it is a single
  * value, treat it as a threshold so return true if user is >= threshold.
  * If it is an array, look for exact matches to one of the values
  * @param int $p_user_access_level user access level

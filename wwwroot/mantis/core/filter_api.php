@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage FilterAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -606,8 +606,20 @@ function filter_ensure_valid_filter( $p_filter_arr ) {
 			unset( $t_fields[$i] );
 		}
 	}
+
+	# Make sure array is no longer than 2 elements
 	$t_sort_fields = explode( ',', $p_filter_arr['sort'] );
+	if( count( $t_sort_fields ) > 2 ) {
+		$t_sort_fields = array_slice( $t_sort_fields, 0, 2 );
+	}
+
+	# Make sure array is no longer than 2 elements
 	$t_dir_fields = explode( ',', $p_filter_arr['dir'] );
+	if( count( $t_dir_fields ) > 2 ) {
+		$t_dir_fields = array_slice( $t_dir_fields, 0, 2 );
+	}
+
+	# Validate the max of two segments for $t_sort_fields and $t_dir_fields
 	for( $i = 0;$i < 2;$i++ ) {
 		if( isset( $t_sort_fields[$i] ) ) {
 			$t_drop = false;
@@ -954,10 +966,16 @@ function filter_get_query_sort_data( &$p_filter, $p_show_sticky, $p_query_clause
 
 			# standard column
 			} else {
-				if ( 'last_updated' == $c_sort ) {
-					$c_sort = "last_updated";
+				$t_sort_col = "$t_bug_table.$c_sort";
+
+				# when sorting by due_date, always display undefined dates last
+				if( 'due_date' == $c_sort && 'ASC' == $c_dir ) {
+					$t_sort_due_date = "$t_sort_col = 1";
+					$p_query_clauses['select'][] = $t_sort_due_date;
+					$t_sort_col = "$t_sort_due_date, $t_sort_col";
 				}
-				$p_query_clauses['order'][] = "$t_bug_table.$c_sort $c_dir";
+
+				$p_query_clauses['order'][] = "$t_sort_col $c_dir";
 			}
 		}
 	}
@@ -1046,7 +1064,7 @@ function filter_get_bug_rows( &$p_page_number, &$p_per_page, &$p_page_count, &$p
 
 	$t_current_user_id = auth_get_current_user_id();
 
-	if( null === $p_user_id ) {
+	if ( $p_user_id === null || $p_user_id === 0 ) {
 		$t_user_id = $t_current_user_id;
 	} else {
 		$t_user_id = $p_user_id;
@@ -1963,7 +1981,7 @@ function filter_get_bug_rows( &$p_page_number, &$p_per_page, &$p_page_count, &$p
 			}
 
 			$c_search = '%' . $t_search_term . '%';
-			$t_textsearch_where_clause .= '( ' . db_helper_like( 'summary' ) .
+			$t_textsearch_where_clause .= '( ' . db_helper_like( "$t_bug_table.summary" ) .
 				' OR ' . db_helper_like( "$t_bug_text_table.description" ) .
 				' OR ' . db_helper_like( "$t_bug_text_table.steps_to_reproduce" ) .
 				' OR ' . db_helper_like( "$t_bug_text_table.additional_information" ) .
@@ -4773,4 +4791,70 @@ function filter_name_valid_length( $p_name ) {
 	} else {
 		return true;
 	}
+}
+
+/**
+ * Create a filter for getting issues assigned to the specified project and user that
+ * are not yet resolved.
+ *
+ * @param $p_project_id the project id or ALL_PROJECTS.
+ * @param $p_user_id the user id or 0 to get unassigned issues.
+ * @return a valid filter.
+ */
+function filter_create_assigned_to_unresolved( $p_project_id, $p_user_id ) {
+	$t_filter = filter_get_default();
+
+	if ( $p_user_id == 0 ) {
+		$t_filter[FILTER_PROPERTY_HANDLER_ID] = array( '0' => META_FILTER_NONE );
+	} else {
+		$t_filter[FILTER_PROPERTY_HANDLER_ID] = array( '0' => $p_user_id );
+	}
+
+	$t_bug_resolved_status_threshold = config_get( 'bug_resolved_status_threshold', /* default */ null, $p_user_id, $p_project_id );
+	$t_filter[FILTER_PROPERTY_HIDE_STATUS_ID] = array( '0' => $t_bug_resolved_status_threshold );
+
+	if ( $p_project_id != ALL_PROJECTS ) {
+		$t_filter[FILTER_PROPERTY_PROJECT_ID] = array( '0' => $p_project_id );
+	}
+
+	return filter_ensure_valid_filter( $t_filter );
+}
+
+/**
+ * Create a filter for getting issues reported by the specified project and user.
+ * @param $p_project_id the project id or ALL_PROJECTS.
+ * @param $p_user_id the user id.
+ * @return a valid filter.
+ */
+function filter_create_reported_by( $p_project_id, $p_user_id ) {
+	$t_filter = filter_get_default();
+	$t_filter[FILTER_PROPERTY_REPORTER_ID] = array( '0' => $p_user_id );
+
+	if ( $p_project_id != ALL_PROJECTS ) {
+		$t_filter[FILTER_PROPERTY_PROJECT_ID] = array( '0' => $p_project_id );
+	}
+
+	return filter_ensure_valid_filter( $t_filter );
+}
+
+/**
+ * Create a filter for getting issues monitored by the specified project and user.
+ * @param $p_project_id the project id or ALL_PROJECTS.
+ * @param $p_user_id the user id.
+ * @return a valid filter.
+ */
+function filter_create_monitored_by( $p_project_id, $p_user_id ) {
+	$t_filter = filter_get_default();
+
+	if ( $p_user_id == 0 ) {
+		$t_filter[FILTER_PROPERTY_MONITOR_USER_ID] = array( '0' => META_FILTER_NONE );
+	} else {
+		$t_filter[FILTER_PROPERTY_MONITOR_USER_ID] = array( '0' => $p_user_id );
+	}
+
+	if ( $p_project_id != ALL_PROJECTS ) {
+		$t_filter[FILTER_PROPERTY_PROJECT_ID] = array( '0' => $p_project_id );
+	}
+
+	return filter_ensure_valid_filter( $t_filter );
 }

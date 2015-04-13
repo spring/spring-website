@@ -1,5 +1,5 @@
 <?php
-/** Corsican (Corsu)
+/** Corsican (corsu)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -361,7 +361,7 @@ U to indirizzu IP serà registratu indu a cronolugia di ista pagina.",
 # Special:ListUsers
 'listusers-submit' => 'Mustrà',
 
-# E-mail user
+# Email user
 'emailto'      => 'À:',
 'emailsubject' => 'Sughjettu:',
 'emailmessage' => 'Messaghju:',

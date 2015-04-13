@@ -18,7 +18,7 @@
  * @package CoreAPI
  * @subpackage GPCAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  *
  * @uses http_api.php
@@ -110,7 +110,11 @@ function gpc_get_string( $p_var_name, $p_default = null ) {
 		trigger_error( ERROR_GPC_ARRAY_UNEXPECTED, ERROR );
 	}
 
-	return $t_result;
+	if( $t_result === null ) {
+		return null;
+	} else {
+		return str_replace( "\0", '', $t_result );
+	}
 }
 
 /**
@@ -255,7 +259,18 @@ function gpc_get_string_array( $p_var_name, $p_default = null ) {
 		trigger_error( ERROR_GPC_ARRAY_EXPECTED, ERROR );
 	}
 
-	return $t_result;
+	if( !is_array( $t_result ) ) {
+		return $t_result;
+	}
+	$t_array = array();
+	foreach( $t_result as $t_key => $t_value ) {
+		if( $t_value === null ) {
+			$t_array[$t_key] = null;
+		} else {
+			$t_array[$t_key] = str_replace( "\0", '', $t_value );
+		}
+	}
+	return $t_array;
 }
 
 /**

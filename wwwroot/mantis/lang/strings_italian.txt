@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ $s_empty_password_button = 'Conferma password vuota';
 $s_reauthenticate_title = 'Autenticazione';
 $s_reauthenticate_message = 'Stai visitando una pagina protetta, e la tua sessione è scaduta.  Per continuare devi rifare l\'autenticazione.';
 $s_no_category = '(Nessuna Categoria)';
-$s_global_categories = 'Categorie Globali';
+$s_global_categories = 'Categorie globali';
 $s_inherit = 'Eredita Categorie';
 $s_inherit_global = 'Eredita Categorie Globali';
 $s_inherit_parent = 'Eredita Categorie dal Padre';
@@ -278,6 +278,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Plugin già installato';
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Pagina del plugin non trovata';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Installazione del plugin non riuscita: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Upgrade dello schema del plugin fallito nel blocco #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Devi aggiornare il plugin "%1$s" prima di poter accedere a questa pagina.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Si è verificato un errore sconosciuto "%1$s" durante l\'esecuzione del plugin "%2$s"';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Il campo "%1$s" contiene colonne duplicate "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Il campo "%1$s" contiene un campo invalido "%2$s".';
@@ -494,7 +495,7 @@ $s_sent_you_this_reminder_about = 'ti invia questo memorandum a proposito dell\'
 $s_bug_reminder = 'Invia un memorandum';
 $s_reminder_sent_to = 'Memorandum spedito a';
 $s_reminder_sent_none = 'Nessun promemoria può essere inviato';
-$s_reminder_list_truncated = 'elenco destinatari troncato, consulta la cronologia per l\'elenco completo';
+$s_reminder_list_truncated = 'elenco destinatari troncato';
 $s_bug_send_button = 'Invia';
 $s_reminder = 'Memorandum';
 $s_reminder_explain = 'Questo memorandum verrà inviato agli utenti selezionati a cui si richiede un feedback sull\'anomalia.';
@@ -582,9 +583,9 @@ $s_login_button = 'Login';
 $s_signup_link = 'Registrati come nuovo utente';
 $s_lost_password_link = 'Hai dimenticato la password?';
 $s_select_project_button = 'Seleziona progetto';
-$s_lost_password_title = 'Reset password';
-$s_lost_password_done_title = 'Reset password messaggio spedito';
-$s_lost_password_subject = 'Reset password';
+$s_lost_password_title = 'Reimposta password';
+$s_lost_password_done_title = 'Messaggio di reimpostazione password inviato';
+$s_lost_password_subject = 'Reimposta password';
 $s_lost_password_info = 'Per reimpostare la password di accesso dimenticata, occorre fornire il tuo nome utente e l\'indirizzo email associato con quell\'account (deve essere quello correntemente in uso).<br /><br />Se i dati indicati corrispondono ad un account valido, ti verrà inviato via email un indirizzo URL speciale che contiene un codice di convalida per il tuo account.  Visitando quel indirizzo potrai cambiare la tua password di accesso al sito.';
 $s_lost_password_confirm_hash_OK = 'Codice di convalida accettato.  Ora puoi cambiare la password di accesso.';
 $s_open_and_assigned_to_me = 'Assegnate a me ancora aperte';
@@ -784,7 +785,7 @@ $s_prune_accounts_button = 'Elimina';
 $s_confirm_account_pruning = 'Sei sicuro di voler eliminare i vecchi account che non sono mai stati utilizzati?';
 $s_edit_user_title = 'Modifica utente';
 $s_account_unlock_button = 'Sblocca l\'account';
-$s_reset_password_button = 'Resetta password';
+$s_reset_password_button = 'Reimposta password';
 $s_delete_user_button = 'Elimina utente';
 $s_reset_password_msg = 'Resettando la password, verrà inviata all\'utente una email di verifica con il codice di convalida.';
 $s_reset_password_msg2 = 'Resettando la password, questa verrà impostata come vuota.';
@@ -932,7 +933,7 @@ $s_reporter_stats = 'Statistiche per segnalatore';
 $s_orct = '(aperte/risolte/chiuse/totale)';
 $s_any = 'qualsiasi';
 $s_all = 'tutte';
-$s_show = 'Quante anomalie';
+$s_show = 'Mostra';
 $s_changed = 'Modificata (ore)';
 $s_viewing_bugs_title = 'Elenco delle anomalie';
 $s_updated = 'Ultima modifica';

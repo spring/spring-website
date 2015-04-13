@@ -1,5 +1,5 @@
 <?php
-/** Ewe (Eʋegbe)
+/** Ewe (eʋegbe)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -14,11 +14,11 @@
 $messages = array(
 # User preference toggles
 'tog-hideminor'            => 'Ɣla tɔtrɔ suewo le tɔtrɔ yeyeawo me',
-'tog-watchcreations'       => 'Tsɔ axa siwo gɔme medze la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
-'tog-watchdefault'         => 'Tsɔ axa siwo ŋu metrɔ asi le la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
-'tog-watchmoves'           => 'Tsɔ axa siwo ƒe nɔƒe meɖɔli la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
-'tog-watchdeletion'        => 'Tsɔ axa siwo metutu la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
-'tog-enotifwatchlistpages' => 'Ɖo du nam ne axa aɖe si ŋu nyeƒe ŋku le la trɔ',
+'tog-watchcreations'       => 'Tsɔ axa siwo gɔme medze kpakple axa siwo meda ɖe afisia la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
+'tog-watchdefault'         => 'Tsɔ axawo kpakple nutatawo siwo ŋu metrɔ asi le la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
+'tog-watchmoves'           => 'Tsɔ  axawo kpakple nutatawo siwo ƒe nɔƒe meɖɔli la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
+'tog-watchdeletion'        => 'Tsɔ  axawo kpakple nutatawo siwo metutu la kpe ɖe axa siwo ŋu nyeƒe ŋku le la ŋu',
+'tog-enotifwatchlistpages' => 'Ɖo du nam ne axa aɖe alo nutata aɖe si ŋu nyeƒe ŋku le la trɔ',
 
 'underline-always' => 'Ɣesiaɣi',
 'underline-never'  => 'Gbeɖe',
@@ -88,6 +88,7 @@ $messages = array(
 
 # Cologne Blue skin
 'qbfind'         => 'Di',
+'qbbrowse'       => 'To eme',
 'qbedit'         => 'Trɔ asi le eŋu',
 'qbpageoptions'  => 'Axa sia',
 'qbmyoptions'    => 'Nyeƒe axawo',
@@ -112,6 +113,7 @@ $messages = array(
 'searcharticle'    => 'Yi',
 'history'          => 'Axa sia ƒe tata xoxoawo',
 'history_short'    => 'Xoxoawo',
+'view'             => 'Tata',
 'edit'             => 'Trɔ asi le eŋu',
 'create'           => 'Dze egɔme',
 'editthispage'     => 'Ðɔ axa sia ɖo',
@@ -563,7 +565,7 @@ Wòateŋu akpɔ alesi woŋlɔe.',
 'ilsubmit'  => 'Dii',
 
 # External editor support
-'edit-externally-help' => '(Kpɔ [//www.mediawiki.org/wiki/Manual:External_editors gɔmedzedze sewo] na kpekpeɖeŋu bubuwo.)',
+'edit-externally-help' => '(Kpɔ [https://www.mediawiki.org/wiki/Manual:External_editors gɔmedzedze sewo] na kpekpeɖeŋu bubuwo.)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'katã',

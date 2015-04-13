@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -35,8 +35,6 @@
 
 	html_page_top1();
 	html_page_top2a();
-
-	$t_key = mt_rand( 0,99999 );
 ?>
 
 <br />
@@ -68,6 +66,9 @@
 <?php
 	$t_allow_passwd = helper_call_custom_function( 'auth_can_change_password', array() );
 	if( ON == config_get( 'signup_use_captcha' ) && get_gd_version() > 0 && ( true == $t_allow_passwd ) ) {
+		session_set( CAPTCHA_KEY, mt_rand() );
+		session_delete( CAPTCHA_IMG );
+
 		# captcha image requires GD library and related option to ON
 ?>
 <tr class="row-1">
@@ -78,8 +79,7 @@
 		<?php print_captcha_input( 'captcha', '' ) ?>
 	</td>
 	<td>
-		<img src="make_captcha_img.php?public_key=<?php echo $t_key ?>" alt="visual captcha" />
-		<input type="hidden" name="public_key" value="<?php echo $t_key ?>" />
+		<img src="make_captcha_img.php" alt="visual captcha" />
 	</td>
 </tr>
 <?php

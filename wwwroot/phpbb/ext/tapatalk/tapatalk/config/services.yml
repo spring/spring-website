@@ -1,0 +1,9 @@
+services:
+    tapatalk.tapatalk.listener:
+        class: tapatalk\tapatalk\event\main_listener
+        arguments:
+            - @template
+            - @user
+            - @auth
+        tags:
+            - { name: event.listener }

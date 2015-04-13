@@ -1,5 +1,5 @@
 <?php
-/** Aragonese (Aragonés)
+/** Aragonese (aragonés)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -265,7 +265,7 @@ $messages = array(
 'cancel'        => 'Cancelar',
 'moredotdotdot' => 'Más...',
 'mypage'        => 'A mía pachina',
-'mytalk'        => 'Pachina de descusión',
+'mytalk'        => 'Pachina de discusión',
 'anontalk'      => "Pachina de descusión d'ista IP",
 'navigation'    => 'Navego',
 'and'           => '&#32;y',
@@ -605,7 +605,7 @@ Si a cuenta s\'ha creyato por error, simplament ignore iste mensache.',
 'loginlanguagelabel'         => 'Idioma: $1',
 'suspicious-userlogout'      => "S'ha denegau a suya demanda de zarrar a sesión ya que pareix que la ninvió un navegador defectuoso u bell proxy amagau.",
 
-# E-mail sending
+# Email sending
 'php-mail-error-unknown' => 'Error desconoixito en a función mail() de PHP',
 'user-mail-no-addy'      => 'Ha mirau de ninviar un mensache de correu sin una adreza de correu electronico.',
 
@@ -776,7 +776,7 @@ A zaguera dentrada d'o rechistro de bloqueyos s'amuestra contino:",
 'userinvalidcssjstitle'            => "'''Pare cuenta:''' No bi ha garra aparencia clamata \"\$1\". Remere que as pachinas presonalizatas .css y .js tienen un títol en minusclas, p.e. {{ns:user}}:Foo/vector.css en cuenta de {{ns:user}}:Foo/Vector.css.",
 'updated'                          => '(Esviellato)',
 'note'                             => "'''Nota:'''",
-'previewnote'                      => "'''Pare cuenta que isto no ye que l'anvista previa d'a pachina; os cambeos encara no s'ha alzato!'''",
+'previewnote'                      => "'''Pare cuenta que isto no ye que l'anvista previa.''' Os cambeos encara no s'ha alzato!",
 'previewconflict'                  => "L'anvista previa li amostrará l'aparencia d'o texto dimpués d'alzar os cambeos.",
 'session_fail_preview'             => "'''Ya lo sentimos, pero no hemos puesto alzar a suya edición por una perda d'os datos de sesion. Por favor, prebe de fer-lo una atra vez, y si encara no funciona, [[Special:UserLogout|salga d'a sesión]] y torne a identificar-se.'''",
 'session_fail_preview_html'        => "'''Ya lo sentimos, pero no s'ha puesto procesar a suya edición por haber-se trafegato os datos de sesión.'''
@@ -891,8 +891,8 @@ A razón indicada por $3 ye ''$2''",
 Leyenda: '''({{int:cur}})''' = esferencias con a versión actual, '''({{int:last}})''' = esferencias con a versión anterior, '''{{int:minoreditletter}}''' = edición menor",
 'history-fieldset-title' => 'Mirar en o historial',
 'history-show-deleted'   => 'Nomás os borratos',
-'histfirst'              => 'Primeras contrebucions',
-'histlast'               => 'Zagueras',
+'histfirst'              => 'primeras',
+'histlast'               => 'zagueras',
 'historysize'            => '({{PLURAL:$1|1 byte|$1 bytes}})',
 'historyempty'           => '(buedo)',
 
@@ -1234,7 +1234,7 @@ Habría de tener menos de $1 {{PLURAL:$1|carácter|carácters}}.',
 'prefs-displaywatchlist'        => 'Opcions de visualización',
 'prefs-diffs'                   => 'Diferencias',
 
-# User preference: e-mail validation using jQuery
+# User preference: email validation using jQuery
 'email-address-validity-valid'   => "L'adreza de correu electronico pareix valida",
 'email-address-validity-invalid' => 'Escriba una adreza valida de correu electronico',
 
@@ -1421,7 +1421,7 @@ Habría de tener menos de $1 {{PLURAL:$1|carácter|carácters}}.',
 'rc_categories_any'                 => 'Todas',
 'rc-change-size-new'                => "$1 {{PLURAL:$1|byte|bytes}} dimpués d'o cambio",
 'newsectionsummary'                 => 'Nueva sección: /* $1 */',
-'rc-enhanced-expand'                => 'Amostrar detalles (cal JavaScript)',
+'rc-enhanced-expand'                => 'Amostrar detalles',
 'rc-enhanced-hide'                  => 'Amagar detalles',
 
 # Recent changes linked
@@ -1451,9 +1451,9 @@ T'a suya conveniencia s'su conveniencia se muestra aquí el registro de supresio
 Ta veyer u mirar fichers cargatas denantes vaiga t'a [[Special:FileList|lista de fichers cargatos]]. As cargas y recargas tamién se rechistran en o [[Special:Log/upload|rechistro de cargas]], y os borraus en o [[Special:Log/delete|rechistro de borraus]].
 
 Ta incluyir un fichero en una pachina, emplegue un vinclo d'una d'istas trazas
-*'''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Fichero.jpg]]</nowiki></tt>''' ta fer servir a version completa d'o fichero,
-*'''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Fichero.png|200px|thumb|left|texto alternativo]]</nowiki></tt>''' ta fer serivr una versión de 200 píxels d'amplaria en una caixa a la marguin cucha con 'texto alternativo' como descripción
-*'''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Fichero.ogg]]</nowiki></tt>''' ta fer un vinclo dreitament ta o fichero sin amostrar-lo.",
+*'''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Fichero.jpg]]</nowiki></code>''' ta fer servir a version completa d'o fichero,
+*'''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:Fichero.png|200px|thumb|left|texto alternativo]]</nowiki></code>''' ta fer serivr una versión de 200 píxels d'amplaria en una caixa a la marguin cucha con 'texto alternativo' como descripción
+*'''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:Fichero.ogg]]</nowiki></code>''' ta fer un vinclo dreitament ta o fichero sin amostrar-lo.",
 'upload-permitted'            => 'Tipos de fichero premititos: $1.',
 'upload-preferred'            => 'Tipos de fichero preferitos: $1.',
 'upload-prohibited'           => 'Tipos de fichero vedatos: $1.',
@@ -1494,20 +1494,20 @@ Ta incluyir un fichero en una pachina, emplegue un vinclo d'una d'istas trazas
 'largefileserver'             => "A grandaria d'iste fichero ye mayor d'a que a confeguración d'iste servidor premite.",
 'emptyfile'                   => 'Parixe que o fichero que se miraba de cargar ye buedo; por favor, comprebe que ixe ye reyalment o fichero que quereba cargar.',
 'windows-nonascii-filename'   => 'Iste wiki no admite nombres de fichero con caracters especials.',
-'fileexists'                  => "Ya bi ha un fichero con ixe nombre.
-Por favor, Por favor mire-se o fichero existent '''<tt>[[:$1]]</tt>''' si no ye seguro de querer sustituyir-lo.
-[[$1|thumb]]",
-'filepageexists'              => "A pachina de descripción d'iste fichero ya s'ha creyau en '''<tt>[[:$1]]</tt>''', pero no i hai garra fichero con iste nombre. O resumen que escriba no amaneixerá en a pachina de descripción.
+'fileexists'                  => 'Ya bi ha un fichero con ixe nombre.
+Por favor, Por favor mire-se o fichero existent <strong>[[:$1]]</strong> si no ye seguro de querer sustituyir-lo.
+[[$1|thumb]]',
+'filepageexists'              => "A pachina de descripción d'iste fichero ya s'ha creyau en <strong>[[:$1]]</strong>, pero no i hai garra fichero con iste nombre. O resumen que escriba no amaneixerá en a pachina de descripción.
 Si quiere que o suyo resumen amaneixca aquí, habrá d'editar-lo manualment.
 [[$1|thumb]]",
 'fileexists-extension'        => "Ya bi ha un fichero con un nombre pareixiu: [[$2|thumb]]
-* Nombre d'o fichero que ye cargando: '''<tt>[[:$1]]</tt>'''
-* Nombre d'o fichero ya existent: '''<tt>[[:$2]]</tt>'''
+* Nombre d'o fichero que ye cargando: <strong>[[:$1]]</strong>
+* Nombre d'o fichero ya existent: <strong>[[:$2]]</strong>
 Por favor, trigue un nombre diferent.",
 'fileexists-thumbnail-yes'    => "Pareix que o fichero ye una imachen chicota ''(miniatura)''. [[$1|thumb]]
-Comprebe por favor o fichero '''<tt>[[:$1]]</tt>'''.
+Comprebe por favor o fichero <strong>[[:$1]]</strong>.
 Si o fichero comprebato ye a mesma imachen en tamanyo orichinal no cal cargar una nueva miniatura.",
-'file-thumbnail-no'           => "O nombre d'o fichero prencipia con '''<tt>$1</tt>'''.
+'file-thumbnail-no'           => "O nombre d'o fichero prencipia con <strong>$1</strong>.
 Pareix que estase una imachen achiquida ''(thumbnail)''.
 Si tiene ista imachen a toda resolución, cargue-la, si no, por favor, cambee o nombre d'o fichero.",
 'fileexists-forbidden'        => 'Ya bi ha un fichero con iste nombre, y no se puet sobrescribir.
@@ -1751,7 +1751,7 @@ Debaixo s'amuestra a descripción d'a suya [$2 pachina de descripción].",
 
 # MIME search
 'mimesearch'         => 'Mirar por tipo MIME',
-'mimesearch-summary' => 'Ista pachina premite filtrar fichers seguntes o suyo tipo MIME. Escribir: tipodeconteniu/subtipo, por exemplo <tt>image/jpeg</tt>.',
+'mimesearch-summary' => 'Ista pachina premite filtrar fichers seguntes o suyo tipo MIME. Escribir: tipodeconteniu/subtipo, por exemplo <code>image/jpeg</code>.',
 'mimetype'           => 'Tipo MIME:',
 'download'           => 'descargar',
 
@@ -1943,7 +1943,7 @@ Se veigan tamién as [[Special:WantedCategories|categorías requiestas]].",
 'linksearch-ok'    => 'Mirar',
 'linksearch-text'  => 'Pueden usar-se carácters comodín como "*.wikipedia.org".
 A lo menos aprecisa un dominio de maximo libel, como "*.org".<br />
-Protocolos suportados: <tt>$1</tt> (no los adhiba en a suya busca).',
+Protocolos suportados: <code>$1</code> (no los adhiba en a suya busca).',
 'linksearch-line'  => '$1 tiene un vinclo dende $2',
 'linksearch-error' => "Os carácters comodín nomás pueden apareixer en o prencipio d'o nombre d'o sitio.",
 
@@ -1984,7 +1984,7 @@ Protocolos suportados: <tt>$1</tt> (no los adhiba en a suya busca).',
 'listgrouprights-addgroup-self-all'    => 'Adhibir-se a todas as collas',
 'listgrouprights-removegroup-self-all' => 'Salir de todas as collas',
 
-# E-mail user
+# Email user
 'mailnologin'          => "No ninviar l'adreza",
 'mailnologintext'      => "Ha d'haber [[Special:UserLogin|encetato una sesión]] y tener una adreza conforme de correu-e en as suyas [[Special:Preferences|preferencias]] ta ninviar un correu electronico ta atros usuarios.",
 'emailuser'            => 'Ninviar un correu electronico ta iste usuario',
@@ -2267,7 +2267,7 @@ $1",
 # Contributions
 'contributions'       => "Contrebucions de l'usuario",
 'contributions-title' => "Contribucions de l'usuario $1",
-'mycontris'           => 'Contrebucions',
+'mycontris'           => 'Contribucions',
 'contribsub2'         => 'De $1 ($2)',
 'nocontribs'          => "No s'han trobato cambeos que concordasen con ixos criterios",
 'uctop'               => '(zaguer cambeo)',
@@ -2571,7 +2571,7 @@ En iste zaguer caso tamién puede usar un vinclo, por eixemplo [[{{#Special:Expo
 'allmessagesdefault'            => 'texto por defecto',
 'allmessagescurrent'            => 'texto actual',
 'allmessagestext'               => "Ista ye una lista de totz os mensaches disponibles en o espacio de nombres MediaWiki.
-Vesite por favor [//www.mediawiki.org/wiki/Localisation a pachina sobre localización de MediaWiki] y  [//translatewiki.net translatewiki.net] si deseya contrebuyir t'a localización cheneral de MediaWiki.",
+Vesite por favor [https://www.mediawiki.org/wiki/Localisation a pachina sobre localización de MediaWiki] y  [//translatewiki.net translatewiki.net] si deseya contrebuyir t'a localización cheneral de MediaWiki.",
 'allmessagesnotsupportedDB'     => 'Ista pachina no ye disponible porque wgUseDatabaseMessages ye desactivato.',
 'allmessages-filter-legend'     => 'Filtro',
 'allmessages-filter'            => 'Filtrar por estau de personalización:',
@@ -3299,7 +3299,7 @@ Os campos de metadatos d'a imachen que amaneixen en iste mensache s'amostrarán 
 
 # External editor support
 'edit-externally'      => 'Editar iste fichero fendo servir una aplicación externa',
-'edit-externally-help' => '(Ta más información, leiga as [//www.mediawiki.org/wiki/Manual:External_editors instruccions de configuración])',
+'edit-externally-help' => '(Ta más información, leiga as [https://www.mediawiki.org/wiki/Manual:External_editors instruccions de configuración])',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'totz',
@@ -3307,7 +3307,7 @@ Os campos de metadatos d'a imachen que amaneixen en iste mensache s'amostrarán 
 'monthsall'     => 'totz',
 'limitall'      => 'Totz',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'              => 'Confirmar adreza de correu-e',
 'confirmemail_noemail'      => "No tiene una adreza de correu-e conforme en as suyas [[Special:Preferences|preferencias d'usuario]].",
 'confirmemail_text'         => "{{SITENAME}} requiere que confirme a suya adreza de correu-e antis de poder usar as funcions de correu-e. Punche o botón de baxo ta ninviar un mensache de confirmación t'a suya adreza. O mensache incluirá un vinclo con un codigo. Escriba-lo ta confirmar que a suya adreza ye conforme.",
@@ -3477,7 +3477,7 @@ Tamién puede fer servir o [[Special:EditWatchlist|editor estándar]].",
 'version-hook-subscribedby'     => 'Suscrito por',
 'version-version'               => '(Versión $1)',
 'version-license'               => 'Licencia',
-'version-poweredby-credits'     => "Iste wiki funciona gracias a '''[//www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2.",
+'version-poweredby-credits'     => "Iste wiki funciona gracias a '''[https://www.mediawiki.org/ MediaWiki]''', copyright © 2001-$1 $2.",
 'version-poweredby-others'      => 'atros',
 'version-license-info'          => "MediaWiki ye software libre, puet redistribuyir-lo y/u modificar-lo baixo os terminos d'a Licencia Publica Cheneral GNU publicada por a Free Software Foundation, ya siga d'a suya versión 2 u (a la suya esleción) qualsiquier versión posterior. 
 

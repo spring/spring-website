@@ -252,7 +252,9 @@ Lakanga: $1<br />
 Eke: $2",
 'viewsource'           => 'Vakai ki he tupunga',
 'protectedinterface'   => 'Ko e peesi ʻeni ʻoku fakaai ia ʻa e potutohi maʻa e founga fakakomipiuta, ʻoku maluʻi ia ʻo taʻofi leakovi.',
-'editinginterface'     => "'''Fakatokanga''' ʻOku ke fatu ʻi he peesi ʻoku ne ngāueʻaki ki he potutohi ʻo e founga fakakomipiuta. Ko ia ʻene ʻasi mai maʻa e kau ʻetita kotoa ʻe hūkitonu ai ʻa e ngaahi liliu ʻo e pēsí.",
+'editinginterface'     => "'''Warning:''' You are editing a page which is used to provide interface text for the software.
+Changes to this page will affect the appearance of the user interface for other users.
+For translations, please consider using [//translatewiki.net/wiki/Main_Page?setlang=en translatewiki.net], the MediaWiki localisation project.",
 'sqlhidden'            => '(ʻOku toi ʻa e fehuʻi SQL)',
 'namespaceprotected'   => "ʻOku ʻikai ngofua ke ke fatu ʻa e ngaahi kupu ʻi he vā hingoa '''$1'''.",
 
@@ -556,8 +558,8 @@ Ko e ʻuhinga loka ko e $1 ia.",
 'badfilename'                 => 'Naʻe liliu ko e hingoa ʻo e faile ki he "$1".',
 'largefileserver'             => 'ʻOku fuʻu lahi ange ʻa e failé ni ʻi he tauhia hono ʻinasi.',
 'emptyfile'                   => 'ʻOku ngalingali maha ʻa e faile naʻa ke hiki hake ai. Mahalo pē naʻa ke fakasipelahalaʻi ki he hingoa. Kātaki vakai ke ke pau te ke fiehiki ʻa e failé ni.',
-'fileexists'                  => "ʻOku toka ʻi ai ha peesi mo e hingoa ē; fakamolemole fakamoʻoniʻi ki he '''<tt>[[:$1]]</tt>''' kapau ʻoku ʻikai te ke pau ʻo te ke fieliliu ia.
-[[$1|thumb]]",
+'fileexists'                  => 'ʻOku toka ʻi ai ha peesi mo e hingoa ē; fakamolemole fakamoʻoniʻi ki he <strong>[[:$1]]</strong> kapau ʻoku ʻikai te ke pau ʻo te ke fieliliu ia.
+[[$1|thumb]]',
 'fileexists-forbidden'        => 'ʻOku toka ʻi ai ha peesi mo e hingoa ē, pea ʻe ʻikai lava liliu; fakamolemole ʻe foki pea hiki hake ʻa e failé ni mo e ha hingoa foʻou. [[File:$1|thumb|center|$1]]',
 'fileexists-shared-forbidden' => 'ʻOku toka ʻi ai ha peesi mo e hingoa ē ʻi he kalasi vahevahe; fakamolemole ʻe foki pea hiki hake ʻa e failé ni mo e ha hingoa foʻou. [[File:$1|thumb|center|$1]]',
 'uploadwarning'               => 'Tokanga hiki hake',
@@ -737,7 +739,7 @@ Also see [[Special:WantedCategories|wanted categories]].',
 'newuserlogpage'     => 'Tohinoa ʻo e fakatupu kau ʻetita',
 'newuserlogpagetext' => 'Ko e tohinoa ʻeni ʻo e fakatupu kau ʻetita.',
 
-# E-mail user
+# Email user
 'mailnologin'     => 'ʻOku ʻikai ha tuʻasila ke tohila ki ai',
 'emailuser'       => 'Tohila ki he ʻetitá ni',
 'emailpage'       => 'Ko e ʻetita ʻene tohila',
@@ -1159,13 +1161,13 @@ Pea hoko ai pē hoʻo lava tānaki ha ʻuhinga ʻi he fakanounou',
 
 # External editor support
 'edit-externally'      => 'Fatuʻi ʻa e failé ni ngāueʻaki mo e polokalama ʻi tuʻa',
-'edit-externally-help' => 'Vakai ki he [//www.mediawiki.org/wiki/Manual:External_editors fakahinohino ki he fokotuʻu] maʻa toe fakamatala.',
+'edit-externally-help' => 'Vakai ki he [https://www.mediawiki.org/wiki/Manual:External_editors fakahinohino ki he fokotuʻu] maʻa toe fakamatala.',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'kātoa',
 'namespacesall' => 'vā kotoa',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'            => 'Fakamoʻoniʻi ho tuʻasila tohila',
 'confirmemail_noemail'    => 'Naʻe ʻikai te ke fakamoʻoniʻi ʻa e tohila totonu ʻi he [[Special:Preferences|faʻiteliha ʻaʻau]].',
 'confirmemail_text'       => 'Kuo pau te ke fakamoʻoniʻi ho tuʻasila tohila ki muʻa ʻi hoʻo ngāueʻaki ʻa e ngaahi fōtunga tohila. Lomiʻi ʻa e meʻalolomi ʻi lalo pea ʻe ʻavea ha tohila fakamoʻoniʻi ki ho tuʻasila. ʻE ʻi ai ha fehokotaki mo ha lea fakapulipuli ʻi ai. Fafaʻo ʻa e fehokotakí ni ʻi hoʻo palausa ke fakamoʻoniʻi ʻoku sai ho tuʻasila tohila.',

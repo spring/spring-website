@@ -20,7 +20,7 @@
 	 *
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -35,6 +35,11 @@
 	$f_perm_login		 = gpc_get_bool( 'perm_login', false );
 	$f_secure_session	 = gpc_get_bool( 'secure_session', false );
 	$f_secure_session_cookie = gpc_get_cookie( config_get_global( 'cookie_prefix' ) . '_secure_session', null );
+
+	# Set username to blank if invalid to prevent possible XSS exploits
+	if( !user_is_name_valid( $f_username ) ) {
+		$f_username = '';
+	}
 
 	$t_session_validation = ( ON == config_get_global( 'session_validation' ) );
 

@@ -1147,9 +1147,9 @@ Pāusai iz [[Special:Watchlist|nadirītan listin]] ast pastarīntan.',
 Kāi widālai anga laukīlai ānkstais enkraūtans zūrbrukins jaīs en [[Special:FileList|listin stēisan enkraūtan zūrbrukin]]. Enkraūsenei ast enpeisātan en [[Special:Log/upload|enkraūsnas registeŗu]], āupausinsenei en [[Special:Log/delete|āupausinsnas registeŗu]].
 
 Zūrbrukis wīrst tikkuns en pāusu, ik tū wīrst tērpauwuns(si) aīnan iz izbilīsenins:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>''' kāi tērpaulai pilnan zūrbrukes wersiōnin
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|papeisāsenis]]</nowiki></tt>''' kāi tērpaulai 200-pikselin miniatūrin sen \"papeisāsenis\" papeisāsenin
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' kāi entikriskai autengīnlai šlāit zūrbrukes waidīnsnan",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>''' kāi tērpaulai pilnan zūrbrukes wersiōnin
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|papeisāsenis]]</nowiki></code>''' kāi tērpaulai 200-pikselin miniatūrin sen \"papeisāsenis\" papeisāsenin
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' kāi entikriskai autengīnlai šlāit zūrbrukes waidīnsnan",
 'upload-permitted'            => 'Preiwērptai zūrbrukin fōrmatai: $1.',
 'upload-preferred'            => 'Pirminiskai zūrbrukin fōrmatai: $1.',
 'upload-prohibited'           => 'Drēuditai zūrbrukin fōrmatai: $1.',
@@ -1178,22 +1178,22 @@ Madli kitawīdinais zūrbrukes pabilīsnan be enkraūneis din etkūmps.',
 'large-file'                  => 'Rāditan ast, kāi zūrbrukes debban ni būlai mūisesan nikāi $1; šisse zūrbrukes debban ast $2.',
 'largefileserver'             => 'Zūrbrukes debban ast mūisesan, nikāi maksimālin preiwērptan.',
 'emptyfile'                   => 'Enkraūts zūrbrukis perwaidinna būtwei pāustan. Sta mazzi būtwei litteras blāndas en zūrbrukes pabilīsnai paggan. Madli izbandais anga zūrbrukes pabilisnā ast tikrōmiskan.',
-'fileexists'                  => "Zūrbrukis sen šin pabilīsnan jāu ekzistijja. Izbandais '''<tt>[[:$1]]</tt>''', ik ni assei aušaudīwingi kāi tū kwaitēi din kitawīdintun.
-[[$1|thumb]]",
-'filepageexists'              => "Šisse zūrbrukes ebpeisāsenes pāusan ast jāu teīktan: '''<tt>[[:$1]]</tt>''', adder tēntiskai niaīns zūrbrukis sen šan pabilīsnan ni ekzistijja.
+'fileexists'                  => 'Zūrbrukis sen šin pabilīsnan jāu ekzistijja. Izbandais <strong>[[:$1]]</strong>, ik ni assei aušaudīwingi kāi tū kwaitēi din kitawīdintun.
+[[$1|thumb]]',
+'filepageexists'              => 'Šisse zūrbrukes ebpeisāsenes pāusan ast jāu teīktan: <strong>[[:$1]]</strong>, adder tēntiskai niaīns zūrbrukis sen šan pabilīsnan ni ekzistijja.
 Infōrmaciōnis ezze zūrbrukin, kawīdans tū assei enweddus, ni wīrst tikkušas en ebpeisāsenes pāusu.
 Ik tū kwaitēi, kāi tennas pastālai waidīntan, tū turri redigītun tennans rānkiskai.
-[[$1|thumb]]",
-'fileexists-extension'        => "Zūrbrukis sen palīgun pabilīsnan ekzistijja: [[$2|thumb]]
-*Enkraūtas zūrbrukes pabilisnā: '''<tt>[[:$1]]</tt>'''
-*Ekzistīntes zūrbrukes pabilisnā: '''<tt>[[:$2]]</tt>'''
-Etrīnkais kittan pabilīsnan.",
-'fileexists-thumbnail-yes'    => "Zūrbrukis perwaidinna būtwei mazintā grāfiki \"(miniatūri)\".[[\$1|thumb]]
-Izbandais zūrbrukin '''<tt>[[:\$1]]</tt>'''.
-Ik etrīnkauts zūrbrukis ast ši subba grāfiki, kawīda en ōrginalu debban, tū ni turri enkraūtun papilniminan miniatūrin.",
-'file-thumbnail-no'           => "Zūrbrukes pabilisnā pagaūne si sen '''<tt>\$1</tt>'''.
-Perwaidinna di, kāi sta ast mazintā grāfiki \"(thumbnail)\".
-Ik turri tū šan grāfikin en pilnasmu debban, enkraūneis din. Ik tū kwaitēi enkraūtun šan, kitawīdinais zūrbrukes pabilīsnan.",
+[[$1|thumb]]',
+'fileexists-extension'        => 'Zūrbrukis sen palīgun pabilīsnan ekzistijja: [[$2|thumb]]
+*Enkraūtas zūrbrukes pabilisnā: <strong>[[:$1]]</strong>
+*Ekzistīntes zūrbrukes pabilisnā: <strong>[[:$2]]</strong>
+Etrīnkais kittan pabilīsnan.',
+'fileexists-thumbnail-yes'    => 'Zūrbrukis perwaidinna būtwei mazintā grāfiki "(miniatūri)".[[$1|thumb]]
+Izbandais zūrbrukin <strong>[[:$1]]</strong>.
+Ik etrīnkauts zūrbrukis ast ši subba grāfiki, kawīda en ōrginalu debban, tū ni turri enkraūtun papilniminan miniatūrin.',
+'file-thumbnail-no'           => 'Zūrbrukes pabilisnā pagaūne si sen <strong>$1</strong>.
+Perwaidinna di, kāi sta ast mazintā grāfiki "(thumbnail)".
+Ik turri tū šan grāfikin en pilnasmu debban, enkraūneis din. Ik tū kwaitēi enkraūtun šan, kitawīdinais zūrbrukes pabilīsnan.',
 'fileexists-forbidden'        => 'Zūrbrukis sen stawīdan pabilīsnan jāu ekzistijja be ni mazzi būtwei kirsāi peisātan.
 Ik tū kwaitēi enkraūtun zūrbrukin, ettreppais be enkraūneis tennan etkūmps sen kittan pabilīsnan. [[File:$1|thumb|center|$1]]',
 'fileexists-shared-forbidden' => 'Zūrbrukis sen šin emnin  jau ekzistijja en dallautan repōzitōrijan stēisan zūrbrukin.
@@ -1335,7 +1335,7 @@ Preiēiminan ast dīgi [[Special:WhatLinksHere/$2|pilna listi]].',
 # MIME search
 'mimesearch'         => 'MIME laukīsna',
 'mimesearch-summary' => 'Šin pāusan wērpja laukīsnan stēisan zūrbrukin pa tenēisan MIME tīpan.
-Tērpausna: ēnturas_tīps/pōtips, perw. <tt>image/jpeg</tt>.',
+Tērpausna: ēnturas_tīps/pōtips, perw. <code>image/jpeg</code>.',
 'mimetype'           => 'MIME tīps',
 'download'           => 'izkraūneis',
 
@@ -1516,7 +1516,7 @@ Tu mazzi anzitun rezultātans etrīnkantei registeres tīpan, tērpautajas pabil
 'linksearch-ns'    => 'Emninplattibi:',
 'linksearch-ok'    => 'Laukīs',
 'linksearch-text'  => 'Mazīngi tērpautun tulapresliskan simbōlin "*"  - perwaidīnsnai „*.wikipedia.org”<br />
-Ebšlūzitai prōtokulai: <tt>$1</tt>',
+Ebšlūzitai prōtokulai: <code>$1</code>',
 'linksearch-line'  => 'Prei $1 autenginna $2',
 'linksearch-error' => 'Mazīngi tērpautun tulapresliskan simbōlin "*" tēr en hostas pabilīsnas pagaūseņu.',
 
@@ -1555,7 +1555,7 @@ Izbandais pāausan sen [[{{MediaWiki:Listgrouprights-helppage}}|papilniminans in
 'listgrouprights-addgroup-self-all'    => 'Preidāis wissans gruppins prei swajjan rekkenan',
 'listgrouprights-removegroup-self-all' => 'Āupausinais wissans gruppins iz swajjan rekkenan',
 
-# E-mail user
+# Email user
 'mailnologin'      => 'Ni ast adressi',
 'mailnologintext'  => 'Tu turri [[Special:UserLogin|enēitwei]] be turītun aktuālin e-mail adressin en twajamans [[Special:Preferences|pirminiskwans]] kāi tengīnlai e-mailins kitēimans tērpautajans.',
 'emailuser'        => 'Tenginnais e-mailin šismu tērpautajan',
@@ -2021,7 +2021,7 @@ Ni mazīngi praskajjintun pāusan en din subban.',
 'allmessagesdefault'            => 'Auprestamins teksts',
 'allmessagescurrent'            => 'Bigānts teksts',
 'allmessagestext'               => 'Sta ast listi wisēisan waīstin preiēiminan en MediaWikis tītelin plattibin.
-Madli kāimalukeis [//www.mediawiki.org/wiki/Localisation MediaWiki Localisation] be [//translatewiki.net translatewiki.net] ik tu kwaitēi delīkan īmtun en MediaWikis prōgraminin tulkausnai.',
+Madli kāimalukeis [https://www.mediawiki.org/wiki/Localisation MediaWiki Localisation] be [//translatewiki.net translatewiki.net] ik tu kwaitēi delīkan īmtun en MediaWikis prōgraminin tulkausnai.',
 'allmessagesnotsupportedDB'     => "Šī pāusan ni mazzi būtwei tērpautan, beggi wariābli '''\$wgUseDatabaseMessages''' ast izklaūtan.",
 'allmessages-filter-legend'     => 'Filtrīs',
 'allmessages-filter'            => 'Filtrīs pa būsenin:',
@@ -2503,7 +2503,7 @@ Kitāi wīrst būwusis kliptan auprestaminai.
 
 # External editor support
 'edit-externally'      => 'Redigīs šin pāusan tērpawintei izwinaīnan prōgraman',
-'edit-externally-help' => '(Skaitāis [//www.mediawiki.org/wiki/Manual:External_editors instrukciōnins], kāi gaūlai tūls infōrmaciōnins).',
+'edit-externally-help' => '(Skaitāis [https://www.mediawiki.org/wiki/Manual:External_editors instrukciōnins], kāi gaūlai tūls infōrmaciōnins).',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'wisāi',
@@ -2511,7 +2511,7 @@ Kitāi wīrst būwusis kliptan auprestaminai.
 'monthsall'     => 'wisāi',
 'limitall'      => 'wisāi',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'             => 'Padrūktinais e-mail adressin',
 'confirmemail_noemail'     => 'Tū ni turri tukrōmiskan e-mail adressin ensadīntan en [[Special:Preferences|pirminiskwamans]].',
 'confirmemail_text'        => '{{SITENAME}} izkīnina e-mailas adressis izbandāsnan pirzdau e-mailas funkciōnis tērpausnan.

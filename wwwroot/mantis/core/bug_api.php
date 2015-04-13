@@ -17,7 +17,7 @@
 /**
  * Bug API
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  * @package CoreAPI
  * @subpackage BugAPI
@@ -96,7 +96,7 @@ class BugData {
 	protected $summary = '';
 	protected $sponsorship_total = 0;
 	protected $sticky = 0;
-	protected $due_date = 0;
+	protected $due_date = '';
 
 	# omitted:
 	# var $bug_text_id
@@ -253,7 +253,7 @@ class BugData {
 		$query = "SELECT COUNT(*)
 					  FROM $t_bugnote_table
 					  WHERE bug_id =" . db_param() . " $t_restriction";
-		$result = db_query_bound( $query, Array( $this->bug_id ) );
+		$result = db_query_bound( $query, Array( $this->id ) );
 
 		return db_result( $result );
 	}
@@ -1102,7 +1102,7 @@ function bug_move( $p_bug_id, $p_target_project_id ) {
 		$t_category_project_id = category_get_field( $t_category_id, 'project_id' );
 
 		if ( $t_category_project_id != ALL_PROJECTS
-		  && !project_hierarchy_inherit_parent( $p_target_project_id, $t_category_project_id )
+		  && !in_array( $t_category_project_id , project_hierarchy_inheritance( $p_target_project_id ) )
 		) {
 			// Map by name
 			$t_category_name = category_get_field( $t_category_id, 'name' );
@@ -1510,7 +1510,9 @@ function bug_set_field( $p_bug_id, $p_field_name, $p_value ) {
 	db_query_bound( $query, Array( $c_value, $c_bug_id ) );
 
 	# updated the last_updated date
-	bug_update_date( $p_bug_id );
+	if ( $p_field_name != 'last_updated' ) {
+		bug_update_date( $p_bug_id );
+	}
 
 	# log changes except for duplicate_id which is obsolete and should be removed in
 	# MantisBT 1.3.

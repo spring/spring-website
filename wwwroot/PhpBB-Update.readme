@@ -1,0 +1,43 @@
+Hello brave soul that has taken upon himself the quest to update the PhpBB installation..
+Let me give you a few cryptic hints that may or may not help you complete this quest..
+
+How to update PhpBB:
+1. Get most recent phpBB from phpbb.com
+    wget https://www.phpbb.com/files/release/phpBB-3.1.3.zip
+    unzip phpBB-3.1.3.zip
+2. Take a good look at the current PhpBB.patch to see the existing changes made to the PhpBB codebase:
+    cat PhpBB.patch
+3. Apply the patch to the new version of PhpBB (if that's possible):
+    cd phpBB3
+    patch -p1 < phpbb/PhpBB.patch)
+4. Make any other necessary changes to the PhpBB codebase:
+    * your changes using your favourite editor *
+    * while remembering that good changes are made as a PhpBB "extension" or "style" *
+5. Update PhpBB.patch while excluding the directories that contain TapaTalk, Styles and Extensions (and some other things), so others know wtf you did to the codebase:
+    diff -ruN -x  "mobiquo" -x "cache" -x "files" -x "images" -x "styles" -x "docs" -x "install" -x ".install" -x "ext" -x "PhpBB.patch" phpBB3/ phpbb/ > PhpBB.patch
+6. Copy data files to new PhpBB where needed:
+    cp -rv phpbb/mobiqo/ phpBB3/
+    cp -rv phpbb/styles/spring/ phpBB3/styles/spring/
+    cp -rv phpbb/images/smilies/ phpBB3/images/smilies/
+    cp -rv phpbb/ext/ phpBB3/ext/
+    cp -rv phpbb/images/avatars/upload/ phpBB3/images/avatars/upload/
+7. Use new phpbb:
+    rm -rf phpbb
+    mv phpBB3 phpbb
+
+Update your database:
+8. You should have a install folder in your new phpBB install:
+   open it from a browser (http://myspringrts.com/phpbb/install/database_update.php)
+9. Remove install dir:
+    rm -rf phpbb/install
+
+Version control:
+10. Commit to git and push:
+  git commit -a
+  git push
+
+Oh, and before I forget.. MediaWiki has this thing where it uses the PhpBB users accounts for logging in.. that still needs to work.
+Also feel free to give more or better hints in this file to people that may decide to follow you.
+
+And thanks for taking on this noble quest to save our little community from the horrors of old PhpBB versions.
+If successful you will be forever remembered in our git change log.

@@ -1,5 +1,5 @@
 <?php
-/** Sardinian (Sardu)
+/** Sardinian (sardu)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -178,7 +178,7 @@ $messages = array(
 'index-category'                 => 'Pàginas indicizadas',
 'noindex-category'               => 'Pàginas no indicitzadas',
 
-'linkprefix' => '/^(.*?)([a-zA-Z\\x80-\\xff]+)$/sD',
+'linkprefix' => '/^((?>.*(?<![a-zA-Z\\\\x80-\\\\xff])))(.+)$/sD',
 
 'about'         => 'A propòsitu de',
 'article'       => 'Artìculu',
@@ -845,9 +845,9 @@ Is pàginas de sa [[Special:Watchlist|watchlist tua]] sunt in '''grassu'''.",
 Pro castiare o chircare is files giai carrigaus, bae a sa [[Special:FileList|lista de is files carrigaus]]. Carrigamentos de files e de noas versiones de files sunt registradas in su [[Special:Log/upload|registru de carrigamentu]], is burraduras in su [[Special:Log/delete|registru burraduras]].
 
 Pro insertare unu file aintru de una pàgina, tocat a faghere unu cullegamentu tipu custu:
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></tt>''' pro impreare sa versione cumpleta de su file
-* '''<tt><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|testo alternativo]]</nowiki></tt>''' pro impreare una versione lada 200 pixel insertada in d'unu box, allinniada a manca e cun 'testu alternativu' comente didascalia
-* '''<tt><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></tt>''' pro ingenerare unu cullegamentu a su file chentza de du biri",
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.jpg]]</nowiki></code>''' pro impreare sa versione cumpleta de su file
+* '''<code><nowiki>[[</nowiki>{{ns:file}}<nowiki>:File.png|200px|thumb|left|testo alternativo]]</nowiki></code>''' pro impreare una versione lada 200 pixel insertada in d'unu box, allinniada a manca e cun 'testu alternativu' comente didascalia
+* '''<code><nowiki>[[</nowiki>{{ns:media}}<nowiki>:File.ogg]]</nowiki></code>''' pro ingenerare unu cullegamentu a su file chentza de du biri",
 'uploadlogpage'       => 'Carrigadas',
 'uploadlogpagetext'   => 'A suta ddoi est sa lista de is files carrigados de reghente.
 Càstia sa [[Special:NewFiles|galleria de files nous]] pro una presentada prus bisuale.',
@@ -1026,7 +1026,7 @@ Dia podent essere immàgines impreadas dae àteros giassos cun unu ligàmine dir
 'listgrouprights-group'   => 'Grupu',
 'listgrouprights-members' => '(lista de is cumponentes)',
 
-# E-mail user
+# Email user
 'mailnologintext' => "Depes èsser [[Special:UserLogin|identificadu (login)]] e àer registradu un'indiritzu e-mail vàlidu in is [[Special:Preferences|preferèntzias tuas]] pro imbiare e-mail a àteros usuàrios.",
 'emailuser'       => 'E-mail a custu usuàriu',
 'emailpage'       => "Ispedi una missada a s'usuàriu",
@@ -1476,7 +1476,7 @@ Is acàpius chi sighint in sa matessi lìnia sunt cunsideraus comente eccetzione
 
 # External editor support
 'edit-externally'      => 'Acontza custu file usendi unu programma de foras',
-'edit-externally-help' => '(Pro àteras informatziones càstia is [//www.mediawiki.org/wiki/Manual:External_editors istrutziones])',
+'edit-externally-help' => '(Pro àteras informatziones càstia is [https://www.mediawiki.org/wiki/Manual:External_editors istrutziones])',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'totu',
@@ -1484,7 +1484,7 @@ Is acàpius chi sighint in sa matessi lìnia sunt cunsideraus comente eccetzione
 'monthsall'     => 'totu',
 'limitall'      => 'totu',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail' => "Cunfirma s'indiritzu e-mail",
 
 # action=purge

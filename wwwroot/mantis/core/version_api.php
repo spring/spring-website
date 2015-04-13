@@ -1,7 +1,7 @@
 <?php
 # MantisBT - a php based bugtracking system
 # Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-# Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+# Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
@@ -17,7 +17,7 @@
 
 /**
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  * @package CoreAPI
  * @subpackage VersionAPI
@@ -403,15 +403,35 @@ function version_cache_array_rows( $p_project_id_array ) {
 function version_get_all_rows( $p_project_id, $p_released = null, $p_obsolete = false, $p_inherit = null ) {
 	global $g_cache_versions, $g_cache_versions_project;
 
-	if( isset( $g_cache_versions_project[ (int)$p_project_id ] ) ) {
-		if( !empty( $g_cache_versions_project[ (int)$p_project_id ]) ) {
-			foreach( $g_cache_versions_project[ (int)$p_project_id ] as $t_id ) {
-				$t_versions[] = version_cache_row( $t_id );
-			}
-			return $t_versions;
-		} else {
-			return array();
+	if ( $p_inherit === null ) {
+		$t_inherit = ( ON == config_get( 'subprojects_inherit_versions' ) );
+	} else {
+		$t_inherit = $p_inherit;
+	}
+
+	if( $t_inherit ) {
+		$t_project_ids = project_hierarchy_inheritance( $p_project_id );
+	} else {
+		$t_project_ids [] = $p_project_id;
+	}
+
+	$t_is_cached = true;
+	foreach( $t_project_ids as $t_project_id ) {
+		if( !isset( $g_cache_versions_project[$t_project_id] ) ) {
+			$t_is_cached = false;
+			break;
 		}
+	}
+	if( $t_is_cached ) {
+		$t_versions = array();
+		foreach( $t_project_ids as $t_project_id ) {
+			if( !empty( $g_cache_versions_project[$t_project_id]) ) {
+				foreach( $g_cache_versions_project[$t_project_id] as $t_id ) {
+					$t_versions[] = version_cache_row( $t_id );
+				}
+			}
+		}
+		return $t_versions;
 	}
 
 	$c_project_id = db_prepare_int( $p_project_id );
@@ -459,7 +479,7 @@ function version_get_all_rows( $p_project_id, $p_released = null, $p_obsolete = 
  * @param int $p_released
  * @param bool $p_obsolete
  * @return array
- */ 
+ */
 function version_get_all_rows_with_subs( $p_project_id, $p_released = null, $p_obsolete = false ) {
 	$t_project_where = helper_project_specific_where( $p_project_id );
 
@@ -623,7 +643,7 @@ function version_get( $p_version_id ) {
  * Return a copy of the version structure with all the instvars prepared for db insertion
  * @param VersionData $p_version_info
  * @return VersionData
- */ 
+ */
 function version_prepare_db( $p_version_info ) {
 	$p_version_info->id = db_prepare_int( $p_version_info->id );
 	$p_version_info->project_id = db_prepare_int( $p_version_info->project_id );

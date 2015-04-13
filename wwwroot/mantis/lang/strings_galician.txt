@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Fitoschido
  * @author McDutchie
  * @author Toliño
  * @author Vivaelcelta
@@ -52,7 +53,7 @@ $s_actiongroup_bugs = 'Problemas seleccionados';
 $s_actiongroup_error_issue_is_readonly = 'O problema é de só lectura.';
 $s_all_projects = 'Todos os proxectos';
 $s_move_bugs = 'Mover os problemas';
-$s_operation_successful = 'Operación exitosa.';
+$s_operation_successful = 'A operación realizouse correctamente.';
 $s_date_order = 'Ordenar por data';
 $s_print_all_bug_page_link = 'Imprimir os informes';
 $s_csv_export = 'Exportar en CSV';
@@ -122,7 +123,7 @@ $s_make_public = 'Facelo público';
 $s_create_new_project_link = 'Crear un novo proxecto';
 $s_login_link = 'Rexistro';
 $s_select_option = '(seleccionar)';
-$s_bug_actiongroup_access = 'Non tiñas os permisos apropiados para levar a cabo esa acción.';
+$s_bug_actiongroup_access = 'Non tiña os permisos apropiados para levar a cabo esa acción.';
 $s_bug_actiongroup_status = 'Este problema non se pode cambiar ao estado solicitado';
 $s_bug_actiongroup_category = 'Este problema non se pode cambiar á categoría solicitada';
 $s_bug_actiongroup_handler = 'O usuario solicitado non ten permiso para manexar este problema';
@@ -199,7 +200,7 @@ $MANTIS_ERROR[ERROR_GPC_NOT_NUMBER] = 'Agardábase un número para %1$s.';
 $MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Non se atopou o problema "%1$d".';
 $MANTIS_ERROR[ERROR_FILTER_NOT_FOUND] = 'Non se atopou o filtro "%1$s".';
 $MANTIS_ERROR[ERROR_FILTER_TOO_OLD] = 'O filtro que está intentando usar é vello de máis para ser actualizado. Por favor, vólvao crear.';
-$MANTIS_ERROR[ERROR_EMAIL_INVALID] = 'Enderezo de correo electrónico inválido.';
+$MANTIS_ERROR[ERROR_EMAIL_INVALID] = 'O enderezo de correo electrónico non é válido.';
 $MANTIS_ERROR[ERROR_EMAIL_DISPOSABLE] = 'Non se permite o uso de enderezos de correo electrónico "descartables".';
 $MANTIS_ERROR[ERROR_USER_PROFILE_NOT_FOUND] = 'Non se atopou o perfil.';
 $MANTIS_ERROR[ERROR_FILE_NOT_ALLOWED] = 'Tipo de ficheiro non permitido nas cargas.';
@@ -268,6 +269,7 @@ $MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'O complemento xa está instalad
 $MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Non se atopou a páxina do complemento.';
 $MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Fallou a instalación do complemento: %1$s.';
 $MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'Fallou a actualización do esquema do complemento no bloque #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'Cómpre actualizar o complemento "%1$s" antes de poder acceder a esta páxina.';
 $MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Houbo un erro descoñecido "%1$s" durante a execución do complemento "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'O campo "%1$s" contén a columna duplicada "%2$s".';
 $MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'O campo "%1$s" contén o campo inválido "%2$s".';
@@ -403,7 +405,7 @@ $s_email_bugnote_limit = 'Enviar un correo en caso de límite de notas';
 $s_language = 'Lingua';
 $s_update_prefs_button = 'Actualizar as preferencias';
 $s_reset_prefs_button = 'Restablecer as preferencias';
-$s_timezone = 'Zona horaria';
+$s_timezone = 'Fuso horario';
 $s_prefs_reset_msg = 'As preferencias foron restablecidas...';
 $s_prefs_updated_msg = 'As preferencias foron actualizadas...';
 $s_profile_added_msg = 'Perfil engadido...';
@@ -462,12 +464,12 @@ $s_delete_bug_sure_msg = 'Está seguro de querer borrar este problema?';
 $s_delete_bug_button = 'Borrar';
 $s_monitor_bug_button = 'Vixiar';
 $s_unmonitor_bug_button = 'Deixar de vixiar';
-$s_file_upload_msg = 'A carga do ficheiro foi exitosa.';
-$s_upload_file = 'Cargar un ficheiro';
-$s_upload_files = 'Cargar ficheiros';
+$s_file_upload_msg = 'A carga do ficheiro realizouse correctamente.';
+$s_upload_file = 'Subir un ficheiro';
+$s_upload_files = 'Subir ficheiros';
 $s_select_file = 'Seleccionar un ficheiro';
 $s_select_files = 'Seleccionar ficheiros';
-$s_upload_file_button = 'Cargar o ficheiro';
+$s_upload_file_button = 'Subir o ficheiro';
 $s_upload_files_button = 'Cargar os ficheiros';
 $s_max_file_size = 'Tamaño máximo';
 $s_bug_reopened_msg = 'O problema foi reaberto...';
@@ -484,7 +486,7 @@ $s_sent_you_this_reminder_about = 'envióuselle este recordatorio sobre';
 $s_bug_reminder = 'Enviar un recordatorio';
 $s_reminder_sent_to = 'Recordatorio enviado a';
 $s_reminder_sent_none = 'Non se puideron enviar os recordatorios';
-$s_reminder_list_truncated = 'a lista de receptores está truncada, consulte o historial de problemas para ollar a lista completa';
+$s_reminder_list_truncated = 'a lista de receptores está truncada';
 $s_bug_send_button = 'Enviar';
 $s_reminder = 'Recordatorio';
 $s_reminder_explain = 'Esta nota será enviada aos destinatarios indicados que pediron comentarios sobre este problema.';
@@ -827,8 +829,8 @@ $s_delete_post = 'Borrar un comentario';
 $s_select_post = 'Seleccionar un comentario';
 $s_news_updated_msg = 'Nova actualizada...';
 $s_back_link = 'Volver';
-$s_file_uploaded_msg = 'Carga do ficheiro exitosa.';
-$s_upload_file_title = 'Cargar un ficheiro';
+$s_file_uploaded_msg = 'A carga do ficheiro realizouse correctamente.';
+$s_upload_file_title = 'Subir un ficheiro';
 $s_title = 'Título';
 $s_project_file_deleted_msg = 'O ficheiro do proxecto foi borrado.';
 $s_confirm_file_delete_msg = 'Está seguro de querer borrar este ficheiro?';
@@ -839,7 +841,7 @@ $s_project_documentation_title = 'Documentación do proxecto';
 $s_user_documentation = 'Documentación do usuario';
 $s_project_documentation = 'Documentación do proxecto';
 $s_add_file = 'Engadir un ficheiro';
-$s_project_document_updated = 'Actualización do proxecto exitosa.';
+$s_project_document_updated = 'A actualización do proxecto realizouse correctamente.';
 $s_project_user_added_msg = 'O usuario foi engadido ao proxecto con éxito.';
 $s_project_removed_user_msg = 'O usuario foi eliminado do proxecto con éxito.';
 $s_remove_user_sure_msg = 'Está seguro de querer eliminar este usuario?';
@@ -1150,7 +1152,7 @@ $s_from_date = 'De';
 $s_to_date = 'A';
 $s_on_date = 'O';
 $s_on = 'Activado';
-$s_off = 'Apagado';
+$s_off = 'Desactivado';
 $s_wiki = 'Wiki';
 $s_tags = 'Etiquetas';
 $s_tag_details = 'Detalles da etiqueta: %1$s';

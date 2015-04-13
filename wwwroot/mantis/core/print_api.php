@@ -19,7 +19,7 @@
  * @package CoreAPI
  * @subpackage PrintAPI
  * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
  */
 
@@ -564,7 +564,7 @@ function print_extended_project_browser( $p_trace = Array(), $p_project_id = nul
 		echo 'subprojects[\'' . $t_id . '\'] = new Object();' . "\n";
 
 		$t_name = project_get_field( $t_id, 'name' );
-		$c_name = addslashes( $t_name );
+		$c_name = addslashes( str_replace( array("\r", "\n"), '', $t_name ) );
 		echo 'subprojects[\'' . $t_id . '\'][\'' . $t_id . '\'] = \'' . $c_name . '\';' . "\n";
 
 		$t_projects[$t_id] = $t_name;
@@ -640,8 +640,8 @@ function print_extended_project_browser_subproject_javascript( $p_trace ) {
 
 # --------------------
 # prints the profiles given the user id
-function print_profile_option_list( $p_user_id, $p_select_id = '', $p_profiles = null ) {
-	if( '' === $p_select_id ) {
+function print_profile_option_list( $p_user_id, $p_select_id = 0, $p_profiles = null ) {
+	if( 0 === $p_select_id ) {
 		$p_select_id = profile_get_default( $p_user_id );
 	}
 	if( $p_profiles != null ) {
@@ -654,8 +654,8 @@ function print_profile_option_list( $p_user_id, $p_select_id = '', $p_profiles =
 
 # --------------------
 # prints the profiles used in a certain project
-function print_profile_option_list_for_project( $p_project_id, $p_select_id = '', $p_profiles = null ) {
-	if( '' === $p_select_id ) {
+function print_profile_option_list_for_project( $p_project_id, $p_select_id = 0, $p_profiles = null ) {
+	if( 0 === $p_select_id ) {
 		$p_select_id = profile_get_default( auth_get_current_user_id() );
 	}
 	if( $p_profiles != null ) {

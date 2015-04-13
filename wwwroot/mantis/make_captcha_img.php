@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @author Marcello Scata' <marcelloscata at users.sourceforge.net> ITALY
 	 * @link http://www.mantisbt.org
 	 */
@@ -26,9 +26,9 @@
 	  */
 	require_once( 'core.php' );
 
-	$f_public_key = gpc_get_int( 'public_key' );
+	$t_form_key = session_get( CAPTCHA_KEY );
 
-	$t_key = utf8_strtolower( utf8_substr( md5( config_get( 'password_confirm_hash_magic_string' ) . $f_public_key ), 1, 5) );
+	$t_key = utf8_strtolower( utf8_substr( md5( config_get( 'password_confirm_hash_magic_string' ) . $t_form_key ), 1, 5) );
 	$t_system_font_folder = get_font_path();
 	$t_font_per_captcha = config_get( 'font_per_captcha' );
 
@@ -147,7 +147,7 @@
 				if($this->debug) echo "\n<br />-Captcha-Debug: Set image dimension to: (".$this->lx." x ".$this->ly.")";
 			}
 
-			function make_captcha( $private_key )
+			function generate_captcha( $private_key )
 			{
 				if($this->debug) echo "\n<br />-Captcha-Debug: Generate private key: ($private_key)";
 
@@ -182,18 +182,13 @@
 					if($this->debug) echo "\n<br />-Captcha-Debug: Fill background with noise: (".$this->nb_noise.")";
 					for($i=0; $i < $this->nb_noise; $i++)
 					{
-						srand((double)microtime()*1000000);
-						$size	= intval(rand((int)($this->minsize / 2.3), (int)($this->maxsize / 1.7)));
-						srand((double)microtime()*1000000);
-						$angle	= intval(rand(0, 360));
-						srand((double)microtime()*1000000);
-						$x		= intval(rand(0, $this->lx));
-						srand((double)microtime()*1000000);
-						$y		= intval(rand(0, (int)($this->ly - ($size / 5))));
+						$size	= intval(mt_rand((int)($this->minsize / 2.3), (int)($this->maxsize / 1.7)));
+						$angle	= intval(mt_rand(0, 360));
+						$x		= intval(mt_rand(0, $this->lx));
+						$y		= intval(mt_rand(0, (int)($this->ly - ($size / 5))));
 						$this->random_color(160, 224);
 						$color	= $func2($image, $this->r, $this->g, $this->b);
-						srand((double)microtime()*1000000);
-						$text	= chr(intval(rand(45,250)));
+						$text	= chr(intval(mt_rand(45,250)));
 						if(count ($this->TTF_RANGE)>0){
 							@ImageTTFText($image, $size, $angle, $x, $y, $color, $this->change_TTF(), $text);
 						} else {
@@ -221,16 +216,13 @@
 				}
 
 				// generate Text
-				if($this->debug) echo "\n<br />-Captcha-Debug: Fill forground with chars and shadows: (".$this->chars.")";
-				for($i=0, $x = intval(rand($this->minsize,$this->maxsize)); $i < $this->chars; $i++)
+				if($this->debug) echo "\n<br />-Captcha-Debug: Fill foreground with chars and shadows: (".$this->chars.")";
+				for($i=0, $x = intval(mt_rand($this->minsize,$this->maxsize)); $i < $this->chars; $i++)
 				{
 					$text	= utf8_strtoupper(substr($private_key, $i, 1));
-					srand((double)microtime()*1000000);
-					$angle	= intval(rand(($this->maxrotation * -1), $this->maxrotation));
-					srand((double)microtime()*1000000);
-					$size	= intval(rand($this->minsize, $this->maxsize));
-					srand((double)microtime()*1000000);
-					$y		= intval(rand((int)($size * 1.5), (int)($this->ly - ($size / 7))));
+					$angle	= intval(mt_rand(($this->maxrotation * -1), $this->maxrotation));
+					$size	= intval(mt_rand($this->minsize, $this->maxsize));
+					$y		= intval(mt_rand((int)($size * 1.5), (int)($this->ly - ($size / 7))));
 					$this->random_color(0, 127);
 					$color	=  $func2($image, $this->r, $this->g, $this->b);
 					$this->random_color(0, 127);
@@ -239,16 +231,48 @@
 						@ImageTTFText($image, $size, $angle, $x + (int)($size / 15), $y, $shadow, $this->change_TTF(), $text);
 						@ImageTTFText($image, $size, $angle, $x, $y - (int)($size / 15), $color, $this->TTF_file, $text);
 					} else {
-						$t_font = rand(3,5);
+						$t_font = mt_rand(3,5);
 						imagestring($image,$t_font,$x + (int)($size / 15),$y-20,$text,$color);
 						imagestring($image,$t_font,$x,$y - (int)($size / 15)-20,$text,$color);
 					}
 					$x += (int)($size + ($this->minsize / 5));
 				}
-				header('Content-type: image/jpeg');
+
+				# Generate the JPEG
+				ob_start();
 				@ImageJPEG($image, null, $this->jpegquality);
+				$jpg = ob_get_contents();
+				ob_end_clean();
+
 				@ImageDestroy($image);
 				if($this->debug) echo "\n<br />-Captcha-Debug: Destroy Imagestream.";
+
+				return $jpg;
+			}
+
+			function make_captcha( $private_key )
+			{
+				# Retrieve previously image generated from session cache
+				$t_image = session_get( CAPTCHA_IMG, null );
+
+				if( is_null( $t_image ) ) {
+					$t_image = $this->generate_captcha( $private_key );
+					if( $this->debug ) {
+						echo "\n<br />-Captcha-Debug: Caching generated image.";
+					}
+					session_set( CAPTCHA_IMG, $t_image );
+				} elseif( $this->debug ) {
+					echo "\n<br />-Captcha-Debug: Retrieved image from cache.";
+				}
+
+				# Output
+				if( $this->debug ) {
+					echo "\n<br />-Captcha-Debug: Generated image (" . strlen( $t_image ) . " bytes): "
+						. '<img src="data:image/jpeg;base64,' . base64_encode( $t_image ) . '">';
+				} else {
+					header('Content-type: image/jpeg');
+					echo $t_image;
+				}
 			}
 
 			/** @private **/
@@ -270,12 +294,9 @@
 
 			function random_color($min,$max)
 			{
-				srand((double)microtime() * 1000000);
-				$this->r = intval(rand($min,$max));
-				srand((double)microtime() * 1000000);
-				$this->g = intval(rand($min,$max));
-				srand((double)microtime() * 1000000);
-				$this->b = intval(rand($min,$max));
+				$this->r = intval(mt_rand($min,$max));
+				$this->g = intval(mt_rand($min,$max));
+				$this->b = intval(mt_rand($min,$max));
 			}
 
 			function change_TTF()
@@ -283,7 +304,6 @@
 				if(count($this->TTF_RANGE) > 0){
 					if(is_array($this->TTF_RANGE))
 					{
-						srand((float)microtime() * 10000000);
 						$key = array_rand($this->TTF_RANGE);
 						$this->TTF_file = $this->TTF_folder.$this->TTF_RANGE[$key];
 					}

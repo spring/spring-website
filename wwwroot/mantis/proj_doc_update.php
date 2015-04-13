@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -46,22 +46,18 @@
 	access_ensure_project_level( config_get( 'upload_project_file_threshold' ), $t_project_id );
 
 	if ( is_blank( $f_title ) ) {
+		error_parameters( lang_get( 'title' ) );
 		trigger_error( ERROR_EMPTY_FIELD, ERROR );
 	}
-
-	$c_file_id = db_prepare_int( $f_file_id );
-	$c_title = db_prepare_string( $f_title );
-	$c_description = db_prepare_string( $f_description );
 
 	$t_project_file_table = db_get_table( 'mantis_project_file_table' );
 
 	/** @todo (thraxisp) this code should probably be integrated into file_api to share methods used to store files */
 
-	file_ensure_uploaded( $f_file );
-
 	extract( $f_file, EXTR_PREFIX_ALL, 'v' );
 
-	if ( is_uploaded_file( $v_tmp_name ) ) {
+	if ( isset( $f_file['tmp_name'] ) && is_uploaded_file( $f_file['tmp_name'] ) ) {
+		file_ensure_uploaded( $f_file );
 
 		$t_project_id = helper_get_current_project();
 
@@ -70,14 +66,11 @@
 		$t_file_path = dirname( $t_disk_file_name );
 
 		# prepare variables for insertion
-		$c_file_name = db_prepare_string( $v_name );
-		$c_file_type = db_prepare_string( $v_type );
-		$t_file_size = filesize( $v_tmp_name );
+		$t_file_size = filesize( $f_file['tmp_name'] );
 		$t_max_file_size = (int)min( ini_get_number( 'upload_max_filesize' ), ini_get_number( 'post_max_size' ), config_get( 'max_file_size' ) );
-        if ( $t_file_size > $t_max_file_size ) {
-            trigger_error( ERROR_FILE_TOO_BIG, ERROR );
-        }
-		$c_file_size = db_prepare_int( $t_file_size );
+		if( $t_file_size > $t_max_file_size ) {
+			trigger_error( ERROR_FILE_TOO_BIG, ERROR );
+		}
 
 		$t_method = config_get( 'file_upload_method' );
 		switch ( $t_method ) {
@@ -94,7 +87,7 @@
 				if ( file_exists( $t_disk_file_name ) ) {
 					file_delete_local( $t_disk_file_name );
 				}
-				if ( !move_uploaded_file( $v_tmp_name, $t_disk_file_name ) ) {
+				if ( !move_uploaded_file( $f_file['tmp_name'], $t_disk_file_name ) ) {
 					trigger_error( ERROR_FILE_MOVE_FAILED, ERROR );
 				}
 				chmod( $t_disk_file_name, config_get( 'attachments_file_permissions' ) );
@@ -102,7 +95,7 @@
 				$c_content = '';
 				break;
 			case DATABASE:
-				$c_content = db_prepare_binary_string( fread ( fopen( $v_tmp_name, 'rb' ), $v_size ) );
+				$c_content = db_prepare_binary_string( fread ( fopen( $f_file['tmp_name'], 'rb' ), $f_file['size'] ) );
 				break;
 			default:
 				/** @todo Such errors should be checked in the admin checks */
@@ -112,12 +105,12 @@
 			SET title=" . db_param() . ", description=" . db_param() . ", date_added=" . db_param() . ",
 				filename=" . db_param() . ", filesize=" . db_param() . ", file_type=" .db_param() . ", content=" .db_param() . "
 				WHERE id=" . db_param();
-		$result = db_query_bound( $query, Array( $c_title, $c_description, db_now(), $c_file_name, $c_file_size, $c_file_type, $c_content, $c_file_id ) );
+		$result = db_query_bound( $query, array( $f_title, $f_description, db_now(), $f_file['name'], $t_file_size, $f_file['type'], $c_content, $f_file_id ) );
 	} else {
 		$query = "UPDATE $t_project_file_table
 				SET title=" . db_param() . ", description=" . db_param() . "
 				WHERE id=" . db_param();
-		$result = db_query_bound( $query, Array( $c_title, $c_description, $c_file_id ) );
+		$result = db_query_bound( $query, Array( $f_title, $f_description, $f_file_id ) );
 	}
 
 	if ( !$result ) {

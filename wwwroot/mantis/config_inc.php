@@ -49,14 +49,14 @@
 	$g_db_type       = "mysql";
 
 	# --- email variables -------------
-	$g_administrator_email  = 'spring@it-l.eu';
+	$g_administrator_email  = 'no-reply@springrts.com';
 	$g_webmaster_email      = '';
 
 	# the "From: " field in emails
-	$g_from_email           = 'spring@it-l.eu';
+	$g_from_email           = 'no-reply@springrts.com';
 
 	# the return address for bounced mail
-	$g_return_path_email    = 'spring@it-l.eu';
+	$g_return_path_email    = 'no-reply@springrts.com';
 
 	# --- file upload settings --------
 	# This is the master setting to disable *all* file uploading functionality

@@ -1,5 +1,5 @@
 <?php
-/** Araucanian (Mapudungun)
+/** Mapuche (mapudungun)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -21,8 +21,8 @@ $messages = array(
 # User preference toggles
 'tog-underline'        => 'Miñcewirilpe lasun',
 'tog-justify'          => 'Xvrvmpe cijkantvkun',
-'tog-showtoolbar'      => 'Pengelün kümeelün ñi chemkün (JavaScript duamyengey)',
-'tog-editondblclick'   => 'Wirin pakina epu klik mew (JavaScript)',
+'tog-showtoolbar'      => 'Pengelün kümeelün ñi chemkün',
+'tog-editondblclick'   => 'Wirin pakina epu klik mew',
 'tog-rememberpassword' => 'Amulen tañi nülküwküleael tüfa mew (alürumechi $1 {{PLURAL:$1 antü}})',
 
 'underline-always' => 'Rumel',
@@ -107,7 +107,9 @@ $messages = array(
 
 # Cologne Blue skin
 'qbfind'         => 'Kintupe',
+'qbbrowse'       => 'Kintun',
 'qbedit'         => 'Pepikape',
+'qbpageoptions'  => 'Tüfachi wülngiñ',
 'qbpageinfo'     => 'Trokiñdungu',
 'qbmyoptions'    => 'tañi nütramkawe',
 'qbspecialpages' => 'Kangelu',
@@ -180,6 +182,7 @@ $messages = array(
 'jumpto'            => 'Amulün:',
 'jumptonavigation'  => 'miyawün',
 'jumptosearch'      => 'kintun',
+'pool-errorunknown' => 'Kimnoelchi welulkan',
 
 # All link text and link target definitions of links into project namespace that get used by other message strings, with the exception of user group pages (see grouppage) and the disambiguation template definition (see disambiguations).
 'aboutsite'            => '{{SITENAME}} ñi dungu',
@@ -214,15 +217,22 @@ $messages = array(
 'toc'                     => 'Trokiñdungu',
 'showtoc'                 => 'pegelpe',
 'hidetoc'                 => 'ellkangepe',
+'thisisdeleted'           => 'Pen kam kümeeltun $1?',
 'viewdeleted'             => 'Küpaadkintuymi $1 am?',
 'restorelink'             => '{{PLURAL:$1|kiñe wirin ñamümgün|$1 wirin ñamümün}}',
+'feedlinks'               => 'Amuldungu:',
+'site-rss-feed'           => '$1 RSS ñi amuldungu',
 'site-atom-feed'          => '$1 ñi Atom ñi amuldungu',
+'page-rss-feed'           => '«$1» RSS ñi amuldungu',
 'page-atom-feed'          => '$1 ñi Atom ñi amuldungu',
 'red-link-title'          => '$1 (ngelay tichi adtapül)',
+'sort-descending'         => 'Kümeelngen minche püle',
+'sort-ascending'          => 'Kümeelngen püra püle',
 
 # Short words for each namespace, by default used in the namespace tab in monobook
 'nstab-main'      => 'Wülngiñ',
 'nstab-user'      => 'Kellufe',
+'nstab-media'     => 'Ad ñi wülngiñ',
 'nstab-special'   => 'Wichu wülngiñ',
 'nstab-project'   => 'Deumandungu wülngiñ',
 'nstab-image'     => 'Eltukawün',
@@ -230,6 +240,9 @@ $messages = array(
 'nstab-template'  => 'Adtükupeyüm',
 'nstab-help'      => 'Kelluwe',
 'nstab-category'  => 'Trokiñ',
+
+# Main script and global functions
+'nosuchaction' => 'Mülelay feychi femün',
 
 # General errors
 'error'              => 'Welulkan',
@@ -419,7 +432,7 @@ Rulpakünuy feychi kangelkülelu dungu.",
 'powersearch-field'                => 'Kintun',
 
 # Preferences page
-'mypreferences'           => 'Tami dullin',
+'mypreferences'           => 'Dullin',
 'prefs-edits'             => 'Rakin Wirin:',
 'prefsnologin'            => 'Mülelay Konün',
 'skin-preview'            => 'Pen chum müley',
@@ -626,7 +639,7 @@ Fey ñi chumngen mülelu ($2 fey ñi chumngen wülngiñ) pengeli tüfa mew.',
 # Special:ListGroupRights
 'listgrouprights-members' => '(koneltulu kellufe ñi wif)',
 
-# E-mail user
+# Email user
 'emailuser'    => 'Amulün werküwe tüfachi kellufe',
 'emailsubject' => 'Dungu',
 'emailmessage' => 'Dungu',
@@ -900,7 +913,7 @@ Ka dungu ellkangeay wünedullin reke.
 
 # External editor support
 'edit-externally'      => 'Kümeelün tüfachi eltukawün wekun küdauwe mew',
-'edit-externally-help' => '(Pen feychi [//www.mediawiki.org/wiki/Manual:External_editors adtukünun chumngechi pünengeael]  doy dungungeam)',
+'edit-externally-help' => '(Pen feychi [https://www.mediawiki.org/wiki/Manual:External_editors adtukünun chumngechi pünengeael]  doy dungungeam)',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'kom',

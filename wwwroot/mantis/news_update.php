@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -37,7 +37,7 @@
 	$f_project_id	= gpc_get_int( 'project_id' );
 	$f_view_state	= gpc_get_int( 'view_state' );
 	$f_headline		= gpc_get_string( 'headline' );
-	$f_announcement	= gpc_get_string( 'announcement', '' );
+	$f_announcement	= gpc_get_bool( 'announcement' );
 	$f_body			= gpc_get_string( 'body', '' );
 
 	$row = news_get_row( $f_news_id );

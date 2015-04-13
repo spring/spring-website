@@ -17,7 +17,7 @@
 	/**
 	 * @package MantisBT
 	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 	 * @link http://www.mantisbt.org
 	 */
 	 /**
@@ -138,6 +138,7 @@
 	} else {
 		# Retrieve the filter from the cookie if it exists
 		$t_cookie_string = gpc_get_cookie( $t_cookie_name, null );
+
 		if( null !== $t_cookie_string ) {
 			$t_cookie_contents = explode( ':', $t_cookie_string );
 
@@ -147,6 +148,13 @@
 
 			if( $t_filter_project_value != META_FILTER_NONE && !project_exists( $t_filter_project_value ) ) {
 				$t_filter_project_value = ALL_PROJECTS;
+			}
+
+			if(    $t_filter_config_value != META_FILTER_NONE
+			   && !is_blank( $t_filter_config_value )
+			   && @config_get_global( $t_filter_config_value ) === null
+			) {
+				$t_filter_config_value = META_FILTER_NONE;
 			}
 		}
 	}
@@ -216,14 +224,18 @@
 
 	# Build filter's where clause
 	$t_where = '';
+	$t_param = array();
 	if( $t_filter_user_value != META_FILTER_NONE ) {
-		$t_where .= " AND user_id = $t_filter_user_value ";
+		$t_where .= " AND user_id = " . db_param();
+		$t_param[] = $t_filter_user_value;
 	}
 	if( $t_filter_project_value != META_FILTER_NONE ) {
-		$t_where .= " AND project_id = $t_filter_project_value ";
+		$t_where .= " AND project_id = " . db_param();
+		$t_param[] = $t_filter_project_value;
 	}
 	if( $t_filter_config_value != META_FILTER_NONE ) {
-		$t_where .= " AND config_id = '$t_filter_config_value' ";
+		$t_where .= " AND config_id = " . db_param();
+		$t_param[] = $t_filter_config_value;
 	}
 	if( $t_where != '' ) {
 		$t_where = " WHERE 1=1 " . $t_where;
@@ -233,7 +245,7 @@
 		FROM $t_config_table
 		$t_where
 		ORDER BY user_id, project_id, config_id ";
-	$result = db_query_bound( $query );
+	$result = db_query_bound( $query, $t_param );
 ?>
 
 <br />
@@ -468,7 +480,7 @@ if( $t_read_write_access ) {
 	</td>
 	<td>
 		<input type="text" name="config_option"
-			value="<?php echo $t_edit_option; ?>"
+			value="<?php echo string_attribute( $t_edit_option ); ?>"
 			size="64" maxlength="64" />
 	</td>
 </tr>

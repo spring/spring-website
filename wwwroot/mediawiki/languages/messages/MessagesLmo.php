@@ -1,5 +1,5 @@
 <?php
-/** Lumbaart (Lumbaart)
+/** lumbaart (lumbaart)
  *
  * See MessagesQqq.php for message documentation incl. usage of parameters
  * To improve a translation please visit http://translatewiki.net
@@ -12,6 +12,8 @@
  * @author Dakrismeno
  * @author DracoRoboter
  * @author Flavio05
+ * @author GatoSelvadego
+ * @author Geitost
  * @author Insübrich
  * @author Kemmótar
  * @author Malafaya
@@ -436,7 +438,7 @@ Tegné cünt che certi paginn pödass che i seguiten a vedess tant 'me se a füd
 'logout'                  => 'Va fö',
 'userlogout'              => 'Và fö',
 'notloggedin'             => 'Te seet minga dent in del sistema',
-'nologin'                 => "Gh'avii anmò da registrav? '''$1'''.",
+'nologin'                 => "Gh'avii anmò da registrav? $1.",
 'nologinlink'             => 'Creé un cünt!',
 'createaccount'           => 'Creá un cünt',
 'gotaccount'              => "Gh'hee-t giamò un cünt? '''$1'''.",
@@ -952,7 +954,7 @@ La descrizión sura la sua [$2 pagina de descrizión del file] l'è mustrada ch�
 'listgrouprights'         => 'Dirit del grüp di druvat',
 'listgrouprights-members' => '(Lista di member)',
 
-# E-mail user
+# Email user
 'emailuser'     => 'Manda un email a quel druvadur chì',
 'emailsent'     => 'Messagg spedii',
 'emailsenttext' => "El messagg e-mail l'è staa spedii.",
@@ -1340,14 +1342,14 @@ I ligam che i vegnen dopu, in sü l'istessa riga, i vegnen cónsideraa di ecezi�
 
 # External editor support
 'edit-externally'      => 'Redatá chest archivi cunt un prugramari da fö',
-'edit-externally-help' => 'Varda [//www.mediawiki.org/wiki/Manual:External_editors i istrüzión] per avègh püssee infurmazión (in ingles).',
+'edit-externally-help' => 'Varda [https://www.mediawiki.org/wiki/Manual:External_editors i istrüzión] per avègh püssee infurmazión (in ingles).',
 
 # 'all' in various places, this might be different for inflected languages
 'watchlistall2' => 'tücc',
 'namespacesall' => 'tücc',
 'monthsall'     => 'tücc',
 
-# E-mail address confirmation
+# Email address confirmation
 'confirmemail'          => "Cunferma l<nowiki>'</nowiki>''e-mail''",
 'confirmemail_text'     => "Prima da pudé riçeef mesacc sül tò adrèss da pòsta letrònica l è neçessari verificál.
 Schiscjá ul butún che gh'è chi da sót par curfermá al tò adrèss.
@@ -1364,6 +1366,9 @@ Te riçevaree un mesacc cun deent un ligamm specjal; ti duvaree clicaa sül liga
 'watchlisttools-view' => 'Varda i mudifegh impurtant',
 'watchlisttools-edit' => 'Varda e mudifega la lista di paginn che te tegnet sut ögg',
 'watchlisttools-raw'  => 'Mudifega la lista in furmaa test',
+
+# Signatures
+'signature' => '[[{{ns:user}}:$1|$2]] ([[{{ns:user_talk}}:$1|ciciarade]])',
 
 # Special:Version
 'version' => 'Versiun',

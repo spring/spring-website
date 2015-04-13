@@ -52,11 +52,10 @@
         }
 
         foreach ($screens as $screen) {
-            $thumb = get_thumbnail($screen['physical_filename'], 142, 80);
+            $thumb = get_thumbnail($screen['physical_filename'], 237, 119);
             $title = $screen['topic_title'];
-            //$title .= ' - &lt;a href=&quot;screenshot.php?topic=' . $screen['topic_id'] . '&quot;&gt;Click here to see the original image&lt;/a&gt;';
             $imgline = '<a href="screenshot.php?id=' . $screen['attach_id'] . '" rel="lytebox[fpscreens]" title="' . $title . '">';
-            $imgline .= '<img src="' . $thumb . '" width="142" height="80" border="0" alt="" /><br /></a>';
+            $imgline .= '<img class="frontscreenshot" src="' . $thumb . '" width="237" height="119" border="0" alt="" /></a>';
             $screenthumbs[] = $imgline;
         }
     }
@@ -66,12 +65,11 @@
 
 
     $videos = array(
-			"http://www.youtube.com/embed/vkZaLLyhEgI?rel=0", #zero-k trailer
-			"http://www.youtube.com/embed/2mKhQD2SVqw?rel=0", #spring rts trailer
-			"http://www.youtube.com/embed/GAM_vcVJiL4?rel=0", #spring showcase
-			"http://www.youtube.com/embed/e0R2QsMwc98?rel=0", #NOTA trailer
-			"http://www.youtube.com/embed/3F7F7NGDDFU?rel=0", #Evolution RTS trailer
-			"http://www.youtube.com/embed/vuP63IobLps?rel=0", #NOTA "Action Trailer"
+			"https://www.youtube.com/embed/vkZaLLyhEgI?rel=0&autohide=1", #zero-k trailer
+			"https://www.youtube.com/embed/2mKhQD2SVqw?rel=0&autohide=1", #spring rts trailer
+			"https://www.youtube.com/embed/GAM_vcVJiL4?rel=0&autohide=1", #spring showcase
+			"https://www.youtube.com/embed/e0R2QsMwc98?rel=0&autohide=1", #NOTA trailer
+			"https://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 		);
     $videofile = $videos[array_rand($videos)];
 
@@ -84,12 +82,14 @@
     // Compose the final page
     $headertemplate = file_get_contents('templates/header.html');
     $starttemplate = file_get_contents('templates/pagestart.html');
+    $metatemplate = file_get_contents('templates/meta.html');
 
-    $html = $starttemplate;
+    $html  = $starttemplate;
+    $html .= str_replace('{META}', '<link href="/index.css?v=1" rel="stylesheet" type="text/css" />', $metatemplate);
+    $html .= "<title>Spring RTS Engine</title>\n</head><body>";
     $html .= str_replace('{PAGE_TITLE}', '<img src="/images/homie.gif" width="11" height="10" border="0" alt=""/>&nbsp;Home', $headertemplate);
     $html .= $fp;
     $html .= file_get_contents('templates/footer.html');
     $html .= file_get_contents('templates/pageend.html');
 
     print($html);
-?>

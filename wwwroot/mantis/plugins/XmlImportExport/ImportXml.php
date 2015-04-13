@@ -1,6 +1,6 @@
 <?php
 # MantisBT - a php based bugtracking system
-# Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+# Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
@@ -102,18 +102,60 @@ class ImportXML {
 
 		echo " Done\n";
 
-		$importedIssues = $this->itemsMap_->getall( 'issue' );
-		printf( "Processing cross-references for %s issues...", count( $importedIssues ) );
-		foreach( $importedIssues as $oldId => $newId ) {
-			$bugData = bug_get( $newId, true );
+		# replace bug references
+		$t_imported_issues = $this->itemsMap_->getall( 'issue' );
+		printf( 'Processing cross-references for %s issues...', count( $t_imported_issues ) );
+		foreach( $t_imported_issues as $t_old_id => $t_new_id ) {
+			$t_bug = bug_get( $t_new_id, true );
 
-			$bugLinkRegexp = '/(^|[^\w])(' . preg_quote( $this->source_->issuelink, '/' ) . ')(\d+)\b/e';
-			$replacement = '"\\1" . $this->getReplacementString( "\\2", "\\3" )';
+			# Using bitwise 'or' here to ensure the all replacements are made
+			# regardless of outcome of the previous one(s)
+			$t_content_replaced =
+				  $this->replaceLinks( $t_bug, 'description' )
+				| $this->replaceLinks( $t_bug, 'steps_to_reproduce' )
+				| $this->replaceLinks( $t_bug, 'additional_information' );
 
-			$bugData->description = preg_replace( $bugLinkRegexp, $replacement, $bugData->description );
-			$bugData->update( true, true );
+			if( $t_content_replaced ) {
+				# only update bug if necessary (otherwise last update date would be unnecessarily overwritten)
+				$t_bug->update( true );
+			}
 		}
+
+		# @todo: replace references within bug notes
 		echo " Done\n";
+	}
+
+	/**
+	 * Replace links in the given bug for the specified field
+	 * @param object $p_bug
+	 * @param string $p_field Field to process (one of 'description',
+	 *                        'steps_to_reproduce' or 'additional_information')
+	 * @return boolean true if replacements have been made
+	 */
+	private function replaceLinks( $p_bug, $p_field ) {
+		static $s_bug_link_regexp;
+		$t_content_replaced = false;
+
+		if( is_null( $s_bug_link_regexp ) ) {
+			$s_bug_link_regexp = '/(?:^|[^\w])'
+				. preg_quote( $this->source_->issuelink, '/' )
+				. '(\d+)\b/';
+		}
+
+		preg_match_all( $s_bug_link_regexp, $p_bug->$p_field, $t_matches );
+
+		if( is_array( $t_matches[1] ) && count( $t_matches[1] ) > 0 ) {
+			$t_content_replaced = true;
+			foreach ( $t_matches[1] as $t_old_id ) {
+				$p_bug->$p_field = str_replace(
+					$this->source_->issuelink . $t_old_id,
+					$this->getReplacementString( $this->source_->issuelink, $t_old_id ),
+					$p_bug->$p_field
+				);
+			}
+		}
+
+		return $t_content_replaced;
 	}
 
 	/**

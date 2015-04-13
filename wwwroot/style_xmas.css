@@ -5,10 +5,10 @@ html {
 	background: radial-gradient(ellipse farthest-corner at center bottom, #CC0000 0%, #2C0000 100%);
 }
 #toplogo {
-	background: transparent url(/images/logo_xmas.png) 10px 18px no-repeat;
+	background: transparent url(/images/logo_xmas.png) no-repeat;
 }
 @media screen and (max-width: 633px) {
 	#toplogo {
-		background: transparent url(/images/logosmall_xmas.png) 10px 25px no-repeat;
+		background: transparent url(/images/logosmall_xmas.png) no-repeat;
 	}
 }

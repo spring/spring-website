@@ -14,25 +14,22 @@ class SkinSpringNew extends SkinLegacy {
 
 	function initPage(OutputPage $out) {
 		parent::initPage($out);
-		$this->skinname = 'springnew';
+		$this->skinname  = 'springnew';
 		$this->stylename = 'springnew';
-		$this->template = 'SpringNewTemplate';
+		$this->template  = 'SpringNewTemplate';
 	}
 
 	function setupSkinUserCss(OutputPage $out) {
 		parent::setupSkinUserCss($out);
-		$out->addStyle('../../skins/mediawiki/spring.css');
+		$meta = file_get_contents('../templates/meta.html');
+		$meta = str_replace('{META}', "<link href='/skins/mediawiki/spring.css' rel='stylesheet' type='text/css' />", $meta);
+		$out->addHeadItem("spring_meta", $meta);
 	}
 };
 
+
 class SpringNewTemplate extends LegacyTemplate {
 
-	protected $searchboxes = '';
-	// How many search boxes have we made?  Avoid duplicate id's.
-
-	function getStylesheet() {
-		return '../../skins/mediawiki/spring.css';
-	}
 	function getSkinName() {
 		return "springnew";
 	}
@@ -47,27 +44,13 @@ class SpringNewTemplate extends LegacyTemplate {
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);
-		$s .= '<tr><td>';
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" width="760">';
-		$s .= '<tr>';
-		$s .= '<td bgcolor="#20292E" width="1"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '<td bgcolor="#4C626F" width="758">';
-
-		$s .= "\n<div id='content'>\n";
-
-
-		//$s .= '<table border="0" cellpadding="0" cellspacing="0" width="758"><tr>';
-		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
-		//$s .= '<td width="738">';
-
-		$s .= "<div id='article'>";
+		$s .= "\n<div id='content'>";
+		$s .= "\n<div id='article'>";
 
 		$notice = $this->data['sitenotice'];
 		if( $notice ) {
 			$s .= "\n<div id='siteNotice'>$notice</div>\n";
 		}
-		//$s .= $this->pageTitle();
-//		$s .= $this->pageSubtitle() . "\n";
 
 		return $s;
 	}
@@ -75,57 +58,32 @@ class SpringNewTemplate extends LegacyTemplate {
 	function doAfterContent()
 	{
 		global $wgUser, $wgOut;
-
-		$s = "\n</div><br clear='all' />\n";
-
-		//$s .= '</td>';
-		//$s .= '<td width="10"><img src="/images/pixel.gif" height="10" width="10" /><br /></td>';
-		//$s .= '</tr></table>';
+		$s = "";
 
 		// category fix
-		$catstr = $this->getSkin()->getCategories();
 		$catlinks = $this->getSkin()->getCategoryLinks();
 		if (strlen($catlinks) > 2) {
-			$s .= '<table border="0" cellpadding="0" cellspacing="0" width="100%" id="categories"><tr>';
-			$s .= '<td width="10">&nbsp;</td><td>';
-
-			$s .= '<table border="0" cellpadding="0" width="100%" id="toc"><tr><td>';
-
 			// Mediawiki 1.19 adds the ul and li tags, which mediawiki 1.16 did not have.
+			$catstr = $this->getSkin()->getCategories();
 			$catstr = str_replace('<ul>', '', str_replace('</ul>', '', $catstr));
 			$catstr = str_replace('<li>', '', str_replace('</li>', ' ', $catstr));
 			$s .= $catstr;
-
-			$s .= '</td></tr></table>';
-
-			$s .= '</td><td width="10">&nbsp;</td></tr></table>';
 		}
 
+		$s .= "\n</div>\n";
 
 		$qb = $this->getSkin()->qbSetting();
 		if ( 0 != $qb ) { $s .= $this->quickBar(); }
 
 		$s .= "\n<div id='footer'>";
-		$s .= "<table width='100%' border='0' cellspacing='0'><tr>";
-
-		$s .= "<td class='bottom' align='left' valign='top'>&nbsp;&nbsp;";
-
-		$s .= $this->searchForm(wfMsg("qbfind"));
-
-		$s .= "</td>";
-		//$s .= '<td class="bottom" align="right"><a href="http://www.mediawiki.org">MediaWiki</a>&nbsp;&nbsp;';
-		//$s .= "</td>";
-		$s .= "</tr></table>\n</div>\n";
-
-
-		$s .= '</td>';
-		$s .= '<td bgcolor="#20292E"><img src="/images/pixel.gif" height="10" width="1" /><br /></td>';
-		$s .= '</tr></table>';
-
-
-		$s .= '</tr></td>';
+			$s .= "<table width='100%' border='0' cellspacing='0'>";
+				$s .= "<tr><td class='bottom' align='left' valign='top'>&nbsp;&nbsp;";
+				$s .= $this->searchForm(wfMsg("qbfind"));
+				$s .= "</td></tr>";
+			$s .= "</table>\n";
+		$s .= "</div>\n";
+		$s .= "</div>\n";
 		$s .= file_get_contents('../templates/footer.html');
-
 		return $s;
 	}
 
@@ -147,9 +105,9 @@ class SpringNewTemplate extends LegacyTemplate {
 
 		$s .= " | ";
 		if ( $wgUser->isLoggedIn() ) {
-			$s .=  Linker::makeKnownLinkObj( $lo, wfMsg( "logout" ), $q );
+			$s .= Linker::makeKnownLinkObj( $lo, wfMsg( "logout" ), $q );
 		} else {
-			$s .=  Linker::makeKnownLinkObj( $li, wfMsg( "login" ), $q );
+			$s .= Linker::makeKnownLinkObj( $li, wfMsg( "login" ), $q );
 		}
 
 		return $s;
@@ -159,104 +117,92 @@ class SpringNewTemplate extends LegacyTemplate {
 	 * Compute the sidebar
 	 * @access private
 	 */
-	function quickBar()
+	private function quickBar()
 	{
 		global $wgOut, $wgTitle, $wgUser, $wgLang, $wgContLang, $wgEnableUploads;
 
 		$tns=$wgTitle->getNamespace();
 
-		$s = "";
-		//$s = "\n<div id='quickbar'>";
+		$s  = '<div id="toolbar">';
+		$s .= '<div class="toolbartitle">Page editing toolbox</div>';
+		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="100%"><tr valign="top">';
+		$sep = "<br/>";
 
-		$s .= '<table border="0" cellpadding="0" cellspacing="0" align="right" width="758">';
-		$s .= '<tr><td width="7" rowspan="3"><img src="/images/pixel.gif" height="1" width="7" /><br /></td>';
-		$s .= '<td height="25" class="toolbar" width="751" colspan="2">Page editing toolbox</td></tr>';
-		$s .= '<tr><td bgcolor="#20292E"><img src="/images/pixel.gif" height="15" width="1" /><br /></td>';
-		$s .= '<td bgcolor="#38474E" class="bottom">';
-
-		$s .= '<table border="0" cellpadding="0" cellspacing="4" width="750"><tr valign="top"><td>';
-
-		$sep = "<br />";
-		//$s .= $this->menuHead( "qbfind" );
-		//$s .= $this->searchForm();
-
-		$s .= $this->menuHead( "qbbrowse" );
-
-		# Use the first heading from the Monobook sidebar as the "browse" section
+		// browse section
+		$section = "";
 		$browseLinks = reset($this->data['sidebar']);
-
 		foreach ( $browseLinks as $link ) {
 			if ( $link['text'] != '-' ) {
-				$s .= "<a href=\"{$link['href']}\">" .
+				$section .= "<a href=\"{$link['href']}\">" .
 					htmlspecialchars( $link['text'] ) . '</a>' . $sep;
 			}
 		}
+		$s .= $this->AddToolbarSection("qbbrowse", $section);
 
+		// page related sections
 		if ( $wgOut->isArticle() ) {
-			$s .= '</td><td>';
+			$section = "";
+			$section .= "<strong>" . $this->editThisPage() . "</strong>";
 
-			$s .= $this->menuHead( "qbedit" );
-			$s .= "<strong>" . $this->editThisPage() . "</strong>";
-
-			$s .= $sep . Linker::makeKnownLinkObj( Title::newFromText( wfMsgForContent("edithelppage") ), wfMsg( "edithelp" ) );
+			$section .= $sep . Linker::makeKnownLinkObj( Title::newFromText( wfMsgForContent("edithelppage") ), wfMsg( "edithelp" ) );
 
 			if( $wgUser->isLoggedIn() ) {
-				$s .= $sep . $this->moveThisPage();
+				$section .= $sep . $this->moveThisPage();
 			}
 			if ( $wgUser->isAllowed('delete') ) {
 				$dtp = $this->deleteThisPage();
 				if ( "" != $dtp ) {
-					$s .= $sep . $dtp;
+					$section .= $sep . $dtp;
 				}
 			}
 			if ( $wgUser->isAllowed('protect') ) {
 				$ptp = $this->protectThisPage();
 				if ( "" != $ptp ) {
-					$s .= $sep . $ptp;
+					$section .= $sep . $ptp;
 				}
 			}
-			$s .= $sep;
-			$s .= '</td><td>';
+			$section .= $sep;
+			$s .= $this->AddToolbarSection("qbedit", $section);
 
-			$s .= $this->menuHead( "qbpageoptions" );
-			$s .= $this->talkLink()
+			$section = "";
+			$section .= $this->talkLink()
 			  . $sep . $this->commentLink()
 			  . $sep . $this->printableLink();
 			if ( $wgUser->isLoggedIn() ) {
-				$s .= $sep . $this->watchThisPage();
+				$section .= $sep . $this->watchThisPage();
 			}
 
-			$s .= $sep;
-			$s .= '</td><td>';
+			$section .= $sep;
+			$s .= $this->AddToolbarSection("qbpageoptions", $section);
 
-			$s .= $this->menuHead("qbpageinfo")
-			  . $this->historyLink()
+			$section = "";
+			$section .= $this->historyLink()
 			  . $sep . $this->whatLinksHere()
 			  . $sep . $this->watchPageLinksLink();
 
 			if( $tns == NS_USER || $tns == NS_USER_TALK ) {
 				$id=User::idFromName($wgTitle->getText());
 				if ($id != 0) {
-					$s .= $sep . $this->userContribsLink();
+					$section .= $sep . $this->userContribsLink();
 					if( $this->getSkin()->showEmailUser( $id ) ) {
-						$s .= $sep . $this->emailUserLink();
+						$section .= $sep . $this->emailUserLink();
 					}
 				}
 			}
-			$s .= $sep;
+			$section .= $sep;
+			$s .= $this->AddToolbarSection("qbpageinfo", $section);
 		}
-		$s .= '</td><td>';
 
-		$s .= $this->menuHead( "qbmyoptions" );
+		// login/user section
+		$section = "";
 		if ( $wgUser->isLoggedIn() ) {
 			$name = $wgUser->getName();
-			$tl = Linker::makeKnownLinkObj( $wgUser->getTalkPage(),
-				wfMsg( 'mytalk' ) );
+			$tl = Linker::makeKnownLinkObj($wgUser->getTalkPage(), wfMsg( 'mytalk' ) );
 			if ( $wgUser->getNewtalk() ) {
 				$tl .= " *";
 			}
 
-			$s .= Linker::makeKnownLinkObj( $wgUser->getUserPage(),
+			$section .= Linker::makeKnownLinkObj( $wgUser->getUserPage(),
 				wfMsg( "mypage" ) )
 			  . $sep . $tl
 			  . $sep . Linker::specialLink( "watchlist" )
@@ -265,42 +211,36 @@ class SpringNewTemplate extends LegacyTemplate {
 			  . $sep . Linker::specialLink( "preferences" )
 			  . $sep . Linker::specialLink( "userlogout" );
 		} else {
-			$s .= Linker::specialLink( "userlogin" );
+			$section .= Linker::specialLink( "userlogin" );
 		}
+		$s .= $this->AddToolbarSection("qbmyoptions", $section);
 
-		$s .= '</td><td>';
-
-		$s .= $this->menuHead( "qbspecialpages" )
-		  . Linker::specialLink( "newpages" )
-		  . $sep . Linker::specialLink( "imagelist" )
-		  . $sep . Linker::specialLink( "statistics" );
-//		  . $sep . $this->bugReportsLink();
+		// special spages section
+		$section = "";
+		$section .= Linker::specialLink( "newpages" )
+		   . $sep . Linker::specialLink( "imagelist" )
+		   . $sep . Linker::specialLink( "statistics" );
 		if ( $wgUser->isLoggedIn() && $wgEnableUploads ) {
-			$s .= $sep . Linker::specialLink( "upload" );
+			$section .= $sep . Linker::specialLink( "upload" );
 		}
 		global $wgSiteSupportPage;
 		if( $wgSiteSupportPage) {
-			$s .= $sep."<a href=\"".htmlspecialchars($wgSiteSupportPage)."\" class =\"internal\">"
+			$section .= $sep."<a href=\"".htmlspecialchars($wgSiteSupportPage)."\" class =\"internal\">"
 			      .wfMsg( "sitesupport" )."</a>";
 		}
-
-		$s .= $sep . Linker::makeKnownLinkObj(
+		$section .= $sep . Linker::makeKnownLinkObj(
 			SpecialPage::getTitleFor( 'Specialpages' ),
 			wfMsg( 'moredotdotdot' ) );
+		$s .= $this->AddToolbarSection("qbspecialpages", $section);
 
-		$s .= '</td></tr></table>';
-
-		$s .= '</td></tr>';
-		$s .= '<tr height="1"><td bgcolor="#20292E" colspan="2"><img src="/images/pixel.gif" height="1" width="10" /></td>';
 		$s .= '</tr></table>';
-
-		//$s .= $sep . "\n</div>\n";
+		$s .= '</div>';
 		return $s;
 	}
 
-	function menuHead( $key )
+	private static function AddToolbarSection( $key, $content )
 	{
-		$s = "\n<h6>" . wfMsg( $key ) . "</h6>";
+		$s = "\n<td><div class='toolbarsection' id='$key'><h6>" . wfMsg( $key ) . "</h6>$content</div></td>";
 		return $s;
 	}
 
@@ -317,6 +257,10 @@ class SpringNewTemplate extends LegacyTemplate {
 		  . htmlspecialchars(substr($search,0,256)) . "\" /> "
 		  . "<input type='submit' id=\"searchGoButton{$this->searchboxes}\" class=\"searchButton\" name=\"go\" value=\"" . htmlspecialchars( wfMsg( "searcharticle" ) ) . "\" />"
 		  . "<input type='submit' id=\"mw-searchButton{$this->searchboxes}\" class=\"searchButton\" name=\"fulltext\" value=\"" . htmlspecialchars( wfMsg( "search" ) ) . "\" /></form></div>";
+
+		// no google searchbox when https is used (prevents FF warning / XSS / etcetc)
+		if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443)
+			return $s;
 
 		// Ensure unique id's for search boxes made after the first
 		$this->searchboxes = $this->searchboxes == '' ? 2 : $this->searchboxes + 1;

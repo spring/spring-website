@@ -460,6 +460,11 @@ class Parser {
 				"Template argument size: {$this->mIncludeSizes['arg']}/$max bytes\n".
 				$PFreport;
 			wfRunHooks( 'ParserLimitReport', array( $this, &$limitReport ) );
+
+			// Sanitize for comment. Note '‐' in the replacement is U+2010,
+			// which looks much like the problematic '-'.
+			$limitReport = str_replace( array( '-', '&' ), array( '‐', '&amp;' ), $limitReport );
+
 			$text .= "\n<!-- \n$limitReport-->\n";
 		}
 		$this->mOutput->setText( $text );
@@ -1481,6 +1486,9 @@ class Parser {
 		wfProfileIn( __METHOD__ );
 
 		$bits = preg_split( $this->mExtLinkBracketedRegex, $text, -1, PREG_SPLIT_DELIM_CAPTURE );
+		if ( $bits === false ) {
+			throw new MWException( "PCRE needs to be compiled with --enable-unicode-properties in order for MediaWiki to function" );
+		}
 		$s = array_shift( $bits );
 
 		$i = 0;

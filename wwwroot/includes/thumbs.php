@@ -20,11 +20,33 @@
             if (!$image)
                 return 'images/screen1.jpg';
 
+            $srcw = imagesx($image);
+            $srch = imagesy($image);
+
+            $clipx = 0;
+            $clipy = 0;
+            $clipw = $srcw;
+            $cliph = $srch;
+            if ($xsize < ($srcw * 0.5)) {
+                $maxclip = 0.8;
+                $s = max($xsize / $srcw - $maxclip, 0.0) / (1.0 - $maxclip);
+                $scale = $maxclip + (1.0 - $maxclip) * $s;
+                $clipx = ($srcw * (1.0 - $scale)) / 2.0;
+                $clipw = $srcw - ($clipx * 2);
+            }
+            if ($ysize < ($srch * 0.5)) {
+                $maxclip = 0.8;
+                $s = max($ysize / $srch - $maxclip, 0.0) / (1.0 - $maxclip);
+                $scale = $maxclip + (1.0 - $maxclip) * $s;
+                $clipy = ($srch * (1.0 - $scale)) / 2.0;
+                $cliph = $srch - ($clipy * 2);
+            }
+
             // imagecopyresampled assumes images are at gamma 1.0, while they probably are at 2.2 (sRGB)
             // details and examples: http://www.4p8.com/eric.brasseur/gamma.html 
             imagegammacorrect($image, 2.2, 1.0);
             $imageout = imagecreatetruecolor($xsize, $ysize);
-            imagecopyresampled($imageout, $image, 0, 0, 0, 0, $xsize, $ysize, imagesx($image), imagesy($image));
+            imagecopyresampled($imageout, $image, 0, 0, $clipx, $clipy, $xsize, $ysize, $clipw, $cliph);
             imagegammacorrect($imageout, 1.0, 2.2);
             imagejpeg($imageout, $thumbname);
         }

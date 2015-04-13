@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2013  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
  * @file
  *
  * @author Hamilton Abreu
+ * @author Luckas
  */
 
 $s_plugin_graph_title = 'Gráficos do Mantis';
@@ -85,7 +86,7 @@ $s_plugin_MantisGraph_period_last_quarter = 'Trimeste Passado';
 $s_plugin_MantisGraph_period_year_to_date = 'Ano Até à Data';
 $s_plugin_MantisGraph_period_select = 'Datas Arbitrárias';
 $s_plugin_MantisGraph_period_last_year = 'Ano Passado';
-$s_plugin_MantisGraph_select = 'Seleccione';
+$s_plugin_MantisGraph_select = 'Por favor, selecione';
 $s_plugin_MantisGraph_select_bystatus = 'por Estado';
 $s_plugin_MantisGraph_select_summbystatus = 'Resumo por Estado';
 $s_plugin_MantisGraph_select_bycat = 'Resumo por Categoria';
