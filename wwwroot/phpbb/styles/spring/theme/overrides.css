@@ -113,6 +113,21 @@ fieldset.fields1 dd {
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
+.postbody .inline-attachment {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    max-width: 95%;
+    background-color: rgba(255,255,255,1);
+    border: 1px dashed #999;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}  
+
+.postbody .attachbox {
+	padding: 10px;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
 /* FontAwesome Overrides -- Proof of concept */
 /*
 dl.icon.forum_unread:before {
