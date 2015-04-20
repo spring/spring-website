@@ -103,6 +103,7 @@ fieldset.fields1 dd {
 
 /* Sexy Additions */
 
+/* Images in posts */
 .postbody img.postimage {
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -111,6 +112,42 @@ fieldset.fields1 dd {
 	background-color: rgba(255,255,255,1);
 	border: 1px dashed #999;
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Links in posts */
+a.postlink:after {
+    font-family: FontAwesome;
+    content: " \f08e";
+
+}
+
+a.postlink {
+    display: inline-block;
+	word-break: break-all;
+    max-width: 96%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+    font-weight: bold;
+    background-color: rgba(255,255,255,1);
+    border: 1px dashed #999;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Attachments */
+.imageset.icon_topic_attach:before {
+    font-family: FontAwesome;
+    content: " \f0c6";
+    position: absolute;
+    margin-top: -13px;
+
+}
+
+.imageset.icon_topic_attach {
+    background-image: none;
+    margin-right: 13px;
 }
 
 .postbody .inline-attachment {
