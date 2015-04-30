@@ -101,6 +101,24 @@ fieldset.fields1 dd {
 	}
 }
 
+/* Fix Post Attachment Box */
+
+.attach-name {
+	width: 40% !important;
+}
+
+.attach-comment {
+	width: 40% !important;
+}
+
+.attach-filesize {
+	width: 10% !important;
+}
+
+.attach-status {
+	  width: 10% !important;
+}
+
 /* Sexy Additions */
 
 /* Images in posts */
