@@ -1,4 +1,5 @@
 /* Table Of Contents
+	0.1 - Color Fixes
 	1.0 - Responsive Fixes
 		1.1 - Posting Box
 		1.2 - Avatars
@@ -10,6 +11,45 @@
 		2.4 - Buttons
 
 */
+
+/* 0.1 - Responsive fixes */
+
+.forabg {
+	background-color: #0076b1 !important;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+}
+
+.forumbg {
+	background-color: #12A3EB !important;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+}
+
 
 /* 1.0 - Responsive fixes */
 
