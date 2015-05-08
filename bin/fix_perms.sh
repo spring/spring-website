@@ -1,20 +1,12 @@
 #!/bin/sh
 
 files="
- cache
  wwwroot/thumbs
  wwwroot/phpbb/cache
  wwwroot/phpbb/files
  wwwroot/phpbb/store
  wwwroot/phpbb/images/avatars/upload
  wwwroot/mediawiki/images
- wwwroot/piwik/tmp
- wwwroot/piwik/tmp/assets
- wwwroot/piwik/tmp/cache
- wwwroot/piwik/tmp/latest
- wwwroot/piwik/tmp/sessions
- wwwroot/piwik/tmp/tcpdf
- wwwroot/piwik/tmp/templates_c
 "
 
 if [ -f /etc/redhat-release ]; then
