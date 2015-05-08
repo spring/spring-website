@@ -12,6 +12,7 @@ springpw.php
 /wwwroot/phpbb/files
 /wwwroot/phpbb/store
 /wwwroot/phpbb/images/avatars/upload
+/wwwroot/phpbb/install
 
 # mediawiki
 /wwwroot/mediawiki/images
