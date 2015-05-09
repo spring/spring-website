@@ -9,9 +9,6 @@
     // Prepare newsitems
     $news = get_news();
 
-    // Prepare community headlines
-    $cnews = get_community_news();
-
     // Get a random welcome image
     $sql = '';
     $sql .= 'select a.attach_id ';
@@ -75,8 +72,8 @@
 
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
-    $fpkeys = array('#NEWSITEMS#', '#CNEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#');
-    $fpitems = array($news, $cnews, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile);
+    $fpkeys = array('#NEWSITEMS#', '#WELCOME#', '#SCREEN1#', '#SCREEN2#', '#SCREEN3#', '#SCREEN4#', '#VIDEOFILE#');
+    $fpitems = array($news, $welcome, $screenthumbs[0], $screenthumbs[1], $screenthumbs[2], $screenthumbs[3], $videofile);
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
 
     // Compose the final page
