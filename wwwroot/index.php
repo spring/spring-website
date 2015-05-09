@@ -68,7 +68,7 @@
 			"https://www.youtube.com/embed/e0R2QsMwc98?rel=0&autohide=1", #NOTA trailer
 			"https://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 		);
-    $videofile = $videos[array_rand($videos)];
+    $videofile = str_replace($videos[array_rand($videos)], "&", "&amp;");
 
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
