@@ -9,6 +9,7 @@
 		2.2 - Links in posts
 		2.3 - Attachments Box
 		2.4 - Buttons
+		2.5 - Pagination
 
 */
 
@@ -239,7 +240,7 @@ a.postlink {
 
 /* 2.4 - Buttons */
 .button1 {
-    font-weight: bold !importan;
+    font-weight: bold !important;
 	padding: 5px 10px !important;
 	margin: 10px !important;
     color: #fff !important;
@@ -266,7 +267,7 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-ou !importantt;
+    transition: all 0.2s ease-in-out !importantt;
 }
 .button1:hover {
 	color: #f0f0f0 !important;
@@ -275,7 +276,7 @@ a.postlink {
 }
 
 .button2 {
-    font-weight: bold !importan;
+    font-weight: bold !important;
 	padding: 5px 10px !important;
 	margin: 5px !important;
     color: #fff !important;
@@ -302,12 +303,161 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-ou !importantt;
+    transition: all 0.2s ease-in-out !importantt;
 }
 .button2:hover {
 	color: #f0f0f0 !important;
     box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
 	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 2.5 - Pagination */
+
+.pagination ul li a {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 5px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !importantt;
+}
+.pagination ul li a:hover {
+	color: #f0f0f0 !important;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.pagination ul li.active span {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 5px !important;
+    color: #f0f0f0 !important;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !importantt;
+}
+
+.pagination ul li.ellipsis span {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 5px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !importantt;
+}
+
+.pagination ul li.page-jump a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.page-jump a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.page-jump a:before {
+	font-family: FontAwesome !important;
+	content: "\f064" !important;
+	color: #fff !important;
+	font-size: 10px !important;
+}
+
+.pagination ul li.previous a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.previous a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.previous a:before {
+	font-family: FontAwesome;
+	content: "\f053" !important;
+	color: #fff !important;
+	font-size: 10px !important;
+}
+
+.pagination ul li.next a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.next a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.next a:before {
+	font-family: FontAwesome !important;
+	content: "\f054" !important;
+	color: #fff;
+	font-size: 10px !important;
 }
 
 
