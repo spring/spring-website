@@ -26,6 +26,8 @@
                       '/\[color=(.*?):\w*\]/',
                       '/\[\/color:\w*\]/',
                       '/\n/',
+                      '/\[code:\w*\]/',
+                      '/\[\/code:\w*\]/',
                       );
         $data = array('/phpbb/images/smilies',
                       '<b>',
@@ -50,6 +52,8 @@
                       '<span style="color:$1">',
                       '</span>',
                       '<br />',
+                      '<div class="codebox">',
+                      '</div>',
                       );
         return preg_replace($keys, $data, $str);
     }
