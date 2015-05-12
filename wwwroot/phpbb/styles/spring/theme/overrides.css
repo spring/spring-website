@@ -308,8 +308,8 @@ a.postlink {
 
 .pagination ul li a {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #fff !important;
 	
 	background-image: -webkit-gradient(
@@ -345,8 +345,8 @@ a.postlink {
 
 .pagination ul li.active span {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #f0f0f0 !important;
     box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
 	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
@@ -378,8 +378,8 @@ a.postlink {
 
 .pagination ul li.ellipsis span {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #fff !important;
 	
 	background-image: -webkit-gradient(
