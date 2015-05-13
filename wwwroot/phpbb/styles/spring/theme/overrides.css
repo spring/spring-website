@@ -260,7 +260,7 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-out !importantt;
+    transition: all 0.2s ease-in-out !important;
 }
 .button1:hover {
 	color: #f0f0f0 !important;
@@ -296,7 +296,7 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-out !importantt;
+    transition: all 0.2s ease-in-out !important;
 }
 .button2:hover {
 	color: #f0f0f0 !important;
@@ -308,8 +308,8 @@ a.postlink {
 
 .pagination ul li a {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #fff !important;
 	
 	background-image: -webkit-gradient(
@@ -335,7 +335,7 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-out !importantt;
+    transition: all 0.2s ease-in-out !important;
 }
 .pagination ul li a:hover {
 	color: #f0f0f0 !important;
@@ -345,11 +345,11 @@ a.postlink {
 
 .pagination ul li.active span {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #f0f0f0 !important;
     box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
-	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
 	
 	background-image: -webkit-gradient(
 		linear,
@@ -358,12 +358,12 @@ a.postlink {
 		color-stop(0.9, #455761),
 		color-stop(0.9, #3c4c55)
 	) !important;
-	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
-	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
-	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
-	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -o-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
 	
-    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+    background-image: linear-gradient(to bottom, #536482 95%, #3c4c55 95%) !important;
 	
 	border: 0px solid #000 !important;
     border-radius: 10px !important;
@@ -373,13 +373,13 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-out !importantt;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .pagination ul li.ellipsis span {
     font-weight: bold !important;
-	padding: 5px 10px !important;
-	margin: 5px !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
     color: #fff !important;
 	
 	background-image: -webkit-gradient(
@@ -405,7 +405,7 @@ a.postlink {
     -moz-transition: all 0.2s ease-in-out !important;
     -ms-transition: all 0.2s ease-in-out !important;
     -o-transition: all 0.2s ease-in-out !important;
-    transition: all 0.2s ease-in-out !importantt;
+    transition: all 0.2s ease-in-out !important;
 }
 
 .pagination ul li.page-jump a {
