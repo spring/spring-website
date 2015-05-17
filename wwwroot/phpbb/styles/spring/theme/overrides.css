@@ -101,6 +101,9 @@ ul.linklist > li.rightside, p.rightside, a.rightside {
 	.search-box {
 		float: right !important;
 	}
+	.pagination {
+		  clear: both !important;
+	}
 }
 
 @media screen and (max-width: 375px) {
