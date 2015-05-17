@@ -16,6 +16,7 @@ springpw.php
 
 # mediawiki
 /wwwroot/mediawiki/images
+/wwwroot/mediawiki/tests
 
 # downloads
 /wwwroot/dl
