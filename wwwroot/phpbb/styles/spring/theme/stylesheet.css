@@ -8,3 +8,4 @@
 /* PhpBB specific Spring css */
 @import url("spring.css");
 @import url("overrides.css");
+@import url("normalize.css");
