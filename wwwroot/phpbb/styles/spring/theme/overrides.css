@@ -58,6 +58,7 @@
 
 #wrap {
 	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
+	margin: 0px 0px !important; /* Why the hell is there a margin in the wrap when there is already a margin in the forum boundry??? -_- */
 }
 
 ul.linklist > li.rightside, p.rightside, a.rightside {
