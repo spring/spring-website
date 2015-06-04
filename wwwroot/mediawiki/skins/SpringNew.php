@@ -22,7 +22,8 @@ class SkinSpringNew extends SkinLegacy {
 	function setupSkinUserCss(OutputPage $out) {
 		parent::setupSkinUserCss($out);
 		$meta = file_get_contents('../templates/meta.html');
-		$meta = str_replace('{META}', "<link href='/skins/mediawiki/spring.css' rel='stylesheet' type='text/css' />", $meta);
+		$meta = str_replace('{META}', "<link href='/skins/mediawiki/spring.css' rel='stylesheet' type='text/css' />
+										<link href='/phpbb/styles/spring/theme/header-navbar.css' rel='stylesheet' type='text/css' />", $meta); /* Import the navbar css too */
 		$out->addHeadItem("spring_meta", $meta);
 	}
 };
@@ -40,7 +41,7 @@ class SpringNewTemplate extends LegacyTemplate {
 		$qb = $this->getSkin()->qbSetting();
 		$mainPageObj = Title::newMainPage();
 
-		$s .= file_get_contents('../templates/header.html');
+		$s .= file_get_contents('../templates/header-offsite.html');
 		$title = htmlspecialchars($wgOut->getPageTitle());
 
 		$s = str_replace('{PAGE_TITLE}', $title, $s);
