@@ -1,0 +1,25 @@
+/* Sigh. Why the heck hasn't this been reset??? Will figure it out and pretty it up when I get the will to mess with the wiki styles. Hopefully they suck slightly less than the needless style orgy that is phpbb. */
+ul, menu, dir {
+	-webkit-margin-before: 0 !important;
+	-webkit-margin-after: 0 !important;
+}
+
+/* Are you effing kidding me phpbb??? */
+.header-navbar-menu ul li {
+	line-height: 0.63em;
+}
+
+/* Thank you phpbb, you effing suck. */
+.header-navbar-menu ul li a {
+	font-size: 0.63em;
+}
+
+/* I hate phpbb */
+.header-navbar-menu {
+	margin-top: 8px;
+}
+
+/* Now this si jsut getting pathetic -_- */
+.header-navbar-menu ul {
+	padding: 0;
+}
