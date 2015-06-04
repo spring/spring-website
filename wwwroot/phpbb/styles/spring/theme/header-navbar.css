@@ -49,6 +49,7 @@
 
 .header-navbar-menu ul li a {
 	color: #fff;
+	text-decoration: none;
 }
 
 .header-navbar-menu ul li a:hover {
