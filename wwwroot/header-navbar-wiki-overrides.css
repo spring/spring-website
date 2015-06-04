@@ -4,7 +4,12 @@ ul, menu, dir {
 	-webkit-margin-after: 0 !important;
 }
 
-/* Thank you phpbb, you fricking suck. */
+/* Are you effing kidding me phpbb??? */
+.header-navbar-menu ul li {
+	line-height: 0.63em;
+}
+
+/* Thank you phpbb, you effing suck. */
 .header-navbar-menu ul li a {
 	font-size: 0.63em;
 }
@@ -12,4 +17,9 @@ ul, menu, dir {
 /* I hate phpbb */
 .header-navbar-menu {
 	margin-top: 8px;
+}
+
+/* Now this si jsut getting pathetic -_- */
+.header-navbar-menu ul {
+	padding: 0;
 }
