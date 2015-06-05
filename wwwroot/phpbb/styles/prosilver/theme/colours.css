@@ -59,38 +59,12 @@ hr {
 
 .forabg {
 	background-color: #0076b1;
-	background-image: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0, #8F969B),
-		color-stop(0, #606A71),
-		color-stop(1, #3A4A53),
-		color-stop(1, #20292E)
-	);
-	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: url("./images/bg_list.gif");
 }
 
 .forumbg {
 	background-color: #12A3EB;
-	background-image: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0, #8F969B),
-		color-stop(0, #606A71),
-		color-stop(1, #3A4A53),
-		color-stop(1, #20292E)
-	);
-	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
-	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%);
+	background-image: url("./images/bg_header.gif");
 }
 
 .panel {
@@ -122,7 +96,9 @@ table.zebra-list tr:nth-child(even) td, ul.zebra-list li:nth-child(even) {
 	background-color: #e1ebf2;
 }
 
-.bg3	{ background-color: #cadceb; }
+.bg3	{
+	background-color: #cadceb;
+}
 
 .ucprowbg {
 	background-color: #DCDEE2;
@@ -190,9 +166,9 @@ dl.details dd {
 ---------------------------------------- */
 
 .pagination li a {
-	color: #5C758C;
 	background-color: #ECEDEE;
 	border-color: #B4BAC0;
+	color: #5C758C;
 }
 
 .pagination li.ellipsis span {
@@ -201,14 +177,14 @@ dl.details dd {
 }
 
 .pagination li.active span {
-	color: #FFFFFF;
 	background-color: #4692BF;
 	border-color: #4692BF;
+	color: #FFFFFF;
 }
 
 .pagination li a:hover, .pagination .dropdown-visible a.dropdown-trigger, .nojs .pagination .dropdown-container:hover a.dropdown-trigger {
-	border-color: #368AD2;
 	background-color: #368AD2;
+	border-color: #368AD2;
 	color: #FFFFFF;
 }
 
@@ -289,13 +265,13 @@ a:hover	{ color: #D31141; }
 
 /* Post body links */
 .postlink {
-	color: #368AD2;
 	border-bottom-color: #368AD2;
+	color: #368AD2;
 }
 
 .postlink:visited {
-	color: #5D8FBD;
 	border-bottom-color: #5D8FBD;
+	color: #5D8FBD;
 }
 
 .postlink:hover {
@@ -341,18 +317,7 @@ Colours and backgrounds for content.css
 
 ul.forums {
 	background-color: #eef5f9;
-	background-image: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0, #D2E0EB),
-		color-stop(1, #EEF5F9)
-	);
-	background-image: -o-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
-	background-image: -moz-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
-	background-image: -webkit-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
-	background-image: -ms-linear-gradient(bottom, #D2E0EB 0%, #EEF5F9 100%);
-	background-image: linear-gradient(to bottom, #D2E0EB 0%, #EEF5F9 100%);
+	background-image: url("./images/gradient.gif");
 }
 
 ul.topiclist li {
@@ -378,7 +343,7 @@ ul.topiclist li.row dt a.subforum.unread {
 
 li.row {
 	border-top-color:  #FFFFFF;
-	border-bottom-color: #a8b2ba;
+	border-bottom-color: #00608F;
 }
 
 li.row strong {
@@ -693,7 +658,6 @@ Colours and backgrounds for buttons.css
 .icon-register				{ background-image: url("./images/icon_register.gif"); }
 .icon-search, .responsive-search a	{ background-image: url("./images/icon_search.gif"); }
 .icon-search-active			{ background-image: url("./images/subforum_read.gif"); }
-.icon-search-advanced		{ background-image: url("./images/icon_search_adv.gif"); }
 .icon-search-new			{ background-image: url("./images/subforum_unread.gif"); }
 .icon-search-self			{ background-image: url("./images/icon_topic_latest.gif"); }
 .icon-search-unanswered		{ background-image: url("./images/icon_post_target.gif"); }

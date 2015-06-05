@@ -1,9 +1,64 @@
-/* Responsive fixes */
+/* Table Of Contents
+	0.1 - Color Fixes
+	1.0 - Responsive Fixes
+		1.1 - Posting Box
+		1.2 - Avatars
+		1.3 - Post Attachment Box
+	2.0 - Sexy Additions
+		2.1 - Images in Posts
+		2.2 - Links in posts
+		2.3 - Attachments Box
+		2.4 - Buttons
+		2.5 - Pagination
+
+*/
+
+/* 0.1 - Responsive fixes */
+
+.forabg {
+	background-color: #0076b1 !important;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+}
+
+.forumbg {
+	background-color: #12A3EB !important;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0, #8F969B),
+		color-stop(0, #606A71),
+		color-stop(1, #3A4A53),
+		color-stop(1, #20292E)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -moz-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -webkit-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: -ms-linear-gradient(bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+	background-image: linear-gradient(to bottom, #8F969B 0%, #606A71 1%, #3A4A53 99%, #20292E 100%) !important;
+}
+
+
+/* 1.0 - Responsive fixes */
 
 /* Important is bad mmmk? Unfortunately a lot of these require it and in this particular case it's not so terrible of a sin, but try not to use important unless you really really have to (says the guy who uses important like it's going out of style below */
 
 #wrap {
 	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
+	margin: 0px 0px !important; /* Why the hell is there a margin in the wrap when there is already a margin in the forum boundry??? -_- */
 }
 
 ul.linklist > li.rightside, p.rightside, a.rightside {
@@ -47,6 +102,9 @@ ul.linklist > li.rightside, p.rightside, a.rightside {
 	.search-box {
 		float: right !important;
 	}
+	.pagination {
+		  clear: both !important;
+	}
 }
 
 @media screen and (max-width: 375px) {
@@ -56,7 +114,7 @@ ul.linklist > li.rightside, p.rightside, a.rightside {
 	}
 }
 
-/* Fix posting box responsiveness -- important because too tired to deal with phpbb's crap tonight */
+/* 1.1 - Fix posting box responsiveness -- important because too tired to deal with phpbb's crap tonight */
 fieldset.fields1 dd {
     margin-left: 0px !important;
 }
@@ -83,7 +141,7 @@ fieldset.fields1 dd {
 	
 /* End Posting box fixes */
 
-/* Fix avatars responsive */
+/* 1.2 - Fix avatars responsive */
 @media screen and (max-width: 700px) {
 	.postprofile {
 		float: none !important;
@@ -101,8 +159,27 @@ fieldset.fields1 dd {
 	}
 }
 
-/* Sexy Additions */
+/* 1.3 - Fix Post Attachment Box */
 
+.attach-name {
+	width: 40% !important;
+}
+
+.attach-comment {
+	width: 40% !important;
+}
+
+.attach-filesize {
+	width: 10% !important;
+}
+
+.attach-status {
+	  width: 10% !important;
+}
+
+/* 2.0 - Sexy Additions */
+
+/* 2.1 - Images in posts */
 .postbody img.postimage {
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -113,20 +190,291 @@ fieldset.fields1 dd {
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
-/* FontAwesome Overrides -- Proof of concept */
-/*
-dl.icon.forum_unread:before {
+/* 2.2 - Links in posts */
+a.postlink:after {
     font-family: FontAwesome;
-    color: #bd3556;
-    border: 1px solid #bd3556;
+    content: " \f08e";
+
+}
+
+a.postlink {
+	word-break: break-all;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+    border: 0px dashed #999;
+}
+
+/* 2.3 - Attachments Box */
+.imageset.icon_topic_attach:before {
+    font-family: FontAwesome;
+    content: " \f0c6";
     position: absolute;
-    top: 20%;
-    left: 0.7%;
-    font-size: 18px;
-    content: "\f1ea";
+    margin-top: -13px;
+
+}
+
+.imageset.icon_topic_attach {
+    background-image: none;
+    margin-right: 13px;
+}
+
+.postbody .inline-attachment {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    max-width: 95%;
+    background-color: rgba(255,255,255,1);
+    border: 1px dashed #999;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}  
+
+.postbody .attachbox {
+	padding: 10px;
+	box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+
+/* 2.4 - Buttons */
+.button1 {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 10px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !important;
+}
+.button1:hover {
+	color: #f0f0f0 !important;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.button2 {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 5px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !important;
+}
+.button2:hover {
+	color: #f0f0f0 !important;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 2.5 - Pagination */
+
+.pagination ul li a {
+    font-weight: bold !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !important;
+}
+.pagination ul li a:hover {
+	color: #f0f0f0 !important;
+    box-shadow: 2px 2px 20px rgba(0,0,0,0.8) !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+.pagination ul li.active span {
+    font-weight: bold !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
+    color: #f0f0f0 !important;
+    box-shadow: 0px 0px 0px rgba(0,0,0,0.8) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #536482 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #536482 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.pagination ul li.ellipsis span {
+    font-weight: bold !important;
+	padding: 2px 4px !important;
+	margin: 2px !important;
+    color: #fff !important;
+	
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		left bottom,
+		color-stop(0.9, #455761),
+		color-stop(0.9, #3c4c55)
+	) !important;
+	background-image: -o-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -moz-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -webkit-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	background-image: -ms-linear-gradient(bottom, #455761 95%, #3c4c55 95%) !important;
+	
+    background-image: linear-gradient(to bottom, #455761 95%, #3c4c55 95%) !important;
+	
+	border: 0px solid #000 !important;
+    border-radius: 10px !important;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.4) !important;
+	text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4) !important;
+	
+	-webkit-transition: all 0.2s ease-in-out !important;
+    -moz-transition: all 0.2s ease-in-out !important;
+    -ms-transition: all 0.2s ease-in-out !important;
+    -o-transition: all 0.2s ease-in-out !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.pagination ul li.page-jump a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.page-jump a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.page-jump a:before {
+	font-family: FontAwesome !important;
+	content: "\f064" !important;
+	color: #fff !important;
+	font-size: 10px !important;
+}
+
+.pagination ul li.previous a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.previous a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.previous a:before {
+	font-family: FontAwesome;
+	content: "\f053" !important;
+	color: #fff !important;
+	font-size: 10px !important;
+}
+
+.pagination ul li.next a {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.next a:hover {
+	background-position: 0px 0px !important;
+}
+
+.pagination ul li.next a:before {
+	font-family: FontAwesome !important;
+	content: "\f054" !important;
+	color: #fff;
+	font-size: 10px !important;
+}
+
+
+/* FontAwesome Overrides -- Proof of concept */
+
+/*
+dl.icon.topic_moved:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #2a77b9;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f064";
+    width: 14px;
+    height: 14px;
     background-color: #fff;
     padding: 5px;
-    border-radius: 500px;
+    border-radius: 12px;
     box-shadow: 0px 0px 2px #000;
 
     background-image: -webkit-gradient(
@@ -142,7 +490,403 @@ dl.icon.forum_unread:before {
     background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
     background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
 }
-dl.icon.forum_unread {
+dl.icon.topic_moved {
+    background-image: none;
+}
+
+dl.icon.topic_read:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #2a77b9;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read {
+    background-image: none;
+}
+
+dl.icon.topic_read_hot:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #2a77b9;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read_hot {
+    background-image: none;
+}
+
+dl.icon.topic_read_hot_mine:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read_hot_mine {
+    background-image: none;
+}
+
+dl.icon.topic_read_locked:before {
+	font-family: FontAwesome;
+	color: #666666;
+	border: 1px solid #2a77b9;
+	position: absolute;
+	top: 19%;
+	left: 1.1%;
+	font-size: 14px;
+	content: "\f023";
+	width: 11px;
+	height: 14px;
+	background-color: #fff;
+	padding: 5px 5px 5px 7px;
+	border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read_locked {
+    background-image: none;
+}
+
+dl.icon.topic_read_locked_mine:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f023";
+	width: 11px;
+	height: 14px;
+	background-color: #fff;
+	padding: 5px 5px 5px 7px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read_locked_mine {
+    background-image: none;
+}
+
+dl.icon.topic_read_mine:before {
+    font-family: FontAwesome;
+    color: #666666;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_read_mine {
+    background-image: none;
+}
+
+dl.icon.topic_unread:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread {
+    background-image: none;
+}
+
+dl.icon.topic_unread_hot:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread_hot {
+    background-image: none;
+}
+
+dl.icon.topic_unread_hot_mine:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread_hot_mine {
+    background-image: none;
+}
+
+dl.icon.topic_unread_locked:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f023";
+	width: 11px;
+	height: 14px;
+	background-color: #fff;
+	padding: 5px 5px 5px 7px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread_locked {
+    background-image: none;
+}
+
+dl.icon.topic_unread_locked_mine:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f023";
+	width: 11px;
+	height: 14px;
+	background-color: #fff;
+	padding: 5px 5px 5px 7px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread_locked_mine {
+    background-image: none;
+}
+
+dl.icon.topic_unread_mine:before {
+    font-family: FontAwesome;
+    color: #bd3556;
+    border: 1px solid #bd3556;
+    position: absolute;
+    top: 19%;
+    left: 1.1%;
+    font-size: 14px;
+    content: "\f039";
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 12px;
+    box-shadow: 0px 0px 2px #000;
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #FDFEFE),
+        color-stop(1, #E0E1E5)
+    );
+    background-image: -o-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -moz-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -webkit-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: -ms-linear-gradient(bottom, #FDFEFE 0%, #E0E1E5 100%);
+    background-image: linear-gradient(to bottom, #FDFEFE 0%, #E0E1E5 100%);
+}
+dl.icon.topic_unread_mine {
     background-image: none;
 }
 */

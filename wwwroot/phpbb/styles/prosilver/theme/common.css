@@ -53,9 +53,7 @@ html {
 }
 
 body {
-	/* Text-Sizing with ems: http://www.clagnut.com/blog/348/ */
 	font-family: Verdana, Helvetica, Arial, sans-serif;
-	/*font-size: 62.5%;			 This sets the default font size to be equivalent to 10px */
 	font-size: 10px;
 	line-height: normal;
 	margin: 0;
@@ -113,7 +111,6 @@ img {
 }
 
 hr {
-	/* Also see tweaks.css */
 	border: 0 solid transparent;
 	border-top-width: 1px;
 	height: 1px;
@@ -179,7 +176,14 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 	border-radius: 8px;
 	margin: 0 auto;
 	max-width: 1152px;
+	min-width: 625px;
 	padding: 15px;
+}
+
+@media only screen and (max-width: 1220px), only screen and (max-device-width: 1220px) {
+	#wrap {
+		margin: 0 12px;
+	}
 }
 
 #page-body {
@@ -664,6 +668,8 @@ table.table1 tbody th {
 
 /* Specific column styles */
 table.table1 .name		{ text-align: left; }
+table.table1 .center		{ text-align: center; }
+table.table1 .reportby	{ width: 15%; }
 table.table1 .posts		{ text-align: center; width: 7%; }
 table.table1 .joined	{ text-align: left; width: 15%; }
 table.table1 .active	{ text-align: left; width: 15%; }
@@ -704,8 +710,7 @@ table.info tbody th {
 
 /* Misc layout styles
 ---------------------------------------- */
-/* column[1-2] styles are containers for two column layouts
-   Also see tweaks.css */
+/* column[1-2] styles are containers for two column layouts */
 .column1 {
 	float: left;
 	clear: left;
