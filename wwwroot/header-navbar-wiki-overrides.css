@@ -1,8 +1,4 @@
 /* Sigh. Why the heck hasn't this been reset??? Will figure it out and pretty it up when I get the will to mess with the wiki styles. Hopefully they suck slightly less than the needless style orgy that is phpbb. */
-ul, menu, dir {
-	-webkit-margin-before: 0 !important;
-	-webkit-margin-after: 0 !important;
-}
 
 /* Are you effing kidding me phpbb??? */
 .header-navbar-menu ul li {
@@ -19,7 +15,9 @@ ul, menu, dir {
 	margin-top: 9px;
 }
 
-/* Now this si jsut getting pathetic -_- */
+/* Now this is jsut getting pathetic -_- */
 .header-navbar-menu ul {
 	padding: 0;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
