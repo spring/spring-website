@@ -77,7 +77,7 @@
     $fp = str_replace($fpkeys, $fpitems, $fptemplate);
 
     // Compose the final page
-    $headertemplate = file_get_contents('templates/header.html');
+    $headertemplate = file_get_contents('templates/header-offsite.html');
     $starttemplate = file_get_contents('templates/pagestart.html');
     $metatemplate = file_get_contents('templates/meta.html');
 
