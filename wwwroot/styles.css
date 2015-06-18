@@ -5,16 +5,16 @@ html {
 	font-family: Verdana,Helvetica,Arial,sans-serif;
 
 	min-height: 100%; /* workaround: else background gradient is clamped with Opera */
-	background-color: #38464F;
+	background-color: #464B4E;
 	background-image: url(/images/background.png);
 	background-repeat:repeat-x;
 
 	/* replicates the image based background */
-	background: linear-gradient(top, #628ca3, #28404f 765px);
-	background: -o-linear-gradient(top, #628ca3, #28404f 765px);
-	background: -moz-linear-gradient(top, #628ca3, #28404f 765px);
-	background: -webkit-linear-gradient(top, #628ca3, #28404f 765px);
-	background: -ms-linear-gradient(top, #628ca3, #28404f 765px);
+	background: linear-gradient(top, #464B4E, #28404f 765px);
+	background: -o-linear-gradient(top, #464B4E, #28404f 765px);
+	background: -moz-linear-gradient(top, #464B4E, #28404f 765px);
+	background: -webkit-linear-gradient(top, #464B4E, #28404f 765px);
+	background: -ms-linear-gradient(top, #464B4E, #28404f 765px);
 }
 
 body {
