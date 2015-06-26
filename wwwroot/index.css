@@ -145,8 +145,17 @@ a~a>.frontscreenshot {
 	padding-left: 4px;
 }
 
+/* THIS IS ONLY A BANDAID! */
 .news {
+	display: block;
+    max-width: 991px;
 }
+
+.news img {
+	max-width: 958px;
+}
+/* IT ENDS HERE! */
+
 .newsbar {
 	background-color: #34414A;
 	background: linear-gradient(top, #34414A, #506673 100%);
