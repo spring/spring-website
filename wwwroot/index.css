@@ -193,7 +193,8 @@ a~a>.frontscreenshot {
 	line-height: 18px;
 }
 .newsbody {
-	width: 49%;
+	max-width: 958px;
+	width: 100%;
 	padding: 8px;
 }
 .cnews {
