@@ -146,7 +146,7 @@ a~a>.frontscreenshot {
 }
 
 .news img {
-	max-width: 50%;
+	max-width: 100%;
 }
 
 .newsbar {
@@ -193,6 +193,7 @@ a~a>.frontscreenshot {
 	line-height: 18px;
 }
 .newsbody {
+	width: 49%;
 	padding: 8px;
 }
 .cnews {
