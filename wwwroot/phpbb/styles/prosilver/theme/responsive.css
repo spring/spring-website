@@ -20,7 +20,7 @@ body {
 	border: none;
 	border-radius: 0;
 	margin: 0;
-	min-width: 0px !important; /* Adding important and 0px default value because phpbb is mental and likes to dynamically overwrite */
+	min-width: 290px;
 	padding: 0 5px;
 }
 
