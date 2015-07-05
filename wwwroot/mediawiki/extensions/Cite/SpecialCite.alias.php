@@ -5,6 +5,7 @@
  * @file
  * @ingroup Extensions
  */
+// @codingStandardsIgnoreFile
 
 $specialPageAliases = array();
 
@@ -23,7 +24,7 @@ $specialPageAliases['arz'] = array(
 	'Cite' => array( 'استشهاد' ),
 );
 
-/** Assamese (অসমীয়া) */
+/** Assamese (অসমীয়া) */
 $specialPageAliases['as'] = array(
 	'Cite' => array( 'উদ্ধৃতি' ),
 );
@@ -53,12 +54,27 @@ $specialPageAliases['bs'] = array(
 	'Cite' => array( 'Citiraj' ),
 );
 
+/** буряад (буряад) */
+$specialPageAliases['bxr'] = array(
+	'Cite' => array( 'Сайт' ),
+);
+
 /** Catalan (català) */
 $specialPageAliases['ca'] = array(
 	'Cite' => array( 'Citau', 'Citeu' ),
 );
 
-/** Czech (česky) */
+/** Min Dong Chinese (Mìng-dĕ̤ng-ngṳ̄) */
+$specialPageAliases['cdo'] = array(
+	'Cite' => array( '註' ),
+);
+
+/** Chechen (нохчийн) */
+$specialPageAliases['ce'] = array(
+	'Cite' => array( 'Дош' ),
+);
+
+/** Czech (čeština) */
 $specialPageAliases['cs'] = array(
 	'Cite' => array( 'Citovat' ),
 );
@@ -100,7 +116,7 @@ $specialPageAliases['es'] = array(
 
 /** Estonian (eesti) */
 $specialPageAliases['et'] = array(
-	'Cite' => array( 'Tsiteeri' ),
+	'Cite' => array( 'Tsiteerimine' ),
 );
 
 /** Persian (فارسی) */
@@ -205,7 +221,7 @@ $specialPageAliases['ksh'] = array(
 
 /** Cornish (kernowek) */
 $specialPageAliases['kw'] = array(
-	'Cite' => array( 'Devydna' ),
+	'Cite' => array( 'Devynna' ),
 );
 
 /** Ladino (Ladino) */
@@ -225,7 +241,7 @@ $specialPageAliases['lzh'] = array(
 
 /** Macedonian (македонски) */
 $specialPageAliases['mk'] = array(
-	'Cite' => array( 'Цитат' ),
+	'Cite' => array( 'Навод' ),
 );
 
 /** Malayalam (മലയാളം) */
@@ -248,12 +264,12 @@ $specialPageAliases['mt'] = array(
 	'Cite' => array( 'Iċċita' ),
 );
 
-/** Nahuatl (Nāhuatl) */
+/** Nāhuatl (Nāhuatl) */
 $specialPageAliases['nah'] = array(
 	'Cite' => array( 'Tlahtoa', 'Citar' ),
 );
 
-/** Norwegian Bokmål (‪norsk (bokmål)‬) */
+/** Norwegian Bokmål (norsk bokmål) */
 $specialPageAliases['nb'] = array(
 	'Cite' => array( 'Siteringshjelp' ),
 );
@@ -263,7 +279,7 @@ $specialPageAliases['nds'] = array(
 	'Cite' => array( 'Ziteerhelp' ),
 );
 
-/** Nedersaksisch (Nedersaksisch) */
+/** Low Saxon (Netherlands) (Nedersaksies) */
 $specialPageAliases['nds-nl'] = array(
 	'Cite' => array( 'Siteerhulpe' ),
 );
@@ -273,7 +289,7 @@ $specialPageAliases['nl'] = array(
 	'Cite' => array( 'Citeren' ),
 );
 
-/** Norwegian Nynorsk (‪norsk (nynorsk)‬) */
+/** Norwegian Nynorsk (norsk nynorsk) */
 $specialPageAliases['nn'] = array(
 	'Cite' => array( 'Siter' ),
 );
@@ -316,6 +332,11 @@ $specialPageAliases['ru'] = array(
 /** Sanskrit (संस्कृतम्) */
 $specialPageAliases['sa'] = array(
 	'Cite' => array( 'उद्धृत' ),
+);
+
+/** Sicilian (sicilianu) */
+$specialPageAliases['scn'] = array(
+	'Cite' => array( 'Cita' ),
 );
 
 /** Slovak (slovenčina) */
@@ -363,6 +384,11 @@ $specialPageAliases['tr'] = array(
 	'Cite' => array( 'KaynakGöster' ),
 );
 
+/** Urdu (اردو) */
+$specialPageAliases['ur'] = array(
+	'Cite' => array( 'حوالہ' ),
+);
+
 /** vèneto (vèneto) */
 $specialPageAliases['vec'] = array(
 	'Cite' => array( 'Cita' ),
@@ -383,12 +409,12 @@ $specialPageAliases['yue'] = array(
 	'Cite' => array( '引用' ),
 );
 
-/** Simplified Chinese (‪中文（简体）‬) */
+/** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = array(
 	'Cite' => array( '引用' ),
 );
 
-/** Traditional Chinese (‪中文（繁體）‬) */
+/** Traditional Chinese (中文（繁體）‎) */
 $specialPageAliases['zh-hant'] = array(
 	'Cite' => array( '引用' ),
 );

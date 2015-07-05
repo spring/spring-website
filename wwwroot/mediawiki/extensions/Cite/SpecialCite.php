@@ -22,8 +22,9 @@ $wgExtensionCredits['specialpage'][] = array(
 	'url' => 'https://www.mediawiki.org/wiki/Extension:Cite/Special:Cite.php'
 );
 
-$dir = dirname( __FILE__ ) . '/';
+$dir = __DIR__ . '/';
 # Internationalisation file
+$wgMessagesDirs['SpecialCite'] = __DIR__ . '/i18n/special';
 $wgExtensionMessagesFiles['SpecialCite'] = $dir . 'SpecialCite.i18n.php';
 $wgExtensionMessagesFiles['SpecialCiteAliases'] = $dir . 'SpecialCite.alias.php';
 
@@ -35,12 +36,12 @@ $wgAutoloadClasses['SpecialCite'] = $dir . 'SpecialCite_body.php';
 
 // Resources
 $citeResourceTemplate = array(
-	'localBasePath' => dirname(__FILE__) . '/modules',
+	'localBasePath' => __DIR__ . '/modules',
 	'remoteExtPath' => 'Cite/modules'
 );
 
 $wgResourceModules['ext.specialcite'] = $citeResourceTemplate + array(
-	'styles' => 'ext.specialcite/ext.specialcite.css',
+	'styles' => 'ext.specialcite.css',
 	'scripts' => array(),
 	'position' => 'bottom',
 );
@@ -53,11 +54,12 @@ $wgResourceModules['ext.specialcite'] = $citeResourceTemplate + array(
  * @return bool
  */
 function wfSpecialCiteNav( &$skintemplate, &$nav_urls, &$oldid, &$revid ) {
-	// check whether we’re in the right namespace, the $revid has the correct type and is not empty 
+	// check whether we’re in the right namespace, the $revid has the correct type and is not empty
 	// (what would mean that the current page doesn’t exist)
-	if ( $skintemplate->getTitle()->isContentPage() && $revid !== 0 && !empty( $revid ) )
+	$title = $skintemplate->getTitle();
+	if ( $title->isContentPage() && $revid !== 0 && !empty( $revid ) )
 		$nav_urls['cite'] = array(
-			'args'   => "page=" . wfUrlencode( "{$skintemplate->thispage}" ) . "&id=$revid"
+			'args' => array( 'page' => $title->getPrefixedDBkey(), 'id' => $revid )
 		);
 
 	return true;
@@ -77,7 +79,7 @@ function wfSpecialCiteToolbox( &$skin ) {
 			array( 'id' => 't-cite' ),
 			Linker::link(
 				SpecialPage::getTitleFor( 'Cite' ),
-				wfMsg( 'cite_article_link' ),
+				wfMessage( 'cite_article_link' )->text(), // @todo Should be escaped()?
 				# Used message keys: 'tooltip-cite-article', 'accesskey-cite-article'
 				Linker::tooltipAndAccessKeyAttribs( 'cite-article' ),
 				$skin->data['nav_urls']['cite']['args']

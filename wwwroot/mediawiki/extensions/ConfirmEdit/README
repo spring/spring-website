@@ -23,7 +23,7 @@ visually or audially, from a widget provided by the reCAPTCHA service
 == License ==
 
 ConfirmEdit is published under the GPL license.
- 
+
 == Authors ==
 
 The main framework, and the SimpleCaptcha and FancyCaptcha modules, were
@@ -36,3 +36,9 @@ The QuestyCaptcha module was written by Benjamin Lees.
 The reCAPTCHA module was written by Mike Crawford and Ben Maurer.
 
 Additional maintenance work was done by Yaron Koren.
+
+== Changelog ==
+
+= Version 1.2
+Fixes bug 46132 - ConfirmEdit fatal error when using MathCaptcha and current Math extension.
+See <https://bugzilla.wikimedia.org/show_bug.cgi?id=46132>.

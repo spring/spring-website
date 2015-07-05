@@ -187,7 +187,7 @@ $wgAuth_Config['NoWikiError']    = 'You are not a member of the required phpBB g
 
 $wgAuth = new Auth_phpBB($wgAuth_Config);     // Auth_phpBB Plugin.
 
-$wgDefaultSkin = 'springnew';
+#$wgDefaultSkin = 'springnew';
 
 $wgAllowDisplayTitle = true;
 $wgRestrictDisplayTitle = false;
@@ -200,4 +200,5 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 
 require_once( "$IP/extensions/Cite/Cite.php" );
 
+$wgUpgradeKey = '84fda4d15e3d3eb8';
 ?>
