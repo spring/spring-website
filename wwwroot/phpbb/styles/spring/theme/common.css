@@ -131,7 +131,6 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 	margin: 0 auto;
 	max-width: 1152px;
 	min-width: 625px;
-	padding: 15px;
 }
 
 @media only screen and (max-width: 1220px), only screen and (max-device-width: 1220px) {

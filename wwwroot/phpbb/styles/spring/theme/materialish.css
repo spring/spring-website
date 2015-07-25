@@ -1,0 +1,150 @@
+/* Materialize */
+
+html, body {
+	background-color: #f0f0f0;
+	background: #f0f0f0;
+}
+
+#wrapper {
+	width: auto !important;
+}
+
+#maincontentwrapper {
+	border-radius: 0;
+	background: none;
+	background-color: none;
+	box-shadow: none;
+}
+
+#maincontentwrapper #wrap {
+	background-color: #f0f0f0;
+}
+
+#wrap {
+	background-color: #f0f0f0;
+	border: none;
+	padding: 0px;
+}
+
+#maincontentwrapper .navbar {
+    background-color: #fff;
+    border-radius: 0;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.locationbar {
+    background-color: none;
+    background-repeat: none;
+    background: none;
+    border-radius: 0px;
+    border: none;
+    box-shadow: none;
+    color: #000;
+}
+
+.forabg {
+	background-color: #f0f0f0 !important;
+	background-image: none !important;
+    border-radius: 0;
+    border: none;
+    color: #000;
+    padding: 0;
+    margin: 20px 0px;
+}
+
+.forumbg {
+	background-color: #f0f0f0 !important;
+	background-image: none !important;
+    border-radius: 0;
+    border: none;
+    color: #000;
+    padding: 0;
+    margin: 20px 0px;
+}
+
+ul.topiclist.topics {
+	background-color: #fff;
+    border-radius: 0;
+    padding: 1px 0px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.bg1 {
+	background-color: inherit;
+}
+
+.bg2 {
+	background-color: inherit;
+}
+
+.forumbg .header a, .forabg .header a, th a {
+    color: #000;
+}
+
+.forabg .header a:hover, th a:hover {
+    color: #909090;
+}
+
+li.header dt, li.header dd {
+    color: #000;
+}
+
+ul.forums {
+    background-color: #fff;
+    background-image: none;
+    border: none;
+    padding: 1px 0px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.post {
+    background-color: #fff;
+    background-image: none;
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+ul.topiclist li {
+	margin: 0px 0px;
+}
+
+li.row {
+    	border-bottom: 1px solid #dcdcdc;
+    	margin: 0px;
+    	padding: 10px;
+}
+
+.bottombar {
+    background-color: #fff;
+    background-image: none;
+    border: none;
+    border-radius: 0px;
+    color: #4C5D77;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.bottombar a:link, .bottombar a:visited {
+    color: #105289;
+}
+
+.bottombar a:hover {
+    color: #D31141;
+    text-decoration: underline;
+}
+
+div#postingbox {
+	background-color: #fff;
+    background-image: none;
+    border: none;
+    border-radius: 0px !important;
+    padding: 20px;
+
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.inputbox {
+	background-color: #f0f0f0
+}

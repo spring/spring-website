@@ -6,7 +6,9 @@
 */
 
 /* PhpBB specific Spring css */
+@import url("common.css");
 @import url("spring.css");
 @import url("overrides.css");
 @import url("header-navbar.css");
 @import url("normalize.css");
+@import url("materialish.css");
