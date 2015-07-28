@@ -28,8 +28,6 @@ body {
 ----------------------------------------*/
 .headerbar, .navbar, .forabg, .forumbg, .post, .panel {
 	border-radius: 0;
-	margin-left: -5px;
-	margin-right: -5px;
 }
 
 #cp-main .forabg, #cp-main .forumdb, #cp-main .post, #cp-main .panel {
@@ -67,7 +65,7 @@ body {
 /* Navigation
 ----------------------------------------*/
 .headerbar + .navbar {
-	margin-top: -5px;
+	margin-top: 5px;
 }
 
 /* Search
