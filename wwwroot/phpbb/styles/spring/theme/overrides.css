@@ -264,11 +264,30 @@ a.postlink {
 	background-image: none !important;
 	border: none !important;
 	border-radius: 6px;
-
 }
 .button2:hover {
 	color: #f0f0f0 !important;
 	background-color: #1c4c86 !important;
+	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Post Reply */
+a.button.icon-button.reply-icon {
+    font-weight: bold !important;
+	padding: 5px 10px !important;
+	margin: 2px 5px 2px 2px !important;
+    color: #fff !important;
+	
+	background-color: #6a1918 !important;
+	background-image: none !important;
+	border: none !important;
+	border-radius: 6px;
+	box-shadow: none;
+}
+
+a.button.icon-button.reply-icon:hover {
+	color: #f0f0f0 !important;
+	background-color: #a22512 !important;
 	text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.4) !important;
 }
 
