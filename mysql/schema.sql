@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.24, for Linux (i686)
+-- MySQL dump 10.13  Distrib 5.5.46, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: spring
 -- ------------------------------------------------------
--- Server version	5.5.24
+-- Server version	5.5.46-0ubuntu0.14.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,19 +25,20 @@ DROP TABLE IF EXISTS `mantis_bug_file_table`;
 CREATE TABLE `mantis_bug_file_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `title` varchar(250) NOT NULL DEFAULT '',
-  `description` varchar(250) NOT NULL DEFAULT '',
-  `diskfile` varchar(250) NOT NULL DEFAULT '',
-  `filename` varchar(250) NOT NULL DEFAULT '',
-  `folder` varchar(250) NOT NULL DEFAULT '',
+  `title` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `diskfile` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `filename` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `folder` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `filesize` int(11) NOT NULL DEFAULT '0',
-  `file_type` varchar(250) NOT NULL DEFAULT '',
-  `date_added` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  `file_type` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `content` longblob NOT NULL,
+  `date_added` int(10) unsigned NOT NULL DEFAULT '1',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `idx_bug_file_bug_id` (`bug_id`),
   KEY `idx_diskfile` (`diskfile`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,15 +52,15 @@ CREATE TABLE `mantis_bug_history_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `date_modified` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `field_name` varchar(64) NOT NULL,
-  `old_value` varchar(255) NOT NULL,
-  `new_value` varchar(255) NOT NULL,
+  `field_name` varchar(64) CHARACTER SET latin1 NOT NULL,
+  `old_value` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `new_value` varchar(255) CHARACTER SET latin1 NOT NULL,
   `type` smallint(6) NOT NULL DEFAULT '0',
+  `date_modified` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_bug_history_bug_id` (`bug_id`),
   KEY `idx_history_user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,7 +74,7 @@ CREATE TABLE `mantis_bug_monitor_table` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +92,28 @@ CREATE TABLE `mantis_bug_relationship_table` (
   PRIMARY KEY (`id`),
   KEY `idx_relationship_source` (`source_bug_id`),
   KEY `idx_relationship_destination` (`destination_bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_bug_revision_table`
+--
+
+DROP TABLE IF EXISTS `mantis_bug_revision_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_bug_revision_table` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `bug_id` int(10) unsigned NOT NULL,
+  `bugnote_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned NOT NULL,
+  `type` int(10) unsigned NOT NULL,
+  `value` longtext NOT NULL,
+  `timestamp` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `idx_bug_rev_type` (`type`),
+  KEY `idx_bug_rev_id_time` (`bug_id`,`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,29 +135,30 @@ CREATE TABLE `mantis_bug_table` (
   `status` smallint(6) NOT NULL DEFAULT '10',
   `resolution` smallint(6) NOT NULL DEFAULT '10',
   `projection` smallint(6) NOT NULL DEFAULT '10',
-  `category` varchar(64) NOT NULL DEFAULT '',
-  `date_submitted` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `last_updated` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   `eta` smallint(6) NOT NULL DEFAULT '10',
   `bug_text_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `os` varchar(32) NOT NULL DEFAULT '',
-  `os_build` varchar(32) NOT NULL DEFAULT '',
-  `platform` varchar(32) NOT NULL DEFAULT '',
-  `version` varchar(64) NOT NULL DEFAULT '',
-  `fixed_in_version` varchar(64) NOT NULL DEFAULT '',
-  `build` varchar(32) NOT NULL DEFAULT '',
+  `os` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `os_build` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `platform` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `version` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `fixed_in_version` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `build` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `profile_id` int(10) unsigned NOT NULL DEFAULT '0',
   `view_state` smallint(6) NOT NULL DEFAULT '10',
-  `summary` varchar(128) NOT NULL DEFAULT '',
+  `summary` varchar(128) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `sponsorship_total` int(11) NOT NULL DEFAULT '0',
   `sticky` tinyint(4) NOT NULL DEFAULT '0',
-  `target_version` varchar(64) NOT NULL DEFAULT '',
+  `target_version` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `category_id` int(10) unsigned NOT NULL DEFAULT '1',
+  `date_submitted` int(10) unsigned NOT NULL DEFAULT '1',
+  `due_date` int(10) unsigned NOT NULL DEFAULT '1',
+  `last_updated` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_bug_sponsorship_total` (`sponsorship_total`),
   KEY `idx_bug_fixed_in_version` (`fixed_in_version`),
   KEY `idx_bug_status` (`status`),
   KEY `idx_project` (`project_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,9 +172,10 @@ CREATE TABLE `mantis_bug_tag_table` (
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   `tag_id` int(10) unsigned NOT NULL DEFAULT '0',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `date_attached` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  PRIMARY KEY (`bug_id`,`tag_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `date_attached` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`bug_id`,`tag_id`),
+  KEY `idx_bug_tag_tag_id` (`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,11 +187,11 @@ DROP TABLE IF EXISTS `mantis_bug_text_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_bug_text_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `description` text NOT NULL,
-  `steps_to_reproduce` text NOT NULL,
-  `additional_information` text NOT NULL,
+  `description` text CHARACTER SET latin1 NOT NULL,
+  `steps_to_reproduce` text CHARACTER SET latin1 NOT NULL,
+  `additional_information` text CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,15 +207,15 @@ CREATE TABLE `mantis_bugnote_table` (
   `reporter_id` int(10) unsigned NOT NULL DEFAULT '0',
   `bugnote_text_id` int(10) unsigned NOT NULL DEFAULT '0',
   `view_state` smallint(6) NOT NULL DEFAULT '10',
-  `date_submitted` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `last_modified` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   `note_type` int(11) DEFAULT '0',
-  `note_attr` varchar(250) DEFAULT '',
+  `note_attr` varchar(250) CHARACTER SET latin1 DEFAULT '',
   `time_tracking` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_modified` int(10) unsigned NOT NULL DEFAULT '1',
+  `date_submitted` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_bug` (`bug_id`),
   KEY `idx_last_mod` (`last_modified`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,9 +227,27 @@ DROP TABLE IF EXISTS `mantis_bugnote_text_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_bugnote_text_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `note` text NOT NULL,
+  `note` text CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_category_table`
+--
+
+DROP TABLE IF EXISTS `mantis_category_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_category_table` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(128) NOT NULL DEFAULT '',
+  `status` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_category_project_name` (`project_id`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -216,15 +258,14 @@ DROP TABLE IF EXISTS `mantis_config_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_config_table` (
-  `config_id` varchar(64) NOT NULL DEFAULT '',
+  `config_id` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `project_id` int(11) NOT NULL DEFAULT '0',
   `user_id` int(11) NOT NULL DEFAULT '0',
   `access_reqd` int(11) DEFAULT '0',
   `type` int(11) DEFAULT '90',
-  `value` text NOT NULL,
-  PRIMARY KEY (`config_id`,`project_id`,`user_id`),
-  KEY `idx_config` (`config_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `value` text CHARACTER SET latin1 NOT NULL,
+  PRIMARY KEY (`config_id`,`project_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +280,7 @@ CREATE TABLE `mantis_custom_field_project_table` (
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sequence` smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (`field_id`,`project_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -252,10 +293,10 @@ DROP TABLE IF EXISTS `mantis_custom_field_string_table`;
 CREATE TABLE `mantis_custom_field_string_table` (
   `field_id` int(11) NOT NULL DEFAULT '0',
   `bug_id` int(11) NOT NULL DEFAULT '0',
-  `value` varchar(255) NOT NULL DEFAULT '',
+  `value` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
   PRIMARY KEY (`field_id`,`bug_id`),
   KEY `idx_custom_field_bug` (`bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,16 +308,15 @@ DROP TABLE IF EXISTS `mantis_custom_field_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_custom_field_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `type` smallint(6) NOT NULL DEFAULT '0',
-  `possible_values` varchar(255) NOT NULL DEFAULT '',
-  `default_value` varchar(255) NOT NULL DEFAULT '',
-  `valid_regexp` varchar(255) NOT NULL DEFAULT '',
+  `possible_values` text CHARACTER SET latin1 NOT NULL,
+  `default_value` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `valid_regexp` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `access_level_r` smallint(6) NOT NULL DEFAULT '0',
   `access_level_rw` smallint(6) NOT NULL DEFAULT '0',
   `length_min` int(11) NOT NULL DEFAULT '0',
   `length_max` int(11) NOT NULL DEFAULT '0',
-  `advanced` tinyint(4) NOT NULL DEFAULT '0',
   `require_report` tinyint(4) NOT NULL DEFAULT '0',
   `require_update` tinyint(4) NOT NULL DEFAULT '0',
   `display_report` tinyint(4) NOT NULL DEFAULT '1',
@@ -285,9 +325,10 @@ CREATE TABLE `mantis_custom_field_table` (
   `display_resolved` tinyint(4) NOT NULL DEFAULT '0',
   `display_closed` tinyint(4) NOT NULL DEFAULT '0',
   `require_closed` tinyint(4) NOT NULL DEFAULT '0',
+  `filter_by` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_custom_field_name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -301,12 +342,11 @@ CREATE TABLE `mantis_email_table` (
   `email_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(64) NOT NULL DEFAULT '',
   `subject` varchar(250) NOT NULL DEFAULT '',
-  `submitted` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   `metadata` longtext NOT NULL,
   `body` longtext NOT NULL,
-  PRIMARY KEY (`email_id`),
-  KEY `idx_email_id` (`email_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `submitted` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,10 +361,10 @@ CREATE TABLE `mantis_filters_table` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `project_id` int(11) NOT NULL DEFAULT '0',
   `is_public` tinyint(4) DEFAULT NULL,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `filter_string` text NOT NULL,
+  `name` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `filter_string` text CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,29 +378,140 @@ CREATE TABLE `mantis_news_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `poster_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `date_posted` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `last_modified` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
   `view_state` smallint(6) NOT NULL DEFAULT '10',
   `announcement` tinyint(4) NOT NULL DEFAULT '0',
-  `headline` varchar(64) NOT NULL DEFAULT '',
-  `body` text NOT NULL,
+  `headline` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `body` text CHARACTER SET latin1 NOT NULL,
+  `last_modified` int(10) unsigned NOT NULL DEFAULT '1',
+  `date_posted` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `mantis_project_category_table`
+-- Table structure for table `mantis_plugin_Source_branch_table`
 --
 
-DROP TABLE IF EXISTS `mantis_project_category_table`;
+DROP TABLE IF EXISTS `mantis_plugin_Source_branch_table`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mantis_project_category_table` (
-  `project_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `category` varchar(64) NOT NULL DEFAULT '',
+CREATE TABLE `mantis_plugin_Source_branch_table` (
+  `repo_id` int(10) unsigned NOT NULL,
+  `branch` varchar(128) NOT NULL,
+  `type` int(10) unsigned NOT NULL DEFAULT '0',
+  `version` varchar(64) NOT NULL DEFAULT '',
+  `regex` varchar(128) NOT NULL DEFAULT '',
+  `pvm_version_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`repo_id`,`branch`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_Source_bug_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_Source_bug_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_Source_bug_table` (
+  `change_id` int(10) unsigned NOT NULL,
+  `bug_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`change_id`,`bug_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_Source_changeset_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_Source_changeset_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_Source_changeset_table` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `repo_id` int(10) unsigned NOT NULL,
+  `revision` varchar(250) NOT NULL,
+  `branch` varchar(250) NOT NULL DEFAULT '',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`project_id`,`category`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `timestamp` datetime NOT NULL,
+  `author` varchar(250) NOT NULL DEFAULT '',
+  `message` longtext NOT NULL,
+  `info` longtext NOT NULL,
+  `parent` varchar(250) NOT NULL DEFAULT '',
+  `ported` varchar(250) NOT NULL DEFAULT '',
+  `author_email` varchar(250) NOT NULL DEFAULT '',
+  `committer` varchar(250) NOT NULL DEFAULT '',
+  `committer_email` varchar(250) NOT NULL DEFAULT '',
+  `committer_id` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`,`repo_id`,`revision`),
+  KEY `idx_changeset_stamp_author` (`timestamp`,`author`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_Source_file_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_Source_file_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_Source_file_table` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `change_id` int(10) unsigned NOT NULL,
+  `revision` varchar(250) NOT NULL,
+  `filename` longtext NOT NULL,
+  `action` varchar(8) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `idx_file_change_revision` (`change_id`,`revision`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_Source_repository_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_Source_repository_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_Source_repository_table` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(8) NOT NULL DEFAULT '',
+  `name` varchar(128) NOT NULL DEFAULT '',
+  `url` varchar(250) DEFAULT '',
+  `info` longtext NOT NULL,
+  PRIMARY KEY (`id`,`type`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_Source_user_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_Source_user_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_Source_user_table` (
+  `user_id` int(10) unsigned NOT NULL,
+  `username` varchar(64) NOT NULL DEFAULT '',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `idx_source_user_username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `mantis_plugin_table`
+--
+
+DROP TABLE IF EXISTS `mantis_plugin_table`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mantis_plugin_table` (
+  `basename` varchar(40) NOT NULL,
+  `enabled` tinyint(4) NOT NULL DEFAULT '0',
+  `protected` tinyint(4) NOT NULL DEFAULT '0',
+  `priority` int(10) unsigned NOT NULL DEFAULT '3',
+  PRIMARY KEY (`basename`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -373,17 +524,18 @@ DROP TABLE IF EXISTS `mantis_project_file_table`;
 CREATE TABLE `mantis_project_file_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `title` varchar(250) NOT NULL DEFAULT '',
-  `description` varchar(250) NOT NULL DEFAULT '',
-  `diskfile` varchar(250) NOT NULL DEFAULT '',
-  `filename` varchar(250) NOT NULL DEFAULT '',
-  `folder` varchar(250) NOT NULL DEFAULT '',
+  `title` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `diskfile` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `filename` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `folder` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `filesize` int(11) NOT NULL DEFAULT '0',
-  `file_type` varchar(250) NOT NULL DEFAULT '',
-  `date_added` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  `file_type` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `content` longblob NOT NULL,
+  `date_added` int(10) unsigned NOT NULL DEFAULT '1',
+  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -395,8 +547,11 @@ DROP TABLE IF EXISTS `mantis_project_hierarchy_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_project_hierarchy_table` (
   `child_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `parent_id` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `parent_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `inherit_parent` int(10) unsigned NOT NULL DEFAULT '0',
+  KEY `idx_project_hierarchy_child_id` (`child_id`),
+  KEY `idx_project_hierarchy_parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -408,18 +563,19 @@ DROP TABLE IF EXISTS `mantis_project_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_project_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL DEFAULT '',
+  `name` varchar(128) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `status` smallint(6) NOT NULL DEFAULT '10',
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   `view_state` smallint(6) NOT NULL DEFAULT '10',
   `access_min` smallint(6) NOT NULL DEFAULT '10',
-  `file_path` varchar(250) NOT NULL DEFAULT '',
-  `description` text NOT NULL,
+  `file_path` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` text CHARACTER SET latin1 NOT NULL,
+  `category_id` int(10) unsigned NOT NULL DEFAULT '1',
+  `inherit_global` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_project_name` (`name`),
-  KEY `idx_project_id` (`id`),
   KEY `idx_project_view` (`view_state`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -435,7 +591,7 @@ CREATE TABLE `mantis_project_user_list_table` (
   `access_level` smallint(6) NOT NULL DEFAULT '10',
   PRIMARY KEY (`project_id`,`user_id`),
   KEY `idx_project_user` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,13 +604,14 @@ DROP TABLE IF EXISTS `mantis_project_version_table`;
 CREATE TABLE `mantis_project_version_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `version` varchar(64) NOT NULL DEFAULT '',
-  `date_order` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `description` text NOT NULL,
+  `version` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` text CHARACTER SET latin1 NOT NULL,
   `released` tinyint(4) NOT NULL DEFAULT '1',
+  `obsolete` tinyint(4) NOT NULL DEFAULT '0',
+  `date_order` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_project_version` (`project_id`,`version`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -469,15 +626,15 @@ CREATE TABLE `mantis_sponsorship_table` (
   `bug_id` int(11) NOT NULL DEFAULT '0',
   `user_id` int(11) NOT NULL DEFAULT '0',
   `amount` int(11) NOT NULL DEFAULT '0',
-  `logo` varchar(128) NOT NULL DEFAULT '',
-  `url` varchar(128) NOT NULL DEFAULT '',
+  `logo` varchar(128) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `url` varchar(128) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `paid` tinyint(4) NOT NULL DEFAULT '0',
-  `date_submitted` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `last_updated` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  `date_submitted` int(10) unsigned NOT NULL DEFAULT '1',
+  `last_updated` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_sponsorship_bug_id` (`bug_id`),
   KEY `idx_sponsorship_user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -490,12 +647,13 @@ DROP TABLE IF EXISTS `mantis_tag_table`;
 CREATE TABLE `mantis_tag_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(100) NOT NULL DEFAULT '',
-  `description` longtext NOT NULL,
-  `date_created` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `date_updated` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  PRIMARY KEY (`id`,`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` longtext CHARACTER SET latin1 NOT NULL,
+  `date_created` int(10) unsigned NOT NULL DEFAULT '1',
+  `date_updated` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`,`name`),
+  KEY `idx_tag_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -509,12 +667,12 @@ CREATE TABLE `mantis_tokens_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL DEFAULT '0',
   `type` int(11) NOT NULL DEFAULT '0',
-  `timestamp` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `expiry` datetime DEFAULT NULL,
-  `value` text NOT NULL,
+  `value` text CHARACTER SET latin1 NOT NULL,
+  `timestamp` int(10) unsigned NOT NULL DEFAULT '1',
+  `expiry` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `idx_typeowner` (`type`,`owner`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -530,12 +688,9 @@ CREATE TABLE `mantis_user_pref_table` (
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `default_profile` int(10) unsigned NOT NULL DEFAULT '0',
   `default_project` int(10) unsigned NOT NULL DEFAULT '0',
-  `advanced_report` tinyint(4) NOT NULL DEFAULT '0',
-  `advanced_view` tinyint(4) NOT NULL DEFAULT '0',
-  `advanced_update` tinyint(4) NOT NULL DEFAULT '0',
   `refresh_delay` int(11) NOT NULL DEFAULT '0',
-  `redirect_delay` tinyint(4) NOT NULL DEFAULT '0',
-  `bugnote_order` varchar(4) NOT NULL DEFAULT 'ASC',
+  `redirect_delay` int(11) NOT NULL DEFAULT '0',
+  `bugnote_order` varchar(4) CHARACTER SET latin1 NOT NULL DEFAULT 'ASC',
   `email_on_new` tinyint(4) NOT NULL DEFAULT '0',
   `email_on_assigned` tinyint(4) NOT NULL DEFAULT '0',
   `email_on_feedback` tinyint(4) NOT NULL DEFAULT '0',
@@ -555,9 +710,10 @@ CREATE TABLE `mantis_user_pref_table` (
   `email_on_assigned_min_severity` smallint(6) NOT NULL DEFAULT '10',
   `email_on_new_min_severity` smallint(6) NOT NULL DEFAULT '10',
   `email_bugnote_limit` smallint(6) NOT NULL DEFAULT '0',
-  `language` varchar(32) NOT NULL DEFAULT 'english',
+  `language` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT 'english',
+  `timezone` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -569,9 +725,9 @@ DROP TABLE IF EXISTS `mantis_user_print_pref_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_user_print_pref_table` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `print_pref` varchar(64) NOT NULL,
+  `print_pref` varchar(64) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -584,12 +740,12 @@ DROP TABLE IF EXISTS `mantis_user_profile_table`;
 CREATE TABLE `mantis_user_profile_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `platform` varchar(32) NOT NULL DEFAULT '',
-  `os` varchar(32) NOT NULL DEFAULT '',
-  `os_build` varchar(32) NOT NULL DEFAULT '',
-  `description` text NOT NULL,
+  `platform` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `os` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `os_build` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `description` text CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -601,25 +757,25 @@ DROP TABLE IF EXISTS `mantis_user_table`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mantis_user_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(32) NOT NULL DEFAULT '',
-  `realname` varchar(64) NOT NULL DEFAULT '',
-  `email` varchar(64) NOT NULL DEFAULT '',
-  `password` varchar(32) NOT NULL DEFAULT '',
-  `date_created` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
-  `last_visit` datetime NOT NULL DEFAULT '1970-01-01 00:00:01',
+  `username` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `realname` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `email` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `password` varchar(32) CHARACTER SET latin1 NOT NULL DEFAULT '',
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   `protected` tinyint(4) NOT NULL DEFAULT '0',
   `access_level` smallint(6) NOT NULL DEFAULT '10',
   `login_count` int(11) NOT NULL DEFAULT '0',
   `lost_password_request_count` smallint(6) NOT NULL DEFAULT '0',
   `failed_login_count` smallint(6) NOT NULL DEFAULT '0',
-  `cookie_string` varchar(64) NOT NULL DEFAULT '',
+  `cookie_string` varchar(64) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `last_visit` int(10) unsigned NOT NULL DEFAULT '1',
+  `date_created` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_user_cookie_string` (`cookie_string`),
   UNIQUE KEY `idx_user_username` (`username`),
   KEY `idx_enable` (`enabled`),
   KEY `idx_access` (`access_level`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,7 +794,7 @@ CREATE TABLE `phpbb3_acl_groups` (
   KEY `group_id` (`group_id`),
   KEY `auth_opt_id` (`auth_option_id`),
   KEY `auth_role_id` (`auth_role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -656,7 +812,7 @@ CREATE TABLE `phpbb3_acl_options` (
   `founder_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`auth_option_id`),
   UNIQUE KEY `auth_option` (`auth_option`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -675,7 +831,7 @@ CREATE TABLE `phpbb3_acl_roles` (
   PRIMARY KEY (`role_id`),
   KEY `role_type` (`role_type`),
   KEY `role_order` (`role_order`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -691,7 +847,7 @@ CREATE TABLE `phpbb3_acl_roles_data` (
   `auth_setting` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`role_id`,`auth_option_id`),
   KEY `ath_op_id` (`auth_option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -710,7 +866,7 @@ CREATE TABLE `phpbb3_acl_users` (
   KEY `user_id` (`user_id`),
   KEY `auth_option_id` (`auth_option_id`),
   KEY `auth_role_id` (`auth_role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -742,7 +898,7 @@ CREATE TABLE `phpbb3_attachments` (
   KEY `topic_id` (`topic_id`),
   KEY `poster_id` (`poster_id`),
   KEY `is_orphan` (`is_orphan`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -767,7 +923,7 @@ CREATE TABLE `phpbb3_banlist` (
   KEY `ban_user` (`ban_userid`,`ban_exclude`),
   KEY `ban_email` (`ban_email`,`ban_exclude`),
   KEY `ban_ip` (`ban_ip`,`ban_exclude`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -790,7 +946,7 @@ CREATE TABLE `phpbb3_bbcodes` (
   `second_pass_replace` mediumtext COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`bbcode_id`),
   KEY `display_on_post` (`display_on_posting`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -804,7 +960,7 @@ CREATE TABLE `phpbb3_bookmarks` (
   `topic_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`topic_id`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -823,7 +979,39 @@ CREATE TABLE `phpbb3_bots` (
   `bot_ip` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`bot_id`),
   KEY `bot_active` (`bot_active`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_captcha_answers`
+--
+
+DROP TABLE IF EXISTS `phpbb3_captcha_answers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_captcha_answers` (
+  `question_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `answer_text` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  KEY `qid` (`question_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_captcha_questions`
+--
+
+DROP TABLE IF EXISTS `phpbb3_captcha_questions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_captcha_questions` (
+  `question_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `strict` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `lang_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `lang_iso` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `question_text` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`question_id`),
+  KEY `lang` (`lang_iso`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -839,7 +1027,21 @@ CREATE TABLE `phpbb3_config` (
   `is_dynamic` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`config_name`),
   KEY `is_dynamic` (`is_dynamic`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_config_text`
+--
+
+DROP TABLE IF EXISTS `phpbb3_config_text`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_config_text` (
+  `config_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `config_value` mediumtext COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`config_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -858,7 +1060,7 @@ CREATE TABLE `phpbb3_confirm` (
   `attempts` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`session_id`,`confirm_id`),
   KEY `confirm_type` (`confirm_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -872,7 +1074,7 @@ CREATE TABLE `phpbb3_disallow` (
   `disallow_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `disallow_username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`disallow_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -892,7 +1094,22 @@ CREATE TABLE `phpbb3_drafts` (
   `draft_message` mediumtext COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`draft_id`),
   KEY `save_time` (`save_time`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_ext`
+--
+
+DROP TABLE IF EXISTS `phpbb3_ext`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_ext` (
+  `ext_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `ext_active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `ext_state` text COLLATE utf8_bin NOT NULL,
+  UNIQUE KEY `ext_name` (`ext_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -913,7 +1130,7 @@ CREATE TABLE `phpbb3_extension_groups` (
   `allowed_forums` text COLLATE utf8_bin NOT NULL,
   `allow_in_pm` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -928,7 +1145,7 @@ CREATE TABLE `phpbb3_extensions` (
   `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `extension` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`extension_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -950,7 +1167,7 @@ CREATE TABLE `phpbb3_forums` (
   `forum_desc_options` int(11) unsigned NOT NULL DEFAULT '7',
   `forum_desc_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
   `forum_link` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `forum_password` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `forum_password` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `forum_style` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `forum_image` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `forum_rules` text COLLATE utf8_bin NOT NULL,
@@ -961,9 +1178,6 @@ CREATE TABLE `phpbb3_forums` (
   `forum_topics_per_page` tinyint(4) NOT NULL DEFAULT '0',
   `forum_type` tinyint(4) NOT NULL DEFAULT '0',
   `forum_status` tinyint(4) NOT NULL DEFAULT '0',
-  `forum_posts` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `forum_topics` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `forum_topics_real` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `forum_last_post_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `forum_last_poster_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `forum_last_post_subject` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -981,10 +1195,20 @@ CREATE TABLE `phpbb3_forums` (
   `prune_freq` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `display_subforum_list` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `forum_options` int(20) unsigned NOT NULL DEFAULT '0',
+  `forum_posts_approved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_posts_unapproved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_posts_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_topics_approved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_topics_unapproved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `forum_topics_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `enable_shadow_prune` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `prune_shadow_days` mediumint(8) unsigned NOT NULL DEFAULT '7',
+  `prune_shadow_freq` mediumint(8) unsigned NOT NULL DEFAULT '1',
+  `prune_shadow_next` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`forum_id`),
   KEY `left_right_id` (`left_id`,`right_id`),
   KEY `forum_lastpost_id` (`forum_last_post_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -999,7 +1223,7 @@ CREATE TABLE `phpbb3_forums_access` (
   `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`forum_id`,`user_id`,`session_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1014,7 +1238,7 @@ CREATE TABLE `phpbb3_forums_track` (
   `forum_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `mark_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1031,7 +1255,7 @@ CREATE TABLE `phpbb3_forums_watch` (
   KEY `forum_id` (`forum_id`),
   KEY `user_id` (`user_id`),
   KEY `notify_stat` (`notify_status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1052,7 +1276,7 @@ CREATE TABLE `phpbb3_groups` (
   `group_desc_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
   `group_display` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `group_avatar` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `group_avatar_type` tinyint(2) NOT NULL DEFAULT '0',
+  `group_avatar_type` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `group_avatar_width` smallint(4) unsigned NOT NULL DEFAULT '0',
   `group_avatar_height` smallint(4) unsigned NOT NULL DEFAULT '0',
   `group_rank` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -1060,12 +1284,12 @@ CREATE TABLE `phpbb3_groups` (
   `group_sig_chars` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `group_receive_pm` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `group_message_limit` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `group_legend` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `group_legend` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `group_max_recipients` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `group_skip_auth` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`),
   KEY `group_legend_name` (`group_legend`,`group_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1084,7 +1308,7 @@ CREATE TABLE `phpbb3_icons` (
   `display_on_posting` tinyint(1) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`icons_id`),
   KEY `display_on_posting` (`display_on_posting`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1103,7 +1327,7 @@ CREATE TABLE `phpbb3_lang` (
   `lang_author` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`lang_id`),
   KEY `lang_iso` (`lang_iso`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1130,7 +1354,7 @@ CREATE TABLE `phpbb3_log` (
   KEY `topic_id` (`topic_id`),
   KEY `reportee_id` (`reportee_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1156,6 +1380,25 @@ CREATE TABLE `phpbb3_login_attempts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `phpbb3_migrations`
+--
+
+DROP TABLE IF EXISTS `phpbb3_migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_migrations` (
+  `migration_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `migration_depends_on` text COLLATE utf8_bin NOT NULL,
+  `migration_schema_done` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `migration_data_done` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `migration_data_state` text COLLATE utf8_bin NOT NULL,
+  `migration_start_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `migration_end_time` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`migration_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `phpbb3_moderator_cache`
 --
 
@@ -1171,7 +1414,7 @@ CREATE TABLE `phpbb3_moderator_cache` (
   `display_on_index` tinyint(1) unsigned NOT NULL DEFAULT '1',
   KEY `disp_idx` (`display_on_index`),
   KEY `forum_id` (`forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1197,7 +1440,77 @@ CREATE TABLE `phpbb3_modules` (
   KEY `left_right_id` (`left_id`,`right_id`),
   KEY `module_enabled` (`module_enabled`),
   KEY `class_left_id` (`module_class`,`left_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_notification_types`
+--
+
+DROP TABLE IF EXISTS `phpbb3_notification_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_notification_types` (
+  `notification_type_id` smallint(4) unsigned NOT NULL AUTO_INCREMENT,
+  `notification_type_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `notification_type_enabled` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`notification_type_id`),
+  UNIQUE KEY `type` (`notification_type_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_notifications`
+--
+
+DROP TABLE IF EXISTS `phpbb3_notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_notifications` (
+  `notification_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `notification_type_id` smallint(4) unsigned NOT NULL DEFAULT '0',
+  `item_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `item_parent_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `notification_read` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `notification_time` int(11) unsigned NOT NULL DEFAULT '1',
+  `notification_data` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`notification_id`),
+  KEY `item_ident` (`notification_type_id`,`item_id`),
+  KEY `user` (`user_id`,`notification_read`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_oauth_accounts`
+--
+
+DROP TABLE IF EXISTS `phpbb3_oauth_accounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_oauth_accounts` (
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `provider` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `oauth_provider_id` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`user_id`,`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_oauth_tokens`
+--
+
+DROP TABLE IF EXISTS `phpbb3_oauth_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_oauth_tokens` (
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `provider` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `oauth_token` mediumtext COLLATE utf8_bin NOT NULL,
+  KEY `user_id` (`user_id`),
+  KEY `provider` (`provider`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1214,7 +1527,7 @@ CREATE TABLE `phpbb3_poll_options` (
   `poll_option_total` mediumint(8) unsigned NOT NULL DEFAULT '0',
   KEY `poll_opt_id` (`poll_option_id`),
   KEY `topic_id` (`topic_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1232,7 +1545,7 @@ CREATE TABLE `phpbb3_poll_votes` (
   KEY `topic_id` (`topic_id`),
   KEY `vote_user_id` (`vote_user_id`),
   KEY `vote_user_ip` (`vote_user_ip`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1250,7 +1563,6 @@ CREATE TABLE `phpbb3_posts` (
   `icon_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `poster_ip` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
   `post_time` int(11) unsigned NOT NULL DEFAULT '0',
-  `post_approved` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `post_reported` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `enable_bbcode` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `enable_smilies` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -1269,17 +1581,20 @@ CREATE TABLE `phpbb3_posts` (
   `post_edit_user` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `post_edit_count` smallint(4) unsigned NOT NULL DEFAULT '0',
   `post_edit_locked` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `post_visibility` tinyint(3) NOT NULL DEFAULT '0',
+  `post_delete_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `post_delete_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `post_delete_user` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`post_id`),
   KEY `forum_id` (`forum_id`),
   KEY `topic_id` (`topic_id`),
   KEY `poster_ip` (`poster_ip`),
   KEY `poster_id` (`poster_id`),
-  KEY `post_approved` (`post_approved`),
   KEY `tid_post_time` (`topic_id`,`post_time`),
   KEY `post_username` (`post_username`),
+  KEY `post_visibility` (`post_visibility`),
   FULLTEXT KEY `post_subject` (`post_subject`),
-  FULLTEXT KEY `post_text` (`post_text`),
-  FULLTEXT KEY `post_content` (`post_subject`,`post_text`)
+  FULLTEXT KEY `post_content` (`post_text`,`post_subject`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1318,7 +1633,7 @@ CREATE TABLE `phpbb3_privmsgs` (
   KEY `message_time` (`message_time`),
   KEY `author_id` (`author_id`),
   KEY `root_level` (`root_level`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1335,7 +1650,7 @@ CREATE TABLE `phpbb3_privmsgs_folder` (
   `pm_count` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`folder_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1357,7 +1672,7 @@ CREATE TABLE `phpbb3_privmsgs_rules` (
   `rule_folder_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`rule_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1381,7 +1696,7 @@ CREATE TABLE `phpbb3_privmsgs_to` (
   KEY `msg_id` (`msg_id`),
   KEY `author_id` (`author_id`),
   KEY `usr_flder_id` (`user_id`,`folder_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1394,14 +1709,14 @@ DROP TABLE IF EXISTS `phpbb3_profile_fields`;
 CREATE TABLE `phpbb3_profile_fields` (
   `field_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `field_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `field_type` tinyint(4) NOT NULL DEFAULT '0',
+  `field_type` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_ident` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_length` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_minlen` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_maxlen` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_novalue` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_default_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `field_validation` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_validation` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
   `field_required` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `field_show_on_reg` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `field_hide` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1411,10 +1726,16 @@ CREATE TABLE `phpbb3_profile_fields` (
   `field_show_profile` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `field_fs_show` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `field_show_on_vt` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `field_show_novalue` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `field_show_on_pm` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `field_show_on_ml` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `field_is_contact` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `field_contact_desc` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `field_contact_url` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`field_id`),
   KEY `fld_type` (`field_type`),
   KEY `fld_ordr` (`field_order`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1427,8 +1748,22 @@ DROP TABLE IF EXISTS `phpbb3_profile_fields_data`;
 CREATE TABLE `phpbb3_profile_fields_data` (
   `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `pf_anti_bot_question` bigint(20) DEFAULT NULL,
+  `pf_aspam_strcount` bigint(20) DEFAULT NULL,
+  `pf_phpbb_interests` mediumtext COLLATE utf8_bin NOT NULL,
+  `pf_phpbb_occupation` mediumtext COLLATE utf8_bin NOT NULL,
+  `pf_phpbb_icq` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_website` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_wlm` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_yahoo` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_aol` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_location` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_youtube` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_facebook` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_googleplus` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_skype` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `pf_phpbb_twitter` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1442,10 +1777,10 @@ CREATE TABLE `phpbb3_profile_fields_lang` (
   `field_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `lang_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `option_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `field_type` tinyint(4) NOT NULL DEFAULT '0',
+  `field_type` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   `lang_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`field_id`,`lang_id`,`option_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1462,7 +1797,27 @@ CREATE TABLE `phpbb3_profile_lang` (
   `lang_explain` text COLLATE utf8_bin NOT NULL,
   `lang_default_value` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`field_id`,`lang_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_qa_confirm`
+--
+
+DROP TABLE IF EXISTS `phpbb3_qa_confirm`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_qa_confirm` (
+  `session_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `confirm_id` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `lang_iso` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `question_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `attempts` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `confirm_type` smallint(4) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`confirm_id`),
+  KEY `session_id` (`session_id`),
+  KEY `lookup` (`confirm_id`,`session_id`,`lang_iso`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1479,7 +1834,7 @@ CREATE TABLE `phpbb3_ranks` (
   `rank_special` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `rank_image` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`rank_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1499,10 +1854,16 @@ CREATE TABLE `phpbb3_reports` (
   `report_time` int(11) unsigned NOT NULL DEFAULT '0',
   `report_text` mediumtext COLLATE utf8_bin NOT NULL,
   `pm_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `reported_post_enable_bbcode` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `reported_post_enable_smilies` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `reported_post_enable_magic_url` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `reported_post_text` mediumtext COLLATE utf8_bin NOT NULL,
+  `reported_post_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `reported_post_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`report_id`),
   KEY `post_id` (`post_id`),
   KEY `pm_id` (`pm_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1518,7 +1879,7 @@ CREATE TABLE `phpbb3_reports_reasons` (
   `reason_description` mediumtext COLLATE utf8_bin NOT NULL,
   `reason_order` smallint(4) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`reason_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1534,7 +1895,7 @@ CREATE TABLE `phpbb3_search_results` (
   `search_keywords` mediumtext COLLATE utf8_bin NOT NULL,
   `search_authors` mediumtext COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`search_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1552,7 +1913,7 @@ CREATE TABLE `phpbb3_search_wordlist` (
   PRIMARY KEY (`word_id`),
   UNIQUE KEY `wrd_txt` (`word_text`),
   KEY `wrd_cnt` (`word_count`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1567,9 +1928,10 @@ CREATE TABLE `phpbb3_search_wordmatch` (
   `word_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `title_match` tinyint(1) unsigned NOT NULL DEFAULT '0',
   UNIQUE KEY `unq_mtch` (`word_id`,`post_id`,`title_match`),
+  UNIQUE KEY `un_mtch` (`word_id`,`post_id`,`title_match`),
   KEY `word_id` (`word_id`),
   KEY `post_id` (`post_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1597,7 +1959,7 @@ CREATE TABLE `phpbb3_sessions` (
   KEY `session_time` (`session_time`),
   KEY `session_user_id` (`session_user_id`),
   KEY `session_fid` (`session_forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1614,7 +1976,7 @@ CREATE TABLE `phpbb3_sessions_keys` (
   `last_login` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`key_id`,`user_id`),
   KEY `last_login` (`last_login`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1630,7 +1992,7 @@ CREATE TABLE `phpbb3_sitelist` (
   `site_hostname` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `ip_exclude` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`site_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1652,7 +2014,7 @@ CREATE TABLE `phpbb3_smilies` (
   `number_on_posting` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`smiley_id`),
   KEY `display_on_post` (`display_on_posting`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1667,111 +2029,30 @@ CREATE TABLE `phpbb3_styles` (
   `style_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `style_copyright` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `style_active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `template_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `theme_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `imageset_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`style_id`),
-  UNIQUE KEY `style_name` (`style_name`),
-  KEY `template_id` (`template_id`),
-  KEY `theme_id` (`theme_id`),
-  KEY `imageset_id` (`imageset_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `phpbb3_styles_imageset`
---
-
-DROP TABLE IF EXISTS `phpbb3_styles_imageset`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phpbb3_styles_imageset` (
-  `imageset_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `imageset_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `imageset_copyright` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `imageset_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
-  PRIMARY KEY (`imageset_id`),
-  UNIQUE KEY `imgset_nm` (`imageset_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `phpbb3_styles_imageset_data`
---
-
-DROP TABLE IF EXISTS `phpbb3_styles_imageset_data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phpbb3_styles_imageset_data` (
-  `image_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `image_name` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `image_filename` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `image_lang` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `image_height` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `image_width` smallint(4) unsigned NOT NULL DEFAULT '0',
-  `imageset_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`image_id`),
-  KEY `i_d` (`imageset_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `phpbb3_styles_template`
---
-
-DROP TABLE IF EXISTS `phpbb3_styles_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phpbb3_styles_template` (
-  `template_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `template_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `template_copyright` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `template_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `style_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   `bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT 'kNg=',
-  `template_storedb` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `template_inherits_id` int(4) unsigned NOT NULL DEFAULT '0',
-  `template_inherit_path` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  PRIMARY KEY (`template_id`),
-  UNIQUE KEY `tmplte_nm` (`template_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `style_parent_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `style_parent_tree` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`style_id`),
+  UNIQUE KEY `style_name` (`style_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `phpbb3_styles_template_data`
+-- Table structure for table `phpbb3_teampage`
 --
 
-DROP TABLE IF EXISTS `phpbb3_styles_template_data`;
+DROP TABLE IF EXISTS `phpbb3_teampage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phpbb3_styles_template_data` (
-  `template_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `template_filename` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `template_included` text COLLATE utf8_bin NOT NULL,
-  `template_mtime` int(11) unsigned NOT NULL DEFAULT '0',
-  `template_data` mediumtext COLLATE utf8_bin NOT NULL,
-  KEY `tid` (`template_id`),
-  KEY `tfn` (`template_filename`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `phpbb3_styles_theme`
---
-
-DROP TABLE IF EXISTS `phpbb3_styles_theme`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phpbb3_styles_theme` (
-  `theme_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  `theme_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `theme_copyright` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `theme_path` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `theme_storedb` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `theme_mtime` int(11) unsigned NOT NULL DEFAULT '0',
-  `theme_data` mediumtext COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`theme_id`),
-  UNIQUE KEY `theme_name` (`theme_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+CREATE TABLE `phpbb3_teampage` (
+  `teampage_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `teampage_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `teampage_position` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `teampage_parent` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`teampage_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1786,19 +2067,16 @@ CREATE TABLE `phpbb3_topics` (
   `forum_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `icon_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `topic_attachment` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `topic_approved` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `topic_reported` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `topic_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `topic_poster` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `topic_time` int(11) unsigned NOT NULL DEFAULT '0',
   `topic_time_limit` int(11) unsigned NOT NULL DEFAULT '0',
   `topic_views` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `topic_replies` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `topic_replies_real` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `topic_status` tinyint(3) NOT NULL DEFAULT '0',
   `topic_type` tinyint(3) NOT NULL DEFAULT '0',
   `topic_first_post_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `topic_first_poster_name` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_first_poster_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `topic_first_poster_colour` varchar(6) COLLATE utf8_bin NOT NULL DEFAULT '',
   `topic_last_post_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `topic_last_poster_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -1816,14 +2094,21 @@ CREATE TABLE `phpbb3_topics` (
   `poll_max_options` tinyint(4) NOT NULL DEFAULT '1',
   `poll_last_vote` int(11) unsigned NOT NULL DEFAULT '0',
   `poll_vote_change` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `topic_visibility` tinyint(3) NOT NULL DEFAULT '0',
+  `topic_delete_time` int(11) unsigned NOT NULL DEFAULT '0',
+  `topic_delete_reason` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `topic_delete_user` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `topic_posts_approved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `topic_posts_unapproved` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `topic_posts_softdeleted` mediumint(8) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`topic_id`),
   KEY `forum_id` (`forum_id`),
   KEY `forum_id_type` (`forum_id`,`topic_type`),
   KEY `last_post_time` (`topic_last_post_time`),
-  KEY `topic_approved` (`topic_approved`),
-  KEY `forum_appr_last` (`forum_id`,`topic_approved`,`topic_last_post_id`),
-  KEY `fid_time_moved` (`forum_id`,`topic_last_post_time`,`topic_moved_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `fid_time_moved` (`forum_id`,`topic_last_post_time`,`topic_moved_id`),
+  KEY `topic_visibility` (`topic_visibility`),
+  KEY `forum_vis_last` (`forum_id`,`topic_visibility`,`topic_last_post_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1838,7 +2123,7 @@ CREATE TABLE `phpbb3_topics_posted` (
   `topic_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `topic_posted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`topic_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1856,7 +2141,7 @@ CREATE TABLE `phpbb3_topics_track` (
   PRIMARY KEY (`user_id`,`topic_id`),
   KEY `forum_id` (`forum_id`),
   KEY `topic_id` (`topic_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1873,7 +2158,7 @@ CREATE TABLE `phpbb3_topics_watch` (
   KEY `topic_id` (`topic_id`),
   KEY `user_id` (`user_id`),
   KEY `notify_stat` (`notify_status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1891,7 +2176,23 @@ CREATE TABLE `phpbb3_user_group` (
   KEY `group_id` (`group_id`),
   KEY `user_id` (`user_id`),
   KEY `group_leader` (`group_leader`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `phpbb3_user_notifications`
+--
+
+DROP TABLE IF EXISTS `phpbb3_user_notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phpbb3_user_notifications` (
+  `item_type` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `item_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `method` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `notify` tinyint(1) unsigned NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1911,9 +2212,8 @@ CREATE TABLE `phpbb3_users` (
   `user_regdate` int(11) unsigned NOT NULL DEFAULT '0',
   `username` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `username_clean` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_password` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_password` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_passchg` int(11) unsigned NOT NULL DEFAULT '0',
-  `user_pass_convert` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `user_email` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_email_hash` bigint(20) NOT NULL DEFAULT '0',
   `user_birthday` varchar(10) COLLATE utf8_bin NOT NULL DEFAULT '',
@@ -1930,8 +2230,7 @@ CREATE TABLE `phpbb3_users` (
   `user_inactive_time` int(11) unsigned NOT NULL DEFAULT '0',
   `user_posts` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `user_lang` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_timezone` decimal(5,2) NOT NULL DEFAULT '0.00',
-  `user_dst` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `user_timezone` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_dateformat` varchar(30) COLLATE utf8_bin NOT NULL DEFAULT 'd M Y H:i',
   `user_style` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `user_rank` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -1957,23 +2256,15 @@ CREATE TABLE `phpbb3_users` (
   `user_allow_massemail` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `user_options` int(11) unsigned NOT NULL DEFAULT '230271',
   `user_avatar` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_avatar_type` tinyint(2) NOT NULL DEFAULT '0',
+  `user_avatar_type` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_avatar_width` smallint(4) unsigned NOT NULL DEFAULT '0',
   `user_avatar_height` smallint(4) unsigned NOT NULL DEFAULT '0',
   `user_sig` mediumtext COLLATE utf8_bin NOT NULL,
   `user_sig_bbcode_uid` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_sig_bbcode_bitfield` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_from` varchar(100) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_icq` varchar(15) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_aim` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_yim` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_msnm` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_jabber` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_website` varchar(200) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_occ` text COLLATE utf8_bin NOT NULL,
-  `user_interests` text COLLATE utf8_bin NOT NULL,
   `user_actkey` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
-  `user_newpasswd` varchar(40) COLLATE utf8_bin NOT NULL DEFAULT '',
+  `user_newpasswd` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_form_salt` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '',
   `user_new` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `user_reminded` tinyint(4) NOT NULL DEFAULT '0',
@@ -1983,7 +2274,7 @@ CREATE TABLE `phpbb3_users` (
   KEY `user_birthday` (`user_birthday`),
   KEY `user_email_hash` (`user_email_hash`),
   KEY `user_type` (`user_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2000,7 +2291,7 @@ CREATE TABLE `phpbb3_warnings` (
   `log_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `warning_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`warning_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2015,7 +2306,7 @@ CREATE TABLE `phpbb3_words` (
   `word` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   `replacement` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '',
   PRIMARY KEY (`word_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2031,514 +2322,7 @@ CREATE TABLE `phpbb3_zebra` (
   `friend` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `foe` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`zebra_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_access`
---
-
-DROP TABLE IF EXISTS `piwik_access`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_access` (
-  `login` varchar(100) NOT NULL,
-  `idsite` int(10) unsigned NOT NULL,
-  `access` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`login`,`idsite`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_archive_blob_2012_01`
---
-
-DROP TABLE IF EXISTS `piwik_archive_blob_2012_01`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_archive_blob_2012_01` (
-  `idarchive` int(10) unsigned NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `idsite` int(10) unsigned DEFAULT NULL,
-  `date1` date DEFAULT NULL,
-  `date2` date DEFAULT NULL,
-  `period` tinyint(3) unsigned DEFAULT NULL,
-  `ts_archived` datetime DEFAULT NULL,
-  `value` mediumblob,
-  PRIMARY KEY (`idarchive`,`name`),
-  KEY `index_period_archived` (`period`,`ts_archived`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_archive_numeric_2012_01`
---
-
-DROP TABLE IF EXISTS `piwik_archive_numeric_2012_01`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_archive_numeric_2012_01` (
-  `idarchive` int(10) unsigned NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `idsite` int(10) unsigned DEFAULT NULL,
-  `date1` date DEFAULT NULL,
-  `date2` date DEFAULT NULL,
-  `period` tinyint(3) unsigned DEFAULT NULL,
-  `ts_archived` datetime DEFAULT NULL,
-  `value` float DEFAULT NULL,
-  PRIMARY KEY (`idarchive`,`name`),
-  KEY `index_idsite_dates_period` (`idsite`,`date1`,`date2`,`period`,`ts_archived`),
-  KEY `index_period_archived` (`period`,`ts_archived`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_goal`
---
-
-DROP TABLE IF EXISTS `piwik_goal`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_goal` (
-  `idsite` int(11) NOT NULL,
-  `idgoal` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `match_attribute` varchar(20) NOT NULL,
-  `pattern` varchar(255) NOT NULL,
-  `pattern_type` varchar(10) NOT NULL,
-  `case_sensitive` tinyint(4) NOT NULL,
-  `allow_multiple` tinyint(4) NOT NULL,
-  `revenue` float NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`idsite`,`idgoal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_action`
---
-
-DROP TABLE IF EXISTS `piwik_log_action`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_action` (
-  `idaction` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` text,
-  `hash` int(10) unsigned NOT NULL,
-  `type` tinyint(3) unsigned DEFAULT NULL,
-  PRIMARY KEY (`idaction`),
-  KEY `index_type_hash` (`type`,`hash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_conversion`
---
-
-DROP TABLE IF EXISTS `piwik_log_conversion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_conversion` (
-  `idvisit` int(10) unsigned NOT NULL,
-  `idsite` int(10) unsigned NOT NULL,
-  `idvisitor` binary(8) NOT NULL,
-  `server_time` datetime NOT NULL,
-  `idaction_url` int(11) DEFAULT NULL,
-  `idlink_va` int(11) DEFAULT NULL,
-  `referer_visit_server_date` date DEFAULT NULL,
-  `referer_type` int(10) unsigned DEFAULT NULL,
-  `referer_name` varchar(70) DEFAULT NULL,
-  `referer_keyword` varchar(255) DEFAULT NULL,
-  `visitor_returning` tinyint(1) NOT NULL,
-  `visitor_count_visits` smallint(5) unsigned NOT NULL,
-  `visitor_days_since_first` smallint(5) unsigned NOT NULL,
-  `visitor_days_since_order` smallint(5) unsigned NOT NULL,
-  `location_country` char(3) NOT NULL,
-  `location_continent` char(3) NOT NULL,
-  `url` text NOT NULL,
-  `idgoal` int(10) NOT NULL,
-  `buster` int(10) unsigned NOT NULL,
-  `idorder` varchar(100) DEFAULT NULL,
-  `items` smallint(5) unsigned DEFAULT NULL,
-  `revenue` float DEFAULT NULL,
-  `revenue_subtotal` float DEFAULT NULL,
-  `revenue_tax` float DEFAULT NULL,
-  `revenue_shipping` float DEFAULT NULL,
-  `revenue_discount` float DEFAULT NULL,
-  `custom_var_k1` varchar(200) DEFAULT NULL,
-  `custom_var_v1` varchar(200) DEFAULT NULL,
-  `custom_var_k2` varchar(200) DEFAULT NULL,
-  `custom_var_v2` varchar(200) DEFAULT NULL,
-  `custom_var_k3` varchar(200) DEFAULT NULL,
-  `custom_var_v3` varchar(200) DEFAULT NULL,
-  `custom_var_k4` varchar(200) DEFAULT NULL,
-  `custom_var_v4` varchar(200) DEFAULT NULL,
-  `custom_var_k5` varchar(200) DEFAULT NULL,
-  `custom_var_v5` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`idvisit`,`idgoal`,`buster`),
-  UNIQUE KEY `unique_idsite_idorder` (`idsite`,`idorder`),
-  KEY `index_idsite_datetime` (`idsite`,`server_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_conversion_item`
---
-
-DROP TABLE IF EXISTS `piwik_log_conversion_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_conversion_item` (
-  `idsite` int(10) unsigned NOT NULL,
-  `idvisitor` binary(8) NOT NULL,
-  `server_time` datetime NOT NULL,
-  `idvisit` int(10) unsigned NOT NULL,
-  `idorder` varchar(100) NOT NULL,
-  `idaction_sku` int(10) unsigned NOT NULL,
-  `idaction_name` int(10) unsigned NOT NULL,
-  `idaction_category` int(10) unsigned NOT NULL,
-  `idaction_category2` int(10) unsigned NOT NULL,
-  `idaction_category3` int(10) unsigned NOT NULL,
-  `idaction_category4` int(10) unsigned NOT NULL,
-  `idaction_category5` int(10) unsigned NOT NULL,
-  `price` float NOT NULL,
-  `quantity` int(10) unsigned NOT NULL,
-  `deleted` tinyint(1) unsigned NOT NULL,
-  PRIMARY KEY (`idvisit`,`idorder`,`idaction_sku`),
-  KEY `index_idsite_servertime` (`idsite`,`server_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_link_visit_action`
---
-
-DROP TABLE IF EXISTS `piwik_log_link_visit_action`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_link_visit_action` (
-  `idlink_va` int(11) NOT NULL AUTO_INCREMENT,
-  `idsite` int(10) unsigned NOT NULL,
-  `idvisitor` binary(8) NOT NULL,
-  `server_time` datetime NOT NULL,
-  `idvisit` int(10) unsigned NOT NULL,
-  `idaction_url` int(10) unsigned NOT NULL,
-  `idaction_url_ref` int(10) unsigned NOT NULL,
-  `idaction_name` int(10) unsigned DEFAULT NULL,
-  `idaction_name_ref` int(10) unsigned NOT NULL,
-  `time_spent_ref_action` int(10) unsigned NOT NULL,
-  `custom_var_k1` varchar(200) DEFAULT NULL,
-  `custom_var_v1` varchar(200) DEFAULT NULL,
-  `custom_var_k2` varchar(200) DEFAULT NULL,
-  `custom_var_v2` varchar(200) DEFAULT NULL,
-  `custom_var_k3` varchar(200) DEFAULT NULL,
-  `custom_var_v3` varchar(200) DEFAULT NULL,
-  `custom_var_k4` varchar(200) DEFAULT NULL,
-  `custom_var_v4` varchar(200) DEFAULT NULL,
-  `custom_var_k5` varchar(200) DEFAULT NULL,
-  `custom_var_v5` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`idlink_va`),
-  KEY `index_idvisit` (`idvisit`),
-  KEY `index_idsite_servertime` (`idsite`,`server_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_profiling`
---
-
-DROP TABLE IF EXISTS `piwik_log_profiling`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_profiling` (
-  `query` text NOT NULL,
-  `count` int(10) unsigned DEFAULT NULL,
-  `sum_time_ms` float DEFAULT NULL,
-  UNIQUE KEY `query` (`query`(100))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_log_visit`
---
-
-DROP TABLE IF EXISTS `piwik_log_visit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_log_visit` (
-  `idvisit` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `idsite` int(10) unsigned NOT NULL,
-  `idvisitor` binary(8) NOT NULL,
-  `visitor_localtime` time NOT NULL,
-  `visitor_returning` tinyint(1) NOT NULL,
-  `visitor_count_visits` smallint(5) unsigned NOT NULL,
-  `visitor_days_since_last` smallint(5) unsigned NOT NULL,
-  `visitor_days_since_order` smallint(5) unsigned NOT NULL,
-  `visitor_days_since_first` smallint(5) unsigned NOT NULL,
-  `visit_first_action_time` datetime NOT NULL,
-  `visit_last_action_time` datetime NOT NULL,
-  `visit_exit_idaction_url` int(11) unsigned NOT NULL,
-  `visit_exit_idaction_name` int(11) unsigned NOT NULL,
-  `visit_entry_idaction_url` int(11) unsigned NOT NULL,
-  `visit_entry_idaction_name` int(11) unsigned NOT NULL,
-  `visit_total_actions` smallint(5) unsigned NOT NULL,
-  `visit_total_time` smallint(5) unsigned NOT NULL,
-  `visit_goal_converted` tinyint(1) NOT NULL,
-  `visit_goal_buyer` tinyint(1) NOT NULL,
-  `referer_type` tinyint(1) unsigned DEFAULT NULL,
-  `referer_name` varchar(70) DEFAULT NULL,
-  `referer_url` text NOT NULL,
-  `referer_keyword` varchar(255) DEFAULT NULL,
-  `config_id` binary(8) NOT NULL,
-  `config_os` char(3) NOT NULL,
-  `config_browser_name` varchar(10) NOT NULL,
-  `config_browser_version` varchar(20) NOT NULL,
-  `config_resolution` varchar(9) NOT NULL,
-  `config_pdf` tinyint(1) NOT NULL,
-  `config_flash` tinyint(1) NOT NULL,
-  `config_java` tinyint(1) NOT NULL,
-  `config_director` tinyint(1) NOT NULL,
-  `config_quicktime` tinyint(1) NOT NULL,
-  `config_realplayer` tinyint(1) NOT NULL,
-  `config_windowsmedia` tinyint(1) NOT NULL,
-  `config_gears` tinyint(1) NOT NULL,
-  `config_silverlight` tinyint(1) NOT NULL,
-  `config_cookie` tinyint(1) NOT NULL,
-  `location_ip` varbinary(16) NOT NULL,
-  `location_browser_lang` varchar(20) NOT NULL,
-  `location_country` char(3) NOT NULL,
-  `location_continent` char(3) NOT NULL,
-  `custom_var_k1` varchar(200) DEFAULT NULL,
-  `custom_var_v1` varchar(200) DEFAULT NULL,
-  `custom_var_k2` varchar(200) DEFAULT NULL,
-  `custom_var_v2` varchar(200) DEFAULT NULL,
-  `custom_var_k3` varchar(200) DEFAULT NULL,
-  `custom_var_v3` varchar(200) DEFAULT NULL,
-  `custom_var_k4` varchar(200) DEFAULT NULL,
-  `custom_var_v4` varchar(200) DEFAULT NULL,
-  `custom_var_k5` varchar(200) DEFAULT NULL,
-  `custom_var_v5` varchar(200) DEFAULT NULL,
-  `location_provider` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`idvisit`),
-  KEY `index_idsite_config_datetime` (`idsite`,`config_id`,`visit_last_action_time`),
-  KEY `index_idsite_datetime` (`idsite`,`visit_last_action_time`),
-  KEY `index_idsite_idvisitor` (`idsite`,`idvisitor`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_logger_api_call`
---
-
-DROP TABLE IF EXISTS `piwik_logger_api_call`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_logger_api_call` (
-  `idlogger_api_call` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `class_name` varchar(255) DEFAULT NULL,
-  `method_name` varchar(255) DEFAULT NULL,
-  `parameter_names_default_values` text,
-  `parameter_values` text,
-  `execution_time` float DEFAULT NULL,
-  `caller_ip` varbinary(16) NOT NULL,
-  `timestamp` timestamp NULL DEFAULT NULL,
-  `returned_value` text,
-  PRIMARY KEY (`idlogger_api_call`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_logger_error`
---
-
-DROP TABLE IF EXISTS `piwik_logger_error`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_logger_error` (
-  `idlogger_error` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` timestamp NULL DEFAULT NULL,
-  `message` text,
-  `errno` int(10) unsigned DEFAULT NULL,
-  `errline` int(10) unsigned DEFAULT NULL,
-  `errfile` varchar(255) DEFAULT NULL,
-  `backtrace` text,
-  PRIMARY KEY (`idlogger_error`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_logger_exception`
---
-
-DROP TABLE IF EXISTS `piwik_logger_exception`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_logger_exception` (
-  `idlogger_exception` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` timestamp NULL DEFAULT NULL,
-  `message` text,
-  `errno` int(10) unsigned DEFAULT NULL,
-  `errline` int(10) unsigned DEFAULT NULL,
-  `errfile` varchar(255) DEFAULT NULL,
-  `backtrace` text,
-  PRIMARY KEY (`idlogger_exception`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_logger_message`
---
-
-DROP TABLE IF EXISTS `piwik_logger_message`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_logger_message` (
-  `idlogger_message` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `timestamp` timestamp NULL DEFAULT NULL,
-  `message` text,
-  PRIMARY KEY (`idlogger_message`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_option`
---
-
-DROP TABLE IF EXISTS `piwik_option`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_option` (
-  `option_name` varchar(255) NOT NULL,
-  `option_value` longtext NOT NULL,
-  `autoload` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`option_name`),
-  KEY `autoload` (`autoload`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_pdf`
---
-
-DROP TABLE IF EXISTS `piwik_pdf`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_pdf` (
-  `idreport` int(11) NOT NULL AUTO_INCREMENT,
-  `idsite` int(11) NOT NULL,
-  `login` varchar(100) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `period` varchar(10) DEFAULT NULL,
-  `format` varchar(10) DEFAULT NULL,
-  `email_me` tinyint(4) DEFAULT NULL,
-  `additional_emails` text,
-  `reports` text NOT NULL,
-  `ts_created` timestamp NULL DEFAULT NULL,
-  `ts_last_sent` timestamp NULL DEFAULT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`idreport`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_session`
---
-
-DROP TABLE IF EXISTS `piwik_session`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_session` (
-  `id` char(32) NOT NULL,
-  `modified` int(11) DEFAULT NULL,
-  `lifetime` int(11) DEFAULT NULL,
-  `data` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_site`
---
-
-DROP TABLE IF EXISTS `piwik_site`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_site` (
-  `idsite` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(90) NOT NULL,
-  `main_url` varchar(255) NOT NULL,
-  `ts_created` timestamp NULL DEFAULT NULL,
-  `ecommerce` tinyint(4) DEFAULT '0',
-  `timezone` varchar(50) NOT NULL,
-  `currency` char(3) NOT NULL,
-  `excluded_ips` text NOT NULL,
-  `excluded_parameters` varchar(255) NOT NULL,
-  `group` varchar(250) NOT NULL,
-  `feedburnerName` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`idsite`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_site_url`
---
-
-DROP TABLE IF EXISTS `piwik_site_url`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_site_url` (
-  `idsite` int(10) unsigned NOT NULL,
-  `url` varchar(255) NOT NULL,
-  PRIMARY KEY (`idsite`,`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_user`
---
-
-DROP TABLE IF EXISTS `piwik_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_user` (
-  `login` varchar(100) NOT NULL,
-  `password` char(32) NOT NULL,
-  `alias` varchar(45) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `token_auth` char(32) NOT NULL,
-  `date_registered` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`login`),
-  UNIQUE KEY `uniq_keytoken` (`token_auth`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_user_dashboard`
---
-
-DROP TABLE IF EXISTS `piwik_user_dashboard`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_user_dashboard` (
-  `login` varchar(100) NOT NULL,
-  `iddashboard` int(11) NOT NULL,
-  `layout` text NOT NULL,
-  PRIMARY KEY (`login`,`iddashboard`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `piwik_user_language`
---
-
-DROP TABLE IF EXISTS `piwik_user_language`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `piwik_user_language` (
-  `login` varchar(100) NOT NULL,
-  `language` varchar(10) NOT NULL,
-  PRIMARY KEY (`login`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2564,8 +2348,10 @@ CREATE TABLE `wiki_archive` (
   `ar_len` int(8) unsigned DEFAULT NULL,
   `ar_page_id` int(10) unsigned DEFAULT NULL,
   `ar_parent_id` int(10) unsigned DEFAULT NULL,
+  `ar_sha1` varbinary(32) NOT NULL DEFAULT '',
   KEY `name_title_timestamp` (`ar_namespace`,`ar_title`,`ar_timestamp`),
-  KEY `usertext_timestamp` (`ar_user_text`,`ar_timestamp`)
+  KEY `usertext_timestamp` (`ar_user_text`,`ar_timestamp`),
+  KEY `ar_revid` (`ar_rev_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2628,11 +2414,15 @@ DROP TABLE IF EXISTS `wiki_categorylinks`;
 CREATE TABLE `wiki_categorylinks` (
   `cl_from` int(8) unsigned NOT NULL DEFAULT '0',
   `cl_to` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
-  `cl_sortkey` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `cl_sortkey` varbinary(230) NOT NULL DEFAULT '',
   `cl_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `cl_sortkey_prefix` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
+  `cl_collation` varbinary(32) NOT NULL DEFAULT '',
+  `cl_type` enum('page','subcat','file') NOT NULL DEFAULT 'page',
   UNIQUE KEY `cl_from` (`cl_from`,`cl_to`),
   KEY `cl_timestamp` (`cl_to`,`cl_timestamp`),
-  KEY `cl_sortkey` (`cl_to`,`cl_sortkey`,`cl_from`)
+  KEY `cl_collation` (`cl_collation`),
+  KEY `cl_sortkey` (`cl_to`,`cl_type`,`cl_sortkey`,`cl_from`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2770,7 +2560,7 @@ DROP TABLE IF EXISTS `wiki_hitcounter`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_hitcounter` (
   `hc_id` int(10) unsigned NOT NULL DEFAULT '0'
-) ENGINE=MEMORY DEFAULT CHARSET=latin1 MAX_ROWS=25000;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 MAX_ROWS=25000;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2830,6 +2620,8 @@ CREATE TABLE `wiki_interwiki` (
   `iw_url` char(127) NOT NULL DEFAULT '',
   `iw_local` tinyint(1) NOT NULL DEFAULT '0',
   `iw_trans` tinyint(1) NOT NULL DEFAULT '0',
+  `iw_api` blob NOT NULL,
+  `iw_wikiid` varchar(64) NOT NULL,
   UNIQUE KEY `iw_prefix` (`iw_prefix`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2894,6 +2686,22 @@ CREATE TABLE `wiki_ipblocks_old` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `wiki_iwlinks`
+--
+
+DROP TABLE IF EXISTS `wiki_iwlinks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_iwlinks` (
+  `iwl_from` int(10) unsigned NOT NULL DEFAULT '0',
+  `iwl_prefix` varbinary(20) NOT NULL DEFAULT '',
+  `iwl_title` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
+  UNIQUE KEY `iwl_from` (`iwl_from`,`iwl_prefix`,`iwl_title`),
+  UNIQUE KEY `iwl_prefix_title_from` (`iwl_prefix`,`iwl_title`,`iwl_from`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `wiki_job`
 --
 
@@ -2906,8 +2714,10 @@ CREATE TABLE `wiki_job` (
   `job_namespace` int(11) NOT NULL,
   `job_title` varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
   `job_params` blob NOT NULL,
+  `job_timestamp` varbinary(14) DEFAULT NULL,
   PRIMARY KEY (`job_id`),
-  KEY `job_cmd` (`job_cmd`,`job_namespace`,`job_title`)
+  KEY `job_cmd` (`job_cmd`,`job_namespace`,`job_title`),
+  KEY `job_timestamp` (`job_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3013,7 +2823,8 @@ CREATE TABLE `wiki_logging` (
   KEY `page_time` (`log_namespace`,`log_title`,`log_timestamp`),
   KEY `times` (`log_timestamp`),
   KEY `log_user_type_time` (`log_user`,`log_type`,`log_timestamp`),
-  KEY `log_page_id_time` (`log_page`,`log_timestamp`)
+  KEY `log_page_id_time` (`log_page`,`log_timestamp`),
+  KEY `type_action` (`log_type`,`log_action`,`log_timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3032,6 +2843,51 @@ CREATE TABLE `wiki_math` (
   `math_mathml` text,
   UNIQUE KEY `math_inputhash` (`math_inputhash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_module_deps`
+--
+
+DROP TABLE IF EXISTS `wiki_module_deps`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_module_deps` (
+  `md_module` varbinary(255) NOT NULL,
+  `md_skin` varbinary(32) NOT NULL,
+  `md_deps` mediumblob NOT NULL,
+  UNIQUE KEY `md_module_skin` (`md_module`,`md_skin`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_msg_resource`
+--
+
+DROP TABLE IF EXISTS `wiki_msg_resource`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_msg_resource` (
+  `mr_resource` varbinary(255) NOT NULL,
+  `mr_lang` varbinary(32) NOT NULL,
+  `mr_blob` mediumblob NOT NULL,
+  `mr_timestamp` binary(14) NOT NULL,
+  UNIQUE KEY `mr_resource_lang` (`mr_resource`,`mr_lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_msg_resource_links`
+--
+
+DROP TABLE IF EXISTS `wiki_msg_resource_links`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_msg_resource_links` (
+  `mrl_resource` varbinary(255) NOT NULL,
+  `mrl_message` varbinary(255) NOT NULL,
+  UNIQUE KEY `mrl_message_resource` (`mrl_message`,`mrl_resource`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3103,7 +2959,8 @@ CREATE TABLE `wiki_page` (
   PRIMARY KEY (`page_id`),
   UNIQUE KEY `name_title` (`page_namespace`,`page_title`),
   KEY `page_random` (`page_random`),
-  KEY `page_len` (`page_len`)
+  KEY `page_len` (`page_len`),
+  KEY `page_redirect_namespace_len` (`page_is_redirect`,`page_namespace`,`page_len`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3314,6 +3171,7 @@ CREATE TABLE `wiki_revision` (
   `rev_len` int(8) unsigned DEFAULT NULL,
   `rev_parent_id` int(8) unsigned DEFAULT NULL,
   `rev_text_id` int(8) unsigned NOT NULL,
+  `rev_sha1` varbinary(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`rev_page`,`rev_id`),
   UNIQUE KEY `rev_id` (`rev_id`),
   KEY `rev_timestamp` (`rev_timestamp`),
@@ -3334,9 +3192,7 @@ CREATE TABLE `wiki_searchindex` (
   `si_page` int(8) unsigned NOT NULL DEFAULT '0',
   `si_title` varchar(255) NOT NULL DEFAULT '',
   `si_text` mediumtext NOT NULL,
-  UNIQUE KEY `si_page` (`si_page`),
-  FULLTEXT KEY `si_title` (`si_title`),
-  FULLTEXT KEY `si_text` (`si_text`)
+  UNIQUE KEY `si_page` (`si_page`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -3438,7 +3294,7 @@ CREATE TABLE `wiki_trackbacks` (
   `tb_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`tb_id`),
   KEY `tb_page` (`tb_page`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3465,8 +3321,40 @@ DROP TABLE IF EXISTS `wiki_updatelog`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_updatelog` (
   `ul_key` varchar(255) NOT NULL,
+  `ul_value` blob,
   PRIMARY KEY (`ul_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_uploadstash`
+--
+
+DROP TABLE IF EXISTS `wiki_uploadstash`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_uploadstash` (
+  `us_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `us_user` int(10) unsigned NOT NULL,
+  `us_key` varchar(255) NOT NULL,
+  `us_orig_path` varchar(255) NOT NULL,
+  `us_path` varchar(255) NOT NULL,
+  `us_source_type` varchar(50) DEFAULT NULL,
+  `us_timestamp` varbinary(14) NOT NULL,
+  `us_status` varchar(50) NOT NULL,
+  `us_size` int(10) unsigned NOT NULL,
+  `us_sha1` varchar(31) NOT NULL,
+  `us_mime` varchar(255) DEFAULT NULL,
+  `us_media_type` enum('UNKNOWN','BITMAP','DRAWING','AUDIO','VIDEO','MULTIMEDIA','OFFICE','TEXT','EXECUTABLE','ARCHIVE') DEFAULT NULL,
+  `us_image_width` int(10) unsigned DEFAULT NULL,
+  `us_image_height` int(10) unsigned DEFAULT NULL,
+  `us_image_bits` smallint(5) unsigned DEFAULT NULL,
+  `us_chunk_inx` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`us_id`),
+  UNIQUE KEY `us_key` (`us_key`),
+  KEY `us_user` (`us_user`),
+  KEY `us_timestamp` (`us_timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3483,7 +3371,6 @@ CREATE TABLE `wiki_user` (
   `user_password` tinyblob NOT NULL,
   `user_newpassword` tinyblob NOT NULL,
   `user_email` tinytext NOT NULL,
-  `user_options` blob NOT NULL,
   `user_touched` varchar(14) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `user_token` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL DEFAULT '',
   `user_email_authenticated` char(14) CHARACTER SET latin1 COLLATE latin1_bin DEFAULT NULL,
@@ -3494,8 +3381,23 @@ CREATE TABLE `wiki_user` (
   `user_editcount` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
-  KEY `user_email_token` (`user_email_token`)
+  KEY `user_email_token` (`user_email_token`),
+  KEY `user_email` (`user_email`(50))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `wiki_user_former_groups`
+--
+
+DROP TABLE IF EXISTS `wiki_user_former_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `wiki_user_former_groups` (
+  `ufg_user` int(10) unsigned NOT NULL DEFAULT '0',
+  `ufg_group` varbinary(32) NOT NULL DEFAULT '',
+  UNIQUE KEY `ufg_user_group` (`ufg_user`,`ufg_group`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3507,7 +3409,7 @@ DROP TABLE IF EXISTS `wiki_user_groups`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_user_groups` (
   `ug_user` int(5) unsigned NOT NULL DEFAULT '0',
-  `ug_group` char(16) NOT NULL DEFAULT '',
+  `ug_group` varbinary(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`ug_user`,`ug_group`),
   KEY `ug_group` (`ug_group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -3523,7 +3425,7 @@ DROP TABLE IF EXISTS `wiki_user_newtalk`;
 CREATE TABLE `wiki_user_newtalk` (
   `user_id` int(5) NOT NULL DEFAULT '0',
   `user_ip` varchar(40) NOT NULL DEFAULT '',
-  `user_last_timestamp` binary(14) NOT NULL DEFAULT '\0\0\0\0\0\0\0\0\0\0\0\0\0\0',
+  `user_last_timestamp` varbinary(14) DEFAULT NULL,
   KEY `user_id` (`user_id`),
   KEY `user_ip` (`user_ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -3538,7 +3440,7 @@ DROP TABLE IF EXISTS `wiki_user_properties`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_user_properties` (
   `up_user` int(11) NOT NULL,
-  `up_property` varbinary(32) NOT NULL,
+  `up_property` varbinary(255) DEFAULT NULL,
   `up_value` blob,
   UNIQUE KEY `user_properties_user_property` (`up_user`,`up_property`),
   KEY `user_properties_property` (`up_property`)
