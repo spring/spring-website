@@ -3,7 +3,7 @@
 	url = git://github.com/mantisbt-plugins/source-integration.git
 [submodule "wwwroot/phpbb/ext/anavaro/postlove"]
 	path = wwwroot/phpbb/ext/anavaro/postlove
-	url = git@github.com:gajop/postlove.git
+	url = https://github.com/gajop/postlove.git
 [submodule "wwwroot/phpbb/ext/o0johntam0o/codeboxplus"]
 	path = wwwroot/phpbb/ext/o0johntam0o/codeboxplus
-	url = git@github.com:gajop/phpBB-Extension-Codebox-Plus.git
+	url = https://github.com/gajop/phpBB-Extension-Codebox-Plus.git
