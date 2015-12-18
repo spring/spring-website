@@ -22,5 +22,3 @@ function cached_file_get_contents($url, $maxage = 300)
 		return file_get_contents($file);
 	}
 }
-
-?>
