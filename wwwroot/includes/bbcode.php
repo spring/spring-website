@@ -57,5 +57,3 @@
                       );
         return preg_replace($keys, $data, $str);
     }
-
-?>
