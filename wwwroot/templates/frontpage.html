@@ -1,11 +1,11 @@
 <div id="content">
-	<div class="welcome">
+	<div class="welcome" id="homepage_banner">
 		<!-- Welcome Image & Text -->
 		<div class="welcomeimage" style="background-image: url(#WELCOME#)">
 			<div id="welcometext">
-				<p>Welcome to the Spring Engine website!</p>
+				<p>Spring is a free RTS engine</p>
 				<p class="welcomesmall">
-					Spring is a free RTS engine developed for
+					developed for
 					<a href="/wiki/Download">Windows</a>,
 					<a href="/wiki/Download">Linux</a> and
 					<a href="/wiki/Download">Mac OS X</a>
@@ -17,31 +17,25 @@
 		#SCREEN2#
 	</div>
 
-	<table border="0" cellspacing="0" cellpadding="0" width="100%" id="frontmedia" bgcolor="#4C626F" style="padding-left: 7px; padding-top: 15px; margin-right: 0; padding-right: 0; padding-bottom: 0px;">
-	<tr>
-	<td id="frontmediavideotd" valign="top" align="center">
-		<iframe width="363" height="205" src="#VIDEOFILE#" frameborder="0"></iframe>
-	</td>
-	<td align="right" valign="top" width="469px">
-		<div class="bigbar">
-			<div class="learnmorebar"><a href="/wiki/About">Learn more</a></div>
-			<div class="downloadbar"><a href="/wiki/Download">Download and play</a></div>
-			<div class="gamesbar"><a href="/wiki/Games">See the games</a></div>
-		</div>
-	</td>
-	</tr>
-	</table>
-
-	<table width="100%" border="0" cellpadding="0" cellspacing="0"  bgcolor="#4C626F" style="padding-left: 7px; margin-right: 0; padding-right: 0; padding-bottom: 14px;">
-	<tr>
-	<td style="padding-top: 15px;">
-		<div class="news">
-			<div class="newsbar">
-				Latest news
+	<div id="homepage_media" class="cf" style="background: #4C626F; padding-top: 15px; margin-right: 0; padding-right: 0; padding-bottom: 0px;">
+	
+		<div align="right" style="width:469px; float:right;">
+			<div class="bigbar">
+				<div class="learnmorebar"><a href="/wiki/About">Learn more</a></div>
+				<div class="downloadbar"><a href="/wiki/Download">Download and play</a></div>
+				<div class="gamesbar"><a href="/wiki/Games">See the games</a></div>
 			</div>
-			#NEWSITEMS#
 		</div>
-	</td>
-	</tr>
-	</table>
+		<div id="frontmediavideotd" style="padding-bottom:15px;">
+			<iframe width="363" height="205" style="margin-left:auto; margin-right:auto; display:block;" align="center" src="https://www.youtube.com/embed/vkZaLLyhEgI?rel=0&amp;autohide=1" frameborder="0"></iframe>
+		</div>
+		<span style="clear:both;"></span>
+	</div>
+
+	<div id="homepage_news" class="news" style="background: #4C626F; margin-right: 0; padding-right: 0; padding-bottom: 14px;">
+		<div class="newsbar">
+			Latest news
+		</div>
+		#NEWSITEMS#
+	</div>
 </div>

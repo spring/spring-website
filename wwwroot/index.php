@@ -10,30 +10,28 @@
     $news = get_news();
 
     // Get a random welcome image
-    $sql = '';
-    $sql .= 'select a.attach_id ';
+    $sql = 'select a.attach_id ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where t.forum_id = 33 and a.topic_id = t.topic_id ";
     $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
     $sql .= 'order by rand() limit 1';
-    $res = mysql_query($sql);
-    $row = mysql_fetch_array($res);
+    $res = mysqli_query($sql);
+    $row = mysqli_fetch_array($res);
     $welcome = '/screenshot.php?id=' . $row['attach_id'];
 
     // Fetch 4 random screenshots
-    $sql = '';
-    $sql .= 'select a.attach_id, physical_filename, topic_title ';
+    $sql = 'select a.attach_id, physical_filename, topic_title ';
     $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
     $sql .= "where t.forum_id = 35 and a.topic_id = t.topic_id ";
     $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
     $sql .= 'order by rand() limit 4';
 
-    $res = mysql_query($sql);
-    $rowcount = mysql_num_rows($res);
+    $res = mysqli_query($sql);
+    $rowcount = mysqli_num_rows($res);
     $screenthumbs = array();
-    if ($rowcount >= 4) {
+    if ( $rowcount >= 4 ) {
         $screenids = array();
-        while (count($screenids) < 4) {
+        while ( count( $screenids ) < 4 ) {
             $proposed = rand(0, $rowcount - 1);
             if (!array_key_exists($proposed, $screenids))
                 $screenids[$proposed] = True;
@@ -41,9 +39,9 @@
 
         // Retreive details for the 4 selected ones
         $screens = array();
-        for ($i = 0; count($screens) < 4; $i++) {
+        for ( $i = 0; count($screens) < 4; $i++ ) {
             $row = mysql_fetch_array($res);
-            if (array_key_exists($i, $screenids)) {
+            if (array_key_exists( $i, $screenids ) ) {
                 $screens[] = $row;
             }
         }
@@ -55,8 +53,7 @@
             $imgline .= '<img class="frontscreenshot" src="' . $thumb . '" width="237" height="119" border="0" alt="" /></a>';
             $screenthumbs[] = $imgline;
         }
-    }
-    else {
+    } else {
         // Not enough.. Should not usually happen.
     }
 
@@ -68,7 +65,7 @@
 			"https://www.youtube.com/embed/e0R2QsMwc98?rel=0&autohide=1", #NOTA trailer
 			"https://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 		);
-    $videofile = str_replace("&", "&amp;", $videos[array_rand($videos)]);
+    $videofile = str_replace( "&", "&amp;", $videos[array_rand($videos)] );
 
     // Compose the frontpage
     $fptemplate = file_get_contents('templates/frontpage.html');
