@@ -46,7 +46,7 @@ $sql .= "and a.topic_id = t.topic_id and p.post_id = a.post_msg_id ";
 $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png') ";
 $sql .= 'order by topic_time desc';
 
-$res = mysqli_query($sql);
+$res = mysqli_query($db, $sql);
 $media = '<tr>';
 $count = 0;
 

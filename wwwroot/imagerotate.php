@@ -24,7 +24,7 @@ $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
 $sql .= "where t.forum_id = $banners_forum and a.topic_id = t.topic_id ";
 $sql .= 'order by rand() limit 1';
 
-$res = mysqli_query($sql);
+$res = mysqli_query($db, $sql);
 if ( mysqli_num_rows($res) != 1 ) {
 	exit();
 }
@@ -38,7 +38,7 @@ $sql .= 'from phpbb3_attachments as a, phpbb3_topics as t ';
 $sql .= "where t.forum_id = $banners_forum and a.topic_id = t.topic_id ";
 $sql .= 'order by rand() limit 1';
 
-$res = mysqli_query($sql);
+$res = mysqli_query($db, $sql);
 if (mysqli_num_rows($res) != 1)
 	exit();
 $row = mysqli_fetch_array($res);

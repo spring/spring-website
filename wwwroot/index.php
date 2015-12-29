@@ -7,7 +7,7 @@
     include_once('includes/news.php');
 
     // Prepare newsitems
-    $news = get_news();
+    $news = get_news($db);
 
     // Get a random welcome image
     $sql = 'select a.attach_id ';
@@ -15,7 +15,7 @@
     $sql .= "where t.forum_id = 33 and a.topic_id = t.topic_id ";
     $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
     $sql .= 'order by rand() limit 1';
-    $res = mysqli_query($sql);
+    $res = mysqli_query($db, $sql);
     $row = mysqli_fetch_array($res);
     $welcome = '/screenshot.php?id=' . $row['attach_id'];
 
@@ -26,7 +26,7 @@
     $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or extension = 'png')";
     $sql .= 'order by rand() limit 4';
 
-    $res = mysqli_query($sql);
+    $res = mysqli_query($db, $sql);
     $rowcount = mysqli_num_rows($res);
     $screenthumbs = array();
     if ( $rowcount >= 4 ) {
@@ -40,7 +40,7 @@
         // Retreive details for the 4 selected ones
         $screens = array();
         for ( $i = 0; count($screens) < 4; $i++ ) {
-            $row = mysql_fetch_array($res);
+            $row = mysqli_fetch_array($res);
             if (array_key_exists( $i, $screenids ) ) {
                 $screens[] = $row;
             }

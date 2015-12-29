@@ -29,7 +29,7 @@ if (!$type)
 else
     $sql .= "and (extension = 'flv')";
 
-$res = mysqli_query($sql);
+$res = mysqli_query($db, $sql);
 if (mysqli_num_rows($res) != 1) {
     die('No such screenshot!');
 }

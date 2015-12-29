@@ -3,7 +3,6 @@
 	include_once('../springpw.php');
 
 	$db = mysqli_connect($spring_dbhost, $spring_dbuser, $spring_dbpass, $spring_dbname);
-	mysqli_set_charset('utf8'); // we except utf-8 to be returned
 
 	if($db == false){
 		$headertemplate = file_get_contents('templates/header.html');
@@ -15,3 +14,5 @@
 		print($html);
 		die();
 	}
+
+	mysqli_set_charset($db, 'utf8'); // we except utf-8 to be returned
