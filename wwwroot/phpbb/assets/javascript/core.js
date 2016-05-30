@@ -303,6 +303,10 @@ phpbb.ajaxify = function(options) {
 					alert = phpbb.alert(res.MESSAGE_TITLE, res.MESSAGE_TEXT);
 				} else {
 					$dark.fadeOut(phpbb.alertTime);
+
+					if ($loadingIndicator) {
+						$loadingIndicator.fadeOut(phpbb.alertTime);
+					}
 				}
 
 				if (typeof phpbb.ajaxCallbacks[callback] === 'function') {
@@ -394,8 +398,11 @@ phpbb.ajaxify = function(options) {
 				error: errorHandler,
 				cache: false
 			});
+
 			request.always(function() {
-				$loadingIndicator.fadeOut(phpbb.alertTime);
+				if ($loadingIndicator && $loadingIndicator.is(':visible')) {
+					$loadingIndicator.fadeOut(phpbb.alertTime);
+				}
 			});
 		};
 
@@ -1022,7 +1029,7 @@ phpbb.resizeTextArea = function($items, options) {
 
 	function autoResize(item) {
 		function setHeight(height) {
-			height += parseInt($item.css('height'), 10) - $item.height();
+			height += parseInt($item.css('height'), 10) - $item.innerHeight();
 			$item
 				.css({ height: height + 'px', resize: 'none' })
 				.addClass('auto-resized');
@@ -1041,7 +1048,7 @@ phpbb.resizeTextArea = function($items, options) {
 				configuration.maxHeight
 			),
 			$item = $(item),
-			height = parseInt($item.height(), 10),
+			height = parseInt($item.innerHeight(), 10),
 			scrollHeight = (item.scrollHeight) ? item.scrollHeight : 0;
 
 		if (height < 0) {
@@ -1531,6 +1538,13 @@ phpbb.toggleSelectSettings = function(el) {
 		var $this = $(this),
 			$setting = $($this.data('toggle-setting'));
 		$setting.toggle($this.is(':selected'));
+
+		// Disable any input elements that are not visible right now
+		if ($this.is(':selected')) {
+			$($this.data('toggle-setting') + ' input').prop('disabled', false);
+		} else {
+			$($this.data('toggle-setting') + ' input').prop('disabled', true);
+		}
 	});
 };
 
@@ -1606,6 +1620,21 @@ phpbb.registerPageDropdowns = function() {
 		}
 	});
 };
+
+/**
+ * Handle avatars to be lazy loaded.
+ */
+phpbb.lazyLoadAvatars = function loadAvatars() {
+	$('.avatar[data-src]').each(function () {
+		var $avatar = $(this);
+
+		$avatar
+			.attr('src', $avatar.data('src'))
+			.removeAttr('data-src');
+	});
+};
+
+$(window).load(phpbb.lazyLoadAvatars);
 
 /**
 * Apply code editor to all textarea elements with data-bbcode attribute

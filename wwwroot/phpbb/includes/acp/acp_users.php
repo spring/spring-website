@@ -44,6 +44,11 @@ class acp_users
 		$user_id	= request_var('u', 0);
 		$action		= request_var('action', '');
 
+		// Get referer to redirect user to the appropriate page after delete action
+		$redirect		= request_var('redirect', '');
+		$redirect_tag	= "redirect=$redirect";
+		$redirect_url	= append_sid("{$phpbb_admin_path}index.$phpEx", "i=$redirect");
+
 		$submit		= (isset($_POST['update']) && !isset($_POST['cancel'])) ? true : false;
 
 		$form_name = 'acp_users';
@@ -52,7 +57,10 @@ class acp_users
 		// Whois (special case)
 		if ($action == 'whois')
 		{
-			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+			if (!function_exists('user_get_id_name'))
+			{
+				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+			}
 
 			$this->page_title = 'WHOIS';
 			$this->tpl_name = 'simple_body';
@@ -146,9 +154,9 @@ class acp_users
 		}
 
 		$template->assign_vars(array(
-			'U_BACK'			=> $this->u_action,
+			'U_BACK'			=> (empty($redirect)) ? $this->u_action : $redirect_url,
 			'U_MODE_SELECT'		=> append_sid("{$phpbb_admin_path}index.$phpEx", "i=$id&amp;u=$user_id"),
-			'U_ACTION'			=> $this->u_action . '&amp;u=' . $user_id,
+			'U_ACTION'			=> $this->u_action . '&amp;u=' . $user_id . ((empty($redirect)) ? '' : '&amp;' . $redirect_tag),
 			'S_FORM_OPTIONS'	=> $s_form_options,
 			'MANAGED_USERNAME'	=> $user_row['username'])
 		);
@@ -165,7 +173,10 @@ class acp_users
 		{
 			case 'overview':
 
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				if (!function_exists('user_get_id_name'))
+				{
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				}
 
 				$user->add_lang('acp/ban');
 
@@ -221,19 +232,30 @@ class acp_users
 								user_delete($delete_type, $user_id, $user_row['username']);
 
 								add_log('admin', 'LOG_USER_DELETED', $user_row['username']);
-								trigger_error($user->lang['USER_DELETED'] . adm_back_link($this->u_action));
+								trigger_error($user->lang['USER_DELETED'] . adm_back_link(
+										(empty($redirect)) ? $this->u_action : $redirect_url
+									)
+								);
 							}
 							else
 							{
-								confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields(array(
+								$delete_confirm_hidden_fields = array(
 									'u'				=> $user_id,
 									'i'				=> $id,
 									'mode'			=> $mode,
 									'action'		=> $action,
 									'update'		=> true,
 									'delete'		=> 1,
-									'delete_type'	=> $delete_type))
+									'delete_type'	=> $delete_type,
 								);
+
+								// Checks if the redirection page is specified
+								if (!empty($redirect))
+								{
+									$delete_confirm_hidden_fields['redirect'] = $redirect;
+								}
+
+								confirm_box(false, $user->lang['CONFIRM_OPERATION'], build_hidden_fields($delete_confirm_hidden_fields));
 							}
 						}
 						else
@@ -338,7 +360,10 @@ class acp_users
 
 							if ($config['email_enable'])
 							{
-								include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+								if (!class_exists('messenger'))
+								{
+									include($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+								}
 
 								$server_url = generate_board_url();
 
@@ -421,7 +446,10 @@ class acp_users
 									$phpbb_notifications = $phpbb_container->get('notification_manager');
 									$phpbb_notifications->delete_notifications('notification.type.admin_activate_user', $user_row['user_id']);
 
-									include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+									if (!class_exists('messenger'))
+									{
+										include($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+									}
 
 									$messenger = new messenger(false);
 
@@ -1345,7 +1373,10 @@ class acp_users
 
 			case 'profile':
 
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				if (!function_exists('user_get_id_name'))
+				{
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				}
 
 				$cp = $phpbb_container->get('profilefields.manager');
 
@@ -1504,7 +1535,10 @@ class acp_users
 
 			case 'prefs':
 
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				if (!function_exists('user_get_id_name'))
+				{
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				}
 
 				$data = array(
 					'dateformat'		=> utf8_normalize_nfc(request_var('dateformat', $user_row['user_dateformat'], true)),
@@ -1553,7 +1587,7 @@ class acp_users
 				if ($submit)
 				{
 					$error = validate_data($data, array(
-						'dateformat'	=> array('string', false, 1, 30),
+						'dateformat'	=> array('string', false, 1, 64),
 						'lang'			=> array('match', false, '#^[a-z_\-]{2,}$#i'),
 						'tz'			=> array('timezone'),
 
@@ -1774,13 +1808,12 @@ class acp_users
 
 			case 'avatar':
 
-				include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-
 				$avatars_enabled = false;
+				/** @var \phpbb\avatar\manager $phpbb_avatar_manager */
+				$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 
 				if ($config['allow_avatar'])
 				{
-					$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 					$avatar_drivers = $phpbb_avatar_manager->get_enabled_drivers();
 
 					// This is normalised data, without the user_ prefix
@@ -1841,14 +1874,21 @@ class acp_users
 
 					$selected_driver = $phpbb_avatar_manager->clean_driver_name($request->variable('avatar_driver', $user_row['user_avatar_type']));
 
+					// Assign min and max values before generating avatar driver html
+					$template->assign_vars(array(
+						'AVATAR_MIN_WIDTH'		=> $config['avatar_min_width'],
+						'AVATAR_MAX_WIDTH'		=> $config['avatar_max_width'],
+						'AVATAR_MIN_HEIGHT'		=> $config['avatar_min_height'],
+						'AVATAR_MAX_HEIGHT'		=> $config['avatar_max_height'],
+					));
+
 					foreach ($avatar_drivers as $current_driver)
 					{
 						$driver = $phpbb_avatar_manager->get_driver($current_driver);
 
 						$avatars_enabled = true;
-						$config_name = $phpbb_avatar_manager->get_driver_config_name($driver);
 						$template->set_filenames(array(
-							'avatar' => "acp_avatar_options_{$config_name}.html",
+							'avatar' => $driver->get_acp_template_name(),
 						));
 
 						if ($driver->prepare_form($request, $template, $user, $avatar_data, $error))
@@ -1868,8 +1908,12 @@ class acp_users
 					}
 				}
 
-				// Replace "error" strings with their real, localised form
-				$error = $phpbb_avatar_manager->localize_errors($user, $error);
+				// Avatar manager is not initialized if avatars are disabled
+				if (isset($phpbb_avatar_manager))
+				{
+					// Replace "error" strings with their real, localised form
+					$error = $phpbb_avatar_manager->localize_errors($user, $error);
+				}
 
 				$avatar = phpbb_get_user_avatar($user_row, 'USER_AVATAR', true);
 
@@ -1930,8 +1974,15 @@ class acp_users
 
 			case 'sig':
 
-				include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-				include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+				if (!function_exists('generate_smilies'))
+				{
+					include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+				}
+
+				if (!function_exists('display_custom_bbcodes'))
+				{
+					include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+				}
 
 				$enable_bbcode	= ($config['allow_sig_bbcode']) ? (bool) $this->optionget($user_row, 'sig_bbcode') : false;
 				$enable_smilies	= ($config['allow_sig_smilies']) ? (bool) $this->optionget($user_row, 'sig_smilies') : false;
@@ -1942,7 +1993,10 @@ class acp_users
 
 				if ($submit || $preview)
 				{
-					include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+					if (!class_exists('messenger'))
+					{
+						include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+					}
 
 					$enable_bbcode	= ($config['allow_sig_bbcode']) ? ((request_var('disable_bbcode', false)) ? false : true) : false;
 					$enable_smilies	= ($config['allow_sig_smilies']) ? ((request_var('disable_smilies', false)) ? false : true) : false;
@@ -2183,7 +2237,10 @@ class acp_users
 
 			case 'groups':
 
-				include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				if (!function_exists('group_user_attributes'))
+				{
+					include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+				}
 
 				$user->add_lang(array('groups', 'acp/groups'));
 				$group_id = request_var('g', 0);
@@ -2399,7 +2456,10 @@ class acp_users
 
 			case 'perm':
 
-				include_once($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
+				if (!class_exists('auth_admin'))
+				{
+					include($phpbb_root_path . 'includes/acp/auth.' . $phpEx);
+				}
 
 				$auth_admin = new auth_admin();
 

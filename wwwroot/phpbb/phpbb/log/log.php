@@ -229,8 +229,8 @@ class log implements \phpbb\log\log_interface
 		}
 
 		$sql_ary = array(
-			'user_id'		=> $user_id,
-			'log_ip'		=> $log_ip,
+			'user_id'		=> !empty($user_id) ? $user_id : ANONYMOUS,
+			'log_ip'		=> !empty($log_ip) ? $log_ip : '',
 			'log_time'		=> $log_time,
 			'log_operation'	=> $log_operation,
 		);
@@ -535,7 +535,7 @@ class log implements \phpbb\log\log_interface
 			'ORDER_BY' => $sort_by,
 		);
 
-		if($log_time)
+		if ($log_time)
 		{
 			$get_logs_sql_ary['WHERE'] = 'l.log_time >= ' . (int) $log_time . '
 					AND ' . $get_logs_sql_ary['WHERE'];

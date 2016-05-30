@@ -1258,6 +1258,10 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 		{
 			$forum_id = array($forum_id);
 		}
+		else
+		{
+			$forum_id = array_unique($forum_id);
+		}
 
 		$phpbb_notifications = $phpbb_container->get('notification_manager');
 
@@ -2230,6 +2234,12 @@ function generate_board_url($without_script_path = false)
 
 	$server_name = $user->host;
 	$server_port = $request->server('SERVER_PORT', 0);
+	$forwarded_proto = $request->server('HTTP_X_FORWARDED_PROTO');
+
+	if (!empty($forwarded_proto) && $forwarded_proto === 'https')
+	{
+		$server_port = 443;
+	}
 
 	// Forcing server vars is the only way to specify/override the protocol
 	if ($config['force_server_vars'] || !$server_name)
@@ -2397,6 +2407,7 @@ function redirect($url, $return = false, $disable_cd_check = false)
 		echo '<html dir="' . $user->lang['DIRECTION'] . '" lang="' . $user->lang['USER_LANG'] . '">';
 		echo '<head>';
 		echo '<meta charset="utf-8">';
+		echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
 		echo '<meta http-equiv="refresh" content="0; url=' . str_replace('&', '&amp;', $url) . '" />';
 		echo '<title>' . $user->lang['REDIRECT'] . '</title>';
 		echo '</head>';
@@ -2817,6 +2828,21 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 		$user->setup();
 	}
 
+	/**
+	 * This event allows an extension to modify the login process
+	 *
+	 * @event core.login_box_before
+	 * @var string	redirect	Redirect string
+	 * @var string	l_explain	Explain language string
+	 * @var string	l_success	Success language string
+	 * @var	bool	admin		Is admin?
+	 * @var bool	s_display	Display full login form?
+	 * @var string	err			Error string
+	 * @since 3.1.9-RC1
+	 */
+	$vars = array('redirect', 'l_explain', 'l_success', 'admin', 's_display', 'err');
+	extract($phpbb_dispatcher->trigger_event('core.login_box_before', compact($vars)));
+
 	// Print out error if user tries to authenticate as an administrator without having the privileges...
 	if ($admin && !$auth->acl_get('a_'))
 	{
@@ -2829,7 +2855,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 		trigger_error('NO_AUTH_ADMIN');
 	}
 
-	if ($request->is_set_post('login') || ($request->is_set('login') && $request->variable('login', '') == 'external'))
+	if (empty($err) && ($request->is_set_post('login') || ($request->is_set('login') && $request->variable('login', '') == 'external')))
 	{
 		// Get credential
 		if ($admin)
@@ -2898,11 +2924,11 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 			*
 			* @event core.login_box_redirect
 			* @var  string	redirect	Redirect string
-			* @var	boolean	admin		Is admin?
-			* @var	bool	return		If true, do not redirect but return the sanitized URL.
+			* @var	bool	admin		Is admin?
 			* @since 3.1.0-RC5
+			* @changed 3.1.9-RC1 Removed undefined return variable
 			*/
-			$vars = array('redirect', 'admin', 'return');
+			$vars = array('redirect', 'admin');
 			extract($phpbb_dispatcher->trigger_event('core.login_box_redirect', compact($vars)));
 
 			// append/replace SID (may change during the session for AOL users)
@@ -3978,6 +4004,7 @@ function msg_handler($errno, $msg_text, $errfile, $errline)
 			echo '<html dir="ltr">';
 			echo '<head>';
 			echo '<meta charset="utf-8">';
+			echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
 			echo '<title>' . $msg_title . '</title>';
 			echo '<style type="text/css">' . "\n" . '/* <![CDATA[ */' . "\n";
 			echo '* { margin: 0; padding: 0; } html { font-size: 100%; height: 100%; margin-bottom: 1px; background-color: #E4EDF0; } body { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif; color: #536482; background: #E4EDF0; font-size: 62.5%; margin: 0; } ';
@@ -4260,10 +4287,14 @@ function obtain_users_online_string($online_users, $item_id = 0, $item = 'forum'
 
 	if (sizeof($online_users['online_users']))
 	{
-		$sql = 'SELECT username, username_clean, user_id, user_type, user_allow_viewonline, user_colour
-				FROM ' . USERS_TABLE . '
-				WHERE ' . $db->sql_in_set('user_id', $online_users['online_users']) . '
-				ORDER BY username_clean ASC';
+		$sql_ary = array(
+			'SELECT'	=> 'u.username, u.username_clean, u.user_id, u.user_type, u.user_allow_viewonline, u.user_colour',
+			'FROM'		=> array(
+				USERS_TABLE	=> 'u',
+			),
+			'WHERE'		=> $db->sql_in_set('u.user_id', $online_users['online_users']),
+			'ORDER_BY'	=> 'u.username_clean ASC',
+		);
 
 		/**
 		* Modify SQL query to obtain online users data
@@ -4275,13 +4306,14 @@ function obtain_users_online_string($online_users, $item_id = 0, $item = 'forum'
 		* @var	string	item			Restrict online users to a certain
 		*								session item, e.g. forum for
 		*								session_forum_id
-		* @var	string	sql				SQL query to obtain users online data
+		* @var	array	sql_ary			SQL query array to obtain users online data
 		* @since 3.1.4-RC1
+		* @changed 3.1.7-RC1			Change sql query into array and adjust var accordingly. Allows extension authors the ability to adjust the sql_ary.
 		*/
-		$vars = array('online_users', 'item_id', 'item', 'sql');
+		$vars = array('online_users', 'item_id', 'item', 'sql_ary');
 		extract($phpbb_dispatcher->trigger_event('core.obtain_users_online_string_sql', compact($vars)));
 
-		$result = $db->sql_query($sql);
+		$result = $db->sql_query($db->sql_build_query('SELECT', $sql_ary));
 		$rowset = $db->sql_fetchrowset($result);
 		$db->sql_freeresult($result);
 
@@ -4295,7 +4327,7 @@ function obtain_users_online_string($online_users, $item_id = 0, $item = 'forum'
 					$row['username'] = '<em>' . $row['username'] . '</em>';
 				}
 
-				if (!isset($online_users['hidden_users'][$row['user_id']]) || $auth->acl_get('u_viewonline'))
+				if (!isset($online_users['hidden_users'][$row['user_id']]) || $auth->acl_get('u_viewonline') || $row['user_id'] === $user->data['user_id'])
 				{
 					$user_online_link[$row['user_id']] = get_username_string(($row['user_type'] <> USER_IGNORE) ? 'full' : 'no_profile', $row['user_id'], $row['username'], $row['user_colour']);
 				}
@@ -4779,13 +4811,14 @@ function phpbb_build_hidden_fields_for_query_params($request, $exclude = null)
 * @param array $user_row Row from the users table
 * @param string $alt Optional language string for alt tag within image, can be a language key or text
 * @param bool $ignore_config Ignores the config-setting, to be still able to view the avatar in the UCP
+* @param bool $lazy If true, will be lazy loaded (requires JS)
 *
 * @return string Avatar html
 */
-function phpbb_get_user_avatar($user_row, $alt = 'USER_AVATAR', $ignore_config = false)
+function phpbb_get_user_avatar($user_row, $alt = 'USER_AVATAR', $ignore_config = false, $lazy = false)
 {
 	$row = \phpbb\avatar\manager::clean_row($user_row, 'user');
-	return phpbb_get_avatar($row, $alt, $ignore_config);
+	return phpbb_get_avatar($row, $alt, $ignore_config, $lazy);
 }
 
 /**
@@ -4794,13 +4827,14 @@ function phpbb_get_user_avatar($user_row, $alt = 'USER_AVATAR', $ignore_config =
 * @param array $group_row Row from the groups table
 * @param string $alt Optional language string for alt tag within image, can be a language key or text
 * @param bool $ignore_config Ignores the config-setting, to be still able to view the avatar in the UCP
+* @param bool $lazy If true, will be lazy loaded (requires JS)
 *
 * @return string Avatar html
 */
-function phpbb_get_group_avatar($user_row, $alt = 'GROUP_AVATAR', $ignore_config = false)
+function phpbb_get_group_avatar($user_row, $alt = 'GROUP_AVATAR', $ignore_config = false, $lazy = false)
 {
 	$row = \phpbb\avatar\manager::clean_row($user_row, 'group');
-	return phpbb_get_avatar($row, $alt, $ignore_config);
+	return phpbb_get_avatar($row, $alt, $ignore_config, $lazy);
 }
 
 /**
@@ -4809,14 +4843,15 @@ function phpbb_get_group_avatar($user_row, $alt = 'GROUP_AVATAR', $ignore_config
 * @param array $row Row cleaned by \phpbb\avatar\manager::clean_row
 * @param string $alt Optional language string for alt tag within image, can be a language key or text
 * @param bool $ignore_config Ignores the config-setting, to be still able to view the avatar in the UCP
+* @param bool $lazy If true, will be lazy loaded (requires JS)
 *
 * @return string Avatar html
 */
-function phpbb_get_avatar($row, $alt, $ignore_config = false)
+function phpbb_get_avatar($row, $alt, $ignore_config = false, $lazy = false)
 {
 	global $user, $config, $cache, $phpbb_root_path, $phpEx;
 	global $request;
-	global $phpbb_container;
+	global $phpbb_container, $phpbb_dispatcher;
 
 	if (!$config['allow_avatar'] && !$ignore_config)
 	{
@@ -4830,7 +4865,7 @@ function phpbb_get_avatar($row, $alt, $ignore_config = false)
 	);
 
 	$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
-	$driver = $phpbb_avatar_manager->get_driver($row['avatar_type'], $ignore_config);
+	$driver = $phpbb_avatar_manager->get_driver($row['avatar_type'], !$ignore_config);
 	$html = '';
 
 	if ($driver)
@@ -4841,7 +4876,7 @@ function phpbb_get_avatar($row, $alt, $ignore_config = false)
 			return $html;
 		}
 
-		$avatar_data = $driver->get_data($row, $ignore_config);
+		$avatar_data = $driver->get_data($row);
 	}
 	else
 	{
@@ -4850,11 +4885,46 @@ function phpbb_get_avatar($row, $alt, $ignore_config = false)
 
 	if (!empty($avatar_data['src']))
 	{
-		$html = '<img src="' . $avatar_data['src'] . '" ' .
+		if ($lazy)
+		{
+			// Determine board url - we may need it later
+			$board_url = generate_board_url() . '/';
+			// This path is sent with the base template paths in the assign_vars()
+			// call below. We need to correct it in case we are accessing from a
+			// controller because the web paths will be incorrect otherwise.
+			$phpbb_path_helper = $phpbb_container->get('path_helper');
+			$corrected_path = $phpbb_path_helper->get_web_root_path();
+
+			$web_path = (defined('PHPBB_USE_BOARD_URL_PATH') && PHPBB_USE_BOARD_URL_PATH) ? $board_url : $corrected_path;
+
+			$theme = "{$web_path}styles/" . rawurlencode($user->style['style_path']) . '/theme';
+
+			$src = 'src="' . $theme . '/images/no_avatar.gif" data-src="' . $avatar_data['src'] . '"';
+		}
+		else
+		{
+			$src = 'src="' . $avatar_data['src'] . '"';
+		}
+
+		$html = '<img class="avatar" ' . $src . ' ' .
 			($avatar_data['width'] ? ('width="' . $avatar_data['width'] . '" ') : '') .
 			($avatar_data['height'] ? ('height="' . $avatar_data['height'] . '" ') : '') .
 			'alt="' . ((!empty($user->lang[$alt])) ? $user->lang[$alt] : $alt) . '" />';
 	}
+
+	/**
+	* Event to modify HTML <img> tag of avatar
+	*
+	* @event core.get_avatar_after
+	* @var	array	row				Row cleaned by \phpbb\avatar\manager::clean_row
+	* @var	string	alt				Optional language string for alt tag within image, can be a language key or text
+	* @var	bool	ignore_config	Ignores the config-setting, to be still able to view the avatar in the UCP
+	* @var	array	avatar_data		The HTML attributes for avatar <img> tag
+	* @var	string	html			The HTML <img> tag of generated avatar
+	* @since 3.1.6-RC1
+	*/
+	$vars = array('row', 'alt', 'ignore_config', 'avatar_data', 'html');
+	extract($phpbb_dispatcher->trigger_event('core.get_avatar_after', compact($vars)));
 
 	return $html;
 }
@@ -4862,7 +4932,7 @@ function phpbb_get_avatar($row, $alt, $ignore_config = false)
 /**
 * Generate page header
 */
-function page_header($page_title = '', $display_online_list = false, $item_id = 0, $item = 'forum')
+function page_header($page_title = '', $display_online_list = false, $item_id = 0, $item = 'forum', $send_headers = true)
 {
 	global $db, $config, $template, $SID, $_SID, $_EXTRA_URL, $user, $auth, $phpEx, $phpbb_root_path;
 	global $phpbb_dispatcher, $request, $phpbb_container, $phpbb_admin_path;
@@ -4921,6 +4991,8 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 			ob_start('ob_gzhandler');
 		}
 	}
+
+	$user->update_session_infos();
 
 	// Generate logged in/logged out status
 	if ($user->data['user_id'] != ANONYMOUS)
@@ -5200,17 +5272,22 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'SITE_LOGO_IMG'			=> $user->img('site_logo'),
 	));
 
-	// An array of http headers that phpbb will set. The following event may override these.
-	$http_headers = array(
-		// application/xhtml+xml not used because of IE
-		'Content-type' => 'text/html; charset=UTF-8',
-		'Cache-Control' => 'private, no-cache="set-cookie"',
-		'Expires' => gmdate('D, d M Y H:i:s', time()) . ' GMT',
-	);
-	if (!empty($user->data['is_bot']))
+	$http_headers = array();
+
+	if ($send_headers)
 	{
-		// Let reverse proxies know we detected a bot.
-		$http_headers['X-PHPBB-IS-BOT'] = 'yes';
+		// An array of http headers that phpbb will set. The following event may override these.
+		$http_headers += array(
+			// application/xhtml+xml not used because of IE
+			'Content-type' => 'text/html; charset=UTF-8',
+			'Cache-Control' => 'private, no-cache="set-cookie"',
+			'Expires' => gmdate('D, d M Y H:i:s', time()) . ' GMT',
+		);
+		if (!empty($user->data['is_bot']))
+		{
+			// Let reverse proxies know we detected a bot.
+			$http_headers['X-PHPBB-IS-BOT'] = 'yes';
+		}
 	}
 
 	/**

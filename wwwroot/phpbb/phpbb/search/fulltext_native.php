@@ -57,7 +57,7 @@ class fulltext_native extends \phpbb\search\base
 	protected $must_not_contain_ids = array();
 
 	/**
-	 * Post ids of posts containing atleast one word that needs to be excluded
+	 * Post ids of posts containing at least one word that needs to be excluded
 	 * @var array
 	 */
 	protected $must_exclude_one_ids = array();
@@ -530,7 +530,7 @@ class fulltext_native extends \phpbb\search\base
 		sort($must_exclude_one_ids);
 
 		// generate a search_key from all the options to identify the results
-		$search_key = md5(implode('#', array(
+		$search_key_array = array(
 			serialize($must_contain_ids),
 			serialize($must_not_contain_ids),
 			serialize($must_exclude_one_ids),
@@ -544,7 +544,45 @@ class fulltext_native extends \phpbb\search\base
 			$post_visibility,
 			implode(',', $author_ary),
 			$author_name,
-		)));
+		);
+
+		/**
+		* Allow changing the search_key for cached results
+		*
+		* @event core.search_native_by_keyword_modify_search_key
+		* @var	array	search_key_array	Array with search parameters to generate the search_key
+		* @var	array	must_contain_ids	Array with post ids of posts containing words that are to be included
+		* @var	array	must_not_contain_ids	Array with post ids of posts containing words that should not be included
+		* @var	array	must_exclude_one_ids	Array with post ids of posts containing at least one word that needs to be excluded
+		* @var	string	type				Searching type ('posts', 'topics')
+		* @var	string	fields				Searching fields ('titleonly', 'msgonly', 'firstpost', 'all')
+		* @var	string	terms				Searching terms ('all', 'any')
+		* @var	int		sort_days			Time, in days, of the oldest possible post to list
+		* @var	string	sort_key			The sort type used from the possible sort types
+		* @var	int		topic_id			Limit the search to this topic_id only
+		* @var	array	ex_fid_ary			Which forums not to search on
+		* @var	string	post_visibility		Post visibility data
+		* @var	array	author_ary			Array of user_id containing the users to filter the results to
+		* @since 3.1.7-RC1
+		*/
+		$vars = array(
+			'search_key_array',
+			'must_contain_ids',
+			'must_not_contain_ids',
+			'must_exclude_one_ids',
+			'type',
+			'fields',
+			'terms',
+			'sort_days',
+			'sort_key',
+			'topic_id',
+			'ex_fid_ary',
+			'post_visibility',
+			'author_ary',
+		);
+		extract($this->phpbb_dispatcher->trigger_event('core.search_native_by_keyword_modify_search_key', compact($vars)));
+
+		$search_key = md5(implode('#', $search_key_array));
 
 		// try reading the results from cache
 		$total_results = 0;
@@ -733,9 +771,10 @@ class fulltext_native extends \phpbb\search\base
 		* @var	array	must_not_contain_ids	Ids that cannot be taken into account for the results
 		* @var	array	must_exclude_one_ids	Ids that cannot be on the results
 		* @var	array	must_contain_ids		Ids that must be on the results
-		* @var	int		result_count			The previous result count for the format of the query
+		* @var	int		total_results			The previous result count for the format of the query
 		*										Set to 0 to force a re-count
-		* @var	bool	join_topic				Weather or not TOPICS_TABLE should be CROSS JOIN'ED
+		* @var	array	sql_array				The data on how to search in the DB at this point
+		* @var	bool	left_join_topics		Whether or not TOPICS_TABLE should be CROSS JOIN'ED
 		* @var	array	author_ary				Array of user_id containing the users to filter the results to
 		* @var	string	author_name				An extra username to search on (!empty(author_ary) must be true, to be relevant)
 		* @var	array	ex_fid_ary				Which forums not to search on
@@ -748,7 +787,7 @@ class fulltext_native extends \phpbb\search\base
 		* @var	string	sql_where				An array of the current WHERE clause conditions
 		* @var	string	sql_match				Which columns to do the search on
 		* @var	string	sql_match_where			Extra conditions to use to properly filter the matching process
-		* @var	string	group_by				Whether or not the SQL query requires a GROUP BY for the elements in the SELECT clause
+		* @var	bool	group_by				Whether or not the SQL query requires a GROUP BY for the elements in the SELECT clause
 		* @var	string	sort_by_sql				The possible predefined sort types
 		* @var	string	sort_key				The sort type used from the possible sort types
 		* @var	string	sort_dir				"a" for ASC or "d" dor DESC for the sort order used
@@ -761,8 +800,9 @@ class fulltext_native extends \phpbb\search\base
 			'must_not_contain_ids',
 			'must_exclude_one_ids',
 			'must_contain_ids',
-			'result_count',
-			'join_topic',
+			'total_results',
+			'sql_array',
+			'left_join_topics',
 			'author_ary',
 			'author_name',
 			'ex_fid_ary',
@@ -978,7 +1018,7 @@ class fulltext_native extends \phpbb\search\base
 		}
 
 		// generate a search_key from all the options to identify the results
-		$search_key = md5(implode('#', array(
+		$search_key_array = array(
 			'',
 			$type,
 			($firstpost_only) ? 'firstpost' : '',
@@ -991,7 +1031,39 @@ class fulltext_native extends \phpbb\search\base
 			$post_visibility,
 			implode(',', $author_ary),
 			$author_name,
-		)));
+		);
+
+		/**
+		* Allow changing the search_key for cached results
+		*
+		* @event core.search_native_by_author_modify_search_key
+		* @var	array	search_key_array	Array with search parameters to generate the search_key
+		* @var	string	type				Searching type ('posts', 'topics')
+		* @var	boolean	firstpost_only		Flag indicating if only topic starting posts are considered
+		* @var	int		sort_days			Time, in days, of the oldest possible post to list
+		* @var	string	sort_key			The sort type used from the possible sort types
+		* @var	int		topic_id			Limit the search to this topic_id only
+		* @var	array	ex_fid_ary			Which forums not to search on
+		* @var	string	post_visibility		Post visibility data
+		* @var	array	author_ary			Array of user_id containing the users to filter the results to
+		* @var	string	author_name			The username to search on
+		* @since 3.1.7-RC1
+		*/
+		$vars = array(
+			'search_key_array',
+			'type',
+			'firstpost_only',
+			'sort_days',
+			'sort_key',
+			'topic_id',
+			'ex_fid_ary',
+			'post_visibility',
+			'author_ary',
+			'author_name',
+		);
+		extract($this->phpbb_dispatcher->trigger_event('core.search_native_by_author_modify_search_key', compact($vars)));
+
+		$search_key = md5(implode('#', $search_key_array));
 
 		// try reading the results from cache
 		$total_results = 0;
@@ -1048,6 +1120,7 @@ class fulltext_native extends \phpbb\search\base
 		* @event core.search_native_author_count_query_before
 		* @var	int		total_results		The previous result count for the format of the query.
 		*									Set to 0 to force a re-count
+		* @var	string	type				The type of search being made
 		* @var	string	select				SQL SELECT clause for what to get
 		* @var	string	sql_sort_table		CROSS JOIN'ed table to allow doing the sort chosen
 		* @var	string	sql_sort_join		Condition to define how to join the CROSS JOIN'ed table specifyed in sql_sort_table
@@ -1060,6 +1133,7 @@ class fulltext_native extends \phpbb\search\base
 		* @var	string	sort_days			Time, in days, that the oldest post showing can have
 		* @var	string	sql_time			The SQL to search on the time specifyed by sort_days
 		* @var	bool	firstpost_only		Wether or not to search only on the first post of the topics
+		* @var	string	sql_firstpost		The SQL used in the WHERE claused to filter by firstpost.
 		* @var	array	ex_fid_ary			Forum ids that must not be searched on
 		* @var	array	sql_fora			SQL query for ex_fid_ary
 		* @var	int		start				How many posts to skip in the search results (used for pagination)
@@ -1067,6 +1141,7 @@ class fulltext_native extends \phpbb\search\base
 		*/
 		$vars = array(
 			'total_results',
+			'type',
 			'select',
 			'sql_sort_table',
 			'sql_sort_join',
@@ -1079,6 +1154,7 @@ class fulltext_native extends \phpbb\search\base
 			'sort_days',
 			'sql_time',
 			'firstpost_only',
+			'sql_firstpost',
 			'ex_fid_ary',
 			'sql_fora',
 			'start',
@@ -1899,15 +1975,15 @@ class fulltext_native extends \phpbb\search\base
 		</dl>
 		<dl>
 			<dt><label for="fulltext_native_min_chars">' . $this->user->lang['MIN_SEARCH_CHARS'] . $this->user->lang['COLON'] . '</label><br /><span>' . $this->user->lang['MIN_SEARCH_CHARS_EXPLAIN'] . '</span></dt>
-			<dd><input id="fulltext_native_min_chars" type="number" size="3" maxlength="3" min="0" max="255" name="config[fulltext_native_min_chars]" value="' . (int) $this->config['fulltext_native_min_chars'] . '" /></dd>
+			<dd><input id="fulltext_native_min_chars" type="number" min="0" max="255" name="config[fulltext_native_min_chars]" value="' . (int) $this->config['fulltext_native_min_chars'] . '" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="fulltext_native_max_chars">' . $this->user->lang['MAX_SEARCH_CHARS'] . $this->user->lang['COLON'] . '</label><br /><span>' . $this->user->lang['MAX_SEARCH_CHARS_EXPLAIN'] . '</span></dt>
-			<dd><input id="fulltext_native_max_chars" type="number" size="3" maxlength="3" min="0" max="255" name="config[fulltext_native_max_chars]" value="' . (int) $this->config['fulltext_native_max_chars'] . '" /></dd>
+			<dd><input id="fulltext_native_max_chars" type="number" min="0" max="255" name="config[fulltext_native_max_chars]" value="' . (int) $this->config['fulltext_native_max_chars'] . '" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="fulltext_native_common_thres">' . $this->user->lang['COMMON_WORD_THRESHOLD'] . $this->user->lang['COLON'] . '</label><br /><span>' . $this->user->lang['COMMON_WORD_THRESHOLD_EXPLAIN'] . '</span></dt>
-			<dd><input id="fulltext_native_common_thres" type="text" size="3" maxlength="3" name="config[fulltext_native_common_thres]" value="' . (double) $this->config['fulltext_native_common_thres'] . '" /> %</dd>
+			<dd><input id="fulltext_native_common_thres" type="text" name="config[fulltext_native_common_thres]" value="' . (double) $this->config['fulltext_native_common_thres'] . '" /> %</dd>
 		</dl>
 		';
 

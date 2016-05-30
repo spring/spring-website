@@ -329,6 +329,7 @@ $lang = array_merge($lang, array(
 	'IMAGE_FILETYPE_INVALID'	=> 'Image file type %d for mimetype %s not supported.',
 	'IMAGE_FILETYPE_MISMATCH'	=> 'Image file type mismatch: expected extension %1$s but extension %2$s given.',
 	'IN'						=> 'in',
+	'INACTIVE'					=> 'Inactive',
 	'INDEX'						=> 'Index page',
 	'INFORMATION'				=> 'Information',
 	'INSECURE_REDIRECT'			=> 'Tried to redirect to potentially insecure url.',
@@ -467,7 +468,7 @@ $lang = array_merge($lang, array(
 	'NOTIFICATION_TOPIC_DISAPPROVED'	=> '<strong>Topic disapproved</strong>:',
 	'NOTIFICATION_TOPIC_IN_QUEUE'		=> '<strong>Topic approval</strong> request by %1$s:',
 	'NOTIFICATION_TYPE_NOT_EXIST'		=> 'The notification type "%s" is missing from the file system.',
-	'NOTIFICATION_ADMIN_ACTIVATE_USER'	=> '<strong>Activation required</strong> for newly registered user: “%1$s”',
+	'NOTIFICATION_ADMIN_ACTIVATE_USER'	=> '<strong>Activation required</strong> for deactivated or newly registered user: “%1$s”',
 	// Used in conjuction with NOTIFICATION_BOOKMARK and NOTIFICATION_POST.
 	'NOTIFICATION_MANY_OTHERS'			=> 'others',
 	'NOTIFICATION_X_OTHERS'				=> array(
@@ -672,7 +673,7 @@ $lang = array_merge($lang, array(
 	'SEARCH_POSTS_BY'			=> 'Search posts by',
 	'SEARCH_SELF'				=> 'Your posts',
 	'SEARCH_TOPIC'				=> 'Search this topic…',
-	'SEARCH_UNANSWERED'			=> 'Unanswered posts',
+	'SEARCH_UNANSWERED'			=> 'Unanswered topics',
 	'SEARCH_UNREAD'				=> 'Unread posts',
 	'SEARCH_USER_POSTS'			=> 'Search user’s posts',
 	'SECONDS'					=> 'Seconds',
@@ -814,7 +815,7 @@ $lang = array_merge($lang, array(
 	'USERS'					=> 'Users',
 	'USE_PERMISSIONS'		=> 'Test out user’s permissions',
 
-	'USER_NEW_PERMISSION_DISALLOWED'	=> 'We are sorry, but you are not authorised to use this feature. You may have just registered here and may need to participate more to be able to use this feature.',
+	'USER_NEW_PERMISSION_DISALLOWED'	=> 'We are sorry, but you are not authorised to use this feature. You may have just registered here and may need to participate more in discussions to be able to use this feature.',
 
 	'VARIANT_DATE_SEPARATOR'	=> ' / ',	// Used in date format dropdown, eg: "Today, 13:37 / 01 Jan 2007, 13:37" ... to join a relative date with calendar date
 	'VIEWED'					=> 'Viewed',

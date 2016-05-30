@@ -18,7 +18,7 @@
 class Twig_TokenStream
 {
     protected $tokens;
-    protected $current;
+    protected $current = 0;
     protected $filename;
 
     /**
@@ -29,9 +29,8 @@ class Twig_TokenStream
      */
     public function __construct(array $tokens, $filename = null)
     {
-        $this->tokens     = $tokens;
-        $this->current    = 0;
-        $this->filename   = $filename;
+        $this->tokens = $tokens;
+        $this->filename = $filename;
     }
 
     /**
@@ -57,10 +56,22 @@ class Twig_TokenStream
     public function next()
     {
         if (!isset($this->tokens[++$this->current])) {
-            throw new Twig_Error_Syntax('Unexpected end of template', $this->tokens[$this->current - 1]->getLine(), $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current - 1]->getLine(), $this->filename);
         }
 
         return $this->tokens[$this->current - 1];
+    }
+
+    /**
+     * Tests a token, sets the pointer to the next one and returns it or throws a syntax error.
+     *
+     * @return Twig_Token|null The next token if the condition is true, null otherwise
+     */
+    public function nextIf($primary, $secondary = null)
+    {
+        if ($this->tokens[$this->current]->test($primary, $secondary)) {
+            return $this->next();
+        }
     }
 
     /**
@@ -73,10 +84,10 @@ class Twig_TokenStream
         $token = $this->tokens[$this->current];
         if (!$token->test($type, $value)) {
             $line = $token->getLine();
-            throw new Twig_Error_Syntax(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s)',
+            throw new Twig_Error_Syntax(sprintf('%sUnexpected token "%s" of value "%s" ("%s" expected%s).',
                 $message ? $message.'. ' : '',
-                Twig_Token::typeToEnglish($token->getType(), $line), $token->getValue(),
-                Twig_Token::typeToEnglish($type, $line), $value ? sprintf(' with value "%s"', $value) : ''),
+                Twig_Token::typeToEnglish($token->getType()), $token->getValue(),
+                Twig_Token::typeToEnglish($type), $value ? sprintf(' with value "%s"', $value) : ''),
                 $line,
                 $this->filename
             );
@@ -89,21 +100,21 @@ class Twig_TokenStream
     /**
      * Looks at the next token.
      *
-     * @param integer $number
+     * @param int $number
      *
      * @return Twig_Token
      */
     public function look($number = 1)
     {
         if (!isset($this->tokens[$this->current + $number])) {
-            throw new Twig_Error_Syntax('Unexpected end of template', $this->tokens[$this->current + $number - 1]->getLine(), $this->filename);
+            throw new Twig_Error_Syntax('Unexpected end of template.', $this->tokens[$this->current + $number - 1]->getLine(), $this->filename);
         }
 
         return $this->tokens[$this->current + $number];
     }
 
     /**
-     * Tests the current token
+     * Tests the current token.
      *
      * @return bool
      */
@@ -113,7 +124,7 @@ class Twig_TokenStream
     }
 
     /**
-     * Checks if end of stream was reached
+     * Checks if end of stream was reached.
      *
      * @return bool
      */
@@ -123,7 +134,7 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the current token
+     * Gets the current token.
      *
      * @return Twig_Token
      */
@@ -133,7 +144,7 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the filename associated with this stream
+     * Gets the filename associated with this stream.
      *
      * @return string
      */

@@ -588,7 +588,34 @@ $quickmod_array = array(
 	'topic_logs'			=> array('VIEW_TOPIC_LOGS', $auth->acl_get('m_', $forum_id)),
 );
 
-foreach($quickmod_array as $option => $qm_ary)
+/**
+* Event to modify data in the quickmod_array before it gets sent to the
+* phpbb_add_quickmod_option function.
+*
+* @event core.viewtopic_add_quickmod_option_before
+* @var	int				forum_id				Forum ID
+* @var	int				post_id					Post ID
+* @var	array			quickmod_array			Array with quick moderation options data
+* @var	array			topic_data				Array with topic data
+* @var	int				topic_id				Topic ID
+* @var	array			topic_tracking_info		Array with topic tracking data
+* @var	string			viewtopic_url			URL to the topic page
+* @var	bool			allow_change_type		Topic change permissions check
+* @since 3.1.9-RC1
+*/
+$vars = array(
+	'forum_id',
+	'post_id',
+	'quickmod_array',
+	'topic_data',
+	'topic_id',
+	'topic_tracking_info',
+	'viewtopic_url',
+	'allow_change_type',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewtopic_add_quickmod_option_before', compact($vars)));
+
+foreach ($quickmod_array as $option => $qm_ary)
 {
 	if (!empty($qm_ary[1]))
 	{
@@ -1452,7 +1479,7 @@ if (sizeof($attach_list))
 			FROM ' . ATTACHMENTS_TABLE . '
 			WHERE ' . $db->sql_in_set('post_msg_id', $attach_list) . '
 				AND in_message = 0
-			ORDER BY filetime DESC, post_msg_id ASC';
+			ORDER BY attach_id DESC, post_msg_id ASC';
 		$result = $db->sql_query($sql);
 
 		while ($row = $db->sql_fetchrow($result))
@@ -1821,10 +1848,19 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		($user->data['user_id'] == ANONYMOUS || $auth->acl_get('f_reply', $forum_id))
 	);
 
+	// Only display the quote button if the post is quotable.  Posts not approved are not quotable.
+	$quote_allowed = ($quote_allowed && $row['post_visibility'] == ITEM_APPROVED) ? true : false;
+
 	$delete_allowed = $force_delete_allowed || ($user->data['is_registered'] && (
 		($auth->acl_get('m_delete', $forum_id) || ($auth->acl_get('m_softdelete', $forum_id) && $row['post_visibility'] != ITEM_DELETED)) ||
 		(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
 	));
+
+	$softdelete_allowed = ($auth->acl_get('m_softdelete', $forum_id) ||
+		($auth->acl_get('f_softdelete', $forum_id) && $user->data['user_id'] == $poster_id)) && ($row['post_visibility'] != ITEM_DELETED);
+
+	$permanent_delete_allowed = ($auth->acl_get('m_delete', $forum_id) ||
+		($auth->acl_get('f_delete', $forum_id) && $user->data['user_id'] == $poster_id));
 
 	// Can this user receive a Private Message?
 	$can_receive_pm = (
@@ -1888,7 +1924,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'U_EDIT'			=> ($edit_allowed) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=edit&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
 		'U_QUOTE'			=> ($quote_allowed) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=quote&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
 		'U_INFO'			=> ($auth->acl_get('m_info', $forum_id)) ? append_sid("{$phpbb_root_path}mcp.$phpEx", "i=main&amp;mode=post_details&amp;f=$forum_id&amp;p=" . $row['post_id'], true, $user->session_id) : '',
-		'U_DELETE'			=> ($delete_allowed) ? append_sid("{$phpbb_root_path}posting.$phpEx", "mode=delete&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
+		'U_DELETE'			=> ($delete_allowed) ? append_sid("{$phpbb_root_path}posting.$phpEx", 'mode=' . (($softdelete_allowed) ? 'soft_delete' : 'delete') . "&amp;f=$forum_id&amp;p={$row['post_id']}") : '',
 
 		'U_SEARCH'		=> $user_cache[$poster_id]['search'],
 		'U_PM'			=> $u_pm,
@@ -1927,6 +1963,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		'L_IGNORE_POST'		=> ($row['foe']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username'])) : '',
 		'S_POST_HIDDEN'		=> $row['hide_post'],
 		'L_POST_DISPLAY'	=> ($row['hide_post']) ? $user->lang('POST_DISPLAY', '<a class="display_post" data-post-id="' . $row['post_id'] . '" href="' . $viewtopic_url . "&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}" . '">', '</a>') : '',
+		'S_DELETE_PERMANENT'	=> $permanent_delete_allowed,
 	);
 
 	$user_poster_data = $user_cache[$poster_id];

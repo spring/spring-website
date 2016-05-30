@@ -301,6 +301,14 @@ class user extends \phpbb\session
 		// After calling it we continue script execution...
 		phpbb_user_session_handler();
 
+		/**
+		* Execute code at the end of user setup
+		*
+		* @event core.user_setup_after
+		* @since 3.1.6-RC1
+		*/
+		$phpbb_dispatcher->dispatch('core.user_setup_after');
+
 		// If this function got called from the error handler we are finished here.
 		if (defined('IN_ERROR_HANDLER'))
 		{
@@ -717,7 +725,7 @@ class user extends \phpbb\session
 			$utc = new \DateTimeZone('UTC');
 		}
 
-		$time = new $this->datetime($this, "@$gmepoch", $utc);
+		$time = new $this->datetime($this, '@' . (int) $gmepoch, $utc);
 		$time->setTimezone($this->timezone);
 
 		return $time->format($format, $forcedate);

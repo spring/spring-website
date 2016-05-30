@@ -68,7 +68,7 @@ class Shell
         if ($this->processIsolation) {
             $finder = new PhpExecutableFinder();
             $php = $finder->find();
-            $this->output->writeln(<<<EOF
+            $this->output->writeln(<<<'EOF'
 <info>Running with process isolation, you should consider this:</info>
   * each command is executed as separate process,
   * commands don't support interactivity, all params must be passed explicitly,
@@ -164,7 +164,7 @@ EOF;
      *
      * @param string $text The last segment of the entered text
      *
-     * @return bool|array    A list of guessed strings or true
+     * @return bool|array A list of guessed strings or true
      */
     private function autocompleter($text)
     {
@@ -207,7 +207,7 @@ EOF;
         } else {
             $this->output->write($this->getPrompt());
             $line = fgets(STDIN, 1024);
-            $line = (!$line && strlen($line) == 0) ? false : rtrim($line);
+            $line = (false === $line || '' === $line) ? false : rtrim($line);
         }
 
         return $line;

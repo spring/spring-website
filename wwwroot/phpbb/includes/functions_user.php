@@ -1402,7 +1402,7 @@ function user_ipwhois($ip)
 	$match = array();
 
 	// Test for referrals from $whois_host to other whois databases, roll on rwhois
-	if (preg_match('#ReferralServer: whois://(.+)#im', $ipwhois, $match))
+	if (preg_match('#ReferralServer:[\x20]*whois://(.+)#im', $ipwhois, $match))
 	{
 		if (strpos($match[1], ':') !== false)
 		{
@@ -2698,7 +2698,7 @@ function group_delete($group_id, $group_name = false)
 */
 function group_user_add($group_id, $user_id_ary = false, $username_ary = false, $group_name = false, $default = false, $leader = 0, $pending = 0, $group_attributes = false)
 {
-	global $db, $auth, $phpbb_container;
+	global $db, $auth, $phpbb_container, $phpbb_dispatcher;
 
 	// We need both username and user_id info
 	$result = user_get_id_name($user_id_ary, $username_ary);
@@ -2775,6 +2775,26 @@ function group_user_add($group_id, $user_id_ary = false, $username_ary = false, 
 	// Clear permissions cache of relevant users
 	$auth->acl_clear_prefetch($user_id_ary);
 
+	/**
+	* Event after users are added to a group
+	*
+	* @event core.group_add_user_after
+	* @var	int	group_id		ID of the group to which users are added
+	* @var	string group_name		Name of the group
+	* @var	array	user_id_ary		IDs of the users which are added
+	* @var	array	username_ary	names of the users which are added
+	* @var	int		pending			Pending setting, 1 if user(s) added are pending
+	* @since 3.1.7-RC1
+	*/
+	$vars = array(
+		'group_id',
+		'group_name',
+		'user_id_ary',
+		'username_ary',
+		'pending',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.group_add_user_after', compact($vars)));
+
 	if (!$group_name)
 	{
 		$group_name = get_group_name($group_id);
@@ -2811,7 +2831,7 @@ function group_user_add($group_id, $user_id_ary = false, $username_ary = false, 
 *
 * @return false if no errors occurred, else the user lang string for the relevant error, for example 'NO_USER'
 */
-function group_user_del($group_id, $user_id_ary = false, $username_ary = false, $group_name = false)
+function group_user_del($group_id, $user_id_ary = false, $username_ary = false, $group_name = false, $log_action = true)
 {
 	global $db, $auth, $config, $phpbb_dispatcher, $phpbb_container;
 
@@ -2933,16 +2953,32 @@ function group_user_del($group_id, $user_id_ary = false, $username_ary = false, 
 	// Clear permissions cache of relevant users
 	$auth->acl_clear_prefetch($user_id_ary);
 
-	if (!$group_name)
-	{
-		$group_name = get_group_name($group_id);
-	}
+	/**
+	* Event after users are removed from a group
+	*
+	* @event core.group_delete_user_after
+	* @var	int		group_id		ID of the group from which users are deleted
+	* @var	string	group_name		Name of the group
+	* @var	array	user_id_ary		IDs of the users which are removed
+	* @var	array	username_ary	names of the users which are removed
+	* @since 3.1.7-RC1
+	*/
+	$vars = array('group_id', 'group_name', 'user_id_ary', 'username_ary');
+	extract($phpbb_dispatcher->trigger_event('core.group_delete_user_after', compact($vars)));
 
-	$log = 'LOG_GROUP_REMOVE';
-
-	if ($group_name)
+	if ($log_action)
 	{
-		add_log('admin', $log, $group_name, implode(', ', $username_ary));
+		if (!$group_name)
+		{
+			$group_name = get_group_name($group_id);
+		}
+
+		$log = 'LOG_GROUP_REMOVE';
+
+		if ($group_name)
+		{
+			add_log('admin', $log, $group_name, implode(', ', $username_ary));
+		}
 	}
 
 	group_update_listings($group_id);
@@ -3586,8 +3622,8 @@ function remove_newly_registered($user_id, $user_data = false)
 	}
 
 	// We need to call group_user_del here, because this function makes sure everything is correctly changed.
-	// A downside for a call within the session handler is that the language is not set up yet - so no log entry
-	group_user_del($group_id, $user_id);
+	// Force function to not log the removal of users from newly registered users group
+	group_user_del($group_id, $user_id, false, false, false);
 
 	// Set user_new to 0 to let this not be triggered again
 	$sql = 'UPDATE ' . USERS_TABLE . '

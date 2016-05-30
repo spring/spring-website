@@ -62,6 +62,13 @@ class FragmentListener implements EventSubscriberInterface
             return;
         }
 
+        if ($request->attributes->has('_controller')) {
+            // Is a sub-request: no need to parse _path but it should still be removed from query parameters as below.
+            $request->query->remove('_path');
+
+            return;
+        }
+
         if (HttpKernelInterface::MASTER_REQUEST === $event->getRequestType()) {
             $this->validateRequest($request);
         }

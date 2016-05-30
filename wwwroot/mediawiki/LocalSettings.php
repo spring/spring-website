@@ -122,6 +122,8 @@ $wgRightsText = "";
 $wgRightsIcon = "";
 # $wgRightsCode = ""; # Not yet used
 
+$wgUrlProtocols[] = "bitcoin:";
+
 $wgDiff3 = "/usr/bin/diff3";
 
 # When you make changes to this configuration file, this will make

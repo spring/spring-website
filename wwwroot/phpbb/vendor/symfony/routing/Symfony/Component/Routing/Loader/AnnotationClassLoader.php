@@ -109,18 +109,18 @@ abstract class AnnotationClassLoader implements LoaderInterface
         }
 
         $globals = array(
-            'path'         => '',
+            'path' => '',
             'requirements' => array(),
-            'options'      => array(),
-            'defaults'     => array(),
-            'schemes'      => array(),
-            'methods'      => array(),
-            'host'         => '',
+            'options' => array(),
+            'defaults' => array(),
+            'schemes' => array(),
+            'methods' => array(),
+            'host' => '',
         );
 
         $class = new \ReflectionClass($class);
         if ($class->isAbstract()) {
-            throw new \InvalidArgumentException(sprintf('Annotations from class "%s" cannot be read as it is abstract.', $class));
+            throw new \InvalidArgumentException(sprintf('Annotations from class "%s" cannot be read as it is abstract.', $class->getName()));
         }
 
         if ($annot = $this->reader->getClassAnnotation($class, $this->routeAnnotationClass)) {
@@ -180,7 +180,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
 
         $defaults = array_replace($globals['defaults'], $annot->getDefaults());
         foreach ($method->getParameters() as $param) {
-            if (!isset($defaults[$param->getName()]) && $param->isOptional()) {
+            if (!isset($defaults[$param->getName()]) && $param->isDefaultValueAvailable()) {
                 $defaults[$param->getName()] = $param->getDefaultValue();
             }
         }
@@ -237,7 +237,7 @@ abstract class AnnotationClassLoader implements LoaderInterface
         if ($this->defaultRouteIndex > 0) {
             $name .= '_'.$this->defaultRouteIndex;
         }
-        $this->defaultRouteIndex++;
+        ++$this->defaultRouteIndex;
 
         return $name;
     }

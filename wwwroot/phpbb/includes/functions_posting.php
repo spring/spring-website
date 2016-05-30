@@ -310,6 +310,7 @@ function posting_gen_topic_icons($mode, $icon_id)
 			{
 				$template->assign_block_vars('topic_icon', array(
 					'ICON_ID'		=> $id,
+					'ICON_NAME'		=> $data['img'],
 					'ICON_IMG'		=> $root_path . $config['icons_path'] . '/' . $data['img'],
 					'ICON_WIDTH'	=> $data['width'],
 					'ICON_HEIGHT'	=> $data['height'],
@@ -1128,6 +1129,32 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 		$db->sql_freeresult($result);
 	}
 
+	/**
+	* Event to modify the posts list for topic reviews
+	*
+	* @event core.topic_review_modify_post_list
+	* @var	array	attachments			Array with the post attachments data
+	* @var	int		cur_post_id			Post offset ID
+	* @var	int		forum_id			The topic's forum ID
+	* @var	string	mode				The topic review mode
+	* @var	array	post_list			Array with the post IDs
+	* @var	array	rowset				Array with the posts data
+	* @var	bool	show_quote_button	Flag indicating if the quote button should be displayed
+	* @var	int		topic_id			The topic ID that is being reviewed
+	* @since 3.1.9-RC1
+	*/
+	$vars = array(
+		'attachments',
+		'cur_post_id',
+		'forum_id',
+		'mode',
+		'post_list',
+		'rowset',
+		'show_quote_button',
+		'topic_id',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.topic_review_modify_post_list', compact($vars)));
+
 	for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	{
 		// A non-existing rowset only happens if there was no user present for the entered poster_id
@@ -1542,7 +1569,14 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 		return false;
 	}
 
-	$current_time = time();
+	if (!empty($data['post_time']))
+	{
+		$current_time = $data['post_time'];
+	}
+	else
+	{
+		$current_time = time();
+	}
 
 	if ($mode == 'post')
 	{
@@ -1601,6 +1635,10 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 				$post_visibility = ITEM_REAPPROVE;
 			break;
 		}
+	}
+	else if (isset($data['post_visibility']) && $data['post_visibility'] !== false)
+	{
+		$post_visibility = $data['post_visibility'];
 	}
 
 	// MODs/Extensions are able to force any visibility on posts
@@ -1738,6 +1776,7 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 				'topic_type'				=> $topic_type,
 				'topic_time_limit'			=> ($topic_type == POST_STICKY || $topic_type == POST_ANNOUNCE) ? ($data['topic_time_limit'] * 86400) : 0,
 				'topic_attachment'			=> (!empty($data['attachment_data'])) ? 1 : 0,
+				'topic_status'				=> (isset($data['topic_status'])) ? $data['topic_status'] : ITEM_UNLOCKED,
 			);
 
 			if (isset($poll['poll_options']) && !empty($poll['poll_options']))
@@ -2394,7 +2433,9 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 
 	$params = $add_anchor = '';
 
-	if ($post_visibility == ITEM_APPROVED)
+	if ($post_visibility == ITEM_APPROVED ||
+		($auth->acl_get('m_softdelete', $data['forum_id']) && $post_visibility == ITEM_DELETED) ||
+		($auth->acl_get('m_approve', $data['forum_id']) && in_array($post_visibility, array(ITEM_UNAPPROVED, ITEM_REAPPROVE))))
 	{
 		$params .= '&amp;t=' . $data['topic_id'];
 

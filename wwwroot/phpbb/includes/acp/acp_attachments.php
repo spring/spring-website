@@ -106,7 +106,10 @@ class acp_attachments
 		{
 			case 'attach':
 
-				include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+				if (!function_exists('get_supported_image_types'))
+				{
+					include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+				}
 
 				$sql = 'SELECT group_name, cat_id
 					FROM ' . EXTENSION_GROUPS_TABLE . '
@@ -1423,7 +1426,7 @@ class acp_attachments
 		$row['group_name'] = $user->lang['NOT_ASSIGNED'];
 		$group_name[] = $row;
 
-		for ($i = 0; $i < sizeof($group_name); $i++)
+		for ($i = 0, $groups_size = sizeof($group_name); $i < $groups_size; $i++)
 		{
 			if ($default_group === false)
 			{
@@ -1732,8 +1735,8 @@ class acp_attachments
 		$size_var = $filesize['si_identifier'];
 		$value = $filesize['value'];
 
-		// size="8" and maxlength="15" attributes as a fallback for browsers that do not support type="number" yet.
-		return '<input type="number" id="' . $key . '" size="8" maxlength="15" min="0" name="config[' . $key . ']" value="' . $value . '" /> <select name="' . $key . '">' . size_select_options($size_var) . '</select>';
+		// size and maxlength must not be specified for input of type number
+		return '<input type="number" id="' . $key . '" min="0" max="999999999999999" step="any" name="config[' . $key . ']" value="' . $value . '" /> <select name="' . $key . '">' . size_select_options($size_var) . '</select>';
 	}
 
 	/**

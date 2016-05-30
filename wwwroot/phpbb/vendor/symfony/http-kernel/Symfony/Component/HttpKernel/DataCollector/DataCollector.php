@@ -45,13 +45,17 @@ abstract class DataCollector implements DataCollectorInterface, \Serializable
             return sprintf('Object(%s)', get_class($var));
         }
 
+        if ($var instanceof \__PHP_Incomplete_Class) {
+            return sprintf('__PHP_Incomplete_Class(%s)', $this->getClassNameFromIncomplete($var));
+        }
+
         if (is_array($var)) {
             $a = array();
             foreach ($var as $k => $v) {
                 $a[] = sprintf('%s => %s', $k, $this->varToString($v));
             }
 
-            return sprintf("Array(%s)", implode(', ', $a));
+            return sprintf('Array(%s)', implode(', ', $a));
         }
 
         if (is_resource($var)) {
@@ -71,5 +75,12 @@ abstract class DataCollector implements DataCollectorInterface, \Serializable
         }
 
         return (string) $var;
+    }
+
+    private function getClassNameFromIncomplete(\__PHP_Incomplete_Class $var)
+    {
+        $array = new \ArrayObject($var);
+
+        return $array['__PHP_Incomplete_Class_Name'];
     }
 }

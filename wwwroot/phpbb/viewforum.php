@@ -264,7 +264,7 @@ gen_forum_auth_level('forum', $forum_id, $forum_data['forum_status']);
 $limit_days = array(0 => $user->lang['ALL_TOPICS'], 1 => $user->lang['1_DAY'], 7 => $user->lang['7_DAYS'], 14 => $user->lang['2_WEEKS'], 30 => $user->lang['1_MONTH'], 90 => $user->lang['3_MONTHS'], 180 => $user->lang['6_MONTHS'], 365 => $user->lang['1_YEAR']);
 
 $sort_by_text = array('a' => $user->lang['AUTHOR'], 't' => $user->lang['POST_TIME'], 'r' => $user->lang['REPLIES'], 's' => $user->lang['SUBJECT'], 'v' => $user->lang['VIEWS']);
-$sort_by_sql = array('a' => 't.topic_first_poster_name', 't' => array('t.topic_last_post_time', 't.topic_last_post_id'), 'r' => (($auth->acl_get('m_approve', $forum_id)) ? 't.topic_posts_approved + t.topic_posts_unapproved + t.topic_posts_softdeleted' : 't.topic_posts_approved'), 's' => 't.topic_title', 'v' => 't.topic_views');
+$sort_by_sql = array('a' => 't.topic_first_poster_name', 't' => array('t.topic_last_post_time', 't.topic_last_post_id'), 'r' => (($auth->acl_get('m_approve', $forum_id)) ? 't.topic_posts_approved + t.topic_posts_unapproved + t.topic_posts_softdeleted' : 't.topic_posts_approved'), 's' => 'LOWER(t.topic_title)', 'v' => 't.topic_views');
 
 $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param, $default_sort_days, $default_sort_key, $default_sort_dir);
@@ -274,14 +274,42 @@ if ($sort_days)
 {
 	$min_post_time = time() - ($sort_days * 86400);
 
-	$sql = 'SELECT COUNT(topic_id) AS num_topics
-		FROM ' . TOPICS_TABLE . "
-		WHERE forum_id = $forum_id
-			AND (topic_last_post_time >= $min_post_time
-				OR topic_type = " . POST_ANNOUNCE . '
-				OR topic_type = ' . POST_GLOBAL . ')
-			AND ' . $phpbb_content_visibility->get_visibility_sql('topic', $forum_id);
-	$result = $db->sql_query($sql);
+	$sql_array = array(
+		'SELECT'	=> 'COUNT(t.topic_id) AS num_topics',
+		'FROM'		=> array(
+			TOPICS_TABLE	=> 't',
+		),
+		'WHERE'		=> 't.forum_id = ' . $forum_id . '
+			AND (t.topic_last_post_time >= ' . $min_post_time . '
+				OR t.topic_type = ' . POST_ANNOUNCE . '
+				OR t.topic_type = ' . POST_GLOBAL . ')
+			AND ' . $phpbb_content_visibility->get_visibility_sql('topic', $forum_id, 't.'),
+	);
+
+	/**
+	* Modify the sort data SQL query for getting additional fields if needed
+	*
+	* @event core.viewforum_modify_sort_data_sql
+	* @var int		forum_id		The forum_id whose topics are being listed
+	* @var int		start			Variable containing start for pagination
+	* @var int		sort_days		The oldest topic displayable in elapsed days
+	* @var string	sort_key		The sorting by. It is one of the first character of (in low case):
+	*								Author, Post time, Replies, Subject, Views
+	* @var string	sort_dir		Either "a" for ascending or "d" for descending
+	* @var array	sql_array		The SQL array to get the data of all topics
+	* @since 3.1.9-RC1
+	*/
+	$vars = array(
+		'forum_id',
+		'start',
+		'sort_days',
+		'sort_key',
+		'sort_dir',
+		'sql_array',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_sort_data_sql', compact($vars)));
+
+	$result = $db->sql_query($db->sql_build_query('SELECT', $sql_array));
 	$topics_count = (int) $db->sql_fetchfield('num_topics');
 	$db->sql_freeresult($result);
 
@@ -396,15 +424,16 @@ $sql_array = array(
 * @event core.viewforum_get_topic_data
 * @var	array	forum_data			Array with forum data
 * @var	array	sql_array			The SQL array to get the data of all topics
-* @var	array	forum_id			The forum_id whose topics are being listed
-* @var	array	topics_count		The total number of topics for display
-* @var	array	sort_days			The oldest topic displayable in elapsed days
-* @var	array	sort_key			The sorting by. It is one of the first character of (in low case):
+* @var	int		forum_id			The forum_id whose topics are being listed
+* @var	int		topics_count		The total number of topics for display
+* @var	int		sort_days			The oldest topic displayable in elapsed days
+* @var	string	sort_key			The sorting by. It is one of the first character of (in low case):
 *									Author, Post time, Replies, Subject, Views
-* @var	array	sort_dir			Either "a" for ascending or "d" for descending
+* @var	string	sort_dir			Either "a" for ascending or "d" for descending
 * @since 3.1.0-a1
 * @change 3.1.0-RC4 Added forum_data var
 * @change 3.1.4-RC1 Added forum_id, topics_count, sort_days, sort_key and sort_dir vars
+* @change 3.1.9-RC1 Fix types of properties
 */
 $vars = array(
 	'forum_data',

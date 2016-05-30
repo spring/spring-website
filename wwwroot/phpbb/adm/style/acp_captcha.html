@@ -8,6 +8,13 @@
 
 <p>{L_ACP_VC_EXT_GET_MORE}</p>
 
+<!-- IF ERROR_MSG -->
+<div class="errorbox">
+	<h3>{L_WARNING}</h3>
+	<p>{ERROR_MSG}</p>
+</div>
+<!-- ENDIF -->
+
 <form id="acp_captcha" method="post" action="{U_ACTION}">
 
 <fieldset>
@@ -20,11 +27,11 @@
 </dl>
 <dl>
 	<dt><label for="max_reg_attempts">{L_REG_LIMIT}{L_COLON}</label><br /><span>{L_REG_LIMIT_EXPLAIN}</span></dt>
-	<dd><input id="max_reg_attempts" type="number" size="4" maxlength="4" min="0" max="9999" name="max_reg_attempts" value="{REG_LIMIT}" /></dd>
+	<dd><input id="max_reg_attempts" type="number" min="0" max="9999" name="max_reg_attempts" value="{REG_LIMIT}" /></dd>
 </dl>
 <dl>
 	<dt><label for="max_login_attempts">{L_MAX_LOGIN_ATTEMPTS}{L_COLON}</label><br /><span>{L_MAX_LOGIN_ATTEMPTS_EXPLAIN}</span></dt>
-	<dd><input id="max_login_attempts" type="number" size="4" maxlength="4" min="0" max="9999" name="max_login_attempts" value="{MAX_LOGIN_ATTEMPTS}" /></dd>
+	<dd><input id="max_login_attempts" type="number" min="0" max="9999" name="max_login_attempts" value="{MAX_LOGIN_ATTEMPTS}" /></dd>
 </dl>
 <dl>
 	<dt><label for="enable_post_confirm">{L_VISUAL_CONFIRM_POST}{L_COLON}</label><br /><span>{L_VISUAL_CONFIRM_POST_EXPLAIN}</span></dt>

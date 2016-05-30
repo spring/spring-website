@@ -446,39 +446,6 @@ class session
 
 					if (!$session_expired)
 					{
-						// Only update session DB a minute or so after last update or if page changes
-						if ($this->time_now - $this->data['session_time'] > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
-						{
-							$sql_ary = array('session_time' => $this->time_now);
-
-							// Do not update the session page for ajax requests, so the view online still works as intended
-							if ($this->update_session_page && !$request->is_ajax())
-							{
-								$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
-								$sql_ary['session_forum_id'] = $this->page['forum'];
-							}
-
-							$db->sql_return_on_error(true);
-
-							$this->update_session($sql_ary);
-
-							$db->sql_return_on_error(false);
-
-							// If the database is not yet updated, there will be an error due to the session_forum_id
-							// @todo REMOVE for 3.0.2
-							if ($result === false)
-							{
-								unset($sql_ary['session_forum_id']);
-
-								$this->update_session($sql_ary);
-							}
-
-							if ($this->data['user_id'] != ANONYMOUS && !empty($config['new_member_post_limit']) && $this->data['user_new'] && $config['new_member_post_limit'] <= $this->data['user_posts'])
-							{
-								$this->leave_newly_registered();
-							}
-						}
-
 						$this->data['is_registered'] = ($this->data['user_id'] != ANONYMOUS && ($this->data['user_type'] == USER_NORMAL || $this->data['user_type'] == USER_FOUNDER)) ? true : false;
 						$this->data['is_bot'] = (!$this->data['is_registered'] && $this->data['user_id'] != ANONYMOUS) ? true : false;
 						$this->data['user_lang'] = basename($this->data['user_lang']);
@@ -519,7 +486,7 @@ class session
 	*/
 	function session_create($user_id = false, $set_admin = false, $persist_login = false, $viewonline = true)
 	{
-		global $SID, $_SID, $db, $config, $cache, $phpbb_root_path, $phpEx, $phpbb_container;
+		global $SID, $_SID, $db, $config, $cache, $phpbb_root_path, $phpEx, $phpbb_container, $phpbb_dispatcher;
 
 		$this->data = array();
 
@@ -734,18 +701,6 @@ class session
 				// Only update session DB a minute or so after last update or if page changes
 				if ($this->time_now - $this->data['session_time'] > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
 				{
-					$this->data['session_time'] = $this->data['session_last_visit'] = $this->time_now;
-
-					$sql_ary = array('session_time' => $this->time_now, 'session_last_visit' => $this->time_now, 'session_admin' => 0);
-
-					if ($this->update_session_page)
-					{
-						$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
-						$sql_ary['session_forum_id'] = $this->page['forum'];
-					}
-
-					$this->update_session($sql_ary);
-
 					// Update the last visit time
 					$sql = 'UPDATE ' . USERS_TABLE . '
 						SET user_lastvisit = ' . (int) $this->data['session_time'] . '
@@ -893,6 +848,19 @@ class session
 			$_SID = '';
 		}
 
+		$session_data = $sql_ary;
+		/**
+		* Event to send new session data to extension
+		* Read-only event
+		*
+		* @event core.session_create_after
+		* @var	array		session_data				Associative array of session keys to be updated
+		* @since 3.1.6-RC1
+		*/
+		$vars = array('session_data');
+		extract($phpbb_dispatcher->trigger_event('core.session_create_after', compact($vars)));
+		unset($session_data);
+
 		return true;
 	}
 
@@ -906,12 +874,29 @@ class session
 	*/
 	function session_kill($new_session = true)
 	{
-		global $SID, $_SID, $db, $config, $phpbb_root_path, $phpEx, $phpbb_container;
+		global $SID, $_SID, $db, $config, $phpbb_root_path, $phpEx, $phpbb_container, $phpbb_dispatcher;
 
 		$sql = 'DELETE FROM ' . SESSIONS_TABLE . "
 			WHERE session_id = '" . $db->sql_escape($this->session_id) . "'
 				AND session_user_id = " . (int) $this->data['user_id'];
 		$db->sql_query($sql);
+
+		$user_id = (int) $this->data['user_id'];
+		$session_id = $this->session_id;
+		/**
+		* Event to send session kill information to extension
+		* Read-only event
+		*
+		* @event core.session_kill_after
+		* @var	int		user_id				user_id of the session user.
+		* @var	string		session_id				current user's session_id
+		* @var	bool	new_session 	should we create new session for user
+		* @since 3.1.6-RC1
+		*/
+		$vars = array('user_id', 'session_id', 'new_session');
+		extract($phpbb_dispatcher->trigger_event('core.session_kill_after', compact($vars)));
+		unset($user_id);
+		unset($session_id);
 
 		// Allow connecting logout with external auth method logout
 		$provider_collection = $phpbb_container->get('auth.provider_collection');
@@ -980,7 +965,7 @@ class session
 	*/
 	function session_gc()
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $phpbb_container;
+		global $db, $config, $phpbb_root_path, $phpEx, $phpbb_container, $phpbb_dispatcher;
 
 		$batch_size = 10;
 
@@ -1047,6 +1032,14 @@ class session
 				WHERE attempt_time < ' . (time() - (int) $config['ip_login_limit_time']);
 			$db->sql_query($sql);
 		}
+
+		/**
+		* Event to trigger extension on session_gc
+		*
+		* @event core.session_gc_after
+		* @since 3.1.6-RC1
+		*/
+		$phpbb_dispatcher->dispatch('core.session_gc_after');
 
 		return;
 	}
@@ -1541,12 +1534,61 @@ class session
 	*/
 	public function update_session($session_data, $session_id = null)
 	{
-		global $db;
+		global $db, $phpbb_dispatcher;
 
 		$session_id = ($session_id) ? $session_id : $this->session_id;
 
 		$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $session_data) . "
 			WHERE session_id = '" . $db->sql_escape($session_id) . "'";
 		$db->sql_query($sql);
+
+		/**
+		* Event to send update session information to extension
+		* Read-only event
+		*
+		* @event core.update_session_after
+		* @var	array		session_data				Associative array of session keys to be updated
+		* @var	string		session_id				current user's session_id
+		* @since 3.1.6-RC1
+		*/
+		$vars = array('session_data', 'session_id');
+		extract($phpbb_dispatcher->trigger_event('core.update_session_after', compact($vars)));
+	}
+
+	public function update_session_infos()
+	{
+		global $config, $db, $request;
+
+		// No need to update if it's a new session. Informations are already inserted by session_create()
+		if (isset($this->data['session_created']) && $this->data['session_created'])
+		{
+			return;
+		}
+
+		// Only update session DB a minute or so after last update or if page changes
+		if ($this->time_now - $this->data['session_time'] > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
+		{
+			$sql_ary = array('session_time' => $this->time_now);
+
+			// Do not update the session page for ajax requests, so the view online still works as intended
+			if ($this->update_session_page && !$request->is_ajax())
+			{
+				$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
+				$sql_ary['session_forum_id'] = $this->page['forum'];
+			}
+
+			$db->sql_return_on_error(true);
+
+			$this->update_session($sql_ary);
+
+			$db->sql_return_on_error(false);
+
+			$this->data = array_merge($this->data, $sql_ary);
+
+			if ($this->data['user_id'] != ANONYMOUS && !empty($config['new_member_post_limit']) && $this->data['user_new'] && $config['new_member_post_limit'] <= $this->data['user_posts'])
+			{
+				$this->leave_newly_registered();
+			}
+		}
 	}
 }

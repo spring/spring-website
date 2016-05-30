@@ -75,14 +75,17 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
             return $value;
         }
 
+        $normalized = array();
+
         foreach ($value as $k => $v) {
             if (false !== strpos($k, '-') && false === strpos($k, '_') && !array_key_exists($normalizedKey = str_replace('-', '_', $k), $value)) {
-                $value[$normalizedKey] = $v;
-                unset($value[$k]);
+                $normalized[$normalizedKey] = $v;
+            } else {
+                $normalized[$k] = $v;
             }
         }
 
-        return $value;
+        return $normalized;
     }
 
     /**
@@ -109,7 +112,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
      * Sets whether to add default values for this array if it has not been
      * defined in any of the configuration files.
      *
-     * @param bool    $boolean
+     * @param bool $boolean
      */
     public function setAddIfNotSet($boolean)
     {
@@ -119,7 +122,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Sets whether false is allowed as value indicating that the array should be unset.
      *
-     * @param bool    $allow
+     * @param bool $allow
      */
     public function setAllowFalse($allow)
     {
@@ -129,7 +132,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Sets whether new keys can be defined in subsequent configurations.
      *
-     * @param bool    $allow
+     * @param bool $allow
      */
     public function setAllowNewKeys($allow)
     {
@@ -139,7 +142,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Sets if deep merging should occur.
      *
-     * @param bool    $boolean
+     * @param bool $boolean
      */
     public function setPerformDeepMerging($boolean)
     {
@@ -149,7 +152,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
     /**
      * Whether extra keys should just be ignore without an exception.
      *
-     * @param bool    $boolean To allow extra keys
+     * @param bool $boolean To allow extra keys
      */
     public function setIgnoreExtraKeys($boolean)
     {
@@ -256,7 +259,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
 
             try {
                 $value[$name] = $child->finalize($value[$name]);
-            } catch (UnsetKeyException $unset) {
+            } catch (UnsetKeyException $e) {
                 unset($value[$name]);
             }
         }
@@ -312,7 +315,7 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
 
         // if extra fields are present, throw exception
         if (count($value) && !$this->ignoreExtraKeys) {
-            $msg = sprintf('Unrecognized options "%s" under "%s"', implode(', ', array_keys($value)), $this->getPath());
+            $msg = sprintf('Unrecognized option%s "%s" under "%s"', 1 === count($value) ? '' : 's', implode(', ', array_keys($value)), $this->getPath());
             $ex = new InvalidConfigurationException($msg);
             $ex->setPath($this->getPath());
 

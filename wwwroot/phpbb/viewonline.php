@@ -85,6 +85,8 @@ if ($mode == 'whois' && $auth->acl_get('a_') && $session_id)
 	page_footer();
 }
 
+$user->update_session_infos();
+
 // Forum info
 $sql_ary = array(
 	'SELECT'	=> 'f.forum_id, f.forum_name, f.parent_id, f.forum_type, f.left_id, f.right_id',
@@ -187,7 +189,7 @@ while ($row = $db->sql_fetchrow($result))
 
 		if (!$row['session_viewonline'])
 		{
-			$view_online = ($auth->acl_get('u_viewonline')) ? true : false;
+			$view_online = ($auth->acl_get('u_viewonline') || $row['user_id'] === $user->data['user_id']) ? true : false;
 			$logged_hidden_online++;
 
 			$username_full = '<em>' . $username_full . '</em>';
