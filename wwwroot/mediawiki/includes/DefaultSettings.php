@@ -73,7 +73,7 @@ $wgConfigRegistry = array(
  * MediaWiki version number
  * @since 1.2
  */
-$wgVersion = '1.23.9';
+$wgVersion = '1.23.14';
 
 /**
  * Name of the site. It must be changed in LocalSettings.php
@@ -669,6 +669,14 @@ $wgCopyUploadAsyncTimeout = false;
  * will have a maximum of 500 kB.
  */
 $wgMaxUploadSize = 1024 * 1024 * 100; # 100MB
+
+ /**
+ * Minimum upload chunk size, in bytes. When using chunked upload, non-final
+ * chunks smaller than this will be rejected. May be reduced based on the
+ * 'upload_max_filesize' or 'post_max_size' PHP settings.
+ * @since 1.26
+ */
+$wgMinUploadChunkSize = 1024; # 1KB
 
 /**
  * Point the upload navigation link to an external URL
@@ -3879,7 +3887,13 @@ $wgDebugTidy = false;
 $wgRawHtml = false;
 
 /**
- * Set a default target for external links, e.g. _blank to pop up a new window
+ * Set a default target for external links, e.g. _blank to pop up a new window.
+ *
+ * This will also set the "noreferrer" and "noopener" link rel to prevent the
+ * attack described at https://mathiasbynens.github.io/rel-noopener/ .
+ * Some older browsers may not support these link attributes, hence
+ * setting $wgExternalLinkTarget to _blank may represent a security risk
+ * to some of your users.
  */
 $wgExternalLinkTarget = false;
 
@@ -4258,6 +4272,12 @@ $wgWhitelistReadRegexp = false;
  * address before being allowed to edit?
  */
 $wgEmailConfirmToEdit = false;
+
+/**
+ * Should MediaWiki attempt to protect user's privacy when doing redirects?
+ * Keep this true if access counts to articles are made public.
+ */
+$wgHideIdentifiableRedirects = true;
 
 /**
  * Permission keys given to users in each group.
@@ -4767,6 +4787,12 @@ $wgRateLimits = array(
 		'newbie' => null, // for each recent (autoconfirmed) account; overrides 'user'
 		'ip' => null, // for each anon and recent account
 		'subnet' => null, // ... within a /24 subnet in IPv4 or /64 in IPv6
+	),
+	'upload' => array(
+		'user' => null,
+		'newbie' => null,
+		'ip' => null,
+		'subnet' => null,
 	),
 	'move' => array(
 		'user' => null,

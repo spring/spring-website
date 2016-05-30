@@ -220,9 +220,7 @@ if ( $wgUseInstantCommons ) {
 	$wgForeignFileRepos[] = array(
 		'class' => 'ForeignAPIRepo',
 		'name' => 'wikimediacommons',
-		'apibase' => WebRequest::detectProtocol() === 'https' ?
-			'https://commons.wikimedia.org/w/api.php' :
-			'http://commons.wikimedia.org/w/api.php',
+		'apibase' => 'https://commons.wikimedia.org/w/api.php',
 		'hashLevels' => 2,
 		'fetchDescription' => true,
 		'descriptionCacheExpiry' => 43200,
@@ -296,6 +294,15 @@ if ( $wgResourceLoaderMaxQueryLength === false ) {
 	$maxValueLength = ini_get( 'suhosin.get.max_value_length' );
 	$wgResourceLoaderMaxQueryLength = $maxValueLength > 0 ? $maxValueLength : -1;
 }
+
+// Ensure the minimum chunk size is less than PHP upload limits or the maximum
+// upload size.
+$wgMinUploadChunkSize = min(
+	$wgMinUploadChunkSize,
+	$wgMaxUploadSize,
+	wfShorthandToInteger( ini_get( 'upload_max_filesize' ), 1e100 ),
+	wfShorthandToInteger( ini_get( 'post_max_size' ), 1e100) - 1024 # Leave room for other parameters
+);
 
 /**
  * Definitions of the NS_ constants are in Defines.php
@@ -415,9 +422,22 @@ wfProfileOut( $fname . '-exception' );
 
 wfProfileIn( $fname . '-includes' );
 require_once "$IP/includes/normal/UtfNormalUtil.php";
-require_once "$IP/includes/GlobalFunctions.php";
 require_once "$IP/includes/normal/UtfNormalDefines.php";
 wfProfileOut( $fname . '-includes' );
+
+wfProfileIn( $fname . '-validation' );
+
+// T48998: Bail out early if $wgArticlePath is non-absolute
+if ( !preg_match( '/^(https?:\/\/|\/)/', $wgArticlePath ) ) {
+	throw new FatalError(
+		'If you use a relative URL for $wgArticlePath, it must start ' .
+		'with a slash (<code>/</code>).<br><br>See ' .
+		'<a href="https://www.mediawiki.org/wiki/Manual:$wgArticlePath">' .
+		'https://www.mediawiki.org/wiki/Manual:$wgArticlePath</a>.'
+	);
+}
+
+wfProfileOut( $fname . '-validation' );
 
 wfProfileIn( $fname . '-defaults2' );
 if ( $wgSecureLogin && substr( $wgServer, 0, 2 ) !== '//' ) {

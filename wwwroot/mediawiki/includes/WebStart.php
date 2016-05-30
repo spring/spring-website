@@ -60,6 +60,10 @@ if ( ini_get( 'register_globals' ) ) {
 	}
 }
 
+if ( ini_get( 'mbstring.func_overload' ) ) {
+       die( 'MediaWiki does not support installations where mbstring.func_overload is non-zero.' );
+}
+
 # bug 15461: Make IE8 turn off content sniffing. Everybody else should ignore this
 # We're adding it here so that it's *always* set, even for alternate entry
 # points and when $wgOut gets disabled or overridden.
@@ -96,6 +100,9 @@ if ( $IP === false ) {
 
 # Start the autoloader, so that extensions can derive classes from core files
 require_once "$IP/includes/AutoLoader.php";
+
+# Load global functions
+require_once "$IP/includes/GlobalFunctions.php";
 
 # Load the profiler
 require_once "$IP/includes/profiler/Profiler.php";

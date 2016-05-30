@@ -26,7 +26,6 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 
 // Hide compatibility functions from Doxygen
 /// @cond
-
 /**
  * Compatibility functions
  *
@@ -103,6 +102,53 @@ if ( !function_exists( 'gzdecode' ) ) {
 	function gzdecode( $data ) {
 		return gzinflate( substr( $data, 10, -8 ) );
 	}
+}
+
+// hash_equals function only exists in PHP >= 5.6.0
+if ( !function_exists( 'hash_equals' ) ) {
+  /**
+   * Check whether a user-provided string is equal to a fixed-length secret without
+   * revealing bytes of the secret through timing differences.
+   *
+   * This timing guarantee -- that a partial match takes the same time as a complete
+   * mismatch -- is why this function is used in some security-sensitive parts of the code.
+   * For example, it shouldn't be possible to guess an HMAC signature one byte at a time.
+   *
+   * Longer explanation: http://www.emerose.com/timing-attacks-explained
+   *
+   * @codeCoverageIgnore
+   * @param string $known_string Fixed-length secret to compare against
+   * @param string $user_string User-provided string
+   * @return bool True if the strings are the same, false otherwise
+   */
+  function hash_equals( $known_string, $user_string ) {
+    // Strict type checking as in PHP's native implementation
+    if ( !is_string( $known_string ) ) {
+      trigger_error( 'hash_equals(): Expected known_string to be a string, ' .
+        gettype( $known_string ) . ' given', E_USER_WARNING );
+
+      return false;
+    }
+
+    if ( !is_string( $user_string ) ) {
+      trigger_error( 'hash_equals(): Expected user_string to be a string, ' .
+        gettype( $user_string ) . ' given', E_USER_WARNING );
+
+      return false;
+    }
+
+    // Note that we do one thing PHP doesn't: try to avoid leaking information about
+    // relative lengths of $known_string and $user_string, and of multiple $known_strings.
+    // However, lengths may still inevitably leak through, for example, CPU cache misses.
+    $known_string_len = strlen( $known_string );
+    $user_string_len = strlen( $user_string );
+    $result = $known_string_len ^ $user_string_len;
+    for ( $i = 0; $i < $user_string_len; $i++ ) {
+      $result |= ord( $known_string[$i % $known_string_len] ) ^ ord( $user_string[$i] );
+    }
+
+    return ( $result === 0 );
+  }
 }
 /// @endcond
 
@@ -2874,6 +2920,14 @@ function wfShellExec( $cmd, &$retval = null, $environ = array(),
 	}
 	wfDebug( "wfShellExec: $cmd\n" );
 
+	// Don't try to execute commands that exceed Linux's MAX_ARG_STRLEN.
+	// Other platforms may be more accomodating, but we don't want to be
+	// accomodating, because very long commands probably include user
+	// input. See T129506.
+	if ( strlen( $cmd ) > SHELL_MAX_ARG_STRLEN ) {
+		throw new Exception( __METHOD__ . '(): total length of $cmd must not exceed SHELL_MAX_ARG_STRLEN' );
+	}
+
 	$desc = array(
 		0 => array( 'file', 'php://stdin', 'r' ),
 		1 => array( 'pipe', 'w' ),
@@ -3895,12 +3949,13 @@ function wfMemoryLimit() {
  * Converts shorthand byte notation to integer form
  *
  * @param string $string
+ * @param int $default Returned if $string is empty
  * @return int
  */
-function wfShorthandToInteger( $string = '' ) {
+function wfShorthandToInteger( $string = '', $default = -1 ) {
 	$string = trim( $string );
 	if ( $string === '' ) {
-		return -1;
+		return $default;
 	}
 	$last = $string[strlen( $string ) - 1];
 	$val = intval( $string );

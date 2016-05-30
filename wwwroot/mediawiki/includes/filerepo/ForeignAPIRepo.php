@@ -21,6 +21,8 @@
  * @ingroup FileRepo
  */
 
+use MediaWiki\Logger\LoggerFactory;
+
 /**
  * A foreign repository with a remote MediaWiki with an API thingy
  *
@@ -521,6 +523,8 @@ class ForeignAPIRepo extends FileRepo {
 		if ( $status->isOK() ) {
 			return $req->getContent();
 		} else {
+			$logger = LoggerFactory::getInstance( 'http' );
+			$logger->warning( $status->getWikiText(), array( 'caller' => 'ForeignAPIRepo::httpGet' ) );
 			return false;
 		}
 	}

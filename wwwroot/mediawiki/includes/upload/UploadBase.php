@@ -123,6 +123,16 @@ abstract class UploadBase {
 		return true;
 	}
 
+	/**
+	 * Returns true if the user has surpassed the upload rate limit, false otherwise.
+	 *
+	 * @param User $user
+	 * @return bool
+	 */
+	public static function isThrottled( $user ) {
+		return $user->pingLimiter( 'upload' );
+	}
+
 	// Upload handlers. Should probably just be a global.
 	static $uploadHandlers = array( 'Stash', 'File', 'Url' );
 
@@ -1306,7 +1316,7 @@ abstract class UploadBase {
 				&& strpos( $value, '#' ) !== 0
 			) {
 				if ( !( $strippedElement === 'a'
-					&& preg_match( '!^https?://!im', $value ) )
+					&& preg_match( '!^https?://!i', $value ) )
 				) {
 					wfDebug( __METHOD__ . ": Found href attribute <$strippedElement "
 						. "'$attrib'='$value' in uploaded file.\n" );

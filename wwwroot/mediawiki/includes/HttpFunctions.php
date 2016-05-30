@@ -25,6 +25,8 @@
  * @defgroup HTTP HTTP
  */
 
+use MediaWiki\Logger\LoggerFactory;
+
 /**
  * Various HTTP related functions
  * @ingroup HTTP
@@ -75,7 +77,11 @@ class Http {
 
 		$content = false;
 		if ( $status->isOK() ) {
-			$content = $req->getContent();
+			 $content = $req->getContent();
+		} else {
+			$errors = $status->getErrorsByType( 'error' );
+			$logger = LoggerFactory::getInstance( 'http' );
+			$logger->warning( $status->getWikiText(), array( 'caller' => $caller ) );
 		}
 		wfProfileOut( __METHOD__ . "-$method" );
 		return $content;
@@ -752,7 +758,22 @@ class CurlHttpRequest extends MWHttpRequest {
 			$this->curlOptions[CURLOPT_HEADER] = true;
 		} elseif ( $this->method == 'POST' ) {
 			$this->curlOptions[CURLOPT_POST] = true;
-			$this->curlOptions[CURLOPT_POSTFIELDS] = $this->postData;
+			$postData = $this->postData;
+			// Don't interpret POST parameters starting with '@' as file uploads, because this
+			// makes it impossible to POST plain values starting with '@' (and causes security
+			// issues potentially exposing the contents of local files).
+			// The PHP manual says this option was introduced in PHP 5.5 defaults to true in PHP 5.6,
+			// but we support lower versions, and the option doesn't exist in HHVM 5.6.99.
+			if ( defined( 'CURLOPT_SAFE_UPLOAD' ) ) {
+				$this->curlOptions[CURLOPT_SAFE_UPLOAD] = true;
+			} else if ( is_array( $postData ) ) {
+				// In PHP 5.2 and later, '@' is interpreted as a file upload if POSTFIELDS
+				// is an array, but not if it's a string. So convert $req['body'] to a string
+				// for safety.
+				$postData = wfArrayToCgi( $postData );
+			}
+			$this->curlOptions[CURLOPT_POSTFIELDS] = $postData;
+
 			// Suppress 'Expect: 100-continue' header, as some servers
 			// will reject it with a 417 and Curl won't auto retry
 			// with HTTP 1.0 fallback
@@ -820,6 +841,8 @@ class CurlHttpRequest extends MWHttpRequest {
 
 class PhpHttpRequest extends MWHttpRequest {
 
+	private $fopenErrors = array();
+
 	/**
 	 * @param $url string
 	 * @return string
@@ -828,6 +851,60 @@ class PhpHttpRequest extends MWHttpRequest {
 		$parsedUrl = parse_url( $url );
 
 		return 'tcp://' . $parsedUrl['host'] . ':' . $parsedUrl['port'];
+	}
+
+	/**
+	 * Returns an array with a 'capath' or 'cafile' key that is suitable to be merged into the 'ssl' sub-array of a
+	 * stream context options array. Uses the 'caInfo' option of the class if it is provided, otherwise uses the system
+	 * default CA bundle if PHP supports that, or searches a few standard locations.
+	 * @return array
+	 * @throws DomainException
+	 */
+	protected function getCertOptions() {
+		$certOptions = array();
+		$certLocations = array();
+		if ( $this->caInfo ) {
+			$certLocations = array( 'manual' => $this->caInfo );
+		} elseif ( version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
+			// Default locations, based on
+			// https://www.happyassassin.net/2015/01/12/a-note-about-ssltls-trusted-certificate-stores-and-platforms/
+			// PHP 5.5 and older doesn't have any defaults, so we try to guess ourselves. PHP 5.6+ gets the CA location
+			// from OpenSSL as long as it is not set manually, so we should leave capath/cafile empty there.
+			$certLocations = array_filter( array(
+				getenv( 'SSL_CERT_DIR' ),
+				getenv( 'SSL_CERT_PATH' ),
+				'/etc/pki/tls/certs/ca-bundle.crt', # Fedora et al
+				'/etc/ssl/certs',  # Debian et al
+				'/etc/pki/tls/certs/ca-bundle.trust.crt',
+				'/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem',
+				'/System/Library/OpenSSL', # OSX
+			) );
+		}
+
+		foreach( $certLocations as $key => $cert ) {
+			if ( is_dir( $cert ) ) {
+				$certOptions['capath'] = $cert;
+				break;
+			} elseif ( is_file( $cert ) ) {
+				$certOptions['cafile'] = $cert;
+				break;
+			} elseif ( $key === 'manual' ) {
+				// fail more loudly if a cert path was manually configured and it is not valid
+				throw new DomainException( "Invalid CA info passed: $cert" );
+			}
+		}
+
+		return $certOptions;
+	}
+
+	/**
+	 * Custom error handler for dealing with fopen() errors. fopen() tends to fire multiple errors in succession, and the last one
+	 * is completely useless (something like "fopen: failed to open stream") so normal methods of handling errors programmatically
+	 * like get_last_error() don't work.
+	 */
+	public function errorHandler( $errno, $errstr ) {
+		$n = count( $this->fopenErrors ) + 1;
+		$this->fopenErrors += array( "errno$n" => $errno, "errstr$n" => $errstr );
 	}
 
 	public function execute() {
@@ -883,16 +960,16 @@ class PhpHttpRequest extends MWHttpRequest {
 		}
 
 		if ( $this->sslVerifyHost ) {
-			$options['ssl']['CN_match'] = $this->parsedUrl['host'];
+			// PHP 5.6.0 deprecates CN_match, in favour of peer_name which
+			// actually checks SubjectAltName properly.
+			if ( version_compare( PHP_VERSION, '5.6.0', '>=' ) ) {
+				$options['ssl']['peer_name'] = $this->parsedUrl['host'];
+			} else {
+				$options['ssl']['CN_match'] = $this->parsedUrl['host'];
+			}
 		}
 
-		if ( is_dir( $this->caInfo ) ) {
-			$options['ssl']['capath'] = $this->caInfo;
-		} elseif ( is_file( $this->caInfo ) ) {
-			$options['ssl']['cafile'] = $this->caInfo;
-		} elseif ( $this->caInfo ) {
-			throw new MWException( "Invalid CA info passed: {$this->caInfo}" );
-		}
+		$options['ssl'] += $this->getCertOptions();
 
 		$context = stream_context_create( $options );
 
@@ -904,11 +981,25 @@ class PhpHttpRequest extends MWHttpRequest {
 
 		do {
 			$reqCount++;
-			wfSuppressWarnings();
+			$this->fopenErrors = array();
+			set_error_handler( array( $this, 'errorHandler' ) );
 			$fh = fopen( $url, "r", false, $context );
-			wfRestoreWarnings();
+			restore_error_handler();
 
 			if ( !$fh ) {
+				// HACK for instant commons.
+				// If we are contacting (commons|upload).wikimedia.org
+				// try again with CN_match for en.wikipedia.org
+				// as php does not handle SubjectAltName properly
+				// prior to "peer_name" option in php 5.6
+				if ( isset( $options['ssl']['CN_match'] )
+					&& ( $options['ssl']['CN_match'] === 'commons.wikimedia.org'
+						|| $options['ssl']['CN_match'] === 'upload.wikimedia.org' )
+				) {
+					$options['ssl']['CN_match'] = 'en.wikipedia.org';
+					$context = stream_context_create( $options );
+					continue;
+				}
 				break;
 			}
 
@@ -936,6 +1027,10 @@ class PhpHttpRequest extends MWHttpRequest {
 		$this->setStatus();
 
 		if ( $fh === false ) {
+			if ( $this->fopenErrors ) {
+				LoggerFactory::getInstance( 'http' )->warning( __CLASS__
+					. ': error opening connection: {errstr1}', $this->fopenErrors );
+			}
 			$this->status->fatal( 'http-request-error' );
 			wfProfileOut( __METHOD__ );
 			return $this->status;

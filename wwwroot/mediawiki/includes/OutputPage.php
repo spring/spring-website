@@ -209,6 +209,8 @@ class OutputPage extends ContextSource {
 
 	// Cache stuff. Looks like mEnableClientCache
 	var $mSquidMaxage = 0;
+	/** @var int Upper limit on mSquidMaxage */
+	protected $mCdnMaxageLimit = INF;
 
 	// @todo document
 	var $mPreventClickjacking = true;
@@ -1735,7 +1737,17 @@ class OutputPage extends ContextSource {
 	 * @param int $maxage Maximum cache time on the Squid, in seconds.
 	 */
 	public function setSquidMaxage( $maxage ) {
-		$this->mSquidMaxage = $maxage;
+		$this->mSquidMaxage = min( $maxage, $this->mCdnMaxageLimit );
+	}
+
+	/**
+	 * Lower the value of the "s-maxage" part of the "Cache-control" HTTP header
+	 *
+	 * @param int $maxage Maximum cache time on the CDN, in seconds
+	 */
+	public function lowerCdnMaxage( $maxage ) {
+		$this->mCdnMaxageLimit = min( $maxage, $this->mCdnMaxageLimit );
+		$this->setSquidMaxage( $this->mSquidMaxage );
 	}
 
 	/**
@@ -1823,6 +1835,11 @@ class OutputPage extends ContextSource {
 	 * @return string
 	 */
 	public function getVaryHeader() {
+		// If we vary on cookies, let's make sure it's always included here too.
+		if ( $this->getCacheVaryCookies() ) {
+			$this->addVaryHeader( 'Cookie' );
+		}
+
 		return 'Vary: ' . join( ', ', array_keys( $this->mVaryHeader ) );
 	}
 
