@@ -35,6 +35,7 @@ if ( $wgCommandLineMode ) {
 # $wgDisableOutputCompression = true;
 
 $wgSitename         = "Spring";
+$wgLogo             = "/mediawiki/skins/SpringWiki1a.png";
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
@@ -203,4 +204,3 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 require_once( "$IP/extensions/Cite/Cite.php" );
 
 $wgUpgradeKey = '84fda4d15e3d3eb8';
-?>
