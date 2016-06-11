@@ -204,3 +204,8 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 require_once( "$IP/extensions/Cite/Cite.php" );
 
 $wgUpgradeKey = '84fda4d15e3d3eb8';
+
+require_once "$IP/extensions/ParserFunctions/ParserFunctions.php";
+$wgPFEnableStringFunctions = true;
+require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
+
