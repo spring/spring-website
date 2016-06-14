@@ -192,3 +192,9 @@ div#postingbox {
 	background-color: #f9f9f9;
 	box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
 }
+
+#topicreview .post {
+    max-width: 97%;
+    margin-left: auto;
+    margin-right: auto;
+}
