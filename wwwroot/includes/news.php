@@ -45,13 +45,12 @@ function get_news($db) {
 		} else {
 			$title = $row['topic_title'];
 		}
-		$posterlink = '/phpbb/memberlist.php?mode=viewprofile&amp;u=' . $row['topic_poster'];
 		$postlink = '/phpbb/viewtopic.php?t=' . $row['topic_id'] ;
 		$title = makelink($postlink, $title);
 		$newstext = link_replace(parse_bbcode($row['post_text']));
-		$poster = makelink($posterlink, $row['username']);
+		$poster = $row['username'];
 		$postdate = date("Y-m-d H:i", $row['topic_time']);
-		$comments = makelink($postlink, ($row['topic_posts_approved'] - 1)  . ' comments');
+		$comments = ($row['topic_posts_approved'] - 1)  . ' comments';
 		$newsdata = array( $title, $newstext, $poster, $postdate, $comments );
 		$news .= str_replace( $newskeys, $newsdata, $newstemplate );
 		$i++;
