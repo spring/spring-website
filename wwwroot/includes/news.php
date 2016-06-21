@@ -43,7 +43,7 @@ function get_news($db) {
 		$newstext = link_replace(parse_bbcode($row['post_text']));
 		$poster = '<a href="/phpbb/memberlist.php?mode=viewprofile&amp;u=' . $row['topic_poster'] . '">' . $row['username'] . '</a>';
 		$postdate = date("Y-m-d H:i", $row['topic_time']);
-		$comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . $row['topic_posts_approved'] . ' comments</a>.';
+		$comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . ($row['topic_posts_approved'] - 1)  . ' comments</a>.';
 		$newsdata = array( $title, $newstext, $poster, $postdate, $comments );
 		$news .= str_replace( $newskeys, $newsdata, $newstemplate );
 		$i++;
