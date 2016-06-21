@@ -25,14 +25,13 @@ function get_news($db) {
 	     . "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p\n"
 	     . "WHERE(t.forum_id = 2 or t.forum_id = 38) AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time\n"
 	     . "ORDER BY t.topic_time DESC\n"
-	     . "LIMIT 10";
+	     . "LIMIT 5";
 
 	$res = mysqli_query($db, $sql);
 	$newstemplate = file_get_contents('templates/newsitem.html');
 	$news = "";
-	$newskeys = array('#HEADLINE#', '#BODY#', '#POSTER#', '#POSTDATE#', '#COMMENTS#');
+	$newskeys = array('#HEADLINE#', '#BODY#', '#POSTER#', '#POSTDATE#');
 
-	$i = 0;
 	while ( $row = mysqli_fetch_array( $res ) ) {
 		if ( $row['forum_id'] == 38 ) {
 			if (preg_match('/^\[(game|map|engine|website|misc)\] (.*)$/', $row['topic_title'], $arr) === FALSE) {
@@ -50,13 +49,8 @@ function get_news($db) {
 		$newstext = link_replace(parse_bbcode($row['post_text']));
 		$poster = $row['username'];
 		$postdate = date("Y-m-d H:i", $row['topic_time']);
-		$comments = ($row['topic_posts_approved'] - 1)  . ' comments';
-		$newsdata = array( $title, $newstext, $poster, $postdate, $comments );
+		$newsdata = array( $title, $newstext, $poster, $postdate);
 		$news .= str_replace( $newskeys, $newsdata, $newstemplate );
-		$i++;
-		if ( $i >= 5 ) {
-			break;
-		}
 	}
 
 	return $news;
