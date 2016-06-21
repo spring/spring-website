@@ -5,6 +5,11 @@ include_once('includes/bbcode.php');
 include_once('includes/cache.php');
 
 
+function makelink($link, $str)
+{
+	return sprintf('<a href="%s">%s</a>', $link, $str);
+}
+
 function link_replace( $str ) {
 	if ( !isset($_SERVER['HTTPS'] ) ) {
 		return $str;
@@ -40,10 +45,13 @@ function get_news($db) {
 		} else {
 			$title = $row['topic_title'];
 		}
+		$posterlink = '/phpbb/memberlist.php?mode=viewprofile&amp;u=' . $row['topic_poster'];
+		$postlink = '/phpbb/viewtopic.php?t=' . $row['topic_id'] ;
+		$title = makelink($postlink, $title);
 		$newstext = link_replace(parse_bbcode($row['post_text']));
-		$poster = '<a href="/phpbb/memberlist.php?mode=viewprofile&amp;u=' . $row['topic_poster'] . '">' . $row['username'] . '</a>';
+		$poster = makelink($posterlink, $row['username']);
 		$postdate = date("Y-m-d H:i", $row['topic_time']);
-		$comments = '<a href="/phpbb/viewtopic.php?t=' . $row['topic_id'] . '">' . ($row['topic_posts_approved'] - 1)  . ' comments</a>.';
+		$comments = makelink($postlink, ($row['topic_posts_approved'] - 1)  . ' comments');
 		$newsdata = array( $title, $newstext, $poster, $postdate, $comments );
 		$news .= str_replace( $newskeys, $newsdata, $newstemplate );
 		$i++;
