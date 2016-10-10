@@ -1,6 +1,26 @@
 Security reminder: MediaWiki does not require PHP's register_globals. If you
 have it on, turn it '''off''' if you can.
 
+== MediaWiki 1.23.15 ==
+
+This is a maintenance release of the MediaWiki 1.23 branch.
+
+== Changes since 1.23.14 ==
+* BREAKING CHANGE: $wgHTTPProxy is now *required* for all external requests
+  made by MediaWiki via a proxy. Relying on the http_proxy environment
+  variable is no longer supported.
+* (T139565) SECURITY: API: Generate head items in the context of the given title
+* (T137264) SECURITY: XSS in unclosed internal links
+* (T133147) SECURITY: Escape '<' and ']]>' in inline <style> blocks
+* (T133147) SECURITY: Require login to preview user CSS pages
+* (T132926) SECURITY: Do not allow undeleting a revision deleted file if it is
+  the top file
+* (T129738) SECURITY: Make $wgBlockDisablesLogin also restrict logged in
+  permissions
+* (T129738) SECURITY: Make blocks log users out if $wgBlockDisablesLogin is true
+* (T115333) SECURITY: Check read permission when loading page content in ApiParse
+* Remove support for $wgWellFormedXml = false, all output is now well formed
+
 == MediaWiki 1.23.13 ==
 
 This is a maintenance release of the MediaWiki 1.23 branch.
@@ -88,7 +108,7 @@ This is a security and maintenance release of the MediaWiki 1.23 branch.
   prevent XSS and protect viewer's privacy.
 * (bug T68650) Fix indexing of moved pages with PostgreSQL. Requires running
   update.php to fix.
-* (bug T70087) Fix Special:ActiveUsers page for installations using 
+* (bug T70087) Fix Special:ActiveUsers page for installations using
   PostgreSQL.
 
 == MediaWiki 1.23.8 ==

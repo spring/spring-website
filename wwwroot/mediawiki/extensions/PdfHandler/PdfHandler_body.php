@@ -190,6 +190,7 @@ class PdfHandler extends ImageHandler {
 			"-sOutputFile=-",
 			"-dFirstPage={$page}",
 			"-dLastPage={$page}",
+			"-dSAFER",
 			"-r{$wgPdfHandlerDpi}",
 			"-dBATCH",
 			"-dNOPAUSE",
