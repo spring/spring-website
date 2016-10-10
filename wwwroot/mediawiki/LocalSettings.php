@@ -48,8 +48,8 @@ $wgScriptExtension  = ".php";
 $wgEnableEmail      = true;
 $wgEnableUserEmail  = true;
 
-$wgEmergencyContact = "spring@it-l.eu";
-$wgPasswordSender = "spring@it-l.eu";
+$wgEmergencyContact = "no-reply@springrts.com";
+$wgPasswordSender = "no-reply@springrts.com";
 
 ## For a detailed description of the following switches see
 ## http://www.mediawiki.org/wiki/Extension:Email_notification
@@ -67,7 +67,7 @@ include( "$IP/../../springpw.php" );
 $wgDBserver         = $spring_dbhost;
 $wgDBuser           = $spring_dbuser;
 $wgDBpassword       = $spring_dbpass;
-$wgDBname           = $spring_dbname;
+$wgDBname           = $spring_dbname_wiki;
 
 # MySQL specific settings
 $wgDBprefix         = "wiki_";
@@ -169,14 +169,14 @@ $wgAuth_Config['UseWikiGroup'] = true;          // This tells the Plugin to requ
                                                 // this to false will let any phpBB
                                                 // user edit the wiki.
 
-$wgAuth_Config['UseExtDatabase'] = false;       // This tells the plugin that the phpBB tables
+$wgAuth_Config['UseExtDatabase'] = true;       // This tells the plugin that the phpBB tables
                                                 // are in a different database then the wiki.
                                                 // The default settings is false.
 
-//$wgAuth_Config['MySQL_Host']        = 'localhost';      // phpBB MySQL Host Name.
-//$wgAuth_Config['MySQL_Username']    = 'username';       // phpBB MySQL Username.
-//$wgAuth_Config['MySQL_Password']    = 'password';       // phpBB MySQL Password.
-//$wgAuth_Config['MySQL_Database']    = 'database';       // phpBB MySQL Database Name.
+$wgAuth_Config['MySQL_Host']        = $spring_dbhost;      // phpBB MySQL Host Name.
+$wgAuth_Config['MySQL_Username']    = $spring_dbuser;       // phpBB MySQL Username.
+$wgAuth_Config['MySQL_Password']    = $spring_dbpass;       // phpBB MySQL Password.
+$wgAuth_Config['MySQL_Database']    = $spring_dbname;       // phpBB MySQL Database Name.
 
 $wgAuth_Config['UserTB']         = 'phpbb3_users';       // Name of your PHPBB user table. (i.e. phpbb_users)
 $wgAuth_Config['GroupsTB']       = 'phpbb3_groups';      // Name of your PHPBB groups table. (i.e. phpbb_groups)
