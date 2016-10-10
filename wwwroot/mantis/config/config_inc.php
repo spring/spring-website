@@ -45,13 +45,12 @@
 	$g_hostname      = $spring_dbhost;
 	$g_db_username   = $spring_dbuser;
 	$g_db_password   = $spring_dbpass;
-	$g_database_name = $spring_dbname;
-	$g_db_type       = "mysql";
+	$g_database_name = $spring_dbname_mantis;
+	$g_db_type       = "mysqli";
 	$g_crypto_master_salt = $mantisbtcryptsalt;
 
 	# --- email variables -------------
-	$g_administrator_email  = 'no-reply@springrts.com';
-	$g_webmaster_email      = '';
+	$g_webmaster_email      = 'no-reply@springrts.com';
 
 	# the "From: " field in emails
 	$g_from_email           = 'no-reply@springrts.com';
@@ -66,7 +65,7 @@
 	#  in PHP as well.  You may need to add "file_uploads = TRUE" to your php.ini.
 	$g_allow_file_upload	= ON;
         $g_file_upload_method   = DISK;
-	$g_absolute_path_default_upload_folder = $_SERVER['DOCUMENT_ROOT'].'/uploads/';
+	$g_absolute_path_default_upload_folder = $_SERVER['DOCUMENT_ROOT'].'/mantis/uploads/';
 
 	$g_notify_new_user_created_threshold_min = NOBODY;
 
@@ -82,4 +81,5 @@
 	$g_enable_profiles = OFF;
 	# enable (deprecated) news
 	$g_news_enabled = ON;
-
+	$g_max_file_size = 2000000;
+	$g_default_timezone = "Europe/Berlin";
