@@ -3,21 +3,31 @@
 # MantisBT Travis-CI before script
 # -----------------------------------------------------------------------------
 
+# Nothing to do here for documentation builds
+# Note: Publican is installed via .travis.yml (apt add-on)
+if [[ -n $DOCBOOK ]]
+then
+	exit
+fi
+
+# -----------------------------------------------------------------------------
 # Global variables initialization
+#
 HOSTNAME=localhost
+
 # Port 80 requires use of 'sudo' to run the PHP built-in web server, which
-# causes builds to fail due to a bug in Travis [1] so we use port 8080 instead.
+# causes builds to fail due to a bug in Travis [1]so we use port 8080 instead.
 # [1] https://github.com/travis-ci/travis-ci/issues/2235
 PORT=8080
 MANTIS_DB_NAME=bugtracker
 MANTIS_BOOTSTRAP=tests/bootstrap.php
-MANTIS_CONFIG=config_inc.php
+MANTIS_CONFIG=config/config_inc.php
 
 SQL_CREATE_DB="CREATE DATABASE $MANTIS_DB_NAME;"
 SQL_CREATE_PROJECT="INSERT INTO mantis_project_table
 	(name, inherit_global, description)
 	VALUES
-	('Test Project',1,'Travis-CI Test Project');"
+	('Test Project',true,'Travis-CI Test Project');"
 
 
 # -----------------------------------------------------------------------------
@@ -27,6 +37,22 @@ function step () {
 	echo $1
 	echo
 }
+
+# -----------------------------------------------------------------------------
+# Fix deprecated warning in PHP 5.6 builds:
+# "Automatically populating $HTTP_RAW_POST_DATA is deprecated [...]"
+# https://www.bram.us/2014/10/26/php-5-6-automatically-populating-http_raw_post_data-is-deprecated-and-will-be-removed-in-a-future-version/
+# https://bugs.php.net/bug.php?id=66763
+
+if [[ $TRAVIS_PHP_VERSION = '5.6' ]]
+then
+	# Generate custom php.ini settings
+	cat <<-EOF >mantis_config.ini
+		always_populate_raw_post_data=-1
+		EOF
+	phpenv config-add mantis_config.ini
+fi
+
 
 # -----------------------------------------------------------------------------
 step "Create database $MANTIS_DB_NAME"
@@ -51,7 +77,7 @@ case $DB in
 		DB_CMD_SCHEMA="-d $MANTIS_DB_NAME"
 
 		# Wait a bit to make sure Postgres has started
-		sleep 2
+		sleep 5
 		$DB_CMD "$SQL_CREATE_DB"
 		$DB_CMD "ALTER USER $DB_USER SET bytea_output = 'escape';"
 		;;
@@ -95,11 +121,11 @@ else
 	else
 		myphp=php
 	fi
-	$myphp -S $HOSTNAME:$PORT &
+	$myphp -S $HOSTNAME:$PORT >& /dev/null &
 fi
 
 # needed to allow web server to create config_inc.php
-chmod 777 .
+chmod 777 config
 
 #  wait until server is up
 sleep 10
@@ -118,6 +144,7 @@ declare -A query=(
 	[db_password]=$DB_PASSWORD
 	[admin_username]=$DB_USER
 	[admin_password]=$DB_PASSWORD
+	[timezone]=UTC
 )
 
 # Build http query string
@@ -149,7 +176,6 @@ cat <<-EOF >> $MANTIS_BOOTSTRAP
 
 echo "Adding custom configuration options"
 sudo chmod 777 $MANTIS_CONFIG
-sed -i '/?>/d' $MANTIS_CONFIG
 cat <<-EOF >> $MANTIS_CONFIG
 
 	# Configs required to ensure all PHPUnit tests are executed

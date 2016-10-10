@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,40 +15,49 @@
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Relationship Graph API
+ *
  * This uses GraphViz utilities to generate relationship graphs for
- * issues. Either GraphViz (for all OSs except Windows) or
- * WinGraphviz (for Windows) must be installed in order to use this
- * feature.
+ * issues. GraphViz must be installed in order to use this feature.
  *
  * Graphviz is available at:
  * 	- http://www.graphviz.org/
  * 	- http://www.research.att.com/sw/tools/graphviz/
  *
- * WinGraphviz is available at:
- * 	- http://home.so-net.net.tw/oodtsen/wingraphviz/
- *
  * Most Linux distributions already have a GraphViz package
  * conveniently available for download and install. Refer to
  * config_defaults_inc.php for how to enable this feature once
  * GraphViz is installed.
+ *
  * @package CoreAPI
  * @subpackage RelationshipGraphAPI
  * @author Juliano Ravasi Ferraz <jferraz at users sourceforge net>
- * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
+ *
+ * @uses access_api.php
+ * @uses bug_api.php
+ * @uses config_api.php
+ * @uses constant_inc.php
+ * @uses graphviz_api.php
+ * @uses helper_api.php
+ * @uses relationship_api.php
+ * @uses string_api.php
+ * @uses utility_api.php
  */
 
-/**
- * requires relationship_api
- */
-require_once( 'relationship_api.php' );
-/**
- * requires graphviz_api
- */
-require_once( 'graphviz_api.php' );
+require_api( 'access_api.php' );
+require_api( 'bug_api.php' );
+require_api( 'config_api.php' );
+require_api( 'constant_inc.php' );
+require_api( 'graphviz_api.php' );
+require_api( 'helper_api.php' );
+require_api( 'relationship_api.php' );
+require_api( 'string_api.php' );
+require_api( 'utility_api.php' );
 
-/*
+/**
  * Generate a pretty bug ID string that is safe to use in the DOT language
  * defined at http://www.graphviz.org/doc/info/lang.html
  * For now we allow formatted strings in these formats:
@@ -56,20 +65,24 @@ require_once( 'graphviz_api.php' );
  *    integer/digit.
  *  - Containing only digits 0-9.
  * The fallback is to use the raw bug ID without any pretty formatting applied.
- * @param int $p_bug_id ID of the bug to pretty format
+ * @param integer $p_bug_id ID of the bug to pretty format.
  * @return string Pretty formatted bug ID
  */
 function relgraph_bug_format_id( $p_bug_id ) {
 	$t_pretty_bug_id = bug_format_id( $p_bug_id );
-	if ( !preg_match( '/^(([a-zA-z_][0-9a-zA-Z_]*)|(\d+))$/', $t_pretty_bug_id ) ) {
+	if( !preg_match( '/^(([a-zA-z_][0-9a-zA-Z_]*)|(\d+))$/', $t_pretty_bug_id ) ) {
 		$t_pretty_bug_id = $p_bug_id;
 	}
 	return $t_pretty_bug_id;
 }
 
-# Generate a relationship graph for the given issue.
-function relgraph_generate_rel_graph( $p_bug_id, $p_bug = null ) {
-
+/**
+ * Generate a relationship graph for the given issue.
+ *
+ * @param integer $p_bug_id A bug identifier.
+ * @return Graph
+ */
+function relgraph_generate_rel_graph( $p_bug_id ) {
 	# List of visited issues and their data.
 	$v_bug_list = array();
 	$v_rel_list = array();
@@ -95,11 +108,13 @@ function relgraph_generate_rel_graph( $p_bug_id, $p_bug = null ) {
 			continue;
 		}
 
-		if( !access_has_bug_level( VIEWER, $t_id ) ) {
+		$t_bug = bug_get( $t_id, false );
+
+		if( !access_has_bug_level( config_get( 'view_bug_threshold', null, null, $t_bug->project_id ), $t_id ) ) {
 			continue;
 		}
 
-		$v_bug_list[$t_id] = bug_get( $t_id, false );
+		$v_bug_list[$t_id] = $t_bug;
 
 		$t_relationships = relationship_get_all_src( $t_id );
 		foreach( $t_relationships as $t_relationship ) {
@@ -175,7 +190,7 @@ function relgraph_generate_rel_graph( $p_bug_id, $p_bug = null ) {
 		if( $t_view_on_click ) {
 			$t_url = string_get_bug_view_url( $t_id );
 		} else {
-			$t_url = "bug_relationship_graph.php?bug_id=$t_id&graph=relation";
+			$t_url = 'bug_relationship_graph.php?bug_id=' . $t_id . '&graph=relation';
 		}
 
 		relgraph_add_bug_to_graph( $t_graph, $t_id_string, $t_bug, $t_url, $t_id == $p_bug_id );
@@ -211,9 +226,14 @@ function relgraph_generate_rel_graph( $p_bug_id, $p_bug = null ) {
 	return $t_graph;
 }
 
-# Generate a dependency relationship graph for the given issue.
-function relgraph_generate_dep_graph( $p_bug_id, $p_bug = null, $p_horizontal = false ) {
-
+/**
+ * Generate a dependency relationship graph for the given issue.
+ * @param integer $p_bug_id     Bug identifier.
+ * @param boolean $p_horizontal Graph orientation - horizontal if true.
+ * @todo duplicate bug/bugid
+ * @return Digraph
+ */
+function relgraph_generate_dep_graph( $p_bug_id, $p_horizontal = false ) {
 	# List of visited issues and their data.
 	$v_bug_list = array();
 
@@ -225,9 +245,7 @@ function relgraph_generate_dep_graph( $p_bug_id, $p_bug = null, $p_horizontal = 
 	# so, if these issues happen to be visited also, relationship links
 	# will be preserved.
 	# The first issue in the list is the one we are parting from.
-	if( null === $p_bug ) {
-		$p_bug = bug_get( $p_bug_id, true );
-	}
+	$p_bug = bug_get( $p_bug_id, true );
 
 	$v_bug_list[$p_bug_id] = $p_bug;
 	$v_bug_list[$p_bug_id]->is_descendant = true;
@@ -302,7 +320,7 @@ function relgraph_generate_dep_graph( $p_bug_id, $p_bug = null, $p_horizontal = 
 		if( $t_view_on_click ) {
 			$t_url = string_get_bug_view_url( $t_related_bug_id );
 		} else {
-			$t_url = "bug_relationship_graph.php?bug_id=$t_related_bug_id&graph=dependency&orientation=$t_graph_orientation";
+			$t_url = 'bug_relationship_graph.php?bug_id=' . $t_related_bug_id . '&graph=dependency&orientation=' . $t_graph_orientation;
 		}
 
 		relgraph_add_bug_to_graph( $t_graph, $t_id_string, $t_related_bug, $t_url, $t_related_bug_id == $p_bug_id );
@@ -323,11 +341,14 @@ function relgraph_generate_dep_graph( $p_bug_id, $p_bug = null, $p_horizontal = 
 	return $t_graph;
 }
 
-# Internal function used to visit ascendant issues recursively.
-function relgraph_add_parent( &$p_bug_list, $p_bug_id ) {
-
-	# If the issue is already in the list, we already visited it, just
-	# leave.
+/**
+ * Internal function used to visit ascendant issues recursively.
+ * @param array   &$p_bug_list Bug list.
+ * @param integer $p_bug_id    Bug id.
+ * @return boolean
+ */
+function relgraph_add_parent( array &$p_bug_list, $p_bug_id ) {
+	# If the issue is already in the list, we already visited it, just leave.
 	if( isset( $p_bug_list[$p_bug_id] ) ) {
 		return true;
 	}
@@ -338,12 +359,14 @@ function relgraph_add_parent( &$p_bug_list, $p_bug_id ) {
 		return false;
 	}
 
-	if( !access_has_bug_level( VIEWER, $p_bug_id ) ) {
+	$t_bug = bug_get( $p_bug_id, false );
+
+	if( !access_has_bug_level( config_get( 'view_bug_threshold', null, null, $t_bug->project_id ), $p_bug_id ) ) {
 		return false;
 	}
 
 	# Add the issue to the list.
-	$p_bug_list[$p_bug_id] = bug_get( $p_bug_id, false );
+	$p_bug_list[$p_bug_id] = $t_bug;
 	$p_bug_list[$p_bug_id]->is_descendant = false;
 	$p_bug_list[$p_bug_id]->parents = array();
 	$p_bug_list[$p_bug_id]->children = array();
@@ -375,9 +398,13 @@ function relgraph_add_parent( &$p_bug_list, $p_bug_id ) {
 	return true;
 }
 
-# Internal function used to visit descendant issues recursively.
-function relgraph_add_child( &$p_bug_list, $p_bug_id ) {
-
+/**
+ * Internal function used to visit descendant issues recursively.
+ * @param array   &$p_bug_list Bug list.
+ * @param integer $p_bug_id    Bug id.
+ * @return boolean
+ */
+function relgraph_add_child( array &$p_bug_list, $p_bug_id ) {
 	# Check if the issue is already in the issue list.
 	if( isset( $p_bug_list[$p_bug_id] ) ) {
 
@@ -405,12 +432,14 @@ function relgraph_add_child( &$p_bug_list, $p_bug_id ) {
 			return false;
 		}
 
-		if( !access_has_bug_level( VIEWER, $p_bug_id ) ) {
+		$t_bug = bug_get( $p_bug_id, false );
+
+		if( !access_has_bug_level( config_get( 'view_bug_threshold', null, null, $t_bug->project_id ), $p_bug_id ) ) {
 			return false;
 		}
 
 		# Add the issue to the list.
-		$p_bug_list[$p_bug_id] = bug_get( $p_bug_id, false );
+		$p_bug_list[$p_bug_id] = $t_bug;
 		$p_bug_list[$p_bug_id]->is_descendant = true;
 		$p_bug_list[$p_bug_id]->parents = array();
 		$p_bug_list[$p_bug_id]->children = array();
@@ -443,23 +472,40 @@ function relgraph_add_child( &$p_bug_list, $p_bug_id ) {
 	return true;
 }
 
-# Outputs a png image for the given relationship graph, previously
-# generated by relgraph_generate_graph_for_bug().
-function relgraph_output_image( $p_graph ) {
+/**
+ * Outputs a png image for the given relationship graph, previously
+ * generated by relgraph_generate_graph_for_bug().
+ * @param Graph $p_graph Graph object.
+ * @return void
+ */
+function relgraph_output_image( Graph $p_graph ) {
 	$p_graph->output( 'png', true );
 }
 
-# Outputs an image map in HTML form (too bad dot didn't output XHTML...)
-# for the given relationship graph, previously generated by
-# relgraph_generate_graph_for_bug().
-function relgraph_output_map( $p_graph, $p_name ) {
+/**
+ * Outputs an image map in XHTML format using the <map> element for the given
+ * relationship graph.
+ * @param Graph  $p_graph Relationship graph object generated from relgraph_generate_graph_for_bug().
+ * @param string $p_name  The XHTML name attribute to apply to the containing <map> element.
+ * @return void
+ */
+function relgraph_output_map( Graph $p_graph, $p_name ) {
 	echo '<map name="' . $p_name . '">' . "\n";
-	$p_graph->output( 'cmap' );
+	$p_graph->output( 'cmapx' );
 	echo '</map>' . "\n";
 }
 
-# Internal function used to add a bug to the given graph.
-function relgraph_add_bug_to_graph( &$p_graph, $p_bug_id, $p_bug, $p_url = null, $p_highlight = false ) {
+/**
+ * Internal function used to add a bug to the given graph.
+ * @todo duplicate or not - bug / bugid?
+ * @param Graph   &$p_graph    Graph object.
+ * @param integer $p_bug_id    A bug identifier.
+ * @param BugData $p_bug       A BugData object.
+ * @param string  $p_url       URL.
+ * @param boolean $p_highlight Highlight.
+ * @return void
+ */
+function relgraph_add_bug_to_graph( Graph &$p_graph, $p_bug_id, BugData $p_bug, $p_url = null, $p_highlight = false ) {
 	$t_node_attributes = array();
 	$t_node_attributes['label'] = $p_bug_id;
 

@@ -16,6 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * **********************************************************************
+ * ** This file contains translations stored in translatewiki.net.     **
+ * ** See http://translatewiki.net/wiki/Project:About for information  **
+ * ** on copyright/license for translatewiki.net translations.         **
+ * **********************************************************************
+ * **                                                                  **
+ * **                      DO NOT UPDATE MANUALLY                      **
+ * **                                                                  **
+ * ** To improve a translation please visit http://translatewiki.net   **
+ * ** Detailed instructions on how to create or update translations at **
+ * ** http://www.mantisbt.org/wiki/doku.php/mantisbt:translationshowto **
+ * **********************************************************************
  */
 /** Norwegian Nynorsk (norsk nynorsk)
  * 
@@ -27,7 +40,6 @@
  *
  * @author Frokor
  * @author Gunnernett
- * @author Harald Khan
  * @author Nghtwlkr
  * @author Njardarlogar
  */
@@ -63,7 +75,6 @@ $s_private_project_msg = 'Dette prosjektet er PRIVAT. Berre administratorar og b
 $s_access_level_project = 'Prosjekttilgjenge';
 $s_view_submitted_bug_link = 'Sjå insend sak %1$s';
 $s_assigned_projects = 'Tildelte prosjekt';
-$s_unassigned_projects = 'Utildelte prosjekt';
 $s_print = 'Skriv ut';
 $s_jump = 'Gå til';
 $s_copy_users = 'Kopier brukarar';
@@ -117,8 +128,6 @@ $s_move_group_bugs_button = 'Flytt saker';
 $s_copy_group_bugs_button = 'Kopier saker';
 $s_assign_group_bugs_button = 'Tildel saker';
 $s_printing_options_link = 'Val for utskrift';
-$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Fann ikkje sak %1$d';
-$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Fann ikkje kategorien.';
 $s_go_back = 'Attende';
 $s_switch = 'Skift';
 $s_logged_in_as = 'Innlogga som';
@@ -203,7 +212,6 @@ $s_profile_added_msg = 'La til profil';
 $s_profile_deleted_msg = 'Sletta profil';
 $s_edit_profile_title = 'Endra profil';
 $s_platform = 'Plattform';
-$s_operating_system = 'Operativsystem';
 $s_additional_description = 'Tilleggsinformasjon';
 $s_add_profile_title = 'Legg til profil';
 $s_add_profile_button = 'Legg til profil';
@@ -221,7 +229,6 @@ $s_file_upload_msg = 'Fila vart lasta opp.';
 $s_upload_file = 'Last opp fil';
 $s_select_file = 'Vel fil';
 $s_upload_file_button = 'Last opp fil';
-$s_max_file_size = 'Maks. storleik';
 $s_from = 'Frå';
 $s_to = 'Til';
 $s_bug_send_button = 'Send';
@@ -253,7 +260,6 @@ $s_add_bugnote_button = 'Legg til merknad';
 $s_bugnote_edit_link = 'Endra';
 $s_closed_bug_button = 'Lat att sak';
 $s_bugnote_updated_msg = 'Merknaden er vorten oppdatert.';
-$s_edited_on = 'endra:';
 $s_hide_content = 'Løyn innhald';
 $s_show_content = 'Vis innhald';
 $s_click_to_login = 'Logg inn';
@@ -300,15 +306,12 @@ $s_reporter_by_resolution = 'Meldar etter løysingsstoda';
 $s_reporter_effectiveness = 'Meldareffektivitet';
 $s_developer_by_resolution = 'Utviklar etter løysingsstoda';
 $s_percentage_fixed = '% fiksa';
-$s_sort = 'Sorter etter';
 $s_issue_id = 'Sak #';
 $s_recently_visited = 'Sist vitja';
 $s_prev = 'Førre';
 $s_next = 'Neste';
 $s_first = 'Fyrste';
 $s_last = 'Siste';
-$s_start_date = 'Startdato';
-$s_end_date = 'Sluttdato';
 $s_use_date_filters = 'Nytt datofilter';
 $s_yes = 'Ja';
 $s_no = 'Nei';
@@ -343,8 +346,6 @@ $s_set_view_status = 'Endra visingsstoda (offentleg eller privat)';
 $s_update_view_status = 'Oppdater visingsstoda (offentleg eller privat)';
 $s_notes = 'MERKNADER';
 $s_add_notes = 'Legg til merknader';
-$s_update_notes = 'Oppdater merknader';
-$s_delete_note = 'Slett merknad';
 $s_view_private_notes = 'Sjå private merknader';
 $s_news = 'NYHENDE';
 $s_view_private_news = 'Sjå private nyhende';
@@ -391,3 +392,5 @@ $s_development_team = 'Utviklarlag';
 $s_overdue = 'Forseinka';
 $s_view_account_title = 'Brukarinformasjon';
 $s_manage_user = 'Handsam brukar';
+$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Fann ikkje sak %1$d';
+$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Fann ikkje kategorien.';

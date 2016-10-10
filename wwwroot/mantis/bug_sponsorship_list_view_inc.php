@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,42 +14,69 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	/**
-	 * This include file prints out the list of users sponsoring the current
-	 * bug.	$f_bug_id must be set to the bug id
-	 *
-	 * @package MantisBT
-	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
-	 * @link http://www.mantisbt.org
-	 */
+/**
+ * This include file prints out the list of users sponsoring the current
+ * bug.	$f_bug_id must be set to the bug id
+ *
+ * @package MantisBT
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link http://www.mantisbt.org
+ *
+ * @uses access_api.php
+ * @uses bug_api.php
+ * @uses collapse_api.php
+ * @uses config_api.php
+ * @uses constant_inc.php
+ * @uses current_user_api.php
+ * @uses form_api.php
+ * @uses helper_api.php
+ * @uses lang_api.php
+ * @uses print_api.php
+ * @uses sponsorship_api.php
+ * @uses utility_api.php
+ */
 
-	require_once( 'sponsorship_api.php' );
-	require_once( 'collapse_api.php' );
+if( !defined( 'BUG_SPONSORSHIP_LIST_VIEW_INC_ALLOW' ) ) {
+	return;
+}
 
-	#
-	# Determine whether the sponsorship section should be shown.
-	#
+require_api( 'access_api.php' );
+require_api( 'bug_api.php' );
+require_api( 'collapse_api.php' );
+require_api( 'config_api.php' );
+require_api( 'constant_inc.php' );
+require_api( 'current_user_api.php' );
+require_api( 'form_api.php' );
+require_api( 'helper_api.php' );
+require_api( 'lang_api.php' );
+require_api( 'print_api.php' );
+require_api( 'sponsorship_api.php' );
+require_api( 'utility_api.php' );
 
-	if ( ( config_get( 'enable_sponsorship' ) == ON ) && ( access_has_bug_level( config_get( 'view_sponsorship_total_threshold' ), $f_bug_id ) ) ) {
-		$t_sponsorship_ids = sponsorship_get_all_ids( $f_bug_id );
+#
+# Determine whether the sponsorship section should be shown.
+#
 
-		$t_sponsorships_exist = count( $t_sponsorship_ids ) > 0;
-		$t_can_sponsor = !bug_is_readonly( $f_bug_id ) && !current_user_is_anonymous();
+if( ( config_get( 'enable_sponsorship' ) == ON ) && ( access_has_bug_level( config_get( 'view_sponsorship_total_threshold' ), $f_bug_id ) ) ) {
+	$t_sponsorship_ids = sponsorship_get_all_ids( $f_bug_id );
 
-		$t_show_sponsorships = $t_sponsorships_exist || $t_can_sponsor;
-	} else {
-		$t_show_sponsorships = false;
-	}
+	$t_sponsorships_exist = count( $t_sponsorship_ids ) > 0;
+	$t_can_sponsor = !bug_is_readonly( $f_bug_id ) && !current_user_is_anonymous();
 
-	#
-	# Sponsorship Box
-	#
+	$t_show_sponsorships = $t_sponsorships_exist || $t_can_sponsor;
+} else {
+	$t_show_sponsorships = false;
+}
 
-	if ( $t_show_sponsorships ) {
+#
+# Sponsorship Box
+#
+
+if( $t_show_sponsorships ) {
 ?>
 
-<a name="sponsorships" id="sponsorships"></a> <br />
+<a id="sponsorships"></a> <br />
 
 <?php
 	collapse_open( 'sponsorship' );
@@ -58,17 +85,15 @@
 <table class="width100" cellspacing="1">
 	<tr>
 		<td width="50" rowspan="3">
-			<img src="images/dollars.gif" alt="<?php echo lang_get( 'sponsor_verb' ) ?>" border="0" />
+			<img src="images/dollars.gif" alt="<?php echo lang_get( 'sponsor_verb' ) ?>" />
 		</td>
-		<td class="form-title" colspan="2">
-		<?php 
+		<td class="form-title" colspan="2"><?php
 			collapse_icon( 'sponsorship' );
-
 			echo lang_get( 'users_sponsoring_bug' );
 
 			$t_details_url = lang_get( 'sponsorship_process_url' );
-			if ( !is_blank( $t_details_url ) ) {
-				echo '&#160;[<a href="' . $t_details_url . '" target="_blank">'
+			if( !is_blank( $t_details_url ) ) {
+				echo '&#160;[<a href="' . $t_details_url . '">'
 					. lang_get( 'sponsorship_more_info' ) . '</a>]';
 			}
 		?>
@@ -76,10 +101,10 @@
 	</tr>
 
 <?php
-	if ( $t_can_sponsor ) {
+	if( $t_can_sponsor ) {
 ?>
 	<tr class="row-1">
-		<td class="category" width="15%"><?php echo lang_get( 'sponsor_issue' ) ?></td>
+		<th class="category" width="15%"><?php echo lang_get( 'sponsor_issue' ) ?></th>
 		<td>
 			<form method="post" action="bug_set_sponsorship.php">
 				<?php echo form_security_field( 'bug_set_sponsorship' ) ?>
@@ -94,31 +119,29 @@
 	}
 
 	$t_total_sponsorship = bug_get_field( $f_bug_id, 'sponsorship_total' );
-	if ( $t_total_sponsorship > 0 ) {
+	if( $t_total_sponsorship > 0 ) {
 ?>
 	<tr class="row-2">
-		<td class="category" width="15%"><?php echo lang_get( 'sponsors_list' ) ?></td>
+		<th class="category" width="15%"><?php echo lang_get( 'sponsors_list' ) ?></th>
 		<td>
 		<?php
 			echo sprintf( lang_get( 'total_sponsorship_amount' ),
 				sponsorship_format_amount( $t_total_sponsorship ) );
 
-			if ( access_has_bug_level( config_get( 'view_sponsorship_details_threshold' )
-				, $f_bug_id ) ) {
+			if( access_has_bug_level( config_get( 'view_sponsorship_details_threshold' ), $f_bug_id ) ) {
 				echo '<br /><br />';
 				$i = 0;
-				foreach ( $t_sponsorship_ids as $id ) {
-					$t_sponsorship = sponsorship_get( $id );
-					$t_date_added = date( config_get( 'normal_date_format' )
-						, $t_sponsorship->date_submitted );
+				foreach ( $t_sponsorship_ids as $t_id ) {
+					$t_sponsorship = sponsorship_get( $t_id );
+					$t_date_added = date( config_get( 'normal_date_format' ), $t_sponsorship->date_submitted );
 
 					echo ($i > 0) ? '<br />' : '';
 					$i++;
 
-					echo $t_date_added . ': ';
+					echo sprintf( lang_get( 'label' ), $t_date_added ) . lang_get( 'word_separator' );
 					print_user( $t_sponsorship->user_id );
 					echo ' (' . sponsorship_format_amount( $t_sponsorship->amount ) . ')';
-					if ( access_has_bug_level( config_get( 'handle_sponsored_bugs_threshold' ), $f_bug_id ) ) {
+					if( access_has_bug_level( config_get( 'handle_sponsored_bugs_threshold' ), $f_bug_id ) ) {
 						echo ' ' . get_enum_element( 'sponsorship', $t_sponsorship->paid );
 					}
 				}
@@ -137,24 +160,22 @@
 
 <table class="width100" cellspacing="1">
 	<tr>
-		<td class="form-title">
-<?php
+		<td class="form-title"><?php
 			collapse_icon( 'sponsorship' );
 			echo lang_get( 'users_sponsoring_bug' );
 
 			$t_details_url = lang_get( 'sponsorship_process_url' );
-			if ( !is_blank( $t_details_url ) ) {
-				echo '&#160;[<a href="' . $t_details_url . '" target="_blank">'
+			if( !is_blank( $t_details_url ) ) {
+				echo '&#160;[<a href="' . $t_details_url . '">'
 					. lang_get( 'sponsorship_more_info' ) . '</a>]';
 			}
 
-	$t_total_sponsorship = bug_get_field( $f_bug_id, 'sponsorship_total' );
-	if ( $t_total_sponsorship > 0 ) {
-		echo ' <span style="font-weight: normal;">(';
-		echo sprintf( lang_get( 'total_sponsorship_amount' ),
-			sponsorship_format_amount( $t_total_sponsorship ) );
-		echo ')</span>';
-	}
+			if( $t_total_sponsorship > 0 ) {
+				echo ' <span style="font-weight: normal;">(';
+				echo sprintf( lang_get( 'total_sponsorship_amount' ),
+				sponsorship_format_amount( $t_total_sponsorship ) );
+				echo ')</span>';
+			}
 ?>
 		</td>
 	</tr>

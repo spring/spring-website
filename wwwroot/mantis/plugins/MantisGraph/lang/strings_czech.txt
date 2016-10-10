@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2016  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * **********************************************************************
+ * ** This file contains translations stored in translatewiki.net.     **
+ * ** See https://translatewiki.net/wiki/Project:About for information **
+ * ** on copyright/license for translatewiki.net translations.         **
+ * **********************************************************************
+ * **                                                                  **
+ * **                      DO NOT UPDATE MANUALLY                      **
+ * **                                                                  **
+ * ** To improve a translation please visit http://translatewiki.net   **
+ * ** Detailed instructions on how to create or update translations at **
+ * ** http://www.mantisbt.org/wiki/doku.php/mantisbt:translationshowto **
+ * **********************************************************************
  */
 /** Czech (čeština)
  * 
@@ -25,6 +38,7 @@
  * @ingroup Language
  * @file
  *
+ * @author Dvorapa
  * @author Kuvaly
  * @author Luk
  */
@@ -53,11 +67,11 @@ $s_plugin_MantisGraph_jpgraph_antialias = 'Antialiasing JpGraph';
 $s_plugin_MantisGraph_jpgraph_antialias_info = 'Antialiasing zlepšuje vzhled některých grafů na úkor výkonu (až 8x pomalejší)';
 $s_plugin_MantisGraph_enabled = 'Zapnuto';
 $s_plugin_MantisGraph_disabled = 'Vypnuto';
-$s_plugin_MantisGraph_graph_imp_status_title = 'Graf podle stavu';
-$s_plugin_MantisGraph_graph_imp_priority_title = 'Graf podle priority';
-$s_plugin_MantisGraph_graph_imp_severity_title = 'Graf podle důležitosti';
-$s_plugin_MantisGraph_graph_imp_category_title = 'Graf podle kategorie';
-$s_plugin_MantisGraph_graph_imp_resolution_title = 'Graf podle řešení';
+$s_plugin_MantisGraph_graph_imp_status_title = 'Grafy podle stavu';
+$s_plugin_MantisGraph_graph_imp_priority_title = 'Grafy podle priority';
+$s_plugin_MantisGraph_graph_imp_severity_title = 'Grafy podle důležitosti';
+$s_plugin_MantisGraph_graph_imp_category_title = 'Grafy podle kategorie';
+$s_plugin_MantisGraph_graph_imp_resolution_title = 'Grafy podle řešení';
 $s_plugin_MantisGraph_by_status_pct = '% podle stavu';
 $s_plugin_MantisGraph_by_priority_pct = '% podle priority';
 $s_plugin_MantisGraph_by_severity_pct = '% podle závažnosti';

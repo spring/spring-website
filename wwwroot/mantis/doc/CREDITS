@@ -1,7 +1,7 @@
 -------------------------------------------------------------------------------
 MantisBT - a PHP based bugtracking system
 Copyright (C) 2000-2002  Kenzaburo Ito - kenito@300baud.org
-Copyright (C) 2002-2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+Copyright (C) 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
 -------------------------------------------------------------------------------
 
 *** Please contact project administrators by sending a message to the
@@ -20,8 +20,10 @@ Developers
 ----------
 
 Damien Regad (dregad)
-Robert Munteaunu (rombert)
+Robert Munteanu (rombert)
 Roland Becker (atrol)
+Carlos Proensa (cproensa)
+Rafik Robeal (syncguru)
 
 
 Ex-Administrators
@@ -50,132 +52,169 @@ People who contributed code to MantisBT, listed in reverse order of the
 number of commits authored.
 
 Victor Boctor
-Kenzaburo Ito
-Paul Richards
-Glenn Henshaw
 Damien Regad
+Paul Richards
+Kenzaburo Ito
+Glenn Henshaw
 Julian Fitzell
-John Reese
 David Hicks
-Siebrand Mazeland
+John Reese
 Jeroen Latour
+Siebrand Mazeland
 Robert Munteanu
 Gianluca Sforna
+Roland Becker
 André Eisenbach
+Daryn Warriner
+Carlos Proensa
 bigbadger
 Lincoln Maskey
-Daryn Warriner
-Roland Becker
 Marcello Scata
 Alexey Chumakov
 beerfrick
 Bastian Pfenningschmidt
+Kornel Lesinski
 Adrian Spinei
 Martin Fuchs
 zakman
 jbrugger
 jctrosset
+Rafik Robeal
 ryandesign
 rufinus
-David Newcomb
+Kirill Krasnov
+Rasmus Lerdorf
 jhuggins
+David Newcomb
 yarick123
-jotel
 robertjf
+jotel
+Luke Lee
 Frank Rodgers
+Tamás Gulácsi
+planser
 Johan Guilbaud
 Chris Fitch
 davidu
-planser
-Franck Villaume
-Véronique Maginot
 myplacedk
-smhanson
+Véronique Maginot
 vwegert
+smhanson
+Matej Habrnal
+Franck Villaume
+Stefan Pettersson
 Daniel Tschinder
 Vincent Sels
-Jim Hanley
-Kirill Krasnov
-Stéphane Veyret
 cyclespersecond
+Dominik Blunk
+Giovanni Giacobbi
+Jim Hanley
+Stéphane Veyret
 scoates
 torija
-Alexander Menk
-Christian Weiske
-Heiko Schneider-Lange
-Markus Schneider
-Tarik Sedlarevic
-jeckyhl
-puklos
-Andreas Schopper
-Benjamin Renard
-Bill Stidham
-Bob Clough
-Brian Wrightson
-Carlos Proensa
-Cyrille Giquello
-Dan Moore
-Daniel N
-David W. Juntgen
-Dawit Ayalew
-Dominik Blunk
-Edward Rudd
-Jacky Alcine
-Jacob Hoover
-Jonas Nockert
-Karl Wiggisser
-Laszlo Kovacs
-Marco Dings
 Matt McCutchen
-MatthieuR
-Michael Lorer
-Michael Weibel
-Olivier Mengué
-Peter Bruin
-Pier-Luc Duchaine
-Raul Baldner junior
-Rolf Kleef
+mfoXen
+Tarik Sedlarevic
+badfiles
+jeckyhl
+Dan Moore
+Alexander Ishmuradov
+Alexander Menk
+puklos
+Markus Schneider
+Christian Weiske
+Val Kulkov
+Jonas Nockert
+Jeremy Vriens
 Ross Nelson
+Ryan Rafe Lee
 SL-Gundam
 Sebastian Kayser
 Sergio Del Franco
+Jacob Hoover
+Jacky Alcine
+watergad
+Ian MacKenzie
+The Gitter Badger
 Todd Whitesel
-Tomasz Krawczyk
-Werner Karl
+Henning Eiben
+Heiko Schneider-Lange
+Gulacsi Tamas
+Florent Daigniere
+Edward Rudd
+cheesecracker
 cybd
+Dmitriy V Kuranov
 davethegr8
+Dawit Ayalew
 dwethell
 gcompagnon
 greenius
-hazerd
+David W. Juntgen
+Daniel N
 mbaranski
+Brian Wrightson
+naveenbali
 petertc
+Bob Clough
+Bill Stidham
+Benjamin Renard
+Andreas Stieger
+Alexander Maringer
+Andreas Schopper
+spidgorny
 tfromm
-watergad
-
+wapznw
+Marco Dings
+Marcin Kłeczek
+MatthieuR
+Michael Lorer
+Michael Weibel
+Murray Crane
+Olivier Mengué
+Laszlo Kovacs
+Pier-Luc Duchaine
+Larry Lewis
+Karl Wiggisser
+Raul Baldner junior
+Raymond van Asperen
+Adrian Spinei
 
 Other Contributors
 ------------------
 
 Alan Seiden (db2 support)
 Alexander Leschinsky (wanderer)
+Alexander Menk
+Alexey Chumakov (achumakov)
 Amandeep Jawa
+André Eisenbach (int2str)
+Andreas Schopper
 Andrew Gregory - xmlhttprequest.js
 Angelo Rossi
 Ariel Arjona (aarjona)
 August Zajonc
+Bastian Pfenningschmidt
 Beorn Harris
 Bernat Pegueroles
 Brett Carter
 Brett England
+Chris Fitch
 Christian Mayer
 Christian Stocker - LiveSearch javascript
 Christoph Giess
+Daniel N
+Daniel Tschinder
+Dawit Ayalew
+davethegr8
 David Ethell
 David Jeske
 Don McPhee
 Dries Samyn
 Duncan Lisset
+Edward Rudd
+Frank Rodgers
+Frank Villaume
 Griff Miller
 Guy Brandt
 Hai Nguyen
@@ -188,29 +227,41 @@ Jason Lunn
 Jason Stewart
 Jean-Francois Travers
 Jon Maltz
+Jonas Nockert
+Kirill Krasnov
 Laurent Petit
 Lee O'Mara
 Leigh Morresi
+Lincoln Maskey (Narcissus)
 Ludwig Ruderstaller
+Marcello Scata (masc)
+Markus Schneider
 Martin Wickmann
-Matthiaus Bauer
+Matt McCutchen
 Matt Otto
+Matthiaus Bauer
 Maxim Berlin
 Niels Andersen
 Ondrej Jombik
 Philip D. Turner
+Pier-Luc Duchaine
 Robert Foster
-Scott Hanson
-Scott Roberts
+Rolf Kleef
+ryandesign
 Sean Phelan
 Sebastien Massoutier
+Scott Hanson
+Scott Roberts
+SL-Gundam
 Steve Davies
 Steve Kwee
 Talal Nehme
+Tarik Sedlarevic (tazza70)
 Thaler Jörg
 Thomas Fromm
-Volker Wegert
+watergad
 Yves Durasnel
+Volker Wegert
 
 
 Translations

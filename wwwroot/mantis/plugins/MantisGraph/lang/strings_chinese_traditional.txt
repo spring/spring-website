@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2016  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * **********************************************************************
+ * ** This file contains translations stored in translatewiki.net.     **
+ * ** See https://translatewiki.net/wiki/Project:About for information **
+ * ** on copyright/license for translatewiki.net translations.         **
+ * **********************************************************************
+ * **                                                                  **
+ * **                      DO NOT UPDATE MANUALLY                      **
+ * **                                                                  **
+ * ** To improve a translation please visit http://translatewiki.net   **
+ * ** Detailed instructions on how to create or update translations at **
+ * ** http://www.mantisbt.org/wiki/doku.php/mantisbt:translationshowto **
+ * **********************************************************************
  */
 /** Traditional Chinese (中文（繁體）‎)
  * 
@@ -26,6 +39,7 @@
  * @file
  *
  * @author Cwlin0416
+ * @author Kly
  */
 
 $s_plugin_graph_title = 'Mantis 圖表';
@@ -38,7 +52,7 @@ $s_plugin_MantisGraph_status_link = '依狀態';
 $s_plugin_MantisGraph_priority_link = '依優先權';
 $s_plugin_MantisGraph_severity_link = '依嚴重性';
 $s_plugin_MantisGraph_category_link = '依類別';
-$s_plugin_MantisGraph_resolution_link = '每項問題分析';
+$s_plugin_MantisGraph_resolution_link = '依問題分析';
 $s_plugin_MantisGraph_graph_bug_page_link = '圖表';
 $s_plugin_MantisGraph_library = '使用繪圖套件';
 $s_plugin_MantisGraph_bundled = '內建';
@@ -52,11 +66,11 @@ $s_plugin_MantisGraph_jpgraph_antialias = 'JpGraph 反鋸齒';
 $s_plugin_MantisGraph_jpgraph_antialias_info = '反鋸齒可以增加圖片外觀品質但會降低處理速度 (最慢可達 8 倍)';
 $s_plugin_MantisGraph_enabled = '開啟';
 $s_plugin_MantisGraph_disabled = '關閉';
-$s_plugin_MantisGraph_graph_imp_status_title = '狀態總覽圖';
-$s_plugin_MantisGraph_graph_imp_priority_title = '優先權合成圖';
-$s_plugin_MantisGraph_graph_imp_severity_title = '嚴重性總覽圖';
-$s_plugin_MantisGraph_graph_imp_category_title = '類別總覽圖';
-$s_plugin_MantisGraph_graph_imp_resolution_title = '問題分析總覽圖';
+$s_plugin_MantisGraph_graph_imp_status_title = '依狀態圖表';
+$s_plugin_MantisGraph_graph_imp_priority_title = '依優先權圖表';
+$s_plugin_MantisGraph_graph_imp_severity_title = '依嚴重性圖表';
+$s_plugin_MantisGraph_graph_imp_category_title = '依類別圖表';
+$s_plugin_MantisGraph_graph_imp_resolution_title = '依問題分析圖表';
 $s_plugin_MantisGraph_by_status_pct = '狀態百分比';
 $s_plugin_MantisGraph_by_priority_pct = '優先權百分比';
 $s_plugin_MantisGraph_by_severity_pct = '嚴重性百分比';

@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2016  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * **********************************************************************
+ * ** This file contains translations stored in translatewiki.net.     **
+ * ** See https://translatewiki.net/wiki/Project:About for information **
+ * ** on copyright/license for translatewiki.net translations.         **
+ * **********************************************************************
+ * **                                                                  **
+ * **                      DO NOT UPDATE MANUALLY                      **
+ * **                                                                  **
+ * ** To improve a translation please visit http://translatewiki.net   **
+ * ** Detailed instructions on how to create or update translations at **
+ * ** http://www.mantisbt.org/wiki/doku.php/mantisbt:translationshowto **
+ * **********************************************************************
  */
 /** Occitan (occitan)
  * 
@@ -52,11 +65,11 @@ $s_plugin_MantisGraph_jpgraph_antialias = 'Anti-aliàs JpGraph';
 $s_plugin_MantisGraph_jpgraph_antialias_info = 'L\'anti-aliàs melhora l\'aparéncia visuala d\'unes grafics, al detriment de la performància (fins a 8x mai lent)';
 $s_plugin_MantisGraph_enabled = 'Activat';
 $s_plugin_MantisGraph_disabled = 'Desactivat';
-$s_plugin_MantisGraph_graph_imp_status_title = 'Grafics de sintèsi per estat';
-$s_plugin_MantisGraph_graph_imp_priority_title = 'Grafics de sintèsi per prioritat';
-$s_plugin_MantisGraph_graph_imp_severity_title = 'Grafics de sintèsi per severitat';
-$s_plugin_MantisGraph_graph_imp_category_title = 'Grafics de sintèsi per categoria';
-$s_plugin_MantisGraph_graph_imp_resolution_title = 'Grafics de sintèsi per resolucion';
+$s_plugin_MantisGraph_graph_imp_status_title = 'Per grafes d\'estat';
+$s_plugin_MantisGraph_graph_imp_priority_title = 'Per grafes de prioritat';
+$s_plugin_MantisGraph_graph_imp_severity_title = 'Per grafes de severitat';
+$s_plugin_MantisGraph_graph_imp_category_title = 'Per grafes de categoria';
+$s_plugin_MantisGraph_graph_imp_resolution_title = 'Per grafes de resolucion';
 $s_plugin_MantisGraph_by_status_pct = 'percentatge per estat';
 $s_plugin_MantisGraph_by_priority_pct = 'percentatge per prioritat';
 $s_plugin_MantisGraph_by_severity_pct = 'percentatge per severitat';

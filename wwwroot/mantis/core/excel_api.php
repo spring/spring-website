@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,39 +16,63 @@
 
 /**
  * Excel API
+ *
  * @package CoreAPI
  * @subpackage ExcelAPI
- * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
+ *
+ * @uses authentication_api.php
+ * @uses bug_api.php
+ * @uses category_api.php
+ * @uses columns_api.php
+ * @uses config_api.php
+ * @uses constant_inc.php
+ * @uses custom_field_api.php
+ * @uses helper_api.php
+ * @uses lang_api.php
+ * @uses project_api.php
+ * @uses user_api.php
  */
+
+require_api( 'authentication_api.php' );
+require_api( 'bug_api.php' );
+require_api( 'category_api.php' );
+require_api( 'columns_api.php' );
+require_api( 'config_api.php' );
+require_api( 'constant_inc.php' );
+require_api( 'custom_field_api.php' );
+require_api( 'helper_api.php' );
+require_api( 'lang_api.php' );
+require_api( 'project_api.php' );
+require_api( 'user_api.php' );
 
 /**
  * A method that returns the header for an Excel Xml file.
  *
- * @param string $p_worksheet_title  The worksheet title.
- * @param array $p_styles An optional array of ExcelStyle entries . Parent entries must be placed before child entries
- * @returns the header Xml.
+ * @param string $p_worksheet_title The worksheet title.
+ * @param array  $p_styles          An optional array of ExcelStyle entries . Parent entries must be placed before child entries.
+ * @return string the header Xml.
  */
-function excel_get_header( $p_worksheet_title, $p_styles = array() ) {
+function excel_get_header( $p_worksheet_title, array $p_styles = array() ) {
 	$p_worksheet_title = preg_replace( '/[\/:*?"<>|]/', '', $p_worksheet_title );
 	return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?mso-application progid=\"Excel.Sheet\"?>
  <Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"
  xmlns:x=\"urn:schemas-microsoft-com:office:excel\"
  xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"
- xmlns:html=\"http://www.w3.org/TR/REC-html40\">\n ". excel_get_styles( $p_styles ). "<Worksheet ss:Name=\"" . urlencode( $p_worksheet_title ) . "\">\n<Table>\n<Column ss:Index=\"1\" ss:AutoFitWidth=\"0\" ss:Width=\"110\"/>\n";
+ xmlns:html=\"http://www.w3.org/TR/REC-html40\">\n ". excel_get_styles( $p_styles ). '<Worksheet ss:Name="' . urlencode( $p_worksheet_title ) . "\">\n<Table>\n<Column ss:Index=\"1\" ss:AutoFitWidth=\"0\" ss:Width=\"110\"/>\n";
 }
 
 /**
  * Returns an XML string containing the <tt>ss:Styles</tt> entry, possibly empty
  *
- * @param array $p_styles an array of ExcelStyle entries
- * @return void|string
+ * @param array $p_styles An array of ExcelStyle entries.
+ * @return null|string
  */
-function excel_get_styles( $p_styles ) {
-
-	if ( count ( $p_styles ) == 0 ) {
-		return;
+function excel_get_styles( array $p_styles ) {
+	if( count( $p_styles ) == 0 ) {
+		return null;
 	}
 
 	$t_styles_string = '<ss:Styles>';
@@ -63,7 +87,7 @@ function excel_get_styles( $p_styles ) {
 
 /**
  * A method that returns the footer for an Excel Xml file.
- * @returns the footer xml.
+ * @return string the footer xml.
  */
 function excel_get_footer() {
 	return "</Table>\n</Worksheet></Workbook>\n";
@@ -71,7 +95,8 @@ function excel_get_footer() {
 
 /**
  * Generates a cell XML for a column title.
- * @returns The cell xml.
+ * @param string $p_column_title Column title.
+ * @return string The cell xml.
  */
 function excel_format_column_title( $p_column_title ) {
 	return '<Cell><Data ss:Type="String">' . $p_column_title . '</Data></Cell>';
@@ -80,11 +105,11 @@ function excel_format_column_title( $p_column_title ) {
 /**
  * Generates the xml for the start of an Excel row.
  *
- * @param string $p_style_id The optional style id
- * @returns The Row tag.
+ * @param string $p_style_id The optional style id.
+ * @return string The Row tag.
  */
-function excel_get_start_row( $p_style_id = '') {
-	if ( $p_style_id != '' ) {
+function excel_get_start_row( $p_style_id = '' ) {
+	if( $p_style_id != '' ) {
 		return '<Row ss:StyleID="' . $p_style_id . '">';
 	} else {
 		return '<Row>';
@@ -93,7 +118,7 @@ function excel_get_start_row( $p_style_id = '') {
 
 /**
  * Generates the xml for the end of an Excel row.
- * @returns The Row end tag.
+ * @return string The Row end tag.
  */
 function excel_get_end_row() {
 	return '</Row>';
@@ -102,9 +127,9 @@ function excel_get_end_row() {
 /**
  * Gets an Xml Row that contains all column titles
  * @param string $p_style_id The optional style id.
- * @returns The xml row.
+ * @return string The xml row.
  */
-function excel_get_titles_row( $p_style_id = '') {
+function excel_get_titles_row( $p_style_id = '' ) {
 	$t_columns = excel_get_columns();
 	$t_ret = excel_get_start_row( $p_style_id );
 
@@ -120,8 +145,8 @@ function excel_get_titles_row( $p_style_id = '') {
 /**
  * Gets the download file name for the Excel export.  If 'All Projects' selected, default to <username>,
  * otherwise default to <projectname>.
-* @returns file name without extension
-*/
+ * @return string file name without extension
+ */
 function excel_get_default_filename() {
 	$t_current_project_id = helper_get_current_project();
 
@@ -135,16 +160,21 @@ function excel_get_default_filename() {
 }
 
 /**
- * Escapes the specified column value and includes it in a Cell Xml.
- * @param $p_value The value
- * @returns The Cell Xml.
+ * Escapes the specified column value and includes it in a Cell Xml as a string.
+ * @param string $p_value The value.
+ * @return string The Cell Xml.
  */
 function excel_prepare_string( $p_value ) {
-	$t_type = is_numeric( $p_value ) ? 'Number' : 'String';
+	return excel_get_cell( $p_value, 'String' );
+}
 
-	$t_value = str_replace( array ( '&', "\n", '<', '>'), array ( '&amp;', '&#10;', '&lt;', '&gt;' ),  $p_value );
-
-	return excel_get_cell( $t_value,  $t_type );
+/**
+ * Escapes the specified column value and includes it in a Cell Xml as a number.
+ * @param integer $p_value The value.
+ * @return string The Cell Xml.
+ */
+function excel_prepare_number( $p_value ) {
+	return excel_get_cell( $p_value, 'Number' );
 }
 
 /**
@@ -153,29 +183,35 @@ function excel_prepare_string( $p_value ) {
  * <p>All the parameters are assumed to be valid and escaped, as this function performs no
  * escaping of its own.</p>
  *
- * @param string $p_value
- * @param string $p_type
- * @param array $p_attributes An array where the keys are attribute names and values attribute
- * values for the <tt>Cell</tt> object
+ * @param string $p_value      Cell Value.
+ * @param string $p_type       Cell Type.
+ * @param array  $p_attributes An array where the keys are attribute names and values attribute
+ *                             values for the <tt>Cell</tt> object.
  * @return string
  */
-function excel_get_cell( $p_value, $p_type, $p_attributes = array() ) {
-	$t_ret = "<Cell ";
+function excel_get_cell( $p_value, $p_type, array $p_attributes = array() ) {
+	if ( !is_int( $p_value ) ) {
+		$t_value = str_replace( array( '&', "\n", '<', '>' ), array( '&amp;', '&#10;', '&lt;', '&gt;' ), $p_value );
+	} else {
+		$t_value = $p_value;
+	}
+
+	$t_ret = '<Cell ';
 
 	foreach ( $p_attributes as $t_attribute_name => $t_attribute_value ) {
 		$t_ret .= $t_attribute_name. '="' . $t_attribute_value . '" ';
 	}
 
-	$t_ret .= ">";
+	$t_ret .= '>';
 
-	$t_ret .= "<Data ss:Type=\"$p_type\">" . $p_value . "</Data></Cell>\n";
+	$t_ret .= '<Data ss:Type="' . $p_type . '">' . $t_value . "</Data></Cell>\n";
 
 	return $t_ret;
 }
 
 /**
  * Gets the columns to be included in the Excel Xml export.
- * @returns column names.
+ * @return array column names.
  */
 function excel_get_columns() {
 	$t_columns = helper_get_columns_to_view( COLUMNS_TARGET_EXCEL_PAGE );
@@ -190,46 +226,37 @@ function excel_get_columns() {
 #
 /**
  * Gets the formatted bug id value.
- * @param object $p_bug the bug
- * @returns The bug id prefixed with 0s.
+ * @param BugData $p_bug The bug object.
+ * @return string The bug id prefixed with 0s.
  */
-function excel_format_id( $p_bug ) {
-	return excel_prepare_string( bug_format_id( $p_bug->id ) );
+function excel_format_id( BugData $p_bug ) {
+	return excel_prepare_number( bug_format_id( $p_bug->id ) );
 }
 
 /**
  * Gets the formatted project id value.
- * @param object $p_bug the bug
- * @returns The project name.
+ * @param BugData $p_bug The bug object.
+ * @return string The project name.
  */
-function excel_format_project_id( $p_bug ) {
+function excel_format_project_id( BugData $p_bug ) {
 	return excel_prepare_string( project_get_name( $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted reporter id value.
- * @param object $p_bug the bug
- * @returns The reporter user name.
+ * @param BugData $p_bug A bug object.
+ * @return string The reporter user name.
  */
-function excel_format_reporter_id( $p_bug ) {
+function excel_format_reporter_id( BugData $p_bug ) {
 	return excel_prepare_string( user_get_name( $p_bug->reporter_id ) );
 }
 
 /**
- * Gets the formatted number of bug notes.
- * @param object $p_bug the bug
- * @returns The number of bug notes.
- */
-function excel_format_bugnotes_count( $p_bug ) {
-	return excel_prepare_string( $p_bug->bugnotes_count );
-}
-
-/**
  * Gets the formatted handler id.
- * @param object $p_bug the bug
- * @returns The handler user name or empty string.
+ * @param BugData $p_bug A bug object.
+ * @return string The handler user name or empty string.
  */
-function excel_format_handler_id( $p_bug ) {
+function excel_format_handler_id( BugData $p_bug ) {
 	if( $p_bug->handler_id > 0 ) {
 		return excel_prepare_string( user_get_name( $p_bug->handler_id ) );
 	} else {
@@ -239,217 +266,242 @@ function excel_format_handler_id( $p_bug ) {
 
 /**
  * Gets the formatted priority.
- * @param object $p_bug the bug
- * @returns the priority text.
+ * @param BugData $p_bug A bug object.
+ * @return string the priority text.
  */
-function excel_format_priority( $p_bug ) {
+function excel_format_priority( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'priority', $p_bug->priority, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted severity.
- * @param object $p_bug the bug
- * @returns the severity text.
+ * @param BugData $p_bug A bug object.
+ * @return string the severity text.
  */
-function excel_format_severity( $p_bug ) {
+function excel_format_severity( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'severity', $p_bug->severity, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted reproducibility.
- * @param object $p_bug the bug
- * @returns the reproducibility text.
+ * @param BugData $p_bug A bug object.
+ * @return string the reproducibility text.
  */
-function excel_format_reproducibility( $p_bug ) {
+function excel_format_reproducibility( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'reproducibility', $p_bug->reproducibility, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted view state,
- * @param object $p_bug the bug
- * @returns The view state
+ * @param BugData $p_bug A bug object.
+ * @return string The view state
  */
-function excel_format_view_state( $p_bug ) {
+function excel_format_view_state( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'view_state', $p_bug->view_state, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted projection.
- * @param object $p_bug the bug
- * @returns the projection text.
+ * @param BugData $p_bug A bug object.
+ * @return string the projection text.
  */
-function excel_format_projection( $p_bug ) {
+function excel_format_projection( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'projection', $p_bug->projection, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted eta.
- * @param object $p_bug the bug
- * @returns the eta text.
+ * @param BugData $p_bug A bug object.
+ * @return string the eta text.
  */
-function excel_format_eta( $p_bug ) {
+function excel_format_eta( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'eta', $p_bug->eta, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the status field.
- * @param object $p_bug the bug
- * @returns the formatted status.
+ * @param BugData $p_bug A bug object.
+ * @return string the formatted status.
  */
-function excel_format_status( $p_bug ) {
+function excel_format_status( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'status', $p_bug->status, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the resolution field.
- * @param object $p_bug the bug
- * @returns the formatted resolution.
+ * @param BugData $p_bug A bug object.
+ * @return string the formatted resolution.
  */
-function excel_format_resolution( $p_bug ) {
+function excel_format_resolution( BugData $p_bug ) {
 	return excel_prepare_string( get_enum_element( 'resolution', $p_bug->resolution, auth_get_current_user_id(), $p_bug->project_id ) );
 }
 
 /**
  * Gets the formatted version.
- * @param object $p_bug the bug
- * @returns the product version.
+ * @param BugData $p_bug A bug object.
+ * @return string the product version.
  */
-function excel_format_version( $p_bug ) {
+function excel_format_version( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->version );
 }
 
 /**
  * Gets the formatted fixed in version.
- * @param object $p_bug the bug
- * @returns the fixed in version.
+ * @param BugData $p_bug A bug object.
+ * @return string the fixed in version.
  */
-function excel_format_fixed_in_version( $p_bug ) {
+function excel_format_fixed_in_version( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->fixed_in_version );
 }
 
 /**
- * Gets the formatted target version.
- * @param object $p_bug the bug
- * @returns the target version.
+ * Gets the formatted tags.
+ * @param BugData $p_bug A bug object.
+ * @return string the tags.
  */
-function excel_format_target_version( $p_bug ) {
+function excel_format_tags( BugData $p_bug ) {
+	$t_value = '';
+
+	if( access_has_bug_level( config_get( 'tag_view_threshold' ), $p_bug->id ) ) {
+		$t_value = tag_bug_get_all( $p_bug->id );
+	}
+
+	return excel_prepare_string( $t_value );
+}
+
+/**
+ * Gets the formatted target version.
+ * @param BugData $p_bug A bug object.
+ * @return string the target version.
+ */
+function excel_format_target_version( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->target_version );
 }
 
 /**
  * Gets the formatted category.
- * @param object $p_bug the bug
- * @returns the category.
+ * @param BugData $p_bug A bug object.
+ * @return string the category.
  */
-function excel_format_category_id( $p_bug ) {
+function excel_format_category_id( BugData $p_bug ) {
 	return excel_prepare_string( category_full_name( $p_bug->category_id, false ) );
 }
 
 /**
  * Gets the formatted operating system.
- * @param object $p_bug the bug
- * @returns the operating system.
+ * @param BugData $p_bug A bug object.
+ * @return string the operating system.
  */
-function excel_format_os( $p_bug ) {
+function excel_format_os( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->os );
 }
 
 /**
  * Gets the formatted operating system build (version).
- * @param object $p_bug the bug
- * @returns the operating system build (version)
+ * @param BugData $p_bug A bug object.
+ * @return string the operating system build (version)
  */
-function excel_format_os_build( $p_bug ) {
+function excel_format_os_build( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->os_build );
 }
 
 /**
  * Gets the formatted product build,
- * @param object $p_bug the bug
- * @returns the product build.
+ * @param BugData $p_bug A bug object.
+ * @return string the product build.
  */
-function excel_format_build( $p_bug ) {
+function excel_format_build( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->build );
 }
 
 /**
  * Gets the formatted platform,
- * @param object $p_bug the bug
- * @returns the platform.
+ * @param BugData $p_bug A bug object.
+ * @return string the platform.
  */
-function excel_format_platform( $p_bug ) {
+function excel_format_platform( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->platform );
 }
 
 /**
  * Gets the formatted date submitted.
- * @param object $p_bug the bug
- * @returns the date submitted in short date format.
+ * @param BugData $p_bug A bug object.
+ * @return string the date submitted in short date format.
  */
-function excel_format_date_submitted( $p_bug ) {
+function excel_format_date_submitted( BugData $p_bug ) {
 	return excel_prepare_string( date( config_get( 'short_date_format' ), $p_bug->date_submitted ) );
 }
 
 /**
  * Gets the formatted date last updated.
- * @param object $p_bug the bug
- * @returns the date last updated in short date format.
+ * @param BugData $p_bug A bug object.
+ * @return string the date last updated in short date format.
  */
-function excel_format_last_updated( $p_bug ) {
+function excel_format_last_updated( BugData $p_bug ) {
 	return excel_prepare_string( date( config_get( 'short_date_format' ), $p_bug->last_updated ) );
 }
 
 /**
  * Gets the summary field.
- * @param object $p_bug the bug
- * @returns the formatted summary.
+ * @param BugData $p_bug A bug object.
+ * @return string the formatted summary.
  */
-function excel_format_summary( $p_bug ) {
+function excel_format_summary( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->summary );
 }
 
 /**
  * Gets the formatted selection.
- * @param object $p_bug the bug
- * @returns An formatted empty string.
+ * @param BugData $p_bug A bug object.
+ * @return string an formatted empty string.
  */
-function excel_format_selection( $p_bug ) {
+function excel_format_selection( BugData $p_bug ) {
 	return excel_prepare_string( '' );
 }
 
 /**
  * Gets the formatted description field.
- * @param object $p_bug the bug
- * @returns The formatted description (multi-line).
+ * @param BugData $p_bug A bug object.
+ * @return string The formatted description (multi-line).
  */
-function excel_format_description( $p_bug ) {
+function excel_format_description( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->description );
 }
 
 /**
- * Gets the formatted 'steps to reproduce' field.
- * @param object $p_bug the bug
- * @returns The formatted steps to reproduce (multi-line).
+ * Gets the formatted notes field.
+ * @param BugData $p_bug A bug object.
+ * @return string The formatted notes (multi-line).
  */
-function excel_format_steps_to_reproduce( $p_bug ) {
+function excel_format_notes( BugData $p_bug ) {
+	$t_notes = bugnote_get_all_visible_as_string( $p_bug->id, /* user_bugnote_order */ 'DESC', /* user_bugnote_limit */ 0 );
+	return excel_prepare_string( $t_notes );
+}
+
+/**
+ * Gets the formatted 'steps to reproduce' field.
+ * @param BugData $p_bug A bug object.
+ * @return string The formatted steps to reproduce (multi-line).
+ */
+function excel_format_steps_to_reproduce( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->steps_to_reproduce );
 }
 
 /**
  * Gets the formatted 'additional information' field.
- * @param object $p_bug the bug
- * @returns The formatted additional information (multi-line).
+ * @param BugData $p_bug A bug object.
+ * @return string The formatted additional information (multi-line).
  */
-function excel_format_additional_information( $p_bug ) {
+function excel_format_additional_information( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->additional_information );
 }
 
 /**
  * Gets the formatted value for the specified issue id, project and custom field.
- * @param $p_issue_id The issue id.
- * @param $p_project_id The project id.
- * @param $p_custom_field The custom field name (without 'custom_' prefix).
- * @returns The custom field value.
+ * @param integer $p_issue_id     The issue id.
+ * @param integer $p_project_id   The project id.
+ * @param string  $p_custom_field The custom field name (without 'custom_' prefix).
+ * @return string The custom field value.
  */
 function excel_format_custom_field( $p_issue_id, $p_project_id, $p_custom_field ) {
 	$t_field_id = custom_field_get_id_from_name( $p_custom_field );
@@ -460,26 +512,31 @@ function excel_format_custom_field( $p_issue_id, $p_project_id, $p_custom_field 
 
 	if( custom_field_is_linked( $t_field_id, $p_project_id ) ) {
 		$t_def = custom_field_get_definition( $t_field_id );
+
+		if ( $t_def['type'] == CUSTOM_FIELD_TYPE_NUMERIC ) {
+			return excel_prepare_number( string_custom_field_value( $t_def, $t_field_id, $p_issue_id ) );
+		}
+
 		return excel_prepare_string( string_custom_field_value( $t_def, $t_field_id, $p_issue_id ) );
 	}
 
-	// field is not linked to project
+	# field is not linked to project
 	return excel_prepare_string( '' );
 }
 
 /**
  * Gets the formatted value for the specified plugin column value.
- * @param $p_custom_field The plugin column name.
- * @param $p_bug The bug to print the column for (needed for the display function of the plugin column).
- * @returns The plugin column value.
+ * @param string  $p_column The plugin column name.
+ * @param BugData $p_bug    A bug object to print the column for - needed for the display function of the plugin column.
+ * @return string The plugin column value.
  */
-function excel_format_plugin_column_value( $p_column, $p_bug ) {
+function excel_format_plugin_column_value( $p_column, BugData $p_bug ) {
 	$t_plugin_columns = columns_get_plugin_columns();
 
-	if ( !isset( $t_plugin_columns[$p_column] ) ) {
+	if( !isset( $t_plugin_columns[$p_column] ) ) {
 		return excel_prepare_string( '' );
 	} else {
-		$t_column_object = $t_plugin_columns[ $p_column ];
+		$t_column_object = $t_plugin_columns[$p_column];
 		ob_start();
 		$t_column_object->display( $p_bug, COLUMNS_TARGET_EXCEL_PAGE );
 		$t_value = ob_get_clean();
@@ -489,21 +546,57 @@ function excel_format_plugin_column_value( $p_column, $p_bug ) {
 
 /**
  * Gets the formatted due date.
- * @param object $p_bug the bug
- * @returns The formatted due date.
+ * @param BugData $p_bug A bug object.
+ * @return string The formatted due date.
  */
-function excel_format_due_date( $p_bug ) {
-	return excel_prepare_string( date( config_get( 'short_date_format' ), $p_bug->due_date ) );
+function excel_format_due_date( BugData $p_bug ) {
+	$t_value = '';
+	if ( !date_is_null( $p_bug->due_date ) && access_has_bug_level( config_get( 'due_date_view_threshold' ), $p_bug->id ) ) {
+		$t_value = date( config_get( 'short_date_format' ), $p_bug->due_date );
+	}
+	return excel_prepare_string( $t_value );
 }
 
 /**
  * Gets the sponsorship total for an issue
- * @param object $p_bug the bug
+ * @param BugData $p_bug A bug object.
  * @return string
  * @access public
  */
-function excel_format_sponsorship_total( $p_bug ) {
+function excel_format_sponsorship_total( BugData $p_bug ) {
 	return excel_prepare_string( $p_bug->sponsorship_total );
+}
+
+/**
+ * Gets the attachment count for an issue
+ * @param BugData $p_bug A bug object.
+ * @return string
+ * @access public
+ */
+function excel_format_attachment_count( BugData $p_bug ) {
+	# Check for attachments
+	$t_attachment_count = 0;
+	if( file_can_view_bug_attachments( $p_bug->id, null ) ) {
+		$t_attachment_count = file_bug_attachment_count( $p_bug->id );
+	}
+	return excel_prepare_number( $t_attachment_count );
+}
+
+/**
+ * Gets the bug note count for an issue
+ * @param BugData $p_bug A bug object.
+ * @return string
+ * @access public
+ */
+function excel_format_bugnotes_count( BugData $p_bug ) {
+	# grab the bugnote count
+	$t_bugnote_stats = bug_get_bugnote_stats( $p_bug->id );
+	if( null !== $t_bugnote_stats ) {
+		$t_bugnote_count = $t_bugnote_stats['count'];
+	} else {
+		$t_bugnote_count = 0;
+	}
+	return excel_prepare_number( $t_bugnote_count );
 }
 
 /**
@@ -515,37 +608,62 @@ function excel_format_sponsorship_total( $p_bug ) {
  *
  */
 class ExcelStyle {
-
+	/**
+	 * Id
+	 */
 	private $id;
+
+	/**
+	 * Parent id
+	 */
 	private $parent_id;
 
+	/**
+	 * Interior
+	 */
 	private $interior;
+
+	/**
+	 * Font
+	 */
 	private $font;
+
+	/**
+	 * Border
+	 */
 	private $border;
+
+	/**
+	 * Alignment
+	 */
 	private $alignment;
 
 	/**
-	 * @param string $p_id The unique style id
-	 * @param string $p_parent_id The parent style id
+	 * Default Constructor
+	 * @param string $p_id        The unique style id.
+	 * @param string $p_parent_id The parent style id.
 	 */
-	function __construct( $p_id , $p_parent_id  = '') {
-
+	function __construct( $p_id, $p_parent_id = '' ) {
 		$this->id = $p_id;
 		$this->parent_id = $p_parent_id;
 	}
 
+	/**
+	 * Return ID
+	 * @return integer
+	 */
 	function getId() {
-
 		return $this->id;
 	}
 
 	/**
-	 * @param string $p_color the color in #rrggbb format or a named color
-	 * @param string $p_pattern
+	 * Set background color
+	 * @param string $p_color   The color in #rrggbb format or a named color.
+	 * @param string $p_pattern Fill Pattern.
+	 * @return void
 	 */
 	function setBackgroundColor( $p_color, $p_pattern = 'Solid' ) {
-
-		if ( ! isset ( $this->interior ) ) {
+		if( ! isset ( $this->interior ) ) {
 			$this->interior = new Interior();
 		}
 
@@ -554,33 +672,31 @@ class ExcelStyle {
 	}
 
 	/**
-	 *
-	 * @param int $p_bold 1 for bold, 0 for not bold
-	 * @param string $p_color the color in #rrggbb format or a named color
-	 * @param string $p_name the name of the font
-	 * @param int $p_italic 1 for italic, 0 for not italic
+	 * Set Font
+	 * @param integer $p_bold   Either 1 for bold, 0 for not bold.
+	 * @param string  $p_color  The color in #rrggbb format or a named color.
+	 * @param string  $p_name   The name of the font.
+	 * @param integer $p_italic Either 1 for italic, 0 for not italic.
+	 * @return void
 	 */
-
 	function setFont( $p_bold, $p_color = '', $p_name = '', $p_italic = -1 ) {
-
-		if ( ! isset ( $this->font ) ) {
+		if( !isset( $this->font ) ) {
 			$this->font = new Font();
 		}
 
-		if ( $p_bold != -1 ) {
+		if( $p_bold != -1 ) {
 			$this->font->bold = $p_bold;
 		}
-		if ( $p_color != '' ) {
+		if( $p_color != '' ) {
 			$this->font->color = $p_color;
 		}
-		if ( $p_name != '' ) {
+		if( $p_name != '' ) {
 			$this->font->fontName = $p_name;
 		}
-		if ( $p_italic != -1 ) {
+		if( $p_italic != -1 ) {
 			$this->font->italic = $p_italic;
 		}
 	}
-
 
 	/**
 	 * Sets the border values for the style
@@ -588,194 +704,262 @@ class ExcelStyle {
 	 * <p>The values are set for the following positions: Left, Top, Right, Bottom. There is no
 	 * support for setting individual values.</p>
 	 *
-	 * @param string $p_color the color in #rrggbb format or a named color
-	 * @param string $p_line_style None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, or Double
-	 * @param string $p_weight Thickness in points
+	 * @param string  $p_color      The color in #rrggbb format or a named color.
+	 * @param string  $p_line_style None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, or Double.
+	 * @param integer $p_weight     Thickness in points.
+	 * @return void
 	 */
-	function setBorder( $p_color, $p_line_style = 'Continuous', $p_weight = 1) {
-
-		if ( ! isset ( $this->border ) ) {
+	function setBorder( $p_color, $p_line_style = 'Continuous', $p_weight = 1 ) {
+		if( !isset( $this->border ) ) {
 			$this->border = new Border();
 		}
 
-		if ( $p_color != '' ) {
+		if( $p_color != '' ) {
 			$this->border->color = $p_color;
 		}
 
-		if ( $p_line_style != '' ) {
+		if( $p_line_style != '' ) {
 			$this->border->lineStyle = $p_line_style;
 		}
 
-		if ( $p_weight != -1 ) {
+		if( $p_weight != -1 ) {
 			$this->border->weight = $p_weight;
 		}
 	}
 
 	/**
-	 * Sets the aligment for the style
+	 * Sets the alignment for the style
 	 *
-	 * @param int $p_wrap_text 1 to wrap, 0 to not wrap
-	 * @param string $p_horizontal Automatic, Left, Center, Right, Fill, Justify, CenterAcrossSelection, Distributed, and JustifyDistributed
-	 * @param string $p_vertical Automatic, Top, Bottom, Center, Justify, Distributed, and JustifyDistributed
+	 * @param integer $p_wrap_text  Either 1 to wrap, 0 to not wrap.
+	 * @param string  $p_horizontal Automatic, Left, Center, Right, Fill, Justify, CenterAcrossSelection, Distributed, and JustifyDistributed.
+	 * @param string  $p_vertical   Automatic, Top, Bottom, Center, Justify, Distributed, and JustifyDistributed.
+	 * @return void
 	 */
-	function setAlignment( $p_wrap_text, $p_horizontal = '', $p_vertical = '') {
-
-		if ( ! isset ( $this->alignment ) ) {
+	function setAlignment( $p_wrap_text, $p_horizontal = '', $p_vertical = '' ) {
+		if( !isset( $this->alignment ) ) {
 			$this->alignment = new Alignment();
 		}
 
-		if ( $p_wrap_text != '' ) {
+		if( $p_wrap_text != '' ) {
 			$this->alignment->wrapText = $p_wrap_text;
 		}
 
-		if ( $p_horizontal != '' ) {
+		if( $p_horizontal != '' ) {
 			$this->alignment->horizontal = $p_horizontal;
 		}
 
-		if ( $p_vertical != '' ) {
+		if( $p_vertical != '' ) {
 			$this->alignment->vertical = $p_vertical;
 		}
-
 	}
 
+	/**
+	 * Return XML
+	 * @return string
+	 */
 	function asXml() {
+		$t_xml = '<ss:Style ss:ID="' . $this->id.'" ss:Name="'.$this->id.'" ';
+		if( $this->parent_id != '' ) {
+			$t_xml .= 'ss:Parent="' . $this->parent_id .'" ';
+		}
+		$t_xml .= '>';
+		if( $this->interior ) {
+			$t_xml .= $this->interior->asXml();
+		}
+		if( $this->font ) {
+			$t_xml .= $this->font->asXml();
+		}
+		if( $this->border ) {
+			$t_xml .= $this->border->asXml();
+		}
+		if( $this->alignment ) {
+			$t_xml .= $this->alignment->asXml();
+		}
+		$t_xml .= '</ss:Style>'."\n";
 
-		$xml = '<ss:Style ss:ID="' . $this->id.'" ss:Name="'.$this->id.'" ';
-		if ( $this->parent_id != '' ) {
-			$xml .= 'ss:Parent="' . $this->parent_id .'" ';
-		}
-		$xml .= '>';
-		if ( $this->interior ) {
-			$xml .= $this->interior->asXml();
-		}
-		if ( $this->font ) {
-			$xml .= $this->font->asXml();
-		}
-		if ( $this->border ) {
-			$xml .= $this->border->asXml();
-		}
-		if ( $this->alignment ) {
-			$xml .= $this->alignment->asXml();
-		}
-		$xml .= '</ss:Style>'."\n";
-
-		return $xml;
+		return $t_xml;
 	}
 }
 
+/**
+ * Interior
+ */
 class Interior {
-
+	/**
+	 * Color
+	 */
 	public $color;
+
+	/**
+	 * Pattern
+	 */
 	public $pattern;
 
+	/**
+	 * Return XML
+	 * @return string
+	 */
 	function asXml() {
+		$t_xml = '<ss:Interior ';
 
-		$xml = '<ss:Interior ';
-
-		if ( $this->color ) {
-		   $xml .= 'ss:Color="' . $this->color .'" ss:Pattern="'. $this->pattern . '" ';
+		if( $this->color ) {
+		   $t_xml .= 'ss:Color="' . $this->color .'" ss:Pattern="'. $this->pattern . '" ';
 		}
 
-		$xml .= '/>';
+		$t_xml .= '/>';
 
-		return $xml;
+		return $t_xml;
 	}
 }
 
+/**
+ * Font
+ */
 class Font {
-
+	/**
+	 * Bold
+	 */
 	public $bold;
+
+	/**
+	 * Colour
+	 */
 	public $color;
+
+	/**
+	 * Font Name
+	 */
 	public $fontName;
+
+	/**
+	 * Italic
+	 */
 	public $italic;
 
+	/**
+	 * Return XML
+	 * @return string
+	 */
 	function asXml() {
+		$t_xml = '<ss:Font ';
 
-		$xml = '<ss:Font ';
-
-		if ( $this->bold ) {
-			$xml .= 'ss:Bold="' . $this->bold .'" ';
+		if( $this->bold ) {
+			$t_xml .= 'ss:Bold="' . $this->bold .'" ';
 		}
 
-		if ( $this->color ) {
-			$xml .= 'ss:Color="' . $this->color .'" ';
+		if( $this->color ) {
+			$t_xml .= 'ss:Color="' . $this->color .'" ';
 		}
 
-		if ( $this->fontName) {
-			$xml .= 'ss:FontName="' . $this->fontName .'" ';
+		if( $this->fontName ) {
+			$t_xml .= 'ss:FontName="' . $this->fontName .'" ';
 		}
 
-		if ( $this->italic ) {
-			$xml .= 'ss:Italic="' . $this->italic .'" ';
+		if( $this->italic ) {
+			$t_xml .= 'ss:Italic="' . $this->italic .'" ';
 		}
 
-		$xml .= '/>';
+		$t_xml .= '/>';
 
-		return $xml;
+		return $t_xml;
 	}
 }
 
+/**
+ * Border
+ */
 class Border {
-
+	/**
+	 * Border Positions
+	 */
 	private $positions = array('Left', 'Top', 'Right', 'Bottom');
 
+	/**
+	 * Color
+	 */
 	public $color;
+
+	/**
+	 * Line Style
+	 */
 	public $lineStyle;
+
+	/**
+	 * Border Weight
+	 */
 	public $weight;
 
+	/**
+	 * Return XML
+	 * @return string
+	 */
 	function asXml() {
-
-		$xml = '<ss:Borders>';
+		$t_xml = '<ss:Borders>';
 
 		foreach ( $this->positions as $p_position ) {
+			$t_xml.= '<ss:Border ss:Position="' . $p_position .'" ';
 
-			$xml.= '<ss:Border ss:Position="' . $p_position .'" ';
-
-			if ( $this->lineStyle ) {
-				$xml .= 'ss:LineStyle="' . $this->lineStyle .'" ';
+			if( $this->lineStyle ) {
+				$t_xml .= 'ss:LineStyle="' . $this->lineStyle .'" ';
 			}
 
-			if ( $this->color ) {
-				$xml .= 'ss:Color="' . $this->color .'" ';
+			if( $this->color ) {
+				$t_xml .= 'ss:Color="' . $this->color .'" ';
 			}
 
-			if ( $this->weight) {
-				$xml .= 'ss:Weight="' . $this->weight .'" ';
+			if( $this->weight ) {
+				$t_xml .= 'ss:Weight="' . $this->weight .'" ';
 			}
 
-			$xml.= '/>';
+			$t_xml.= '/>';
 		}
 
-		$xml .= '</ss:Borders>';
+		$t_xml .= '</ss:Borders>';
 
-		return $xml;
+		return $t_xml;
 	}
 }
 
+/**
+ * Alignment
+ */
 class Alignment {
-
+	/**
+	 * Wrap Text
+	 */
 	public $wrapText;
+
+	/**
+	 * Horizontal
+	 */
 	public $horizontal;
+
+	/**
+	 * Vertical
+	 */
 	public $vertical;
 
+	/**
+	 * Return XML
+	 * @return string
+	 */
 	function asXml() {
+		$t_xml = '<ss:Alignment ';
 
-		$xml = '<ss:Alignment ';
-
-		if ( $this->wrapText ) {
-			$xml .= 'ss:WrapText="' . $this->wrapText.'" ';
+		if( $this->wrapText ) {
+			$t_xml .= 'ss:WrapText="' . $this->wrapText.'" ';
 		}
 
-		if ( $this->horizontal ) {
-			$xml .= 'ss:Horizontal="' . $this->horizontal.'" ';
+		if( $this->horizontal ) {
+			$t_xml .= 'ss:Horizontal="' . $this->horizontal.'" ';
 		}
 
-		if ( $this->vertical ) {
-			$xml .= 'ss:Vertical="' . $this->vertical.'" ';
+		if( $this->vertical ) {
+			$t_xml .= 'ss:Vertical="' . $this->vertical.'" ';
 		}
 
-		$xml .= '/>';
+		$t_xml .= '/>';
 
-		return $xml;
+		return $t_xml;
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,8 +13,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * MantisBT Constants
+ *
+ */
 
-define( 'MANTIS_VERSION', '1.2.19' );
+/**
+ * Mantis Version
+ */
+define( 'MANTIS_VERSION', '1.3.2' );
+define( 'FILTER_VERSION', 'v9' );
 
 # --- constants -------------------
 # magic numbers
@@ -31,12 +39,17 @@ define( 'PHP_CLI', 0 );
 define( 'PHP_CGI', 1 );
 
 # installation
-define( 'CONFIGURED_PASSWORD', "______" );
+define( 'CONFIGURED_PASSWORD', '______' );
+define( 'DB_MIN_VERSION_ADODB', '5.20.2' );  # For mssql, oracle and pgsql
+define( 'DB_MIN_VERSION_MSSQL', '9.0.0' );
+define( 'DB_MIN_VERSION_MYSQL', '5.0.8' );   # See #16584
+define( 'DB_MIN_VERSION_PGSQL', '9.0' );     # Earliest supported version as of August 2014
 
 # error types
 define( 'ERROR', E_USER_ERROR );
 define( 'WARNING', E_USER_WARNING );
 define( 'NOTICE', E_USER_NOTICE );
+define( 'DEPRECATED', E_USER_DEPRECATED );
 
 # access levels
 define( 'ANYBODY', 0 );
@@ -66,7 +79,7 @@ define( 'CLOSED', 90 );
 define( 'OPEN', 10 );
 define( 'FIXED', 20 );
 define( 'REOPENED', 30 );
-define( 'UNABLE_TO_DUPLICATE', 40 );
+define( 'UNABLE_TO_REPRODUCE', 40 );
 define( 'NOT_FIXABLE', 50 );
 define( 'DUPLICATE', 60 );
 define( 'NOT_A_BUG', 70 );
@@ -138,7 +151,6 @@ define( 'HTTP_AUTH', 6 );
 # file upload methods
 define( 'DISK', 1 );
 define( 'DATABASE', 2 );
-define( 'FTP', 3 );
 
 # show variable values
 define( 'BOTH', 0 );
@@ -182,7 +194,6 @@ define( 'BUG_ADD_RELATIONSHIP', 18 );
 define( 'BUG_DEL_RELATIONSHIP', 19 );
 define( 'BUG_CLONED_TO', 20 );
 define( 'BUG_CREATED_FROM', 21 );
-define( 'CHECKIN', 22 );
 define( 'BUG_REPLACE_RELATIONSHIP', 23 );
 define( 'BUG_PAID_SPONSORSHIP', 24 );
 define( 'TAG_ATTACHED', 25 );
@@ -208,6 +219,13 @@ define( 'BUG_DEPENDANT', 2 );
 define( 'BUG_BLOCKS', 3 );
 define( 'BUG_HAS_DUPLICATE', 4 );
 
+# bug update types
+define( 'BUG_UPDATE_TYPE_NORMAL', 'update' );
+define( 'BUG_UPDATE_TYPE_ASSIGN', 'assign' );
+define( 'BUG_UPDATE_TYPE_CLOSE', 'close' );
+define( 'BUG_UPDATE_TYPE_REOPEN', 'reopen' );
+define( 'BUG_UPDATE_TYPE_CHANGE_STATUS', 'change_status' );
+
 # error messages
 define( 'ERROR_GENERIC', 0 );
 define( 'ERROR_SQL', 1 );
@@ -220,18 +238,24 @@ define( 'ERROR_EMPTY_FIELD', 11 );
 define( 'ERROR_PROTECTED_ACCOUNT', 12 );
 define( 'ERROR_ACCESS_DENIED', 13 );
 define( 'ERROR_UPLOAD_FAILURE', 15 );
-define( 'ERROR_FTP_CONNECT_ERROR', 16 );
 define( 'ERROR_HANDLER_ACCESS_TOO_LOW', 17 );
 define( 'ERROR_PAGE_REDIRECTION', 18 );
 define( 'ERROR_INVALID_REQUEST_METHOD', 19 );
 define( 'ERROR_INVALID_SORT_FIELD', 20 );
 define( 'ERROR_INVALID_DATE_FORMAT', 21 );
 define( 'ERROR_UPDATING_TIMEZONE', 22 );
+define( 'ERROR_DEPRECATED_SUPERSEDED', 23 );
+define( 'ERROR_INVALID_RESOLUTION', 24 );
+define( 'ERROR_DISPLAY_USER_ERROR_INLINE', 25 );
+define( 'ERROR_TYPE_MISMATCH', 26 );
+define( 'ERROR_SPAM_SUSPECTED', 27 );
+define( 'ERROR_FIELD_TOO_LONG', 28 );
 
 # ERROR_CONFIG_*
 define( 'ERROR_CONFIG_OPT_NOT_FOUND', 100 );
 define( 'ERROR_CONFIG_OPT_INVALID', 101 );
 define( 'ERROR_CONFIG_OPT_CANT_BE_SET_IN_DB', 102 );
+define( 'ERROR_CONFIG_OPT_BAD_SYNTAX', 103 );
 
 # ERROR_GPC_*
 define( 'ERROR_GPC_VAR_NOT_FOUND', 200 );
@@ -247,6 +271,7 @@ define( 'ERROR_DB_CONNECT_FAILED', 400 );
 define( 'ERROR_DB_QUERY_FAILED', 401 );
 define( 'ERROR_DB_SELECT_FAILED', 402 );
 define( 'ERROR_DB_FIELD_NOT_FOUND', 403 );
+define( 'ERROR_DB_IDENTIFIER_TOO_LONG', 404 );
 
 # ERROR_FILE_*
 define( 'ERROR_FILE_TOO_BIG', 500 );
@@ -255,6 +280,7 @@ define( 'ERROR_FILE_DUPLICATE', 502 );
 define( 'ERROR_FILE_INVALID_UPLOAD_PATH', 503 );
 define( 'ERROR_FILE_NO_UPLOAD_FAILURE', 504 );
 define( 'ERROR_FILE_MOVE_FAILED', 505 );
+define( 'ERROR_FILE_NOT_FOUND', 506 );
 
 # ERROR_BUGNOTE_*
 define( 'ERROR_BUGNOTE_NOT_FOUND', 600 );
@@ -278,6 +304,8 @@ define( 'ERROR_USER_CHANGE_LAST_ADMIN', 808 );
 define( 'ERROR_USER_REAL_NAME_INVALID', 809 );
 define( 'ERROR_USER_BY_NAME_NOT_FOUND', 810 );
 define( 'ERROR_USER_BY_ID_NOT_FOUND', 811 );
+define( 'ERROR_USER_CURRENT_PASSWORD_MISMATCH', 812 );
+define( 'ERROR_USER_EMAIL_NOT_UNIQUE', 813 );
 
 # ERROR_AUTH_*
 define( 'ERROR_AUTH_INVALID_COOKIE', 900 );
@@ -288,11 +316,10 @@ define( 'ERROR_NEWS_NOT_FOUND', 1000 );
 # ERROR_BUG_*
 define( 'ERROR_BUG_NOT_FOUND', 1100 );
 define( 'ERROR_BUG_DUPLICATE_SELF', 1101 );
-define( 'ERROR_BUG_RESOLVED_ACTION_DENIED', 1102 );
-define( 'ERROR_BUG_REVISION_NOT_FOUND', 1150 );
-
-// @@@ obsolete, remove after lang files are sync'd
 define( 'ERROR_BUG_READ_ONLY_ACTION_DENIED', 1103 );
+define( 'ERROR_BUG_RESOLVE_DEPENDANTS_BLOCKING', 1104 );
+define( 'ERROR_BUG_CONFLICTING_EDIT', 1105 );
+define( 'ERROR_BUG_REVISION_NOT_FOUND', 1150 );
 
 # ERROR_EMAIL_*
 define( 'ERROR_EMAIL_INVALID', 1200 );
@@ -304,6 +331,7 @@ define( 'ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE', 1301 );
 define( 'ERROR_CUSTOM_FIELD_IN_USE', 1302 );
 define( 'ERROR_CUSTOM_FIELD_INVALID_VALUE', 1303 );
 define( 'ERROR_CUSTOM_FIELD_INVALID_DEFINITION', 1304 );
+define( 'ERROR_CUSTOM_FIELD_NOT_LINKED_TO_PROJECT', 1305 );
 define( 'ERROR_CUSTOM_FIELD_INVALID_PROPERTY', 1306 );
 
 # ERROR_LDAP_*
@@ -319,6 +347,7 @@ define( 'ERROR_CATEGORY_NO_ACTION', 1501 );
 define( 'ERROR_CATEGORY_NOT_FOUND', 1502 );
 define( 'ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT', 1503 );
 define( 'ERROR_CATEGORY_CANNOT_DELETE_DEFAULT', 1504 );
+define( 'ERROR_CATEGORY_CANNOT_DELETE_HAS_ISSUES', 1505 );
 
 # ERROR_VERSION_*
 define( 'ERROR_VERSION_DUPLICATE', 1600 );
@@ -350,9 +379,6 @@ define( 'ERROR_LOST_PASSWORD_MAX_IN_PROGRESS_ATTEMPTS_REACHED', 1905 );
 define( 'ERROR_FILTER_NOT_FOUND', 2000 );
 define( 'ERROR_FILTER_TOO_OLD', 2001 );
 
-# ERROR_TWITTER_*
-define( 'ERROR_TWITTER_NO_CURL_EXT', 2100 );
-
 # ERROR_TAG_*
 define( 'ERROR_TAG_NOT_FOUND', 2200 );
 define( 'ERROR_TAG_DUPLICATE', 2201 );
@@ -373,6 +399,11 @@ define( 'ERROR_PLUGIN_PAGE_NOT_FOUND', 2502 );
 define( 'ERROR_PLUGIN_UPGRADE_FAILED', 2503 );
 define( 'ERROR_PLUGIN_INSTALL_FAILED', 2504 );
 define( 'ERROR_PLUGIN_UPGRADE_NEEDED', 2505 );
+define( 'ERROR_PLUGIN_NOT_LOADED', 2506 );
+define( 'ERROR_PLUGIN_INVALID_PAGE', 2507 );
+define( 'ERROR_PLUGIN_INVALID_FILE', 2508 );
+define( 'ERROR_PLUGIN_FILE_NOT_FOUND', 2509 );
+define( 'ERROR_PLUGIN_CLASS_NOT_FOUND', 2510 );
 define( 'ERROR_PLUGIN_GENERIC', 2599 );
 
 # ERROR_COLUMNS_*
@@ -387,13 +418,21 @@ define( 'ERROR_SESSION_NOT_VALID', 2702 );
 # ERROR_FORM_*
 define( 'ERROR_FORM_TOKEN_INVALID', 2800 );
 
+# ERROR_CRYPTO_*
+define( 'ERROR_CRYPTO_MASTER_SALT_INVALID', 2900 );
+define( 'ERROR_CRYPTO_CAN_NOT_GENERATE_STRONG_RANDOMNESS', 2901 );
+
+# ERROR_API_TOKEN_*
+define( 'ERROR_API_TOKEN_NAME_NOT_UNIQUE', 3000 );
+
 # Generic position constants
 define( 'POSITION_NONE', 0 );
 define( 'POSITION_TOP', 1 );
 define( 'POSITION_BOTTOM', 2 );
-define( 'POSITION_BOTH', 3 );
+define( 'POSITION_BOTH', 3 ); # POSITION_TOP | POSITION_BOTTOM (bitwise OR)
 
 # Status Legend Position
+define( 'STATUS_LEGEND_POSITION_NONE', POSITION_NONE );
 define( 'STATUS_LEGEND_POSITION_TOP', POSITION_TOP );
 define( 'STATUS_LEGEND_POSITION_BOTTOM', POSITION_BOTTOM );
 define( 'STATUS_LEGEND_POSITION_BOTH', POSITION_BOTH );
@@ -403,10 +442,6 @@ define( 'FILTER_POSITION_NONE', POSITION_NONE );
 define( 'FILTER_POSITION_TOP', POSITION_TOP );
 define( 'FILTER_POSITION_BOTTOM', POSITION_BOTTOM );
 define( 'FILTER_POSITION_BOTH', POSITION_BOTH );
-
-// FILTER_POSITION_TOP | FILTER_POSITION_BOTTOM (bitwise OR)
-# Flags for settings E-mail categories
-define( 'EMAIL_CATEGORY_PROJECT_CATEGORY', 1 );
 
 # Custom Field types
 define( 'CUSTOM_FIELD_TYPE_STRING', 0 );
@@ -419,6 +454,7 @@ define( 'CUSTOM_FIELD_TYPE_LIST', 6 );
 define( 'CUSTOM_FIELD_TYPE_MULTILIST', 7 );
 define( 'CUSTOM_FIELD_TYPE_DATE', 8 );
 define( 'CUSTOM_FIELD_TYPE_RADIO', 9 );
+define( 'CUSTOM_FIELD_TYPE_TEXTAREA', 10 );
 
 # Meta filter values
 define( 'META_FILTER_MYSELF', -1 );
@@ -434,13 +470,13 @@ define( 'FILTER_TYPE_MULTI_STRING', 3 );
 define( 'FILTER_TYPE_MULTI_INT', 4 );
 
 # Filter match types
-define( 'FILTER_MATCH_ALL', 0);
-define( 'FILTER_MATCH_ANY', 1);
+define( 'FILTER_MATCH_ALL', 0 );
+define( 'FILTER_MATCH_ANY', 1 );
 
 # Versions
 define( 'VERSION_ALL', null );
-define( 'VERSION_FUTURE', 0 );
-define( 'VERSION_RELEASED', 1 );
+define( 'VERSION_FUTURE', false );
+define( 'VERSION_RELEASED', true );
 
 # Contexts for bug summary
 define( 'SUMMARY_CAPTION', 1 );
@@ -459,6 +495,8 @@ define( 'TOKEN_GRAPH', 2 );
 define( 'TOKEN_LAST_VISITED', 3 );
 define( 'TOKEN_AUTHENTICATED', 4 );
 define( 'TOKEN_COLLAPSE', 5 );
+define( 'TOKEN_ACCOUNT_VERIFY', 6 );
+define( 'TOKEN_ACCOUNT_ACTIVATION', 7 );
 define( 'TOKEN_USER', 1000 );
 
 # token expirations
@@ -468,6 +506,7 @@ define( 'TOKEN_EXPIRY', 60 * 60 );
 define( 'TOKEN_EXPIRY_LAST_VISITED', 24 * 60 * 60 );
 define( 'TOKEN_EXPIRY_AUTHENTICATED', 5 * 60 );
 define( 'TOKEN_EXPIRY_COLLAPSE', 365 * 24 * 60 * 60 );
+define( 'TOKEN_EXPIRY_ACCOUNT_ACTIVATION', 24 * 60 * 60 );
 
 # config types
 define( 'CONFIG_TYPE_DEFAULT', 0 );
@@ -493,16 +532,23 @@ define( 'CUSTOM_FIELD_TYPE_BUGNOTE', 2 );
 define( 'CUSTOM_FIELD_TYPE_PROJECT', 3 );
 define( 'CUSTOM_FIELD_TYPE_FILE', 4 );
 
+# display types for $g_display_errors
+define( 'DISPLAY_ERROR_HALT', 'halt' );
+define( 'DISPLAY_ERROR_INLINE', 'inline' );
+define( 'DISPLAY_ERROR_NONE', 'none' );
+
 # system logging
-#  logging levels, can be OR'd together
-define( 'LOG_NONE',                     0 );  # no logging
-define( 'LOG_EMAIL',                    1 );  # all emails sent
-define( 'LOG_EMAIL_RECIPIENT',          2 );  # details of email recipient determination
-define( 'LOG_FILTERING',                4 );  # logging for filtering.
-define( 'LOG_AJAX',                     8 );  # logging for AJAX / XmlHttpRequests
-define( 'LOG_LDAP',                     16 );  # logging for ldap
-define( 'LOG_DATABASE',                 32 );  # logging for ldap
-define( 'LOG_SOAP',                     64 );  # logging for SOAP
+# The logging levels can be combined using bitwise operators
+define( 'LOG_ALL', ~0 );            # All possible log levels
+define( 'LOG_NONE', 0 );            # no logging
+define( 'LOG_EMAIL', 1 );           # all emails sent
+define( 'LOG_EMAIL_RECIPIENT', 2 ); # details of email recipient determination
+define( 'LOG_FILTERING', 4 );       # logging for filtering.
+define( 'LOG_AJAX', 8 );            # logging for AJAX / XmlHttpRequests
+define( 'LOG_LDAP', 16 );           # logging for LDAP
+define( 'LOG_DATABASE', 32 );       # logging for Database
+define( 'LOG_WEBSERVICE', 64 );     # logging for Web Service Requests
+define( 'LOG_EMAIL_VERBOSE', 128 ); # logging for verbose email internals
 
 # COLUMNS_TARGET_*
 define( 'COLUMNS_TARGET_VIEW_PAGE', 1 );
@@ -527,19 +573,48 @@ define( 'TIMELINE_TARGETTED', 1 );
 define( 'TIMELINE_FIXED', 2 );
 
 # PHPMailer Methods
-define( 'PHPMAILER_METHOD_MAIL',		0 );
-define( 'PHPMAILER_METHOD_SENDMAIL',	1 );
-define( 'PHPMAILER_METHOD_SMTP',		2 );
+define( 'PHPMAILER_METHOD_MAIL', 0 );
+define( 'PHPMAILER_METHOD_SENDMAIL', 1 );
+define( 'PHPMAILER_METHOD_SMTP', 2 );
+
+# Binary flag values for $g_email_shutdown_processing
+define( 'EMAIL_SHUTDOWN_SKIP', 0 );
+define( 'EMAIL_SHUTDOWN_GENERATED', 1 );
+define( 'EMAIL_SHUTDOWN_FORCE', 2 );
 
 # Lengths - NOTE: these may represent hard-coded values in db schema and should not be changed.
-define( 'DB_FIELD_SIZE_USERNAME', 32);
-define( 'DB_FIELD_SIZE_REALNAME', 64);
-define( 'DB_FIELD_SIZE_PASSWORD', 32);
+# Note: 191 comes from a MySQL/InnoDB limitation on Index key size (767 bytes)
+# divided by 4 (bytes per unicode char), see #20431:52209 for details.
+define( 'DB_FIELD_SIZE_USERNAME', 191 );
+define( 'DB_FIELD_SIZE_REALNAME', 255 );
+define( 'DB_FIELD_SIZE_PASSWORD', 64 );
+define( 'DB_FIELD_SIZE_API_TOKEN_NAME', 128 );
 
 # Maximum size for the user's password when storing it as a hash
 define( 'PASSWORD_MAX_SIZE_BEFORE_HASH', 1024 );
 
 define( 'SECONDS_PER_DAY', 86400 );
 
-define( 'CAPTCHA_KEY', 'captcha_key' );
-define( 'CAPTCHA_IMG', 'captcha_image' );
+# Auto-generated link targets
+define( 'LINKS_SAME_WINDOW', 1 );
+define( 'LINKS_NEW_WINDOW', 2 );
+
+# Obsolete / deprecated constants
+# Defined below for backwards-compatibility purposes -- Do not use them
+#        Constant                                   # Replaced by
+define( 'UNABLE_TO_DUPLICATE', 40 );                # UNABLE_TO_REPRODUCE
+define( 'ERROR_BUG_RESOLVED_ACTION_DENIED', 1102 ); # N/A
+define( 'LOG_SOAP', 64 );                           # LOG_WEBSERVICE
+define( 'FTP', 1 );                                 # DISK
+define( 'ERROR_FTP_CONNECT_ERROR', 16 );            # N/A
+
+# JQuery and JQuery UI
+define ( 'JQUERY_VERSION', '1.12.4' );
+define ( 'JQUERY_UI_VERSION', '1.11.4' );
+
+# Byte Order Markers
+define( 'UTF8_BOM', "\xEF\xBB\xBF" );
+
+# Maximum number of bugs that are treated simutaneously in export procedures,
+# to keep memory usage under control. Do not exceed 1000 if using Oracle DB.
+define( 'EXPORT_BLOCK_SIZE', 500 );

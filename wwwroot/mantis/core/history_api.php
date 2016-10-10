@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,22 +15,63 @@
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * History API
+ *
  * @package CoreAPI
  * @subpackage HistoryAPI
- * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  * @link http://www.mantisbt.org
+ *
+ * @uses access_api.php
+ * @uses authentication_api.php
+ * @uses bug_api.php
+ * @uses bug_revision_api.php
+ * @uses bugnote_api.php
+ * @uses columns_api.php
+ * @uses config_api.php
+ * @uses constant_inc.php
+ * @uses custom_field_api.php
+ * @uses database_api.php
+ * @uses gpc_api.php
+ * @uses helper_api.php
+ * @uses lang_api.php
+ * @uses project_api.php
+ * @uses relationship_api.php
+ * @uses sponsorship_api.php
+ * @uses user_api.php
+ * @uses utility_api.php
  */
+
+require_api( 'access_api.php' );
+require_api( 'authentication_api.php' );
+require_api( 'bug_api.php' );
+require_api( 'bug_revision_api.php' );
+require_api( 'bugnote_api.php' );
+require_api( 'columns_api.php' );
+require_api( 'config_api.php' );
+require_api( 'constant_inc.php' );
+require_api( 'custom_field_api.php' );
+require_api( 'database_api.php' );
+require_api( 'gpc_api.php' );
+require_api( 'helper_api.php' );
+require_api( 'lang_api.php' );
+require_api( 'project_api.php' );
+require_api( 'relationship_api.php' );
+require_api( 'sponsorship_api.php' );
+require_api( 'user_api.php' );
+require_api( 'utility_api.php' );
 
 /**
  * log the changes (old / new value are supplied to reduce db access)
  * events should be logged *after* the modification
- * @param int $p_bug_id
- * @param string $p_field_name
- * @param string $p_old_value
- * @param string $p_new_value
- * @param int $p_user_id
- * @param int $p_type
+ * @param integer $p_bug_id     The bug identifier of the bug being modified.
+ * @param string  $p_field_name The field name of the field being modified.
+ * @param string  $p_old_value  The old value of the field.
+ * @param string  $p_new_value  The new value of the field.
+ * @param integer $p_user_id    The user identifier of the user modifying the bug.
+ * @param integer $p_type       The type of the modification.
+ * @return void
  */
 function history_log_event_direct( $p_bug_id, $p_field_name, $p_old_value, $p_new_value, $p_user_id = null, $p_type = 0 ) {
 	# Only log events that change the value
@@ -40,29 +81,25 @@ function history_log_event_direct( $p_bug_id, $p_field_name, $p_old_value, $p_ne
 		}
 
 		$c_field_name = $p_field_name;
-		$c_old_value = ( is_null( $p_old_value ) ? '' : $p_old_value );
-		$c_new_value = ( is_null( $p_new_value ) ? '' : $p_new_value );
-		$c_bug_id = db_prepare_int( $p_bug_id );
-		$c_user_id = db_prepare_int( $p_user_id );
-		$c_type = db_prepare_int( $p_type );
+		$c_old_value = ( is_null( $p_old_value ) ? '' : (string)$p_old_value );
+		$c_new_value = ( is_null( $p_new_value ) ? '' : (string)$p_new_value );
 
-		$t_mantis_bug_history_table = db_get_table( 'mantis_bug_history_table' );
-
-		$query = "INSERT INTO $t_mantis_bug_history_table
+		db_param_push();
+		$t_query = 'INSERT INTO {bug_history}
 						( user_id, bug_id, date_modified, field_name, old_value, new_value, type )
 					VALUES
-						( " . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ' )';
-		$result = db_query_bound( $query, Array( $c_user_id, $c_bug_id, db_now(), $c_field_name, $c_old_value, $c_new_value, $c_type ) );
+						( ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ' )';
+		db_query( $t_query, array( $p_user_id, $p_bug_id, db_now(), $c_field_name, $c_old_value, $c_new_value, $p_type ) );
 	}
 }
 
 /**
  * log the changes
  * events should be logged *after* the modification
- * @param int $p_bug_id
- * @param string $p_field_name
- * @param string $p_old_value
- * @return null
+ * @param integer $p_bug_id     The bug identifier of the bug being modified.
+ * @param string  $p_field_name The field name of the field being modified.
+ * @param string  $p_old_value  The old value of the field.
+ * @return void
  */
 function history_log_event( $p_bug_id, $p_field_name, $p_old_value ) {
 	history_log_event_direct( $p_bug_id, $p_field_name, $p_old_value, bug_get_field( $p_bug_id, $p_field_name ) );
@@ -72,165 +109,266 @@ function history_log_event( $p_bug_id, $p_field_name, $p_old_value ) {
  * log the changes
  * events should be logged *after* the modification
  * These are special case logs (new bug, deleted bugnote, etc.)
- * @param int $p_bug_id
- * @param int $p_type
- * @param string $p_optional
- * @param string $p_optional2
- * @return null
+ * @param integer $p_bug_id    The bug identifier of the bug being modified.
+ * @param integer $p_type      The type of the modification.
+ * @param string  $p_old_value The optional value to store in the old_value field.
+ * @param string  $p_new_value The optional value to store in the new_value field.
+ * @return void
  */
-function history_log_event_special( $p_bug_id, $p_type, $p_optional = '', $p_optional2 = '' ) {
-	$c_bug_id = db_prepare_int( $p_bug_id );
-	$c_type = db_prepare_int( $p_type );
-	$c_optional = ( $p_optional );
-	$c_optional2 = ( $p_optional2 );
+function history_log_event_special( $p_bug_id, $p_type, $p_old_value = '', $p_new_value = '' ) {
 	$t_user_id = auth_get_current_user_id();
 
-	$t_mantis_bug_history_table = db_get_table( 'mantis_bug_history_table' );
+	if( is_null( $p_old_value ) ) {
+		$p_old_value = '';
+	}
+	if( is_null( $p_new_value ) ) {
+		$p_new_value = '';
+	}
 
-	$query = "INSERT INTO $t_mantis_bug_history_table
+	db_param_push();
+	$t_query = 'INSERT INTO {bug_history}
 					( user_id, bug_id, date_modified, type, old_value, new_value, field_name )
 				VALUES
-					( " . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ',' . db_param() . ', ' . db_param() . ')';
-	$result = db_query_bound( $query, Array( $t_user_id, $c_bug_id, db_now(), $c_type, $c_optional, $c_optional2, '' ) );
+					( ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ', ' . db_param() . ',' . db_param() . ', ' . db_param() . ')';
+	db_query( $t_query, array( $t_user_id, $p_bug_id, db_now(), $p_type, $p_old_value, $p_new_value, '' ) );
 }
 
 /**
  * Retrieves the history events for the specified bug id and returns it in an array
  * The array is indexed from 0 to N-1.  The second dimension is: 'date', 'username',
  * 'note', 'change'.
- * @param int $p_bug_id
- * @param int $p_user_id
+ * @param integer $p_bug_id  A valid bug identifier.
+ * @param integer $p_user_id A valid user identifier.
  * @return array
  */
 function history_get_events_array( $p_bug_id, $p_user_id = null ) {
 	$t_normal_date_format = config_get( 'normal_date_format' );
 
-	$raw_history = history_get_raw_events_array( $p_bug_id, $p_user_id );
-	$raw_history_count = count( $raw_history );
-	$history = array();
+	$t_raw_history = history_get_raw_events_array( $p_bug_id, $p_user_id );
+	$t_history = array();
 
-	for( $i = 0;$i < $raw_history_count;$i++ ) {
-		$history[$i] = history_localize_item( $raw_history[$i]['field'], $raw_history[$i]['type'], $raw_history[$i]['old_value'], $raw_history[$i]['new_value'] );
-		$history[$i]['date'] = date( $t_normal_date_format, $raw_history[$i]['date'] );
-		$history[$i]['userid'] = $raw_history[$i]['userid'];
-		$history[$i]['username'] = $raw_history[$i]['username'];
+	foreach( $t_raw_history as $k => $t_item ) {
+		extract( $t_item, EXTR_PREFIX_ALL, 'v' );
+		$t_history[$k] = history_localize_item( $v_field, $v_type, $v_old_value, $v_new_value );
+		$t_history[$k]['date'] = date( $t_normal_date_format, $v_date );
+		$t_history[$k]['userid'] = $v_userid;
+		$t_history[$k]['username'] = $v_username;
 	}
 
-	return( $history );
+	return( $t_history );
 }
 
 /**
- * Retrieves the raw history events for the specified bug id and returns it in an array
- * The array is indexed from 0 to N-1.  The second dimension is: 'date', 'userid', 'username',
- * 'field','type','old_value','new_value'
- * @param int $p_bug_id
- * @param int $p_user_id
- * @return array
+ * Counts the number of changes done by the specified user within specified time window.
+ * @param  integer $p_duration_in_seconds The time window in seconds.
+ * @param  [type]  $p_user_id             The user id or null for logged in user.
+ * @return integer The number of changes done by user in the specified time window.
  */
-function history_get_raw_events_array( $p_bug_id, $p_user_id = null ) {
-	$t_mantis_bug_history_table = db_get_table( 'mantis_bug_history_table' );
-	$t_mantis_user_table = db_get_table( 'mantis_user_table' );
-	$t_history_order = config_get( 'history_order' );
-	$c_bug_id = db_prepare_int( $p_bug_id );
+function history_count_user_recent_events( $p_duration_in_seconds, $p_user_id = null ) {
+	$t_user_id = ( ( null === $p_user_id ) ? auth_get_current_user_id() : $p_user_id );
 
-	$t_user_id = (( null === $p_user_id ) ? auth_get_current_user_id() : $p_user_id );
+	$t_params = array( db_now() - $p_duration_in_seconds, $t_user_id );
 
-	$t_roadmap_view_access_level = config_get( 'roadmap_view_threshold' );
-	$t_due_date_view_threshold = config_get( 'due_date_view_threshold' );
+	db_param_push();
+	$t_query = 'SELECT count(*) as event_count FROM {bug_history} WHERE date_modified > ' . db_param() .
+				' AND user_id = ' . db_param();
+	$t_result = db_query( $t_query, $t_params );
 
-	# grab history and display by date_modified then field_name
-	# @@@ by MASC I guess it's better by id then by field_name. When we have more history lines with the same
-	# date, it's better to respect the storing order otherwise we should risk to mix different information
-	# I give you an example. We create a child of a bug with different custom fields. In the history of the child
-	# bug we will find the line related to the relationship mixed with the custom fields (the history is creted
-	# for the new bug with the same timestamp...)
-	$query = "SELECT *
-				FROM $t_mantis_bug_history_table
-				WHERE bug_id=" . db_param() . "
-				ORDER BY date_modified $t_history_order,id";
-	$result = db_query_bound( $query, Array( $c_bug_id ) );
-	$raw_history_count = db_num_rows( $result );
-	$raw_history = array();
+	$t_row = db_fetch_array( $t_result );
+	return $t_row['event_count'];
+}
 
-	$t_private_bugnote_threshold = config_get( 'private_bugnote_threshold' );
-	$t_private_bugnote_visible = access_has_bug_level( config_get( 'private_bugnote_threshold' ), $p_bug_id, $t_user_id );
-	$t_tag_view_threshold = config_get( 'tag_view_threshold' );
-	$t_view_attachments_threshold = config_get( 'view_attachments_threshold' );
-	$t_show_monitor_list_threshold = config_get( 'show_monitor_list_threshold' );
-	$t_show_handler_threshold = config_get( 'view_handler_threshold' );
+/**
+ * Creates and executes a query for the history rows related to bugs matched by the provided filter
+ * @param  array $p_filter           Filter array
+ * @param  integer $p_start_time     The start time to filter by, or null for all.
+ * @param  integer $p_end_time       The end time to filter by, or null for all.
+ * @param  string  $p_history_order  The sort order.
+ * @return database result to pass into history_get_event_from_row().
+ */
+function history_get_range_result_filter( $p_filter, $p_start_time = null, $p_end_time = null, $p_history_order = null ) {
+	if ( $p_history_order === null ) {
+		$t_history_order = config_get( 'history_order' );
+	} else {
+		$t_history_order = $p_history_order;
+	}
 
-	$t_standard_fields = columns_get_standard();
+	# Note: filter_get_bug_rows_query_clauses() calls db_param_push();
+	$t_query_clauses = filter_get_bug_rows_query_clauses( $p_filter, null, null, null );
 
-	for( $i = 0, $j = 0;$i < $raw_history_count;++$i ) {
-		$t_row = db_fetch_array( $result );
+	# if the query can't be formed, there are no results
+	if( empty( $t_query_clauses ) ) {
+		# reset the db_param stack that was initialized by "filter_get_bug_rows_query_clauses()"
+		db_param_pop();
+		return db_empty_result();
+	}
 
-		$v_type = $t_row['type'];
-		$v_field_name = $t_row['field_name'];
-		$v_user_id = $t_row['user_id'];
-		$v_new_value = $t_row['new_value'];
-		$v_old_value = $t_row['old_value'];
-		$v_date_modified = $t_row['date_modified'];
+	$t_select_string = 'SELECT DISTINCT {bug}.id ';
+	$t_from_string = ' FROM ' . implode( ', ', $t_query_clauses['from'] );
+	$t_join_string = count( $t_query_clauses['join'] ) > 0 ? implode( ' ', $t_query_clauses['join'] ) : ' ';
+	$t_where_string = ' WHERE '. implode( ' AND ', $t_query_clauses['project_where'] );
+	if( count( $t_query_clauses['where'] ) > 0 ) {
+		$t_where_string .= ' AND ( ';
+		$t_where_string .= implode( $t_query_clauses['operator'], $t_query_clauses['where'] );
+		$t_where_string .= ' ) ';
+	}
 
-		if ( $v_type == NORMAL_TYPE ) {
-			if ( !in_array( $v_field_name, $t_standard_fields ) ) {
-				# check that the item should be visible to the user
+	$t_query = 'SELECT * FROM {bug_history} JOIN'
+			. ' ( ' . $t_select_string . $t_from_string . $t_join_string . $t_where_string . ' ) B'
+			. ' ON {bug_history}.bug_id=B.id';
 
-				# We are passing 32 here to notify the custom field API
-				# that legacy history entries for field names longer than
-				# 32 chars created when the db column was of that size were
-				# truncated (no longer the case since 1.1.0a4, see #8002)
-				$t_field_id = custom_field_get_id_from_name( $v_field_name, 32 );
-				if( false !== $t_field_id && !custom_field_has_read_access( $t_field_id, $p_bug_id, $t_user_id ) ) {
-					continue;
-				}
+	$t_params = $t_query_clauses['where_values'];
+	$t_where = array();
+	if ( $p_start_time !== null ) {
+		$t_where[] = 'date_modified >= ' . db_param();
+		$t_params[] = $p_start_time;
+	}
+
+	if ( $p_end_time !== null ) {
+		$t_where[] = 'date_modified < ' . db_param();
+		$t_params[] = $p_end_time;
+	}
+
+	if ( count( $t_where ) > 0 ) {
+		$t_query .= ' WHERE ' . implode( ' AND ', $t_where );
+	}
+
+	$t_query .= ' ORDER BY {bug_history}.date_modified ' . $t_history_order . ', {bug_history}.id ' . $t_history_order;
+	$t_result = db_query( $t_query, $t_params );
+	return $t_result;
+}
+
+/**
+ * Creates and executes a query for the history rows matching the specified criteria.
+ * @param  integer $p_bug_id         The bug id or null for matching any bug.
+ * @param  integer $p_start_time     The start time to filter by, or null for all.
+ * @param  integer $p_end_time       The end time to filter by, or null for all.
+ * @param  string  $p_history_order  The sort order.
+ * @return database result to pass into history_get_event_from_row().
+ */
+function history_get_range_result( $p_bug_id = null, $p_start_time = null, $p_end_time = null, $p_history_order = null ) {
+	if ( $p_history_order === null ) {
+		$t_history_order = config_get( 'history_order' );
+	} else {
+		$t_history_order = $p_history_order;
+	}
+
+	db_param_push();
+	$t_query = 'SELECT * FROM {bug_history}';
+	$t_params = array();
+	$t_where = array();
+
+	if ( $p_bug_id !== null ) {
+		$t_where[] = 'bug_id=' . db_param();
+		$t_params = array( $p_bug_id );
+	}
+
+	if ( $p_start_time !== null ) {
+		$t_where[] = 'date_modified >= ' . db_param();
+		$t_params[] = $p_start_time;
+	}
+
+	if ( $p_end_time !== null ) {
+		$t_where[] = 'date_modified < ' . db_param();
+		$t_params[] = $p_end_time;
+	}
+
+	if ( count( $t_where ) > 0 ) {
+		$t_query .= ' WHERE ' . implode( ' AND ', $t_where );
+	}
+
+	$t_query .= ' ORDER BY date_modified ' . $t_history_order . ',id ' . $t_history_order;
+
+	$t_result = db_query( $t_query, $t_params );
+
+	return $t_result;
+}
+
+/**
+ * Gets the next accessible history event for current user and specified db result.
+ * @param  object  $p_result      The database result.
+ * @param  integer $p_user_id     The user id or null for logged in user.
+ * @param  boolean $p_check_access_to_issue true: check that user has access to bugs,
+ *                                          false otherwise.
+ * @return array containing the history event or false if no more matches.
+ */
+function history_get_event_from_row( $p_result, $p_user_id = null, $p_check_access_to_issue = true ) {
+	static $s_bug_visible = array();
+	$t_user_id = ( null === $p_user_id ) ? auth_get_current_user_id() : $p_user_id;
+
+	while ( $t_row = db_fetch_array( $p_result ) ) {
+		extract( $t_row, EXTR_PREFIX_ALL, 'v' );
+
+		# Ignore entries related to non-existing bugs (see #20727)
+		if( !bug_exists( $v_bug_id ) ) {
+			continue;
+		}
+
+		if( $p_check_access_to_issue ) {
+			if( !isset( $s_bug_visible[$v_bug_id] ) ) {
+				$s_bug_visible[$v_bug_id] = access_has_bug_level( VIEWER, $v_bug_id );
 			}
 
-			if ( ( $v_field_name == 'target_version' ) && !access_has_bug_level( $t_roadmap_view_access_level, $p_bug_id, $t_user_id ) ) {
-				continue;
-			}
-
-			if ( ( $v_field_name == 'due_date' ) && !access_has_bug_level( $t_due_date_view_threshold, $p_bug_id, $t_user_id ) ) {
-				continue;
-			}
-
-			if ( ( $v_field_name == 'handler_id' ) && !access_has_bug_level( $t_show_handler_threshold, $p_bug_id, $t_user_id ) ) {
+			if( !$s_bug_visible[$v_bug_id] ) {
 				continue;
 			}
 		}
 
-		// bugnotes
+		if( $v_type == NORMAL_TYPE ) {
+			if( !in_array( $v_field_name, columns_get_standard() ) ) {
+				# check that the item should be visible to the user
+				$t_field_id = custom_field_get_id_from_name( $v_field_name );
+				if( false !== $t_field_id && !custom_field_has_read_access( $t_field_id, $v_bug_id, $t_user_id ) ) {
+					continue;
+				}
+			}
+
+			if( ( $v_field_name == 'target_version' ) && !access_has_bug_level( config_get( 'roadmap_view_threshold' ), $v_bug_id, $t_user_id ) ) {
+				continue;
+			}
+
+			if( ( $v_field_name == 'due_date' ) && !access_has_bug_level( config_get( 'due_date_view_threshold' ), $v_bug_id, $t_user_id ) ) {
+				continue;
+			}
+
+			if( ( $v_field_name == 'handler_id' ) && !access_has_bug_level( config_get( 'view_handler_threshold' ), $v_bug_id, $t_user_id ) ) {
+				continue;
+			}
+		}
+
+		# bugnotes
 		if( $t_user_id != $v_user_id ) {
-			// bypass if user originated note
-			if(( $v_type == BUGNOTE_ADDED ) || ( $v_type == BUGNOTE_UPDATED ) || ( $v_type == BUGNOTE_DELETED ) ) {
-				if( !$t_private_bugnote_visible && ( bugnote_get_field( $v_old_value, 'view_state' ) == VS_PRIVATE ) ) {
+			# bypass if user originated note
+			if( ( $v_type == BUGNOTE_ADDED ) || ( $v_type == BUGNOTE_UPDATED ) || ( $v_type == BUGNOTE_DELETED ) ) {
+				if( !access_has_bug_level( config_get( 'private_bugnote_threshold' ), $v_bug_id, $t_user_id ) && ( bugnote_get_field( $v_old_value, 'view_state' ) == VS_PRIVATE ) ) {
 					continue;
 				}
 			}
 
 			if( $v_type == BUGNOTE_STATE_CHANGED ) {
-				if( !$t_private_bugnote_visible && ( bugnote_get_field( $v_new_value, 'view_state' ) == VS_PRIVATE ) ) {
+				if( !access_has_bug_level( config_get( 'private_bugnote_threshold' ), $v_bug_id, $t_user_id ) && ( bugnote_get_field( $v_new_value, 'view_state' ) == VS_PRIVATE ) ) {
 					continue;
 				}
 			}
 		}
 
-		// tags
+		# tags
 		if( $v_type == TAG_ATTACHED || $v_type == TAG_DETACHED || $v_type == TAG_RENAMED ) {
-			if( !access_has_bug_level( $t_tag_view_threshold, $p_bug_id, $t_user_id ) ) {
+			if( !access_has_bug_level( config_get( 'tag_view_threshold' ), $v_bug_id, $t_user_id ) ) {
 				continue;
 			}
 		}
 
 		# attachments
 		if( $v_type == FILE_ADDED || $v_type == FILE_DELETED ) {
-			if( !access_has_bug_level( $t_view_attachments_threshold, $p_bug_id, $t_user_id ) ) {
+			if( !access_has_bug_level( config_get( 'view_attachments_threshold' ), $v_bug_id, $t_user_id ) ) {
 				continue;
 			}
 		}
 
-		// monitoring
+		# monitoring
 		if( $v_type == BUG_MONITOR || $v_type == BUG_UNMONITOR ) {
-			if( !access_has_bug_level( $t_show_monitor_list_threshold, $p_bug_id, $t_user_id ) ) {
+			if( !access_has_bug_level( config_get( 'show_monitor_list_threshold' ), $v_bug_id, $t_user_id ) ) {
 				continue;
 			}
 		}
@@ -241,49 +379,90 @@ function history_get_raw_events_array( $p_bug_id, $p_user_id = null ) {
 
 			# If bug doesn't exist, then we don't know whether to expose it or not based on the fact whether it was
 			# accessible to user or not.  This also simplifies client code that is accessing the history log.
-			if( !bug_exists( $t_related_bug_id ) || !access_has_bug_level( VIEWER, $t_related_bug_id, $t_user_id ) ) {
+			if( !bug_exists( $t_related_bug_id ) || !access_has_bug_level( config_get( 'view_bug_threshold' ), $t_related_bug_id, $t_user_id ) ) {
 				continue;
 			}
 		}
 
-		$raw_history[$j]['date'] = $v_date_modified;
-		$raw_history[$j]['userid'] = $v_user_id;
+		$t_event = array();
+		$t_event['bug_id'] = $v_bug_id;
+		$t_event['date'] = $v_date_modified;
+		$t_event['userid'] = $v_user_id;
 
 		# user_get_name handles deleted users, and username vs realname
-		$raw_history[$j]['username'] = user_get_name( $v_user_id );
+		$t_event['username'] = user_get_name( $v_user_id );
 
-		$raw_history[$j]['field'] = $v_field_name;
-		$raw_history[$j]['type'] = $v_type;
-		$raw_history[$j]['old_value'] = $v_old_value;
-		$raw_history[$j]['new_value'] = $v_new_value;
+		$t_event['field'] = $v_field_name;
+		$t_event['type'] = $v_type;
+		$t_event['old_value'] = $v_old_value;
+		$t_event['new_value'] = $v_new_value;
 
+		return $t_event;
+	}
+
+	return false;
+}
+
+/**
+ * Retrieves the raw history events for the specified bug id and returns it in an array
+ * The array is indexed from 0 to N-1.  The second dimension is: 'date', 'userid', 'username',
+ * 'field','type','old_value','new_value'
+ * @param integer $p_bug_id  A valid bug identifier or null to not filter by bug.  If no bug id is specified,
+ *                           then returned array will have a field for bug_id, otherwise it won't.
+ * @param integer $p_user_id A valid user identifier.
+ * @param integer $p_start_time The start time to filter by, or null for all.
+ * @param integer $p_end_time   The end time to filter by, or null for all.
+ * @return array
+ */
+function history_get_raw_events_array( $p_bug_id, $p_user_id = null, $p_start_time = null, $p_end_time = null ) {
+	$t_user_id = (( null === $p_user_id ) ? auth_get_current_user_id() : $p_user_id );
+
+	# grab history and display by date_modified then field_name
+	# @@@ by MASC I guess it's better by id then by field_name. When we have more history lines with the same
+	# date, it's better to respect the storing order otherwise we should risk to mix different information
+	# I give you an example. We create a child of a bug with different custom fields. In the history of the child
+	# bug we will find the line related to the relationship mixed with the custom fields (the history is creted
+	# for the new bug with the same timestamp...)
+
+	$t_result = history_get_range_result( $p_bug_id, $p_start_time, $p_end_time );
+
+	$t_raw_history = array();
+
+	$j = 0;
+	while( true ) {
+		$t_event = history_get_event_from_row( $t_result, $t_user_id, /* check access */ true );
+		if ( $t_event === false ) {
+			break;
+		}
+
+		$t_raw_history[$j] = $t_event;
 		$j++;
 	}
 
 	# end for loop
 
-	return $raw_history;
+	return $t_raw_history;
 }
 
 /**
  * Localizes one raw history item specified by set the next parameters: $p_field_name, $p_type, $p_old_value, $p_new_value
  * Returns array with two elements indexed as 'note' and 'change'
- * @param string $p_field_name
- * @param int $p_type
- * @param string $p_old_value
- * @param string $p_new_value
- * @param bool $p_linkify
+ * @param string  $p_field_name The field name of the field being localized.
+ * @param integer $p_type       The type of the history entry.
+ * @param string  $p_old_value  The old value of the field.
+ * @param string  $p_new_value  The new value of the field.
+ * @param boolean $p_linkify    Whether to return a string containing hyperlinks.
  * @return array
  */
-function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_value, $p_linkify=true ) {
+function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_value, $p_linkify = true ) {
 	$t_note = '';
 	$t_change = '';
 	$t_field_localized = $p_field_name;
 	$t_raw = true;
 
 	if( PLUGIN_HISTORY == $p_type ) {
-		$t_note = lang_get_defaulted( "plugin_$p_field_name", $p_field_name );
-		$t_change = ( isset( $p_new_value ) ? "$p_old_value => $p_new_value" : $p_old_value );
+		$t_note = lang_get_defaulted( 'plugin_' . $p_field_name, $p_field_name );
+		$t_change = ( isset( $p_new_value ) ? $p_old_value . ' => ' . $p_new_value : $p_old_value );
 
 		return array( 'note' => $t_note, 'change' => $t_change, 'raw' => true );
 	}
@@ -413,10 +592,10 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 			break;
 		case 'due_date':
 			if( $p_old_value !== '' ) {
-				$p_old_value = date( config_get( 'normal_date_format' ), (int) $p_old_value );
+				$p_old_value = date( config_get( 'normal_date_format' ), (int)$p_old_value );
 			}
 			if( $p_new_value !== '' ) {
-				$p_new_value = date( config_get( 'normal_date_format' ), (int) $p_new_value );
+				$p_new_value = date( config_get( 'normal_date_format' ), (int)$p_new_value );
 			}
 			$t_field_localized = lang_get( 'due_date' );
 			break;
@@ -446,8 +625,8 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 					$t_note = lang_get( 'bugnote_edited' ) . ': ' . $p_old_value;
 					$t_old_value = (int)$p_old_value;
 					$t_new_value = (int)$p_new_value;
-					if ( $p_linkify && bug_revision_exists( $t_new_value ) ) {
-						if ( bugnote_exists( $t_old_value ) ) {
+					if( $p_linkify && bug_revision_exists( $t_new_value ) ) {
+						if( bugnote_exists( $t_old_value ) ) {
 							$t_bug_revision_view_page_argument = 'bugnote_id=' . $t_old_value . '#r' . $t_new_value;
 						} else {
 							$t_bug_revision_view_page_argument = 'rev_id=' . $t_new_value;
@@ -463,7 +642,7 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 				case DESCRIPTION_UPDATED:
 					$t_note = lang_get( 'description_updated' );
 					$t_old_value = (int)$p_old_value;
-					if ( $p_linkify && bug_revision_exists( $t_old_value ) ) {
+					if( $p_linkify && bug_revision_exists( $t_old_value ) ) {
 						$t_change = '<a href="bug_revision_view_page.php?rev_id=' . $t_old_value . '#r' . $t_old_value . '">' .
 							lang_get( 'view_revisions' ) . '</a>';
 						$t_raw = false;
@@ -472,7 +651,7 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 				case ADDITIONAL_INFO_UPDATED:
 					$t_note = lang_get( 'additional_information_updated' );
 					$t_old_value = (int)$p_old_value;
-					if ( $p_linkify && bug_revision_exists( $t_old_value ) ) {
+					if( $p_linkify && bug_revision_exists( $t_old_value ) ) {
 						$t_change = '<a href="bug_revision_view_page.php?rev_id=' . $t_old_value . '#r' . $t_old_value . '">' .
 							lang_get( 'view_revisions' ) . '</a>';
 						$t_raw = false;
@@ -481,7 +660,7 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 				case STEP_TO_REPRODUCE_UPDATED:
 					$t_note = lang_get( 'steps_to_reproduce_updated' );
 					$t_old_value = (int)$p_old_value;
-					if ( $p_linkify && bug_revision_exists( $t_old_value ) ) {
+					if( $p_linkify && bug_revision_exists( $t_old_value ) ) {
 						$t_change = '<a href="bug_revision_view_page.php?rev_id=' . $t_old_value . '#r' . $t_old_value . '">' .
 							lang_get( 'view_revisions' ) . '</a>';
 						$t_raw = false;
@@ -502,7 +681,9 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 					$t_note = lang_get( 'bug_monitor' ) . ': ' . $p_old_value;
 					break;
 				case BUG_UNMONITOR:
-					$p_old_value = user_get_name( $p_old_value );
+					if( $p_old_value !== '' ) {
+						$p_old_value = user_get_name( $p_old_value );
+					}
 					$t_note = lang_get( 'bug_end_monitor' ) . ': ' . $p_old_value;
 					break;
 				case BUG_DELETED:
@@ -548,9 +729,6 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 				case BUG_CREATED_FROM:
 					$t_note = lang_get( 'bug_created_from' ) . ': ' . bug_format_id( $p_new_value );
 					break;
-				case CHECKIN:
-					$t_note = lang_get( 'checkin' );
-					break;
 				case TAG_ATTACHED:
 					$t_note = lang_get( 'tag_history_attached' ) . ': ' . $p_old_value;
 					break;
@@ -582,17 +760,11 @@ function history_localize_item( $p_field_name, $p_type, $p_old_value, $p_new_val
 
 /**
  * delete all history associated with a bug
- * @param int $p_bug_id
- * @return true
+ * @param integer $p_bug_id A valid bug identifier.
+ * @return void
  */
 function history_delete( $p_bug_id ) {
-	$c_bug_id = db_prepare_int( $p_bug_id );
-
-	$t_bug_history_table = db_get_table( 'mantis_bug_history_table' );
-
-	$query = 'DELETE FROM ' . $t_bug_history_table . ' WHERE bug_id=' . db_param();
-	db_query_bound( $query, Array( $c_bug_id ) );
-
-	# db_query errors on failure so:
-	return true;
+	db_param_push();
+	$t_query = 'DELETE FROM {bug_history} WHERE bug_id=' . db_param();
+	db_query( $t_query, array( $p_bug_id ) );
 }

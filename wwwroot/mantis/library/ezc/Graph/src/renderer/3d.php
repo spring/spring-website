@@ -2,10 +2,26 @@
 /**
  * File containing the three dimensional renderer
  *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
  * @package Graph
- * @version 1.5
- * @copyright Copyright (C) 2005-2009 eZ Systems AS. All rights reserved.
- * @license http://ez.no/licenses/new_bsd New BSD License
+ * @version //autogentag//
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 /**
  * Class to transform chart primitives into image primitives. This renderer
@@ -53,7 +69,7 @@
  *   $graph->render( 400, 150, 'tutorial_pie_chart_3d.svg' );
  * </code>
  *
- * @version 1.5
+ * @version //autogentag//
  * @package Graph
  * @mainclass
  */
@@ -2235,40 +2251,46 @@ class ezcGraphRenderer3d
             'start' => clone $start,
             'end' => clone $end,
             'axis' => $axis,
+            'positioningDone' => false,
         );
 
         if ( $this->xAxisSpace && $this->yAxisSpace )
         {
-            foreach ( $this->axisLabels as $axisLabel )
+            foreach ( $this->axisLabels as &$axisLabel )
             {
-                // If font should not be synchronized, use font configuration from
-                // each axis
-                if ( $this->options->syncAxisFonts === false )
+                if ( !$axisLabel['positioningDone'] )
                 {
-                    $this->driver->options->font = $axisLabel['axis']->font;
-                }
+                    // If font should not be synchronized, use font configuration from
+                    // each axis
+                    if ( $this->options->syncAxisFonts === false )
+                    {
+                        $this->driver->options->font = $axisLabel['axis']->font;
+                    }
 
-                switch ( $axisLabel['axis']->position )
-                {
-                    case ezcGraph::RIGHT:
-                    case ezcGraph::LEFT:
-                        $axisLabel['start']->x += $this->xAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
-                        $axisLabel['end']->x -= $this->xAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
-                        break;
-                    case ezcGraph::TOP:
-                    case ezcGraph::BOTTOM:
-                        $axisLabel['start']->y += $this->yAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
-                        $axisLabel['end']->y -= $this->yAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
-                        break;
-                }
+                    switch ( $axisLabel['axis']->position )
+                    {
+                        case ezcGraph::RIGHT:
+                        case ezcGraph::LEFT:
+                            $axisLabel['start']->x += $this->xAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
+                            $axisLabel['end']->x -= $this->xAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
+                            break;
+                        case ezcGraph::TOP:
+                        case ezcGraph::BOTTOM:
+                            $axisLabel['start']->y += $this->yAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
+                            $axisLabel['end']->y -= $this->yAxisSpace * ( $axisLabel['start'] > $axisLabel['end'] ? -1 : 1 );
+                            break;
+                    }
 
-                $axisLabel['object']->renderLabels(
-                    $this,
-                    $axisLabel['boundings'],
-                    $axisLabel['start'],
-                    $axisLabel['end'],
-                    $axisLabel['axis']
-                );
+                    $axisLabel['object']->renderLabels(
+                        $this,
+                        $axisLabel['boundings'],
+                        $axisLabel['start'],
+                        $axisLabel['end'],
+                        $axisLabel['axis']
+                    );
+
+                    $axisLabel['positioningDone'] = true;
+                }
             }
         }
     }

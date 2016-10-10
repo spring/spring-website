@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,35 +14,49 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	/**
-	 * @package MantisBT
-	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
-	 * @link http://www.mantisbt.org
-	 */
-	 /**
-	  * MantisBT Core API's
-	  */
-	require_once( 'core.php' );
+/**
+ * Add documentation to project
+ *
+ * @package MantisBT
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link http://www.mantisbt.org
+ *
+ * @uses core.php
+ * @uses access_api.php
+ * @uses config_api.php
+ * @uses file_api.php
+ * @uses form_api.php
+ * @uses html_api.php
+ * @uses lang_api.php
+ * @uses utility_api.php
+ */
 
-	require_once( 'file_api.php' );
+require_once( 'core.php' );
+require_api( 'access_api.php' );
+require_api( 'config_api.php' );
+require_api( 'file_api.php' );
+require_api( 'form_api.php' );
+require_api( 'html_api.php' );
+require_api( 'lang_api.php' );
+require_api( 'utility_api.php' );
 
-	# Check if project documentation feature is enabled.
-	if ( OFF == config_get( 'enable_project_documentation' ) ||
-		!file_is_uploading_enabled() ||
-		!file_allow_project_upload() ) {
-		access_denied();
-	}
+# Check if project documentation feature is enabled.
+if( OFF == config_get( 'enable_project_documentation' ) ||
+	!file_is_uploading_enabled() ||
+	!file_allow_project_upload() ) {
+	access_denied();
+}
 
-	access_ensure_project_level( config_get( 'upload_project_file_threshold' ) );
+access_ensure_project_level( config_get( 'upload_project_file_threshold' ) );
 
-	$t_max_file_size = (int)min( ini_get_number( 'upload_max_filesize' ), ini_get_number( 'post_max_size' ), config_get( 'max_file_size' ) );
+$t_max_file_size = (int)min( ini_get_number( 'upload_max_filesize' ), ini_get_number( 'post_max_size' ), config_get( 'max_file_size' ) );
 
-	html_page_top();
+html_page_top();
 ?>
 
 <br />
-<div align="center">
+<div>
 <form method="post" enctype="multipart/form-data" action="proj_doc_add.php">
 <?php echo form_security_field( 'proj_doc_add' ) ?>
 <table class="width75" cellspacing="1">
@@ -55,25 +69,26 @@
 	</td>
 </tr>
 <tr class="row-1">
-	<td class="category" width="25%">
-		<span class="required">*</span><?php echo lang_get( 'title' ) ?>
-	</td>
+	<th class="category" width="25%">
+		<label class="required"><span><?php echo lang_get( 'title' ) ?></span></label>
+	</th>
 	<td width="75%">
 		<input type="text" name="title" size="70" maxlength="250" />
 	</td>
 </tr>
 <tr class="row-2">
-	<td class="category">
+	<th class="category">
 		<?php echo lang_get( 'description' ) ?>
-	</td>
+	</th>
 	<td>
 		<textarea name="description" cols="60" rows="7"></textarea>
 	</td>
 </tr>
 <tr class="row-1">
 	<td class="category">
-		<span class="required">*</span><?php echo lang_get( 'select_file' );
-			echo '<br /><span class="small">(' . lang_get( 'max_file_size' ) . ': ' . number_format( $t_max_file_size/1000 ) . 'k)</span>'?>
+		<label class="required"><span><?php echo lang_get( 'select_file' ) ?></span></label>
+		<br />
+		<?php print_max_filesize( $t_max_file_size ); ?>
 	</td>
 	<td>
 		<input type="hidden" name="max_file_size" value="<?php echo $t_max_file_size ?>" />
@@ -93,4 +108,4 @@
 </div>
 
 <?php
-	html_page_bottom();
+html_page_bottom();

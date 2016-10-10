@@ -2,7 +2,7 @@
 /** MantisBT - a php based bugtracking system
  *
  * Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
- * Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * Copyright (C) 2002 - 2016  MantisBT Team - mantisbt-dev@lists.sourceforge.net
  *
  * MantisBT is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * **********************************************************************
+ * ** This file contains translations stored in translatewiki.net.     **
+ * ** See https://translatewiki.net/wiki/Project:About for information **
+ * ** on copyright/license for translatewiki.net translations.         **
+ * **********************************************************************
+ * **                                                                  **
+ * **                      DO NOT UPDATE MANUALLY                      **
+ * **                                                                  **
+ * ** To improve a translation please visit http://translatewiki.net   **
+ * ** Detailed instructions on how to create or update translations at **
+ * ** http://www.mantisbt.org/wiki/doku.php/mantisbt:translationshowto **
+ * **********************************************************************
  */
 /** Portuguese (português)
  * 
@@ -25,18 +38,18 @@
  * @ingroup Language
  * @file
  *
+ * @author Bithunter
  * @author Crazymadlover
  * @author Giro720
  * @author Gusta
  * @author Hamilton Abreu
+ * @author Imperadeiro90
  * @author Imperadeiro98
  * @author Luckas
- * @author Luckas Blade
- * @author Luís Martins, lmar@ualg.pt
  * @author M42
  * @author Malafaya
  * @author McDutchie
- * @author Rui Alexandre Coelho, rac@iosoft.pt
+ * @author Vitorvicentevalente
  * @author Waldir
  */
 
@@ -75,7 +88,6 @@ $s_private_project_msg = 'Este projeto é privado. Apenas os administradores e o
 $s_access_level_project = 'Nível de acesso do projeto';
 $s_view_submitted_bug_link = 'Ver Problema Submetido %1$s';
 $s_assigned_projects = 'Projectos Atribuídos';
-$s_unassigned_projects = 'Projectos Não Atribuídos';
 $s_print = 'Imprimir';
 $s_jump = 'Ir Para';
 $s_copy_users = 'Copiar Utilizadores';
@@ -173,123 +185,6 @@ $s_bugnote_title = 'Handler da nota';
 $s_bugnote_date = 'Data da nota';
 $s_bugnote_description = 'Descrição da nota';
 $s_error_no_proceed = 'Por favor, use o botão "Voltar" no seu browser para retornar à página anterior. Pode corrigir quaisquer problemas identificados neste erro ou escolher uma outra ação. Pode também clicar numa opção na barra de menus para ir diretamente para uma nova seção.';
-$MANTIS_ERROR[ERROR_GENERIC] = 'Ocorreu um erro durante a execução desta ação. Pode querer comunicar este erro ao seu administrador local';
-$MANTIS_ERROR[ERROR_SQL] = 'Erro de SQL detectado';
-$MANTIS_ERROR[ERROR_REPORT] = 'Houve um erro no seu relatório';
-$MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED] = 'Nenhum ficheiro especificado';
-$MANTIS_ERROR[ERROR_FILE_DISALLOWED] = 'O tipo de ficheiro não é permitido.';
-$MANTIS_ERROR[ERROR_NO_DIRECTORY] = 'A pasta não existe. Por favor verifique as definições do projeto.';
-$MANTIS_ERROR[ERROR_DUPLICATE_PROJECT] = 'Um projeto com este nome já existe.';
-$MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'O campo necessário "%1$s" estava vazio. Por favor, verifique novamente as entradas.';
-$MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT] = 'Esta conta está protegida. Você não tem permissão para aceder a isto até que a proteção seja removida.';
-$MANTIS_ERROR[ERROR_ACCESS_DENIED] = 'Acesso Negado.';
-$MANTIS_ERROR[ERROR_UPLOAD_FAILURE] = 'Carregamento de ficheiro mal-sucedido. Ficheiro não é legível pelo MantisBT. Por favor verifique as definições do projeto.';
-$MANTIS_ERROR[ERROR_FILE_TOO_BIG] = 'Carregamento de ficheiro mal-sucedido. Isto foi provavelmente causado pelo tamanho do ficheiro ser superior ao limite permitido por esta instalação do PHP.';
-$MANTIS_ERROR[ERROR_GPC_VAR_NOT_FOUND] = 'Um parâmetro obrigatório para esta página (%1$s) não foi encontrado.';
-$MANTIS_ERROR[ERROR_USER_NAME_NOT_UNIQUE] = 'Esse nome de utilizador já está a ser usado. Por favor volte atrás e escolha outro.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_NOT_FOUND] = 'Opção de configuração "%1$s" não encontrada.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_CANT_BE_SET_IN_DB] = 'Opção de configuração "%1$s" não pode ser definida na base de dados. Deve ser definida em config_inc.php.';
-$MANTIS_ERROR[ERROR_LANG_STRING_NOT_FOUND] = 'Cadeia de caracteres "%1$s" não encontrada.';
-$MANTIS_ERROR[ERROR_BUGNOTE_NOT_FOUND] = 'Nota não encontrada.';
-$MANTIS_ERROR[ERROR_PROJECT_NOT_FOUND] = 'Projeto "%1$d" não encontrado.';
-$MANTIS_ERROR[ERROR_DB_FIELD_NOT_FOUND] = 'Campo de base de dados "%1$s" não encontrado.';
-$MANTIS_ERROR[ERROR_FTP_CONNECT_ERROR] = 'Não foi possível ligar ao servidor FTP.';
-$MANTIS_ERROR[ERROR_HANDLER_ACCESS_TOO_LOW] = 'Handler de problemas não tem privilégios suficientes para tratar do problema neste estado.';
-$MANTIS_ERROR[ERROR_PROJECT_NAME_NOT_UNIQUE] = 'Um projeto com esse nome já existe. Por favor, volte atrás e introduza um nome diferente.';
-$MANTIS_ERROR[ERROR_PROJECT_NAME_INVALID] = 'O nome de projeto especificado é inválido. Nomes de projeto não podem estar em branco.';
-$MANTIS_ERROR[ERROR_USER_BY_NAME_NOT_FOUND] = 'Utilizador com o nome "%1$s" não encontrado.';
-$MANTIS_ERROR[ERROR_USER_BY_ID_NOT_FOUND] = 'Utilizador com o id "%1$d" não encontrado.';
-$MANTIS_ERROR[ERROR_AUTH_INVALID_COOKIE] = 'A informação de login armazenada pelo seu navegador é inválida. Talvez a sua conta tenha sido apagada?';
-$MANTIS_ERROR[ERROR_USER_PREFS_NOT_FOUND] = 'As preferências deste utilizador não puderam ser encontradas.';
-$MANTIS_ERROR[ERROR_NEWS_NOT_FOUND] = 'Não foi encontrado item de notícias.';
-$MANTIS_ERROR[ERROR_USER_CREATE_PASSWORD_MISMATCH] = 'Palavra-chave não corresponde à verificação.';
-$MANTIS_ERROR[ERROR_GPC_ARRAY_EXPECTED] = 'Era esperado um array mas foi recebida uma cadeia de caracteres para %1$s.';
-$MANTIS_ERROR[ERROR_GPC_ARRAY_UNEXPECTED] = 'Era esperada uma cadeia de caracteres mas foi recebido um array para %1$s.';
-$MANTIS_ERROR[ERROR_GPC_NOT_NUMBER] = 'Um número era esperado para %1$s.';
-$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Problema %1$d não encontrado.';
-$MANTIS_ERROR[ERROR_FILTER_NOT_FOUND] = 'Filtro %1$s não encontrado.';
-$MANTIS_ERROR[ERROR_FILTER_TOO_OLD] = 'O filtro que está a tentar usar é demasiado antigo para ser atualizado. Por favor, recrie-o.';
-$MANTIS_ERROR[ERROR_EMAIL_INVALID] = 'Endereço de email inválido.';
-$MANTIS_ERROR[ERROR_EMAIL_DISPOSABLE] = 'Não é permitido o uso de endereços de e-mail descartáveis.';
-$MANTIS_ERROR[ERROR_USER_PROFILE_NOT_FOUND] = 'Perfil não encontrado.';
-$MANTIS_ERROR[ERROR_FILE_NOT_ALLOWED] = 'Tipo de ficheiro não permitido para uploads.';
-$MANTIS_ERROR[ERROR_FILE_DUPLICATE] = 'Este é um ficheiro duplicado. Por favor, apague o ficheiro antes.';
-$MANTIS_ERROR[ERROR_FILE_INVALID_UPLOAD_PATH] = 'Localização inválida. O diretório não existe ou não tem as permissões necessárias.';
-$MANTIS_ERROR[ERROR_FILE_NO_UPLOAD_FAILURE] = 'Nenhum ficheiro foi carregado. Por favor, volte atrás e escolha um ficheiro antes de premir o botão Carregar.';
-$MANTIS_ERROR[ERROR_FILE_MOVE_FAILED] = 'Não foi possível mover para o destino final o ficheiro enviado. O diretório não existe ou não tem as permissões necessárias.';
-$MANTIS_ERROR[ERROR_BUG_DUPLICATE_SELF] = 'Não pode marcar um problema como duplicado dele próprio.';
-$MANTIS_ERROR[ERROR_BUG_REVISION_NOT_FOUND] = 'Revisão do problema não encontrada.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NOT_FOUND] = 'Campo personalizado não encontrado.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Este é um nome duplicado.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Pelo menos um projeto ainda utiliza este campo.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valor inválido para o campo "%1$s".';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definição de campo personalizado inválida.';
-$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propriedade de campo personalizado inválido ( %1$s ).';
-$MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Falha na Autenticação LDAP.';
-$MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Falha na ligação ao servidor LDAP.';
-$MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Atualização de registro LDAP falhou.';
-$MANTIS_ERROR[ERROR_LDAP_USER_NOT_FOUND] = 'Registo de Utilizador LDAP Não Encontrado.';
-$MANTIS_ERROR[ERROR_LDAP_EXTENSION_NOT_LOADED] = 'Extensão LDAP Não Carregada.';
-$MANTIS_ERROR[ERROR_DB_CONNECT_FAILED] = 'Ligação à base de dados falhou. O erro recebido da base de dados foi #%1$d: %2$s.';
-$MANTIS_ERROR[ERROR_DB_QUERY_FAILED] = 'Query à base de dados falhou. Erro recebido da base de dados foi #%1$d: %2$s para a query: %3$s.';
-$MANTIS_ERROR[ERROR_DB_SELECT_FAILED] = 'Seleção da base de dados falhou. Erro recebido da base de dados foi #%1$d: %2$s.';
-$MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Já existe uma categoria com esse nome.';
-$MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Nenhuma ação de cópia foi especificada.';
-$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Categoria não encontrada.';
-$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Categoria "%1$s" não encontrada para o projeto "%2$s".';
-$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Esta categoria não pode ser eliminada, porque está definida como "categoria padrão para movimentos".';
-$MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Já existe uma versão com esse nome.';
-$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Versão "%1$s" não encontrada.';
-$MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'O nome de utilizador é inválido. Nomes de utilizador só podem conter letras, números, espaços, hífenes (-), pontos (.), sinais de mais (+) e sublinhados (_).';
-$MANTIS_ERROR[ERROR_USER_REAL_NAME_INVALID] = 'O nome verdadeiro do utilizador é inválido.';
-$MANTIS_ERROR[ERROR_USER_DOES_NOT_HAVE_REQ_ACCESS] = 'O utilizador não tem o nível de acesso exigido.';
-$MANTIS_ERROR[ERROR_USER_REAL_MATCH_USER] = 'O "Nome Real" escolhido coincide com o nome de login de outro utilizador. Por favor escolha outro.';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_NOT_ENABLED] = 'Apoio de patrocínio não ativado.';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_NOT_FOUND] = 'Patrocínio %1$d não encontrado.';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_AMOUNT_TOO_LOW] = 'Patrocínio (%1$s) é inferior à quantidade mínima (%2$s).';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_HANDLER_ACCESS_LEVEL_TOO_LOW] = 'Handler não tem o nível de acesso necessário para tratar de problemas patrocinados.';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_ASSIGNER_ACCESS_LEVEL_TOO_LOW] = 'Acesso negado: Atribuir patrocínio requer um nível de acesso mais alto.';
-$MANTIS_ERROR[ERROR_SPONSORSHIP_SPONSOR_NO_EMAIL] = 'O patrocinador não indicou um endereço de email. Por favor, atualize o seu perfil.';
-$MANTIS_ERROR[ERROR_CONFIG_OPT_INVALID] = 'Opção de configuração "%1$s" tem o valor inválido "%2$s".';
-$MANTIS_ERROR[ERROR_BUG_READ_ONLY_ACTION_DENIED] = 'Não pode realizar esta ação porque o problema "%1$d" é só de leitura.';
-$MANTIS_ERROR[ERROR_RELATIONSHIP_ALREADY_EXISTS] = 'Já existe uma relação entre estes dois problemas.';
-$MANTIS_ERROR[ERROR_RELATIONSHIP_NOT_FOUND] = 'Relacionamento não encontrado.';
-$MANTIS_ERROR[ERROR_RELATIONSHIP_ACCESS_LEVEL_TO_DEST_BUG_TOO_LOW] = 'Acesso negado: O problema %1$d requer nível de acesso mais alto.';
-$MANTIS_ERROR[ERROR_RELATIONSHIP_SAME_BUG] = 'Um problema não pode estar relacionado consigo próprio.';
-$MANTIS_ERROR[ERROR_SIGNUP_NOT_MATCHING_CAPTCHA] = 'Hash de confirmação não corresponde. Por favor, tente novamente.';
-$MANTIS_ERROR[ERROR_LOST_PASSWORD_NOT_ENABLED] = 'A funcionalidade "perdeu a sua palavra-chave" não está disponível.';
-$MANTIS_ERROR[ERROR_LOST_PASSWORD_NO_EMAIL_SPECIFIED] = 'Tem que indicar um endereço de email para poder redefinir a palavra-chave.';
-$MANTIS_ERROR[ERROR_LOST_PASSWORD_NOT_MATCHING_DATA] = 'A informação fornecida não corresponde a qualquer conta registada!';
-$MANTIS_ERROR[ERROR_LOST_PASSWORD_CONFIRM_HASH_INVALID] = 'O URL de confirmação é inválido ou já foi utilizado. Por favor registe-se novamente.';
-$MANTIS_ERROR[ERROR_LOST_PASSWORD_MAX_IN_PROGRESS_ATTEMPTS_REACHED] = 'Foi atingido o número máximo de pedidos pendentes. Por favor, contacte o administrador do sistema.';
-$MANTIS_ERROR[ERROR_PROJECT_RECURSIVE_HIERARCHY] = 'Essa operação iria criar um ciclo na hierarquia de subprojectos.';
-$MANTIS_ERROR[ERROR_USER_CHANGE_LAST_ADMIN] = 'Não pode alterar ou despromover a última conta de administrador. Para executar a ação pedida, é necessário criar primeiro outra conta de administrador.';
-$MANTIS_ERROR[ERROR_PAGE_REDIRECTION] = 'Erro de redirecionamento da página, certifique-se que não haja espaços fora do bloco PHP (&lt;?php ?&gt;) nos ficheiros config_inc.php ou custom_*.php.';
-$MANTIS_ERROR[ERROR_TWITTER_NO_CURL_EXT] = 'Integração com Twitter requer a extensão cURL do PHP, que não está instalada.';
-$MANTIS_ERROR[ERROR_TAG_NOT_FOUND] = 'Não foi possível encontrar uma etiqueta com esse nome.';
-$MANTIS_ERROR[ERROR_TAG_DUPLICATE] = 'Já existe uma etiqueta com esse nome.';
-$MANTIS_ERROR[ERROR_TAG_NAME_INVALID] = 'Esse nome de etiqueta é inválido.';
-$MANTIS_ERROR[ERROR_TAG_NOT_ATTACHED] = 'Essa etiqueta não está associada a esse problema.';
-$MANTIS_ERROR[ERROR_TAG_ALREADY_ATTACHED] = 'Essa etiqueta já está associada a esse problema.';
-$MANTIS_ERROR[ERROR_TOKEN_NOT_FOUND] = 'Não foi possível encontrar o token.';
-$MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'Evento "%1$s" ainda não foi declarado.';
-$MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'Plugin não está registado no MantisBT.';
-$MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'Plugin já está instalado.';
-$MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'Não foi encontrada a página de plugin.';
-$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Instalação do plugin falhada:  %1$s .';
-$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'A atualização do schema do plugin falhou no bloco #%1$s.';
-$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'O plugin "%1$s" precisa de ser atualizado antes de você poder aceder a esta página.';
-$MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Houve um erro desconhecido "%1$s" durante a execução do plugin "%2$s".';
-$MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Campo "%1$s" contém coluna duplicada "%2$s".';
-$MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Campo "%1$s" contém campo inválido "%2$s".';
-$MANTIS_ERROR[ERROR_SESSION_HANDLER_INVALID] = 'Handler de sessão inválido.';
-$MANTIS_ERROR[ERROR_SESSION_VAR_NOT_FOUND] = 'Variável de sessão "%1$s" não encontrada.';
-$MANTIS_ERROR[ERROR_SESSION_NOT_VALID] = 'A sua sessão tornou-se inválida.';
-$MANTIS_ERROR[ERROR_FORM_TOKEN_INVALID] = 'Token de segurança de formulário inválido. Isto pode ser causado por um timeout da sessão ou pelo envio acidental do formulário em duplicado.';
-$MANTIS_ERROR[ERROR_INVALID_REQUEST_METHOD] = 'Esta página não pode ser acedida por este método.';
-$MANTIS_ERROR[ERROR_INVALID_SORT_FIELD] = 'Campo de ordenação inválido.';
-$MANTIS_ERROR[ERROR_INVALID_DATE_FORMAT] = 'Formato de data inválido.';
-$MANTIS_ERROR[ERROR_UPDATING_TIMEZONE] = 'Não é possível atualizar o fuso horário.';
 $s_login_error = 'A sua conta pode estar desativada ou bloqueada, ou a combinação nome de utilizador/palavra-chave que você digitou está incorreta.';
 $s_login_cookies_disabled = 'O seu browser não consegue lidar com cookies, ou recusa-se a fazê-lo.';
 $s_go_back = 'Voltar';
@@ -421,7 +316,6 @@ $s_profile_added_msg = 'Perfil adicionado...';
 $s_profile_deleted_msg = 'Perfil removido...';
 $s_edit_profile_title = 'Editar perfil';
 $s_platform = 'Computador (CPU, RAM, disco, etc)';
-$s_operating_system = 'Sistema Operativo';
 $s_additional_description = 'Descrição Adicional';
 $s_update_profile_button = 'Atualizar perfil';
 $s_profile_defaulted_msg = 'Perfil padrão atualizado...';
@@ -454,7 +348,6 @@ $s_realname_duplicated = 'O nome real é usado por outro utilizador';
 $s_realname_updated = 'Nome real atualizado com sucesso';
 $s_password_updated = 'Palavra-chave alterada com sucesso';
 $s_multiple_projects = 'Os problemas selecionados pertencem a projetos diferentes. Os parâmetros abaixo refletem as configurações para todos os projectos. Se isto estiver incorreto, por favor, tente novamente as alterações com um menor número de problemas selecionados.';
-$s_bug_assign_msg = 'O problema foi Atribuído com sucesso...';
 $s_new_bug_title = 'Novo problema';
 $s_feedback_bug_title = 'Pedir comentários ao problema';
 $s_acknowledged_bug_title = 'Reconhecer problema';
@@ -480,7 +373,6 @@ $s_select_file = 'Selecionar Ficheiro';
 $s_select_files = 'Selecionar Ficheiros';
 $s_upload_file_button = 'Enviar Ficheiro';
 $s_upload_files_button = 'Carregar Ficheiros';
-$s_max_file_size = 'Tamanho Máx.';
 $s_bug_reopened_msg = 'O problema foi reaberto...';
 $s_reopen_add_bugnote_title = 'Adicione uma nota com o motivo da reabertura do problema';
 $s_bugnote_add_reopen_button = 'Adicionar Nota e Reabrir o Problema';
@@ -557,18 +449,17 @@ $s_add_bugnote_button = 'Adicionar nota';
 $s_bugnote_edit_link = 'Editar';
 $s_closed_bug_button = 'Fechar problema';
 $s_bugnote_updated_msg = 'A nota referente ao problema foi atualizada com sucesso...';
-$s_edited_on = 'Editada em:';
 $s_hide_content = 'Esconder conteúdo';
 $s_show_content = 'Mostrar conteúdo';
 $s_total_queries_executed = '%1$d queries executadas no total.';
 $s_unique_queries_executed = '%1$d queries únicas executadas.';
-$s_memory_usage_in_kb = 'utilização de memória: %1$s KB';
+$s_memory_usage_in_kb = 'Uso da memória: %1$s KiB';
+$s_log_page_time = 'Tempo de execução';
 $s_please_report = 'Por favor, relate isto ao %1$s';
 $s_click_to_login = 'Entrar';
 $s_warning_plain_password_authentication = '<strong>Aviso:</strong> Autenticação com palavras-chave em claro está a ser usada. Os administradores ficarão a conhecer a sua palavra-chave.';
 $s_warning_default_administrator_account_present = '<strong>Aviso:</strong> Você deve desativar a conta predefinida de \'administrador\' ou alterar a respectiva palavra-chave.';
 $s_warning_admin_directory_present = '<strong>Aviso:</strong> Diretório \'admin\' deve ser removido.';
-$s_error_database_version_out_of_date_1 = '<strong>Erro:</strong> A estrutura da base de dados parece estar desatualizada (config(databaseversion) é 0 e existem tabelas antigas de atualização). A versão 1.x do MantisBT introduziu um novo processo de atualização. Parece estar a atualizar a partir de uma versão 0.XX. Por favor, atualize para 1.0.8 ou 1.1.x e depois 1.2.';
 $s_error_database_no_schema_version = '<strong>Erro:</strong> A estrutura da base de dados parece estar desatualizada (config(databaseversion) é 0 e não existem tabelas antigas de atualização). Verifique se a sua base de dados está em execução - não se pode obter a versão do esquema da base de dados. Config Table não retornou uma versão do esquema da base de dados válida - por favor, pedir apoio na lista de discussão mantis-help se necessário.';
 $s_error_database_version_out_of_date_2 = '<strong>Aviso:</strong> A estrutura da base de dados pode estar desatualizada. Por favor, atualize <a href="admin/install.php">aqui</a> antes de entrar.';
 $s_error_code_version_out_of_date = '<strong>Aviso:</strong> A estrutura da base de dados é mais atual do que o código instalado. Por favor, atualize o código.';
@@ -581,14 +472,13 @@ $s_choose_project = 'Escolher projeto';
 $s_login_button = 'Entrar';
 $s_signup_link = 'Pedir uma nova conta';
 $s_lost_password_link = 'Perdeu a sua palavra-chave?';
+$s_username_or_email = 'Nome de utilizador(a) ou endereço de correio eletrónico';
 $s_select_project_button = 'Selecionar projeto';
 $s_lost_password_title = 'Reposição da palavra-chave';
 $s_lost_password_done_title = 'Mensagem de palavra-chave enviada';
 $s_lost_password_subject = 'Reposição da palavra-chave';
 $s_lost_password_info = 'Para repor a sua palavra-chave perdida, forneça o nome e  endereço de e-mail da sua conta.<br /><br />Se os dados corresponderem a uma conta válida, ser-lhe-á enviado um URL especial, via e-mail, que contém um código de validação para a sua conta. Siga o link fornecido para alterar a sua palavra-passe.';
 $s_lost_password_confirm_hash_OK = 'A sua confirmação foi aceite. Por favor, atualize a sua palavra-passe.';
-$s_open_and_assigned_to_me = 'Abertos e atribuídos a mim';
-$s_open_and_reported_to_me = 'Aberto e relatado por mim';
 $s_newer_news_link = 'Notícias Recentes';
 $s_older_news_link = 'Notícias Antigas';
 $s_archives = 'Arquivos';
@@ -671,15 +561,11 @@ $s_desc_bug_submit_status = 'Estado para o qual um novo problema fica definido';
 $s_desc_bug_reopen_status = 'Estado para o qual os problemas reabertos são definidos';
 $s_desc_bug_resolved_status_threshold = 'Estado em que um problema é considerado resolvido';
 $s_desc_bug_closed_status_threshold = 'Estado no qual um problema é considerado fechado';
-$s_workflow_change_access = 'Quem pode alterar o Workflow';
-$s_access_change_access = 'Quem pode alterar níveis de acesso';
 $s_default_not_in_flow = 'O estado predefinido de %1$s não está selecionado no próximo estado de %2$s. Será ignorado.';
 $s_assign_issue = 'Atribuir um problema';
-$s_allow_close_immediate = 'Permitir que o problema seja fechado ao resolver';
 $s_allow_reporter_close = 'Permitir que o repórter feche o problema';
 $s_allow_reporter_reopen = 'Permitir que o repórter reabra o problema';
 $s_set_status_assigned = 'Definir estado ao atribuir Handler';
-$s_allow_user_edit = 'Permitir que o utilizador edite as suas próprias notas de problemas';
 $s_limit_access = 'Limitar o acesso do repórter aos seus próprios problemas';
 $s_submit_status = 'Estado no qual um novo problema é colocado';
 $s_assigned_status = 'Estado para o qual se definem os problemas auto-atribuídos';
@@ -715,7 +601,6 @@ $s_plugin_install = 'Instalar';
 $s_plugin_upgrade = 'Atualizar';
 $s_plugin_uninstall = 'Desinstalar';
 $s_plugin_uninstall_message = 'Tem a certeza que quer desinstalar o plugin "%1$s"?';
-$s_plugin_key = 'Chave';
 $s_plugin_key_met = 'plugin pronto';
 $s_plugin_key_unmet = 'dependências não satisfeitas';
 $s_plugin_key_dated = 'dependências desatualizadas';
@@ -854,7 +739,7 @@ $s_project_document_updated = 'Projeto atualizado com sucesso';
 $s_project_user_added_msg = 'Utilizador adicionado ao projeto com sucesso.';
 $s_project_removed_user_msg = 'Utilizador removido do projeto com sucesso.';
 $s_remove_user_sure_msg = 'Tem Certeza que Deseja Remover o Utilizador ?';
-$s_remove_user_from_project_button = 'Remover utilizador do projeto %s';
+$s_remove_user_button = 'Remover utilizador';
 $s_remove_all_users_sure_msg = 'Tem a certeza que deseja remover todos os utilizadores deste projeto?';
 $s_remove_all_users_button = 'Remover todos os utilizadores';
 $s_add_user_title = 'Adicionar usuário ao projeto';
@@ -887,7 +772,6 @@ $s_valid_project_msg = 'Você deve escolher um projeto válido.';
 $s_signup_done_title = 'Registo de conta processada.';
 $s_password_emailed_msg = 'Parabéns. Registou-se com sucesso. Vai-lhe ser enviado agora um email de confirmação para verificar o seu endereço de email. Ao visitar o link que irá no e-mail irá ativar a sua conta.';
 $s_no_reponse_msg = 'Terá sete dias para completar o processo de confirmação; se não conseguir completar este processo nos sete dias, esta conta pode ser descartada.';
-$s_signup_captcha_request = 'Digite o código tal como aparece na caixa à direita.';
 $s_signup_info = 'Ao completar este formulário e verificar as suas respostas, ser-lhe-á enviada uma mensagem de confirmação por email, para o endereço que indicou.<br />Através deste e-mail, será possível ativar a sua conta. Se não ativar a conta no prazo de sete dias, será apagada.<br />Deve indicar um endereço de e-mail válido para que possa receber a mensagem de confirmação.';
 $s_signup_title = 'Inscrição';
 $s_signup_button = 'Inscrição';
@@ -937,11 +821,8 @@ $s_changed = 'Modificado(hrs)';
 $s_viewing_bugs_title = 'Ver problemas';
 $s_updated = 'Atualizado';
 $s_sticky = 'Mostrar problemas colados';
-$s_sort = 'Ordenar por';
 $s_issue_id = 'Problema #';
 $s_recently_visited = 'Recentemente visitado';
-$s_note_user_id = 'Nota por';
-$s_filter_match_type = 'Tipo de correspondência';
 $s_filter_match_all = 'Todas as condições';
 $s_filter_match_any = 'Qualquer condição';
 $s_none = 'Nenhum';
@@ -953,8 +834,6 @@ $s_prev = 'Anterior';
 $s_next = 'Seguinte';
 $s_first = 'Primeiro';
 $s_last = 'Último';
-$s_start_date = 'Data de início';
-$s_end_date = 'Data fim';
 $s_use_date_filters = 'Usar filtro de data';
 $s_yes = 'Sim';
 $s_no = 'Não';
@@ -986,7 +865,6 @@ $s_close_bug_button = 'Fechar';
 $s_move_bug_button = 'Mover';
 $s_attached_files = 'Ficheiros anexos';
 $s_publish = 'Publicar';
-$s_cached = 'Em cache';
 $s_add_user_to_monitor = 'Adicionar';
 $s_bug_view_title = 'Ver detalhes do problema';
 $s_no_users_monitoring_bug = 'Não há utilizadores a acompanhar este problema';
@@ -1025,9 +903,8 @@ $s_custom_field_require_resolved = 'Necessário ao resolver';
 $s_custom_field_require_closed = 'Necessário ao fechar';
 $s_link_custom_field_to_project_title = 'Ligar campo personalizado ao projeto';
 $s_link_custom_field_to_project_button = 'Ligar campo personalizado';
-$s_linked_projects = 'Projectos ligados';
 $s_custom_field_sequence = 'Sequência';
-$s_custom_field_type_enum_string = '0:Cadeia de caracteres,1:Numérico,2:Vírgula flutuante,3:Enumeração,4:E-mail,5:Caixa de verificação,6:Lista,7:Lista de seleção múltipla,8:Data,9:Botão rádio';
+$s_custom_field_type_enum_string = '0:Cadeia de caracteres,1:Numérico,2:Vírgula flutuante,3:Enumeração,4:E-mail,5:Caixa de verificação,6:Lista,7:Lista de seleção múltipla,8:Data,9:Botão rádio,10:Textarea';
 $s_confirm_used_custom_field_deletion = 'Este campo está atualmente ligado a pelo menos um projeto. Se continuar, todos os valores para este campo serão permanentemente apagados. Esta ação não pode ser desfeita. Se não quer apagar este campo, use o botão \'Voltar\' no seu browser. Para avançar, clique no botão seguinte';
 $s_confirm_custom_field_deletion = 'Tem a certeza que quer apagar este campo personalizado e todos os valores associados?';
 $s_field_delete_button = 'Apagar campo';
@@ -1089,7 +966,6 @@ $s_dependency_graph = 'Gráfico de dependências';
 $s_vertical = 'Vertical';
 $s_horizontal = 'Horizontal';
 $s_view_issue = 'Ver problema';
-$s_checkin = 'Checkin';
 $s_perm_rpt_capability = 'Capacidade';
 $s_view = 'Ver';
 $s_issues = 'Problemas';
@@ -1108,8 +984,6 @@ $s_update_view_status = 'Atualizar estado de visibilidade (público vs privado)'
 $s_show_list_of_users_monitoring_issue = 'Mostrar lista de utilizadores a acompanhar um problema';
 $s_notes = 'Notas';
 $s_add_notes = 'Acrescentar notas';
-$s_update_notes = 'Atualizar notas';
-$s_delete_note = 'Apagar nota';
 $s_view_private_notes = 'Ver notas privadas';
 $s_news = 'Notícias';
 $s_view_private_news = 'Ver notícias privadas';
@@ -1199,14 +1073,13 @@ $s_time_tracking = 'Acompanhamento de tempo';
 $s_time_tracking_time_spent = 'Tempo gasto:';
 $s_time_tracking_get_info_button = 'Obter informação de acompanhamento de tempo';
 $s_time_tracking_cost_per_hour = 'Custo / Hora';
+$s_time_tracking_cost_per_hour_label = 'Custo / Hora:';
 $s_time_tracking_cost = 'Custo';
 $s_total_time_for_issue = 'Tempo total para o problema = %1$s';
 $s_time_tracking_stopwatch_start = 'Iniciar';
 $s_time_tracking_stopwatch_stop = 'Parar';
 $s_time_tracking_stopwatch_reset = 'Reset';
 $s_access_denied = 'Acesso negado';
-$s_twitter_resolved = '%1$dd: [%2$s] %3$s (resolvido por %4$s em %5$s)';
-$s_twitter_resolved_no_version = '%1$d: [%2$s] %3$s (resolvido por %4$s)';
 $s_development_team = 'Equipe de desenvolvimento';
 $s_manage_columns_config = 'Gerir colunas';
 $s_all_columns_title = 'Todas as colunas disponíveis';
@@ -1227,6 +1100,7 @@ $s_manage_user = 'Gerir utilizador';
 $s_install_information = 'Informação da instalação MantisBT';
 $s_database_information = 'Informação da base de dados MantisBT';
 $s_path_information = 'Informação do caminho MantisBT';
+$s_php_version = 'Versão do PHP';
 $s_month_january = 'Janeiro';
 $s_month_february = 'Fevereiro';
 $s_month_march = 'Março';
@@ -1239,3 +1113,118 @@ $s_month_september = 'Setembro';
 $s_month_october = 'Outubro';
 $s_month_november = 'Novembro';
 $s_month_december = 'Dezembro';
+$MANTIS_ERROR[ERROR_GENERIC] = 'Ocorreu um erro durante a execução desta ação. Pode querer comunicar este erro ao seu administrador local';
+$MANTIS_ERROR[ERROR_SQL] = 'Erro de SQL detectado';
+$MANTIS_ERROR[ERROR_REPORT] = 'Houve um erro no seu relatório';
+$MANTIS_ERROR[ERROR_NO_FILE_SPECIFIED] = 'Nenhum ficheiro especificado';
+$MANTIS_ERROR[ERROR_FILE_DISALLOWED] = 'O tipo de ficheiro não é permitido.';
+$MANTIS_ERROR[ERROR_NO_DIRECTORY] = 'A pasta não existe. Por favor verifique as definições do projeto.';
+$MANTIS_ERROR[ERROR_DUPLICATE_PROJECT] = 'Um projeto com este nome já existe.';
+$MANTIS_ERROR[ERROR_EMPTY_FIELD] = 'O campo necessário "%1$s" estava vazio. Por favor, verifique novamente as entradas.';
+$MANTIS_ERROR[ERROR_PROTECTED_ACCOUNT] = 'Esta conta está protegida. Você não tem permissão para aceder a isto até que a proteção seja removida.';
+$MANTIS_ERROR[ERROR_ACCESS_DENIED] = 'Acesso Negado.';
+$MANTIS_ERROR[ERROR_UPLOAD_FAILURE] = 'Carregamento de ficheiro mal-sucedido. Ficheiro não é legível pelo MantisBT. Por favor verifique as definições do projeto.';
+$MANTIS_ERROR[ERROR_FILE_TOO_BIG] = 'Carregamento de ficheiro mal-sucedido. Isto foi provavelmente causado pelo tamanho do ficheiro ser superior ao limite permitido por esta instalação do PHP.';
+$MANTIS_ERROR[ERROR_GPC_VAR_NOT_FOUND] = 'Um parâmetro obrigatório para esta página (%1$s) não foi encontrado.';
+$MANTIS_ERROR[ERROR_USER_NAME_NOT_UNIQUE] = 'Esse nome de utilizador já está a ser usado. Por favor volte atrás e escolha outro.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_NOT_FOUND] = 'Opção de configuração "%1$s" não encontrada.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_CANT_BE_SET_IN_DB] = 'Opção de configuração "%1$s" não pode ser definida na base de dados. Deve ser definida em config_inc.php.';
+$MANTIS_ERROR[ERROR_LANG_STRING_NOT_FOUND] = 'Cadeia de caracteres "%1$s" não encontrada.';
+$MANTIS_ERROR[ERROR_BUGNOTE_NOT_FOUND] = 'Nota não encontrada.';
+$MANTIS_ERROR[ERROR_PROJECT_NOT_FOUND] = 'O projeto "%1$s" não foi encontrado.';
+$MANTIS_ERROR[ERROR_DB_FIELD_NOT_FOUND] = 'Campo de base de dados "%1$s" não encontrado.';
+$MANTIS_ERROR[ERROR_HANDLER_ACCESS_TOO_LOW] = 'Handler de problemas não tem privilégios suficientes para tratar do problema neste estado.';
+$MANTIS_ERROR[ERROR_PROJECT_NAME_NOT_UNIQUE] = 'Um projeto com esse nome já existe. Por favor, volte atrás e introduza um nome diferente.';
+$MANTIS_ERROR[ERROR_PROJECT_NAME_INVALID] = 'O nome de projeto especificado é inválido. Nomes de projeto não podem estar em branco.';
+$MANTIS_ERROR[ERROR_USER_BY_NAME_NOT_FOUND] = 'Utilizador com o nome "%1$s" não encontrado.';
+$MANTIS_ERROR[ERROR_USER_BY_ID_NOT_FOUND] = 'Utilizador com o id "%1$d" não encontrado.';
+$MANTIS_ERROR[ERROR_AUTH_INVALID_COOKIE] = 'A informação de login armazenada pelo seu navegador é inválida. Talvez a sua conta tenha sido apagada?';
+$MANTIS_ERROR[ERROR_USER_PREFS_NOT_FOUND] = 'As preferências deste utilizador não puderam ser encontradas.';
+$MANTIS_ERROR[ERROR_NEWS_NOT_FOUND] = 'Não foi encontrado item de notícias.';
+$MANTIS_ERROR[ERROR_USER_CREATE_PASSWORD_MISMATCH] = 'Palavra-chave não corresponde à verificação.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_EXPECTED] = 'Era esperado um array mas foi recebida uma cadeia de caracteres para %1$s.';
+$MANTIS_ERROR[ERROR_GPC_ARRAY_UNEXPECTED] = 'Era esperada uma cadeia de caracteres mas foi recebido um array para %1$s.';
+$MANTIS_ERROR[ERROR_GPC_NOT_NUMBER] = 'Um número era esperado para %1$s.';
+$MANTIS_ERROR[ERROR_BUG_NOT_FOUND] = 'Problema %1$d não encontrado.';
+$MANTIS_ERROR[ERROR_FILTER_NOT_FOUND] = 'Filtro %1$s não encontrado.';
+$MANTIS_ERROR[ERROR_FILTER_TOO_OLD] = 'O filtro que está a tentar usar é demasiado antigo para ser atualizado. Por favor, recrie-o.';
+$MANTIS_ERROR[ERROR_EMAIL_INVALID] = 'Endereço de email inválido.';
+$MANTIS_ERROR[ERROR_EMAIL_DISPOSABLE] = 'Não é permitido o uso de endereços de e-mail descartáveis.';
+$MANTIS_ERROR[ERROR_USER_PROFILE_NOT_FOUND] = 'Perfil não encontrado.';
+$MANTIS_ERROR[ERROR_FILE_NOT_ALLOWED] = 'Tipo de ficheiro não permitido para uploads.';
+$MANTIS_ERROR[ERROR_FILE_DUPLICATE] = 'Este é um ficheiro duplicado. Por favor, apague o ficheiro antes.';
+$MANTIS_ERROR[ERROR_FILE_INVALID_UPLOAD_PATH] = 'Localização inválida. O diretório não existe ou não tem as permissões necessárias.';
+$MANTIS_ERROR[ERROR_FILE_NO_UPLOAD_FAILURE] = 'Nenhum ficheiro foi carregado. Por favor, volte atrás e escolha um ficheiro antes de premir o botão Carregar.';
+$MANTIS_ERROR[ERROR_FILE_MOVE_FAILED] = 'Não foi possível mover para o destino final o ficheiro enviado. O diretório não existe ou não tem as permissões necessárias.';
+$MANTIS_ERROR[ERROR_BUG_DUPLICATE_SELF] = 'Não pode marcar um problema como duplicado dele próprio.';
+$MANTIS_ERROR[ERROR_BUG_REVISION_NOT_FOUND] = 'Revisão do problema não encontrada.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NOT_FOUND] = 'Campo personalizado não encontrado.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_NAME_NOT_UNIQUE] = 'Este é um nome duplicado.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_IN_USE] = 'Pelo menos um projeto ainda utiliza este campo.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_VALUE] = 'Valor inválido para o campo "%1$s".';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_DEFINITION] = 'Definição de campo personalizado inválida.';
+$MANTIS_ERROR[ERROR_CUSTOM_FIELD_INVALID_PROPERTY] = 'Propriedade de campo personalizado inválido ( %1$s ).';
+$MANTIS_ERROR[ERROR_LDAP_AUTH_FAILED] = 'Falha na Autenticação LDAP.';
+$MANTIS_ERROR[ERROR_LDAP_SERVER_CONNECT_FAILED] = 'Falha na ligação ao servidor LDAP.';
+$MANTIS_ERROR[ERROR_LDAP_UPDATE_FAILED] = 'Atualização de registro LDAP falhou.';
+$MANTIS_ERROR[ERROR_LDAP_USER_NOT_FOUND] = 'Registo de Utilizador LDAP Não Encontrado.';
+$MANTIS_ERROR[ERROR_LDAP_EXTENSION_NOT_LOADED] = 'Extensão LDAP Não Carregada.';
+$MANTIS_ERROR[ERROR_DB_CONNECT_FAILED] = 'Ligação à base de dados falhou. O erro recebido da base de dados foi #%1$d: %2$s.';
+$MANTIS_ERROR[ERROR_DB_QUERY_FAILED] = 'Query à base de dados falhou. Erro recebido da base de dados foi #%1$d: %2$s para a query: %3$s.';
+$MANTIS_ERROR[ERROR_DB_SELECT_FAILED] = 'Seleção da base de dados falhou. Erro recebido da base de dados foi #%1$d: %2$s.';
+$MANTIS_ERROR[ERROR_CATEGORY_DUPLICATE] = 'Já existe uma categoria com esse nome.';
+$MANTIS_ERROR[ERROR_CATEGORY_NO_ACTION] = 'Nenhuma ação de cópia foi especificada.';
+$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND] = 'Categoria não encontrada.';
+$MANTIS_ERROR[ERROR_CATEGORY_NOT_FOUND_FOR_PROJECT] = 'Categoria "%1$s" não encontrada para o projeto "%2$s".';
+$MANTIS_ERROR[ERROR_CATEGORY_CANNOT_DELETE_DEFAULT] = 'Esta categoria não pode ser eliminada, porque está definida como "categoria padrão para movimentos".';
+$MANTIS_ERROR[ERROR_VERSION_DUPLICATE] = 'Já existe uma versão com esse nome.';
+$MANTIS_ERROR[ERROR_VERSION_NOT_FOUND] = 'Versão "%1$s" não encontrada.';
+$MANTIS_ERROR[ERROR_USER_NAME_INVALID] = 'O nome de utilizador é inválido. Nomes de utilizador só podem conter letras, números, espaços, hífenes (-), pontos (.), sinais de mais (+) e sublinhados (_).';
+$MANTIS_ERROR[ERROR_USER_REAL_NAME_INVALID] = 'O nome verdadeiro do utilizador é inválido.';
+$MANTIS_ERROR[ERROR_USER_DOES_NOT_HAVE_REQ_ACCESS] = 'O utilizador não tem o nível de acesso exigido.';
+$MANTIS_ERROR[ERROR_USER_REAL_MATCH_USER] = 'O "Nome Real" escolhido coincide com o nome de login de outro utilizador. Por favor escolha outro.';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_NOT_ENABLED] = 'Apoio de patrocínio não ativado.';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_NOT_FOUND] = 'Patrocínio %1$d não encontrado.';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_AMOUNT_TOO_LOW] = 'Patrocínio (%1$s) é inferior à quantidade mínima (%2$s).';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_HANDLER_ACCESS_LEVEL_TOO_LOW] = 'Handler não tem o nível de acesso necessário para tratar de problemas patrocinados.';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_ASSIGNER_ACCESS_LEVEL_TOO_LOW] = 'Acesso negado: Atribuir patrocínio requer um nível de acesso mais alto.';
+$MANTIS_ERROR[ERROR_SPONSORSHIP_SPONSOR_NO_EMAIL] = 'O patrocinador não indicou um endereço de email. Por favor, atualize o seu perfil.';
+$MANTIS_ERROR[ERROR_CONFIG_OPT_INVALID] = 'Opção de configuração "%1$s" tem o valor inválido "%2$s".';
+$MANTIS_ERROR[ERROR_BUG_READ_ONLY_ACTION_DENIED] = 'Não pode realizar esta ação porque o problema "%1$d" é só de leitura.';
+$MANTIS_ERROR[ERROR_RELATIONSHIP_ALREADY_EXISTS] = 'Já existe uma relação entre estes dois problemas.';
+$MANTIS_ERROR[ERROR_RELATIONSHIP_NOT_FOUND] = 'Relacionamento não encontrado.';
+$MANTIS_ERROR[ERROR_RELATIONSHIP_ACCESS_LEVEL_TO_DEST_BUG_TOO_LOW] = 'Acesso negado: O problema %1$d requer nível de acesso mais alto.';
+$MANTIS_ERROR[ERROR_RELATIONSHIP_SAME_BUG] = 'Um problema não pode estar relacionado consigo próprio.';
+$MANTIS_ERROR[ERROR_SIGNUP_NOT_MATCHING_CAPTCHA] = 'Hash de confirmação não corresponde. Por favor, tente novamente.';
+$MANTIS_ERROR[ERROR_LOST_PASSWORD_NOT_ENABLED] = 'A funcionalidade "perdeu a sua palavra-chave" não está disponível.';
+$MANTIS_ERROR[ERROR_LOST_PASSWORD_NO_EMAIL_SPECIFIED] = 'Tem que indicar um endereço de email para poder redefinir a palavra-chave.';
+$MANTIS_ERROR[ERROR_LOST_PASSWORD_NOT_MATCHING_DATA] = 'A informação fornecida não corresponde a qualquer conta registada!';
+$MANTIS_ERROR[ERROR_LOST_PASSWORD_CONFIRM_HASH_INVALID] = 'O URL de confirmação é inválido ou já foi utilizado. Por favor registe-se novamente.';
+$MANTIS_ERROR[ERROR_LOST_PASSWORD_MAX_IN_PROGRESS_ATTEMPTS_REACHED] = 'Foi atingido o número máximo de pedidos pendentes. Por favor, contacte o administrador do sistema.';
+$MANTIS_ERROR[ERROR_PROJECT_RECURSIVE_HIERARCHY] = 'Essa operação iria criar um ciclo na hierarquia de subprojectos.';
+$MANTIS_ERROR[ERROR_USER_CHANGE_LAST_ADMIN] = 'Não pode alterar ou despromover a última conta de administrador. Para executar a ação pedida, é necessário criar primeiro outra conta de administrador.';
+$MANTIS_ERROR[ERROR_PAGE_REDIRECTION] = 'Erro de redirecionamento da página, certifique-se que não haja espaços fora do bloco PHP (&lt;?php ?&gt;) nos ficheiros config_inc.php ou custom_*.php.';
+$MANTIS_ERROR[ERROR_TAG_NOT_FOUND] = 'Não foi possível encontrar uma etiqueta com esse nome.';
+$MANTIS_ERROR[ERROR_TAG_DUPLICATE] = 'Já existe uma etiqueta com esse nome.';
+$MANTIS_ERROR[ERROR_TAG_NAME_INVALID] = 'Esse nome de etiqueta é inválido.';
+$MANTIS_ERROR[ERROR_TAG_NOT_ATTACHED] = 'Essa etiqueta não está associada a esse problema.';
+$MANTIS_ERROR[ERROR_TAG_ALREADY_ATTACHED] = 'Essa etiqueta já está associada a esse problema.';
+$MANTIS_ERROR[ERROR_TOKEN_NOT_FOUND] = 'Não foi possível encontrar o token.';
+$MANTIS_ERROR[ERROR_EVENT_UNDECLARED] = 'Evento "%1$s" ainda não foi declarado.';
+$MANTIS_ERROR[ERROR_PLUGIN_NOT_REGISTERED] = 'O plugin "%1$s" não está registado.';
+$MANTIS_ERROR[ERROR_PLUGIN_ALREADY_INSTALLED] = 'O plugin "%1$s" já está instalado.';
+$MANTIS_ERROR[ERROR_PLUGIN_PAGE_NOT_FOUND] = 'A página "%2$s" não existe no Plugin "%1$s".';
+$MANTIS_ERROR[ERROR_PLUGIN_INSTALL_FAILED] = 'Instalação do plugin falhada:  %1$s .';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_FAILED] = 'A atualização do schema do plugin falhou no bloco #%1$s.';
+$MANTIS_ERROR[ERROR_PLUGIN_UPGRADE_NEEDED] = 'O plugin "%1$s" precisa de ser atualizado antes de você poder aceder a esta página.';
+$MANTIS_ERROR[ERROR_PLUGIN_GENERIC] = 'Houve um erro desconhecido "%1$s" durante a execução do plugin "%2$s".';
+$MANTIS_ERROR[ERROR_COLUMNS_DUPLICATE] = 'Campo "%1$s" contém coluna duplicada "%2$s".';
+$MANTIS_ERROR[ERROR_COLUMNS_INVALID] = 'Campo "%1$s" contém campo inválido "%2$s".';
+$MANTIS_ERROR[ERROR_SESSION_HANDLER_INVALID] = 'Handler de sessão inválido.';
+$MANTIS_ERROR[ERROR_SESSION_VAR_NOT_FOUND] = 'Variável de sessão "%1$s" não encontrada.';
+$MANTIS_ERROR[ERROR_SESSION_NOT_VALID] = 'A sua sessão tornou-se inválida.';
+$MANTIS_ERROR[ERROR_FORM_TOKEN_INVALID] = 'Token de segurança de formulário inválido. Isto pode ser causado por um timeout da sessão ou pelo envio acidental do formulário em duplicado.';
+$MANTIS_ERROR[ERROR_INVALID_REQUEST_METHOD] = 'Esta página não pode ser acedida por este método.';
+$MANTIS_ERROR[ERROR_INVALID_SORT_FIELD] = 'Campo de ordenação inválido.';
+$MANTIS_ERROR[ERROR_INVALID_DATE_FORMAT] = 'Formato de data inválido.';
+$MANTIS_ERROR[ERROR_UPDATING_TIMEZONE] = 'Não é possível atualizar o fuso horário.';

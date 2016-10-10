@@ -18,10 +18,12 @@ function config_set_if_needed( $p_name, $p_value ) {
 }
 
 $t_redirect_url = plugin_page( 'config_page', true );
+html_page_top( null, $t_redirect_url );
 
 config_set_if_needed( 'import_threshold' , gpc_get_int( 'import_threshold' ) );
 config_set_if_needed( 'export_threshold' , gpc_get_int( 'export_threshold' ) );
 
 form_security_purge( 'plugin_XmlImportExport_config' );
 
-print_successful_redirect( $t_redirect_url );
+html_operation_successful( $t_redirect_url );
+html_page_bottom();

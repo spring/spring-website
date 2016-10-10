@@ -1,5 +1,5 @@
 <?php
-# MantisBT - a php based bugtracking system
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,29 +14,29 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
-	/**
-	 * @package MantisBT
-	 * @copyright Copyright (C) 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
-	 * @copyright Copyright (C) 2002 - 2014  MantisBT Team - mantisbt-dev@lists.sourceforge.net
-	 * @link http://www.mantisbt.org
-	 */
-	 /**
-	  * MantisBT Core API's
-	  */
-	require_once( 'core.php' );
+/**
+ * Graph by Priority
+ *
+ * @package MantisBT
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link http://www.mantisbt.org
+ */
 
-	require_once( 'graph_api.php' );
+require_once( 'core.php' );
 
-	access_ensure_project_level( config_get( 'view_summary_threshold' ) );
+plugin_require_api( 'core/graph_api.php' );
 
-	$f_width = gpc_get_int( 'width', 300 );
-	$t_ar = plugin_config_get( 'bar_aspect' );
+access_ensure_project_level( config_get( 'view_summary_threshold' ) );
 
-	$t_token = token_get_value( TOKEN_GRAPH );
-	if ( $t_token == null ) {
-		$t_metrics = enum_bug_group( lang_get( 'priority_enum_string' ), 'priority');
-	} else {
-		$t_metrics = unserialize( $t_token );
-	}
+$f_width = gpc_get_int( 'width', 300 );
+$t_ar = plugin_config_get( 'bar_aspect' );
 
-	graph_group( $t_metrics, plugin_lang_get( 'by_priority_mix' ), $f_width, $f_width * $t_ar );
+$t_token = token_get_value( TOKEN_GRAPH );
+if( $t_token == null ) {
+	$t_metrics = enum_bug_group( lang_get( 'priority_enum_string' ), 'priority' );
+} else {
+	$t_metrics = json_decode( $t_token, true );
+}
+
+graph_group( $t_metrics, plugin_lang_get( 'by_priority_mix' ), $f_width, $f_width * $t_ar );

@@ -9,40 +9,55 @@ html_page_top();
 ?>
 
 <br />
+<div class="form-container">
 <form action="<?php echo plugin_page( 'config' ) ?>" method="post">
-<?php echo form_security_field( 'plugin_XmlImportExport_config' ) ?>
-<table class="width60" align="center">
+<fieldset>
+	<legend>
+		<?php echo plugin_lang_get( 'config_title' ) ?>
+	</legend>
 
-<tr>
-<td class="form-title" colspan="2"><?php echo plugin_lang_get("config_title") ?></td>
-</tr>
+	<?php echo form_security_field( 'plugin_XmlImportExport_config' ) ?>
 
-<tr <?php echo helper_alternate_class() ?>>
-<td class="category"><?php echo plugin_lang_get( 'import_threshold' ) ?></td>
-<td><select name="import_threshold"><?php
-	print_enum_string_option_list(
-		'access_levels',
-		plugin_config_get( 'import_threshold' )
-	);
-	?></select></td>
-</tr>
+	<!-- Import Access Level  -->
+	<div class="field-container">
+		<label for="import_threshold">
+			<span><?php echo plugin_lang_get( 'import_threshold' ) ?></span>
+		</label>
+		<span class="select">
+			<select id="import_threshold" name="import_threshold"><?php
+				print_enum_string_option_list(
+					'access_levels',
+					plugin_config_get( 'import_threshold' )
+				);
+			?></select>
+		</span>
+		<span class="label-style"></span>
+	</div>
 
-<tr <?php echo helper_alternate_class() ?>>
-<td class="category"><?php echo plugin_lang_get( 'export_threshold' ) ?></td>
-<td><select name="export_threshold"><?php
-	print_enum_string_option_list(
-		'access_levels',
-		plugin_config_get( 'export_threshold' )
-	);
-	?></select></td>
-</tr>
+	<!-- Export Access Level  -->
+	<div class="field-container">
+		<label for="export_threshold">
+			<span><?php echo plugin_lang_get( 'export_threshold' ) ?></span>
+		</label>
+		<span class="select">
+			<select id="export_threshold" name="export_threshold"><?php
+				print_enum_string_option_list(
+					'access_levels',
+					plugin_config_get( 'export_threshold' )
+				);
+			?></select>
+		</span>
+		<span class="label-style"></span>
+	</div>
 
-<tr>
-<td class="center" colspan="2"><input type="submit" value="<?php echo plugin_lang_get("action_update") ?>"/></td>
-</tr>
+	<!-- Update button -->
+	<div class="submit-button">
+		<input type="submit" value="<?php echo plugin_lang_get( 'action_update' ) ?>"/>
+	</div>
 
-</table>
+</fieldset>
 </form>
+</div>
 
 <?php
 html_page_bottom();
