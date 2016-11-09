@@ -35,29 +35,15 @@ a~a>.frontscreenshot {
 }
 #welcometext {
 	position: absolute; bottom: 0; left: 0;
-	background-image: linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
-	background-image: -o-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
-	background-image: -moz-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
-	background-image: -webkit-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
-	background-image: -ms-linear-gradient(top, rgba(200,40,30,0.80), rgba(150,30,20,0.80) 100%);
-	box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.706), inset 0px 1px rgba(255, 255, 255, 0.298),
-		inset 0px 3px rgba(255, 255, 255, 0.128), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -15px 30px rgba(0, 0, 0, 0.298);
-
-	border-radius: 10px;
+	background: rgba(0, 0, 0, 0.2);
+	width:100%;
 	padding: 10px;
-	padding-bottom:14px;
-	margin-left: 10px;
-	margin-bottom: 10px;
-
 	font-size: 25px;
-	text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 	color: #EEE;
 }
 .welcomesmall {
 	font-size: 60%;
 	font-weight: bold;
-	margin-left: 2px;
-	margin-bottom: -3px;
 }
 .byline {
 	font-size: 14px;
