@@ -137,20 +137,12 @@ a~a>.frontscreenshot {
 
 .newsbar {
 	background-color: #34414A;
-	background: linear-gradient(top, #34414A, #506673 100%);
-	background: -o-linear-gradient(top, #34414A, #506673 100%);
-	background: -moz-linear-gradient(top, #34414A, #506673 100%);
-	background: -webkit-linear-gradient(top, #34414A, #506673 100%);
-	background: -ms-linear-gradient(top, #34414A, #506673 100%);
-	box-shadow: inset 0px 1px rgba(255, 255, 255, 0.298), inset 0px 10px 20px rgba(255, 255, 255, 0.251), inset 0px -16px 20px rgba(0, 0, 0, 0.298);
-	border-right:  1px solid #20292E;
-	border-left:   1px solid #20292E;
-	border-bottom: 1px solid #20292E;
+	border:  1px solid #20292E;
+	border-top: none;
 	border-radius: 10px 0 0 0;
 	padding: 4px 0 3px 12px;
 	font-size: 15px;
 	font-weight:bold;
-	text-shadow: 2px 2px 1px rgba(0,0,0,0.95);
 	color: #EEE;
 }
 .newsitem {
@@ -160,18 +152,11 @@ a~a>.frontscreenshot {
 	border-bottom: 1px solid #20292E;
 	padding: 8px;
 	background-color: #38474E;
-	background: -webkit-linear-gradient(-65deg, #506161, #38474E 200px);
-	background: linear-gradient(-65deg, #506161, #38474E 200px);
-	background: -o-linear-gradient(-65deg, #506161, #38474E 200px);
-	background: -moz-linear-gradient(-65deg, #506161, #38474E 200px);
-	background: -webkit-linear-gradient(-65deg, #506161, #38474E 200px);
-	background: -ms-linear-gradient(-65deg, #506161, #38474E 200px);
 	box-shadow: inset 1px 1px rgba(255, 255, 255, 0.198);
 }
 .newsheadline {
 	font-size: 22px;
 	color: #EEE;
-	text-shadow: 2px 2px 2px #111;
 }
 .newsabout {
 	font-size: 11px;
