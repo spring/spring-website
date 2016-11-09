@@ -227,6 +227,28 @@ a~a>.frontscreenshot {
 	max-width: 465px;
 }
 
+#homepagenews {
+	background: #4C626F;
+	margin-right: 0;
+	padding-right: 0;
+	padding-bottom: 14px;
+}
+#frontmediavideotd {
+	padding-bottom:15px;
+}
+
+#homepagemedia {
+	background: #4C626F;
+	padding-top: 15px;
+	margin-right: 0;
+	padding-right: 0;
+	padding-bottom: 0px;
+}
+
+#homepage-media-options {
+	width:469px;
+	float:right;
+}
 
 @media (max-width: 1050px), (max-device-width: 1050px) {
 	.frontscreenshot {
