@@ -162,12 +162,16 @@ a~a>.frontscreenshot {
 	font-size: 11px;
 	color: #EEE;
 	line-height: 18px;
+	font-style: italic;
 }
-.newsbody {
+.newsbody,
+.newsabout,
+.newsheadline {
 	max-width: 958px;
 	width: 100%;
 	padding: 8px;
 }
+
 .cnews {
 	float: right;
 	clear: right;
