@@ -4,7 +4,7 @@
  *
  * Created on Dec 1, 2007
  *
- * Copyright © 2006 Yuri Astrakhan <Firstname><Lastname>@gmail.com
+ * Copyright © 2006 Yuri Astrakhan "<Firstname><Lastname>@gmail.com"
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
  *
  * @ingroup API
  */
-class ApiQueryAllmessages extends ApiQueryBase {
+class ApiQueryAllMessages extends ApiQueryBase {
 
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'am' );
@@ -39,8 +39,9 @@ class ApiQueryAllmessages extends ApiQueryBase {
 		$params = $this->extractRequestParams();
 
 		if ( is_null( $params['lang'] ) ) {
-			global $wgLang;
-			$langObj = $wgLang;
+			$langObj = $this->getLanguage();
+		} elseif ( !Language::isValidCode( $params['lang'] ) ) {
+			$this->dieUsage( 'Invalid language code for parameter lang', 'invalidlang' );
 		} else {
 			$langObj = Language::factory( $params['lang'] );
 		}
@@ -48,7 +49,7 @@ class ApiQueryAllmessages extends ApiQueryBase {
 		if ( $params['enableparser'] ) {
 			if ( !is_null( $params['title'] ) ) {
 				$title = Title::newFromText( $params['title'] );
-				if ( !$title ) {
+				if ( !$title || $title->isExternal() ) {
 					$this->dieUsageMsg( array( 'invalidtitle', $params['title'] ) );
 				}
 			} else {
@@ -86,7 +87,7 @@ class ApiQueryAllmessages extends ApiQueryBase {
 			foreach ( $messages_target as $message ) {
 				// === 0: must be at beginning of string (position 0)
 				if ( strpos( $message, $params['prefix'] ) === 0 ) {
-					if( !$skip ) {
+					if ( !$skip ) {
 						$skip = true;
 					}
 					$messages_filtered[] = $message;
@@ -116,7 +117,7 @@ class ApiQueryAllmessages extends ApiQueryBase {
 			$lang = $langObj->getCode();
 
 			$customisedMessages = AllmessagesTablePager::getCustomisedStatuses(
-				array_map( array( $langObj, 'ucfirst'), $messages_target ), $lang, $lang != $wgContLang->getCode() );
+				array_map( array( $langObj, 'ucfirst' ), $messages_target ), $lang, $lang != $wgContLang->getCode() );
 
 			$customised = $params['customised'] === 'modified';
 		}
@@ -143,7 +144,7 @@ class ApiQueryAllmessages extends ApiQueryBase {
 				}
 
 				if ( $customiseFilterEnabled ) {
-					$messageIsCustomised = isset( $customisedMessages['pages'][ $langObj->ucfirst( $message ) ] );
+					$messageIsCustomised = isset( $customisedMessages['pages'][$langObj->ucfirst( $message )] );
 					if ( $customised === $messageIsCustomised ) {
 						if ( $customised ) {
 							$a['customised'] = '';
@@ -240,10 +241,10 @@ class ApiQueryAllmessages extends ApiQueryBase {
 			'messages' => 'Which messages to output. "*" (default) means all messages',
 			'prop' => 'Which properties to get',
 			'enableparser' => array( 'Set to enable parser, will preprocess the wikitext of message',
-							'Will substitute magic words, handle templates etc.' ),
+				'Will substitute magic words, handle templates etc.' ),
 			'nocontent' => 'If set, do not include the content of the messages in the output.',
 			'includelocal' => array( "Also include local messages, i.e. messages that don't exist in the software but do exist as a MediaWiki: page.",
-							"This lists all MediaWiki: pages, so it will also list those that aren't 'really' messages such as Common.js",
+				"This lists all MediaWiki: pages, so it will also list those that aren't 'really' messages such as Common.js",
 			),
 			'title' => 'Page name to use as context when parsing message (for enableparser option)',
 			'args' => 'Arguments to be substituted into message',
@@ -256,8 +257,35 @@ class ApiQueryAllmessages extends ApiQueryBase {
 		);
 	}
 
+	public function getPossibleErrors() {
+		return array_merge( parent::getPossibleErrors(), array(
+			array( 'code' => 'invalidlang', 'info' => 'Invalid language code for parameter lang' ),
+		) );
+	}
+
+	public function getResultProperties() {
+		return array(
+			'' => array(
+				'name' => 'string',
+				'customised' => 'boolean',
+				'missing' => 'boolean',
+				'*' => array(
+					ApiBase::PROP_TYPE => 'string',
+					ApiBase::PROP_NULLABLE => true
+				)
+			),
+			'default' => array(
+				'defaultmissing' => 'boolean',
+				'default' => array(
+					ApiBase::PROP_TYPE => 'string',
+					ApiBase::PROP_NULLABLE => true
+				)
+			)
+		);
+	}
+
 	public function getDescription() {
-		return 'Return messages from this site';
+		return 'Return messages from this site.';
 	}
 
 	public function getExamples() {
@@ -269,9 +297,5 @@ class ApiQueryAllmessages extends ApiQueryBase {
 
 	public function getHelpUrls() {
 		return 'https://www.mediawiki.org/wiki/API:Meta#allmessages_.2F_am';
-	}
-
-	public function getVersion() {
-		return __CLASS__ . ': $Id$';
 	}
 }
