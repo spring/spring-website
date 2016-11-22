@@ -17,7 +17,7 @@ $sql .= "and (extension = 'gif' or extension = 'jpg' or extension = 'jpeg' or ex
 $sql .= 'order by rand() limit 1';
 $res = mysqli_query($db, $sql);
 $row = mysqli_fetch_array($res);
-$welcome = '/screenshot.php?id=' . absint( $row['attach_id'] );
+$welcome = '/screenshot.php?id=' . intval( $row['attach_id'] );
 
 // Fetch 4 random screenshots
 $sql = 'select a.attach_id, physical_filename, topic_title ';
@@ -49,7 +49,7 @@ if ( $rowcount >= 4 ) {
     foreach ($screens as $screen) {
         $thumb = get_thumbnail($screen['physical_filename'], 237, 119);
         $title = $screen['topic_title'];
-        $imgline = '<a href="screenshot.php?id=' . absint( $screen['attach_id'] ) . '" rel="lytebox[fpscreens]" title="' . $title . '">';
+        $imgline = '<a href="screenshot.php?id=' . intval( $screen['attach_id'] ) . '" rel="lytebox[fpscreens]" title="' . $title . '">';
         $imgline .= '<img class="frontscreenshot" src="' . $thumb . '" width="237" height="119" border="0" alt="" /></a>';
         $screenthumbs[] = $imgline;
     }

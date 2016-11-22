@@ -85,7 +85,7 @@ while ($row = mysqli_fetch_array($res)) {
         $thumb = get_thumbnail($row['physical_filename'], 174, 98);
 
         if ($row['forum_id'] == 35) {
-		$item = '<a href="screenshot.php?id=' . absint( $row['attach_id'] ) . '" rel="lytebox[fpscreens]" title="' . $title . '">';
+		$item = '<a href="screenshot.php?id=' . intval( $row['attach_id'] ) . '" rel="lytebox[fpscreens]" title="' . $title . '">';
 		$item .= '<img src="' . $thumb . '" width="174" height="98" border="0" alt="" /></a>';
         } elseif ($row['forum_id'] == 34) {
 		$item = '<a href="' . get_link(array('play' => $row['topic_id'])) . '">';
