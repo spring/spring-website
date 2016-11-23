@@ -264,3 +264,9 @@ a~a>.frontscreenshot {
 		display: none;
 	}
 }
+
+@meda ( min-width: 480px) {
+	.bigbar {
+		min-width:486px;
+	}
+}
