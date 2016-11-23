@@ -54,6 +54,8 @@ a~a>.frontscreenshot {
 	font-size: 24px;
 	font-weight:bold;
 	color: #EEE;
+	align-self: flex-end;
+	margin-left: auto;
 }
 
 .learnmorebar,
@@ -237,17 +239,8 @@ a~a>.frontscreenshot {
 	padding-bottom:15px;
 }
 
-#homepagemedia {
-	background: #4C626F;
-	padding-top: 15px;
-	margin-right: 0;
-	padding-right: 0;
-	padding-bottom: 0px;
-}
-
-#homepage-media-options {
-	width:469px;
-	float:right;
+#homepage_media {
+	display: flex;
 }
 
 @media (max-width: 1050px), (max-device-width: 1050px) {
