@@ -258,7 +258,7 @@ a~a>.frontscreenshot {
 	}
 }
 
-@meda ( min-width: 480px) {
+@media ( min-width: 480px) {
 	.bigbar {
 		min-width:486px;
 	}
