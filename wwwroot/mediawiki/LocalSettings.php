@@ -209,3 +209,4 @@ require_once "$IP/extensions/ParserFunctions/ParserFunctions.php";
 $wgPFEnableStringFunctions = true;
 require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
 
+$wgEnableAPI = true; # Enables the mediawiki API
