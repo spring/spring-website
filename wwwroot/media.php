@@ -165,7 +165,7 @@ $starttemplate = file_get_contents('templates/pagestart.html');
 $metatemplate = file_get_contents('templates/meta.html');
 
 $html  = $starttemplate;
-$html .= str_replace('{META}', '<link href="/index.css?v=1" rel="stylesheet" type="text/css" />
+$html .= str_replace('{META}', '<link href="/index.css?v=2" rel="stylesheet" type="text/css" />
 								<link href="/header-navbar-media-overrides.css" rel="stylesheet" type="text/css" />', $metatemplate);
 $html .= "<title>Spring RTS Engine</title>\n</head><body>";
 $html .= str_replace('{PAGE_TITLE}', 'Media', $headertemplate);
