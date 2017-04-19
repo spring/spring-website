@@ -25,10 +25,3 @@ springpw.php
 *~
 *.rej
 *.orig
-
-# unused files
-/wwwroot/mantis/tests
-/wwwroot/mantis/uploads
-/wwwroot/mantis/doc
-/wwwroot/mantis/api
-/wwwroot/mantis/admin
