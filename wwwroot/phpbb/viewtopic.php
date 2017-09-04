@@ -495,6 +495,28 @@ if ($config['allow_topic_notify'])
 	}
 }
 
+/**
+* Event to modify highlight.
+*
+* @event core.viewtopic_highlight_modify
+* @var	string	highlight			String to be highlighted
+* @var	string	highlight_match		Highlight string to be used in preg_replace
+* @var	array	topic_data			Topic data
+* @var	int		start				Pagination start
+* @var	int		total_posts			Number of posts
+* @var	string	viewtopic_url		Current viewtopic URL
+* @since 3.1.11-RC1
+*/
+$vars = array(
+	'highlight',
+	'highlight_match',
+	'topic_data',
+	'start',
+	'total_posts',
+	'viewtopic_url',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewtopic_highlight_modify', compact($vars)));
+
 // Bookmarks
 if ($config['allow_bookmarks'] && $user->data['is_registered'] && request_var('bookmark', 0))
 {
@@ -678,7 +700,7 @@ $base_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=
 * @var	int		total_posts			Topic total posts count
 * @var	string	viewtopic_url		URL to the topic page
 * @since 3.1.0-RC4
-* @change 3.1.2-RC1 Added viewtopic_url
+* @changed 3.1.2-RC1 Added viewtopic_url
 */
 $vars = array(
 	'base_url',
@@ -1178,7 +1200,7 @@ $sql_ary = array(
 * @var	int		start		Pagination information
 * @var	array	sql_ary		The SQL array to get the data of posts and posters
 * @since 3.1.0-a1
-* @change 3.1.0-a2 Added vars forum_id, topic_id, topic_data, post_list, sort_days, sort_key, sort_dir, start
+* @changed 3.1.0-a2 Added vars forum_id, topic_id, topic_data, post_list, sort_days, sort_key, sort_dir, start
 */
 $vars = array(
 	'forum_id',
@@ -1294,7 +1316,6 @@ while ($row = $db->sql_fetchrow($result))
 				'rank_title'		=> '',
 				'rank_image'		=> '',
 				'rank_image_src'	=> '',
-				'sig'				=> '',
 				'pm'				=> '',
 				'email'				=> '',
 				'jabber'			=> '',
@@ -1791,7 +1812,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		$s_first_unread = $first_unread = true;
 	}
 
-	$force_edit_allowed = $force_delete_allowed = false;
+	$force_edit_allowed = $force_delete_allowed = $force_softdelete_allowed = false;
 
 	$s_cannot_edit = !$auth->acl_get('f_edit', $forum_id) || $user->data['user_id'] != $poster_id;
 	$s_cannot_edit_time = $config['edit_time'] && $row['post_time'] <= time() - ($config['edit_time'] * 60);
@@ -1821,7 +1842,9 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	* @var	bool	s_cannot_delete_lastpost	User can not delete the post because it's not the last post of the topic
 	* @var	bool	s_cannot_delete_locked		User can not delete the post because it's locked
 	* @var	bool	s_cannot_delete_time		User can not delete the post because edit_time has passed
+	* @var	bool	force_softdelete_allowed	Allow the user to ыoftdelete the post (all permissions and conditions are ignored)
 	* @since 3.1.0-b4
+	* @changed 3.1.11-RC1 Added force_softdelete_allowed var
 	*/
 	$vars = array(
 		'row',
@@ -1835,6 +1858,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		's_cannot_delete_lastpost',
 		's_cannot_delete_locked',
 		's_cannot_delete_time',
+		'force_softdelete_allowed',
 	);
 	extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_post_action_conditions', compact($vars)));
 
@@ -1856,10 +1880,10 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 		(!$s_cannot_delete && !$s_cannot_delete_lastpost && !$s_cannot_delete_time && !$s_cannot_delete_locked)
 	));
 
-	$softdelete_allowed = ($auth->acl_get('m_softdelete', $forum_id) ||
-		($auth->acl_get('f_softdelete', $forum_id) && $user->data['user_id'] == $poster_id)) && ($row['post_visibility'] != ITEM_DELETED);
+	$softdelete_allowed = $force_softdelete_allowed || (($auth->acl_get('m_softdelete', $forum_id) ||
+		($auth->acl_get('f_softdelete', $forum_id) && $user->data['user_id'] == $poster_id)) && ($row['post_visibility'] != ITEM_DELETED));
 
-	$permanent_delete_allowed = ($auth->acl_get('m_delete', $forum_id) ||
+	$permanent_delete_allowed = $force_delete_allowed || ($auth->acl_get('m_delete', $forum_id) ||
 		($auth->acl_get('f_delete', $forum_id) && $user->data['user_id'] == $poster_id));
 
 	// Can this user receive a Private Message?
@@ -1986,9 +2010,9 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	* @var	array	post_row			Template block array of the post
 	* @var	array	topic_data			Array with topic data
 	* @since 3.1.0-a1
-	* @change 3.1.0-a3 Added vars start, current_row_number, end, attachments
-	* @change 3.1.0-b3 Added topic_data array, total_posts
-	* @change 3.1.0-RC3 Added poster_id
+	* @changed 3.1.0-a3 Added vars start, current_row_number, end, attachments
+	* @changed 3.1.0-b3 Added topic_data array, total_posts
+	* @changed 3.1.0-RC3 Added poster_id
 	*/
 	$vars = array(
 		'start',
@@ -2086,7 +2110,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 	* @var	array	post_row			Template block array of the post
 	* @var	array	topic_data			Array with topic data
 	* @since 3.1.0-a3
-	* @change 3.1.0-b3 Added topic_data array, total_posts
+	* @changed 3.1.0-b3 Added topic_data array, total_posts
 	*/
 	$vars = array(
 		'start',
@@ -2249,7 +2273,7 @@ $page_title = $topic_data['topic_title'] . ($start ? ' - ' . sprintf($user->lang
 * @var	int		start			Start offset used to calculate the page
 * @var	array	post_list		Array with post_ids we are going to display
 * @since 3.1.0-a1
-* @change 3.1.0-RC4 Added post_list var
+* @changed 3.1.0-RC4 Added post_list var
 */
 $vars = array('page_title', 'topic_data', 'forum_id', 'start', 'post_list');
 extract($phpbb_dispatcher->trigger_event('core.viewtopic_modify_page_title', compact($vars)));

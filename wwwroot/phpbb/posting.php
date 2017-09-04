@@ -84,7 +84,7 @@ $current_time = time();
 *							NOTE: Should be actual language strings, NOT
 *							language keys.
 * @since 3.1.0-a1
-* @change 3.1.2-RC1			Removed 'delete' var as it does not exist
+* @changed 3.1.2-RC1			Removed 'delete' var as it does not exist
 */
 $vars = array(
 	'post_id',
@@ -340,11 +340,6 @@ switch ($mode)
 			$is_authed = true;
 			$mode = 'soft_delete';
 		}
-		else if (!$is_authed)
-		{
-			// Display the same error message for softdelete we use for delete
-			$mode = 'delete';
-		}
 	break;
 }
 /**
@@ -371,7 +366,9 @@ switch ($mode)
 *							NOTE: Should be actual language strings, NOT
 *							language keys.
 * @var	bool	is_authed	Does the user have the required permissions?
+* @var	array	post_data	All post data from database
 * @since 3.1.3-RC1
+* @changed 3.1.10-RC1 Added post_data
 */
 $vars = array(
 	'post_id',
@@ -387,16 +384,17 @@ $vars = array(
 	'mode',
 	'error',
 	'is_authed',
+	'post_data',
 );
 extract($phpbb_dispatcher->trigger_event('core.modify_posting_auth', compact($vars)));
 
-if (!$is_authed)
+if (!$is_authed || !empty($error))
 {
-	$check_auth = ($mode == 'quote') ? 'reply' : $mode;
+	$check_auth = ($mode == 'quote') ? 'reply' : (($mode == 'soft_delete') ? 'delete' : $mode);
 
 	if ($user->data['is_registered'])
 	{
-		trigger_error('USER_CANNOT_' . strtoupper($check_auth));
+		trigger_error(empty($error) ? 'USER_CANNOT_' . strtoupper($check_auth) : implode('<br/>', $error));
 	}
 	$message = $user->lang['LOGIN_EXPLAIN_' . strtoupper($mode)];
 
@@ -938,7 +936,9 @@ if ($submit || $preview || $refresh)
 	*				is posting a new topic or editing a post)
 	* @var	bool	refresh		Whether or not to retain previously submitted data
 	* @var	object	message_parser	The message parser object
+	* @var	array	error		Array of errors
 	* @since 3.1.2-RC1
+	* @changed 3.1.11-RC1 Added error
 	*/
 	$vars = array(
 		'post_data',
@@ -953,6 +953,7 @@ if ($submit || $preview || $refresh)
 		'cancel',
 		'refresh',
 		'message_parser',
+		'error',
 	);
 	extract($phpbb_dispatcher->trigger_event('core.posting_modify_message_text', compact($vars)));
 
@@ -1060,7 +1061,10 @@ if ($submit || $preview || $refresh)
 	// Validate username
 	if (($post_data['username'] && !$user->data['is_registered']) || ($mode == 'edit' && $post_data['poster_id'] == ANONYMOUS && $post_data['username'] && $post_data['post_username'] && $post_data['post_username'] != $post_data['username']))
 	{
-		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		if (!function_exists('validate_username'))
+		{
+			include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		}
 
 		$user->add_lang('ucp');
 
@@ -1258,7 +1262,7 @@ if ($submit || $preview || $refresh)
 	* @var	array	error		Any error strings; a non-empty array aborts form submission.
 	*				NOTE: Should be actual language strings, NOT language keys.
 	* @since 3.1.0-RC5
-	* @change 3.1.5-RC1 Added poll array to the event
+	* @changed 3.1.5-RC1 Added poll array to the event
 	*/
 	$vars = array(
 		'post_data',
@@ -1741,6 +1745,7 @@ $page_data = array(
 	'L_POST_A'					=> $page_title,
 	'L_ICON'					=> ($mode == 'reply' || $mode == 'quote' || ($mode == 'edit' && $post_id != $post_data['topic_first_post_id'])) ? $user->lang['POST_ICON'] : $user->lang['TOPIC_ICON'],
 	'L_MESSAGE_BODY_EXPLAIN'	=> $user->lang('MESSAGE_BODY_EXPLAIN', (int) $config['max_post_chars']),
+	'L_DELETE_POST_PERMANENTLY'	=> $user->lang('DELETE_POST_PERMANENTLY', 1),
 
 	'FORUM_NAME'			=> $post_data['forum_name'],
 	'FORUM_DESC'			=> ($post_data['forum_desc']) ? generate_text_for_display($post_data['forum_desc'], $post_data['forum_desc_uid'], $post_data['forum_desc_bitfield'], $post_data['forum_desc_options']) : '',
@@ -1865,13 +1870,13 @@ if (($mode == 'post' || ($mode == 'edit' && $post_id == $post_data['topic_first_
 *				posting page via $template->assign_vars()
 * @var	object	message_parser	The message parser object
 * @since 3.1.0-a1
-* @change 3.1.0-b3 Added vars post_data, moderators, mode, page_title,
+* @changed 3.1.0-b3 Added vars post_data, moderators, mode, page_title,
 *		s_topic_icons, form_enctype, s_action, s_hidden_fields,
 *		post_id, topic_id, forum_id, submit, preview, save, load,
 *		delete, cancel, refresh, error, page_data, message_parser
-* @change 3.1.2-RC1 Removed 'delete' var as it does not exist
-* @change 3.1.5-RC1 Added poll variables to the page_data array
-* @change 3.1.6-RC1 Added 'draft_id' var
+* @changed 3.1.2-RC1 Removed 'delete' var as it does not exist
+* @changed 3.1.5-RC1 Added poll variables to the page_data array
+* @changed 3.1.6-RC1 Added 'draft_id' var
 */
 $vars = array(
 	'post_data',

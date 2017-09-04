@@ -219,7 +219,7 @@ class session
 	function session_begin($update_session_page = true)
 	{
 		global $phpEx, $SID, $_SID, $_EXTRA_URL, $db, $config, $phpbb_root_path;
-		global $request, $phpbb_container;
+		global $request, $phpbb_container, $phpbb_dispatcher;
 
 		// Give us some basic information
 		$this->time_now				= time();
@@ -281,11 +281,21 @@ class session
 
 		// Why no forwarded_for et al? Well, too easily spoofed. With the results of my recent requests
 		// it's pretty clear that in the majority of cases you'll at least be left with a proxy/cache ip.
-		$this->ip = htmlspecialchars_decode($request->server('REMOTE_ADDR'));
-		$this->ip = preg_replace('# {2,}#', ' ', str_replace(',', ' ', $this->ip));
+		$ip = htmlspecialchars_decode($request->server('REMOTE_ADDR'));
+		$ip = preg_replace('# {2,}#', ' ', str_replace(',', ' ', $ip));
+
+		/**
+		* Event to alter user IP address
+		*
+		* @event core.session_ip_after
+		* @var	string	ip	REMOTE_ADDR
+		* @since 3.1.10-RC1
+		*/
+		$vars = array('ip');
+		extract($phpbb_dispatcher->trigger_event('core.session_ip_after', compact($vars)));
 
 		// split the list of IPs
-		$ips = explode(' ', trim($this->ip));
+		$ips = explode(' ', trim($ip));
 
 		// Default IP if REMOTE_ADDR is invalid
 		$this->ip = '127.0.0.1';
@@ -449,6 +459,9 @@ class session
 						$this->data['is_registered'] = ($this->data['user_id'] != ANONYMOUS && ($this->data['user_type'] == USER_NORMAL || $this->data['user_type'] == USER_FOUNDER)) ? true : false;
 						$this->data['is_bot'] = (!$this->data['is_registered'] && $this->data['user_id'] != ANONYMOUS) ? true : false;
 						$this->data['user_lang'] = basename($this->data['user_lang']);
+
+						// Is user banned? Are they excluded? Won't return on ban, exists within method
+						$this->check_ban_for_current_session($config);
 
 						return true;
 					}
@@ -656,19 +669,7 @@ class session
 		// session exists in which case session_id will also be set
 
 		// Is user banned? Are they excluded? Won't return on ban, exists within method
-		if ($this->data['user_type'] != USER_FOUNDER)
-		{
-			if (!$config['forwarded_for_check'])
-			{
-				$this->check_ban($this->data['user_id'], $this->ip);
-			}
-			else
-			{
-				$ips = explode(' ', $this->forwarded_for);
-				$ips[] = $this->ip;
-				$this->check_ban($this->data['user_id'], $ips);
-			}
-		}
+		$this->check_ban_for_current_session($config);
 
 		$this->data['is_registered'] = (!$bot && $this->data['user_id'] != ANONYMOUS && ($this->data['user_type'] == USER_NORMAL || $this->data['user_type'] == USER_FOUNDER)) ? true : false;
 		$this->data['is_bot'] = ($bot) ? true : false;
@@ -1258,9 +1259,6 @@ class session
 			$message .= ($ban_row['ban_give_reason']) ? '<br /><br />' . sprintf($this->lang['BOARD_BAN_REASON'], $ban_row['ban_give_reason']) : '';
 			$message .= '<br /><br /><em>' . $this->lang['BAN_TRIGGERED_BY_' . strtoupper($ban_triggered_by)] . '</em>';
 
-			// To circumvent session_begin returning a valid value and the check_ban() not called on second page view, we kill the session again
-			$this->session_kill(false);
-
 			// A very special case... we are within the cron script which is not supposed to print out the ban message... show blank page
 			if (defined('IN_CRON'))
 			{
@@ -1269,10 +1267,35 @@ class session
 				exit;
 			}
 
+			// To circumvent session_begin returning a valid value and the check_ban() not called on second page view, we kill the session again
+			$this->session_kill(false);
+
 			trigger_error($message);
 		}
 
 		return ($banned && $ban_row['ban_give_reason']) ? $ban_row['ban_give_reason'] : $banned;
+	}
+
+	/**
+	 * Check the current session for bans
+	 *
+	 * @return true if session user is banned.
+	 */
+	protected function check_ban_for_current_session($config)
+	{
+		if (!defined('SKIP_CHECK_BAN') && $this->data['user_type'] != USER_FOUNDER)
+		{
+			if (!$config['forwarded_for_check'])
+			{
+				$this->check_ban($this->data['user_id'], $this->ip);
+			}
+			else
+			{
+				$ips = explode(' ', $this->forwarded_for);
+				$ips[] = $this->ip;
+				$this->check_ban($this->data['user_id'], $ips);
+			}
+		}
 	}
 
 	/**
@@ -1566,7 +1589,7 @@ class session
 		}
 
 		// Only update session DB a minute or so after last update or if page changes
-		if ($this->time_now - $this->data['session_time'] > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
+		if ($this->time_now - ((isset($this->data['session_time'])) ? $this->data['session_time'] : 0) > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
 		{
 			$sql_ary = array('session_time' => $this->time_now);
 
@@ -1585,7 +1608,7 @@ class session
 
 			$this->data = array_merge($this->data, $sql_ary);
 
-			if ($this->data['user_id'] != ANONYMOUS && !empty($config['new_member_post_limit']) && $this->data['user_new'] && $config['new_member_post_limit'] <= $this->data['user_posts'])
+			if ($this->data['user_id'] != ANONYMOUS && isset($config['new_member_post_limit']) && $this->data['user_new'] && $config['new_member_post_limit'] <= $this->data['user_posts'])
 			{
 				$this->leave_newly_registered();
 			}

@@ -231,6 +231,13 @@ class messenger
 			$template_lang = basename($config['default_lang']);
 		}
 
+		$ext_template_paths = array(
+			array(
+				'name' 		=> $template_lang . '_email',
+				'ext_path' 	=> 'language/' . $template_lang . '/email' . $template_dir_prefix,
+			),
+		);
+
 		if ($template_path)
 		{
 			$template_paths = array(
@@ -246,23 +253,38 @@ class messenger
 				$template_path . $template_dir_prefix,
 			);
 
+			$board_language = basename($config['default_lang']);
+
 			// we can only specify default language fallback when the path is not a custom one for which we
 			// do not know the default language alternative
-			if ($template_lang !== basename($config['default_lang']))
+			if ($template_lang !== $board_language)
 			{
 				$fallback_template_path = (!empty($user->lang_path)) ? $user->lang_path : $phpbb_root_path . 'language/';
-				$fallback_template_path .= basename($config['default_lang']) . '/email';
+				$fallback_template_path .= $board_language . '/email';
 
 				$template_paths[] = $fallback_template_path . $template_dir_prefix;
+
+				$ext_template_paths[] = array(
+					'name'		=> $board_language . '_email',
+					'ext_path'	=> 'language/' . $board_language . '/email' . $template_dir_prefix,
+				);
+			}
+			// If everything fails just fall back to en template
+			if ($template_lang !== 'en' && $board_language !== 'en')
+			{
+				$fallback_template_path = (!empty($user->lang_path)) ? $user->lang_path : $phpbb_root_path . 'language/';
+				$fallback_template_path .= 'en/email';
+
+				$template_paths[] = $fallback_template_path . $template_dir_prefix;
+
+				$ext_template_paths[] = array(
+					'name'		=> 'en_email',
+					'ext_path'	=> 'language/en/email' . $template_dir_prefix,
+				);
 			}
 		}
 
-		$this->set_template_paths(array(
-			array(
-				'name' 		=> $template_lang . '_email',
-				'ext_path' 	=> 'language/' . $template_lang . '/email' . $template_dir_prefix,
-			),
-		), $template_paths);
+		$this->set_template_paths($ext_template_paths, $template_paths);
 
 		$this->template->set_filenames(array(
 			'body'		=> $template_file . '.txt',
@@ -290,10 +312,16 @@ class messenger
 
 	/**
 	* Send the mail out to the recipients set previously in var $this->addresses
+	*
+	* @param int	$method	User notification method NOTIFY_EMAIL|NOTIFY_IM|NOTIFY_BOTH
+	* @param bool	$break	Flag indicating if the function only formats the subject
+	*						and the message without sending it
+	*
+	* @return bool
 	*/
 	function send($method = NOTIFY_EMAIL, $break = false)
 	{
-		global $config, $user;
+		global $config, $user, $phpbb_dispatcher;
 
 		// We add some standard variables we always use, no need to specify them always
 		$this->assign_vars(array(
@@ -301,6 +329,30 @@ class messenger
 			'EMAIL_SIG'	=> str_replace('<br />', "\n", "-- \n" . htmlspecialchars_decode($config['board_email_sig'])),
 			'SITENAME'	=> htmlspecialchars_decode($config['sitename']),
 		));
+
+		$subject = $this->subject;
+		$message = $this->msg;
+		/**
+		* Event to modify notification message text before parsing
+		*
+		* @event core.modify_notification_message
+		* @var	int		method	User notification method NOTIFY_EMAIL|NOTIFY_IM|NOTIFY_BOTH
+		* @var	bool	break	Flag indicating if the function only formats the subject
+		*						and the message without sending it
+		* @var	string	subject	The message subject
+		* @var	string	message	The message text
+		* @since 3.1.11-RC1
+		*/
+		$vars = array(
+			'method',
+			'break',
+			'subject',
+			'message',
+		);
+		extract($phpbb_dispatcher->trigger_event('core.modify_notification_message', compact($vars)));
+		$this->subject = $subject;
+		$this->msg = $message;
+		unset($subject, $message);
 
 		// Parse message through template
 		$this->msg = trim($this->template->assign_display('body'));
@@ -416,7 +468,7 @@ class messenger
 	*/
 	function build_header($to, $cc, $bcc)
 	{
-		global $config;
+		global $config, $phpbb_dispatcher;
 
 		// We could use keys here, but we won't do this for 3.0.x to retain backwards compatibility
 		$headers = array();
@@ -447,6 +499,16 @@ class messenger
 		$headers[] = 'X-Mailer: phpBB3';
 		$headers[] = 'X-MimeOLE: phpBB3';
 		$headers[] = 'X-phpBB-Origin: phpbb://' . str_replace(array('http://', 'https://'), array('', ''), generate_board_url());
+
+		/**
+		* Event to modify email header entries
+		*
+		* @event core.modify_email_headers
+		* @var	array	headers	Array containing email header entries
+		* @since 3.1.11-RC1
+		*/
+		$vars = array('headers');
+		extract($phpbb_dispatcher->trigger_event('core.modify_email_headers', compact($vars)));
 
 		if (sizeof($this->extra_headers))
 		{
@@ -593,7 +655,7 @@ class messenger
 		if (!$use_queue)
 		{
 			include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
+			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl'], $config['jab_verify_peer'], $config['jab_verify_peer_name'], $config['jab_allow_self_signed']);
 
 			if (!$this->jabber->connect())
 			{
@@ -768,7 +830,7 @@ class queue
 					}
 
 					include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
+					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl'], $config['jab_verify_peer'], $config['jab_verify_peer_name'], $config['jab_allow_self_signed']);
 
 					if (!$this->jabber->connect())
 					{
@@ -1014,7 +1076,18 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	}
 	$collector = new \phpbb\error_collector;
 	$collector->install();
-	$smtp->socket = fsockopen($config['smtp_host'], $config['smtp_port'], $errno, $errstr, 20);
+
+	$options = array();
+	$verify_peer = (bool) $config['smtp_verify_peer'];
+	$verify_peer_name = (bool) $config['smtp_verify_peer_name'];
+	$allow_self_signed = (bool) $config['smtp_allow_self_signed'];
+	$remote_socket = $config['smtp_host'] . ':' . $config['smtp_port'];
+
+	// Set ssl context options, see http://php.net/manual/en/context.ssl.php
+	$options['ssl'] = array('verify_peer' => $verify_peer, 'verify_peer_name' => $verify_peer_name, 'allow_self_signed' => $allow_self_signed);
+	$socket_context = stream_context_create($options);
+
+	$smtp->socket = @stream_socket_client($remote_socket, $errno, $errstr, 20, STREAM_CLIENT_CONNECT, $socket_context);
 	$collector->uninstall();
 	$error_contents = $collector->format_errors();
 

@@ -124,7 +124,7 @@ function wrap_img_in_html($src, $title)
 */
 function send_file_to_browser($attachment, $upload_dir, $category)
 {
-	global $user, $db, $config, $phpbb_root_path;
+	global $user, $db, $config, $phpbb_dispatcher, $phpbb_root_path;
 
 	$filename = $phpbb_root_path . $upload_dir . '/' . $attachment['physical_filename'];
 
@@ -149,6 +149,26 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	// Now send the File Contents to the Browser
 	$size = @filesize($filename);
 
+	/**
+	* Event to alter attachment before it is sent to browser.
+	*
+	* @event core.send_file_to_browser_before
+	* @var	array	attachment	Attachment data
+	* @var	string	upload_dir	Relative path of upload directory
+	* @var	int		category	Attachment category
+	* @var	string	filename	Path to file, including filename
+	* @var	int		size		File size
+	* @since 3.1.11-RC1
+	*/
+	$vars = array(
+		'attachment',
+		'upload_dir',
+		'category',
+		'filename',
+		'size',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.send_file_to_browser_before', compact($vars)));
+
 	// To correctly display further errors we need to make sure we are using the correct headers for both (unsetting content-length may not work)
 
 	// Check if headers already sent or not able to get the file contents.
@@ -166,7 +186,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	}
 
 	// Make sure the database record for the filesize is correct
-	if ($size > 0 && $size != $attachment['filesize'])
+	if ($size > 0 && $size != $attachment['filesize'] && strpos($attachment['physical_filename'], 'thumb_') === false)
 	{
 		// Update database record
 		$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
@@ -284,7 +304,7 @@ function header_filename($file)
 
 	// There be dragons here.
 	// Not many follows the RFC...
-	if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
+	if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Konqueror') !== false)
 	{
 		return "filename=" . rawurlencode($file);
 	}
@@ -677,6 +697,8 @@ function phpbb_download_handle_forum_auth($db, $auth, $topic_id)
 */
 function phpbb_download_handle_pm_auth($db, $auth, $user_id, $msg_id)
 {
+	global $phpbb_dispatcher;
+
 	if (!$auth->acl_get('u_pm_download'))
 	{
 		send_status_line(403, 'Forbidden');
@@ -684,6 +706,18 @@ function phpbb_download_handle_pm_auth($db, $auth, $user_id, $msg_id)
 	}
 
 	$allowed = phpbb_download_check_pm_auth($db, $user_id, $msg_id);
+
+	/**
+	* Event to modify PM attachments download auth
+	*
+	* @event core.modify_pm_attach_download_auth
+	* @var	bool	allowed		Whether the user is allowed to download from that PM or not
+	* @var	int		msg_id		The id of the PM to download from
+	* @var	int		user_id		The user id for auth check
+	* @since 3.1.11-RC1
+	*/
+	$vars = array('allowed', 'msg_id', 'user_id');
+	extract($phpbb_dispatcher->trigger_event('core.modify_pm_attach_download_auth', compact($vars)));
 
 	if (!$allowed)
 	{

@@ -119,6 +119,15 @@ function generate_smilies($mode, $forum_id)
 
 		foreach ($smilies as $row)
 		{
+			/**
+			* Modify smiley root path before populating smiley list
+			*
+			* @event core.generate_smilies_before
+			* @var string  root_path root_path for smilies
+			* @since 3.1.11-RC1
+			*/
+			$vars = array('root_path');
+			extract($phpbb_dispatcher->trigger_event('core.generate_smilies_before', compact($vars)));
 			$template->assign_block_vars('smiley', array(
 				'SMILEY_CODE'	=> $row['code'],
 				'A_SMILEY_CODE'	=> addslashes($row['code']),
@@ -702,7 +711,7 @@ function create_thumbnail($source, $destination, $mimetype)
 
 	$used_imagick = false;
 
-	// Only use imagemagick if defined and the passthru function not disabled
+	// Only use ImageMagick if defined and the passthru function not disabled
 	if ($config['img_imagick'] && function_exists('passthru'))
 	{
 		if (substr($config['img_imagick'], -1) !== '/')
@@ -1074,7 +1083,7 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 	}
 
 	$sql_ary = array(
-		'SELECT'	=> 'u.username, u.user_id, u.user_colour, p.*, z.friend, z.foe',
+		'SELECT'	=> 'u.username, u.user_id, u.user_colour, p.*, z.friend, z.foe, uu.username as post_delete_username, uu.user_colour as post_delete_user_colour',
 
 		'FROM'		=> array(
 			USERS_TABLE		=> 'u',
@@ -1085,6 +1094,10 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 			array(
 				'FROM'	=> array(ZEBRA_TABLE => 'z'),
 				'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id',
+			),
+			array(
+				'FROM'	=> array(USERS_TABLE => 'uu'),
+				'ON'	=> 'uu.user_id = p.post_delete_user',
 			),
 		),
 
@@ -1194,6 +1207,31 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 		$post_anchor = ($mode == 'post_review') ? 'ppr' . $row['post_id'] : 'pr' . $row['post_id'];
 		$u_show_post = append_sid($phpbb_root_path . 'viewtopic.' . $phpEx, "f=$forum_id&amp;t=$topic_id&amp;p={$row['post_id']}&amp;view=show#p{$row['post_id']}");
 
+		$l_deleted_message = '';
+		if ($row['post_visibility'] == ITEM_DELETED)
+		{
+			$display_postername = get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']);
+
+			// User having deleted the post also being the post author?
+			if (!$row['post_delete_user'] || $row['post_delete_user'] == $poster_id)
+			{
+				$display_username = $display_postername;
+			}
+			else
+			{
+				$display_username = get_username_string('full', $row['post_delete_user'], $row['post_delete_username'], $row['post_delete_user_colour']);
+			}
+
+			if ($row['post_delete_reason'])
+			{
+				$l_deleted_message = $user->lang('POST_DELETED_BY_REASON', $display_postername, $display_username, $user->format_date($row['post_delete_time'], false, true), $row['post_delete_reason']);
+			}
+			else
+			{
+				$l_deleted_message = $user->lang('POST_DELETED_BY', $display_postername, $display_username, $user->format_date($row['post_delete_time'], false, true));
+			}
+		}
+
 		$post_row = array(
 			'POST_AUTHOR_FULL'		=> get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']),
 			'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $poster_id, $row['username'], $row['user_colour'], $row['post_username']),
@@ -1204,6 +1242,8 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 			'S_FRIEND'			=> ($row['friend']) ? true : false,
 			'S_IGNORE_POST'		=> ($row['foe']) ? true : false,
 			'L_IGNORE_POST'		=> ($row['foe']) ? sprintf($user->lang['POST_BY_FOE'], get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']), "<a href=\"{$u_show_post}\" onclick=\"phpbb.toggleDisplay('{$post_anchor}', 1); return false;\">", '</a>') : '',
+			'S_POST_DELETED'	=> ($row['post_visibility'] == ITEM_DELETED) ? true : false,
+			'L_DELETE_POST'		=> $l_deleted_message,
 
 			'POST_SUBJECT'		=> $post_subject,
 			'MINI_POST_IMG'		=> $user->img('icon_post_target', $user->lang['POST']),
@@ -1275,7 +1315,7 @@ function topic_review($topic_id, $forum_id, $mode = 'topic_review', $cur_post_id
 */
 function delete_post($forum_id, $topic_id, $post_id, &$data, $is_soft = false, $softdelete_reason = '')
 {
-	global $db, $user, $auth, $phpbb_container;
+	global $db, $user, $auth, $phpbb_container, $phpbb_dispatcher;
 	global $config, $phpEx, $phpbb_root_path;
 
 	// Specify our post mode
@@ -1525,6 +1565,34 @@ function delete_post($forum_id, $topic_id, $post_id, &$data, $is_soft = false, $
 	{
 		sync('topic_reported', 'topic_id', array($topic_id));
 	}
+
+	/**
+	* This event is used for performing actions directly after a post or topic
+	* has been deleted.
+	*
+	* @event core.delete_post_after
+	* @var	int		forum_id			Post forum ID
+	* @var	int		topic_id			Post topic ID
+	* @var	int		post_id				Post ID
+	* @var	array	data				Post data
+	* @var	bool	is_soft				Soft delete flag
+	* @var	string	softdelete_reason	Soft delete reason
+	* @var	string	post_mode			delete_topic, delete_first_post, delete_last_post or delete
+	* @var	mixed	next_post_id		Next post ID in the topic (post ID or false)
+	*
+	* @since 3.1.11-RC1
+	*/
+	$vars = array(
+		'forum_id',
+		'topic_id',
+		'post_id',
+		'data',
+		'is_soft',
+		'softdelete_reason',
+		'post_mode',
+		'next_post_id',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.delete_post_after', compact($vars)));
 
 	return $next_post_id;
 }
@@ -2474,7 +2542,7 @@ function submit_post($mode, $subject, $username, $topic_type, &$poll, &$data, $u
 	* @var	string	url					The "Return to topic" URL
 	*
 	* @since 3.1.0-a3
-	* @change 3.1.0-RC3 Added vars mode, subject, username, topic_type,
+	* @changed 3.1.0-RC3 Added vars mode, subject, username, topic_type,
 	*		poll, update_message, update_search_index
 	*/
 	$vars = array(
@@ -2623,16 +2691,54 @@ function phpbb_upload_popup($forum_style = 0)
 
 /**
 * Do the various checks required for removing posts as well as removing it
+*
+* @param int		$forum_id		The id of the forum
+* @param int		$topic_id		The id of the topic
+* @param int		$post_id		The id of the post
+* @param array		$post_data		Array with the post data
+* @param bool		$is_soft		The flag indicating whether it is the soft delete mode
+* @param string		$delete_reason	Description for the post deletion reason
+*
+* @return null
 */
 function phpbb_handle_post_delete($forum_id, $topic_id, $post_id, &$post_data, $is_soft = false, $delete_reason = '')
 {
 	global $user, $auth, $config, $request;
-	global $phpbb_root_path, $phpEx;
+	global $phpbb_root_path, $phpEx, $phpbb_dispatcher;
 
+	$force_delete_allowed = $force_softdelete_allowed = false;
 	$perm_check = ($is_soft) ? 'softdelete' : 'delete';
 
+	/**
+	* This event allows to modify the conditions for the post deletion
+	*
+	* @event core.handle_post_delete_conditions
+	* @var	int		forum_id		The id of the forum
+	* @var	int		topic_id		The id of the topic
+	* @var	int		post_id			The id of the post
+	* @var	array	post_data		Array with the post data
+	* @var	bool	is_soft			The flag indicating whether it is the soft delete mode
+	* @var	string	delete_reason	Description for the post deletion reason
+	* @var	bool	force_delete_allowed		Allow the user to delete the post (all permissions and conditions are ignored)
+	* @var	bool	force_softdelete_allowed	Allow the user to softdelete the post (all permissions and conditions are ignored)
+	* @var	string	perm_check		The deletion mode softdelete|delete
+	* @since 3.1.11-RC1
+	*/
+	$vars = array(
+		'forum_id',
+		'topic_id',
+		'post_id',
+		'post_data',
+		'is_soft',
+		'delete_reason',
+		'force_delete_allowed',
+		'force_softdelete_allowed',
+		'perm_check',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.handle_post_delete_conditions', compact($vars)));
+
 	// If moderator removing post or user itself removing post, present a confirmation screen
-	if ($auth->acl_get("m_$perm_check", $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get("f_$perm_check", $forum_id) && $post_id == $post_data['topic_last_post_id'] && !$post_data['post_edit_locked'] && ($post_data['post_time'] > time() - ($config['delete_time'] * 60) || !$config['delete_time'])))
+	if ($force_delete_allowed || ($is_soft && $force_softdelete_allowed) || $auth->acl_get("m_$perm_check", $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get("f_$perm_check", $forum_id) && $post_id == $post_data['topic_last_post_id'] && !$post_data['post_edit_locked'] && ($post_data['post_time'] > time() - ($config['delete_time'] * 60) || !$config['delete_time'])))
 	{
 		$s_hidden_fields = array(
 			'p'		=> $post_id,
@@ -2689,10 +2795,10 @@ function phpbb_handle_post_delete($forum_id, $topic_id, $post_id, &$post_data, $
 		}
 		else
 		{
-			global $user, $template, $request;
+			global $template;
 
-			$can_delete = $auth->acl_get('m_delete', $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get('f_delete', $forum_id));
-			$can_softdelete = $auth->acl_get('m_softdelete', $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get('f_softdelete', $forum_id));
+			$can_delete = $force_delete_allowed || ($auth->acl_get('m_delete', $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get('f_delete', $forum_id)));
+			$can_softdelete = $force_softdelete_allowed || ($auth->acl_get('m_softdelete', $forum_id) || ($post_data['poster_id'] == $user->data['user_id'] && $user->data['is_registered'] && $auth->acl_get('f_softdelete', $forum_id)));
 
 			$template->assign_vars(array(
 				'S_SOFTDELETED'			=> $post_data['post_visibility'] == ITEM_DELETED,

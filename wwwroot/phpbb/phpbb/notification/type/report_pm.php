@@ -52,7 +52,7 @@ class report_pm extends \phpbb\notification\type\pm
 	*
 	* @var string Permission name
 	*/
-	protected $permission = 'm_report';
+	protected $permission = 'm_pm_report';
 
 	/**
 	* Notification option data (for outputting to the user)
@@ -141,6 +141,8 @@ class report_pm extends \phpbb\notification\type\pm
 	*/
 	public function get_email_template_variables()
 	{
+		$user_data = $this->user_loader->get_user($this->get_data('reporter_id'));
+
 		return array(
 			'AUTHOR_NAME'				=> htmlspecialchars_decode($user_data['username']),
 			'SUBJECT'					=> htmlspecialchars_decode(censor_text($this->get_data('message_subject'))),

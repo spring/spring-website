@@ -373,11 +373,6 @@ class acp_users
 								if ($user_row['user_type'] == USER_NORMAL)
 								{
 									user_active_flip('deactivate', $user_id, INACTIVE_REMIND);
-
-									$sql = 'UPDATE ' . USERS_TABLE . "
-										SET user_actkey = '" . $db->sql_escape($user_actkey) . "'
-										WHERE user_id = $user_id";
-									$db->sql_query($sql);
 								}
 								else
 								{
@@ -386,8 +381,18 @@ class acp_users
 										FROM ' . USERS_TABLE . '
 										WHERE user_id = ' . $user_id;
 									$result = $db->sql_query($sql);
-									$user_actkey = (string) $db->sql_fetchfield('user_actkey');
+									$user_activation_key = (string) $db->sql_fetchfield('user_actkey');
 									$db->sql_freeresult($result);
+
+									$user_actkey = empty($user_activation_key) ? $user_actkey : $user_activation_key;
+								}
+
+								if ($user_row['user_type'] == USER_NORMAL || empty($user_activation_key))
+								{
+									$sql = 'UPDATE ' . USERS_TABLE . "
+										SET user_actkey = '" . $db->sql_escape($user_actkey) . "'
+										WHERE user_id = $user_id";
+									$db->sql_query($sql);
 								}
 
 								$messenger = new messenger(false);
@@ -1924,7 +1929,7 @@ class acp_users
 
 					'S_FORM_ENCTYPE'	=> ' enctype="multipart/form-data"',
 
-					'L_AVATAR_EXPLAIN'	=> sprintf($user->lang['AVATAR_EXPLAIN'], $config['avatar_max_width'], $config['avatar_max_height'], $config['avatar_filesize'] / 1024),
+					'L_AVATAR_EXPLAIN'	=> $user->lang(($config['avatar_filesize'] == 0) ? 'AVATAR_EXPLAIN_NO_FILESIZE' : 'AVATAR_EXPLAIN', $config['avatar_max_width'], $config['avatar_max_height'], $config['avatar_filesize'] / 1024),
 
 					'S_AVATARS_ENABLED'		=> ($config['allow_avatar'] && $avatars_enabled),
 				));
@@ -2274,6 +2279,12 @@ class acp_users
 						{
 							trigger_error($user->lang['NO_GROUP'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 						}
+
+						if (!check_link_hash($request->variable('hash', ''), 'acp_users'))
+						{
+							trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+						}
+
 						group_user_attributes($action, $group_id, $user_id);
 
 						if ($action == 'default')
@@ -2431,8 +2442,8 @@ class acp_users
 					{
 						$template->assign_block_vars('group', array(
 							'U_EDIT_GROUP'		=> append_sid("{$phpbb_admin_path}index.$phpEx", "i=groups&amp;mode=manage&amp;action=edit&amp;u=$user_id&amp;g={$data['group_id']}&amp;back_link=acp_users_groups"),
-							'U_DEFAULT'			=> $this->u_action . "&amp;action=default&amp;u=$user_id&amp;g=" . $data['group_id'],
-							'U_DEMOTE_PROMOTE'	=> $this->u_action . '&amp;action=' . (($data['group_leader']) ? 'demote' : 'promote') . "&amp;u=$user_id&amp;g=" . $data['group_id'],
+							'U_DEFAULT'			=> $this->u_action . "&amp;action=default&amp;u=$user_id&amp;g=" . $data['group_id'] . '&amp;hash=' . generate_link_hash('acp_users'),
+							'U_DEMOTE_PROMOTE'	=> $this->u_action . '&amp;action=' . (($data['group_leader']) ? 'demote' : 'promote') . "&amp;u=$user_id&amp;g=" . $data['group_id'] . '&amp;hash=' . generate_link_hash('acp_users'),
 							'U_DELETE'			=> $this->u_action . "&amp;action=delete&amp;u=$user_id&amp;g=" . $data['group_id'],
 							'U_APPROVE'			=> ($group_type == 'pending') ? $this->u_action . "&amp;action=approve&amp;u=$user_id&amp;g=" . $data['group_id'] : '',
 

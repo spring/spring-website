@@ -1171,7 +1171,7 @@ class parse_message extends bbcode_firstpass
 		* @var bool		return					Do we return after the event is triggered if $warn_msg is not empty
 		* @var array	warn_msg				Array of the warning messages
 		* @since 3.1.2-RC1
-		* @change 3.1.3-RC1 Added vars $bbcode_bitfield and $bbcode_uid
+		* @changed 3.1.3-RC1 Added vars $bbcode_bitfield and $bbcode_uid
 		*/
 		$message = $this->message;
 		$warn_msg = $this->warn_msg;
@@ -1822,7 +1822,7 @@ class parse_message extends bbcode_firstpass
 		$this->message = $poll['poll_title'];
 		$this->bbcode_bitfield = $bbcode_bitfield;
 
-		$poll['poll_options'] = explode("\n", trim($poll['poll_option_text']));
+		$poll['poll_options'] = preg_split('/\s*?\n\s*/', trim($poll['poll_option_text']));
 		$poll['poll_options_size'] = sizeof($poll['poll_options']);
 
 		if (!$poll['poll_title'] && $poll['poll_options_size'])

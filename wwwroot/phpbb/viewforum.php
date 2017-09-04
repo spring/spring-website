@@ -146,6 +146,13 @@ else
 	}
 }
 
+// Is a forum specific topic count required?
+if ($forum_data['forum_topics_per_page'])
+{
+	$config['topics_per_page'] = $forum_data['forum_topics_per_page'];
+}
+
+/* @var $phpbb_content_visibility \phpbb\content_visibility */
 $phpbb_content_visibility = $phpbb_container->get('content.visibility');
 
 // Dump out the page header and load viewforum template
@@ -207,12 +214,6 @@ if ($mark_read == 'topics')
 	}
 
 	trigger_error($user->lang['TOPICS_MARKED'] . '<br /><br />' . sprintf($user->lang['RETURN_FORUM'], '<a href="' . $redirect_url . '">', '</a>'));
-}
-
-// Is a forum specific topic count required?
-if ($forum_data['forum_topics_per_page'])
-{
-	$config['topics_per_page'] = $forum_data['forum_topics_per_page'];
 }
 
 // Do the forum Prune thang - cron type job ...
@@ -431,9 +432,9 @@ $sql_array = array(
 *									Author, Post time, Replies, Subject, Views
 * @var	string	sort_dir			Either "a" for ascending or "d" for descending
 * @since 3.1.0-a1
-* @change 3.1.0-RC4 Added forum_data var
-* @change 3.1.4-RC1 Added forum_id, topics_count, sort_days, sort_key and sort_dir vars
-* @change 3.1.9-RC1 Fix types of properties
+* @changed 3.1.0-RC4 Added forum_data var
+* @changed 3.1.4-RC1 Added forum_id, topics_count, sort_days, sort_key and sort_dir vars
+* @changed 3.1.9-RC1 Fix types of properties
 */
 $vars = array(
 	'forum_data',
@@ -492,6 +493,28 @@ if ($forum_data['forum_type'] == FORUM_POST)
 
 		'ORDER_BY'	=> 't.topic_time DESC',
 	);
+
+	/**
+	* Event to modify the SQL query before the announcement topic ids data is retrieved
+	*
+	* @event core.viewforum_get_announcement_topic_ids_data
+	* @var	array	forum_data			Data about the forum
+	* @var	array	g_forum_ary			Global announcement forums array
+	* @var	array	sql_anounce_array	SQL announcement array
+	* @var	array	sql_ary				SQL query array to get the announcement topic ids data
+	* @var	int		forum_id			The forum ID
+	*
+	* @since 3.1.10-RC1
+	*/
+	$vars = array(
+		'forum_data',
+		'g_forum_ary',
+		'sql_anounce_array',
+		'sql_ary',
+		'forum_id',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.viewforum_get_announcement_topic_ids_data', compact($vars)));
+
 	$sql = $db->sql_build_query('SELECT', $sql_ary);
 	$result = $db->sql_query($sql);
 
@@ -760,9 +783,11 @@ $topic_tracking_info = $tracking_topics = array();
 * @var	array	topic_list			Array with current viewforum page topic ids
 * @var	array	rowset				Array with topics data (in topic_id => topic_data format)
 * @var	int		total_topic_count	Forum's total topic count
+* @var	int		forum_id			Forum identifier
 * @since 3.1.0-b3
+* @changed 3.1.11-RC1 Added forum_id
 */
-$vars = array('topic_list', 'rowset', 'total_topic_count');
+$vars = array('topic_list', 'rowset', 'total_topic_count', 'forum_id');
 extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topics_data', compact($vars)));
 
 // Okay, lets dump out the page ...
@@ -917,11 +942,15 @@ if (sizeof($topic_list))
 		* Modify the topic data before it is assigned to the template
 		*
 		* @event core.viewforum_modify_topicrow
-		* @var	array	row			Array with topic data
-		* @var	array	topic_row	Template array with topic data
+		* @var	array	row					Array with topic data
+		* @var	array	topic_row			Template array with topic data
+		* @var	bool	s_type_switch		Flag indicating if the topic type is [global] announcement
+		* @var	bool	s_type_switch_test	Flag indicating if the test topic type is [global] announcement
 		* @since 3.1.0-a1
+		*
+		* @changed 3.1.10-RC1 Added s_type_switch, s_type_switch_test
 		*/
-		$vars = array('row', 'topic_row');
+		$vars = array('row', 'topic_row', 's_type_switch', 's_type_switch_test');
 		extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topicrow', compact($vars)));
 
 		$template->assign_block_vars('topicrow', $topic_row);

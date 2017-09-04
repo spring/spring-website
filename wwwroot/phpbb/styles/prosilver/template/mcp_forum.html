@@ -50,7 +50,7 @@
 					<!-- IF topicrow.S_TOPIC_REPORTED --><a href="{topicrow.U_MCP_REPORT}">{REPORTED_IMG}</a><!-- ENDIF -->
 					<!-- IF topicrow.S_MOVED_TOPIC and S_CAN_DELETE -->&nbsp;<a href="{topicrow.U_DELETE_TOPIC}" class="topictitle">[ {L_DELETE_SHADOW_TOPIC} ]</a><!-- ENDIF -->
 					<br />
-
+					<!-- EVENT topiclist_row_topic_title_after -->
 					<div class="responsive-show" style="display: none;">
 						<!-- IF topicrow.ATTACH_ICON_IMG -->{topicrow.ATTACH_ICON_IMG} <!-- ENDIF -->
 						{L_LAST_POST} {L_POST_BY_AUTHOR} {topicrow.LAST_POST_AUTHOR_FULL} &laquo; {topicrow.LAST_POST_TIME}<br />
@@ -120,6 +120,7 @@
 	</div>
 </div>
 
+<!-- EVENT mcp_forum_actions_before -->
 <fieldset class="display-actions">
 	<!-- IF not S_MERGE_SELECT -->
 	<select name="action">
@@ -137,12 +138,14 @@
 			<option value="make_announce">{L_MAKE_ANNOUNCE}</option>
 			<option value="make_global">{L_MAKE_GLOBAL}</option>
 		<!-- ENDIF -->
+		<!-- EVENT mcp_forum_actions_append -->
 	</select>
 	<input class="button2" type="submit" value="{L_SUBMIT}" />
 	<div><a href="#" onclick="marklist('mcp', 'topic_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'topic_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	<!-- ENDIF -->
 	{S_FORM_TOKEN}
 </fieldset>
+<!-- EVENT mcp_forum_actions_after -->
 </form>
 
 <!-- INCLUDE mcp_footer.html -->

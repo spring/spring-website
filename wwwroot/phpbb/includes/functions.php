@@ -2233,13 +2233,6 @@ function generate_board_url($without_script_path = false)
 	global $config, $user, $request;
 
 	$server_name = $user->host;
-	$server_port = $request->server('SERVER_PORT', 0);
-	$forwarded_proto = $request->server('HTTP_X_FORWARDED_PROTO');
-
-	if (!empty($forwarded_proto) && $forwarded_proto === 'https')
-	{
-		$server_port = 443;
-	}
 
 	// Forcing server vars is the only way to specify/override the protocol
 	if ($config['force_server_vars'] || !$server_name)
@@ -2254,6 +2247,13 @@ function generate_board_url($without_script_path = false)
 	}
 	else
 	{
+		$server_port = $request->server('SERVER_PORT', 0);
+		$forwarded_proto = $request->server('HTTP_X_FORWARDED_PROTO');
+
+		if (!empty($forwarded_proto) && $forwarded_proto === 'https')
+		{
+			$server_port = 443;
+		}
 		// Do not rely on cookie_secure, users seem to think that it means a secured cookie instead of an encrypted connection
 		$cookie_secure = $request->is_secure() ? 1 : 0;
 		$url = (($cookie_secure) ? 'https://' : 'http://') . $server_name;
@@ -2609,8 +2609,9 @@ function check_link_hash($token, $link_name)
 /**
 * Add a secret token to the form (requires the S_FORM_TOKEN template variable)
 * @param string  $form_name The name of the form; has to match the name used in check_form_key, otherwise no restrictions apply
+* @param string  $template_variable_suffix A string that is appended to the name of the template variable to which the form elements are assigned
 */
-function add_form_key($form_name)
+function add_form_key($form_name, $template_variable_suffix = '')
 {
 	global $config, $template, $user, $phpbb_dispatcher;
 
@@ -2627,13 +2628,15 @@ function add_form_key($form_name)
 	* Perform additional actions on creation of the form token
 	*
 	* @event core.add_form_key
-	* @var	string	form_name			The form name
-	* @var	int		now					Current time timestamp
-	* @var	string	s_fields			Generated hidden fields
-	* @var	string	token				Form token
-	* @var	string	token_sid			User session ID
+	* @var	string	form_name					The form name
+	* @var	int		now							Current time timestamp
+	* @var	string	s_fields					Generated hidden fields
+	* @var	string	token						Form token
+	* @var	string	token_sid					User session ID
+	* @var	string	template_variable_suffix	The string that is appended to template variable name
 	*
 	* @since 3.1.0-RC3
+	* @changed 3.1.11-RC1 Added template_variable_suffix
 	*/
 	$vars = array(
 		'form_name',
@@ -2641,12 +2644,11 @@ function add_form_key($form_name)
 		's_fields',
 		'token',
 		'token_sid',
+		'template_variable_suffix',
 	);
 	extract($phpbb_dispatcher->trigger_event('core.add_form_key', compact($vars)));
 
-	$template->assign_vars(array(
-		'S_FORM_TOKEN'	=> $s_fields,
-	));
+	$template->assign_var('S_FORM_TOKEN' . $template_variable_suffix, $s_fields);
 }
 
 /**
@@ -2774,7 +2776,7 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
 
 	$template->assign_vars(array(
-		'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title],
+		'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang($title, 1),
 		'MESSAGE_TEXT'		=> (!isset($user->lang[$title . '_CONFIRM'])) ? $title : $user->lang[$title . '_CONFIRM'],
 
 		'YES_VALUE'			=> $user->lang['YES'],
@@ -3439,6 +3441,11 @@ function get_preg_expression($mode)
 		// Matches the predecing dot
 		case 'path_remove_dot_trailing_slash':
 			return '#^(?:(\.)?)+(?:(.+)?)+(?:([\\/\\\])$)#';
+		break;
+
+		case 'semantic_version':
+			// Regular expression to match semantic versions by http://rgxdb.com/
+			return '/(?<=^[Vv]|^)(?:(?<major>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<minor>(?:0|[1-9](?:(?:0|[1-9])+)*))[.](?<patch>(?:0|[1-9](?:(?:0|[1-9])+)*))(?:-(?<prerelease>(?:(?:(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?|(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?)|(?:0|[1-9](?:(?:0|[1-9])+)*))(?:[.](?:(?:(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?|(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?)|(?:0|[1-9](?:(?:0|[1-9])+)*)))*))?(?:[+](?<build>(?:(?:(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?|(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?)|(?:(?:0|[1-9])+))(?:[.](?:(?:(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?|(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)(?:[A-Za-z]|-)(?:(?:(?:0|[1-9])|(?:[A-Za-z]|-))+)?)|(?:(?:0|[1-9])+)))*))?)$/';
 		break;
 	}
 
@@ -4334,6 +4341,30 @@ function obtain_users_online_string($online_users, $item_id = 0, $item = 'forum'
 			}
 		}
 	}
+
+	/**
+	* Modify online userlist data
+	*
+	* @event core.obtain_users_online_string_before_modify
+	* @var	array	online_users		Array with online users data
+	*									from obtain_users_online()
+	* @var	int		item_id				Restrict online users to item id
+	* @var	string	item				Restrict online users to a certain
+	*									session item, e.g. forum for
+	*									session_forum_id
+	* @var	array	rowset				Array with online users data
+	* @var	array	user_online_link	Array with online users items (usernames)
+	* @since 3.1.10-RC1
+	*/
+	$vars = array(
+		'online_users',
+		'item_id',
+		'item',
+		'rowset',
+		'user_online_link',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.obtain_users_online_string_before_modify', compact($vars)));
+
 	$online_userlist = implode(', ', $user_online_link);
 
 	if (!$online_userlist)
