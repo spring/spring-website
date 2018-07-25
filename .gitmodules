@@ -4,3 +4,6 @@
 [submodule "wwwroot/phpbb/ext/o0johntam0o/codeboxplus"]
 	path = wwwroot/phpbb/ext/o0johntam0o/codeboxplus
 	url = https://github.com/gajop/phpBB-Extension-Codebox-Plus.git
+[submodule "codebox"]
+	path = codebox
+	url = https://github.com/o0johntam0o/phpBB-Extension-Codebox-Plus/
