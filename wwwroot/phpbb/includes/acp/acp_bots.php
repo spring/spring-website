@@ -25,13 +25,13 @@ class acp_bots
 
 	function main($id, $mode)
 	{
-		global $config, $db, $user, $auth, $template, $cache, $request;
-		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix;
+		global $config, $db, $user, $template, $cache, $request, $phpbb_log;
+		global $phpbb_root_path, $phpEx;
 
-		$action = request_var('action', '');
+		$action = $request->variable('action', '');
 		$submit = (isset($_POST['submit'])) ? true : false;
-		$mark	= request_var('mark', array(0));
-		$bot_id	= request_var('id', 0);
+		$mark	= $request->variable('mark', array(0));
+		$bot_id	= $request->variable('id', 0);
 
 		if (isset($_POST['add']))
 		{
@@ -55,7 +55,7 @@ class acp_bots
 		switch ($action)
 		{
 			case 'activate':
-				if ($bot_id || sizeof($mark))
+				if ($bot_id || count($mark))
 				{
 					$sql_id = ($bot_id) ? " = $bot_id" : ' IN (' . implode(', ', $mark) . ')';
 
@@ -69,7 +69,7 @@ class acp_bots
 			break;
 
 			case 'deactivate':
-				if ($bot_id || sizeof($mark))
+				if ($bot_id || count($mark))
 				{
 					$sql_id = ($bot_id) ? " = $bot_id" : ' IN (' . implode(', ', $mark) . ')';
 
@@ -83,7 +83,7 @@ class acp_bots
 			break;
 
 			case 'delete':
-				if ($bot_id || sizeof($mark))
+				if ($bot_id || count($mark))
 				{
 					if (confirm_box(true))
 					{
@@ -109,7 +109,7 @@ class acp_bots
 							WHERE bot_id $sql_id";
 						$db->sql_query($sql);
 
-						if (sizeof($user_id_ary))
+						if (count($user_id_ary))
 						{
 							$_tables = array(USERS_TABLE, USER_GROUP_TABLE);
 							foreach ($_tables as $table)
@@ -124,7 +124,7 @@ class acp_bots
 
 						$cache->destroy('_bots');
 
-						add_log('admin', 'LOG_BOT_DELETE', implode(', ', $bot_name_ary));
+						$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_BOT_DELETE', false, array(implode(', ', $bot_name_ary)));
 						trigger_error($user->lang['BOT_DELETED'] . adm_back_link($this->u_action));
 					}
 					else
@@ -148,12 +148,12 @@ class acp_bots
 				}
 
 				$bot_row = array(
-					'bot_name'		=> utf8_normalize_nfc(request_var('bot_name', '', true)),
-					'bot_agent'		=> request_var('bot_agent', ''),
-					'bot_ip'		=> request_var('bot_ip', ''),
-					'bot_active'	=> request_var('bot_active', true),
-					'bot_lang'		=> request_var('bot_lang', $config['default_lang']),
-					'bot_style'		=> request_var('bot_style' , $config['default_style']),
+					'bot_name'		=> $request->variable('bot_name', '', true),
+					'bot_agent'		=> $request->variable('bot_agent', ''),
+					'bot_ip'		=> $request->variable('bot_ip', ''),
+					'bot_active'	=> $request->variable('bot_active', true),
+					'bot_lang'		=> $request->variable('bot_lang', $config['default_lang']),
+					'bot_style'		=> $request->variable('bot_style' , $config['default_style']),
 				);
 
 				if ($submit)
@@ -207,7 +207,7 @@ class acp_bots
 						$error[] = $user->lang['BOT_NAME_TAKEN'];
 					}
 
-					if (!sizeof($error))
+					if (!count($error))
 					{
 						// New bot? Create a new user and group entry
 						if ($action == 'add')
@@ -296,7 +296,7 @@ class acp_bots
 
 						$cache->destroy('_bots');
 
-						add_log('admin', 'LOG_BOT_' . $log, $bot_row['bot_name']);
+						$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_BOT_' . $log, false, array($bot_row['bot_name']));
 						trigger_error($user->lang['BOT_' . $log] . adm_back_link($this->u_action));
 
 					}
@@ -338,7 +338,7 @@ class acp_bots
 					'L_TITLE'		=> $user->lang['BOT_' . $l_title],
 					'U_ACTION'		=> $this->u_action . "&amp;id=$bot_id&amp;action=$action",
 					'U_BACK'		=> $this->u_action,
-					'ERROR_MSG'		=> (sizeof($error)) ? implode('<br />', $error) : '',
+					'ERROR_MSG'		=> (count($error)) ? implode('<br />', $error) : '',
 
 					'BOT_NAME'		=> $bot_row['bot_name'],
 					'BOT_IP'		=> $bot_row['bot_ip'],
@@ -348,7 +348,7 @@ class acp_bots
 					'S_ACTIVE_OPTIONS'	=> $s_active_options,
 					'S_STYLE_OPTIONS'	=> $style_select,
 					'S_LANG_OPTIONS'	=> $lang_select,
-					'S_ERROR'			=> (sizeof($error)) ? true : false,
+					'S_ERROR'			=> (count($error)) ? true : false,
 					)
 				);
 

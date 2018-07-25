@@ -35,14 +35,14 @@ class mcp_queue
 
 	public function main($id, $mode)
 	{
-		global $auth, $db, $user, $template, $cache, $request;
+		global $auth, $db, $user, $template, $request;
 		global $config, $phpbb_root_path, $phpEx, $action, $phpbb_container;
 		global $phpbb_dispatcher;
 
 		include_once($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 
-		$forum_id = request_var('f', 0);
-		$start = request_var('start', 0);
+		$forum_id = $request->variable('f', 0);
+		$start = $request->variable('start', 0);
 
 		$this->page_title = 'MCP_QUEUE';
 
@@ -104,7 +104,7 @@ class mcp_queue
 
 				if (!empty($topic_id_list) && $mode == 'deleted_topics')
 				{
-					if (!function_exists('mcp_delete_topics'))
+					if (!function_exists('mcp_delete_topic'))
 					{
 						global $phpbb_root_path, $phpEx;
 						include($phpbb_root_path . 'includes/mcp/mcp_main.' . $phpEx);
@@ -154,9 +154,10 @@ class mcp_queue
 
 				$user->add_lang(array('posting', 'viewtopic'));
 
-				$post_id = request_var('p', 0);
-				$topic_id = request_var('t', 0);
+				$post_id = $request->variable('p', 0);
+				$topic_id = $request->variable('t', 0);
 
+				/* @var $phpbb_notifications \phpbb\notification\manager */
 				$phpbb_notifications = $phpbb_container->get('notification_manager');
 
 				if ($topic_id)
@@ -166,7 +167,7 @@ class mcp_queue
 					{
 						$post_id = (int) $topic_info[$topic_id]['topic_first_post_id'];
 
-						$phpbb_notifications->mark_notifications_read('notification.type.topic_in_queue', $topic_id, $user->data['user_id']);
+						$phpbb_notifications->mark_notifications('topic_in_queue', $topic_id, $user->data['user_id']);
 					}
 					else
 					{
@@ -174,11 +175,11 @@ class mcp_queue
 					}
 				}
 
-				$phpbb_notifications->mark_notifications_read('notification.type.post_in_queue', $post_id, $user->data['user_id']);
+				$phpbb_notifications->mark_notifications('post_in_queue', $post_id, $user->data['user_id']);
 
 				$post_info = phpbb_get_post_data(array($post_id), 'm_approve', true);
 
-				if (!sizeof($post_info))
+				if (!count($post_info))
 				{
 					trigger_error('NO_POST_SELECTED');
 				}
@@ -194,7 +195,7 @@ class mcp_queue
 					));
 				}
 
-				$extensions = $attachments = $topic_tracking_info = array();
+				$attachments = $topic_tracking_info = array();
 
 				// Get topic tracking info
 				if ($config['load_db_lastread'])
@@ -216,8 +217,6 @@ class mcp_queue
 
 				if ($post_info['post_attachment'] && $auth->acl_get('u_download') && $auth->acl_get('f_download', $post_info['forum_id']))
 				{
-					$extensions = $cache->obtain_attach_extensions($post_info['forum_id']);
-
 					$sql = 'SELECT *
 						FROM ' . ATTACHMENTS_TABLE . '
 						WHERE post_msg_id = ' . $post_id . '
@@ -231,7 +230,7 @@ class mcp_queue
 					}
 					$db->sql_freeresult($result);
 
-					if (sizeof($attachments))
+					if (count($attachments))
 					{
 						$update_count = array();
 						parse_attachments($post_info['forum_id'], $message, $attachments, $update_count);
@@ -281,7 +280,7 @@ class mcp_queue
 				$post_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $post_info['forum_id'] . '&amp;p=' . $post_info['post_id'] . '#p' . $post_info['post_id']);
 				$topic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", 'f=' . $post_info['forum_id'] . '&amp;t=' . $post_info['topic_id']);
 
-				$template->assign_vars(array(
+				$post_data = array(
 					'S_MCP_QUEUE'			=> true,
 					'U_APPROVE_ACTION'		=> append_sid("{$phpbb_root_path}mcp.$phpEx", "i=queue&amp;p=$post_id&amp;f=$forum_id"),
 					'S_CAN_DELETE_POST'		=> $auth->acl_get('m_delete', $post_info['forum_id']),
@@ -320,12 +319,40 @@ class mcp_queue
 					'POST_SUBJECT'			=> $post_info['post_subject'],
 					'POST_DATE'				=> $user->format_date($post_info['post_time']),
 					'POST_IP'				=> $post_info['poster_ip'],
-					'POST_IPADDR'			=> ($auth->acl_get('m_info', $post_info['forum_id']) && request_var('lookup', '')) ? @gethostbyaddr($post_info['poster_ip']) : '',
+					'POST_IPADDR'			=> ($auth->acl_get('m_info', $post_info['forum_id']) && $request->variable('lookup', '')) ? @gethostbyaddr($post_info['poster_ip']) : '',
 					'POST_ID'				=> $post_info['post_id'],
 					'S_FIRST_POST'			=> ($post_info['topic_first_post_id'] == $post_id),
 
 					'U_LOOKUP_IP'			=> ($auth->acl_get('m_info', $post_info['forum_id'])) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue&amp;mode=approve_details&amp;f=' . $post_info['forum_id'] . '&amp;p=' . $post_id . '&amp;lookup=' . $post_info['poster_ip']) . '#ip' : '',
-				));
+				);
+
+				/**
+				* Alter post awaiting approval template before it is rendered
+				*
+				* @event core.mcp_queue_approve_details_template
+				* @var	int		post_id		Post ID
+				* @var	int		topic_id	Topic ID
+				* @var	array	topic_info	Topic data
+				* @var	array	post_info	Post data
+				* @var array	post_data	Post template data
+				* @var	string	message		Post message
+				* @var	string	post_url	Post URL
+				* @var	string	topic_url	Topic URL
+				* @since 3.2.2-RC1
+				*/
+				$vars = array(
+					'post_id',
+					'topic_id',
+					'topic_info',
+					'post_info',
+					'post_data',
+					'message',
+					'post_url',
+					'topic_url',
+				);
+				extract($phpbb_dispatcher->trigger_event('core.mcp_queue_approve_details_template', compact($vars)));
+
+				$template->assign_vars($post_data);
 
 			break;
 
@@ -342,13 +369,15 @@ class mcp_queue
 
 				$topic_id = $request->variable('t', 0);
 				$forum_info = array();
+
+				/* @var $pagination \phpbb\pagination */
 				$pagination = $phpbb_container->get('pagination');
 
 				if ($topic_id)
 				{
 					$topic_info = phpbb_get_topic_data(array($topic_id));
 
-					if (!sizeof($topic_info))
+					if (!count($topic_info))
 					{
 						trigger_error('TOPIC_NOT_EXIST');
 					}
@@ -378,7 +407,7 @@ class mcp_queue
 						$forum_list[] = $row['forum_id'];
 					}
 
-					if (!sizeof($forum_list))
+					if (!count($forum_list))
 					{
 						trigger_error('NOT_MODERATOR');
 					}
@@ -394,12 +423,11 @@ class mcp_queue
 				{
 					$forum_info = phpbb_get_forum_data(array($forum_id), $m_perm);
 
-					if (!sizeof($forum_info))
+					if (!count($forum_info))
 					{
 						trigger_error('NOT_MODERATOR');
 					}
 
-					$forum_info = $forum_info[$forum_id];
 					$forum_list = $forum_id;
 				}
 
@@ -414,7 +442,6 @@ class mcp_queue
 				$sort_by_sql = $sort_order_sql = array();
 				phpbb_mcp_sorting($mode, $sort_days, $sort_key, $sort_dir, $sort_by_sql, $sort_order_sql, $total, $forum_id, $topic_id);
 
-				$forum_topics = ($total == -1) ? $forum_info['forum_topics_approved'] : $total;
 				$limit_time_sql = ($sort_days) ? 'AND t.topic_last_post_time >= ' . (time() - ($sort_days * 86400)) : '';
 
 				$forum_names = array();
@@ -466,7 +493,7 @@ class mcp_queue
 					}
 					$db->sql_freeresult($result);
 
-					if (sizeof($post_ids))
+					if (count($post_ids))
 					{
 						$sql = 'SELECT t.topic_id, t.topic_title, t.forum_id, p.post_id, p.post_subject, p.post_username, p.poster_id, p.post_time, p.post_attachment, u.username, u.username_clean, u.user_colour
 							FROM ' . POSTS_TABLE . ' p, ' . TOPICS_TABLE . ' t, ' . USERS_TABLE . ' u
@@ -538,7 +565,7 @@ class mcp_queue
 					$db->sql_freeresult($result);
 				}
 
-				if (sizeof($forum_names))
+				if (count($forum_names))
 				{
 					// Select the names for the forum_ids
 					$sql = 'SELECT forum_id, forum_name
@@ -578,7 +605,7 @@ class mcp_queue
 						'POST_SUBJECT'	=> ($row['post_subject'] != '') ? $row['post_subject'] : $user->lang['NO_SUBJECT'],
 						'TOPIC_TITLE'	=> $row['topic_title'],
 						'POST_TIME'		=> $user->format_date($row['post_time']),
-						'ATTACH_ICON_IMG'	=> ($auth->acl_get('u_download') && $auth->acl_get('f_download', $row['forum_id']) && $row['post_attachment']) ? $user->img('icon_topic_attach', $user->lang['TOTAL_ATTACHMENTS']) : '',
+						'S_HAS_ATTACHMENTS'	=> $auth->acl_get('u_download') && $auth->acl_get('f_download', $row['forum_id']) && $row['post_attachment'],
 					));
 				}
 				unset($rowset, $forum_names);
@@ -618,17 +645,18 @@ class mcp_queue
 	*/
 	static public function approve_posts($action, $post_id_list, $id, $mode)
 	{
-		global $db, $template, $user, $config, $request, $phpbb_container, $phpbb_dispatcher;
-		global $phpEx, $phpbb_root_path;
+		global $template, $user, $request, $phpbb_container, $phpbb_dispatcher;
+		global $phpEx, $phpbb_root_path, $phpbb_log;
 
 		if (!phpbb_check_ids($post_id_list, POSTS_TABLE, 'post_id', array('m_approve')))
 		{
+			send_status_line(403, 'Forbidden');
 			trigger_error('NOT_AUTHORISED');
 		}
 
 		$redirect = $request->variable('redirect', build_url(array('quickmod')));
 		$redirect = reapply_sid($redirect);
-		$success_msg = $post_url = '';
+		$post_url = '';
 		$approve_log = array();
 		$num_topics = 0;
 
@@ -677,10 +705,12 @@ class mcp_queue
 				$approve_log[] = array(
 					'forum_id'		=> $post_data['forum_id'],
 					'topic_id'		=> $post_data['topic_id'],
+					'post_id'		=> $post_id,
 					'post_subject'	=> $post_data['post_subject'],
 				);
 			}
 
+			/* @var $phpbb_content_visibility \phpbb\content_visibility */
 			$phpbb_content_visibility = $phpbb_container->get('content.visibility');
 			foreach ($topic_info as $topic_id => $topic_data)
 			{
@@ -689,12 +719,18 @@ class mcp_queue
 
 			foreach ($approve_log as $log_data)
 			{
-				add_log('mod', $log_data['forum_id'], $log_data['topic_id'], 'LOG_POST_' . strtoupper($action) . 'D', $log_data['post_subject']);
+				$phpbb_log->add('mod', $user->data['user_id'], $user->ip, 'LOG_POST_' . strtoupper($action) . 'D', false, array(
+					'forum_id' => $log_data['forum_id'],
+					'topic_id' => $log_data['topic_id'],
+					'post_id'  => $log_data['post_id'],
+					$log_data['post_subject']
+				));
 			}
 
 			// Only send out the mails, when the posts are being approved
 			if ($action == 'approve')
 			{
+				/* @var $phpbb_notifications \phpbb\notification\manager */
 				$phpbb_notifications = $phpbb_container->get('notification_manager');
 
 				// Handle notifications
@@ -731,7 +767,7 @@ class mcp_queue
 					$phpbb_notifications->add_notifications(array('notification.type.quote'), $post_data);
 					$phpbb_notifications->delete_notifications('notification.type.post_in_queue', $post_id);
 
-					$phpbb_notifications->mark_notifications_read(array(
+					$phpbb_notifications->mark_notifications(array(
 						'notification.type.quote',
 						'notification.type.bookmark',
 						'notification.type.post',
@@ -763,7 +799,7 @@ class mcp_queue
 			}
 			else
 			{
-				$success_msg = (sizeof($post_info) == 1) ? 'POST_' . strtoupper($action) . 'D_SUCCESS' : 'POSTS_' . strtoupper($action) . 'D_SUCCESS';
+				$success_msg = (count($post_info) == 1) ? 'POST_' . strtoupper($action) . 'D_SUCCESS' : 'POSTS_' . strtoupper($action) . 'D_SUCCESS';
 			}
 
 			/**
@@ -806,7 +842,7 @@ class mcp_queue
 			$message .= '<br /><br />' . $user->lang('RETURN_PAGE', '<a href="' . $redirect . '">', '</a>');
 
 			// If approving one post, also give links back to post...
-			if (sizeof($post_info) == 1 && $post_url)
+			if (count($post_info) == 1 && $post_url)
 			{
 				$message .= '<br /><br />' . $user->lang('RETURN_POST', '<a href="' . $post_url . '">', '</a>');
 			}
@@ -839,14 +875,14 @@ class mcp_queue
 
 			// Create the confirm box message
 			$action_msg = strtoupper($action);
-			$num_posts = sizeof($post_id_list) - $num_topics;
+			$num_posts = count($post_id_list) - $num_topics;
 			if ($num_topics > 0 && $num_posts <= 0)
 			{
 				$action_msg .= '_TOPIC' . (($num_topics == 1) ? '' : 'S');
 			}
 			else
 			{
-				$action_msg .= '_POST' . ((sizeof($post_id_list) == 1) ? '' : 'S');
+				$action_msg .= '_POST' . ((count($post_id_list) == 1) ? '' : 'S');
 			}
 			confirm_box(false, $action_msg, $s_hidden_fields, 'mcp_approve.html');
 		}
@@ -865,11 +901,12 @@ class mcp_queue
 	*/
 	static public function approve_topics($action, $topic_id_list, $id, $mode)
 	{
-		global $db, $template, $user, $config;
+		global $db, $template, $user, $phpbb_log;
 		global $phpEx, $phpbb_root_path, $request, $phpbb_container, $phpbb_dispatcher;
 
 		if (!phpbb_check_ids($topic_id_list, TOPICS_TABLE, 'topic_id', array('m_approve')))
 		{
+			send_status_line(403, 'Forbidden');
 			trigger_error('NOT_AUTHORISED');
 		}
 
@@ -892,6 +929,7 @@ class mcp_queue
 		{
 			$notify_poster = ($action == 'approve' && isset($_REQUEST['notify_poster'])) ? true : false;
 
+			/* @var $phpbb_content_visibility \phpbb\content_visibility */
 			$phpbb_content_visibility = $phpbb_container->get('content.visibility');
 			$first_post_ids = array();
 
@@ -909,14 +947,18 @@ class mcp_queue
 				);
 			}
 
-			if (sizeof($topic_info) >= 1)
+			if (count($topic_info) >= 1)
 			{
-				$success_msg = (sizeof($topic_info) == 1) ? 'TOPIC_' . strtoupper($action) . 'D_SUCCESS' : 'TOPICS_' . strtoupper($action) . 'D_SUCCESS';
+				$success_msg = (count($topic_info) == 1) ? 'TOPIC_' . strtoupper($action) . 'D_SUCCESS' : 'TOPICS_' . strtoupper($action) . 'D_SUCCESS';
 			}
 
 			foreach ($approve_log as $log_data)
 			{
-				add_log('mod', $log_data['forum_id'], $log_data['topic_id'], 'LOG_TOPIC_' . strtoupper($action) . 'D', $log_data['topic_title']);
+				$phpbb_log->add('mod', $user->data['user_id'], $user->ip, 'LOG_TOPIC_' . strtoupper($action) . 'D', false, array(
+					'forum_id' => $log_data['forum_id'],
+					'topic_id' => $log_data['topic_id'],
+					$log_data['topic_title']
+				));
 			}
 
 			// Only send out the mails, when the posts are being approved
@@ -935,6 +977,7 @@ class mcp_queue
 				$db->sql_freeresult($result);
 
 				// Handle notifications
+				/* @var $phpbb_notifications \phpbb\notification\manager */
 				$phpbb_notifications = $phpbb_container->get('notification_manager');
 
 				foreach ($topic_info as $topic_id => $topic_data)
@@ -961,8 +1004,8 @@ class mcp_queue
 						), $topic_data);
 					}
 
-					$phpbb_notifications->mark_notifications_read('notification.type.quote', $topic_data['post_id'], $user->data['user_id']);
-					$phpbb_notifications->mark_notifications_read('notification.type.topic', $topic_id, $user->data['user_id']);
+					$phpbb_notifications->mark_notifications('quote', $topic_data['post_id'], $user->data['user_id']);
+					$phpbb_notifications->mark_notifications('topic', $topic_id, $user->data['user_id']);
 
 					if ($notify_poster)
 					{
@@ -1009,7 +1052,7 @@ class mcp_queue
 			$message .= '<br /><br />' . $user->lang('RETURN_PAGE', '<a href="' . $redirect . '">', '</a>');
 
 			// If approving one topic, also give links back to topic...
-			if (sizeof($topic_info) == 1 && $topic_url)
+			if (count($topic_info) == 1 && $topic_url)
 			{
 				$message .= '<br /><br />' . $user->lang('RETURN_TOPIC', '<a href="' . $topic_url . '">', '</a>');
 			}
@@ -1040,7 +1083,7 @@ class mcp_queue
 				'S_' . strtoupper($action)	=> true,
 			));
 
-			confirm_box(false, strtoupper($action) . '_TOPIC' . ((sizeof($topic_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
+			confirm_box(false, strtoupper($action) . '_TOPIC' . ((count($topic_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
 		}
 
 		redirect($redirect);
@@ -1056,11 +1099,12 @@ class mcp_queue
 	*/
 	static public function disapprove_posts($post_id_list, $id, $mode)
 	{
-		global $db, $template, $user, $config, $phpbb_container, $phpbb_dispatcher;
-		global $phpEx, $phpbb_root_path, $request;
+		global $db, $template, $user, $phpbb_container, $phpbb_dispatcher;
+		global $phpEx, $phpbb_root_path, $request, $phpbb_log;
 
 		if (!phpbb_check_ids($post_id_list, POSTS_TABLE, 'post_id', array('m_approve')))
 		{
+			send_status_line(403, 'Forbidden');
 			trigger_error('NOT_AUTHORISED');
 		}
 
@@ -1068,7 +1112,7 @@ class mcp_queue
 		$redirect = reapply_sid($redirect);
 		$reason = $request->variable('reason', '', true);
 		$reason_id = $request->variable('reason_id', 0);
-		$success_msg = $additional_msg = '';
+		$additional_msg = '';
 
 		$s_hidden_fields = build_hidden_fields(array(
 			'i'				=> $id,
@@ -1126,7 +1170,7 @@ class mcp_queue
 
 		if (confirm_box(true))
 		{
-			$disapprove_log = $disapprove_log_topics = $disapprove_log_posts = array();
+			$disapprove_log_topics = $disapprove_log_posts = array();
 			$topic_posts_unapproved = $post_disapprove_list = $topic_information = array();
 
 			// Build a list of posts to be disapproved and get the related topics real replies count
@@ -1190,8 +1234,8 @@ class mcp_queue
 			}
 
 			// Get disapproved posts/topics counts separately
-			$num_disapproved_topics = sizeof($disapprove_log_topics);
-			$num_disapproved_posts = sizeof($disapprove_log_posts);
+			$num_disapproved_topics = count($disapprove_log_topics);
+			$num_disapproved_posts = count($disapprove_log_posts);
 
 			// Build the whole log
 			$disapprove_log = array_merge($disapprove_log_topics, $disapprove_log_posts);
@@ -1200,7 +1244,7 @@ class mcp_queue
 			unset($post_data, $disapprove_log_topics, $disapprove_log_posts);
 
 			// Let's do the job - delete disapproved posts
-			if (sizeof($post_disapprove_list))
+			if (count($post_disapprove_list))
 			{
 				if (!function_exists('delete_posts'))
 				{
@@ -1217,16 +1261,28 @@ class mcp_queue
 					if ($is_disapproving)
 					{
 						$l_log_message = ($log_data['type'] == 'topic') ? 'LOG_TOPIC_DISAPPROVED' : 'LOG_POST_DISAPPROVED';
-						add_log('mod', $log_data['forum_id'], $log_data['topic_id'], $l_log_message, $log_data['post_subject'], $disapprove_reason, $log_data['post_username']);
+						$phpbb_log->add('mod', $user->data['user_id'], $user->ip, $l_log_message, false, array(
+							'forum_id' => $log_data['forum_id'],
+							'topic_id' => $log_data['topic_id'],
+							$log_data['post_subject'],
+							$disapprove_reason,
+							$log_data['post_username']
+						));
 					}
 					else
 					{
 						$l_log_message = ($log_data['type'] == 'topic') ? 'LOG_DELETE_TOPIC' : 'LOG_DELETE_POST';
-						add_log('mod', $log_data['forum_id'], $log_data['topic_id'], $l_log_message, $log_data['post_subject'], $log_data['post_username']);
+						$phpbb_log->add('mod', $user->data['user_id'], $user->ip, $l_log_message, false, array(
+							'forum_id' => $log_data['forum_id'],
+							'topic_id' => $log_data['topic_id'],
+							$log_data['post_subject'],
+							$log_data['post_username']
+						));
 					}
 				}
 			}
 
+			/* @var $phpbb_notifications \phpbb\notification\manager */
 			$phpbb_notifications = $phpbb_container->get('notification_manager');
 
 			$lang_reasons = array();
@@ -1388,11 +1444,6 @@ class mcp_queue
 		}
 		else
 		{
-			if (!function_exists('display_reasons'))
-			{
-				include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-			}
-
 			$show_notify = false;
 
 			foreach ($post_info as $post_data)
@@ -1412,7 +1463,7 @@ class mcp_queue
 			$confirm_template = 'mcp_approve.html';
 			if ($is_disapproving)
 			{
-				display_reasons($reason_id);
+				$phpbb_container->get('phpbb.report.report_reason_list_provider')->display_reasons($reason_id);
 			}
 			else
 			{
@@ -1421,7 +1472,7 @@ class mcp_queue
 				$l_confirm_msg = 'DELETE_POST_PERMANENTLY';
 				$confirm_template = 'confirm_delete_body.html';
 			}
-			$l_confirm_msg .= ((sizeof($post_id_list) == 1) ? '' : 'S');
+			$l_confirm_msg .= ((count($post_id_list) == 1) ? '' : 'S');
 
 			$template->assign_vars(array(
 				'S_NOTIFY_POSTER'	=> $show_notify,

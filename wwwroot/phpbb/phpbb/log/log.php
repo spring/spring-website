@@ -27,7 +27,7 @@ class log implements \phpbb\log\log_interface
 
 	/**
 	* An array with the disabled log types. Logs of such types will not be
-	* added when add_log() is called.
+	* added when add() is called.
 	* @var array
 	*/
 	protected $disabled_types;
@@ -223,7 +223,7 @@ class log implements \phpbb\log\log_interface
 			return false;
 		}
 
-		if ($log_time == false)
+		if ($log_time === false)
 		{
 			$log_time = time();
 		}
@@ -249,10 +249,13 @@ class log implements \phpbb\log\log_interface
 				unset($additional_data['forum_id']);
 				$topic_id = isset($additional_data['topic_id']) ? (int) $additional_data['topic_id'] : 0;
 				unset($additional_data['topic_id']);
+				$post_id = isset($additional_data['post_id']) ? (int) $additional_data['post_id'] : 0;
+				unset($additional_data['post_id']);
 				$sql_ary += array(
 					'log_type'		=> LOG_MOD,
 					'forum_id'		=> $forum_id,
 					'topic_id'		=> $topic_id,
+					'post_id'		=> $post_id,
 					'log_data'		=> (!empty($additional_data)) ? serialize($additional_data) : '',
 				);
 			break;
@@ -388,7 +391,7 @@ class log implements \phpbb\log\log_interface
 		{
 			$sql_where .= ' AND ';
 
-			if (is_array($field_value) && sizeof($field_value) == 2 && !is_array($field_value[1]))
+			if (is_array($field_value) && count($field_value) == 2 && !is_array($field_value[1]))
 			{
 				$sql_where .= $field . ' ' . $field_value[0] . ' ' . $field_value[1];
 			}
@@ -643,6 +646,7 @@ class log implements \phpbb\log\log_interface
 				'time'				=> (int) $row['log_time'],
 				'forum_id'			=> (int) $row['forum_id'],
 				'topic_id'			=> (int) $row['topic_id'],
+				'post_id'			=> (int) $row['post_id'],
 
 				'viewforum'			=> ($row['forum_id'] && $this->auth->acl_get('f_read', $row['forum_id'])) ? append_sid("{$this->phpbb_root_path}viewforum.{$this->php_ext}", 'f=' . $row['forum_id']) : false,
 				'action'			=> (isset($this->user->lang[$row['log_operation']])) ? $row['log_operation'] : '{' . ucfirst(str_replace('_', ' ', $row['log_operation'])) . '}',
@@ -685,9 +689,9 @@ class log implements \phpbb\log\log_interface
 						}
 					}
 
-					if (($num_args - sizeof($log_data_ary)) > 0)
+					if (($num_args - count($log_data_ary)) > 0)
 					{
-						$log_data_ary = array_merge($log_data_ary, array_fill(0, $num_args - sizeof($log_data_ary), ''));
+						$log_data_ary = array_merge($log_data_ary, array_fill(0, $num_args - count($log_data_ary), ''));
 					}
 
 					$lang_arguments = array_merge(array($log[$i]['action']), $log_data_ary);
@@ -736,18 +740,19 @@ class log implements \phpbb\log\log_interface
 		$vars = array('log', 'topic_id_list', 'reportee_id_list');
 		extract($this->dispatcher->trigger_event('core.get_logs_get_additional_data', compact($vars)));
 
-		if (sizeof($topic_id_list))
+		if (count($topic_id_list))
 		{
 			$topic_auth = $this->get_topic_auth($topic_id_list);
 
 			foreach ($log as $key => $row)
 			{
 				$log[$key]['viewtopic'] = (isset($topic_auth['f_read'][$row['topic_id']])) ? append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", 'f=' . $topic_auth['f_read'][$row['topic_id']] . '&amp;t=' . $row['topic_id']) : false;
+				$log[$key]['viewpost'] = (isset($topic_auth['f_read'][$row['topic_id']]) && $row['post_id']) ? append_sid("{$this->phpbb_root_path}viewtopic.{$this->php_ext}", 'f=' . $topic_auth['f_read'][$row['topic_id']] . '&amp;t=' . $row['topic_id'] . '&amp;p=' . $row['post_id'] . '#p' . $row['post_id']) : false;
 				$log[$key]['viewlogs'] = (isset($topic_auth['m_'][$row['topic_id']])) ? append_sid("{$this->phpbb_root_path}mcp.{$this->php_ext}", 'i=logs&amp;mode=topic_logs&amp;t=' . $row['topic_id'], true, $this->user->session_id) : false;
 			}
 		}
 
-		if (sizeof($reportee_id_list))
+		if (count($reportee_id_list))
 		{
 			$reportee_data_list = $this->get_reportee_data($reportee_id_list);
 
@@ -833,7 +838,7 @@ class log implements \phpbb\log\log_interface
 			$keywords_pattern = array();
 
 			// Build pattern and keywords...
-			for ($i = 0, $num_keywords = sizeof($keywords); $i < $num_keywords; $i++)
+			for ($i = 0, $num_keywords = count($keywords); $i < $num_keywords; $i++)
 			{
 				$keywords_pattern[] = preg_quote($keywords[$i], '#');
 				$keywords[$i] = $this->db->sql_like_expression($this->db->get_any_char() . $keywords[$i] . $this->db->get_any_char());
@@ -927,6 +932,20 @@ class log implements \phpbb\log\log_interface
 			{
 				$forum_auth['f_read'][$row['topic_id']] = $row['forum_id'];
 			}
+
+			/**
+			 * Allow modifying SQL query after topic data is retrieved (inside loop).
+			 *
+			 * @event core.phpbb_log_get_topic_auth_sql_after
+			 * @var	array	forum_auth	Forum permissions
+			 * @var	array	row			One row of data from SQL query
+			 * @since 3.2.2-RC1
+			 */
+			$vars = array(
+				'forum_auth',
+				'row',
+			);
+			extract($this->dispatcher->trigger_event('core.phpbb_log_get_topic_auth_sql_after', compact($vars)));
 
 			if ($this->auth->acl_gets('a_', 'm_', $row['forum_id']))
 			{

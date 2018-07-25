@@ -227,14 +227,13 @@ class ucp_main
 				{
 					if (check_form_key('ucp_front_subscribed'))
 					{
-						$forums = array_keys(request_var('f', array(0 => 0)));
-						$topics = array_keys(request_var('t', array(0 => 0)));
-						$msg = '';
+						$forums = array_keys($request->variable('f', array(0 => 0)));
+						$topics = array_keys($request->variable('t', array(0 => 0)));
 
-						if (sizeof($forums) || sizeof($topics))
+						if (count($forums) || count($topics))
 						{
 							$l_unwatch = '';
-							if (sizeof($forums))
+							if (count($forums))
 							{
 								$sql = 'DELETE FROM ' . FORUMS_WATCH_TABLE . '
 									WHERE ' . $db->sql_in_set('forum_id', $forums) . '
@@ -244,7 +243,7 @@ class ucp_main
 								$l_unwatch .= '_FORUMS';
 							}
 
-							if (sizeof($topics))
+							if (count($topics))
 							{
 								$sql = 'DELETE FROM ' . TOPICS_WATCH_TABLE . '
 									WHERE ' . $db->sql_in_set('topic_id', $topics) . '
@@ -451,10 +450,10 @@ class ucp_main
 				if (isset($_POST['unbookmark']))
 				{
 					$s_hidden_fields = array('unbookmark' => 1);
-					$topics = (isset($_POST['t'])) ? array_keys(request_var('t', array(0 => 0))) : array();
+					$topics = (isset($_POST['t'])) ? array_keys($request->variable('t', array(0 => 0))) : array();
 					$url = $this->u_action;
 
-					if (!sizeof($topics))
+					if (!count($topics))
 					{
 						trigger_error('NO_BOOKMARKS_SELECTED');
 					}
@@ -507,9 +506,9 @@ class ucp_main
 				{
 					if (check_form_key('ucp_draft'))
 					{
-						$drafts = array_keys(request_var('d', array(0 => 0)));
+						$drafts = array_keys($request->variable('d', array(0 => 0)));
 
-						if (sizeof($drafts))
+						if (count($drafts))
 						{
 							$sql = 'DELETE FROM ' . DRAFTS_TABLE . '
 								WHERE ' . $db->sql_in_set('draft_id', $drafts) . '
@@ -530,8 +529,8 @@ class ucp_main
 
 				if ($submit && $edit)
 				{
-					$draft_subject = utf8_normalize_nfc(request_var('subject', '', true));
-					$draft_message = utf8_normalize_nfc(request_var('message', '', true));
+					$draft_subject = $request->variable('subject', '', true);
+					$draft_message = $request->variable('message', '', true);
 					if (check_form_key('ucp_draft'))
 					{
 						if ($draft_message && $draft_subject)
@@ -595,7 +594,7 @@ class ucp_main
 				}
 				$db->sql_freeresult($result);
 
-				if (sizeof($topic_ids))
+				if (count($topic_ids))
 				{
 					$sql = 'SELECT topic_id, forum_id, topic_title
 						FROM ' . TOPICS_TABLE . '
@@ -695,9 +694,10 @@ class ucp_main
 	{
 		global $user, $db, $template, $config, $cache, $auth, $phpbb_root_path, $phpEx, $phpbb_container, $request, $phpbb_dispatcher;
 
-		$table = ($mode == 'subscribed') ? TOPICS_WATCH_TABLE : BOOKMARKS_TABLE;
-		$start = request_var('start', 0);
+		/* @var $pagination \phpbb\pagination */
 		$pagination = $phpbb_container->get('pagination');
+		$table = ($mode == 'subscribed') ? TOPICS_WATCH_TABLE : BOOKMARKS_TABLE;
+		$start = $request->variable('start', 0);
 
 		// Grab icons
 		$icons = $cache->obtain_icons();
@@ -852,6 +852,7 @@ class ucp_main
 			}
 		}
 
+		/* @var $phpbb_content_visibility \phpbb\content_visibility */
 		$phpbb_content_visibility = $phpbb_container->get('content.visibility');
 
 		foreach ($topic_list as $topic_id)

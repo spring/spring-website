@@ -42,9 +42,10 @@ if (($mark_notification = $request->variable('mark_notification', 0)))
 
 	if (check_link_hash($request->variable('hash', ''), 'mark_notification_read'))
 	{
+		/* @var $phpbb_notifications \phpbb\notification\manager */
 		$phpbb_notifications = $phpbb_container->get('notification_manager');
 
-		$notification = $phpbb_notifications->load_notifications(array(
+		$notification = $phpbb_notifications->load_notifications('notification.method.board', array(
 			'notification_id'	=> $mark_notification,
 		));
 
@@ -99,11 +100,14 @@ else
 }
 $result = $db->sql_query($sql);
 
+/** @var \phpbb\group\helper $group_helper */
+$group_helper = $phpbb_container->get('group_helper');
+
 $legend = array();
 while ($row = $db->sql_fetchrow($result))
 {
 	$colour_text = ($row['group_colour']) ? ' style="color:#' . $row['group_colour'] . '"' : '';
-	$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name'];
+	$group_name = $group_helper->get_name($row['group_name']);
 
 	if ($row['group_name'] == 'BOTS' || ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')))
 	{
@@ -119,8 +123,10 @@ $db->sql_freeresult($result);
 $legend = implode($user->lang['COMMA_SEPARATOR'], $legend);
 
 // Generate birthday list if required ...
+$show_birthdays = ($config['load_birthdays'] && $config['allow_birthdays'] && $auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'));
+
 $birthdays = $birthday_list = array();
-if ($config['load_birthdays'] && $config['allow_birthdays'] && $auth->acl_gets('u_viewprofile', 'a_user', 'a_useradd', 'a_userdel'))
+if ($show_birthdays)
 {
 	$time = $user->create_datetime();
 	$now = phpbb_gmgetdate($time->getTimestamp() + $time->getOffset());
@@ -211,7 +217,7 @@ $template->assign_vars(array(
 
 	'S_LOGIN_ACTION'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login'),
 	'U_SEND_PASSWORD'           => ($config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=sendpassword') : '',
-	'S_DISPLAY_BIRTHDAY_LIST'	=> ($config['load_birthdays']) ? true : false,
+	'S_DISPLAY_BIRTHDAY_LIST'	=> $show_birthdays,
 	'S_INDEX'					=> true,
 
 	'U_MARK_FORUMS'		=> ($user->data['is_registered'] || $config['load_anon_lastread']) ? append_sid("{$phpbb_root_path}index.$phpEx", 'hash=' . generate_link_hash('global') . '&amp;mark=forums&amp;mark_time=' . time()) : '',

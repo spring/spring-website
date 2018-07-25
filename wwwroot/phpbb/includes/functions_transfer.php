@@ -112,7 +112,7 @@ class transfer
 		$dir = explode('/', $dir);
 		$dirs = '';
 
-		for ($i = 0, $total = sizeof($dir); $i < $total; $i++)
+		for ($i = 0, $total = count($dir); $i < $total; $i++)
 		{
 			$result = true;
 
@@ -406,9 +406,6 @@ class ftp extends transfer
 	*/
 	function _put($from_file, $to_file)
 	{
-		// get the file extension
-		$file_extension = strtolower(substr(strrchr($to_file, '.'), 1));
-
 		// We only use the BINARY file mode to cicumvent rewrite actions from ftp server (mostly linefeeds being replaced)
 		$mode = FTP_BINARY;
 

@@ -13,7 +13,7 @@
 
 namespace phpbb\db\migration\data\v310;
 
-class dev extends \phpbb\db\migration\migration
+class dev extends \phpbb\db\migration\container_aware_migration
 {
 	public function effectively_installed()
 	{
@@ -125,7 +125,9 @@ class dev extends \phpbb\db\migration\migration
 				'ACP_GROUPS',
 				array(
 					'module_basename'	=> 'acp_groups',
-					'modes'				=> array('position'),
+					'module_langname'	=> 'ACP_GROUPS_POSITION',
+					'module_mode'		=> 'position',
+					'module_auth'		=> 'acl_a_group',
 				),
 			)),
 			array('module.add', array(
@@ -133,7 +135,9 @@ class dev extends \phpbb\db\migration\migration
 				'ACP_ATTACHMENTS',
 				array(
 					'module_basename'	=> 'acp_attachments',
-					'modes'				=> array('manage'),
+					'module_langname'	=> 'ACP_MANAGE_ATTACHMENTS',
+					'module_mode'		=> 'manage',
+					'module_auth'		=> 'acl_a_attach',
 				),
 			)),
 			array('module.add', array(
@@ -141,7 +145,19 @@ class dev extends \phpbb\db\migration\migration
 				'ACP_STYLE_MANAGEMENT',
 				array(
 					'module_basename'	=> 'acp_styles',
-					'modes'				=> array('install', 'cache'),
+					'module_langname'	=> 'ACP_STYLES_INSTALL',
+					'module_mode'		=> 'install',
+					'module_auth'		=> 'acl_a_styles',
+				),
+			)),
+			array('module.add', array(
+				'acp',
+				'ACP_STYLE_MANAGEMENT',
+				array(
+					'module_basename'	=> 'acp_styles',
+					'module_langname'	=> 'ACP_STYLES_CACHE',
+					'module_mode'		=> 'cache',
+					'module_auth'		=> 'acl_a_styles',
 				),
 			)),
 			array('module.add', array(
@@ -149,7 +165,8 @@ class dev extends \phpbb\db\migration\migration
 				'UCP_PROFILE',
 				array(
 					'module_basename'	=> 'ucp_profile',
-					'modes'				=> array('autologin_keys'),
+					'module_langname'	=> 'UCP_PROFILE_AUTOLOGIN_KEYS',
+					'module_mode'		=> 'autologin_keys',
 				),
 			)),
 			// Module will be renamed later
@@ -204,18 +221,13 @@ class dev extends \phpbb\db\migration\migration
 		$language_management_module_id = $this->db->sql_fetchfield('module_id');
 		$this->db->sql_freeresult($result);
 
-		if (!class_exists('acp_modules'))
-		{
-			include($this->phpbb_root_path . 'includes/acp/acp_modules.' . $this->php_ext);
-		}
 		// acp_modules calls adm_back_link, which is undefined at this point
 		if (!function_exists('adm_back_link'))
 		{
 			include($this->phpbb_root_path . 'includes/functions_acp.' . $this->php_ext);
 		}
-		$module_manager = new \acp_modules();
-		$module_manager->module_class = 'acp';
-		$module_manager->move_module($language_module_id, $language_management_module_id);
+		$module_manager = $this->container->get('module.manager');
+		$module_manager->move_module($language_module_id, $language_management_module_id, 'acp');
 	}
 
 	public function update_ucp_pm_basename()

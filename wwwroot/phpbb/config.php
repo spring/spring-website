@@ -17,4 +17,4 @@ $acm_type = 'phpbb\\cache\\driver\\file';
 // @define('PHPBB_DISPLAY_LOAD_TIME', true);
 // @define('DEBUG', true);
 // @define('DEBUG_CONTAINER', true);
-
+# error_reporting(0);

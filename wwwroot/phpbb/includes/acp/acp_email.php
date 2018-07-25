@@ -25,8 +25,8 @@ class acp_email
 
 	function main($id, $mode)
 	{
-		global $config, $db, $user, $auth, $template, $cache;
-		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix, $phpbb_dispatcher;
+		global $config, $db, $user, $template, $phpbb_log, $request;
+		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $phpbb_dispatcher;
 
 		$user->add_lang('acp/email');
 		$this->tpl_name = 'acp_email';
@@ -39,11 +39,11 @@ class acp_email
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$error = array();
 
-		$usernames	= request_var('usernames', '', true);
+		$usernames	= $request->variable('usernames', '', true);
 		$usernames	= (!empty($usernames)) ? explode("\n", $usernames) : array();
-		$group_id	= request_var('g', 0);
-		$subject	= utf8_normalize_nfc(request_var('subject', '', true));
-		$message	= utf8_normalize_nfc(request_var('message', '', true));
+		$group_id	= $request->variable('g', 0);
+		$subject	= $request->variable('subject', '', true);
+		$message	= $request->variable('message', '', true);
 
 		// Do the job ...
 		if ($submit)
@@ -51,7 +51,7 @@ class acp_email
 			// Error checking needs to go here ... if no subject and/or no message then skip
 			// over the send and return to the form
 			$use_queue		= (isset($_POST['send_immediately'])) ? false : true;
-			$priority		= request_var('mail_priority_flag', MAIL_NORMAL_PRIORITY);
+			$priority		= $request->variable('mail_priority_flag', MAIL_NORMAL_PRIORITY);
 
 			if (!check_form_key($form_key))
 			{
@@ -68,7 +68,7 @@ class acp_email
 				$error[] = $user->lang['NO_EMAIL_MESSAGE'];
 			}
 
-			if (!sizeof($error))
+			if (!count($error))
 			{
 				if (!empty($usernames))
 				{
@@ -168,7 +168,7 @@ class acp_email
 						{
 							$i = 0;
 
-							if (sizeof($email_list))
+							if (count($email_list))
 							{
 								$j++;
 							}
@@ -235,16 +235,16 @@ class acp_email
 				);
 				extract($phpbb_dispatcher->trigger_event('core.acp_email_send_before', compact($vars)));
 
-				for ($i = 0, $size = sizeof($email_list); $i < $size; $i++)
+				for ($i = 0, $size = count($email_list); $i < $size; $i++)
 				{
 					$used_lang = $email_list[$i][0]['lang'];
 					$used_method = $email_list[$i][0]['method'];
 
-					for ($j = 0, $list_size = sizeof($email_list[$i]); $j < $list_size; $j++)
+					for ($j = 0, $list_size = count($email_list[$i]); $j < $list_size; $j++)
 					{
 						$email_row = $email_list[$i][$j];
 
-						$messenger->{((sizeof($email_list[$i]) == 1) ? 'to' : 'bcc')}($email_row['email'], $email_row['name']);
+						$messenger->{((count($email_list[$i]) == 1) ? 'to' : 'bcc')}($email_row['email'], $email_row['name']);
 						$messenger->im($email_row['jabber'], $email_row['name']);
 					}
 
@@ -270,7 +270,7 @@ class acp_email
 				{
 					if (!empty($usernames))
 					{
-						add_log('admin', 'LOG_MASS_EMAIL', implode(', ', utf8_normalize_nfc($usernames)));
+						$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_MASS_EMAIL', false, array(implode(', ', utf8_normalize_nfc($usernames))));
 					}
 					else
 					{
@@ -284,7 +284,7 @@ class acp_email
 							$group_name = $user->lang['ALL_USERS'];
 						}
 
-						add_log('admin', 'LOG_MASS_EMAIL', $group_name);
+						$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_MASS_EMAIL', false, array($group_name));
 					}
 				}
 
@@ -322,8 +322,8 @@ class acp_email
 		$s_priority_options .= '<option value="' . MAIL_HIGH_PRIORITY . '">' . $user->lang['MAIL_HIGH_PRIORITY'] . '</option>';
 
 		$template_data = array(
-			'S_WARNING'				=> (sizeof($error)) ? true : false,
-			'WARNING_MSG'			=> (sizeof($error)) ? implode('<br />', $error) : '',
+			'S_WARNING'				=> (count($error)) ? true : false,
+			'WARNING_MSG'			=> (count($error)) ? implode('<br />', $error) : '',
 			'U_ACTION'				=> $this->u_action,
 			'S_GROUP_OPTIONS'		=> $select_list,
 			'USERNAMES'				=> implode("\n", $usernames),

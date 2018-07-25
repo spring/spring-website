@@ -24,7 +24,7 @@ if (!defined('IN_PHPBB'))
 */
 function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 {
-	global $user, $template, $auth, $db, $cache, $phpbb_container;
+	global $user, $template, $auth, $db, $phpbb_container;
 	global $phpbb_root_path, $request, $phpEx, $config, $phpbb_dispatcher;
 
 	$user->add_lang(array('viewtopic', 'memberlist'));
@@ -32,7 +32,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 	$msg_id		= (int) $msg_id;
 	$folder_id	= (int) $folder_id;
 	$author_id	= (int) $message_row['author_id'];
-	$view		= request_var('view', '');
+	$view		= $request->variable('view', '');
 
 	// Not able to view message, it was deleted by the sender
 	if ($message_row['pm_deleted'])
@@ -41,6 +41,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 		$message = $user->lang['NO_AUTH_READ_REMOVED_MESSAGE'];
 
 		$message .= '<br /><br />' . sprintf($user->lang['RETURN_FOLDER'], '<a href="' . $meta_info . '">', '</a>');
+		send_status_line(403, 'Forbidden');
 		trigger_error($message);
 	}
 
@@ -50,12 +51,10 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 		trigger_error('NO_AUTH_READ_HOLD_MESSAGE');
 	}
 
-	// Grab icons
-	$icons = $cache->obtain_icons();
-
 	// Load the custom profile fields
 	if ($config['load_cpf_pm'])
 	{
+		/* @var $cp \phpbb\profilefields\manager */
 		$cp = $phpbb_container->get('profilefields.manager');
 
 		$profile_fields = $cp->grab_profile_fields_data($author_id);
@@ -114,7 +113,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 			$db->sql_freeresult($result);
 
 			// No attachments exist, but message table thinks they do so go ahead and reset attach flags
-			if (!sizeof($attachments))
+			if (!count($attachments))
 			{
 				$sql = 'UPDATE ' . PRIVMSGS_TABLE . "
 					SET message_attachment = 0
@@ -135,7 +134,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 		parse_attachments(false, $message, $attachments, $update_count);
 
 		// Update the attachment download counts
-		if (sizeof($update_count))
+		if (count($update_count))
 		{
 			$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
 				SET download_count = download_count + 1
@@ -231,7 +230,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 
 		'U_DELETE'			=> ($auth->acl_get('u_pm_delete')) ? "$url&amp;mode=compose&amp;action=delete&amp;f=$folder_id&amp;p=" . $message_row['msg_id'] : '',
 		'U_EMAIL'			=> $user_info['email'],
-		'U_REPORT'			=> ($config['allow_pm_report']) ? append_sid("{$phpbb_root_path}report.$phpEx", "pm=" . $message_row['msg_id']) : '',
+		'U_REPORT'			=> ($config['allow_pm_report']) ? $phpbb_container->get('controller.helper')->route('phpbb_report_pm_controller', array('id' => $message_row['msg_id'])) : '',
 		'U_QUOTE'			=> ($auth->acl_get('u_sendpm') && $author_id != ANONYMOUS) ? "$url&amp;mode=compose&amp;action=quote&amp;f=$folder_id&amp;p=" . $message_row['msg_id'] : '',
 		'U_EDIT'			=> (($message_row['message_time'] > time() - ($config['pm_edit_time'] * 60) || !$config['pm_edit_time']) && $folder_id == PRIVMSGS_OUTBOX && $auth->acl_get('u_pm_edit')) ? "$url&amp;mode=compose&amp;action=edit&amp;f=$folder_id&amp;p=" . $message_row['msg_id'] : '',
 		'U_POST_REPLY_PM'	=> ($auth->acl_get('u_sendpm') && $author_id != ANONYMOUS) ? "$url&amp;mode=compose&amp;action=reply&amp;f=$folder_id&amp;p=" . $message_row['msg_id'] : '',
@@ -241,7 +240,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 
 		'U_PM_ACTION'		=> $url . '&amp;mode=compose&amp;f=' . $folder_id . '&amp;p=' . $message_row['msg_id'],
 
-		'S_HAS_ATTACHMENTS'	=> (sizeof($attachments)) ? true : false,
+		'S_HAS_ATTACHMENTS'	=> (count($attachments)) ? true : false,
 		'S_DISPLAY_NOTICE'	=> $display_notice && $message_row['message_attachment'],
 		'S_AUTHOR_DELETED'	=> ($author_id == ANONYMOUS) ? true : false,
 		'S_SPECIAL_FOLDER'	=> in_array($folder_id, array(PRIVMSGS_NO_BOX, PRIVMSGS_OUTBOX)),
@@ -268,6 +267,8 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 	* @var 	array	user_info	User data of the sender
 	* @since 3.1.0-a1
 	* @changed 3.1.6-RC1		Added user_info into event
+	* @changed 3.2.2-RC1		Deprecated
+	* @deprecated 4.0.0			Event name is misspelled and is replaced with new event with correct name
 	*/
 	$vars = array(
 		'id',
@@ -281,6 +282,34 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 		'user_info',
 	);
 	extract($phpbb_dispatcher->trigger_event('core.ucp_pm_view_messsage', compact($vars)));
+
+	/**
+	 * Modify pm and sender data before it is assigned to the template
+	 *
+	 * @event core.ucp_pm_view_message
+	 * @var	mixed	id			Active module category (can be int or string)
+	 * @var	string	mode		Active module
+	 * @var	int		folder_id	ID of the folder the message is in
+	 * @var	int		msg_id		ID of the private message
+	 * @var	array	folder		Array with data of user's message folders
+	 * @var	array	message_row	Array with message data
+	 * @var	array	cp_row		Array with senders custom profile field data
+	 * @var	array	msg_data	Template array with message data
+	 * @var array	user_info	User data of the sender
+	 * @since 3.2.2-RC1
+	 */
+	$vars = array(
+		'id',
+		'mode',
+		'folder_id',
+		'msg_id',
+		'folder',
+		'message_row',
+		'cp_row',
+		'msg_data',
+		'user_info',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.ucp_pm_view_message', compact($vars)));
 
 	$template->assign_vars($msg_data);
 
@@ -331,7 +360,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 	}
 
 	// Display not already displayed Attachments for this post, we already parsed them. ;)
-	if (isset($attachments) && sizeof($attachments))
+	if (isset($attachments) && count($attachments))
 	{
 		foreach ($attachments as $attachment)
 		{
@@ -356,7 +385,7 @@ function view_message($id, $mode, $folder_id, $msg_id, $folder, $message_row)
 */
 function get_user_information($user_id, $user_row)
 {
-	global $db, $auth, $user, $cache;
+	global $db, $auth, $user;
 	global $phpbb_root_path, $phpEx, $config;
 
 	if (!$user_id)

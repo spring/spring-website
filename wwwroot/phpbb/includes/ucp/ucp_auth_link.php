@@ -38,6 +38,7 @@ class ucp_auth_link
 
 		$error = array();
 
+		/* @var $provider_collection \phpbb\auth\provider_collection */
 		$provider_collection = $phpbb_container->get('auth.provider_collection');
 		$auth_provider = $provider_collection->get_provider();
 
@@ -54,14 +55,14 @@ class ucp_auth_link
 		$submit	= $request->variable('submit', false, false, \phpbb\request\request_interface::POST);
 
 		// This path is only for primary actions
-		if (!sizeof($error) && $submit)
+		if (!count($error) && $submit)
 		{
 			if (!check_form_key('ucp_auth_link'))
 			{
 				$error[] = 'FORM_INVALID';
 			}
 
-			if (!sizeof($error))
+			if (!count($error))
 			{
 				// Any post data could be necessary for auth (un)linking
 				$link_data = $request->get_super_global(\phpbb\request\request_interface::POST);

@@ -25,7 +25,7 @@ class acp_prune
 
 	function main($id, $mode)
 	{
-		global $user, $phpEx, $phpbb_admin_path, $phpbb_root_path;
+		global $user, $phpEx, $phpbb_root_path;
 
 		$user->add_lang('acp/prune');
 
@@ -55,11 +55,10 @@ class acp_prune
 	*/
 	function prune_forums($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
+		global $db, $user, $auth, $template, $phpbb_log, $request, $phpbb_dispatcher;
 
-		$all_forums = request_var('all_forums', 0);
-		$forum_id = request_var('f', array(0));
+		$all_forums = $request->variable('all_forums', 0);
+		$forum_id = $request->variable('f', array(0));
 		$submit = (isset($_POST['submit'])) ? true : false;
 
 		if ($all_forums)
@@ -81,14 +80,14 @@ class acp_prune
 		{
 			if (confirm_box(true))
 			{
-				$prune_posted = request_var('prune_days', 0);
-				$prune_viewed = request_var('prune_vieweddays', 0);
+				$prune_posted = $request->variable('prune_days', 0);
+				$prune_viewed = $request->variable('prune_vieweddays', 0);
 				$prune_all = (!$prune_posted && !$prune_viewed) ? true : false;
 
 				$prune_flags = 0;
-				$prune_flags += (request_var('prune_old_polls', 0)) ? 2 : 0;
-				$prune_flags += (request_var('prune_announce', 0)) ? 4 : 0;
-				$prune_flags += (request_var('prune_sticky', 0)) ? 8 : 0;
+				$prune_flags += ($request->variable('prune_old_polls', 0)) ? 2 : 0;
+				$prune_flags += ($request->variable('prune_announce', 0)) ? 4 : 0;
+				$prune_flags += ($request->variable('prune_sticky', 0)) ? 8 : 0;
 
 				// Convert days to seconds for timestamp functions...
 				$prunedate_posted = time() - ($prune_posted * 86400);
@@ -98,7 +97,7 @@ class acp_prune
 					'S_PRUNED'		=> true)
 				);
 
-				$sql_forum = (sizeof($forum_id)) ? ' AND ' . $db->sql_in_set('forum_id', $forum_id) : '';
+				$sql_forum = (count($forum_id)) ? ' AND ' . $db->sql_in_set('forum_id', $forum_id) : '';
 
 				// Get a list of forum's or the data for the forum that we are pruning.
 				$sql = 'SELECT forum_id, forum_name
@@ -157,7 +156,8 @@ class acp_prune
 
 					// Sync all pruned forums at once
 					sync('forum', 'forum_id', $prune_ids, true, true);
-					add_log('admin', 'LOG_PRUNE', $log_data);
+
+					$phpbb_log->add('admin', $user->data['user_id'], $user->ip, 'LOG_PRUNE', false, array($log_data));
 				}
 				$db->sql_freeresult($result);
 
@@ -165,25 +165,37 @@ class acp_prune
 			}
 			else
 			{
-				confirm_box(false, $user->lang['PRUNE_FORUM_CONFIRM'], build_hidden_fields(array(
+				$hidden_fields = array(
 					'i'				=> $id,
 					'mode'			=> $mode,
 					'submit'		=> 1,
 					'all_forums'	=> $all_forums,
 					'f'				=> $forum_id,
 
-					'prune_days'		=> request_var('prune_days', 0),
-					'prune_vieweddays'	=> request_var('prune_vieweddays', 0),
-					'prune_old_polls'	=> request_var('prune_old_polls', 0),
-					'prune_announce'	=> request_var('prune_announce', 0),
-					'prune_sticky'		=> request_var('prune_sticky', 0),
-				)));
+					'prune_days'		=> $request->variable('prune_days', 0),
+					'prune_vieweddays'	=> $request->variable('prune_vieweddays', 0),
+					'prune_old_polls'	=> $request->variable('prune_old_polls', 0),
+					'prune_announce'	=> $request->variable('prune_announce', 0),
+					'prune_sticky'		=> $request->variable('prune_sticky', 0),
+				);
+
+				/**
+				 * Use this event to pass data from the prune form to the confirmation screen
+				 *
+				 * @event core.prune_forums_settings_confirm
+				 * @var array	hidden_fields	Hidden fields that are passed through the confirm screen
+				 * @since 3.2.2-RC1
+				 */
+				$vars = array('hidden_fields');
+				extract($phpbb_dispatcher->trigger_event('core.prune_forums_settings_confirm', compact($vars)));
+
+				confirm_box(false, $user->lang['PRUNE_FORUM_CONFIRM'], build_hidden_fields($hidden_fields));
 			}
 		}
 
 		// If they haven't selected a forum for pruning yet then
 		// display a select box to use for pruning.
-		if (!sizeof($forum_id))
+		if (!count($forum_id))
 		{
 			$template->assign_vars(array(
 				'U_ACTION'			=> $this->u_action,
@@ -215,15 +227,27 @@ class acp_prune
 
 			$db->sql_freeresult($result);
 
-			$l_selected_forums = (sizeof($forum_id) == 1) ? 'SELECTED_FORUM' : 'SELECTED_FORUMS';
+			$l_selected_forums = (count($forum_id) == 1) ? 'SELECTED_FORUM' : 'SELECTED_FORUMS';
 
-			$template->assign_vars(array(
+			$template_data = array(
 				'L_SELECTED_FORUMS'		=> $user->lang[$l_selected_forums],
 				'U_ACTION'				=> $this->u_action,
 				'U_BACK'				=> $this->u_action,
 				'FORUM_LIST'			=> $forum_list,
-				'S_HIDDEN_FIELDS'		=> $s_hidden_fields)
+				'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 			);
+
+			/**
+			 * Event to add/modify prune forums settings template data
+			 *
+			 * @event core.prune_forums_settings_template_data
+			 * @var array	template_data	Array with form template data
+			 * @since 3.2.2-RC1
+			 */
+			$vars = array('template_data');
+			extract($phpbb_dispatcher->trigger_event('core.prune_forums_settings_template_data', compact($vars)));
+
+			$template->assign_vars($template_data);
 		}
 	}
 
@@ -232,8 +256,11 @@ class acp_prune
 	*/
 	function prune_users($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
+		global $db, $user, $auth, $template, $phpbb_log, $request;
+		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $phpbb_container;
+
+		/** @var \phpbb\group\helper $group_helper */
+		$group_helper = $phpbb_container->get('group_helper');
 
 		$user->add_lang('memberlist');
 
@@ -241,15 +268,15 @@ class acp_prune
 
 		if ($prune)
 		{
-			$action = request_var('action', 'deactivate');
-			$deleteposts = request_var('deleteposts', 0);
+			$action = $request->variable('action', 'deactivate');
+			$deleteposts = $request->variable('deleteposts', 0);
 
 			if (confirm_box(true))
 			{
 				$user_ids = $usernames = array();
 
 				$this->get_prune_users($user_ids, $usernames);
-				if (sizeof($user_ids))
+				if (count($user_ids))
 				{
 					if ($action == 'deactivate')
 					{
@@ -272,7 +299,7 @@ class acp_prune
 						}
 					}
 
-					add_log('admin', $l_log, implode(', ', $usernames));
+					$phpbb_log->add('admin', $user->data['user_id'], $user->ip, $l_log, false, array(implode(', ', $usernames)));
 					$msg = $user->lang['USER_' . strtoupper($action) . '_SUCCESS'];
 				}
 				else
@@ -288,7 +315,7 @@ class acp_prune
 				$user_ids = $usernames = array();
 				$this->get_prune_users($user_ids, $usernames);
 
-				if (!sizeof($user_ids))
+				if (!count($user_ids))
 				{
 					trigger_error($user->lang['USER_PRUNE_FAILURE'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
@@ -314,8 +341,8 @@ class acp_prune
 					'mode'			=> $mode,
 					'prune'			=> 1,
 
-					'deleteposts'	=> request_var('deleteposts', 0),
-					'action'		=> request_var('action', ''),
+					'deleteposts'	=> $request->variable('deleteposts', 0),
+					'action'		=> $request->variable('action', ''),
 				)), 'confirm_body_prune.html');
 			}
 		}
@@ -345,7 +372,7 @@ class acp_prune
 		$s_group_list = '';
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$s_group_list .= '<option value="' . $row['group_id'] . '">' . $row['group_name'] . '</option>';
+			$s_group_list .= '<option value="' . $row['group_id'] . '">' . $group_helper->get_name($row['group_name']) . '</option>';
 		}
 		$db->sql_freeresult($result);
 
@@ -372,9 +399,9 @@ class acp_prune
 	{
 		global $user, $db, $request;
 
-		$users_by_name = request_var('users', '', true);
-		$users_by_id = request_var('user_ids', array(0));
-		$group_id = request_var('group_id', 0);
+		$users_by_name = $request->variable('users', '', true);
+		$users_by_id = $request->variable('user_ids', array(0));
+		$group_id = $request->variable('group_id', 0);
 		$posts_on_queue = (trim($request->variable('posts_on_queue', '')) === '') ? false : $request->variable('posts_on_queue', 0);
 
 		if ($users_by_name)
@@ -391,15 +418,15 @@ class acp_prune
 		}
 		else
 		{
-			$username = request_var('username', '', true);
-			$email = request_var('email', '');
+			$username = $request->variable('username', '', true);
+			$email = $request->variable('email', '');
 
-			$active_select = request_var('active_select', 'lt');
-			$count_select = request_var('count_select', 'eq');
-			$queue_select = request_var('queue_select', 'gt');
-			$joined_before = request_var('joined_before', '');
-			$joined_after = request_var('joined_after', '');
-			$active = request_var('active', '');
+			$active_select = $request->variable('active_select', 'lt');
+			$count_select = $request->variable('count_select', 'eq');
+			$queue_select = $request->variable('queue_select', 'gt');
+			$joined_before = $request->variable('joined_before', '');
+			$joined_after = $request->variable('joined_after', '');
+			$active = $request->variable('active', '');
 
 			$count = ($request->variable('count', '') === '') ? false : $request->variable('count', 0);
 
@@ -431,13 +458,12 @@ class acp_prune
 			}
 			// implicit else when both arrays are empty do nothing
 
-			if ((sizeof($active) && sizeof($active) != 3) || (sizeof($joined_before) && sizeof($joined_before) != 3) || (sizeof($joined_after) && sizeof($joined_after) != 3))
+			if ((count($active) && count($active) != 3) || (count($joined_before) && count($joined_before) != 3) || (count($joined_after) && count($joined_after) != 3))
 			{
 				trigger_error($user->lang['WRONG_ACTIVE_JOINED_DATE'] . adm_back_link($this->u_action), E_USER_WARNING);
 			}
 
 			$key_match = array('lt' => '<', 'gt' => '>', 'eq' => '=');
-			$sort_by_types = array('username', 'user_email', 'user_posts', 'user_regdate', 'user_lastvisit');
 
 			$where_sql = '';
 			$where_sql .= ($username) ? ' AND username_clean ' . $db->sql_like_expression(str_replace('*', $db->get_any_char(), utf8_clean_string($username))) : '';
@@ -446,15 +472,15 @@ class acp_prune
 			$where_sql .= ($count !== false) ? " AND user_posts " . $key_match[$count_select] . ' ' . (int) $count . ' ' : '';
 
 			// First handle pruning of users who never logged in, last active date is 0000-00-00
-			if (sizeof($active) && (int) $active[0] == 0 && (int) $active[1] == 0 && (int) $active[2] == 0)
+			if (count($active) && (int) $active[0] == 0 && (int) $active[1] == 0 && (int) $active[2] == 0)
 			{
 				$where_sql .= ' AND user_lastvisit = 0';
 			}
-			else if (sizeof($active) && $active_select != 'lt')
+			else if (count($active) && $active_select != 'lt')
 			{
 				$where_sql .= ' AND user_lastvisit ' . $key_match[$active_select] . ' ' . gmmktime(0, 0, 0, (int) $active[1], (int) $active[2], (int) $active[0]);
 			}
-			else if (sizeof($active))
+			else if (count($active))
 			{
 				$where_sql .= ' AND (user_lastvisit > 0 AND user_lastvisit < ' . gmmktime(0, 0, 0, (int) $active[1], (int) $active[2], (int) $active[0]) . ')';
 			}
