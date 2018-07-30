@@ -7,3 +7,6 @@
 [submodule "codebox"]
 	path = codebox
 	url = https://github.com/o0johntam0o/phpBB-Extension-Codebox-Plus/
+[submodule "wwwroot/phpbb/ext/phpbbmodders/banhammer"]
+	path = wwwroot/phpbb/ext/phpbbmodders/banhammer
+	url = https://github.com/phpbbmodders/ban-hammer
