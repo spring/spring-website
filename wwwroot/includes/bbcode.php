@@ -3,24 +3,49 @@
     // Should probably use some nice bbcode library
     function parse_bbcode($str)
     {
+	$keys = array();
+	$data = array();
+	foreach (array("r", "s", "e", "LI", "LIST") as $rep) {
+		$keys[] = "/<$rep>/";
+		$data[] = "";
+
+		$keys[] = "/<\/$rep>/";
+		$data[] = "";
+	}
+
+	foreach (array("URL", "IMG") as $rep) {
+		$keys[] = '/<'.$rep.' \w+=".*">/';
+		$data[] = "";
+
+		$keys[] = "/<\/$rep>/";
+		$data[] = "";
+	}
+	$keys[] = "/\r/";
+	$data[] = "";
+
+	$keys[] = "/\n/";
+	$data[] = "";
+
+        $str = preg_replace($keys, $data, $str);
+
         $keys = array('/{SMILIES_PATH}/',
-                      '/\[b:\w*\]/',
-                      '/\[\/b:\w*\]/',
+                      '/\[b]/',
+                      '/\[\/b]/',
                       '/\[u:\w*\]/',
                       '/\[\/u:\w*\]/',
-                      '/\[s:\w*\]/',
-                      '/\[\/s:\w*\]/',
+                      '/\[s\]/',
+                      '/\[\/s\]/',
                       '/\[i:\w*\]/',
                       '/\[\/i:\w*\]/',
-                      '/\[url:\w*\](.*?)\[\/url:\w*\]/',
-                      '/\[url=(.*?):\w*\]/',
-                      '/\[\/url:\w*\]/',
-                      '/\[list:\w*\]\n?/',
-                      '/\[\*:\w*\]\n?/',
+                      '/\[url]/',
+                      '/\[url=(.*?)\]/',
+                      '/\[\/url\]/',
+                      '/\[list]\n?/',
+                      '/\[\*\]\n?/',
                       '/\[\/\*[:\w]*\]\n?/',
                       '/\[\/list[:\w]*\]\n?/',
-                      '/\[img:\w*\]/',
-                      '/\[\/img:\w*\]/',
+                      '/\[img\]/',
+                      '/\[\/img\]/',
                       '/\[size=(.*?):\w*\]/',
                       '/\[\/size:\w*\]/',
                       '/\[color=(.*?):\w*\]/',
@@ -57,3 +82,4 @@
                       );
         return preg_replace($keys, $data, $str);
     }
+
