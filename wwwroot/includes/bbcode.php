@@ -5,7 +5,7 @@
     {
 	$keys = array();
 	$data = array();
-	foreach (array("r", "s", "e", "LI", "LIST") as $rep) {
+	foreach (array("r", "s", "e", "S", "E", "LI", "LIST") as $rep) {
 		$keys[] = "/<$rep>/";
 		$data[] = "";
 
@@ -70,7 +70,7 @@
                       '<li>',
                       '</li>',
                       '</ul>',
-                      '<img src="',
+                      '<img alt="" src="',
                       '" />',
                       '',
                       '',
