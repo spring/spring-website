@@ -13,6 +13,7 @@ springpw.php
 /wwwroot/phpbb/store
 /wwwroot/phpbb/images/avatars/upload
 /wwwroot/phpbb/install
+/wwwroot/phpbb/ext/phpbb/viglink/.gitignore
 
 # downloads
 /wwwroot/dl
