@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\Routing\Loader;
 
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Config\Resource\DirectoryResource;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * AnnotationDirectoryLoader loads routing information from annotations set
@@ -74,7 +74,7 @@ class AnnotationDirectoryLoader extends AnnotationFileLoader
      */
     public function supports($resource, $type = null)
     {
-        if (!is_string($resource)) {
+        if (!\is_string($resource)) {
             return false;
         }
 
@@ -105,7 +105,7 @@ class RecursiveCallbackFilterIterator extends \FilterIterator implements \Recurs
 
     public function accept()
     {
-        return call_user_func($this->callback, $this->current(), $this->key(), $this->iterator);
+        return \call_user_func($this->callback, $this->current(), $this->key(), $this->iterator);
     }
 
     public function hasChildren()

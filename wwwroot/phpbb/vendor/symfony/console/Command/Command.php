@@ -11,19 +11,19 @@
 
 namespace Symfony\Component\Console\Command;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Descriptor\TextDescriptor;
 use Symfony\Component\Console\Descriptor\XmlDescriptor;
 use Symfony\Component\Console\Exception\ExceptionInterface;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\LogicException;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Base class for all commands.
@@ -63,7 +63,7 @@ class Command
         $this->configure();
 
         if (!$this->name) {
-            throw new LogicException(sprintf('The command defined in "%s" cannot have an empty name.', get_class($this)));
+            throw new LogicException(sprintf('The command defined in "%s" cannot have an empty name.', \get_class($this)));
         }
     }
 
@@ -207,16 +207,15 @@ class Command
         $this->initialize($input, $output);
 
         if (null !== $this->processTitle) {
-            if (function_exists('cli_set_process_title')) {
-                if (false === @cli_set_process_title($this->processTitle)) {
+            if (\function_exists('cli_set_process_title')) {
+                if (!@cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
-                        $output->writeln('<comment>Running "cli_get_process_title" as an unprivileged user is not supported on MacOS.</comment>');
+                        $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
-                        $error = error_get_last();
-                        trigger_error($error['message'], E_USER_WARNING);
+                        cli_set_process_title($this->processTitle);
                     }
                 }
-            } elseif (function_exists('setproctitle')) {
+            } elseif (\function_exists('setproctitle')) {
                 setproctitle($this->processTitle);
             } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity()) {
                 $output->writeln('<comment>Install the proctitle PECL to be able to change the process title.</comment>');
@@ -237,7 +236,7 @@ class Command
         $input->validate();
 
         if ($this->code) {
-            $statusCode = call_user_func($this->code, $input, $output);
+            $statusCode = \call_user_func($this->code, $input, $output);
         } else {
             $statusCode = $this->execute($input, $output);
         }
@@ -261,14 +260,14 @@ class Command
      */
     public function setCode($code)
     {
-        if (!is_callable($code)) {
+        if (!\is_callable($code)) {
             throw new InvalidArgumentException('Invalid callable provided to Command::setCode.');
         }
 
-        if (PHP_VERSION_ID >= 50400 && $code instanceof \Closure) {
+        if (\PHP_VERSION_ID >= 50400 && $code instanceof \Closure) {
             $r = new \ReflectionFunction($code);
             if (null === $r->getClosureThis()) {
-                if (PHP_VERSION_ID < 70000) {
+                if (\PHP_VERSION_ID < 70000) {
                     // Bug in PHP5: https://bugs.php.net/bug.php?id=64761
                     // This means that we cannot bind static closures and therefore we must
                     // ignore any errors here.  There is no way to test if the closure is
@@ -525,7 +524,7 @@ class Command
      */
     public function setAliases($aliases)
     {
-        if (!is_array($aliases) && !$aliases instanceof \Traversable) {
+        if (!\is_array($aliases) && !$aliases instanceof \Traversable) {
             throw new InvalidArgumentException('$aliases must be an array or an instance of \Traversable');
         }
 
@@ -622,7 +621,7 @@ class Command
      */
     public function asText()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.3 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.3 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         $descriptor = new TextDescriptor();
         $output = new BufferedOutput(BufferedOutput::VERBOSITY_NORMAL, true);
@@ -642,7 +641,7 @@ class Command
      */
     public function asXml($asDom = false)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.3 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.3 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         $descriptor = new XmlDescriptor();
 

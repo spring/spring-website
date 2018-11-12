@@ -54,7 +54,7 @@ class ContainerAwareEventDispatcher extends EventDispatcher
      */
     public function addListenerService($eventName, $callback, $priority = 0)
     {
-        if (!is_array($callback) || 2 !== count($callback)) {
+        if (!\is_array($callback) || 2 !== \count($callback)) {
             throw new \InvalidArgumentException('Expected an array("service", "method") argument');
         }
 
@@ -67,7 +67,7 @@ class ContainerAwareEventDispatcher extends EventDispatcher
 
         if (isset($this->listenerIds[$eventName])) {
             foreach ($this->listenerIds[$eventName] as $i => $args) {
-                list($serviceId, $method, $priority) = $args;
+                list($serviceId, $method) = $args;
                 $key = $serviceId.'.'.$method;
                 if (isset($this->listeners[$eventName][$key]) && $listener === array($this->listeners[$eventName][$key], $method)) {
                     unset($this->listeners[$eventName][$key]);
@@ -136,9 +136,9 @@ class ContainerAwareEventDispatcher extends EventDispatcher
     public function addSubscriberService($serviceId, $class)
     {
         foreach ($class::getSubscribedEvents() as $eventName => $params) {
-            if (is_string($params)) {
+            if (\is_string($params)) {
                 $this->listenerIds[$eventName][] = array($serviceId, $params, 0);
-            } elseif (is_string($params[0])) {
+            } elseif (\is_string($params[0])) {
                 $this->listenerIds[$eventName][] = array($serviceId, $params[0], isset($params[1]) ? $params[1] : 0);
             } else {
                 foreach ($params as $listener) {

@@ -15,11 +15,11 @@ use Symfony\Component\DependencyInjection\Exception\InactiveScopeException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * Container is a dependency injection container.
@@ -157,8 +157,8 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
      */
     public function set($id, $service, $scope = self::SCOPE_CONTAINER)
     {
-        if (!in_array($scope, array('container', 'request')) || ('request' === $scope && 'request' !== $id)) {
-            @trigger_error('The concept of container scopes is deprecated since version 2.8 and will be removed in 3.0. Omit the third parameter.', E_USER_DEPRECATED);
+        if (!\in_array($scope, array('container', 'request')) || ('request' === $scope && 'request' !== $id)) {
+            @trigger_error('The concept of container scopes is deprecated since Symfony 2.8 and will be removed in 3.0. Omit the third parameter.', E_USER_DEPRECATED);
         }
 
         if (self::SCOPE_PROTOTYPE === $scope) {
@@ -280,7 +280,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
                     $alternatives = array();
                     foreach ($this->getServiceIds() as $knownId) {
                         $lev = levenshtein($id, $knownId);
-                        if ($lev <= strlen($id) / 3 || false !== strpos($knownId, $id)) {
+                        if ($lev <= \strlen($id) / 3 || false !== strpos($knownId, $id)) {
                             $alternatives[] = $knownId;
                         }
                     }
@@ -384,7 +384,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
     public function enterScope($name)
     {
         if ('request' !== $name) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
 
         if (!isset($this->scopes[$name])) {
@@ -410,7 +410,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
             }
 
             // update global map
-            $this->services = call_user_func_array('array_diff_key', $services);
+            $this->services = \call_user_func_array('array_diff_key', $services);
             array_shift($services);
 
             // add stack entry for this scope so we can restore the removed services later
@@ -436,7 +436,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
     public function leaveScope($name)
     {
         if ('request' !== $name) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
 
         if (!isset($this->scopedServices[$name])) {
@@ -456,10 +456,10 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
         }
 
         // update global map
-        $this->services = call_user_func_array('array_diff_key', $services);
+        $this->services = \call_user_func_array('array_diff_key', $services);
 
         // check if we need to restore services of a previous scope of this type
-        if (isset($this->scopeStacks[$name]) && count($this->scopeStacks[$name]) > 0) {
+        if (isset($this->scopeStacks[$name]) && \count($this->scopeStacks[$name]) > 0) {
             $services = $this->scopeStacks[$name]->pop();
             $this->scopedServices += $services;
 
@@ -488,7 +488,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
         $parentScope = $scope->getParentName();
 
         if ('request' !== $name) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
         if (self::SCOPE_CONTAINER === $name || self::SCOPE_PROTOTYPE === $name) {
             throw new InvalidArgumentException(sprintf('The scope "%s" is reserved.', $name));
@@ -522,7 +522,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
     public function hasScope($name)
     {
         if ('request' !== $name) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
 
         return isset($this->scopes[$name]);
@@ -541,7 +541,7 @@ class Container implements IntrospectableContainerInterface, ResettableContainer
      */
     public function isScopeActive($name)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         return isset($this->scopedServices[$name]);
     }

@@ -1331,6 +1331,8 @@ phpbb.toggleDropdown = function() {
 			$this.css({
 				marginLeft: 0,
 				left: 0,
+				marginRight: 0,
+				right: 0,
 				maxWidth: (windowWidth - 4) + 'px'
 			});
 
@@ -1654,7 +1656,7 @@ $(function() {
 
 	phpbb.registerPageDropdowns();
 
-	$('#color_palette_placeholder').each(function() {
+	$('[data-orientation]').each(function() {
 		phpbb.registerPalette($(this));
 	});
 

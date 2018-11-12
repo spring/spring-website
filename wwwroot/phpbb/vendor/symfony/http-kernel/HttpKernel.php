@@ -11,10 +11,12 @@
 
 namespace Symfony\Component\HttpKernel;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
@@ -22,11 +24,9 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * HttpKernel notifies events to convert a Request object to a Response one.
@@ -78,14 +78,12 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     }
 
     /**
-     * @throws \LogicException If the request stack is empty
-     *
      * @internal
      */
-    public function terminateWithException(\Exception $exception)
+    public function terminateWithException(\Exception $exception, Request $request = null)
     {
-        if (!$request = $this->requestStack->getMasterRequest()) {
-            throw new \LogicException('Request stack is empty', 0, $exception);
+        if (!$request = $request ?: $this->requestStack->getMasterRequest()) {
+            throw $exception;
         }
 
         $response = $this->handleException($exception, $request, self::MASTER_REQUEST);
@@ -134,7 +132,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $arguments = $this->resolver->getArguments($request, $controller);
 
         // call controller
-        $response = call_user_func_array($controller, $arguments);
+        $response = \call_user_func_array($controller, $arguments);
 
         // view
         if (!$response instanceof Response) {
@@ -249,11 +247,11 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
 
     private function varToString($var)
     {
-        if (is_object($var)) {
-            return sprintf('Object(%s)', get_class($var));
+        if (\is_object($var)) {
+            return sprintf('Object(%s)', \get_class($var));
         }
 
-        if (is_array($var)) {
+        if (\is_array($var)) {
             $a = array();
             foreach ($var as $k => $v) {
                 $a[] = sprintf('%s => %s', $k, $this->varToString($v));
@@ -262,7 +260,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             return sprintf('Array(%s)', implode(', ', $a));
         }
 
-        if (is_resource($var)) {
+        if (\is_resource($var)) {
             return sprintf('Resource(%s)', get_resource_type($var));
         }
 

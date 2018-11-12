@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\HttpKernel\Profiler;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Exception\ConflictingHeadersException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Profiler.
@@ -102,7 +102,7 @@ class Profiler
         }
 
         if (!($ret = $this->storage->write($profile)) && null !== $this->logger) {
-            $this->logger->warning('Unable to store the profiler information.', array('configured_storage' => get_class($this->storage)));
+            $this->logger->warning('Unable to store the profiler information.', array('configured_storage' => \get_class($this->storage)));
         }
 
         return $ret;
@@ -125,7 +125,7 @@ class Profiler
      */
     public function export(Profile $profile)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         return base64_encode(serialize($profile));
     }
@@ -141,7 +141,7 @@ class Profiler
      */
     public function import($data)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         $profile = unserialize(base64_decode($data));
 

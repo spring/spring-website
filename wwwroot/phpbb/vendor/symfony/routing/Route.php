@@ -34,6 +34,8 @@ class Route implements \Serializable
     private $compiled;
 
     /**
+     * Constructor.
+     *
      * Available options:
      *
      *  * compiler_class: A class name able to compile this route instance (RouteCompiler by default)
@@ -114,7 +116,7 @@ class Route implements \Serializable
      */
     public function getPattern()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the getPath() method instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.2 and will be removed in 3.0. Use the getPath() method instead.', E_USER_DEPRECATED);
 
         return $this->path;
     }
@@ -132,7 +134,7 @@ class Route implements \Serializable
      */
     public function setPattern($pattern)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.2 and will be removed in 3.0. Use the setPath() method instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.2 and will be removed in 3.0. Use the setPath() method instead.', E_USER_DEPRECATED);
 
         return $this->setPath($pattern);
     }
@@ -239,7 +241,7 @@ class Route implements \Serializable
      */
     public function hasScheme($scheme)
     {
-        return in_array(strtolower($scheme), $this->schemes, true);
+        return \in_array(strtolower($scheme), $this->schemes, true);
     }
 
     /**
@@ -508,9 +510,9 @@ class Route implements \Serializable
     public function getRequirement($key)
     {
         if ('_scheme' === $key) {
-            @trigger_error('The "_scheme" requirement is deprecated since version 2.2 and will be removed in 3.0. Use getSchemes() instead.', E_USER_DEPRECATED);
+            @trigger_error('The "_scheme" requirement is deprecated since Symfony 2.2 and will be removed in 3.0. Use getSchemes() instead.', E_USER_DEPRECATED);
         } elseif ('_method' === $key) {
-            @trigger_error('The "_method" requirement is deprecated since version 2.2 and will be removed in 3.0. Use getMethods() instead.', E_USER_DEPRECATED);
+            @trigger_error('The "_method" requirement is deprecated since Symfony 2.2 and will be removed in 3.0. Use getMethods() instead.', E_USER_DEPRECATED);
         }
 
         return isset($this->requirements[$key]) ? $this->requirements[$key] : null;
@@ -594,7 +596,7 @@ class Route implements \Serializable
 
     private function sanitizeRequirement($key, $regex)
     {
-        if (!is_string($regex)) {
+        if (!\is_string($regex)) {
             throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" must be a string.', $key));
         }
 
@@ -612,11 +614,11 @@ class Route implements \Serializable
 
         // this is to keep BC and will be removed in a future version
         if ('_scheme' === $key) {
-            @trigger_error('The "_scheme" requirement is deprecated since version 2.2 and will be removed in 3.0. Use the setSchemes() method instead.', E_USER_DEPRECATED);
+            @trigger_error('The "_scheme" requirement is deprecated since Symfony 2.2 and will be removed in 3.0. Use the setSchemes() method instead.', E_USER_DEPRECATED);
 
             $this->setSchemes(explode('|', $regex));
         } elseif ('_method' === $key) {
-            @trigger_error('The "_method" requirement is deprecated since version 2.2 and will be removed in 3.0. Use the setMethods() method instead.', E_USER_DEPRECATED);
+            @trigger_error('The "_method" requirement is deprecated since Symfony 2.2 and will be removed in 3.0. Use the setMethods() method instead.', E_USER_DEPRECATED);
 
             $this->setMethods(explode('|', $regex));
         }

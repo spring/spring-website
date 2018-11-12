@@ -11,7 +11,7 @@
 
 namespace Symfony\Component\HttpFoundation\Session\Storage\Handler;
 
-@trigger_error('The '.__NAMESPACE__.'\LegacyPdoSessionHandler class is deprecated since version 2.6 and will be removed in 3.0. Use the Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler class instead.', E_USER_DEPRECATED);
+@trigger_error('The '.__NAMESPACE__.'\LegacyPdoSessionHandler class is deprecated since Symfony 2.6 and will be removed in 3.0. Use the Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler class instead.', E_USER_DEPRECATED);
 
 /**
  * Session handler using a PDO connection to read and write data.
@@ -54,6 +54,8 @@ class LegacyPdoSessionHandler implements \SessionHandlerInterface
     private $timeCol;
 
     /**
+     * Constructor.
+     *
      * List of available options:
      *  * db_table: The name of the table [required]
      *  * db_id_col: The column where to store the session id [default: sess_id]

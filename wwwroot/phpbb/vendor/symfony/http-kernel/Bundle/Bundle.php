@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\HttpKernel\Bundle;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
  * An implementation of BundleInterface that adds a few conventions
@@ -84,7 +84,7 @@ abstract class Bundle implements BundleInterface
 
             if (null !== $extension) {
                 if (!$extension instanceof ExtensionInterface) {
-                    throw new \LogicException(sprintf('Extension %s must implement Symfony\Component\DependencyInjection\Extension\ExtensionInterface.', get_class($extension)));
+                    throw new \LogicException(sprintf('Extension %s must implement Symfony\Component\DependencyInjection\Extension\ExtensionInterface.', \get_class($extension)));
                 }
 
                 // check naming convention
@@ -116,7 +116,7 @@ abstract class Bundle implements BundleInterface
      */
     public function getNamespace()
     {
-        $class = get_class($this);
+        $class = \get_class($this);
 
         return substr($class, 0, strrpos($class, '\\'));
     }
@@ -130,7 +130,7 @@ abstract class Bundle implements BundleInterface
     {
         if (null === $this->path) {
             $reflected = new \ReflectionObject($this);
-            $this->path = dirname($reflected->getFileName());
+            $this->path = \dirname($reflected->getFileName());
         }
 
         return $this->path;
@@ -156,7 +156,7 @@ abstract class Bundle implements BundleInterface
             return $this->name;
         }
 
-        $name = get_class($this);
+        $name = \get_class($this);
         $pos = strrpos($name, '\\');
 
         return $this->name = false === $pos ? $name : substr($name, $pos + 1);

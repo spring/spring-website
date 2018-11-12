@@ -11,7 +11,7 @@
 
 namespace Symfony\Component\Finder\Shell;
 
-@trigger_error('The '.__NAMESPACE__.'\Command class is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+@trigger_error('The '.__NAMESPACE__.'\Command class is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
 
 /**
  * @author Jean-François Simon <contact@jfsimon.fr>
@@ -104,7 +104,7 @@ class Command
         array_unshift($this->bits, $bit);
 
         foreach ($this->labels as $label => $index) {
-            $this->labels[$label] += 1;
+            ++$this->labels[$label];
         }
 
         return $this;
@@ -154,7 +154,7 @@ class Command
         }
 
         $this->bits[] = self::create($this);
-        $this->labels[$label] = count($this->bits) - 1;
+        $this->labels[$label] = \count($this->bits) - 1;
 
         return $this->bits[$this->labels[$label]];
     }
@@ -200,7 +200,7 @@ class Command
      */
     public function length()
     {
-        return count($this->bits);
+        return \count($this->bits);
     }
 
     /**

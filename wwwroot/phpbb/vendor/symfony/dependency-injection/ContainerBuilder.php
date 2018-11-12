@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection;
 
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\Compiler\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -22,8 +24,6 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\InstantiatorInterface;
 use Symfony\Component\DependencyInjection\LazyProxy\Instantiator\RealServiceInstantiator;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -276,10 +276,14 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * @throws BadMethodCallException When this ContainerBuilder is frozen
      * @throws \LogicException        if the container is frozen
      */
-    public function loadFromExtension($extension, array $values = array())
+    public function loadFromExtension($extension, array $values = null)
     {
         if ($this->isFrozen()) {
             throw new BadMethodCallException('Cannot load from an extension on a frozen container.');
+        }
+
+        if (\func_num_args() < 2) {
+            $values = array();
         }
 
         $namespace = $this->getExtension($extension)->getAlias();
@@ -340,7 +344,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     public function getScopes($triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
 
         return $this->scopes;
@@ -356,7 +360,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     public function getScopeChildren($triggerDeprecationError = true)
     {
         if ($triggerDeprecationError) {
-            @trigger_error('The '.__METHOD__.' method is deprecated since version 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
+            @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.8 and will be removed in 3.0.', E_USER_DEPRECATED);
         }
 
         return $this->scopeChildren;
@@ -489,10 +493,10 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
      * the parameters passed to the container constructor to have precedence
      * over the loaded ones.
      *
-     * $container = new ContainerBuilder(array('foo' => 'bar'));
+     * $container = new ContainerBuilder(new ParameterBag(array('foo' => 'bar')));
      * $loader = new LoaderXXX($container);
      * $loader->load('resource_name');
-     * $container->register('foo', new stdClass());
+     * $container->register('foo', 'stdClass');
      *
      * In the above example, even if the loaded resource defines a foo
      * parameter, the value will still be 'bar' as defined in the ContainerBuilder
@@ -637,7 +641,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         $alias = strtolower($alias);
 
-        if (is_string($id)) {
+        if (\is_string($id)) {
             $id = new Alias($id);
         } elseif (!$id instanceof Alias) {
             throw new InvalidArgumentException('$id must be a string, or an Alias object.');
@@ -890,15 +894,15 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         $arguments = $this->doResolveServices($parameterBag->unescapeValue($parameterBag->resolveValue($definition->getArguments())), $inlinedDefinitions);
 
         if (null !== $factory = $definition->getFactory()) {
-            if (is_array($factory)) {
+            if (\is_array($factory)) {
                 $factory = array($this->doResolveServices($parameterBag->resolveValue($factory[0]), $inlinedDefinitions), $factory[1]);
-            } elseif (!is_string($factory)) {
+            } elseif (!\is_string($factory)) {
                 throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
             }
 
-            $service = call_user_func_array($factory, $arguments);
+            $service = \call_user_func_array($factory, $arguments);
 
-            if (!$definition->isDeprecated() && is_array($factory) && is_string($factory[0])) {
+            if (!$definition->isDeprecated() && \is_array($factory) && \is_string($factory[0])) {
                 $r = new \ReflectionClass($factory[0]);
 
                 if (0 < strpos($r->getDocComment(), "\n * @deprecated ")) {
@@ -914,7 +918,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
                 throw new RuntimeException(sprintf('Cannot create service "%s" from factory method without a factory service or factory class.', $id));
             }
 
-            $service = call_user_func_array(array($factory, $definition->getFactoryMethod(false)), $arguments);
+            $service = \call_user_func_array(array($factory, $definition->getFactoryMethod(false)), $arguments);
         } else {
             $r = new \ReflectionClass($parameterBag->resolveValue($definition->getClass()));
 
@@ -940,7 +944,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
         }
 
         if ($callable = $definition->getConfigurator()) {
-            if (is_array($callable)) {
+            if (\is_array($callable)) {
                 $callable[0] = $parameterBag->resolveValue($callable[0]);
 
                 if ($callable[0] instanceof Reference) {
@@ -950,11 +954,11 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
                 }
             }
 
-            if (!is_callable($callable)) {
-                throw new InvalidArgumentException(sprintf('The configure callable for class "%s" is not a callable.', get_class($service)));
+            if (!\is_callable($callable)) {
+                throw new InvalidArgumentException(sprintf('The configure callable for class "%s" is not a callable.', \get_class($service)));
             }
 
-            call_user_func($callable, $service);
+            \call_user_func($callable, $service);
         }
 
         return $service;
@@ -975,7 +979,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
 
     private function doResolveServices($value, \SplObjectStorage $inlinedDefinitions)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             foreach ($value as $k => $v) {
                 $value[$k] = $this->doResolveServices($v, $inlinedDefinitions);
             }
@@ -1070,7 +1074,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
     {
         $services = array();
 
-        if (is_array($value)) {
+        if (\is_array($value)) {
             foreach ($value as $v) {
                 $services = array_unique(array_merge($services, self::getServiceConditionals($v)));
             }
@@ -1137,7 +1141,7 @@ class ContainerBuilder extends Container implements TaggedContainerInterface
             }
         }
 
-        call_user_func_array(array($service, $call[0]), $this->doResolveServices($this->getParameterBag()->unescapeValue($this->getParameterBag()->resolveValue($call[1])), $inlinedDefinitions));
+        \call_user_func_array(array($service, $call[0]), $this->doResolveServices($this->getParameterBag()->unescapeValue($this->getParameterBag()->resolveValue($call[1])), $inlinedDefinitions));
     }
 
     /**

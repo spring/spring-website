@@ -11,10 +11,10 @@
 
 namespace Symfony\Component\Routing\Loader;
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\Config\Loader\FileLoader;
+use Symfony\Component\Config\Resource\FileResource;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * AnnotationFileLoader loads routing information from annotations set
@@ -31,7 +31,7 @@ class AnnotationFileLoader extends FileLoader
      */
     public function __construct(FileLocatorInterface $locator, AnnotationClassLoader $loader)
     {
-        if (!function_exists('token_get_all')) {
+        if (!\function_exists('token_get_all')) {
             throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
         }
 
@@ -72,7 +72,7 @@ class AnnotationFileLoader extends FileLoader
      */
     public function supports($resource, $type = null)
     {
-        return is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
+        return \is_string($resource) && 'php' === pathinfo($resource, PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
     }
 
     /**
@@ -100,29 +100,29 @@ class AnnotationFileLoader extends FileLoader
 
             if (true === $namespace && T_STRING === $token[0]) {
                 $namespace = $token[1];
-                while (isset($tokens[++$i][1]) && in_array($tokens[$i][0], array(T_NS_SEPARATOR, T_STRING))) {
+                while (isset($tokens[++$i][1]) && \in_array($tokens[$i][0], array(T_NS_SEPARATOR, T_STRING))) {
                     $namespace .= $tokens[$i][1];
                 }
                 $token = $tokens[$i];
             }
 
             if (T_CLASS === $token[0]) {
-                // Skip usage of ::class constant
-                $isClassConstant = false;
+                // Skip usage of ::class constant and anonymous classes
+                $skipClassToken = false;
                 for ($j = $i - 1; $j > 0; --$j) {
                     if (!isset($tokens[$j][1])) {
                         break;
                     }
 
-                    if (T_DOUBLE_COLON === $tokens[$j][0]) {
-                        $isClassConstant = true;
+                    if (T_DOUBLE_COLON === $tokens[$j][0] || T_NEW === $tokens[$j][0]) {
+                        $skipClassToken = true;
                         break;
-                    } elseif (!in_array($tokens[$j][0], array(T_WHITESPACE, T_DOC_COMMENT, T_COMMENT))) {
+                    } elseif (!\in_array($tokens[$j][0], array(T_WHITESPACE, T_DOC_COMMENT, T_COMMENT))) {
                         break;
                     }
                 }
 
-                if (!$isClassConstant) {
+                if (!$skipClassToken) {
                     $class = true;
                 }
             }

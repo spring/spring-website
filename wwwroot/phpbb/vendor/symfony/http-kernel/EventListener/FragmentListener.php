@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\HttpKernel\EventListener;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Handles content fragments represented by special URIs.
@@ -97,7 +97,7 @@ class FragmentListener implements EventSubscriberInterface
      */
     protected function getLocalIpAddresses()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.3.19 and will be removed in 3.0.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.3.19 and will be removed in 3.0.', E_USER_DEPRECATED);
 
         return array('127.0.0.1', 'fe80::1', '::1');
     }

@@ -11,10 +11,10 @@
 
 namespace Symfony\Component\Routing\Matcher\Dumper;
 
+use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 /**
  * PhpMatcherDumper creates a PHP class able to match URLs for a given set of routes.
@@ -96,12 +96,12 @@ EOF;
         $code = rtrim($this->compileRoutes($this->getRoutes(), $supportsRedirections), "\n");
 
         return <<<EOF
-    public function match(\$pathinfo)
+    public function match(\$rawPathinfo)
     {
         \$allow = array();
-        \$pathinfo = rawurldecode(\$pathinfo);
+        \$pathinfo = rawurldecode(\$rawPathinfo);
         \$context = \$this->context;
-        \$request = \$this->request;
+        \$request = \$this->request ?: \$this->createRequest(\$pathinfo);
 
 $code
 
@@ -164,7 +164,7 @@ EOF;
     {
         $code = '';
         $prefix = $collection->getPrefix();
-        $optimizable = 1 < strlen($prefix) && 1 < count($collection->all());
+        $optimizable = 1 < \strlen($prefix) && 1 < \count($collection->all());
         $optimizedPrefix = $parentPrefix;
 
         if ($optimizable) {
@@ -213,13 +213,13 @@ EOF;
         $methods = $route->getMethods();
 
         // GET and HEAD are equivalent
-        if (in_array('GET', $methods) && !in_array('HEAD', $methods)) {
+        if (\in_array('GET', $methods) && !\in_array('HEAD', $methods)) {
             $methods[] = 'HEAD';
         }
 
-        $supportsTrailingSlash = $supportsRedirections && (!$methods || in_array('HEAD', $methods));
+        $supportsTrailingSlash = $supportsRedirections && (!$methods || \in_array('GET', $methods));
 
-        if (!count($compiledRoute->getPathVariables()) && false !== preg_match('#^(.)\^(?P<url>.*?)\$\1#', $compiledRoute->getRegex(), $m)) {
+        if (!\count($compiledRoute->getPathVariables()) && false !== preg_match('#^(.)\^(?P<url>.*?)\$\1#', $compiledRoute->getRegex(), $m)) {
             if ($supportsTrailingSlash && '/' === substr($m['url'], -1)) {
                 $conditions[] = sprintf("%s === rtrim(\$pathinfo, '/')", var_export(rtrim(str_replace('\\', '', $m['url']), '/'), true));
                 $hasTrailingSlash = true;
@@ -258,8 +258,63 @@ EOF;
 EOF;
 
         $gotoname = 'not_'.preg_replace('/[^A-Za-z0-9_]/', '', $name);
-        if ($methods) {
-            if (1 === count($methods)) {
+
+        if ($hasTrailingSlash) {
+            $code .= <<<EOF
+            if ('/' === substr(\$pathinfo, -1)) {
+                // no-op
+            } elseif (!in_array(\$this->context->getMethod(), array('HEAD', 'GET'))) {
+                goto $gotoname;
+            } else {
+                return \$this->redirect(\$rawPathinfo.'/', '$name');
+            }
+
+
+EOF;
+        }
+
+        if ($schemes = $route->getSchemes()) {
+            if (!$supportsRedirections) {
+                throw new \LogicException('The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
+            }
+            $schemes = str_replace("\n", '', var_export(array_flip($schemes), true));
+            if ($methods) {
+                $methods = implode("', '", $methods);
+                $code .= <<<EOF
+            \$requiredSchemes = $schemes;
+            \$hasRequiredScheme = isset(\$requiredSchemes[\$this->context->getScheme()]);
+            if (!in_array(\$this->context->getMethod(), array('$methods'))) {
+                if (\$hasRequiredScheme) {
+                    \$allow = array_merge(\$allow, array('$methods'));
+                }
+                goto $gotoname;
+            }
+            if (!\$hasRequiredScheme) {
+                if (!in_array(\$this->context->getMethod(), array('HEAD', 'GET'))) {
+                    goto $gotoname;
+                }
+
+                return \$this->redirect(\$rawPathinfo, '$name', key(\$requiredSchemes));
+            }
+
+
+EOF;
+            } else {
+                $code .= <<<EOF
+            \$requiredSchemes = $schemes;
+            if (!isset(\$requiredSchemes[\$this->context->getScheme()])) {
+                if (!in_array(\$this->context->getMethod(), array('HEAD', 'GET'))) {
+                    goto $gotoname;
+                }
+
+                return \$this->redirect(\$rawPathinfo, '$name', key(\$requiredSchemes));
+            }
+
+
+EOF;
+            }
+        } elseif ($methods) {
+            if (1 === \count($methods)) {
                 $code .= <<<EOF
             if (\$this->context->getMethod() != '$methods[0]') {
                 \$allow[] = '$methods[0]';
@@ -279,31 +334,6 @@ EOF;
 
 EOF;
             }
-        }
-
-        if ($hasTrailingSlash) {
-            $code .= <<<EOF
-            if (substr(\$pathinfo, -1) !== '/') {
-                return \$this->redirect(\$pathinfo.'/', '$name');
-            }
-
-
-EOF;
-        }
-
-        if ($schemes = $route->getSchemes()) {
-            if (!$supportsRedirections) {
-                throw new \LogicException('The "schemes" requirement is only supported for URL matchers that implement RedirectableUrlMatcherInterface.');
-            }
-            $schemes = str_replace("\n", '', var_export(array_flip($schemes), true));
-            $code .= <<<EOF
-            \$requiredSchemes = $schemes;
-            if (!isset(\$requiredSchemes[\$this->context->getScheme()])) {
-                return \$this->redirect(\$pathinfo, '$name', key(\$requiredSchemes));
-            }
-
-
-EOF;
         }
 
         // optimize parameters array
@@ -329,7 +359,7 @@ EOF;
         }
         $code .= "        }\n";
 
-        if ($methods) {
+        if ($hasTrailingSlash || $schemes || $methods) {
             $code .= "        $gotoname:\n";
         }
 

@@ -11,9 +11,9 @@
 
 namespace Symfony\Component\Console\Helper;
 
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Exception\LogicException;
 
 /**
  * The ProgressBar provides helpers to display progress output.
@@ -183,7 +183,7 @@ class ProgressBar
      */
     public function getStep()
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.6 and will be removed in 3.0. Use the getProgress() method instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.6 and will be removed in 3.0. Use the getProgress() method instead.', E_USER_DEPRECATED);
 
         return $this->getProgress();
     }
@@ -366,7 +366,7 @@ class ProgressBar
      */
     public function setCurrent($step)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since version 2.6 and will be removed in 3.0. Use the setProgress() method instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 2.6 and will be removed in 3.0. Use the setProgress() method instead.', E_USER_DEPRECATED);
 
         $this->setProgress($step);
     }
@@ -444,7 +444,7 @@ class ProgressBar
         $messages = $this->messages;
         $this->overwrite(preg_replace_callback("{%([a-z\-_]+)(?:\:([^%]+))?%}i", function ($matches) use ($self, $output, $messages) {
             if ($formatter = $self::getPlaceholderFormatterDefinition($matches[1])) {
-                $text = call_user_func($formatter, $self, $output);
+                $text = \call_user_func($formatter, $self, $output);
             } elseif (isset($messages[$matches[1]])) {
                 $text = $messages[$matches[1]];
             } else {
