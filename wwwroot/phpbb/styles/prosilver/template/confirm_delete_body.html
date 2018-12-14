@@ -49,6 +49,8 @@
 			</dl>
 		<!-- ENDIF -->
 
+		{% EVENT confirm_delete_body_delete_reason_before %}
+
 		<dl>
 			<dt><label for="delete_reason">{L_DELETE_REASON}{L_COLON}</label><br /><span>{L_DELETE_REASON_EXPLAIN}</span></dt>
 			<dd><input type="text" name="delete_reason" id="delete_reason" value="" class="inputbox autowidth" maxlength="120" size="45" /></dd>
@@ -58,7 +60,7 @@
 
 	<fieldset class="submit-buttons">
 		{S_HIDDEN_FIELDS}
-		<input type="submit" name="confirm" value="{L_YES}" class="button1" />&nbsp; 
+		<input type="submit" name="confirm" value="{L_YES}" class="button1" />&nbsp;
 		<input type="submit" name="cancel" value="{L_NO}" class="button2" />
 	</fieldset>
 

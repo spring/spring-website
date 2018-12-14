@@ -13,25 +13,25 @@
 
 namespace phpbb\db\migration\data\v32x;
 
-class v323rc1 extends \phpbb\db\migration\migration
+class forum_topics_per_page_type extends \phpbb\db\migration\migration
 {
-	public function effectively_installed()
-	{
-		return phpbb_version_compare($this->config['version'], '3.2.3-RC1', '>=');
-	}
 
 	static public function depends_on()
 	{
 		return array(
-			'\phpbb\db\migration\data\v32x\v322',
-			'\phpbb\db\migration\data\v32x\enable_accurate_pm_button',
+			'\phpbb\db\migration\data\v32x\v323',
 		);
 	}
 
-	public function update_data()
+	public function update_schema()
 	{
 		return array(
-			array('config.update', array('version', '3.2.3-RC1')),
+			'change_columns' => array(
+				$this->table_prefix . 'forums' => array(
+					'forum_topics_per_page' => array('USINT', 0),
+				),
+			),
 		);
 	}
+
 }
