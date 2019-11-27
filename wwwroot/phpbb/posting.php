@@ -222,6 +222,25 @@ if (!$post_data)
 	trigger_error(($mode == 'post' || $mode == 'bump' || $mode == 'reply') ? 'NO_TOPIC' : 'NO_POST');
 }
 
+/**
+* This event allows you to bypass reply/quote test of an unapproved post.
+*
+* @event core.posting_modify_row_data
+* @var	array	post_data	All post data from database
+* @var	string	mode		What action to take if the form has been submitted
+*							post|reply|quote|edit|delete|bump|smilies|popup
+* @var	int		topic_id	ID of the topic
+* @var	int		forum_id	ID of the forum
+* @since 3.2.8-RC1
+*/
+$vars = array(
+	'post_data',
+	'mode',
+	'topic_id',
+	'forum_id',
+);
+extract($phpbb_dispatcher->trigger_event('core.posting_modify_row_data', compact($vars)));
+
 // Not able to reply to unapproved posts/topics
 // TODO: add more descriptive language key
 if ($auth->acl_get('m_approve', $forum_id) && ((($mode == 'reply' || $mode == 'bump') && $post_data['topic_visibility'] != ITEM_APPROVED) || ($mode == 'quote' && $post_data['post_visibility'] != ITEM_APPROVED)))
@@ -597,6 +616,20 @@ if (isset($post_data['post_text']))
 // Set some default variables
 $uninit = array('post_attachment' => 0, 'poster_id' => $user->data['user_id'], 'enable_magic_url' => 0, 'topic_status' => 0, 'topic_type' => POST_NORMAL, 'post_subject' => '', 'topic_title' => '', 'post_time' => 0, 'post_edit_reason' => '', 'notify_set' => 0);
 
+/**
+* This event allows you to modify the default variables for post_data, and unset them in post_data if needed
+*
+* @event core.posting_modify_default_variables
+* @var	array	post_data	Array with post data
+* @var	array	uninit		Array with default vars to put into post_data, if they aren't there
+* @since 3.2.5-RC1
+*/
+$vars = array(
+	'post_data',
+	'uninit',
+);
+extract($phpbb_dispatcher->trigger_event('core.posting_modify_default_variables', compact($vars)));
+
 foreach ($uninit as $var_name => $default_value)
 {
 	if (!isset($post_data[$var_name]))
@@ -832,6 +865,7 @@ if ($load && ($mode == 'reply' || $mode == 'quote' || $mode == 'post') && $post_
 	load_drafts($topic_id, $forum_id);
 }
 
+/** @var \phpbb\textformatter\utils_interface $bbcode_utils */
 $bbcode_utils = $phpbb_container->get('text_formatter.utils');
 
 if ($submit || $preview || $refresh)
@@ -940,7 +974,10 @@ if ($submit || $preview || $refresh)
 	}
 
 	// Parse Attachments - before checksum is calculated
-	$message_parser->parse_attachments('fileupload', $mode, $forum_id, $submit, $preview, $refresh);
+	if ($message_parser->check_attachment_form_token($language, $request, 'posting'))
+	{
+		$message_parser->parse_attachments('fileupload', $mode, $forum_id, $submit, $preview, $refresh);
+	}
 
 	/**
 	* This event allows you to modify message text before parsing
@@ -1634,12 +1671,42 @@ if ($generate_quote)
 						'user_id' => $post_data['poster_id'],
 	);
 
-	phpbb_format_quote($config['allow_bbcode'], $quote_attributes, $bbcode_utils, $message_parser);
+	/**
+	* This event allows you to modify the quote attributes of the post being quoted
+	*
+	* @event core.posting_modify_quote_attributes
+	* @var	array	quote_attributes	Array with quote attributes
+	* @var	array	post_data			Array with post data
+	* @since 3.2.6-RC1
+	*/
+	$vars = array(
+		'quote_attributes',
+		'post_data',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.posting_modify_quote_attributes', compact($vars)));
+
+	/** @var \phpbb\language\language $language */
+	$language = $phpbb_container->get('language');
+	phpbb_format_quote($language, $message_parser, $bbcode_utils, $bbcode_status, $quote_attributes);
 }
 
 if (($mode == 'reply' || $mode == 'quote') && !$submit && !$preview && !$refresh)
 {
 	$post_data['post_subject'] = ((strpos($post_data['post_subject'], 'Re: ') !== 0) ? 'Re: ' : '') . censor_text($post_data['post_subject']);
+
+	$post_subject = $post_data['post_subject'];
+
+	/**
+	* This event allows you to modify the post subject of the post being quoted
+	*
+	* @event core.posting_modify_post_subject
+	* @var	string		post_subject	String with the post subject already censored.
+	* @since 3.2.8-RC1
+	*/
+	$vars = array('post_subject');
+	extract($phpbb_dispatcher->trigger_event('core.posting_modify_post_subject', compact($vars)));
+
+	$post_data['post_subject'] = $post_subject;
 }
 
 $attachment_data = $message_parser->attachment_data;

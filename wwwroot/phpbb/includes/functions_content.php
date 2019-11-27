@@ -627,7 +627,7 @@ function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text 
 			}
 			else
 			{
-				$bbcode->bbcode($bitfield);
+				$bbcode->bbcode_set_bitfield($bitfield);
 			}
 
 			$bbcode->bbcode_second_pass($text, $uid);
@@ -1482,6 +1482,8 @@ function truncate_string($string, $max_length = 60, $max_store_length = 255, $al
 * Get username details for placing into templates.
 * This function caches all modes on first call, except for no_profile and anonymous user - determined by $user_id.
 *
+* @html Username spans and links
+*
 * @param string $mode Can be profile (for getting an url to the profile), username (for obtaining the username), colour (for obtaining the user colour), full (for obtaining a html string representing a coloured link to the users profile) or no_profile (the same as full but forcing no profile link)
 * @param int $user_id The users id
 * @param string $username The users name
@@ -1501,6 +1503,7 @@ function get_username_string($mode, $user_id, $username, $username_colour = '', 
 	{
 		global $phpbb_root_path, $phpEx;
 
+		/** @html Username spans and links for usage in the template */
 		$_profile_cache['base_url'] = append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u={USER_ID}');
 		$_profile_cache['tpl_noprofile'] = '<span class="username">{USERNAME}</span>';
 		$_profile_cache['tpl_noprofile_colour'] = '<span style="color: {USERNAME_COLOUR};" class="username-coloured">{USERNAME}</span>';
@@ -1762,13 +1765,14 @@ class bitfield
 /**
  * Formats the quote according to the given BBCode status setting
  *
- * @param bool 						$bbcode_status The status of the BBCode setting
- * @param array 					$quote_attributes The attributes of the quoted post
- * @param phpbb\textformatter\utils $text_formatter_utils Text formatter utilities
- * @param parse_message 			$message_parser Message parser class
- * @param string 					$message_link Link of the original quoted post
+ * @param phpbb\language\language				$language Language class
+ * @param parse_message 						$message_parser Message parser class
+ * @param phpbb\textformatter\utils_interface	$text_formatter_utils Text formatter utilities
+ * @param bool 									$bbcode_status The status of the BBCode setting
+ * @param array 								$quote_attributes The attributes of the quoted post
+ * @param string 								$message_link Link of the original quoted post
  */
-function phpbb_format_quote($bbcode_status, $quote_attributes, $text_formatter_utils, $message_parser, $message_link = '')
+function phpbb_format_quote($language, $message_parser, $text_formatter_utils, $bbcode_status, $quote_attributes, $message_link = '')
 {
 	if ($bbcode_status)
 	{
@@ -1794,7 +1798,7 @@ function phpbb_format_quote($bbcode_status, $quote_attributes, $text_formatter_u
 		$message = $quote_string . $message;
 		$message = str_replace("\n", "\n" . $quote_string, $message);
 
-		$message_parser->message = $quote_attributes['author'] . " " . $user->lang['WROTE'] . ":\n" . $message . "\n";
+		$message_parser->message = $quote_attributes['author'] . " " . $language->lang('WROTE') . ":\n" . $message . "\n";
 	}
 
 	if ($message_link)

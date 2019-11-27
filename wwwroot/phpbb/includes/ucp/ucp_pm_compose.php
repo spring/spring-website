@@ -26,16 +26,27 @@ if (!defined('IN_PHPBB'))
 function compose_pm($id, $mode, $action, $user_folders = array())
 {
 	global $template, $db, $auth, $user, $cache;
-	global $phpbb_root_path, $phpEx, $config;
+	global $phpbb_root_path, $phpEx, $config, $language;
 	global $request, $phpbb_dispatcher, $phpbb_container;
 
 	// Damn php and globals - i know, this is horrible
 	// Needed for handle_message_list_actions()
 	global $refresh, $submit, $preview;
 
-	include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-	include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-	include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	if (!function_exists('generate_smilies'))
+	{
+		include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+	}
+
+	if (!function_exists('display_custom_bbcodes'))
+	{
+		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+	}
+
+	if (!class_exists('parse_message'))
+	{
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	}
 
 	if (!$action)
 	{
@@ -788,7 +799,10 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		extract($phpbb_dispatcher->trigger_event('core.ucp_pm_compose_modify_parse_before', compact($vars)));
 
 		// Parse Attachments - before checksum is calculated
-		$message_parser->parse_attachments('fileupload', $action, 0, $submit, $preview, $refresh, true);
+		if ($message_parser->check_attachment_form_token($language, $request, 'ucp_pm_compose'))
+		{
+			$message_parser->parse_attachments('fileupload', $action, 0, $submit, $preview, $refresh, true);
+		}
 
 		if (count($message_parser->warn_msg) && !($remove_u || $remove_g || $add_to || $add_bcc))
 		{
@@ -986,12 +1000,26 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 			$quote_attributes['post_id'] = $post['msg_id'];
 		}
 
-		phpbb_format_quote($bbcode_status, $quote_attributes, $phpbb_container->get('text_formatter.utils'), $message_parser, $message_link);
+		/** @var \phpbb\language\language $language */
+		$language = $phpbb_container->get('language');
+		/** @var \phpbb\textformatter\utils_interface $text_formatter_utils */
+		$text_formatter_utils = $phpbb_container->get('text_formatter.utils');
+		phpbb_format_quote($language, $message_parser, $text_formatter_utils, $bbcode_status, $quote_attributes, $message_link);
 	}
 
 	if (($action == 'reply' || $action == 'quote' || $action == 'quotepost') && !$preview && !$refresh)
 	{
 		$message_subject = ((!preg_match('/^Re:/', $message_subject)) ? 'Re: ' : '') . censor_text($message_subject);
+
+		/**
+		* This event allows you to modify the PM subject of the PM being quoted
+		*
+		* @event core.pm_modify_message_subject
+		* @var	string		message_subject		String with the PM subject already censored.
+		* @since 3.2.8-RC1
+		*/
+		$vars = array('message_subject');
+		extract($phpbb_dispatcher->trigger_event('core.pm_modify_message_subject', compact($vars)));
 	}
 
 	if ($action == 'forward' && !$preview && !$refresh && !$submit)
@@ -1191,7 +1219,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 	$controller_helper = $phpbb_container->get('controller.helper');
 
 	// Start assigning vars for main posting page ...
-	$template->assign_vars(array(
+	$template_ary = array(
 		'L_POST_A'					=> $page_title,
 		'L_ICON'					=> $user->lang['PM_ICON'],
 		'L_MESSAGE_BODY_EXPLAIN'	=> $user->lang('MESSAGE_BODY_EXPLAIN', (int) $config['max_post_chars']),
@@ -1236,7 +1264,19 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		'S_CLOSE_PROGRESS_WINDOW'	=> isset($_POST['add_file']),
 		'U_PROGRESS_BAR'			=> append_sid("{$phpbb_root_path}posting.$phpEx", 'f=0&amp;mode=popup'),
 		'UA_PROGRESS_BAR'			=> addslashes(append_sid("{$phpbb_root_path}posting.$phpEx", 'f=0&amp;mode=popup')),
-	));
+	);
+
+	/**
+	* Modify the default template vars
+	*
+	* @event core.ucp_pm_compose_template
+	* @var	array	template_ary	Template variables
+	* @since 3.2.6-RC1
+	*/
+	$vars = array('template_ary');
+	extract($phpbb_dispatcher->trigger_event('core.ucp_pm_compose_template', compact($vars)));
+
+	$template->assign_vars($template_ary);
 
 	// Build custom bbcodes array
 	display_custom_bbcodes();
