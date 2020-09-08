@@ -46,6 +46,7 @@ class bbcode_firstpass extends bbcode
 	var $message = '';
 	var $warn_msg = array();
 	var $parsed_items = array();
+	var $mode;
 
 	/**
 	* Parse BBCode
@@ -390,7 +391,7 @@ class bbcode_firstpass extends bbcode
 		$in = str_replace(' ', '%20', $in);
 
 		// Checking urls
-		if (!preg_match('#^' . get_preg_expression('url') . '$#iu', $in) && !preg_match('#^' . get_preg_expression('www_url') . '$#iu', $in))
+		if (!preg_match('#^' . get_preg_expression('url_http') . '$#iu', $in) && !preg_match('#^' . get_preg_expression('www_url') . '$#iu', $in))
 		{
 			return '[img]' . $in . '[/img]';
 		}
@@ -399,32 +400,6 @@ class bbcode_firstpass extends bbcode
 		if (!preg_match('#^[a-z0-9]+://#i', $in))
 		{
 			$in = 'http://' . $in;
-		}
-
-		if ($config['max_' . $this->mode . '_img_height'] || $config['max_' . $this->mode . '_img_width'])
-		{
-			$imagesize = new \FastImageSize\FastImageSize();
-			$size_info = $imagesize->getImageSize(htmlspecialchars_decode($in));
-
-			if ($size_info === false)
-			{
-				$error = true;
-				$this->warn_msg[] = $user->lang['UNABLE_GET_IMAGE_SIZE'];
-			}
-			else
-			{
-				if ($config['max_' . $this->mode . '_img_height'] && $config['max_' . $this->mode . '_img_height'] < $size_info['height'])
-				{
-					$error = true;
-					$this->warn_msg[] = $user->lang('MAX_IMG_HEIGHT_EXCEEDED', (int) $config['max_' . $this->mode . '_img_height']);
-				}
-
-				if ($config['max_' . $this->mode . '_img_width'] && $config['max_' . $this->mode . '_img_width'] < $size_info['width'])
-				{
-					$error = true;
-					$this->warn_msg[] = $user->lang('MAX_IMG_WIDTH_EXCEEDED', (int) $config['max_' . $this->mode . '_img_width']);
-				}
-			}
 		}
 
 		if ($error || $this->path_in_domain($in))
@@ -1127,8 +1102,6 @@ class parse_message extends bbcode_firstpass
 	var $allow_flash_bbcode = true;
 	var $allow_quote_bbcode = true;
 	var $allow_url_bbcode = true;
-
-	var $mode;
 
 	/**
 	* The plupload object used for dealing with attachments

@@ -204,7 +204,6 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 		'username_clean'	=> $username_clean,
 		'user_password'		=> (isset($user_row['user_password'])) ? $user_row['user_password'] : '',
 		'user_email'		=> strtolower($user_row['user_email']),
-		'user_email_hash'	=> phpbb_email_hash($user_row['user_email']),
 		'group_id'			=> $user_row['group_id'],
 		'user_type'			=> $user_row['user_type'],
 	);
@@ -424,11 +423,11 @@ function user_add($user_row, $cp_data = false, $notifications_data = null)
 }
 
 /**
- * Remove User
+ * Delete user(s) and their related data
  *
- * @param string	$mode		Either 'retain' or 'remove'
- * @param mixed		$user_ids	Either an array of integers or an integer
- * @param bool		$retain_username
+ * @param string	$mode				Mode of posts deletion (retain|delete)
+ * @param mixed		$user_ids			Either an array of integers or an integer
+ * @param bool		$retain_username	True if username should be retained, false otherwise
  * @return bool
  */
 function user_delete($mode, $user_ids, $retain_username = true)
@@ -462,17 +461,16 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	}
 
 	/**
-	* Event before a user is deleted
-	*
-	* @event core.delete_user_before
-	* @var	string	mode		Mode of deletion (retain/delete posts)
-	* @var	array	user_ids	IDs of the deleted user
-	* @var	mixed	retain_username	True if username should be retained
-	*				or false if not
-	* @var	array	user_rows	Array containing data of the deleted users
-	* @since 3.1.0-a1
-	* @changed 3.2.4-RC1 Added user_rows
-	*/
+	 * Event before of the performing of the user(s) delete action
+	 *
+	 * @event core.delete_user_before
+	 * @var string	mode				Mode of posts deletion (retain|delete)
+	 * @var array	user_ids			ID(s) of the user(s) bound to be deleted
+	 * @var bool	retain_username		True if username should be retained, false otherwise
+	 * @var array	user_rows			Array containing data of the user(s) bound to be deleted
+	 * @since 3.1.0-a1
+	 * @changed 3.2.4-RC1 Added user_rows
+	 */
 	$vars = array('mode', 'user_ids', 'retain_username', 'user_rows');
 	extract($phpbb_dispatcher->trigger_event('core.delete_user_before', compact($vars)));
 
@@ -761,7 +759,7 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	$db->sql_query($sql);
 
 	// Clean the private messages tables from the user
-	if (!function_exists('phpbb_delete_user_pms'))
+	if (!function_exists('phpbb_delete_users_pms'))
 	{
 		include($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 	}
@@ -773,17 +771,16 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	$db->sql_transaction('commit');
 
 	/**
-	* Event after a user is deleted
-	*
-	* @event core.delete_user_after
-	* @var	string	mode		Mode of deletion (retain/delete posts)
-	* @var	array	user_ids	IDs of the deleted user
-	* @var	mixed	retain_username	True if username should be retained
-	*				or false if not
-	* @var	array	user_rows	Array containing data of the deleted users
-	* @since 3.1.0-a1
-	* @changed 3.2.2-RC1 Added user_rows
-	*/
+	 * Event after the user(s) delete action has been performed
+	 *
+	 * @event core.delete_user_after
+	 * @var string	mode				Mode of posts deletion (retain|delete)
+	 * @var array	user_ids			ID(s) of the deleted user(s)
+	 * @var bool	retain_username		True if username should be retained, false otherwise
+	 * @var array	user_rows			Array containing data of the deleted user(s)
+	 * @since 3.1.0-a1
+	 * @changed 3.2.2-RC1 Added user_rows
+	 */
 	$vars = array('mode', 'user_ids', 'retain_username', 'user_rows');
 	extract($phpbb_dispatcher->trigger_event('core.delete_user_after', compact($vars)));
 
@@ -1046,13 +1043,15 @@ function user_ban($mode, $ban, $ban_len, $ban_len_other, $ban_exclude, $ban_reas
 					$banlist_ary[] = (int) $row['user_id'];
 				}
 				while ($row = $db->sql_fetchrow($result));
+
+				$db->sql_freeresult($result);
 			}
 			else
 			{
 				$db->sql_freeresult($result);
+
 				trigger_error('NO_USERS', E_USER_WARNING);
 			}
-			$db->sql_freeresult($result);
 		break;
 
 		case 'ip':
@@ -1455,12 +1454,7 @@ function user_unban($mode, $ban)
 */
 function user_ipwhois($ip)
 {
-	if (empty($ip))
-	{
-		return '';
-	}
-
-	if (!preg_match(get_preg_expression('ipv4'), $ip) && !preg_match(get_preg_expression('ipv6'), $ip))
+	if (!filter_var($ip, FILTER_VALIDATE_IP))
 	{
 		return '';
 	}
@@ -1473,7 +1467,8 @@ function user_ipwhois($ip)
 	if (($fsk = @fsockopen($whois_host, 43)))
 	{
 		// CRLF as per RFC3912
-		fputs($fsk, "$ip\r\n");
+		// Z to limit the query to all possible flags (whois.arin.net)
+		fputs($fsk, "z $ip\r\n");
 		while (!feof($fsk))
 		{
 			$ipwhois .= fgets($fsk, 1024);
@@ -1910,7 +1905,7 @@ function phpbb_validate_email($email, $config = null)
 	{
 		list(, $domain) = explode('@', $email);
 
-		if (phpbb_checkdnsrr($domain, 'A') === false && phpbb_checkdnsrr($domain, 'MX') === false)
+		if (checkdnsrr($domain, 'A') === false && checkdnsrr($domain, 'MX') === false)
 		{
 			return 'DOMAIN_NO_MX_RECORD';
 		}
@@ -1953,9 +1948,9 @@ function validate_user_email($email, $allowed_email = false)
 
 	if (!$config['allow_emailreuse'])
 	{
-		$sql = 'SELECT user_email_hash
+		$sql = 'SELECT user_email
 			FROM ' . USERS_TABLE . "
-			WHERE user_email_hash = " . $db->sql_escape(phpbb_email_hash($email));
+			WHERE user_email = '" . $db->sql_escape($email) . "'";
 		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);

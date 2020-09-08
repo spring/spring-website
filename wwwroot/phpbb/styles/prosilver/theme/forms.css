@@ -145,7 +145,7 @@ dd textarea {
 /* Browser-specific tweaks */
 button::-moz-focus-inner {
 	padding: 0;
-	border: 0
+	border: 0;
 }
 
 /* Quick-login on index page */
@@ -355,7 +355,7 @@ input.button3 {
 	font-variant: small-caps;
 }
 
-input[type="button"], input[type="submit"], input[type="reset"], input[type="checkbox"], input[type="radio"] {
+input[type="button"], input[type="submit"], input[type="reset"], input[type="checkbox"], input[type="radio"], .search-results li {
 	cursor: pointer;
 }
 

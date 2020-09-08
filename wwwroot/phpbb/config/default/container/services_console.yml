@@ -128,6 +128,7 @@ services:
             - '@user'
             - '@ext.manager'
             - '@log'
+            - '%cache.driver.class%'
         tags:
             - { name: console.command }
 
@@ -137,6 +138,7 @@ services:
             - '@user'
             - '@ext.manager'
             - '@log'
+            - '%cache.driver.class%'
         tags:
             - { name: console.command }
 
@@ -146,6 +148,7 @@ services:
             - '@user'
             - '@ext.manager'
             - '@log'
+            - '%cache.driver.class%'
         tags:
             - { name: console.command }
 
@@ -155,14 +158,7 @@ services:
             - '@user'
             - '@ext.manager'
             - '@log'
-        tags:
-            - { name: console.command }
-
-    console.command.fixup.recalculate_email_hash:
-        class: phpbb\console\command\fixup\recalculate_email_hash
-        arguments:
-            - '@user'
-            - '@dbal.conn'
+            - '%cache.driver.class%'
         tags:
             - { name: console.command }
 

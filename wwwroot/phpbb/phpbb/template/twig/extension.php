@@ -13,10 +13,13 @@
 
 namespace phpbb\template\twig;
 
-class extension extends \Twig_Extension
+class extension extends \Twig\Extension\AbstractExtension
 {
 	/** @var \phpbb\template\context */
 	protected $context;
+
+	/** @var \phpbb\template\twig\environment */
+	protected $environment;
 
 	/** @var \phpbb\language\language */
 	protected $language;
@@ -25,12 +28,13 @@ class extension extends \Twig_Extension
 	* Constructor
 	*
 	* @param \phpbb\template\context $context
+	* @param \phpbb\template\twig\environment $environment
 	* @param \phpbb\language\language $language
-	* @return \phpbb\template\twig\extension
 	*/
-	public function __construct(\phpbb\template\context $context, $language)
+	public function __construct(\phpbb\template\context $context, \phpbb\template\twig\environment $environment, $language)
 	{
 		$this->context = $context;
+		$this->environment = $environment;
 		$this->language = $language;
 	}
 
@@ -47,7 +51,7 @@ class extension extends \Twig_Extension
 	/**
 	* Returns the token parser instance to add to the existing list.
 	*
-	* @return array An array of Twig_TokenParser instances
+	* @return array An array of \Twig\TokenParser\AbstractTokenParser instances
 	*/
 	public function getTokenParsers()
 	{
@@ -56,9 +60,9 @@ class extension extends \Twig_Extension
 			new \phpbb\template\twig\tokenparser\includeparser,
 			new \phpbb\template\twig\tokenparser\includejs,
 			new \phpbb\template\twig\tokenparser\includecss,
-			new \phpbb\template\twig\tokenparser\event,
-			new \phpbb\template\twig\tokenparser\includephp,
-			new \phpbb\template\twig\tokenparser\php,
+			new \phpbb\template\twig\tokenparser\event($this->environment),
+			new \phpbb\template\twig\tokenparser\includephp($this->environment),
+			new \phpbb\template\twig\tokenparser\php($this->environment),
 		);
 	}
 
@@ -70,9 +74,9 @@ class extension extends \Twig_Extension
 	public function getFilters()
 	{
 		return array(
-			new \Twig_SimpleFilter('subset', array($this, 'loop_subset'), array('needs_environment' => true)),
+			new \Twig\TwigFilter('subset', array($this, 'loop_subset'), array('needs_environment' => true)),
 			// @deprecated 3.2.0 Uses twig's JS escape method instead of addslashes
-			new \Twig_SimpleFilter('addslashes', 'addslashes'),
+			new \Twig\TwigFilter('addslashes', 'addslashes'),
 		);
 	}
 
@@ -84,7 +88,9 @@ class extension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			new \Twig_SimpleFunction('lang', array($this, 'lang')),
+			new \Twig\TwigFunction('lang', array($this, 'lang')),
+			new \Twig\TwigFunction('lang_defined', array($this, 'lang_defined')),
+			new \Twig\TwigFunction('get_class', 'get_class'),
 		);
 	}
 
@@ -97,30 +103,30 @@ class extension extends \Twig_Extension
 	{
 		return array(
 			array(
-				'!' => array('precedence' => 50, 'class' => 'Twig_Node_Expression_Unary_Not'),
+				'!' => array('precedence' => 50, 'class' => '\Twig\Node\Expression\Unary\NotUnary'),
 			),
 			array(
 				// precedence settings are copied from similar operators in Twig core extension
-				'||' => array('precedence' => 10, 'class' => 'Twig_Node_Expression_Binary_Or', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'&&' => array('precedence' => 15, 'class' => 'Twig_Node_Expression_Binary_And', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'||' => array('precedence' => 10, 'class' => '\Twig\Node\Expression\Binary\OrBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'&&' => array('precedence' => 15, 'class' => '\Twig\Node\Expression\Binary\AndBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 
-				'eq' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Equal', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'eq' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\EqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 
-				'ne' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'neq' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'<>' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_NotEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'ne' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\NotEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'neq' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\NotEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'<>' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\NotEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 
-				'===' => array('precedence' => 20, 'class' => '\phpbb\template\twig\node\expression\binary\equalequal', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'!==' => array('precedence' => 20, 'class' => '\phpbb\template\twig\node\expression\binary\notequalequal', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'===' => array('precedence' => 20, 'class' => '\phpbb\template\twig\node\expression\binary\equalequal', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'!==' => array('precedence' => 20, 'class' => '\phpbb\template\twig\node\expression\binary\notequalequal', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 
-				'gt' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Greater', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'gte' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'ge' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_GreaterEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'lt' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_Less', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'lte' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_LessEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
-				'le' => array('precedence' => 20, 'class' => 'Twig_Node_Expression_Binary_LessEqual', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'gt' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\GreaterBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'gte' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\GreaterEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'ge' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\GreaterEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'lt' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\LessBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'lte' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\LessEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
+				'le' => array('precedence' => 20, 'class' => '\Twig\Node\Expression\Binary\LessEqualBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 
-				'mod' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => \Twig_ExpressionParser::OPERATOR_LEFT),
+				'mod' => array('precedence' => 60, 'class' => '\Twig\Node\Expression\Binary\ModBinary', 'associativity' => \Twig\ExpressionParser::OPERATOR_LEFT),
 			),
 		);
 	}
@@ -128,7 +134,7 @@ class extension extends \Twig_Extension
 	/**
 	* Grabs a subset of a loop
 	*
-	* @param \Twig_Environment $env          A Twig_Environment instance
+	* @param \Twig\Environment $env          A Twig\Environment instance
 	* @param mixed            $item         A variable
 	* @param integer          $start        Start of the subset
 	* @param integer          $end   	     End of the subset
@@ -136,7 +142,7 @@ class extension extends \Twig_Extension
 	*
 	* @return mixed The sliced variable
 	*/
-	function loop_subset(\Twig_Environment $env, $item, $start, $end = null, $preserveKeys = false)
+	public function loop_subset(\Twig\Environment $env, $item, $start, $end = null, $preserveKeys = false)
 	{
 		// We do almost the same thing as Twig's slice (array_slice), except when $end is positive
 		if ($end >= 1)
@@ -165,7 +171,7 @@ class extension extends \Twig_Extension
 	*
 	* @return string
 	*/
-	function lang()
+	public function lang()
 	{
 		$args = func_get_args();
 		$key = $args[0];
@@ -181,5 +187,15 @@ class extension extends \Twig_Extension
 		// need to check for it
 
 		return call_user_func_array(array($this->language, 'lang'), $args);
+	}
+
+	/**
+	 * Check if a language variable exists
+	 *
+	 * @return bool
+	 */
+	public function lang_defined($key)
+	{
+		return call_user_func_array([$this->language, 'is_set'], [$key]);
 	}
 }

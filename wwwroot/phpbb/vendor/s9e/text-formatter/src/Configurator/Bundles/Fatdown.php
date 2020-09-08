@@ -1,19 +1,26 @@
 <?php
 
-/*
+/**
 * @package   s9e\TextFormatter
-* @copyright Copyright (c) 2010-2019 The s9e Authors
+* @copyright Copyright (c) 2010-2020 The s9e authors
 * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
 */
 namespace s9e\TextFormatter\Configurator\Bundles;
+
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Bundle;
+
 class Fatdown extends Bundle
 {
+	/**
+	* {@inheritdoc}
+	*/
 	public function configure(Configurator $configurator)
 	{
 		$configurator->urlConfig->allowScheme('ftp');
-		$configurator->Litedown->decodeHtmlEntities = \true;
+		$configurator->urlConfig->allowScheme('mailto');
+
+		$configurator->Litedown->decodeHtmlEntities = true;
 		$configurator->Autoemail;
 		$configurator->Autolink;
 		$configurator->Escaper;
@@ -21,6 +28,8 @@ class Fatdown extends Bundle
 		$configurator->HTMLComments;
 		$configurator->HTMLEntities;
 		$configurator->PipeTables;
+		$configurator->TaskLists;
+
 		$htmlAliases = [
 			'a'      => ['URL', 'href' => 'url'],
 			'hr'     => 'HR',
@@ -30,15 +39,23 @@ class Fatdown extends Bundle
 			'sup'    => 'SUP'
 		];
 		foreach ($htmlAliases as $elName => $alias)
-			if (\is_array($alias))
+		{
+			if (is_array($alias))
 			{
 				$configurator->HTMLElements->aliasElement($elName, $alias[0]);
 				unset($alias[0]);
+
 				foreach ($alias as $attrName => $alias)
+				{
 					$configurator->HTMLElements->aliasAttribute($elName, $attrName, $alias);
+				}
 			}
 			else
+			{
 				$configurator->HTMLElements->aliasElement($elName, $alias);
+			}
+		}
+
 		$htmlElements = [
 			'abbr' => ['title'],
 			'b',
@@ -76,7 +93,7 @@ class Fatdown extends Bundle
 		];
 		foreach ($htmlElements as $k => $v)
 		{
-			if (\is_numeric($k))
+			if (is_numeric($k))
 			{
 				$elName    = $v;
 				$attrNames = [];
@@ -86,15 +103,20 @@ class Fatdown extends Bundle
 				$elName    = $k;
 				$attrNames = $v;
 			}
+
 			$configurator->HTMLElements->allowElement($elName);
 			foreach ($attrNames as $attrName)
+			{
 				$configurator->HTMLElements->allowAttribute($elName, $attrName);
+			}
 		}
-		$configurator->tags['html:dd']->rules->createParagraphs(\false);
-		$configurator->tags['html:dt']->rules->createParagraphs(\false);
-		$configurator->tags['html:td']->rules->createParagraphs(\false);
-		$configurator->tags['html:th']->rules->createParagraphs(\false);
-		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => \false]);
+
+		$configurator->tags['html:dd']->rules->createParagraphs(false);
+		$configurator->tags['html:dt']->rules->createParagraphs(false);
+		$configurator->tags['html:td']->rules->createParagraphs(false);
+		$configurator->tags['html:th']->rules->createParagraphs(false);
+
+		$configurator->plugins->load('MediaEmbed', ['createMediaBBCode' => false]);
 		$sites = [
 			'bandcamp',
 			'dailymotion',
@@ -108,6 +130,8 @@ class Fatdown extends Bundle
 			'youtube'
 		];
 		foreach ($sites as $site)
+		{
 			$configurator->MediaEmbed->add($site);
+		}
 	}
 }

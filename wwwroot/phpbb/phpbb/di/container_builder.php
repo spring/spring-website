@@ -137,13 +137,14 @@ class container_builder
 	{
 		try
 		{
-			$container_filename = $this->get_container_filename();
-			$config_cache = new ConfigCache($container_filename, defined('DEBUG'));
-			if ($this->use_cache && $config_cache->isFresh())
+			$build_container = true;
+
+			if ($this->use_cache)
 			{
 				if ($this->use_extensions)
 				{
 					$autoload_cache = new ConfigCache($this->get_autoload_filename(), defined('DEBUG'));
+
 					if (!$autoload_cache->isFresh())
 					{
 						// autoload cache should be refreshed
@@ -153,17 +154,30 @@ class container_builder
 					require($this->get_autoload_filename());
 				}
 
-				require($config_cache->getPath());
-				$this->container = new \phpbb_cache_container();
+				$container_filename = $this->get_container_filename();
+				$config_cache = new ConfigCache($container_filename, defined('DEBUG'));
+
+				if ($config_cache->isFresh())
+				{
+					require($config_cache->getPath());
+					$this->container = new \phpbb_cache_container();
+					$build_container = false;
+				}
 			}
-			else
+
+			if ($build_container)
 			{
-				$this->container_extensions = array(new extension\core($this->get_config_path()));
+				$this->container_extensions = [
+					new extension\core($this->get_config_path()),
+				];
 
 				if ($this->use_extensions)
 				{
 					$this->load_extensions();
 				}
+
+				// Add tables extension after all extensions
+				$this->container_extensions[] = new extension\tables();
 
 				// Inject the config
 				if ($this->config_php_file)
@@ -481,7 +495,7 @@ class container_builder
 
 			$cached_container_dump = $dumper->dump(array(
 				'class'      => 'phpbb_cache_container',
-				'base_class' => 'Symfony\\Component\\DependencyInjection\\ContainerBuilder',
+				'base_class' => 'Symfony\\Component\\DependencyInjection\\Container',
 			));
 
 			$cache->write($cached_container_dump, $this->container->getResources());

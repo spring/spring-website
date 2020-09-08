@@ -4,6 +4,10 @@ function parse()
 	{
 		parseInlineLinks();
 	}
+	if (text.indexOf('<') !== -1)
+	{
+		parseAutomaticLinks();
+	}
 	if (hasReferences)
 	{
 		parseReferenceLinks();
@@ -43,10 +47,30 @@ function getLabels()
 	var labels = {}, m, regexp = /\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\]/g;
 	while (m = regexp.exec(text))
 	{
-		labels[m['index']] = m[1].toLowerCase();
+		labels[m.index] = m[1].toLowerCase();
 	}
 
 	return labels;
+}
+
+/**
+* Parse automatic links markup
+*/
+function parseAutomaticLinks()
+{
+	var m, regexp = /<[-+.\w]+([:@])[^\x17\s>]+?(?:>|\x1B7)/g;
+	while (m = regexp.exec(text))
+	{
+		// Re-escape escape sequences in automatic links
+		var content  = decode(m[0].replace(/\x1B/g, "\\\x1B")).replace(/^<(.+)>$/, '$1'),
+			startPos = m.index,
+			endPos   = startPos + m[0].length - 1,
+
+			tagName  = (m[1] === ':') ? 'URL' : 'EMAIL',
+			attrName = tagName.toLowerCase();
+
+		addTagPair(tagName, startPos, 1, endPos, 1).setAttribute(attrName, content);
+	}
 }
 
 /**
@@ -54,11 +78,11 @@ function getLabels()
 */
 function parseInlineLinks()
 {
-	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:[^\x17\s()]|\([^\x17\s()]*\))*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
+	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:\([^\x17\s()]*\)|[^\x17\s)])*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
 		var linkInfo = m[1],
-			startPos = +m['index'],
+			startPos = m.index,
 			endLen   = 3 + linkInfo.length,
 			endPos   = startPos + m[0].length - endLen;
 

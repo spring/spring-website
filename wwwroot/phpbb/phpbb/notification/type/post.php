@@ -352,7 +352,7 @@ class post extends \phpbb\notification\type\base
 	*
 	* @param array $post Post data from submit_post
 	* @param array $notify_users Notify users list
-	* 		Formated from find_users_for_notification()
+	* 		Formatted from find_users_for_notification()
 	* @return array Whatever you want to send to create_insert_array().
 	*/
 	public function pre_create_insert_array($post, $notify_users)
@@ -457,6 +457,12 @@ class post extends \phpbb\notification\type\base
 		}
 
 		$data_array = array_merge(array(
+			'poster_id'		=> $post['poster_id'],
+			'topic_title'	=> $post['topic_title'],
+			'post_subject'	=> $post['post_subject'],
+			'post_username'	=> $post['post_username'],
+			'forum_id'		=> $post['forum_id'],
+			'forum_name'	=> $post['forum_name'],
 			'post_time'		=> $post['post_time'],
 			'post_id'		=> $post['post_id'],
 			'topic_id'		=> $post['topic_id']

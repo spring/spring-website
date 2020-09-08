@@ -87,7 +87,7 @@ class context
 	}
 
 	/**
-	* Retreive a single scalar value from a single key.
+	* Retrieve a single scalar value from a single key.
 	*
 	* @param string $varname Variable name
 	* @return mixed Variable value, or null if not set
@@ -149,7 +149,7 @@ class context
 			{
 				// If the key name is lowercase and the data is an array,
 				// it could be a template loop. So we set the S_NUM_ROWS there
-				// aswell.
+				// as well.
 				if ($sub_block_name === strtolower($sub_block_name) && is_array($sub_block))
 				{
 					$this->set_num_rows($sub_block);
@@ -384,7 +384,9 @@ class context
 		if (is_array($key))
 		{
 			// Search array to get correct position
-			list($search_key, $search_value) = @each($key);
+			$search_key = key($key);
+			$search_value = current($key);
+
 			foreach ($block as $i => $val_ary)
 			{
 				if ($val_ary[$search_key] === $search_value)
@@ -481,7 +483,8 @@ class context
 		if (is_array($key))
 		{
 			// Search array to get correct position
-			list($search_key, $search_value) = @each($key);
+			$search_key = key($key);
+			$search_value = current($key);
 
 			$key = null;
 			foreach ($block as $i => $val_ary)

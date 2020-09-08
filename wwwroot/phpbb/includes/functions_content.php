@@ -1166,6 +1166,8 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 		$filename = $phpbb_root_path . $config['upload_path'] . '/' . utf8_basename($attachment['physical_filename']);
 
 		$upload_icon = '';
+		$download_link = '';
+		$display_cat = false;
 
 		if (isset($extensions[$attachment['extension']]))
 		{
@@ -1245,11 +1247,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 				$display_cat = ATTACHMENT_CATEGORY_NONE;
 			}
 
-			if ($display_cat == ATTACHMENT_CATEGORY_FLASH && !$user->optionget('viewflash'))
-			{
-				$display_cat = ATTACHMENT_CATEGORY_NONE;
-			}
-
 			$download_link = append_sid("{$phpbb_root_path}download/file.$phpEx", 'id=' . $attachment['attach_id']);
 			$l_downloaded_viewed = 'VIEWED_COUNTS';
 
@@ -1278,21 +1275,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 						'THUMB_IMAGE'		=> $thumbnail_link,
 					);
 
-					$update_count_ary[] = $attachment['attach_id'];
-				break;
-
-				// Macromedia Flash Files
-				case ATTACHMENT_CATEGORY_FLASH:
-					list($width, $height) = @getimagesize($filename);
-
-					$block_array += array(
-						'S_FLASH_FILE'	=> true,
-						'WIDTH'			=> $width,
-						'HEIGHT'		=> $height,
-						'U_VIEW_LINK'	=> $download_link . '&amp;view=1',
-					);
-
-					// Viewed/Heared File ... update the download count
 					$update_count_ary[] = $attachment['attach_id'];
 				break;
 
@@ -1345,7 +1327,7 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 		);
 		extract($phpbb_dispatcher->trigger_event('core.parse_attachments_modify_template_data', compact($vars)));
 		$update_count_ary = $update_count;
-		unset($update_count);
+		unset($update_count, $display_cat, $download_link);
 
 		$template->assign_block_vars('_file', $block_array);
 

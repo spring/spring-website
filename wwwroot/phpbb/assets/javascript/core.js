@@ -11,7 +11,9 @@ phpbb.alertTime = 100;
 var keymap = {
 	TAB: 9,
 	ENTER: 13,
-	ESC: 27
+	ESC: 27,
+	ARROW_UP: 38,
+	ARROW_DOWN: 40
 };
 
 var $dark = $('#darkenwrapper');
@@ -561,7 +563,7 @@ phpbb.search.setValue = function($input, value, multiline) {
 phpbb.search.setValueOnClick = function($input, value, $row, $container) {
 	$row.click(function() {
 		phpbb.search.setValue($input, value.result, $input.attr('data-multiline'));
-		$container.hide();
+		phpbb.search.closeResults($input, $container);
 	});
 };
 
@@ -575,7 +577,7 @@ phpbb.search.setValueOnClick = function($input, value, $row, $container) {
  * @param {object} event			Onkeyup event object.
  * @param {function} sendRequest	Function to execute AJAX request.
  *
- * @returns {bool} Returns false.
+ * @returns {boolean} Returns false.
  */
 phpbb.search.filter = function(data, event, sendRequest) {
 	var $this = $(this),
@@ -584,8 +586,15 @@ phpbb.search.filter = function(data, event, sendRequest) {
 		searchID = $this.attr('data-results'),
 		keyword = phpbb.search.getKeyword($this, data[dataName], $this.attr('data-multiline')),
 		cache = phpbb.search.cache.get(searchID),
+		key = event.keyCode || event.which,
 		proceed = true;
 	data[dataName] = keyword;
+
+	// No need to search if enter was pressed
+	// for selecting a value from the results.
+	if (key === keymap.ENTER) {
+		return false;
+	}
 
 	if (cache.timeout) {
 		clearTimeout(cache.timeout);
@@ -697,22 +706,108 @@ phpbb.search.showResults = function(results, $input, $container, callback) {
 		row.appendTo($resultContainer).show();
 	});
 	$container.show();
+
+	phpbb.search.navigateResults($input, $container, $resultContainer);
 };
 
 /**
  * Clear search results.
  *
- * @param {jQuery} $container Search results container.
+ * @param {jQuery} $container		Search results container.
  */
 phpbb.search.clearResults = function($container) {
 	$container.children(':not(.search-result-tpl)').remove();
+};
+
+/**
+ * Close search results.
+ *
+ * @param {jQuery} $input			Search input|textarea.
+ * @param {jQuery} $container		Search results container.
+ */
+phpbb.search.closeResults = function($input, $container) {
+	$input.off('.phpbb.search');
+	$container.hide();
+};
+
+/**
+ * Navigate search results.
+ *
+ * @param {jQuery} $input			Search input|textarea.
+ * @param {jQuery} $container		Search results container.
+ * @param {jQuery} $resultContainer	Search results list container.
+ */
+phpbb.search.navigateResults = function($input, $container, $resultContainer) {
+	// Add a namespace to the event (.phpbb.search),
+	// so it can be unbound specifically later on.
+	// Rebind it, to ensure the event is 'dynamic'.
+	$input.off('.phpbb.search');
+	$input.on('keydown.phpbb.search', function(event) {
+		var key = event.keyCode || event.which,
+			$active = $resultContainer.children('.active');
+
+		switch (key) {
+			// Close the results
+			case keymap.ESC:
+				phpbb.search.closeResults($input, $container);
+			break;
+
+			// Set the value for the selected result
+			case keymap.ENTER:
+				if ($active.length) {
+					var value = $active.find('.search-result > span').text();
+
+					phpbb.search.setValue($input, value, $input.attr('data-multiline'));
+				}
+
+				phpbb.search.closeResults($input, $container);
+
+				// Do not submit the form
+				event.preventDefault();
+			break;
+
+			// Navigate the results
+			case keymap.ARROW_DOWN:
+			case keymap.ARROW_UP:
+				var up = key === keymap.ARROW_UP,
+					$children = $resultContainer.children();
+
+				if (!$active.length) {
+					if (up) {
+						$children.last().addClass('active');
+					} else {
+						$children.first().addClass('active');
+					}
+				} else if ($children.length > 1) {
+					if (up) {
+						if ($active.is(':first-child')) {
+							$children.last().addClass('active');
+						} else {
+							$active.prev().addClass('active');
+						}
+					} else {
+						if ($active.is(':last-child')) {
+							$children.first().addClass('active');
+						} else {
+							$active.next().addClass('active');
+						}
+					}
+
+					$active.removeClass('active');
+				}
+
+				// Do not change cursor position in the input element
+				event.preventDefault();
+			break;
+		}
+	});
 };
 
 $('#phpbb').click(function() {
 	var $this = $(this);
 
 	if (!$this.is('.live-search') && !$this.parents().is('.live-search')) {
-		$('.live-search').hide();
+		phpbb.search.closeResults($('input, textarea'), $('.live-search'));
 	}
 });
 
@@ -853,7 +948,10 @@ phpbb.timezonePreselectSelect = function(forceSelector) {
 	var minutes = offset % 60;
 	var hours = (offset - minutes) / 60;
 
-	if (hours < 10) {
+	if (hours === 0) {
+		hours = '00';
+		sign = '+';
+	} else if (hours < 10) {
 		hours = '0' + hours.toString();
 	} else {
 		hours = hours.toString();
@@ -1492,7 +1590,7 @@ phpbb.colorPalette = function(dir, width, height) {
 * @param {jQuery} el jQuery object for the palette container.
 */
 phpbb.registerPalette = function(el) {
-	var	orientation	= el.attr('data-orientation'),
+	var	orientation	= el.attr('data-color-palette') || el.attr('data-orientation'), // data-orientation kept for backwards compat.
 		height		= el.attr('data-height'),
 		width		= el.attr('data-width'),
 		target		= el.attr('data-target'),
@@ -1650,19 +1748,100 @@ phpbb.lazyLoadAvatars = function loadAvatars() {
 	});
 };
 
+phpbb.recaptcha = {
+	button: null,
+	ready: false,
+
+	token: $('input[name="recaptcha_token"]'),
+	form: $('.g-recaptcha').parents('form'),
+	v3: $('[data-recaptcha-v3]'),
+
+	load: function() {
+		phpbb.recaptcha.bindButton();
+		phpbb.recaptcha.bindForm();
+	},
+	bindButton: function() {
+		phpbb.recaptcha.form.find('input[type="submit"]').on('click', function() {
+			// Listen to all the submit buttons for the form that has reCAPTCHA protection,
+			// and store it so we can click the exact same button later on when we are ready.
+			phpbb.recaptcha.button = this;
+		});
+	},
+	bindForm: function() {
+		phpbb.recaptcha.form.on('submit', function(e) {
+			 // If ready is false, it means the user pressed a submit button.
+			 // And the form was not submitted by us, after the token was loaded.
+			if (!phpbb.recaptcha.ready) {
+				 // If version 3 is used, we need to make a different execution,
+				 // including the action and the site key.
+				if (phpbb.recaptcha.v3.length) {
+					grecaptcha.execute(
+						phpbb.recaptcha.v3.data('recaptcha-v3'),
+						{action: phpbb.recaptcha.v3.val()}
+					).then(function(token) {
+						// Place the token inside the form
+						phpbb.recaptcha.token.val(token);
+
+						// And now we submit the form.
+						phpbb.recaptcha.submitForm();
+					});
+				} else {
+					// Regular version 2 execution
+					grecaptcha.execute();
+				}
+
+				// Do not submit the form
+				e.preventDefault();
+			}
+		});
+	},
+	submitForm: function() {
+		// Now we are ready, so set it to true.
+		// so the 'submit' event doesn't run multiple times.
+		phpbb.recaptcha.ready = true;
+
+		if (phpbb.recaptcha.button) {
+			// If there was a specific button pressed initially, trigger the same button
+			phpbb.recaptcha.button.click();
+		} else {
+			if (typeof phpbb.recaptcha.form.submit !== 'function') {
+				// Rename input[name="submit"] so that we can submit the form
+				phpbb.recaptcha.form.submit.name = 'submit_btn';
+			}
+
+			phpbb.recaptcha.form.submit();
+		}
+	}
+};
+
+// reCAPTCHA v2 doesn't accept callback functions nested inside objects
+// so we need to make this helper functions here
+window.phpbbRecaptchaOnLoad = function() {
+	phpbb.recaptcha.load();
+};
+
+window.phpbbRecaptchaOnSubmit = function() {
+	phpbb.recaptcha.submitForm();
+};
+
 $(window).on('load', phpbb.lazyLoadAvatars);
 
 /**
 * Apply code editor to all textarea elements with data-bbcode attribute
 */
 $(function() {
+	// reCAPTCHA v3 needs to be initialized
+	if (phpbb.recaptcha.v3.length) {
+		phpbb.recaptcha.load();
+	}
+
 	$('textarea[data-bbcode]').each(function() {
 		phpbb.applyCodeEditor(this);
 	});
 
 	phpbb.registerPageDropdowns();
 
-	$('[data-orientation]').each(function() {
+	$('[data-color-palette], [data-orientation]').each(function() {
 		phpbb.registerPalette($(this));
 	});
 

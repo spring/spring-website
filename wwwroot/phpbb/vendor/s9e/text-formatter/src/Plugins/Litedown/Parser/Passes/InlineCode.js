@@ -59,17 +59,17 @@ function getInlineCodeMarkers()
 	var regexp   = /(`+)(\s*)[^\x17`]*/g,
 		trimNext = 0,
 		markers  = [],
-		_text    = text.replace(/\x1BB/g, '\\`'),
+		_text    = text.replace(/\x1BD/g, '\\`'),
 		m;
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(_text))
 	{
 		markers.push({
-			pos        : +m['index'],
+			pos        : m.index,
 			len        : m[1].length,
 			trimBefore : trimNext,
 			trimAfter  : m[2].length,
-			next       : m['index'] + m[0].length
+			next       : m.index + m[0].length
 		});
 		trimNext = m[0].length - m[0].replace(/\s+$/, '').length;
 	}

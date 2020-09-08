@@ -1,15 +1,15 @@
 /**
-* @var {boolean} Whether to decode HTML entities when decoding text
+* @type {boolean} Whether to decode HTML entities when decoding text
 */
 var decodeHtmlEntities = config.decodeHtmlEntities;
 
 /**
-* @var {bool} Whether text contains escape characters
+* @type {boolean} Whether text contains escape characters
 */
 var hasEscapedChars = false;
 
 /**
-* @var {bool} Whether text contains link references
+* @type {boolean} Whether text contains link references
 */
 var hasReferences = false;
 
@@ -25,14 +25,14 @@ if (text.indexOf('\\') >= 0)
 	// Encode escaped literals that have a special meaning otherwise, so that we don't have
 	// to take them into account in regexps
 	text = text.replace(
-		/\\[!"'()*[\\\]^_`~]/g,
+		/\\[!"'()*<>[\\\]^_`~]/g,
 		function (str)
 		{
 			return {
-				'\\!': "\x1B0", '\\"': "\x1B1", "\\'": "\x1B2", '\\(' : "\x1B3",
-				'\\)': "\x1B4", '\\*': "\x1B5", '\\[': "\x1B6", '\\\\': "\x1B7",
-				'\\]': "\x1B8", '\\^': "\x1B9", '\\_': "\x1BA", '\\`' : "\x1BB",
-				'\\~': "\x1BC"
+				'\\!': "\x1B0", '\\"' : "\x1B1", "\\'": "\x1B2", '\\(': "\x1B3",
+				'\\)': "\x1B4", '\\*' : "\x1B5", '\\<': "\x1B6", '\\>': "\x1B7",
+				'\\[': "\x1B8", '\\\\': "\x1B9", '\\]': "\x1BA", '\\^': "\x1BB",
+				'\\_': "\x1BC", '\\`' : "\x1BD", '\\~': "\x1BE"
 			}[str];
 		}
 	);
@@ -65,10 +65,10 @@ function decode(str)
 			function (seq)
 			{
 				return {
-					"\x1B0": '!', "\x1B1": '"', "\x1B2": "'", "\x1B3": '(',
-					"\x1B4": ')', "\x1B5": '*', "\x1B6": '[', "\x1B7": '\\',
-					"\x1B8": ']', "\x1B9": '^', "\x1BA": '_', "\x1BB": '`',
-					"\x1BC": '~'
+					"\x1B0": '!', "\x1B1": '"',  "\x1B2": "'", "\x1B3": '(',
+					"\x1B4": ')', "\x1B5": '*',  "\x1B6": '<', "\x1B7": '>',
+					"\x1B8": '[', "\x1B9": '\\', "\x1BA": ']', "\x1BB": '^',
+					"\x1BC": '_', "\x1BD": '`',  "\x1BE": '~'
 				}[seq];
 			}
 		);

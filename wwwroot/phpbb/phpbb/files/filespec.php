@@ -408,7 +408,7 @@ class filespec
 			return false;
 		}
 
-		$chmod = ($chmod === false) ? CHMOD_READ | CHMOD_WRITE : $chmod;
+		$chmod = ($chmod === false) ? \phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE : $chmod;
 
 		// We need to trust the admin in specifying valid upload directories and an attacker not being able to overwrite it...
 		$this->destination_path = $this->phpbb_root_path . $destination;
@@ -420,7 +420,7 @@ class filespec
 			return false;
 		}
 
-		$upload_mode = ($this->php_ini->getBool('open_basedir') || $this->php_ini->getBool('safe_mode')) ? 'move' : 'copy';
+		$upload_mode = ($this->php_ini->getBool('open_basedir')) ? 'move' : 'copy';
 		$upload_mode = ($this->local) ? 'local' : $upload_mode;
 		$this->destination_file = $this->destination_path . '/' . utf8_basename($this->realname);
 

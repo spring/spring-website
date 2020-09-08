@@ -13,23 +13,23 @@
 
 namespace phpbb\template\twig\tokenparser;
 
-class includecss extends \Twig_TokenParser
+class includecss extends \Twig\TokenParser\AbstractTokenParser
 {
 	/**
 	* Parses a token and returns a node.
 	*
-	* @param \Twig_Token $token A Twig_Token instance
+	* @param \Twig\Token $token A Twig\Token instance
 	*
-	* @return \Twig_NodeInterface A Twig_NodeInterface instance
+	* @return \Twig\Node\Node A Twig\Node instance
 	*/
-	public function parse(\Twig_Token $token)
+	public function parse(\Twig\Token $token)
 	{
 		$expr = $this->parser->getExpressionParser()->parseExpression();
 
 		$stream = $this->parser->getStream();
-		$stream->expect(\Twig_Token::BLOCK_END_TYPE);
+		$stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
-		return new \phpbb\template\twig\node\includecss($expr, $this->parser->getEnvironment(), $token->getLine(), $this->getTag());
+		return new \phpbb\template\twig\node\includecss($expr, $token->getLine(), $this->getTag());
 	}
 
 	/**

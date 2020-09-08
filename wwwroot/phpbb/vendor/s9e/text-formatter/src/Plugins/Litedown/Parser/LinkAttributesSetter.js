@@ -9,11 +9,15 @@ function setLinkAttributes(tag, linkInfo, attrName)
 {
 	var url   = linkInfo.replace(/^\s*/, '').replace(/\s*$/, ''),
 		title = '',
-		pos   = url.indexOf(' ')
+		pos   = url.indexOf(' ');
 	if (pos !== -1)
 	{
 		title = url.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
 		url   = url.substr(0, pos);
+	}
+	if (/^<.+>$/.test(url))
+	{
+		url = url.replace(/^<(.+)>$/, '$1').replace(/\\>/g, '>');
 	}
 
 	tag.setAttribute(attrName, decode(url));

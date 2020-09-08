@@ -822,10 +822,12 @@ class acp_users
 							* @var	string	action		Quick tool that should be run
 							* @var	array	user_row	Current user data
 							* @var	string	u_action	The u_action link
+							* @var	int		user_id		User id of the user to manage
 							* @since 3.1.0-a1
 							* @changed 3.2.2-RC1 Added u_action
+							* @changed 3.2.10-RC1 Added user_id
 							*/
-							$vars = array('action', 'user_row', 'u_action');
+							$vars = array('action', 'user_row', 'u_action', 'user_id');
 							extract($phpbb_dispatcher->trigger_event('core.acp_users_overview_run_quicktool', compact($vars)));
 
 							unset($u_action);
@@ -844,9 +846,9 @@ class acp_users
 					// Validation data - we do not check the password complexity setting here
 					$check_ary = array(
 						'new_password'		=> array(
-							array('string', true, $config['min_pass_chars'], $config['max_pass_chars']),
+							array('string', true, $config['min_pass_chars'], 0),
 							array('password')),
-						'password_confirm'	=> array('string', true, $config['min_pass_chars'], $config['max_pass_chars']),
+						'password_confirm'	=> array('string', true, $config['min_pass_chars'], 0),
 					);
 
 					// Check username if altered
@@ -966,10 +968,7 @@ class acp_users
 
 						if ($update_email !== false)
 						{
-							$sql_ary += array(
-								'user_email'		=> $update_email,
-								'user_email_hash'	=> phpbb_email_hash($update_email),
-							);
+							$sql_ary += ['user_email'		=> $update_email];
 
 							$phpbb_log->add('user', $user->data['user_id'], $user->ip, 'LOG_USER_UPDATE_EMAIL', false, array(
 								'reportee_id' => $user_id,
@@ -1130,7 +1129,7 @@ class acp_users
 
 				$template->assign_vars(array(
 					'L_NAME_CHARS_EXPLAIN'		=> $user->lang($config['allow_name_chars'] . '_EXPLAIN', $user->lang('CHARACTERS', (int) $config['min_name_chars']), $user->lang('CHARACTERS', (int) $config['max_name_chars'])),
-					'L_CHANGE_PASSWORD_EXPLAIN'	=> $user->lang($config['pass_complex'] . '_EXPLAIN', $user->lang('CHARACTERS', (int) $config['min_pass_chars']), $user->lang('CHARACTERS', (int) $config['max_pass_chars'])),
+					'L_CHANGE_PASSWORD_EXPLAIN'	=> $user->lang($config['pass_complex'] . '_EXPLAIN', $user->lang('CHARACTERS', (int) $config['min_pass_chars'])),
 					'L_POSTS_IN_QUEUE'			=> $user->lang('NUM_POSTS_IN_QUEUE', $user_row['posts_in_queue']),
 					'S_FOUNDER'					=> ($user->data['user_type'] == USER_FOUNDER) ? true : false,
 
@@ -2607,6 +2606,7 @@ class acp_users
 			break;
 
 			default:
+				$u_action = $this->u_action;
 
 				/**
 				* Additional modes provided by extensions
@@ -2616,11 +2616,14 @@ class acp_users
 				* @var	int		user_id			User id of the user to manage
 				* @var	array	user_row		Array with user data
 				* @var	array	error			Array with errors data
+				* @var	string	u_action		The u_action link
 				* @since 3.2.2-RC1
+				* @changed 3.2.10-RC1 Added u_action
 				*/
-				$vars = array('mode', 'user_id', 'user_row', 'error');
+				$vars = array('mode', 'user_id', 'user_row', 'error', 'u_action');
 				extract($phpbb_dispatcher->trigger_event('core.acp_users_mode_add', compact($vars)));
 
+				unset($u_action);
 			break;
 		}
 

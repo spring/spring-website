@@ -44,7 +44,7 @@
 		<!-- INCLUDE acp_posting_buttons.html -->
 
 		<dl class="responsive-columns">
-			<dt style="width: 90px;" id="color_palette_placeholder" data-orientation="v" data-height="12" data-width="15" data-bbcode="true">
+			<dt style="width: 90px;" id="color_palette_placeholder" data-color-palette="v" data-height="12" data-width="15" data-bbcode="true">
 			</dt>
 
 			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px;">
@@ -66,9 +66,12 @@
 		</dl>
 	</fieldset>
 
-	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-		<input class="button2" type="submit" name="preview" value="{L_PREVIEW}" />
+	<fieldset>
+		<legend>{L_ACP_SUBMIT_CHANGES}</legend>
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
 		{S_FORM_TOKEN}
 	</fieldset>
 </form>

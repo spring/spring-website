@@ -22,7 +22,7 @@ if (!defined('IN_PHPBB'))
 /**
 * Get user avatar
 *
-* @deprecated 3.1.0-a1 (To be removed: 3.3.0)
+* @deprecated 3.1.0-a1 (To be removed: 4.0.0)
 *
 * @param string $avatar Users assigned avatar name
 * @param int $avatar_type Type of avatar
@@ -50,7 +50,7 @@ function get_user_avatar($avatar, $avatar_type, $avatar_width, $avatar_height, $
 /**
 * Hash the password
 *
-* @deprecated 3.1.0-a2 (To be removed: 3.3.0)
+* @deprecated 3.1.0-a2 (To be removed: 4.0.0)
 *
 * @param string $password Password to be hashed
 *
@@ -68,7 +68,7 @@ function phpbb_hash($password)
 /**
 * Check for correct password
 *
-* @deprecated 3.1.0-a2 (To be removed: 3.3.0)
+* @deprecated 3.1.0-a2 (To be removed: 4.0.0)
 *
 * @param string $password The password in plain text
 * @param string $hash The stored password hash
@@ -92,7 +92,7 @@ function phpbb_check_hash($password, $hash)
 * @param string $path Path to clean
 * @return string Cleaned path
 *
-* @deprecated 3.1.0 (To be removed: 3.3.0)
+* @deprecated 3.1.0 (To be removed: 4.0.0)
 */
 function phpbb_clean_path($path)
 {
@@ -136,7 +136,7 @@ function phpbb_clean_path($path)
 *
 * @return		string		Returns the options for timezone selector only
 *
-* @deprecated 3.1.0 (To be removed: 3.3.0)
+* @deprecated 3.1.0 (To be removed: 4.0.0)
 */
 function tz_select($default = '', $truncate = false)
 {
@@ -150,7 +150,7 @@ function tz_select($default = '', $truncate = false)
 * via admin_permissions. Changes of usernames and group names
 * must be carried through for the moderators table.
 *
-* @deprecated 3.1.0 (To be removed: 3.3.0)
+* @deprecated 3.1.0 (To be removed: 4.0.0)
 * @return null
 */
 function cache_moderators()
@@ -162,7 +162,7 @@ function cache_moderators()
 /**
 * Removes moderators and administrators from foe lists.
 *
-* @deprecated 3.1.0 (To be removed: 3.3.0)
+* @deprecated 3.1.0 (To be removed: 4.0.0)
 * @param array|bool $group_id If an array, remove all members of this group from foe lists, or false to ignore
 * @param array|bool $user_id If an array, remove this user from foe lists, or false to ignore
 * @return null
@@ -182,7 +182,7 @@ function update_foes($group_id = false, $user_id = false)
 * @param string &$rank_img the rank image as full img tag is stored here after execution
 * @param string &$rank_img_src the rank image source is stored here after execution
 *
-* @deprecated 3.1.0-RC5 (To be removed: 3.3.0)
+* @deprecated 3.1.0-RC5 (To be removed: 4.0.0)
 *
 * Note: since we do not want to break backwards-compatibility, this function will only properly assign ranks to guests if you call it for them with user_posts == false
 */
@@ -232,7 +232,7 @@ function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port 
  *
  * @return	int|bool		Returns the log_id, if the entry was added to the database, false otherwise.
  *
- * @deprecated	3.1.0 (To be removed: 3.3.0)
+ * @deprecated	3.1.0 (To be removed: 4.0.0)
  */
 function add_log()
 {
@@ -280,7 +280,7 @@ function add_log()
  *
  * @return null
  *
- * @deprecated 3.1.0 (To be removed: 3.3.0)
+ * @deprecated 3.1.0 (To be removed: 4.0.0)
  */
 function set_config($config_name, $config_value, $is_dynamic = false, \phpbb\config\config $set_config = null)
 {
@@ -310,7 +310,7 @@ function set_config($config_name, $config_value, $is_dynamic = false, \phpbb\con
  *
  * @return null
  *
- * @deprecated 3.1.0 (To be removed: 3.3.0)
+ * @deprecated 3.1.0 (To be removed: 4.0.0)
  */
 function set_config_count($config_name, $increment, $is_dynamic = false, \phpbb\config\config $set_config = null)
 {
@@ -331,7 +331,7 @@ function set_config_count($config_name, $increment, $is_dynamic = false, \phpbb\
  * See {@link \phpbb\request\request_interface::variable \phpbb\request\request_interface::variable} for
  * documentation of this function's use.
  *
- * @deprecated 3.1.0 (To be removed: 3.3.0)
+ * @deprecated 3.1.0 (To be removed: 4.0.0)
  * @param	mixed			$var_name	The form variable's name from which data shall be retrieved.
  * 										If the value is an array this may be an array of indizes which will give
  * 										direct access to a value at any depth. E.g. if the value of "var" is array(1 => "a")
@@ -389,7 +389,7 @@ function request_var($var_name, $default, $multibyte = false, $cookie = false, $
 /**
  * Get tables of a database
  *
- * @deprecated 3.1.0 (To be removed: 3.3.0)
+ * @deprecated 3.1.0 (To be removed: 4.0.0)
  */
 function get_tables($db)
 {
@@ -492,7 +492,7 @@ function phpbb_realpath($path)
  * @param $number	int|float	The number we want to get the plural case for. Float numbers are floored.
  * @return	int		The plural-case we need to use for the number plural-rule combination
  *
- * @deprecated 3.2.0-dev (To be removed: 3.3.0)
+ * @deprecated 3.2.0-dev (To be removed: 4.0.0)
  */
 function phpbb_get_plural_form($rule, $number)
 {
@@ -510,4 +510,373 @@ function phpbb_get_plural_form($rule, $number)
 function phpbb_pcre_utf8_support()
 {
 	return true;
+}
+
+/**
+ * Casts a variable to the given type.
+ *
+ * @deprecated 3.1 (To be removed 4.0.0)
+ */
+function set_var(&$result, $var, $type, $multibyte = false)
+{
+	// no need for dependency injection here, if you have the object, call the method yourself!
+	$type_cast_helper = new \phpbb\request\type_cast_helper();
+	$type_cast_helper->set_var($result, $var, $type, $multibyte);
+}
+
+/**
+ * Delete Attachments
+ *
+ * @deprecated 3.2.0-a1 (To be removed: 4.0.0)
+ *
+ * @param string $mode can be: post|message|topic|attach|user
+ * @param mixed $ids can be: post_ids, message_ids, topic_ids, attach_ids, user_ids
+ * @param bool $resync set this to false if you are deleting posts or topics
+ */
+function delete_attachments($mode, $ids, $resync = true)
+{
+	global $phpbb_container;
+
+	/** @var \phpbb\attachment\manager $attachment_manager */
+	$attachment_manager = $phpbb_container->get('attachment.manager');
+	$num_deleted = $attachment_manager->delete($mode, $ids, $resync);
+
+	unset($attachment_manager);
+
+	return $num_deleted;
+}
+
+/**
+ * Delete attached file
+ *
+ * @deprecated 3.2.0-a1 (To be removed: 4.0.0)
+ */
+function phpbb_unlink($filename, $mode = 'file', $entry_removed = false)
+{
+	global $phpbb_container;
+
+	/** @var \phpbb\attachment\manager $attachment_manager */
+	$attachment_manager = $phpbb_container->get('attachment.manager');
+	$unlink = $attachment_manager->unlink($filename, $mode, $entry_removed);
+	unset($attachment_manager);
+
+	return $unlink;
+}
+
+/**
+ * Display reasons
+ *
+ * @deprecated 3.2.0-dev (To be removed: 4.0.0)
+ */
+function display_reasons($reason_id = 0)
+{
+	global $phpbb_container;
+
+	$phpbb_container->get('phpbb.report.report_reason_list_provider')->display_reasons($reason_id);
+}
+
+/**
+ * Upload Attachment - filedata is generated here
+ * Uses upload class
+ *
+ * @deprecated 3.2.0-a1 (To be removed: 4.0.0)
+ *
+ * @param string			$form_name		The form name of the file upload input
+ * @param int			$forum_id		The id of the forum
+ * @param bool			$local			Whether the file is local or not
+ * @param string			$local_storage	The path to the local file
+ * @param bool			$is_message		Whether it is a PM or not
+ * @param array			$local_filedata	A filespec object created for the local file
+ *
+ * @return array File data array
+ */
+function upload_attachment($form_name, $forum_id, $local = false, $local_storage = '', $is_message = false, $local_filedata = false)
+{
+	global $phpbb_container;
+
+	/** @var \phpbb\attachment\manager $attachment_manager */
+	$attachment_manager = $phpbb_container->get('attachment.manager');
+	$file = $attachment_manager->upload($form_name, $forum_id, $local, $local_storage, $is_message, $local_filedata);
+	unset($attachment_manager);
+
+	return $file;
+}
+
+/**
+* Wrapper for php's checkdnsrr function.
+*
+* @param string $host	Fully-Qualified Domain Name
+* @param string $type	Resource record type to lookup
+*						Supported types are: MX (default), A, AAAA, NS, TXT, CNAME
+*						Other types may work or may not work
+*
+* @return mixed		true if entry found,
+*					false if entry not found,
+*					null if this function is not supported by this environment
+*
+* Since null can also be returned, you probably want to compare the result
+* with === true or === false,
+*
+* @deprecated 3.3.0-b2 (To be removed: 4.0.0)
+*/
+function phpbb_checkdnsrr($host, $type = 'MX')
+{
+	return checkdnsrr($host, $type);
+}
+
+/*
+ * Wrapper for inet_ntop()
+ *
+ * Converts a packed internet address to a human readable representation
+ * inet_ntop() is supported by PHP since 5.1.0, since 5.3.0 also on Windows.
+ *
+ * @param string $in_addr	A 32bit IPv4, or 128bit IPv6 address.
+ *
+ * @return mixed		false on failure,
+ *					string otherwise
+  *
+ * @deprecated 3.3.0-b2 (To be removed: 4.0.0)
+ */
+function phpbb_inet_ntop($in_addr)
+{
+	return inet_ntop($in_addr);
+}
+
+/**
+ * Wrapper for inet_pton()
+ *
+ * Converts a human readable IP address to its packed in_addr representation
+ * inet_pton() is supported by PHP since 5.1.0, since 5.3.0 also on Windows.
+ *
+ * @param string $address	A human readable IPv4 or IPv6 address.
+ *
+ * @return mixed		false if address is invalid,
+ *					in_addr representation of the given address otherwise (string)
+ *
+ * @deprecated 3.3.0-b2 (To be removed: 4.0.0)
+ */
+function phpbb_inet_pton($address)
+{
+	return inet_pton($address);
+}
+
+/**
+ * Hashes an email address to a big integer
+ *
+ * @param string $email		Email address
+ *
+ * @return string			Unsigned Big Integer
+ *
+ * @deprecated 3.3.0-b2 (To be removed: 4.0.0)
+ */
+function phpbb_email_hash($email)
+{
+	return sprintf('%u', crc32(strtolower($email))) . strlen($email);
+}
+
+/**
+ * Load the autoloaders added by the extensions.
+ *
+ * @param string $phpbb_root_path Path to the phpbb root directory.
+ */
+function phpbb_load_extensions_autoloaders($phpbb_root_path)
+{
+	$iterator = new \RecursiveIteratorIterator(
+		new \phpbb\recursive_dot_prefix_filter_iterator(
+			new \RecursiveDirectoryIterator(
+				$phpbb_root_path . 'ext/',
+				\FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS
+			)
+		),
+		\RecursiveIteratorIterator::SELF_FIRST
+	);
+	$iterator->setMaxDepth(2);
+
+	foreach ($iterator as $file_info)
+	{
+		if ($file_info->getFilename() === 'vendor' && $iterator->getDepth() === 2)
+		{
+			$filename = $file_info->getRealPath() . '/autoload.php';
+			if (file_exists($filename))
+			{
+				require $filename;
+			}
+		}
+	}
+}
+
+/**
+* Login using http authenticate.
+*
+* @param array	$param		Parameter array, see $param_defaults array.
+*
+* @return null
+*
+* @deprecated 3.2.10 (To be removed 4.0.0)
+*/
+function phpbb_http_login($param)
+{
+	global $auth, $user, $request;
+	global $config;
+
+	$param_defaults = array(
+		'auth_message'	=> '',
+
+		'autologin'		=> false,
+		'viewonline'	=> true,
+		'admin'			=> false,
+	);
+
+	// Overwrite default values with passed values
+	$param = array_merge($param_defaults, $param);
+
+	// User is already logged in
+	// We will not overwrite his session
+	if (!empty($user->data['is_registered']))
+	{
+		return;
+	}
+
+	// $_SERVER keys to check
+	$username_keys = array(
+		'PHP_AUTH_USER',
+		'Authorization',
+		'REMOTE_USER', 'REDIRECT_REMOTE_USER',
+		'HTTP_AUTHORIZATION', 'REDIRECT_HTTP_AUTHORIZATION',
+		'REMOTE_AUTHORIZATION', 'REDIRECT_REMOTE_AUTHORIZATION',
+		'AUTH_USER',
+	);
+
+	$password_keys = array(
+		'PHP_AUTH_PW',
+		'REMOTE_PASSWORD',
+		'AUTH_PASSWORD',
+	);
+
+	$username = null;
+	foreach ($username_keys as $k)
+	{
+		if ($request->is_set($k, \phpbb\request\request_interface::SERVER))
+		{
+			$username = htmlspecialchars_decode($request->server($k));
+			break;
+		}
+	}
+
+	$password = null;
+	foreach ($password_keys as $k)
+	{
+		if ($request->is_set($k, \phpbb\request\request_interface::SERVER))
+		{
+			$password = htmlspecialchars_decode($request->server($k));
+			break;
+		}
+	}
+
+	// Decode encoded information (IIS, CGI, FastCGI etc.)
+	if (!is_null($username) && is_null($password) && strpos($username, 'Basic ') === 0)
+	{
+		list($username, $password) = explode(':', base64_decode(substr($username, 6)), 2);
+	}
+
+	if (!is_null($username) && !is_null($password))
+	{
+		set_var($username, $username, 'string', true);
+		set_var($password, $password, 'string', true);
+
+		$auth_result = $auth->login($username, $password, $param['autologin'], $param['viewonline'], $param['admin']);
+
+		if ($auth_result['status'] == LOGIN_SUCCESS)
+		{
+			return;
+		}
+		else if ($auth_result['status'] == LOGIN_ERROR_ATTEMPTS)
+		{
+			send_status_line(401, 'Unauthorized');
+
+			trigger_error('NOT_AUTHORISED');
+		}
+	}
+
+	// Prepend sitename to auth_message
+	$param['auth_message'] = ($param['auth_message'] === '') ? $config['sitename'] : $config['sitename'] . ' - ' . $param['auth_message'];
+
+	// We should probably filter out non-ASCII characters - RFC2616
+	$param['auth_message'] = preg_replace('/[\x80-\xFF]/', '?', $param['auth_message']);
+
+	header('WWW-Authenticate: Basic realm="' . $param['auth_message'] . '"');
+	send_status_line(401, 'Unauthorized');
+
+	trigger_error('NOT_AUTHORISED');
+}
+
+/**
+* Converts query string (GET) parameters in request into hidden fields.
+*
+* Useful for forwarding GET parameters when submitting forms with GET method.
+*
+* It is possible to omit some of the GET parameters, which is useful if
+* they are specified in the form being submitted.
+*
+* sid is always omitted.
+*
+* @param \phpbb\request\request $request Request object
+* @param array $exclude A list of variable names that should not be forwarded
+* @return string HTML with hidden fields
+*
+* @deprecated 3.2.10 (To be removed 4.0.0)
+*/
+function phpbb_build_hidden_fields_for_query_params($request, $exclude = null)
+{
+	$names = $request->variable_names(\phpbb\request\request_interface::GET);
+	$hidden = '';
+	foreach ($names as $name)
+	{
+		// Sessions are dealt with elsewhere, omit sid always
+		if ($name == 'sid')
+		{
+			continue;
+		}
+
+		// Omit any additional parameters requested
+		if (!empty($exclude) && in_array($name, $exclude))
+		{
+			continue;
+		}
+
+		$escaped_name = phpbb_quoteattr($name);
+
+		// Note: we might retrieve the variable from POST or cookies
+		// here. To avoid exposing cookies, skip variables that are
+		// overwritten somewhere other than GET entirely.
+		$value = $request->variable($name, '', true);
+		$get_value = $request->variable($name, '', true, \phpbb\request\request_interface::GET);
+		if ($value === $get_value)
+		{
+			$escaped_value = phpbb_quoteattr($value);
+			$hidden .= "<input type='hidden' name=$escaped_name value=$escaped_value />";
+		}
+	}
+	return $hidden;
+}
+
+/**
+* Delete all PM(s) for a given user and delete the ones without references
+*
+* @param	int		$user_id	ID of the user whose private messages we want to delete
+*
+* @return	boolean		False if there were no pms found, true otherwise.
+*
+* @deprecated 3.2.10 (To be removed 4.0.0)
+*/
+function phpbb_delete_user_pms($user_id)
+{
+	$user_id = (int) $user_id;
+
+	if (!$user_id)
+	{
+		return false;
+	}
+
+	return phpbb_delete_users_pms(array($user_id));
 }

@@ -296,7 +296,7 @@ class compress_zip extends compress
 
 									try
 									{
-										$this->filesystem->phpbb_chmod($str, CHMOD_READ | CHMOD_WRITE);
+										$this->filesystem->phpbb_chmod($str, \phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE);
 									}
 									catch (\phpbb\filesystem\exception\filesystem_exception $e)
 									{
@@ -305,8 +305,8 @@ class compress_zip extends compress
 								}
 							}
 						}
-						// This is a directory, we are not writting files
-						continue;
+						// This is a directory, we are not writing files
+						continue 2;
 					}
 					else
 					{
@@ -333,7 +333,7 @@ class compress_zip extends compress
 
 								try
 								{
-									$this->filesystem->phpbb_chmod($str, CHMOD_READ | CHMOD_WRITE);
+									$this->filesystem->phpbb_chmod($str, \phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE);
 								}
 								catch (\phpbb\filesystem\exception\filesystem_exception $e)
 								{
@@ -636,7 +636,7 @@ class compress_tar extends compress
 
 								try
 								{
-									$this->filesystem->phpbb_chmod($str, CHMOD_READ | CHMOD_WRITE);
+									$this->filesystem->phpbb_chmod($str, \phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE);
 								}
 								catch (\phpbb\filesystem\exception\filesystem_exception $e)
 								{
@@ -671,7 +671,7 @@ class compress_tar extends compress
 
 							try
 							{
-								$this->filesystem->phpbb_chmod($str, CHMOD_READ | CHMOD_WRITE);
+								$this->filesystem->phpbb_chmod($str, \phpbb\filesystem\filesystem_interface::CHMOD_READ | \phpbb\filesystem\filesystem_interface::CHMOD_WRITE);
 							}
 							catch (\phpbb\filesystem\exception\filesystem_exception $e)
 							{
@@ -688,7 +688,7 @@ class compress_tar extends compress
 
 					try
 					{
-						$this->filesystem->phpbb_chmod($target_filename, CHMOD_READ);
+						$this->filesystem->phpbb_chmod($target_filename, \phpbb\filesystem\filesystem_interface::CHMOD_READ);
 					}
 					catch (\phpbb\filesystem\exception\filesystem_exception $e)
 					{

@@ -16,7 +16,7 @@ namespace phpbb\template\twig;
 /**
 * Twig Template loader
 */
-class loader extends \Twig_Loader_Filesystem
+class loader extends \Twig\Loader\FilesystemLoader
 {
 	protected $safe_directories = array();
 
@@ -35,14 +35,14 @@ class loader extends \Twig_Loader_Filesystem
 	{
 		$this->filesystem = $filesystem;
 
-		parent::__construct($paths, $this->filesystem->realpath(dirname(__FILE__)));
+		parent::__construct($paths, __DIR__);
 	}
 
 	/**
 	* Set safe directories
 	*
 	* @param array $directories Array of directories that are safe (empty to clear)
-	* @return \Twig_Loader_Filesystem
+	* @return \Twig\Loader\FilesystemLoader
 	*/
 	public function setSafeDirectories($directories = array())
 	{
@@ -63,7 +63,7 @@ class loader extends \Twig_Loader_Filesystem
 	* Add safe directory
 	*
 	* @param string $directory Directory that should be added
-	* @return \Twig_Loader_Filesystem
+	* @return \Twig\Loader\FilesystemLoader
 	*/
 	public function addSafeDirectory($directory)
 	{
@@ -111,12 +111,12 @@ class loader extends \Twig_Loader_Filesystem
 	}
 
 	/**
-	* Find the template
-	*
-	* Override for Twig_Loader_Filesystem::findTemplate to add support
-	*	for loading from safe directories.
-	*/
-	protected function findTemplate($name)
+	 * Find the template
+	 *
+	 * Override for \Twig\Loader\FilesystemLoader::findTemplate
+	 * to add support for loading from safe directories.
+	 */
+	protected function findTemplate($name, $throw = true)
 	{
 		$name = (string) $name;
 
@@ -132,14 +132,14 @@ class loader extends \Twig_Loader_Filesystem
 
 		// First, find the template name. The override above of validateName
 		//	causes the validateName process to be skipped for this call
-		$file = parent::findTemplate($name);
+		$file = parent::findTemplate($name, $throw);
 
 		try
 		{
 			// Try validating the name (which may throw an exception)
-			parent::validateName($name);
+			$this->validateName($name);
 		}
-		catch (\Twig_Error_Loader $e)
+		catch (\Twig\Error\LoaderError $e)
 		{
 			if (strpos($e->getRawMessage(), 'Looks like you try to load a template outside configured directories') === 0)
 			{

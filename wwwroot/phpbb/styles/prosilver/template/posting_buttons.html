@@ -31,7 +31,7 @@
 <div id="colour_palette" style="display: none;">
 	<dl style="clear: left;">
 		<dt><label>{L_FONT_COLOR}{L_COLON}</label></dt>
-		<dd id="color_palette_placeholder" class="color_palette_placeholder" data-orientation="h" data-height="12" data-width="15" data-bbcode="true"></dd>
+		<dd id="color_palette_placeholder" class="color_palette_placeholder" data-color-palette="h" data-height="12" data-width="15" data-bbcode="true"></dd>
 	</dl>
 </div>
 
@@ -96,7 +96,7 @@
 	<!-- EVENT posting_editor_buttons_custom_tags_before -->
 
 	<!-- BEGIN custom_tags -->
-	<button type="button" class="button button-secondary bbcode-{custom_tags.BBCODE_TAG_CLEAN}" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID})" title="{{ custom_tags.BBCODE_HELPLINE|e('html_attr') }}">
+	<button type="button" class="button button-secondary bbcode-{custom_tags.BBCODE_TAG_CLEAN}" name="addbbcode{custom_tags.BBCODE_ID}" value="{custom_tags.BBCODE_TAG}" onclick="bbstyle({custom_tags.BBCODE_ID})" title="{{ custom_tags.BBCODE_HELPLINE }}">
 		{custom_tags.BBCODE_TAG}
 	</button>
 	<!-- END custom_tags -->
