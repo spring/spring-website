@@ -57,12 +57,11 @@ if ( $rowcount >= 4 ) {
     // Not enough.. Should not usually happen.
 }
 
-
 $videos = array(
-		"https://www.youtube.com/embed/R6DSXTIcwzI?rel=0&autohide=1", #zero-k trailer
-		"https://www.youtube.com/embed/2mKhQD2SVqw?rel=0&autohide=1", #spring rts trailer
-		"https://www.youtube.com/embed/GAM_vcVJiL4?rel=0&autohide=1", #spring showcase
-		"https://www.youtube.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
+		"https://www.youtube-nocookie.com/embed/R6DSXTIcwzI?rel=0&autohide=1", #zero-k trailer
+		"https://www.youtube-nocookie.com/embed/2mKhQD2SVqw?rel=0&autohide=1", #spring rts trailer
+		"https://www.youtube-nocookie.com/embed/GAM_vcVJiL4?rel=0&autohide=1", #spring showcase
+		"https://www.youtube-nocookie.com/embed/vuP63IobLps?rel=0&autohide=1", #NOTA "Action Trailer"
 	);
 $videofile = str_replace( "&", "&amp;", $videos[array_rand($videos)] );
 
