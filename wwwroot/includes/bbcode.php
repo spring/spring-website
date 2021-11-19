@@ -52,7 +52,6 @@
                       '/\[\/color\]/',
                       '/\n/',
                       '/\[code\]/',
-                      '/\[\/code\]/',
                       );
         $data = array('/phpbb/images/smilies',
                       '<b>',

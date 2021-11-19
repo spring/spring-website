@@ -21,11 +21,11 @@ function link_replace( $str ) {
 }
 
 function get_news($db) {
-	$sql = "SELECT t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_posts_approved, t.topic_title, t.forum_id\n"
-	     . "FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p\n"
-	     . "WHERE(t.forum_id = 2 or t.forum_id = 38) AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time\n"
-	     . "ORDER BY t.topic_time DESC\n"
-	     . "LIMIT 10";
+	$sql = "SELECT t.topic_id, topic_poster, p.post_text, u.username, u.user_email, t.topic_time, t.topic_posts_approved, t.topic_title, t.forum_id
+	     FROM phpbb3_topics AS t, phpbb3_users AS u, phpbb3_posts AS p
+	     WHERE t.forum_id in (2, 38, 75) AND t.topic_poster = u.user_id AND t.topic_id = p.topic_id AND t.topic_time = p.post_time
+	     ORDER BY t.topic_time DESC
+	     LIMIT 10";
 
 	$res = mysqli_query($db, $sql);
 	$newstemplate = file_get_contents('templates/newsitem.html');
