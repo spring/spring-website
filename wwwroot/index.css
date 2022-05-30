@@ -241,6 +241,12 @@ a~a>.frontscreenshot {
 
 #homepage_media {
 	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+.homepage-media-options {
+	flex-grow: 2;
 }
 
 @media (max-width: 1050px), (max-device-width: 1050px) {
