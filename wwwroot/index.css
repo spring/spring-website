@@ -159,6 +159,9 @@ a~a>.frontscreenshot {
 .newsheadline {
 	font-size: 22px;
 	color: #EEE;
+	background-color: rgba(255,255,255,0.1);
+	box-shadow: inset 1px 1px rgba(255, 255, 255, 0.198);
+	border: 1px solid rgba(0,0,0,0.35);
 }
 .newsabout {
 	font-size: 11px;
@@ -166,6 +169,14 @@ a~a>.frontscreenshot {
 	line-height: 18px;
 	font-style: italic;
 }
+.newsbody {
+	background-color: rgba(0,0,0,0.15);
+	box-shadow: 1px 1px rgba(255, 255, 255, 0.198);
+	color: #EEE;
+	border: 1px solid rgba(0,0,0,0.15);
+	font-size: 85%;
+}
+
 .newsbody,
 .newsabout,
 .newsheadline {
