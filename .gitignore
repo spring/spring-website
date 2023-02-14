@@ -8,12 +8,11 @@ springpw.php
 /wwwroot/thumbs
 
 # phpBB
-/wwwroot/phpbb/cache
-/wwwroot/phpbb/files
-/wwwroot/phpbb/store
-/wwwroot/phpbb/images/avatars/upload
-/wwwroot/phpbb/install
-/wwwroot/phpbb/ext/phpbb/viglink/.gitignore
+/wwwroot/phpBB-*/cache/
+/wwwroot/files/files
+/wwwroot/files/store
+/wwwroot/files/images/avatars/upload
+/wwwroot/*/install
 
 # downloads
 /wwwroot/dl
