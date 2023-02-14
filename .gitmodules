@@ -1,3 +1,0 @@
-[submodule "wwwroot/phpbb/ext/phpbbmodders/banhammer"]
-	path = wwwroot/files/ext/phpbbmodders/banhammer
-	url = https://github.com/phpbbmodders/ban-hammer.git

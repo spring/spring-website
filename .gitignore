@@ -9,10 +9,10 @@ springpw.php
 
 # phpBB
 /wwwroot/phpBB-*/cache/
+/wwwroot/phpBB-*/store
+/wwwroot/phpBB-*/install
 /wwwroot/files/files
-/wwwroot/files/store
 /wwwroot/files/images/avatars/upload
-/wwwroot/*/install
 
 # downloads
 /wwwroot/dl
