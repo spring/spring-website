@@ -1,12 +1,3 @@
-[submodule "wwwroot/files/ext/anavaro/postlove"]
-	path = wwwroot/files/ext/anavaro/postlove
-	url = https://github.com/spring/spring-website-phpbb-postlove.git
-[submodule "wwwroot/files/ext/o0johntam0o/codeboxplus"]
-	path = wwwroot/files/ext/o0johntam0o/codeboxplus
-	url = https://github.com/gajop/phpBB-Extension-Codebox-Plus.git
-[submodule "wwwroot/files/ext/codebox"]
-	path = wwwroot/files/ext/codebox
-	url = https://github.com/o0johntam0o/phpBB-Extension-Codebox-Plus.git
 [submodule "wwwroot/phpbb/ext/phpbbmodders/banhammer"]
 	path = wwwroot/files/ext/phpbbmodders/banhammer
 	url = https://github.com/phpbbmodders/ban-hammer.git
