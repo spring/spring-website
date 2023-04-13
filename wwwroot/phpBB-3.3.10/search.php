@@ -376,7 +376,7 @@ if ($keywords || $author || $author_id || $search_id || $submit)
 				$show_results = 'topics';
 				$sort_key = 't';
 				$sort_dir = 'd';
-				$sort_days = $request->variable('st', 7);
+				$sort_days = $request->variable('st', 365);
 				$sort_by_sql['t'] = 't.topic_last_post_time';
 
 				gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param);
